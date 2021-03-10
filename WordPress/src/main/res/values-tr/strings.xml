@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 14:53:51+0000
+Translation-Revision-Date: 2021-02-28 17:15:46+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="threat_fix_all_status_success_message_plural">Tehditler başarıyla düzeltildi.</string>
+    <string name="scan_fixing_threats_description_plural">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal bir şekilde kullanmaya devam edebilirsiniz, ilerlemeyi istediğiniz zaman kontrol edebilirsiniz.</string>
+    <string name="gutenberg_native_edit_focal_point">Odak noktasını düzenle</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Tüm görevler tamamlandı&lt;/b>&lt;br/>Daha fazla kişiye ulaşacaksınız. İyi iş!</string>
+    <string name="new_site_creation_search_domain_input_hint">Siteniz için bir ad yazın</string>
+    <string name="new_site_creation_search_domain_example">ornek.com</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Görseli düzenlemek, değiştirmek veya temizlemek üzere eylem sayfasını açmak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Görseli düzenlemek, değiştirmek veya temizlemek üzere alt sayfayı açmak için iki kez dokunun</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Tüm görevler tamamlandı&lt;/b> &lt;br/>Sitenizi özelleştirdiniz. İyi iş!</string>
+    <string name="invite_links_disable_dialog_message">Davet bağlantısı etkisizleştirildiğinde, ekibinizden kimse katılamaz. Emin misiniz?</string>
+    <string name="magic_link_not_meaning_to_create_account">Yeni bir hesap oluşturmak istemediniz mi? E-posta adresinizi yeniden girmek için geri dönün.</string>
+    <string name="quick_start_card_menu_hide">Şimdilik gizle</string>
+    <string name="invite_links_helper_text">Ekibinizin üyelerini tek tek davet etmek zorunda kalmadan dahil etmek için bu bağlantıyı kullanın. Bu bağlantıya tıklayan herkes, başkasından bile almış olsa, kurumunuza dahil olabilir. O nedenle, sadece güvendiğiniz kişilerle paylaşmaya dikkat edin.</string>
+    <string name="invite_links_generic_get_data_error">Davet bağlantıları verilerini alırken bilinmeyen hata</string>
+    <string name="invite_links_cannot_get_roles_error">Rol alınırken bir hata oluştu</string>
+    <string name="invite_links_cannot_get_role_data_error">%1$s rolü için veri alınırken bir hata oluştu</string>
+    <string name="invite_links_null_response">Yanıt alınamadı</string>
+    <string name="invite_links_bad_format_response">Geçersiz yanıt alındı</string>
+    <string name="invite_links_disable_dialog_title">Davet bağlantısını etkisizleştir</string>
+    <string name="invite_links_section_title">Davet bağlantısı</string>
+    <string name="invite_links_get_status_retry">Bağlantı durumunu yenile</string>
+    <string name="invite_links_generate">Yeni bağlantı oluştur</string>
+    <string name="invite_links_share_invite_link">Davet bağlantısını paylaş</string>
+    <string name="invite_links_disable_invite_link">Davet bağlantısını etkisizleştir</string>
+    <string name="invite_links_expire_date">Son kullanma tarihi: %1$s</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Tarama tamamlandı&lt;/b> &lt;br>&lt;/br> Tehdit bulunamadı</string>
+    <string name="threats_found_plural">Tehditler bulundu</string>
+    <string name="threats_found_singular">Tehdit bulundu</string>
+    <string name="disable">Etkisizleştir</string>
+    <string name="scan_fixing_threats_title_singular">Tehditler düzeltiliyor</string>
     <string name="quick_start_card_menu_unpin">Sabitlemeyi kaldır</string>
     <string name="quick_start_list_review_pages_subtitle">Sayfalarınızı kontrol edin ve değişiklikler yapın veya sayfa ekleyin ya da kaldırın.</string>
     <string name="quick_start_list_view_site_title">Sitenizi ziyaret edin</string>
@@ -32,8 +62,6 @@ Language: tr
     <string name="backup_item_content_hint">(temalar, eklentiler ve yüklemeler hariç)</string>
     <string name="backup_item_contents">WP-content dizini</string>
     <string name="backup_item_roots">WordPress kök dizini</string>
-    <string name="backup_download_progress_action_button_content_description">Bittiğinde bana haber ver düğmesi</string>
-    <string name="backup_download_progress_action_button">Bittiğinde bana haber ver!</string>
     <string name="backup_download_details_choose_items_header">Bu indirmeye dahil olan öğeler</string>
     <string name="gutenberg_native_uploading">Yükleniyor…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Yeniden kullanılabilir bloklar iOS için WordPress\'te düzenlenemez</string>
@@ -61,14 +89,13 @@ Language: tr
     <string name="threat_status_fixed">Sabit</string>
     <string name="threat_found_header">Bulundu</string>
     <string name="scan_here_to_help">yardım etmek için buradayım</string>
-    <string name="scan_idle_with_threats_description">Tarama %2s ile ilgili %1s potansiyel tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %3$s.</string>
     <string name="scan_idle_manual_scan_description">Sitenizi yeniden gözden geçirmek için manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
     <string name="scan_provisioning_description">Jetpack Scan\'e hoş geldiniz! Sitenize göz atıyor ve tam bir tarama yapacak şekilde ayarlıyoruz. Taramayı etkileyebilecek herhangi bir sorun tespit edersek size haber vereceğiz, ardından ilk tam taramanız başlayacaktır.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.</string>
-    <string name="scan_fixing_threats_description">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
+    <string name="scan_fixing_threats_description_singular">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
     <string name="scan_scanning_description">Tarama tamamlandığında size bir bildirim göndereceğiz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
-    <string name="scan_fixing_threats_title">Tehditler Düzeltiliyor</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan sitenizin taramasını tamamlayamadı. Lütfen sitenizin devre dışı olup olmadığını kontrol edin, değilse tekrar deneyin. Devre dışıysa veya Jetpack Scan\'de hâlâ sorun varsa destek ekibimizle iletişime geçin.</string>
+    <string name="scan_fixing_threats_title_plural">Tehditler düzeltiliyor</string>
     <string name="scan_request_failed_title">Bir şeyler yanlış gitti</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Site yedekleniyor</string>
     <string name="activity_log_currently_backing_up_message">Siteden %1$s %2$s kaynağından yedekleniyor</string>
@@ -109,7 +136,6 @@ Language: tr
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Tekrar gösterme</string>
-    <string name="quick_start_card_menu_hide">Gizle</string>
     <string name="quick_start_dialog_review_pages_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
     <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
     <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>
@@ -126,9 +152,8 @@ Language: tr
     <string name="reader_marked_post_as_unseen">Yayın görülmedi olarak işaretlendi</string>
     <string name="reader_marked_post_as_seen">Yayın görüldü olarak işaretlendi</string>
     <string name="threat_fix_all_status_error_message">Düzeltme durumu alınırken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
-    <string name="threat_fix_all_status_success_message">Tehditler başarıyla düzeltildi.</string>
+    <string name="threat_fix_all_status_success_message_singular">Tehditler başarıyla düzeltildi.</string>
     <string name="threat_fix_all_error_message">Tehditler düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
-    <string name="threat_fix_all_warning_message">Lütfen %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
     <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
     <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
     <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
@@ -208,7 +233,6 @@ Language: tr
     <string name="threat_item_header_vulnerable_plugin">Savunmasız eklenti: %s (sürüm %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kötü amaçlı kod deseni</string>
     <string name="threat_item_header_database_threat">Veritabanı %s tehditleri</string>
-    <string name="threats_found">Tehditler bulundu</string>
     <string name="scan_in_few_seconds">bir kaç saniye önce</string>
     <string name="scan_in_minutes_ago">%s dakika önce</string>
     <string name="scan_in_hours_ago">%s saat önce</string>
@@ -234,7 +258,6 @@ Language: tr
     <string name="activity_log_date_range_filter_label_content_description">Tarih aralığı filtresi</string>
     <string name="activity_log_active_filter_empty_subtitle">Tarih aralığınızı veya etkinlik türü filtrelerinizi ayarlamayı deneyin</string>
     <string name="activity_log_active_filter_empty_title">Eşleşen etkinlik bulunamadı</string>
-    <string name="rewind">Geri al</string>
     <string name="backup_item_media_uploads">Medya Yüklemeleri</string>
     <string name="backup_item_plugins">WordPress Eklentileri</string>
     <string name="backup_item_themes">WordPress Temaları</string>
@@ -358,7 +381,6 @@ Language: tr
     <string name="stories_intro_title_first">Artık herkes öykülere erişebilir</string>
     <string name="stories_intro_image_caption_second">Öykü başlığı örneği</string>
     <string name="stories_intro_image_caption_first">Öykü yayını nasıl oluşturulur?</string>
-    <string name="stories_intro_main_subtitle">Öykü yayınlarına erken erişiminiz var ve denemenizi çok isteriz.</string>
     <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
     <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
     <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>
@@ -495,7 +517,6 @@ Language: tr
     <string name="signup_confirmation_title">Kayıt onayı</string>
     <string name="enter_your_site_address">Mevcut site adresinizi girin</string>
     <string name="continue_terms_of_service_text">Devam etmekle, %1$shizmet koşullarını%2$s kabul etmiş olursunuz.</string>
-    <string name="signup_confirmation_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size e-postayla bir kayıt bağlantısı göndereceğiz.</string>
     <string name="signup_confirmation_message">Bu e-posta adresini, yeni WordPress.com hesabınızı oluşturmak için kullanacağız.</string>
     <string name="signup_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size kayıdolma bağlantısı gönderdik. Bu cihazdaki e-postanızı kontrol edin ve WordPress.com\'dan aldığınız e-postadaki bağlantıya dokunun.</string>
     <string name="enter_account_info_for_site">%1$s için hesap bilgilerinizi girin.</string>
@@ -1140,8 +1161,6 @@ Language: tr
     <string name="menu_switch_to_aztec_editor">Klasik düzenleyiciye geç</string>
     <string name="exit">çıkış</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
-    <string name="quick_start_sites_type_grow">Kitlenizi Genişletin</string>
-    <string name="quick_start_sites_type_customize">Sitenizi Özelleştirin</string>
     <string name="quick_start_sites">Sonraki Adımlar</string>
     <string name="quick_start_complete_tasks_header">Tamamlandı (%d)</string>
     <string name="quick_start_dialog_view_site_message">Tamamlanmış ürününüzün tadını çıkarın!</string>
@@ -1178,7 +1197,6 @@ Language: tr
     <string name="new_site_creation_create_site_button">Site oluştur</string>
     <string name="notification_new_site_creation_title">Site Oluştur</string>
     <string name="notification_new_site_creation_failed">Bir sorun vardı</string>
-    <string name="new_site_creation_search_domain_input_hint">Alan adı ara</string>
     <string name="new_site_creation_clear_all_content_description">Temizle</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
     <string name="site_created_but_not_fetched_snackbar_message">Yavaş bir bağlantı kullanıyorsunuz gibi duruyor. Yeni sitenizi listede görmüyorsanız listeyi yenilemeyi deneyin.</string>

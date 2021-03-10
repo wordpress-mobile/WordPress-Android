@@ -1,0 +1,2 @@
+16.8:
+De senaste uppdateringarna av Android-appen WordPress är här. Vi har förbättrat funktionen för publicerade hemsidor, så att din webbplats inte bryts om du tar bort dem eller återställer dem till utkast. Vi har lagt till stöd för att ställa in fokalpunkt för omslagsblocket. Dessutom förbättrade vi P2-hanteringen så att du kan skapa, dela och inaktivera inbjudningslänkar för P2-roller.

@@ -154,7 +154,6 @@ Language: nb_NO
     <string name="gutenberg_native_block_removed">Blokk fjernet</string>
     <string name="enter_your_site_address">Oppgi din eksisterende nettstedsadresse</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
-    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
     <string name="signup_magic_link_message">Vi har sendt deg en registreringslenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
     <string name="enter_account_info_for_site">Oppgi din kontoinformasjon for %1$s.</string>
@@ -747,8 +746,6 @@ Language: nb_NO
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
     <string name="exit">gå ut</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
-    <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
-    <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
@@ -788,7 +785,6 @@ Language: nb_NO
     <string name="notification_new_site_creation_failed">Det oppsto et problem</string>
     <string name="notification_new_site_creation_title">Lag nettsted</string>
     <string name="new_site_creation_create_site_button">Lag nettsted</string>
-    <string name="new_site_creation_search_domain_input_hint">Søk domener</string>
     <string name="new_site_creation_domain_header_subtitle">Dette er der folk vil finne deg på nettet.</string>
     <string name="new_site_creation_empty_domain_list_message">Ingen tilgjengelige adresser passet til ditt søk</string>
     <string name="site_creation_error_generic_subtitle">Feil ved kommunkasjonen med server, vennligst prøv igjen</string>

@@ -3,12 +3,9 @@ package org.wordpress.android.ui.gif
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
-import android.widget.TextView
-import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.MediaPickerThumbnailBinding
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.getDistinct
@@ -53,13 +50,12 @@ class GifMediaViewHolder(
 ) : LifecycleOwnerViewHolder<GifMediaViewModel>(itemView) {
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
-    private val thumbnailView: ImageView = itemView.image_thumbnail
-    private val selectionNumberTextView: TextView = itemView.text_selection_count
+    private val binding = MediaPickerThumbnailBinding.bind(itemView)
 
     private var mediaViewModel: GifMediaViewModel? = null
 
     init {
-        thumbnailView.apply {
+        binding.imageThumbnail.apply {
             layoutParams.width = thumbnailViewDimensions.width
             layoutParams.height = thumbnailViewDimensions.height
 
@@ -91,7 +87,7 @@ class GifMediaViewHolder(
         updateThumbnailOnSelectionChange(isSelected = isSelected, animated = false)
 
         // When the [isSelected] property changes later, update the selection number and scale the thumbnail
-        mediaViewModel?.isSelected?.observe(this, Observer {
+        mediaViewModel?.isSelected?.observe(this, {
             val selected = it ?: false
 
             updateSelectionIndicatorOnSelectionChange(isSelected = selected, animated = true)
@@ -99,20 +95,20 @@ class GifMediaViewHolder(
         })
 
         // Update selection number text and observe later changes
-        selectionNumberTextView.text = mediaViewModel?.selectionNumber?.value?.toString() ?: ""
-        mediaViewModel?.selectionNumber?.getDistinct()?.observe(this, Observer {
-            selectionNumberTextView.text = it?.toString() ?: ""
+        binding.textSelectionCount.text = mediaViewModel?.selectionNumber?.value?.toString() ?: ""
+        mediaViewModel?.selectionNumber?.getDistinct()?.observe(this, {
+            binding.textSelectionCount.text = it?.toString() ?: ""
         })
 
-        thumbnailView.contentDescription = mediaViewModel?.title
-        imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
+        binding.imageThumbnail.contentDescription = mediaViewModel?.title
+        imageManager.load(binding.imageThumbnail, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
     }
 
     private fun updateSelectionIndicatorOnSelectionChange(isSelected: Boolean, animated: Boolean) {
         // The `isSelected` here changes the color of the text. It will be blue when selected.
-        selectionNumberTextView.isSelected = isSelected
+        binding.textSelectionCount.isSelected = isSelected
         if (!isMultiSelectEnabled) {
-            selectionNumberTextView.visibility = if (isSelected) {
+            binding.textSelectionCount.visibility = if (isSelected) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -122,12 +118,12 @@ class GifMediaViewHolder(
         if (animated) {
             if (!isMultiSelectEnabled) {
                 if (isSelected) {
-                    AniUtils.scaleIn(selectionNumberTextView, MEDIUM)
+                    AniUtils.scaleIn(binding.textSelectionCount, MEDIUM)
                 } else {
-                    AniUtils.scaleOut(selectionNumberTextView, MEDIUM)
+                    AniUtils.scaleOut(binding.textSelectionCount, MEDIUM)
                 }
             } else {
-                AniUtils.startAnimation(selectionNumberTextView, R.anim.pop)
+                AniUtils.startAnimation(binding.textSelectionCount, R.anim.pop)
             }
         }
     }
@@ -139,7 +135,7 @@ class GifMediaViewHolder(
         val scaleStart = if (isSelected) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
         val scaleEnd = if (scaleStart == THUMBNAIL_SCALE_SELECTED) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
 
-        with(thumbnailView) {
+        with(binding.imageThumbnail) {
             if (animated) {
                 AniUtils.scale(this, scaleStart, scaleEnd, AniUtils.Duration.SHORT)
             } else {

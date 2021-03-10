@@ -574,8 +574,8 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart() {
-        quickStartRepository.startQuickStart()
+    fun startQuickStart(newSiteLocalID: Int) {
+        quickStartRepository.startQuickStart(newSiteLocalID)
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {

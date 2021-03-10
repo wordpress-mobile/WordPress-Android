@@ -1,112 +1,69 @@
 <ar>
-16.7:
-- يمكن لعملاء Jetpack الآن استعادة موقع أو تنزيل نسخة احتياطية أو إجراء فحص والبحث عن التهديدات وإصلاحها
-- تحديثات متنوعة على محرِّر المكوِّن، بما في ذلك القدرة على تعيين رموز إرساء في مكوِّن العنوان
-- عامل تصفية جديد للمقالات غير المقروءة والقدرة على وضع علامة على المقالات بوصفها مرئية/غير مرئية في القارئ
-- النطاقات الفرعية .blog متاحة الآن
+16.8:
+The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
 </ar>
+<de-DE>
+16.8:
+Die neuesten Updates für die WordPress Android-App sind da. Wir haben die Funktionalität veröffentlichter Startseiten verbessert und sichergestellt, dass Löschen oder ein Zurücksetzen in Entwurfsform nicht zum Absturz deiner Website führen. Im Cover-Block wird nun das Setzen eines Fokuspunkts unterstützt. Außerdem haben wir die P2-Verwaltung erweitert, sodass du jetzt Einladungs-Links für P2-Rollen generieren, teilen und deaktivieren kannst.
+</de-DE>
 <en-US>
-16.7:
-- Jetpack customers can now restore a site or download a backup, scan, and fix threats
-- Various block editor updates, including the ability to set anchors in the Heading block
-- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
-- .blog subdomains now available
+16.8:
+The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
 </en-US>
 <es-ES>
-16.7:
-- Ahora, los clientes de Jetpack pueden restaurar un sitio o descargar una copia de seguridad, explorarlo y corregir fallos de seguridad
-- Varias actualizaciones del editor de bloques, incluyendo la capacidad de establecer anclajes en el bloque de encabezado
-- Nuevo filtro de entradas no leidas y la capacidad de marcar las entradas como vistas/no vistas en el Lector
-- Ahora están disponibles los subdominios «.blog»
+16.8:
+Ya están aquí las últimas actualizaciones de la aplicación Android para WordPress. Hemos mejorado la funcionalidad de las páginas de inicio publicadas, garantizando que borrarlas o volverlas de nuevo a su forma de borrador no romperá tu sitio. Hemos añadido compatibilidad para establecer el punto focal del bloque de fondo. Además, hemos mejorado la gestión de P2, para que puedas generar, compartir y desactivar los enlaces de invitación para los perfiles de P2.
 </es-ES>
 <fr-CA>
-16.7 :
-- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
-- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
-- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
-- Sous-domaines .blog désormais disponibles
+16,8 :
+Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
 </fr-CA>
 <fr-FR>
-16.7 :
-- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
-- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
-- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
-- Sous-domaines .blog désormais disponibles
+16,8 :
+Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
 </fr-FR>
 <iw-IL>
-16.7:
-- לקוחות של Jetpack יכולים כעת לשחזר אתר או להוריד גיבוי, לסרוק את האתר ולתקן איומים
-- מספר עדכונים בעורך הבלוקים, כולל יכולת להגדיר נקודות עיגון בבלוק הכותרת
-- מסנן חדש של פוסטים שלא נקראו ויכולת לסמן פוסטים כ'נקרא' או כ'לא נקרא' ב-Reader
-- דומיינים משנה של ‎.blog זמינים כעת
+16.8:
+העדכונים האחרונים לאפליקציה של WordPress ב-Android כבר כאן. שיפרנו את הפונקציונליות של עמודי בית שפורסמו כדי לוודא שמחיקה שלהם או שחזור שלהם למצב טיוטה לא יהרסו את האתר. הוספנו תמיכה בהגדרה של נקודת מוקד בבלוק הכיסוי. בנוסף, שיפרנו את יכולת הניהול של P2 כדי שתהיה לך אפשרות ליצור, לשתף ולהשבית קישורי הזמנה לתפקידים של P2.
 </iw-IL>
 <id>
-16.7:
-- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
-- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
-- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
-- Subdomain .blog sudah tersedia
+16.8:
+Ini adalah pembaruan paling mutakhir untuk aplikasi Android WordPress. Kami meningkatkan fungsi halaman situs yang diposkan sehingga menjamin bahwa menghapus atau mengembalikannya ke formulir konsep tidak akan merusak situs Anda.  Kami menambahkan dukungan untuk mengatur titik fokus blok Sampul. Selain itu, kami meningkatkan pengelolaan P2 sehingga Anda dapat membuat, membagikan, dan menonaktifkan tautan undangan untuk peran P2.
 </id>
 <it-IT>
-16.7:
-- I clienti di Jetpack possono ora ripristinare un sito o un scaricare un backup, scansionare e risolvere le minacce
-- Vari aggiornamenti dell'editor a blocchi, inclusa la possibilità di impostare le ancore nel blocco Titolo
-- Nuovo filtro di articoli non letti e possibilità di contrassegnare gli articoli come letti/non letti nel Reader
-- Sono ora disponibili i sottodomini .blog
+16.8:
+Ecco gli ultimi aggiornamenti all'app per Android di WordPress. Abbiamo migliorato la funzionalità delle homepage pubblicate, assicurando che l'eliminazione o il recupero nel modulo delle bozze non comprometta il tuo sito. Abbiamo aggiunto il supporto per le impostazioni del punto focale del blocco Copertina. Inoltre, abbiamo migliorato la gestione di P2, in modo da poter generare, condividere e disabilitare i link di invito per i ruoli P2.
 </it-IT>
 <ja-JP>
-16.7:
-- Jetpack をご利用のお客様は、サイトの復元やバックアップのダウンロード、スキャン、脅威の修正を実行できるようになりました
-- 見出しブロックにアンカーを設定する機能など、ブロックエディターの各種更新
-- 未読投稿の新しいフィルターと、リーダーで投稿に既読 / 未読のマークを付ける機能
-- .blog サブドメインが利用可能に
+16.8:
+WordPress Android アプリの最新の更新プログラムはこちらです。 公開ホームページの機能を改善し、削除したり下書きフォームに戻したりしてもサイトが壊れないようにしました。 カバーブロックの焦点を設定するサポートを追加しました。 また、P2権限グループに対する招待リンクを生成、共有、無効化できるように、P2管理を強化しました。
 </ja-JP>
 <ko-KR>
-16.7:
-- 이제 젯팩 고객이 사이트를 복원하거나 백업을 다운로드하고, 위협을 스캔 및 해결할 수 있습니다.
-- 헤딩요소 블록에 앵커를 설정하는 기능을 포함하여 블록 편집기의 다양한 기능 업데이트
-- 새로운 읽지 않은 글 필터 및 리더에 글을 읽음/안 읽음으로 표시하는 기능
-- 이제 .blog를 하위 도메인으로 사용 가능
+16.8:
+최근에 WordPress Android 앱을 업데이트했습니다. 발행된 홈페이지를 삭제하거나 임시글 양식으로 되돌려도 사이트가 중단되지 않도록 기능을 개선했습니다. 커버 블록 초점 설정에 대한 지원을 추가했습니다. 또한, P2 역할에 대한 초대 링크를 생성하고, 공유하고, 비활성화할 수 있도록 P2 관리를 개선했습니다.
 </ko-KR>
 <nl-NL>
-16.7:
-- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
-- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
-- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
-- .blog subdomeinen nu beschikbaar
+16.8:
+De nieuwste updates voor de WordPress Android app zijn hier. We hebben de functionaliteit van gepubliceerde homepages verbeterd, zodat het verwijderen of terugzetten naar conceptvorm je site niet zal vernielen. We hebben ondersteuning toegevoegd voor het instellen van het Cover blok focus punt. Bovendien hebben we het P2 beheer verbeterd, zodat je uitnodigingslinks voor P2 rollen kunt aanmaken, delen en uitschakelen.
 </nl-NL>
 <ru-RU>
-6.7:
-- Пользователи Jetpack теперь могут восстанавливать сайт или скачивать резервную копию, проверять и устранять угрозы.
-- Различные обновления редактора блоков, включая возможность устанавливать якоря в блоке заголовка.
-- Новый фильтр непрочитанных сообщений и возможность отмечать сообщения как (не)прочитанные в Чтиве
-- Теперь доступны поддомены .blog
+16.8:
+Последние обновления приложения WordPress для Android --
+Мы улучшили функциональность опубликованных домашних страниц, гарантируя, что их удаление или возврат к черновику не нарушит работу вашего сайта. Мы добавили поддержку настройки фокуса блока обложки. Кроме того, мы улучшили управление P2, так что вы можете создавать, публиковать и отключать пригласительные ссылки для ролей P2.
 </ru-RU>
 <sv-SE>
-16.7:
-- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
-- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
-- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
-- Nu går det att välja underdomäner under .blog
+16.8:
+De senaste uppdateringarna av Android-appen WordPress är här. Vi har förbättrat funktionen för publicerade hemsidor, så att din webbplats inte bryts om du tar bort dem eller återställer dem till utkast. Vi har lagt till stöd för att ställa in fokalpunkt för omslagsblocket. Dessutom förbättrade vi P2-hanteringen så att du kan skapa, dela och inaktivera inbjudningslänkar för P2-roller.
 </sv-SE>
 <tr-TR>
-16.7:
-- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
-- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
-- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
-- .blog alt alan adları artık kullanılabilir
+16.8:
+WordPress Android uygulamasının en son güncellemeleri burada. Yayınlanan ana sayfaların işlevselliğini geliştirerek bunları silmenin veya taslak forma geri döndürmenin sitenizi bozmamasını sağladık. Manşet bloğu odak noktasını ayarlamak için destek ekledik. Ayrıca P2 yönetimini geliştirdik, böylece P2 rolleri için davet bağlantıları oluşturabilir, paylaşabilir ve devre dışı bırakabilirsiniz.
 </tr-TR>
 <zh-CN>
-16.7：
-- Jetpack 客户现在可以恢复站点或者下载备份、扫描和修复威胁
-- 一些区块编辑器更新，包括能够在标题区块中设置锚
-- 添加新的未读文章过滤器，并且能够在阅读器中将文章标记为“已读”/“未读”
-- .blog 子域现已可用
+16.8：
+这是 WordPress Android 应用程序的最新更新。 我们改进了已发布主页的功能，确保将其删除或还原为草稿形式不会破坏您的站点。 我们增加了对设置“封面区块”焦点的支持。 此外，我们还增强了 P2 管理，以便您可以对 P2 角色的邀请链接执行生成、共享和禁用等操作。
 </zh-CN>
 <zh-TW>
-16.7：
-- Jetpack 顧客現在可以還原網站或下載備份、掃描與修正威脅
-- 多種區塊編輯器更新，包括在標題區塊設定錨點的功能
-- 新的未讀文章篩選功能，且可以在閱讀器中將文章標註為已看過/未看過
-- 已可使用 .blog 子網域
+16.8:
+以下是 WordPress Android 應用程式的最新更新。 我們改善了已發表首頁的功能，現在刪除已發表首頁或將其還原到草稿形式不會破壞整個網站。 我們為設定封面區塊焦點新增了支援。 另外，我們增強了 P2 管理，現在你可以產生、分享和停用 P2 角色的邀請連結。
 </zh-TW>

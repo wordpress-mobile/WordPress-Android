@@ -18,14 +18,14 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
         assertEquals(sourceTest, output);
     }
 
-    public void testNonBlacklistedUrl1() {
+    public void testNonDenylistedUrl1() {
         String sourceTest = "http://test.com";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         String expected = "<a href=\"http://test.com\">http://test.com</a>";
         assertEquals(expected, output);
     }
 
-    public void testNonBlacklistedUrl2() {
+    public void testNonDenylistedUrl2() {
         String sourceTest = "http://test.com http://test.com";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         String expected =
@@ -33,7 +33,7 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
         assertEquals(expected, output);
     }
 
-    public void testNonBlacklistedUrl3() {
+    public void testNonDenylistedUrl3() {
         String sourceTest = "http://test.com\nhttp://test.com";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         String expected =
@@ -41,26 +41,26 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
         assertEquals(expected, output);
     }
 
-    public void testBlacklistedUrl1() {
+    public void testDenylistedUrl1() {
         String sourceTest = "http://youtube.com/watch?test";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         assertEquals(sourceTest, output);
     }
 
-    public void testBlacklistedUrlIgnoreCase1() {
+    public void testDenylistedUrlIgnoreCase1() {
         String sourceTest = "http://youtube.com/WATCH?test";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         assertEquals(sourceTest, output);
     }
 
-    public void testBlacklistedUrlKickStarter1() {
+    public void testDenylistedUrlKickStarter1() {
         String sourceTest = "testing https://www.kickstarter.com/projects/583173617/raspi-boy-retro-"
                             + "handheld-emulation-console-electro ponies";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         assertEquals(sourceTest, output);
     }
 
-    public void testBlacklistedUrlKickStarter2() {
+    public void testDenylistedUrlKickStarter2() {
         String sourceTest = "testing http://kck.st/2gNq7KK ponies";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         assertEquals(sourceTest, output);

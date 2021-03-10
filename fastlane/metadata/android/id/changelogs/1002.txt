@@ -1,5 +1,0 @@
-16.7:
-- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
-- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
-- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
-- Subdomain .blog sudah tersedia

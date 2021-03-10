@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-19 17:24:38+0000
+Translation-Revision-Date: 2021-03-04 23:23:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Lösen</string>
+    <string name="reader_title_interests">Themen folgen</string>
+    <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
+    <string name="stories_intro_main_subtitle">Eine neue Möglichkeit, ansprechende Inhalte auf deiner Website zu erstellen und zu veröffentlichen.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Ausblenden</string>
+    <string name="threat_fix_all_status_success_message_plural">Bedrohungen wurden erfolgreich behoben.</string>
+    <string name="scan_fixing_threats_description_plural">Wir arbeiten im Hintergrund daran, diese Bedrohungen zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
+    <string name="gutenberg_native_edit_focal_point">Fokuspunkt bearbeiten</string>
+    <string name="new_site_creation_search_domain_example">beispiel.com</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Tippe zweimal, um das Bottom Sheet zu öffnen und das Bild zu bearbeiten, auszutauschen oder zu löschen</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Tippe zweimal, um das Action Sheet zu öffnen und das Bild zu bearbeiten, auszutauschen oder zu löschen</string>
+    <string name="new_site_creation_search_domain_input_hint">Gib einen Namen für deine Website ein</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Alle Aufgaben abgeschlossen&lt;/b>&lt;br/>Du wirst nun mehr Personen erreichen. Gute Arbeit!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Alle Aufgaben abgeschlossen&lt;/b>&lt;br/>Du hast deine Website angepasst. Gut gemacht!</string>
+    <string name="quick_start_card_menu_hide">Vorerst ausblenden</string>
+    <string name="magic_link_not_meaning_to_create_account">Du wolltest kein neues Konto erstellen? Gehe zurück und gib deine E-Mail-Adresse noch einmal ein.</string>
+    <string name="invite_links_disable_dialog_message">Wenn dieser Einladungslink deaktiviert ist, kann ihn niemand verwenden, um deinem Team beizutreten. Bist du dir sicher?</string>
+    <string name="invite_links_disable_dialog_title">Einladungslink deaktivieren</string>
+    <string name="invite_links_bad_format_response">Ungültige Antwort erhalten</string>
+    <string name="invite_links_null_response">Keine Antwort erhalten</string>
+    <string name="invite_links_cannot_get_role_data_error">Beim Abrufen von Daten für Rolle %1$s ist ein Fehler aufgetreten</string>
+    <string name="invite_links_cannot_get_roles_error">Beim Abrufen von Rollen ist ein Fehler aufgetreten</string>
+    <string name="invite_links_generic_get_data_error">Unbekannter Fehler beim Abrufen von Daten zu Einladungs-Links</string>
+    <string name="invite_links_helper_text">Verwende diesen Link, um deine Teammitglieder einzuladen. Jeder, der diese URL besucht, kann sich bei deiner Organisation registrieren, auch wenn er oder sie den Link von jemand anderem erhalten hat. Teile ihn also nur mit vertrauenswürdigen Personen.</string>
+    <string name="invite_links_section_title">Einladungslink</string>
+    <string name="invite_links_expire_date">Läuft ab %1$s</string>
+    <string name="invite_links_disable_invite_link">Einladungslink deaktivieren</string>
+    <string name="invite_links_share_invite_link">Einladungs-Link teilen</string>
+    <string name="invite_links_generate">Neuen Link generieren</string>
+    <string name="invite_links_get_status_retry">Link-Status aktualisieren</string>
+    <string name="threats_found_plural">Bedrohungen gefunden</string>
+    <string name="threats_found_singular">Bedrohung gefunden</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scan abgeschlossen&lt;/b> &lt;br>&lt;/br> Keine Bedrohungen gefunden</string>
+    <string name="disable">Deaktivieren</string>
+    <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
     <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
+    <string name="quick_start_card_menu_unpin">Dies lösen</string>
     <string name="quick_start_list_view_site_title">Besuche deine Website</string>
     <string name="quick_start_list_upload_icon_subtitle">Füge ein Website-Icon hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_list_follow_site_subtitle">Entdecke und folge Websites, die dich inspirieren.</string>
@@ -32,8 +66,6 @@ Language: de
     <string name="backup_item_content_hint">(enthält keine Themes, Plugins und Uploads)</string>
     <string name="backup_item_contents">WP-content-Verzeichnis</string>
     <string name="backup_item_roots">WordPress-Root</string>
-    <string name="backup_download_progress_action_button_content_description">Button „Lass mich wissen, wenn du fertig bist“</string>
-    <string name="backup_download_progress_action_button">Lass mich wissen, wenn du fertig bist!</string>
     <string name="backup_download_details_choose_items_header">In diesem Download enthaltene Elemente</string>
     <string name="gutenberg_native_uploading">Wird hochgeladen …</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Wiederverwendbare Blöcke können auf WordPress für iOS nicht bearbeitet werden</string>
@@ -61,13 +93,11 @@ Language: de
     <string name="threat_status_fixed">Fixiert</string>
     <string name="threat_found_header">Gefunden</string>
     <string name="scan_here_to_help">hier, um zu helfen</string>
-    <string name="scan_idle_with_threats_description">Beim Scan wurden %1s mögliche Bedrohungen bei %2s gefunden. Prüfe diese bitte unten und führe die erforderliche Aktion aus oder tippe auf den Button „Alle beheben“. Wir sind %3$s, wenn du uns brauchst.</string>
     <string name="scan_idle_manual_scan_description">Um deine Website noch einmal zu prüfen, führe einen manuellen Scan aus oder warte, bis deine Website heute zu einem späteren Zeitpunkt von Jetpack gescannt wird.</string>
     <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
-    <string name="scan_fixing_threats_description">Wir arbeiten im Hintergrund daran, diese Bedrohungen zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_scanning_description">Wir werden dir eine Benachrichtigung schicken, sobald der Scan abgeschlossen ist. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
-    <string name="scan_fixing_threats_title">Bedrohungen werden behoben</string>
+    <string name="scan_fixing_threats_description_singular">Wir arbeiten im Hintergrund daran, die Bedrohung zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan konnte einen Scan deiner Website ausführen. Schau bitte nach, ob deine Website erreichbar ist. Wenn ja, versuche es erneut. Wenn sie nicht erreichbar ist oder wenn mit Jetpack Scan weiterhin Probleme auftreten, wende dich bitte an unser Support-Team.</string>
     <string name="scan_request_failed_title">Etwas ist schiefgelaufen</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Erstellung eines Backups der Website</string>
@@ -107,7 +137,6 @@ Language: de
     <string name="web_preview_mobile">Mobil</string>
     <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
     <string name="quick_start_card_menu_remove">Nicht erneut anzeigen</string>
-    <string name="quick_start_card_menu_hide">Ausblenden</string>
     <string name="quick_start_dialog_review_pages_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
     <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
     <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
@@ -123,9 +152,8 @@ Language: de
     <string name="reader_marked_post_as_unseen">Als nicht gesehen markiert</string>
     <string name="reader_marked_post_as_seen">Beitrag als gesehen markiert</string>
     <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
-    <string name="threat_fix_all_status_success_message">Bedrohungen wurden erfolgreich behoben.</string>
     <string name="threat_fix_all_error_message">Fehler beim Beheben von Bedrohungen. Bitte kontaktiere den Support.</string>
-    <string name="threat_fix_all_warning_message">Bitte bestätige, dass du %s aktive Bedrohungen beheben möchtest.</string>
+    <string name="threat_fix_all_status_success_message_singular">Die Bedrohung wurde erfolgreich behoben.</string>
     <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
     <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
@@ -164,6 +192,7 @@ Language: de
     <string name="backup_download_progress_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
     <string name="backup_download_progress_description_with_two_parameters">Wir erstellen ein herunterladbares Backup deiner Website vom %1$s %2$s.</string>
     <string name="backup_download_progress_header">Wir erstellen momentan ein herunterladbares Backup deiner Website</string>
+    <string name="backup_download_progress_footnote">Du brauchst nicht zu warten. Wir teilen dir mit, wenn dein Backup fertig ist.</string>
     <string name="backup_download_progress_page_title">Backup herunterladen</string>
     <string name="backup_download_generic_failure">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="backup_download_another_download_running">Ein anderer Download läuft gerade.</string>
@@ -204,14 +233,13 @@ Language: de
     <string name="threat_item_header_vulnerable_plugin">Gefährdetes Plugin: %s (Version %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: bösartiges Codemuster</string>
     <string name="threat_item_header_database_threat">Datenbankbedrohung %s</string>
-    <string name="scan_in_few_seconds">in wenigen Sekunden</string>
     <string name="scan_this_site">diese Website</string>
-    <string name="scan_in_hours_ago">vor %s Stunden</string>
-    <string name="scan_in_minutes_ago">vor %s Minuten</string>
-    <string name="threats_found">Bedrohungen gefunden</string>
     <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
     <string name="threat_item_header_infected_core_file">%s: infizierte Core-Datei</string>
     <string name="scan_idle_last_scan_description">Der letzte Jetpack Scan wurde ausgeführt am %s. Dabei wurden keine Risiken festgestellt. %s</string>
+    <string name="scan_in_few_seconds">vor einigen Sekunden</string>
+    <string name="scan_in_hours_ago">vor %s Stunde(n)</string>
+    <string name="scan_in_minutes_ago">vor %s Minute(n)</string>
     <string name="backup">Backup</string>
     <string name="scan_now">Jetzt scannen</string>
     <string name="scan_again">Erneut scannen</string>
@@ -229,7 +257,6 @@ Language: de
     <string name="activity_log_date_range_filter_label_content_description">Datumsbereich-Filter</string>
     <string name="activity_log_active_filter_empty_title">Keine passenden Ereignisse gefunden</string>
     <string name="activity_log_active_filter_empty_subtitle">Versuche, deinen Zeitraum oder Aktivitätsfilter zu ändern</string>
-    <string name="rewind">Wiederherstellen</string>
     <string name="backup_item_media_uploads">Medien-Uploads</string>
     <string name="backup_item_themes">WordPress-Themes</string>
     <string name="backup_item_plugins">WordPress-Plugins</string>
@@ -354,7 +381,6 @@ Language: de
     <string name="stories_intro_title_first">Storys sind jetzt für alle verfügbar</string>
     <string name="stories_intro_image_caption_second">Beispieltitel für Story</string>
     <string name="stories_intro_image_caption_first">So erstellst du einen Story-Beitrag</string>
-    <string name="stories_intro_main_subtitle">Du hast frühzeitig Zugriff auf Story-Beiträge und wir würden uns freuen, wenn du sie ausprobierst.</string>
     <string name="stories_intro_main_title">Neu: Story-Beiträge</string>
     <string name="mlp_notice_blank_page_created">Leere Seite erstellt</string>
     <string name="mlp_notice_page_created">Seite erstellt</string>
@@ -490,7 +516,6 @@ Language: de
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="continue_terms_of_service_text">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
-    <string name="signup_confirmation_magic_link_message">Wir senden dir einen Anmeldelink per E-Mail, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_confirmation_message">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_magic_link_message">Wir haben dir einen Anmeldelink per E-Mail gesendet, um dein neues WordPress.com-Konto zu erstellen. Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von WordPress.com erhalten hast.</string>
     <string name="enter_account_info_for_site">Gib deine Kontodetails für %1$s ein.</string>
@@ -1136,8 +1161,6 @@ Language: de
     <string name="exit">beenden</string>
     <string name="quick_start_sites">Nächste Schritte</string>
     <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
-    <string name="quick_start_sites_type_grow">Erweitere deinen Nutzerkreis</string>
-    <string name="quick_start_sites_type_customize">Deine Website anpassen</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_view_site_message">Genieße dein fertiges Produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Hochladen eines Website-Icons</string>
@@ -1171,7 +1194,6 @@ Language: de
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_domain_header_subtitle">Hier wirst du im Internet gefunden.</string>
-    <string name="new_site_creation_search_domain_input_hint">Domains durchsuchen</string>
     <string name="new_site_creation_create_site_button">Website erstellen</string>
     <string name="notification_new_site_creation_title">Website erstellen</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Wir erstellen deine neue Website.</string>
