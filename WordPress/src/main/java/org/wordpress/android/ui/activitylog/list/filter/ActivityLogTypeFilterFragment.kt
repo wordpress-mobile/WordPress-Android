@@ -13,10 +13,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
-import kotlinx.android.synthetic.main.progress_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogTypeFilterFragmentBinding
+import org.wordpress.android.databinding.ProgressLayoutBinding
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Error
@@ -38,6 +38,7 @@ private const val ACTIONS_MENU_GROUP = 1
  */
 private const val PRIMARY_ACTION_ORDER = 2
 private const val SECONDARY_ACTION_ORDER = 1
+
 /**
  * Always show the primary action no matter the screen size.
  */
@@ -63,39 +64,41 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar()
-        initRecyclerView()
-        initViewModel()
+        with(ActivityLogTypeFilterFragmentBinding.bind(view)) {
+            initToolbar()
+            initRecyclerView()
+            initViewModel()
+        }
     }
 
-    private fun initToolbar() {
-        toolbar_main.navigationIcon = ColorUtils.applyTintToDrawable(
-                toolbar_main.context, R.drawable.ic_close_white_24dp,
-                toolbar_main.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+    private fun ActivityLogTypeFilterFragmentBinding.initToolbar() {
+        toolbarMain.navigationIcon = ColorUtils.applyTintToDrawable(
+                toolbarMain.context, R.drawable.ic_close_white_24dp,
+                toolbarMain.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
         )
-        toolbar_main.setNavigationContentDescription(R.string.close_dialog_button_desc)
-        toolbar_main.setNavigationOnClickListener { dismiss() }
+        toolbarMain.setNavigationContentDescription(R.string.close_dialog_button_desc)
+        toolbarMain.setNavigationOnClickListener { dismiss() }
     }
 
-    private fun initRecyclerView() {
-        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+    private fun ActivityLogTypeFilterFragmentBinding.initRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
+    private fun ActivityLogTypeFilterFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@ActivityLogTypeFilterFragment, viewModelFactory)
                 .get(ActivityLogTypeFilterViewModel::class.java)
 
         val parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(ActivityLogViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-            uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisibility)
-            uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
-            uiHelpers.updateVisibility(progress_layout, uiState.loadingVisibility)
+            uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisibility)
+            uiHelpers.updateVisibility(recyclerView, uiState.contentVisibility)
+            uiHelpers.updateVisibility(progress.root, uiState.loadingVisibility)
             refreshMenuItems(uiState)
             when (uiState) {
-                is FullscreenLoading -> refreshLoadingScreen(uiState)
+                is FullscreenLoading -> progress.refreshLoadingScreen(uiState)
                 is Error -> refreshErrorScreen(uiState)
                 is Content -> refreshContentScreen(uiState)
             }
@@ -124,24 +127,24 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         )
     }
 
-    private fun refreshLoadingScreen(uiState: FullscreenLoading) {
-        uiHelpers.setTextOrHide(progress_text, uiState.loadingText)
+    private fun ProgressLayoutBinding.refreshLoadingScreen(uiState: FullscreenLoading) {
+        uiHelpers.setTextOrHide(progressText, uiState.loadingText)
     }
 
-    private fun refreshErrorScreen(uiState: Error) {
-        actionable_empty_view.image.setImageResource(uiState.image)
-        uiHelpers.setTextOrHide(actionable_empty_view.title, uiState.title)
-        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, uiState.subtitle)
-        uiHelpers.setTextOrHide(actionable_empty_view.button, uiState.buttonText)
-        actionable_empty_view.button.setOnClickListener { uiState.retryAction?.action?.invoke() }
+    private fun ActivityLogTypeFilterFragmentBinding.refreshErrorScreen(uiState: Error) {
+        actionableEmptyView.image.setImageResource(uiState.image)
+        uiHelpers.setTextOrHide(actionableEmptyView.title, uiState.title)
+        uiHelpers.setTextOrHide(actionableEmptyView.subtitle, uiState.subtitle)
+        uiHelpers.setTextOrHide(actionableEmptyView.button, uiState.buttonText)
+        actionableEmptyView.button.setOnClickListener { uiState.retryAction?.action?.invoke() }
     }
 
-    private fun refreshContentScreen(uiState: Content) {
-        (recycler_view.adapter as ActivityLogTypeFilterAdapter).update(uiState.items)
+    private fun ActivityLogTypeFilterFragmentBinding.refreshContentScreen(uiState: Content) {
+        (recyclerView.adapter as ActivityLogTypeFilterAdapter).update(uiState.items)
     }
 
-    private fun refreshMenuItems(uiState: ActivityLogTypeFilterViewModel.UiState) {
-        val menu = toolbar_main.menu
+    private fun ActivityLogTypeFilterFragmentBinding.refreshMenuItems(uiState: ActivityLogTypeFilterViewModel.UiState) {
+        val menu = toolbarMain.menu
         menu.removeGroup(ACTIONS_MENU_GROUP)
 
         if (uiState is Content) {
@@ -150,9 +153,9 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         }
     }
 
-    private fun addMenuItem(action: ActivityLogTypeFilterViewModel.Action, order: Int, showAlways: Boolean) {
+    private fun ActivityLogTypeFilterFragmentBinding.addMenuItem(action: ActivityLogTypeFilterViewModel.Action, order: Int, showAlways: Boolean) {
         val actionLabel = uiHelpers.getTextOfUiString(requireContext(), action.label)
-        toolbar_main.menu.add(ACTIONS_MENU_GROUP, Menu.NONE, order, actionLabel).let {
+        toolbarMain.menu.add(ACTIONS_MENU_GROUP, Menu.NONE, order, actionLabel).let {
             if (showAlways) {
                 it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             } else {
@@ -165,8 +168,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         }
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = ActivityLogTypeFilterAdapter(uiHelpers)
+    private fun ActivityLogTypeFilterFragmentBinding.initAdapter() {
+        recyclerView.adapter = ActivityLogTypeFilterAdapter(uiHelpers)
     }
 
     companion object {
