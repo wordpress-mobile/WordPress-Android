@@ -8,7 +8,10 @@ import androidx.test.espresso.ViewInteraction;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
@@ -57,9 +60,14 @@ public class MySitesPage {
     }
 
     public void gotoSiteSettings() {
-        onView(withId(R.id.row_settings))
-                .perform(scrollTo());
-        clickOn(R.id.row_settings);
+        if (isElementDisplayed(R.id.recycler_view)) {
+            // If My Site Improvements are enabled, we reach the item in a different way
+            onView(withId(R.id.recycler_view))
+                    .perform(actionOnItem(hasDescendant(withText(R.string.my_site_btn_site_settings)), click()));
+        } else {
+            onView(withText(R.string.my_site_btn_site_settings))
+                    .perform(scrollTo(), click());
+        }
     }
 
     public void clickBlogPosts() {
