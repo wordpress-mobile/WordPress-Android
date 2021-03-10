@@ -461,7 +461,7 @@ ENV["validate_translations"]="lintVanillaRelease"
   ]
 
   binary_imported_libraries = [
-    { name: "Gutenberg Native",   import_key: "gutenbergMobileVersion",   repository: "wordpress-mobile/gutenberg-mobile",   strings_file_path: "bundle/android/strings.xml" },
+    { name: "Gutenberg Native",   import_key: "gutenbergMobileVersion",   repository: "wordpress-mobile/gutenberg-mobile",   strings_file_path: "bundle/android/strings.xml", github_release_prefix: "v" },
   ]
 
   private_lane :send_strings_for_translation do | options |
@@ -497,7 +497,8 @@ ENV["validate_translations"]="lintVanillaRelease"
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path])
+        file_path: lib[:strings_file_path],
+        github_release_prefix: lib[:github_release_prefix])
 
       if download_path.nil?
         UI.error "Abort." unless UI.confirm("Can't download strings file for #{lib[:name]}. Do you want to continue?")
