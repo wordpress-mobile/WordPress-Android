@@ -280,7 +280,25 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         val tabs = data.firstOrNull { it is TabsItem } as? TabsItem
         return if (tabs != null) {
             if (tabLayout.tabCount == 0) {
-                setupTabs(tabs)
+                tabLayout.clearOnTabSelectedListeners()
+                tabLayout.removeAllTabs()
+                tabs.tabs.forEach { tabItem ->
+                    tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+                }
+                tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+                    override fun onTabReselected(tab: Tab) {
+                    }
+
+                    override fun onTabUnselected(tab: Tab) {
+                    }
+
+                    override fun onTabSelected(tab: Tab) {
+                        tabs.onTabSelected(tab.position)
+                        activity?.intent?.putExtra(SELECTED_TAB_KEY, tab.position)
+                    }
+                })
+                val selectedTab = activity?.intent?.getIntExtra(SELECTED_TAB_KEY, 0) ?: 0
+                tabLayout.getTabAt(selectedTab)?.select()
             } else if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
@@ -297,29 +315,5 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
             }
             data
         }
-    }
-
-    private fun StatsViewAllFragmentBinding.setupTabs(item: TabsItem) {
-        tabLayout.clearOnTabSelectedListeners()
-        tabLayout.removeAllTabs()
-        item.tabs.forEach { tabItem ->
-            tabLayout.addTab(tabLayout.newTab().setText(tabItem))
-        }
-
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabReselected(tab: Tab) {
-            }
-
-            override fun onTabUnselected(tab: Tab) {
-            }
-
-            override fun onTabSelected(tab: Tab) {
-                item.onTabSelected(tab.position)
-                activity?.intent?.putExtra(SELECTED_TAB_KEY, tab.position)
-            }
-        })
-
-        val selectedTab = activity?.intent?.getIntExtra(SELECTED_TAB_KEY, 0) ?: 0
-        tabLayout.getTabAt(selectedTab)?.select()
     }
 }
