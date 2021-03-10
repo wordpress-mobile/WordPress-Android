@@ -6,9 +6,24 @@ import org.wordpress.android.fluxc.model.MediaModel
 import kotlin.math.min
 
 private const val MAX_COLUMNS = 3
+private const val HEADER_LENGTH_THRESHOLD = 4
+private const val QUOTE_PREFIX = ">"
+private const val PREFORMATTED_QUOTE = "`"
 
 val String.wordCount: Int
     get() = replace("\n", " ").split(" ").size
+
+val String.isBigText: Boolean
+    get() = wordCount > HEADER_LENGTH_THRESHOLD
+
+val String.isWhitespace: Boolean
+    get() = length > 0 && trim().isEmpty()
+
+val String.isQuote: Boolean
+    get() = startsWith(QUOTE_PREFIX)
+
+val String.isPreformatted: Boolean
+    get() = startsWith(PREFORMATTED_QUOTE) && endsWith(PREFORMATTED_QUOTE)
 
 private val String.brForNewLines: String
     get() = this.replace("\n", "<br>")
@@ -18,6 +33,19 @@ val String.paragraphBlock: String
 
 val String.headingBlock: String
     get() = "<!-- wp:heading --><h2>$brForNewLines</h2><!-- /wp:heading -->"
+
+val String.quoteBlock: String
+    get() = """<!-- wp:quote --><blockquote class="wp-block-quote"><p>${substring(1).brForNewLines}</p>
+        |</blockquote><!-- /wp:quote -->""".trimMargin()
+
+val String.preformattedBlock: String
+    get() = """<!-- wp:preformatted --><pre class="wp-block-preformatted">
+    |${substring(1, length - 1).brForNewLines}</pre><!-- /wp:preformatted -->""".trimMargin()
+
+val String.spacerBlock: String
+    get() = """<!-- wp:spacer {"height":${30 * split("\n").size}} -->
+        |<div style="height:${30 * split("\n").size}px" aria-hidden="true" class="wp-block-spacer"></div>
+        |<!-- /wp:spacer -->""".trimMargin()
 
 fun imageBlock(image: MediaModel) =
         """<!-- wp:image {"id":${image.mediaId},"sizeSlug":"large"} --><figure class="wp-block-image size-large">

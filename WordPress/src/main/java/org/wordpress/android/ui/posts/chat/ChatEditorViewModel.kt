@@ -16,8 +16,6 @@ import java.lang.StringBuilder
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val HEADER_LENGTH_THRESHOLD = 4
-
 class ChatEditorViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -67,7 +65,11 @@ class ChatEditorViewModel @Inject constructor(
     private fun getContent(text: String, mediaList: List<MediaModel>): String {
         val content = StringBuilder()
         if (mediaList.isEmpty()) {
-            setTextContent(text, content)
+            if (text.isWhitespace) {
+                content.append(text.spacerBlock)
+            } else {
+                setTextContent(text, content)
+            }
         } else { // Media attached
             val images = mediaList.filter { !it.isVideo }
             val videos = mediaList.filter { it.isVideo }
@@ -94,11 +96,12 @@ class ChatEditorViewModel @Inject constructor(
         return content.toString()
     }
 
-    private fun setTextContent(text: String, content: StringBuilder) {
-        if (text.wordCount > HEADER_LENGTH_THRESHOLD) {
-            content.append(text.paragraphBlock)
-        } else {
-            content.append(text.headingBlock)
-        }
-    }
+    private fun setTextContent(text: String, content: StringBuilder) = content.append(
+            when {
+                text.isQuote -> text.quoteBlock
+                text.isPreformatted -> text.preformattedBlock
+                text.isBigText -> text.paragraphBlock
+                else -> text.headingBlock
+            }
+    )
 }
