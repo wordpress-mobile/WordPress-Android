@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +11,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.manual_feature_config_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -32,7 +32,7 @@ class ManualFeatureConfigFragment : DaggerFragment() {
 
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(ManualFeatureConfigViewModel::class.java)
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner, {
             it?.let { uiState ->
                 val adapter: FeatureAdapter
                 if (recycler_view.adapter == null) {
@@ -48,10 +48,8 @@ class ManualFeatureConfigFragment : DaggerFragment() {
                 layoutManager?.onRestoreInstanceState(recyclerViewState)
             }
         })
-        viewModel.restartAction.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                exitProcess(0)
-            }
+        viewModel.restartAction.observeEvent(viewLifecycleOwner, {
+            exitProcess(0)
         })
         viewModel.start()
     }

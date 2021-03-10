@@ -87,6 +87,7 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
@@ -183,147 +184,129 @@ class ImprovedMySiteFragment : Fragment(),
                 }
             }
         })
-        viewModel.onScrollTo.observe(viewLifecycleOwner, {
-            it?.applyIfNotHandled {
-                (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this, 0)
-            }
+        viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
+            (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
         })
-        viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { model ->
-                dialogViewModel.showDialog(requireActivity().supportFragmentManager,
-                        BasicDialogModel(
-                                model.tag,
-                                getString(model.title),
-                                getString(model.message),
-                                getString(model.positiveButtonLabel),
-                                model.negativeButtonLabel?.let { label -> getString(label) },
-                                model.cancelButtonLabel?.let { label -> getString(label) }
-                        ))
-            }
+        viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
+            dialogViewModel.showDialog(requireActivity().supportFragmentManager,
+                    BasicDialogModel(
+                            model.tag,
+                            getString(model.title),
+                            getString(model.message),
+                            getString(model.positiveButtonLabel),
+                            model.negativeButtonLabel?.let { label -> getString(label) },
+                            model.cancelButtonLabel?.let { label -> getString(label) }
+                    ))
         })
-        viewModel.onTextInputDialogShown.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { model ->
-                val inputDialog = TextInputDialogFragment.newInstance(
-                        getString(model.title),
-                        model.initialText,
-                        getString(model.hint),
-                        model.isMultiline,
-                        model.isInputEnabled,
-                        model.callbackId
-                )
-                inputDialog.setTargetFragment(this, 0)
-                inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
-            }
+        viewModel.onTextInputDialogShown.observeEvent(viewLifecycleOwner, { model ->
+            val inputDialog = TextInputDialogFragment.newInstance(
+                    getString(model.title),
+                    model.initialText,
+                    getString(model.hint),
+                    model.isMultiline,
+                    model.isInputEnabled,
+                    model.callbackId
+            )
+            inputDialog.setTargetFragment(this, 0)
+            inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
-        viewModel.onDynamicCardMenuShown.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { dynamicCardMenuModel ->
-                ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
-                        ?: DynamicCardMenuFragment.newInstance(
-                                dynamicCardMenuModel.cardType,
-                                dynamicCardMenuModel.isPinned
-                        ))
-                        .show(parentFragmentManager, dynamicCardMenuModel.id)
-            }
+        viewModel.onDynamicCardMenuShown.observeEvent(viewLifecycleOwner, { dynamicCardMenuModel ->
+            ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
+                    ?: DynamicCardMenuFragment.newInstance(
+                            dynamicCardMenuModel.cardType,
+                            dynamicCardMenuModel.isPinned
+                    ))
+                    .show(parentFragmentManager, dynamicCardMenuModel.id)
         })
-        viewModel.onNavigation.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { action ->
-                when (action) {
-                    is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-                    is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
-                    is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-                    is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
-                    is OpenCropActivity -> startCropActivity(action.imageUri)
-                    is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-                    is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
-                    is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
-                    is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
-                    is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
-                    is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
-                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
-                    is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
-                    is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
-                    is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
-                    is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
-                    is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                    is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
-                    is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
-                    is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-                    is AddNewStory ->
-                        ActivityLauncher.addNewStoryForResult(
-                                activity,
-                                action.site,
-                                action.source
-                        )
-                    is AddNewStoryWithMediaIds ->
-                        ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                                activity,
-                                action.site,
-                                action.source,
-                                action.mediaIds.toLongArray()
-                        )
-                    is AddNewStoryWithMediaUris ->
-                        ActivityLauncher.addNewStoryWithMediaUrisForResult(
-                                activity,
-                                action.site,
-                                action.source,
-                                action.mediaUris.toTypedArray()
-                        )
-                    is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { action ->
+            when (action) {
+                is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+                is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+                is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+                is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
+                is OpenCropActivity -> startCropActivity(action.imageUri)
+                is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+                is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
+                is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
+                is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
+                is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+                is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+                is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+                is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
+                is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
+                is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
+                is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
+                is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
+                is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
+                is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
+                is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+                is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+                is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
+                is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+                is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
+                is AddNewStory ->
+                    ActivityLauncher.addNewStoryForResult(
                             activity,
                             action.site,
-                            CTA_DOMAIN_CREDIT_REDEMPTION
+                            action.source
                     )
-                    is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-                }
-            }
-        })
-        viewModel.onSnackbarMessage.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { messageHolder ->
-                showSnackbar(messageHolder)
-            }
-        })
-        viewModel.onQuickStartMySitePrompts.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { activeTutorialPrompt ->
-                val message = quickStartUtils.stylizeThemedQuickStartPrompt(
-                        requireContext(),
-                        activeTutorialPrompt.shortMessagePrompt,
-                        activeTutorialPrompt.iconId
+                is AddNewStoryWithMediaIds ->
+                    ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                            activity,
+                            action.site,
+                            action.source,
+                            action.mediaIds.toLongArray()
+                    )
+                is AddNewStoryWithMediaUris ->
+                    ActivityLauncher.addNewStoryWithMediaUrisForResult(
+                            activity,
+                            action.site,
+                            action.source,
+                            action.mediaUris.toTypedArray()
+                    )
+                is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+                        activity,
+                        action.site,
+                        CTA_DOMAIN_CREDIT_REDEMPTION
                 )
-                showSnackbar(SnackbarMessageHolder(UiStringText(message)))
+                is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
             }
         })
-        viewModel.onMediaUpload.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { mediaModel ->
-                UploadService.uploadMedia(requireActivity(), mediaModel)
-            }
+        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
+            showSnackbar(messageHolder)
         })
-        dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
+        viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
+            val message = quickStartUtils.stylizeThemedQuickStartPrompt(
+                    requireContext(),
+                    activeTutorialPrompt.shortMessagePrompt,
+                    activeTutorialPrompt.iconId
+            )
+            showSnackbar(SnackbarMessageHolder(UiStringText(message)))
         })
-        dynamicCardMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { interaction -> viewModel.onQuickStartMenuInteraction(interaction) }
+        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner, { mediaModel ->
+            UploadService.uploadMedia(requireActivity(), mediaModel)
         })
-        viewModel.onUploadedItem.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { itemUploadedModel ->
-                when (itemUploadedModel) {
-                    is ItemUploadedModel.PostUploaded -> {
-                        uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                                activity,
-                                requireActivity().findViewById(R.id.coordinator), true, false,
-                                itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
-                        )
-                    }
-                    is ItemUploadedModel.MediaUploaded -> {
-                        uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
-                                activity,
-                                requireActivity().findViewById(R.id.coordinator), true,
-                                itemUploadedModel.media, itemUploadedModel.site, itemUploadedModel.errorMessage
-                        )
-                    }
+        dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, { interaction ->
+            viewModel.onDialogInteraction(interaction)
+        })
+        dynamicCardMenuViewModel.onInteraction.observeEvent(viewLifecycleOwner, { interaction ->
+            viewModel.onQuickStartMenuInteraction(interaction)
+        })
+        viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { itemUploadedModel ->
+            when (itemUploadedModel) {
+                is ItemUploadedModel.PostUploaded -> {
+                    uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                            activity,
+                            requireActivity().findViewById(R.id.coordinator), true, false,
+                            itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
+                    )
+                }
+                is ItemUploadedModel.MediaUploaded -> {
+                    uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                            activity,
+                            requireActivity().findViewById(R.id.coordinator), true,
+                            itemUploadedModel.media, itemUploadedModel.site, itemUploadedModel.errorMessage
+                    )
                 }
             }
         })

@@ -52,6 +52,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
@@ -154,52 +155,40 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
-        {
-            it.getContentIfNotHandled()?.let { uri ->
-                MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        uri.toString()
-                )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            }
+        viewModel.onNavigateToPreview.observeEvent(viewLifecycleOwner, { uri ->
+            MediaPreviewActivity.showPreview(
+                    requireContext(),
+                    null,
+                    uri.toString()
+            )
+            AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
         })
 
-        viewModel.onInsert.observe(viewLifecycleOwner, Observer
-        { event ->
-            event.getContentIfNotHandled()?.let { selectedUris ->
-                listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
-            }
+        viewModel.onInsert.observeEvent(viewLifecycleOwner, { selectedUris ->
+            listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
         })
 
-        viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { (icon, allowMultipleSelection) ->
-                listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
-            }
+        viewModel.onIconClicked.observeEvent(viewLifecycleOwner, { (icon, allowMultipleSelection) ->
+            listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
         })
 
-        viewModel.onShowPopupMenu.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { uiModel ->
-                val popup = PopupMenu(activity, uiModel.view.view)
-                for (popupMenuItem in uiModel.items) {
-                    val item = popup.menu
-                            .add(popupMenuItem.title.stringRes)
-                    item.setOnMenuItemClickListener {
-                        popupMenuItem.action()
-                        true
-                    }
+        viewModel.onShowPopupMenu.observeEvent(viewLifecycleOwner, { uiModel ->
+            val popup = PopupMenu(activity, uiModel.view.view)
+            for (popupMenuItem in uiModel.items) {
+                val item = popup.menu
+                        .add(popupMenuItem.title.stringRes)
+                item.setOnMenuItemClickListener {
+                    popupMenuItem.action()
+                    true
                 }
-                popup.show()
             }
+            popup.show()
         })
 
-        viewModel.onPermissionsRequested.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                when (this) {
-                    CAMERA -> requestCameraPermission()
-                    STORAGE -> requestStoragePermission()
-                }
+        viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
+            when (it) {
+                CAMERA -> requestCameraPermission()
+                STORAGE -> requestStoragePermission()
             }
         })
 

@@ -62,6 +62,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
@@ -234,24 +235,22 @@ class PostsListActivity : LocaleAwareActivity(),
         postListCreateMenuViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
-        postListCreateMenuViewModel.isBottomSheetShowing.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { isBottomSheetShowing ->
-                var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
-                if (createMenuFragment == null) {
-                    if (isBottomSheetShowing) {
-                        createMenuFragment = PostListCreateMenuFragment.newInstance()
-                        createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
-                    }
-                } else {
-                    if (!isBottomSheetShowing) {
-                        createMenuFragment as PostListCreateMenuFragment
-                        createMenuFragment.dismiss()
-                    }
+        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this, { isBottomSheetShowing ->
+            var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
+            if (createMenuFragment == null) {
+                if (isBottomSheetShowing) {
+                    createMenuFragment = PostListCreateMenuFragment.newInstance()
+                    createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
+                }
+            } else {
+                if (!isBottomSheetShowing) {
+                    createMenuFragment as PostListCreateMenuFragment
+                    createMenuFragment.dismiss()
                 }
             }
         })
 
-        postListCreateMenuViewModel.fabUiState.observe(this, Observer { fabUiState ->
+        postListCreateMenuViewModel.fabUiState.observe(this, { fabUiState ->
             val message = resources.getString(fabUiState.CreateContentMessageId)
 
             if (fabUiState.isFabTooltipVisible) {
@@ -264,7 +263,7 @@ class PostsListActivity : LocaleAwareActivity(),
             fab.contentDescription = message
         })
 
-        postListCreateMenuViewModel.createAction.observe(this, Observer { createAction ->
+        postListCreateMenuViewModel.createAction.observe(this, { createAction ->
             when (createAction) {
                 CREATE_NEW_POST -> viewModel.newPost()
                 CREATE_NEW_STORY -> viewModel.newStoryPost()
@@ -291,9 +290,9 @@ class PostsListActivity : LocaleAwareActivity(),
                 tabLayoutFadingEdge.visibility = authorSelectionVisibility
 
                 val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible)
+                        if (state.isAuthorFilterVisible) {
                             resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        else 0
+                        } else 0
                 tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
 
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
@@ -304,7 +303,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        viewModel.postListAction.observe(this, Observer { postListAction ->
+        viewModel.postListAction.observe(this, { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(
                         this@PostsListActivity,
@@ -315,20 +314,20 @@ class PostsListActivity : LocaleAwareActivity(),
                 )
             }
         })
-        viewModel.selectTab.observe(this, Observer { tabIndex ->
+        viewModel.selectTab.observe(this, { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
             }
         })
-        viewModel.scrollToLocalPostId.observe(this, Observer { targetLocalPostId ->
+        viewModel.scrollToLocalPostId.observe(this, { targetLocalPostId ->
             targetLocalPostId?.let {
                 postsPagerAdapter.getItemAtPosition(pager.currentItem)?.scrollToTargetPost(targetLocalPostId)
             }
         })
-        viewModel.snackBarMessage.observe(this, Observer {
+        viewModel.snackBarMessage.observe(this, {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
-        viewModel.previewState.observe(this, Observer {
+        viewModel.previewState.observe(this, {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                     this,
                     progressDialog,
@@ -336,13 +335,13 @@ class PostsListActivity : LocaleAwareActivity(),
                     uiHelpers
             )
         })
-        viewModel.dialogAction.observe(this, Observer {
+        viewModel.dialogAction.observe(this, {
             it?.show(this, supportFragmentManager, uiHelpers)
         })
-        viewModel.toastMessage.observe(this, Observer {
+        viewModel.toastMessage.observe(this, {
             it?.show(this)
         })
-        viewModel.postUploadAction.observe(this, Observer {
+        viewModel.postUploadAction.observe(this, {
             it?.let { uploadAction ->
                 handleUploadAction(
                         uploadAction,
@@ -353,34 +352,28 @@ class PostsListActivity : LocaleAwareActivity(),
                 )
             }
         })
-        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
-                if (fragment == null) {
-                    val prepublishingFragment = newInstance(
-                            site = site,
-                            isPage = editPostRepository.isPage,
-                            isStoryPost = false
-                    )
-                    prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
-                }
+        viewModel.openPrepublishingBottomSheet.observeEvent(this, {
+            val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
+            if (fragment == null) {
+                val prepublishingFragment = newInstance(
+                        site = site,
+                        isPage = editPostRepository.isPage,
+                        isStoryPost = false
+                )
+                prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
         })
 
-        viewModel.onFabClicked.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                postListCreateMenuViewModel.onFabClicked()
-            }
+        viewModel.onFabClicked.observeEvent(this, {
+            postListCreateMenuViewModel.onFabClicked()
         })
 
-        viewModel.onFabLongPressedForCreateMenu.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                postListCreateMenuViewModel.onFabLongPressed()
-            }
+        viewModel.onFabLongPressedForCreateMenu.observeEvent(this, {
+            postListCreateMenuViewModel.onFabLongPressed()
             Toast.makeText(fab.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
 
-        viewModel.onFabLongPressedForPostList.observe(this, Observer {
+        viewModel.onFabLongPressedForPostList.observe(this, {
             if (fab.isHapticFeedbackEnabled) {
                 fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
@@ -393,14 +386,14 @@ class PostsListActivity : LocaleAwareActivity(),
             snackbarSequencer.enqueue(
                     SnackbarItem(
                             SnackbarItem.Info(
-                                view = parent,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
+                                    view = parent,
+                                    textRes = holder.message,
+                                    duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = OnClickListener { holder.buttonAction() }
+                                        textRes = holder.buttonTitle,
+                                        clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
                             dismissCallback = { _, _ -> holder.onDismissAction() }
@@ -468,7 +461,7 @@ class PostsListActivity : LocaleAwareActivity(),
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
             toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
-            viewModel.viewLayoutTypeMenuUiState.observe(this, Observer { menuUiState ->
+            viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
                 menuUiState?.let {
                     updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
                     updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
@@ -528,7 +521,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+        viewModel.isSearchExpanded.observe(this, { isExpanded ->
             toggleViewLayoutMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
         })

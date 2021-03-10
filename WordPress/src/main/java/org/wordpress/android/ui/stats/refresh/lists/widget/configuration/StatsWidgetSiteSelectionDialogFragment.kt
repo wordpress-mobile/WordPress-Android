@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +13,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.stats_widget_site_selector.*
 import org.wordpress.android.R
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
@@ -37,14 +37,12 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
-        viewModel.sites.observe(this, Observer {
+        viewModel.sites.observe(this, {
             (requireDialog().recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
         })
-        viewModel.hideSiteDialog.observe(this, Observer {
-            it?.applyIfNotHandled {
-                if (dialog?.isShowing == true) {
-                    requireDialog().dismiss()
-                }
+        viewModel.hideSiteDialog.observeEvent(this, {
+            if (dialog?.isShowing == true) {
+                requireDialog().dismiss()
             }
         })
         viewModel.loadSites()
