@@ -1,0 +1,111 @@
+package org.wordpress.android.ui.reader.usecases
+
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mock
+import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderPostDiscoverData
+import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
+import org.wordpress.android.test
+
+@InternalCoroutinesApi
+class ReaderGetPostUseCaseTest : BaseUnitTest() {
+    @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    private val postId = 1L
+    private val blogId = 2L
+
+    private val readerPost = ReaderPost().apply {
+        postId = this@ReaderGetPostUseCaseTest.postId
+        blogId = this@ReaderGetPostUseCaseTest.blogId
+    }
+
+    private val readerDiscoverSourcePost = ReaderPost().apply {
+        postId = 3L
+        blogId = 4L
+    }
+
+    private lateinit var useCase: ReaderGetPostUseCase
+
+    @Before
+    fun setUp() {
+        useCase = ReaderGetPostUseCase(TEST_DISPATCHER, readerPostTableWrapper)
+    }
+
+    @Test
+    fun `given feed, when reader post is retrieved, feed post is returned`() = test {
+        whenever(readerPostTableWrapper.getFeedPost(blogId = blogId, postId = postId, excludeTextColumn = false))
+                .thenReturn(readerPost)
+
+        val result = useCase.get(blogId = blogId, postId = postId, isFeed = true)
+
+        assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, true))
+    }
+
+    @Test
+    fun `given blog, when reader post is retrieved, blog post is returned`() = test {
+        whenever(readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false))
+                .thenReturn(readerPost)
+
+        val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+
+        assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
+    }
+
+    @Test
+    fun `given editor pick discover post is found, when reader post is retrieved, discover source post returned`() =
+            test {
+                val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.EDITOR_PICK)
+                whenever(
+                        readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false)
+                ).thenReturn(readerPost)
+                whenever(
+                        readerPostTableWrapper.getBlogPost(
+                                blogId = readerDiscoverSourcePost.blogId,
+                                postId = readerDiscoverSourcePost.postId,
+                                excludeTextColumn = false
+                        )
+                ).thenReturn(readerDiscoverSourcePost)
+
+                val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+
+                assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerDiscoverSourcePost, false))
+            }
+
+    @Test
+    fun `given non editor pick reader post is found, when reader post is retrieved, reader post is returned`() =
+            test {
+                val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.SITE_PICK)
+                whenever(
+                        readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false)
+                ).thenReturn(readerPost)
+
+                val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+
+                assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
+            }
+
+    private fun createPost(
+        isDiscoverPost: Boolean = false,
+        discoverType: DiscoverType = DiscoverType.OTHER
+    ): ReaderPost {
+        val post = spy(readerPost)
+        // The ReaderPost contains business logic and accesses static classes. Using spy() allows us to use it in tests.
+        whenever(post.isDiscoverPost).thenReturn(isDiscoverPost)
+        if (isDiscoverPost) {
+            val mockedDiscoverData: ReaderPostDiscoverData = mock()
+            whenever(post.discoverData).thenReturn(mockedDiscoverData)
+            whenever(mockedDiscoverData.discoverType).thenReturn(discoverType)
+            whenever(mockedDiscoverData.postId).thenReturn(readerDiscoverSourcePost.postId)
+            whenever(mockedDiscoverData.blogId).thenReturn(readerDiscoverSourcePost.blogId)
+        }
+        return post
+    }
+}
