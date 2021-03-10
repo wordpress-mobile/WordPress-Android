@@ -9,15 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_log_list_activity.*
-import kotlinx.android.synthetic.main.activity_log_list_fragment.*
-import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogListFragmentBinding
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -70,47 +69,49 @@ class ActivityLogListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
+        (nonNullActivity.application as WordPress).component()?.inject(this@ActivityLogListFragment)
+        viewModel = ViewModelProvider(this@ActivityLogListFragment, viewModelFactory).get(ActivityLogViewModel::class.java)
 
-        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
+        with(ActivityLogListFragmentBinding.bind(view)) {
+            logListView.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            if (NetworkUtils.checkConnection(nonNullActivity)) {
-                viewModel.onPullToRefresh()
-            } else {
-                swipeToRefreshHelper.isRefreshing = false
-            }
-        }
-
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityLogViewModel::class.java)
-
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-        val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
-
-        log_list_view.setEmptyView(actionable_empty_view)
-        log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (!recyclerView.canScrollVertically(1) && dy != 0) {
-                    viewModel.onScrolledToBottom()
+            swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+                if (NetworkUtils.checkConnection(nonNullActivity)) {
+                    viewModel.onPullToRefresh()
+                } else {
+                    swipeToRefreshHelper.isRefreshing = false
                 }
             }
-        })
 
-        setupObservers()
+            val site = if (savedInstanceState == null) {
+                val nonNullIntent = checkNotNull(nonNullActivity.intent)
+                nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+            } else {
+                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            }
+            val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
 
-        viewModel.start(site, rewindableOnly)
+            logListView.setEmptyView(actionableEmptyView)
+            logListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (!recyclerView.canScrollVertically(1) && dy != 0) {
+                        viewModel.onScrolledToBottom()
+                    }
+                }
+            })
+
+            setupObservers()
+
+            viewModel.start(site, rewindableOnly)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        requireActivity().activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
-        requireActivity().date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
+        with(requireActivity()) {
+            findViewById<View>(R.id.activity_type_filter).setOnClickListener { viewModel.onActivityTypeFilterClicked() }
+            findViewById<View>(R.id.date_range_picker).setOnClickListener { viewModel.dateRangePickerClicked() }
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -142,7 +143,7 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onQueryBackupDownloadStatus(rewindId, downloadId, actionState)
     }
 
-    private fun setupObservers() {
+    private fun ActivityLogListFragmentBinding.setupObservers() {
         viewModel.events.observe(viewLifecycleOwner, {
             reloadEvents(it ?: emptyList())
         })
@@ -152,17 +153,19 @@ class ActivityLogListFragment : Fragment() {
         })
 
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
-            uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
-            uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
+            with(requireActivity()) {
+            uiHelpers.updateVisibility(findViewById(R.id.filters_bar), uiState.visibility)
+            uiHelpers.updateVisibility(findViewById(R.id.filters_bar_divider), uiState.visibility)
+            }
             if (uiState is FiltersShown) updateFilters(uiState)
         })
 
         viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
-            actionable_empty_view.title.text = uiHelpers.getTextOfUiString(
+            actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     emptyState.emptyScreenTitle
             )
-            actionable_empty_view.subtitle.text = uiHelpers.getTextOfUiString(
+            actionableEmptyView.subtitle.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     emptyState.emptyScreenSubtitle
             )
@@ -195,8 +198,8 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        viewModel.moveToTop.observe(this, {
-            log_list_view.scrollToPosition(0)
+        viewModel.moveToTop.observe(this@ActivityLogListFragment, {
+            logListView.scrollToPosition(0)
         })
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
@@ -277,14 +280,14 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun updateFilters(uiState: FiltersShown) {
-        with(requireActivity().date_range_picker) {
+        with(requireActivity().findViewById<Chip>(R.id.date_range_picker)) {
             text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
             contentDescription = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabelContentDescription)
             isCloseIconVisible = uiState.onClearDateRangeFilterClicked != null
             setOnCloseIconClickListener { uiState.onClearDateRangeFilterClicked?.invoke() }
         }
 
-        with(requireActivity().activity_type_filter) {
+        with(requireActivity().findViewById<Chip>(R.id.activity_type_filter)) {
             text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
             contentDescription = uiHelpers
                     .getTextOfUiString(requireContext(), uiState.activityTypeLabelContentDescription)
@@ -301,10 +304,10 @@ class ActivityLogListFragment : Fragment() {
         swipeToRefreshHelper.isRefreshing = eventListStatus == FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
         val showLoadMore = eventListStatus == LOADING_MORE
-        progress?.visibility = if (showLoadMore) View.VISIBLE else View.GONE
+        requireActivity().findViewById<View>(R.id.progress)?.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
-    private fun reloadEvents(data: List<ActivityLogListItem>) {
+    private fun ActivityLogListFragmentBinding.reloadEvents(data: List<ActivityLogListItem>) {
         setEvents(data)
     }
 
@@ -323,18 +326,18 @@ class ActivityLogListFragment : Fragment() {
         return viewModel.onSecondaryActionClicked(secondaryAction, item)
     }
 
-    private fun setEvents(events: List<ActivityLogListItem>) {
+    private fun ActivityLogListFragmentBinding.setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
-        if (log_list_view.adapter == null) {
+        if (logListView.adapter == null) {
             adapter = ActivityLogAdapter(
-                    this::onItemClicked,
-                    this::onItemButtonClicked,
-                    this::onSecondaryActionClicked,
+                    this@ActivityLogListFragment::onItemClicked,
+                    this@ActivityLogListFragment::onItemButtonClicked,
+                    this@ActivityLogListFragment::onSecondaryActionClicked,
                     uiHelpers
             )
-            log_list_view.adapter = adapter
+            logListView.adapter = adapter
         } else {
-            adapter = log_list_view.adapter as ActivityLogAdapter
+            adapter = logListView.adapter as ActivityLogAdapter
         }
         adapter.updateList(events)
     }
