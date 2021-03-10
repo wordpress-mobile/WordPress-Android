@@ -153,7 +153,11 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         }
     }
 
-    private fun ActivityLogTypeFilterFragmentBinding.addMenuItem(action: ActivityLogTypeFilterViewModel.Action, order: Int, showAlways: Boolean) {
+    private fun ActivityLogTypeFilterFragmentBinding.addMenuItem(
+        action: ActivityLogTypeFilterViewModel.Action,
+        order: Int,
+        showAlways: Boolean
+    ) {
         val actionLabel = uiHelpers.getTextOfUiString(requireContext(), action.label)
         toolbarMain.menu.add(ACTIONS_MENU_GROUP, Menu.NONE, order, actionLabel).let {
             if (showAlways) {

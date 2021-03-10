@@ -3,10 +3,9 @@ package org.wordpress.android.ui.activitylog.detail
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -34,7 +33,7 @@ import javax.inject.Inject
 private const val DETAIL_TRACKING_SOURCE = "detail"
 private const val FORWARD_SLASH = "/"
 
-class ActivityLogDetailFragment : Fragment() {
+class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
@@ -64,45 +63,7 @@ class ActivityLogDetailFragment : Fragment() {
                 val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
 
                 viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
-                    setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
-                    uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
-                    uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
-
-                    val spannable = activityLogModel?.content?.let {
-                        notificationsUtilsWrapper.getSpannableContentForRanges(
-                                it,
-                                activityMessage,
-                                { range ->
-                                    viewModel.onRangeClicked(range)
-                                },
-                                false
-                        )
-                    }
-
-                    val noteBlockSpans = spannable?.getSpans(
-                            0,
-                            spannable.length,
-                            NoteBlockClickableSpan::class.java
-                    )
-
-                    noteBlockSpans?.forEach {
-                        it.enableColors(activity)
-                    }
-
-                    uiHelpers.setTextOrHide(activityMessage, spannable)
-                    uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
-
-                    activityCreatedDate.text = activityLogModel?.createdDate
-                    activityCreatedTime.text = activityLogModel?.createdTime
-
-                    if (activityLogModel != null) {
-                        activityRestoreButton.setOnClickListener {
-                            viewModel.onRestoreClicked(activityLogModel)
-                        }
-                        activityDownloadBackupButton.setOnClickListener {
-                            viewModel.onDownloadBackupClicked(activityLogModel)
-                        }
-                    }
+                    loadLogItem(activityLogModel, activity)
                 })
 
                 viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
@@ -147,6 +108,51 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
+    private fun ActivityLogItemDetailBinding.loadLogItem(
+        activityLogModel: ActivityLogDetailModel?,
+        activity: FragmentActivity
+    ) {
+        setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
+        uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
+        uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
+
+        val spannable = activityLogModel?.content?.let {
+            notificationsUtilsWrapper.getSpannableContentForRanges(
+                    it,
+                    activityMessage,
+                    { range ->
+                        viewModel.onRangeClicked(range)
+                    },
+                    false
+            )
+        }
+
+        val noteBlockSpans = spannable?.getSpans(
+                0,
+                spannable.length,
+                NoteBlockClickableSpan::class.java
+        )
+
+        noteBlockSpans?.forEach {
+            it.enableColors(activity)
+        }
+
+        uiHelpers.setTextOrHide(activityMessage, spannable)
+        uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
+
+        activityCreatedDate.text = activityLogModel?.createdDate
+        activityCreatedTime.text = activityLogModel?.createdTime
+
+        if (activityLogModel != null) {
+            activityRestoreButton.setOnClickListener {
+                viewModel.onRestoreClicked(activityLogModel)
+            }
+            activityDownloadBackupButton.setOnClickListener {
+                viewModel.onDownloadBackupClicked(activityLogModel)
+            }
+        }
+    }
+
     private fun sideAndActivityId(savedInstanceState: Bundle?, intent: Intent?) = when {
         savedInstanceState != null -> {
             val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
@@ -171,14 +177,6 @@ class ActivityLogDetailFragment : Fragment() {
         intent != null ->
             intent.getBooleanExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, true)
         else -> throw Throwable("Couldn't initialize Activity Log view model")
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.activity_log_item_detail, container, false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

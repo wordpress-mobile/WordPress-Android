@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.activitylog.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +19,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
@@ -55,22 +54,21 @@ private const val BACKUP_TRACKING_SOURCE = "backup"
  * necessity to split those features in separate screens in order not to increase further the complexity of this
  * screen's architecture.
  */
-class ActivityLogListFragment : Fragment() {
+class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_log_list_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component()?.inject(this@ActivityLogListFragment)
-        viewModel = ViewModelProvider(this@ActivityLogListFragment, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel = ViewModelProvider(
+                this@ActivityLogListFragment,
+                viewModelFactory
+        ).get(ActivityLogViewModel::class.java)
 
         with(ActivityLogListFragmentBinding.bind(view)) {
             logListView.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
@@ -154,8 +152,8 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             with(requireActivity()) {
-            uiHelpers.updateVisibility(findViewById(R.id.filters_bar), uiState.visibility)
-            uiHelpers.updateVisibility(findViewById(R.id.filters_bar_divider), uiState.visibility)
+                uiHelpers.updateVisibility(findViewById(R.id.filters_bar), uiState.visibility)
+                uiHelpers.updateVisibility(findViewById(R.id.filters_bar_divider), uiState.visibility)
             }
             if (uiState is FiltersShown) updateFilters(uiState)
         })
@@ -204,36 +202,40 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
-                val trackingSource = when {
-                    requireNotNull(
-                            requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)
-                    ) ->
-                        BACKUP_TRACKING_SOURCE
-                    else -> {
-                        ACTIVITY_LOG_TRACKING_SOURCE
-                    }
-                }
-
-                when (this) {
-                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                            requireActivity(),
-                            viewModel.site,
-                            event.activityId,
-                            RequestCodes.BACKUP_DOWNLOAD,
-                            trackingSource
-                    )
-                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                            requireActivity(),
-                            viewModel.site,
-                            event.activityId,
-                            RequestCodes.RESTORE,
-                            trackingSource
-                    )
-                    is ShowRewindDialog -> displayRewindDialog(event)
-                    is DownloadBackupFile -> ActivityLauncher.downloadBackupDownloadFile(requireActivity(), url)
-                }
+                navigate(this)
             }
         })
+    }
+
+    private fun navigate(events: ActivityLogNavigationEvents) {
+        val trackingSource = when {
+            requireNotNull(
+                    requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)
+            ) ->
+                BACKUP_TRACKING_SOURCE
+            else -> {
+                ACTIVITY_LOG_TRACKING_SOURCE
+            }
+        }
+
+        when (events) {
+            is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                    requireActivity(),
+                    viewModel.site,
+                    events.event.activityId,
+                    RequestCodes.BACKUP_DOWNLOAD,
+                    trackingSource
+            )
+            is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                    requireActivity(),
+                    viewModel.site,
+                    events.event.activityId,
+                    RequestCodes.RESTORE,
+                    trackingSource
+            )
+            is ShowRewindDialog -> displayRewindDialog(events.event)
+            is DownloadBackupFile -> ActivityLauncher.downloadBackupDownloadFile(requireActivity(), events.url)
+        }
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
