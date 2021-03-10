@@ -48,7 +48,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private lateinit var binding: StatsViewAllFragmentBinding
+    private var binding: StatsViewAllFragmentBinding? = null
 
     private val listStateKey = "list_state"
 
@@ -60,7 +60,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        binding.statsListFragment.recyclerView.layoutManager?.let {
+        binding?.statsListFragment?.recyclerView?.layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -84,13 +84,13 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?, binding: StatsViewAllFragmentBinding) = with(binding) {
+    private fun StatsViewAllFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
-        with(binding.statsListFragment) {
+        with(statsListFragment) {
             recyclerView.layoutManager = layoutManager
             loadingRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         }
@@ -99,7 +99,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
             viewModel.onPullToRefresh()
         }
 
-        with(binding.statsListFragment.dateSelector) {
+        with(statsListFragment.dateSelector) {
             nextDateButton.setOnClickListener {
                 viewModel.onNextDateSelected()
             }
@@ -113,16 +113,23 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        binding = StatsViewAllFragmentBinding.bind(requireView())
-        with(nonNullActivity as AppCompatActivity) {
-            setSupportActionBar(binding.toolbar)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
+        with(StatsViewAllFragmentBinding.bind(requireView())) {
+            this@StatsViewAllFragment.binding = this
+            with(nonNullActivity as AppCompatActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.let {
+                    it.setHomeButtonEnabled(true)
+                    it.setDisplayHomeAsUpEnabled(true)
+                }
             }
+            initializeViews(savedInstanceState)
+            initializeViewModels(nonNullActivity, savedInstanceState)
         }
-        initializeViews(savedInstanceState, binding)
-        initializeViewModels(nonNullActivity, savedInstanceState, binding)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -131,11 +138,10 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         (activity as AppCompatActivity).supportActionBar?.title = getString(viewModel.title)
     }
 
-    private fun initializeViewModels(
+    private fun StatsViewAllFragmentBinding.initializeViewModels(
         activity: FragmentActivity,
-        savedInstanceState: Bundle?,
-        binding: StatsViewAllFragmentBinding
-    ) = with(binding) {
+        savedInstanceState: Bundle?
+    ) {
         val nonNullIntent = checkNotNull(activity.intent)
         val type = if (savedInstanceState == null) {
             nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
@@ -161,12 +167,12 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         } else {
             savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
         }
-        setupObservers(activity, binding)
+        setupObservers(activity)
 
         viewModel.start(selectedDate)
     }
 
-    private fun setupObservers(activity: FragmentActivity, binding: StatsViewAllFragmentBinding) = with(binding) {
+    private fun StatsViewAllFragmentBinding.setupObservers(activity: FragmentActivity) {
         viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -179,7 +185,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
 
         viewModel.data.observe(viewLifecycleOwner, {
             if (it != null) {
-                with(binding.statsListFragment) {
+                with(statsListFragment) {
                     recyclerView.visibility = if (it is Success) View.VISIBLE else View.GONE
                     loadingContainer.visibility = if (it is Loading) View.VISIBLE else View.GONE
                     val showErrorView = if (it is Error) View.VISIBLE else View.GONE
@@ -188,10 +194,10 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
                     emptyView.statsEmptyView.visibility = showEmptyView
                     when (it) {
                         is Success -> {
-                            loadData(recyclerView, prepareLayout(it.data, it.type, binding))
+                            loadData(recyclerView, prepareLayout(it.data, it.type))
                         }
                         is Loading -> {
-                            loadData(loadingRecyclerView, prepareLayout(it.data, it.type, binding))
+                            loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
                         }
                         is Error -> {
                             errorView.statsErrorView.button.setOnClickListener {
@@ -267,15 +273,14 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun prepareLayout(
+    private fun StatsViewAllFragmentBinding.prepareLayout(
         data: List<BlockListItem>,
-        type: Type,
-        binding: StatsViewAllFragmentBinding
-    ): List<BlockListItem> = with(binding) {
+        type: Type
+    ): List<BlockListItem> {
         val tabs = data.firstOrNull { it is TabsItem } as? TabsItem
         return if (tabs != null) {
             if (tabLayout.tabCount == 0) {
-                setupTabs(tabs, binding)
+                setupTabs(tabs)
             } else if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
@@ -294,7 +299,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         }
     }
 
-    private fun setupTabs(item: TabsItem, binding: StatsViewAllFragmentBinding) = with(binding) {
+    private fun StatsViewAllFragmentBinding.setupTabs(item: TabsItem) {
         tabLayout.clearOnTabSelectedListeners()
         tabLayout.removeAllTabs()
         item.tabs.forEach { tabItem ->

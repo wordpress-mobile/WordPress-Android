@@ -35,7 +35,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     private lateinit var viewModel: StatsListViewModel
 
     private var layoutManager: LayoutManager? = null
-    private lateinit var binding: StatsListFragmentBinding
+    private var binding: StatsListFragmentBinding? = null
 
     private val listStateKey = "list_state"
 
@@ -66,7 +66,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?, binding: StatsListFragmentBinding) = with(binding) {
+    private fun StatsListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val columns = resources.getInteger(R.integer.stats_number_of_columns)
         val layoutManager: LayoutManager = if (columns == 1) {
             LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -116,19 +116,26 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
-        return binding.recyclerView
+        return binding!!.recyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        binding = StatsListFragmentBinding.bind(view)
-        initializeViews(savedInstanceState, binding)
-        initializeViewModels(nonNullActivity, binding)
+        with(StatsListFragmentBinding.bind(view)) {
+            binding = this
+            initializeViews(savedInstanceState)
+            initializeViewModels(nonNullActivity)
+        }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, binding: StatsListFragmentBinding) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
         val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
                 ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
                 ?: StatsSection.INSIGHTS
@@ -143,16 +150,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.YEARS -> YearsListViewModel::class.java
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
+        viewModel = ViewModelProvider(this@StatsListFragment, viewModelFactory)
                 .get(statsSection.name, viewModelClass)
 
-        setupObservers(activity, binding)
+        setupObservers(activity)
         viewModel.start()
     }
 
-    private fun setupObservers(activity: FragmentActivity, binding: StatsListFragmentBinding) = with(binding) {
+    private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(viewLifecycleOwner, {
-            showUiModel(it, binding)
+            showUiModel(it)
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
@@ -185,12 +192,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.showUiModel(
-        it: UiModel?,
-        binding: StatsListFragmentBinding
+        it: UiModel?
     ) {
         when (it) {
             is Success -> {
-                updateInsights(it.data, binding)
+                updateInsights(it.data)
             }
             is Error, null -> {
                 recyclerView.visibility = View.GONE
@@ -217,7 +223,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
     }
 
-    private fun updateInsights(statsState: List<StatsBlock>, binding: StatsListFragmentBinding) = with(binding) {
+    private fun StatsListFragmentBinding.updateInsights(statsState: List<StatsBlock>) {
         recyclerView.visibility = View.VISIBLE
         errorView.statsErrorView.visibility = View.GONE
         emptyView.statsEmptyView.visibility = View.GONE

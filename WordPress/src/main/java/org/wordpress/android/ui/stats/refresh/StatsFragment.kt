@@ -44,7 +44,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private lateinit var binding: StatsFragmentBinding
     private val selectedTabListener: SelectedTabListener
         get() = SelectedTabListener(viewModel)
 
@@ -59,17 +58,17 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        binding = StatsFragmentBinding.bind(view)
-        with(nonNullActivity as AppCompatActivity) {
-            setSupportActionBar(binding.toolbar)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(true)
-                it.setDisplayHomeAsUpEnabled(true)
+        with(StatsFragmentBinding.bind(view)) {
+            with(nonNullActivity as AppCompatActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.let {
+                    it.setHomeButtonEnabled(true)
+                    it.setDisplayHomeAsUpEnabled(true)
+                }
             }
+            initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
+            initializeViews(nonNullActivity)
         }
-
-        initializeViewModels(nonNullActivity, binding, savedInstanceState == null, savedInstanceState)
-        initializeViews(nonNullActivity, binding)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -78,7 +77,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(activity: FragmentActivity, binding: StatsFragmentBinding) = with(binding) {
+    private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
         statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
@@ -90,17 +89,16 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun initializeViewModels(
+    private fun StatsFragmentBinding.initializeViewModels(
         activity: FragmentActivity,
-        binding: StatsFragmentBinding,
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
-    ) = with(binding) {
+    ) {
         viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
 
         viewModel.onRestoreInstanceState(savedInstanceState)
 
-        setupObservers(activity, binding)
+        setupObservers(activity)
 
         viewModel.start(activity.intent)
 
@@ -117,7 +115,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         }
     }
 
-    private fun setupObservers(activity: FragmentActivity, binding: StatsFragmentBinding) = with(binding) {
+    private fun StatsFragmentBinding.setupObservers(activity: FragmentActivity) {
         viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
