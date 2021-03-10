@@ -28,7 +28,7 @@ class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
     @Inject lateinit var zendeskHelper: ZendeskHelper
-    private lateinit var binding: HelpActivityBinding
+    private var binding: HelpActivityBinding? = null
 
     private val originFromExtras by lazy {
         (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
@@ -43,8 +43,8 @@ class HelpActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        binding = HelpActivityBinding.inflate(layoutInflater)
-        with(binding) {
+        with(HelpActivityBinding.inflate(layoutInflater)) {
+            binding = this
             setContentView(root)
             setSupportActionBar(toolbarMain)
 
@@ -79,7 +79,7 @@ class HelpActivity : LocaleAwareActivity() {
                         isNameInputHidden = true
                 ) { email, _ ->
                     zendeskHelper.setSupportEmail(email)
-                    refreshContactEmailText(this)
+                    refreshContactEmailText()
                     AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_SET)
                 }
                 AnalyticsTracker.track(Stat.SUPPORT_IDENTITY_FORM_VIEWED)
@@ -96,10 +96,15 @@ class HelpActivity : LocaleAwareActivity() {
         }
     }
 
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
+    }
+
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.HELP_SCREEN)
-        refreshContactEmailText(binding)
+        binding?.refreshContactEmailText()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -138,7 +143,7 @@ class HelpActivity : LocaleAwareActivity() {
                 )
     }
 
-    private fun refreshContactEmailText(helpActivityBinding: HelpActivityBinding) = with(helpActivityBinding) {
+    private fun HelpActivityBinding.refreshContactEmailText() {
         val supportEmail = AppPrefs.getSupportEmail()
         contactEmailAddress.text = if (!supportEmail.isNullOrEmpty()) {
             supportEmail
