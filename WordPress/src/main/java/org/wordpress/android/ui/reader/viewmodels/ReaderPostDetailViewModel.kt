@@ -41,6 +41,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
@@ -160,6 +161,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
+        _uiState.value = LoadingUiState
+
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
@@ -410,7 +413,12 @@ class ReaderPostDetailViewModel @Inject constructor(
         _uiState.value = ErrorUiState(UiStringRes(errMsgResId), signInButtonVisibility)
     }
 
-    sealed class UiState(val errorVisible: Boolean = false) {
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val errorVisible: Boolean = false
+    ) {
+        object LoadingUiState : UiState(loadingVisible = true)
+
         data class ErrorUiState(
             val message: UiString?,
             val signInButtonVisibility: Boolean = false

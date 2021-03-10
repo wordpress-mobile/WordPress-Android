@@ -86,6 +86,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
@@ -371,8 +372,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(text_error, it.errorVisible)
+            uiHelpers.updateVisibility(progress_loading, it.loadingVisible)
             when (it) {
+                is LoadingUiState -> Unit // Do Nothing
+
                 is ReaderPostDetailsUiState -> renderUiState(it)
+
                 is ErrorUiState -> {
                     uiHelpers.updateVisibility(signInButton, it.signInButtonVisibility)
                     val message = it.message?.let { msg -> uiHelpers.getTextOfUiString(requireContext(), msg) }
