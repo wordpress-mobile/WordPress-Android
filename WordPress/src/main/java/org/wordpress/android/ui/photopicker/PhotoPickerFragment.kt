@@ -15,11 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
-import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -224,7 +224,7 @@ class PhotoPickerFragment : Fragment() {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
                         imageManager,
-                        viewModel as CoroutineScope
+                        viewModel.viewModelScope
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter
