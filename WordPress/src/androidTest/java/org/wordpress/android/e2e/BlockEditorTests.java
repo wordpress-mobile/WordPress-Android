@@ -41,7 +41,7 @@ public class BlockEditorTests extends BaseTest {
         MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
 
-        mySitesPage.gotoSiteSettings();
+        mySitesPage.clickSettingsItem();
 
         // Set to Gutenberg. Apparently the site is defaulting to Aztec still.
         new SiteSettingsPage().setEditorToGutenberg();
@@ -49,7 +49,7 @@ public class BlockEditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mySitesPage.clickBlogPosts();
+        mySitesPage.clickBlogPostsItem();
 
         mySitesPage.startNewPost();
 

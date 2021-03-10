@@ -59,7 +59,7 @@ public class MySitesPage {
         }
     }
 
-    public void gotoSiteSettings() {
+    public void clickSettingsItem() {
         if (isElementDisplayed(R.id.recycler_view)) {
             // If My Site Improvements are enabled, we reach the item in a different way
             onView(withId(R.id.recycler_view))
@@ -70,7 +70,7 @@ public class MySitesPage {
         }
     }
 
-    public void clickBlogPosts() {
+    public void clickBlogPostsItem() {
         if (isElementDisplayed(R.id.recycler_view)) {
             // If My Site Improvements are enabled, we reach the item in a different way
             onView(withId(R.id.recycler_view))
