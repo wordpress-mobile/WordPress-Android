@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -88,7 +88,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun init() {
-        readerPostCardActionsHandler.initScope(this)
+        readerPostCardActionsHandler.initScope(viewModelScope)
         _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
 
