@@ -23,16 +23,12 @@ private const val recommendedBlogsViewType: Int = 4
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager
-) : Adapter<ReaderViewHolder>() {
+) : Adapter<ReaderViewHolder<*>>() {
     private val items = mutableListOf<ReaderCardUiState>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
         return when (viewType) {
             welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
-            postViewType -> ReaderPostViewHolder(
-                    uiHelpers,
-                    imageManager,
-                    parent
-            )
+            postViewType -> ReaderPostViewHolder(uiHelpers, imageManager, parent)
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
             recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
@@ -41,7 +37,7 @@ class ReaderDiscoverAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: ReaderViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReaderViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
 
