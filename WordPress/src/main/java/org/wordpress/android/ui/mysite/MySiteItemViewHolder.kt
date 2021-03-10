@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.mysite
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.viewbinding.ViewBinding
 
-open class MySiteItemViewHolder(parent: ViewGroup, layout: Int) : ViewHolder(
-        LayoutInflater.from(parent.context).inflate(layout, parent, false)
-)
+open class MySiteItemViewHolder<T : ViewBinding>(protected val binding: T) : ViewHolder(binding.root)

@@ -20,7 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder>() {
+class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder<*>>() {
     private var items = listOf<MySiteItem>()
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
@@ -33,7 +33,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteItemViewHolder<*> {
         return when (viewType) {
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
@@ -50,7 +50,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         }
     }
 
-    override fun onBindViewHolder(holder: MySiteItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MySiteItemViewHolder<*>, position: Int) {
         when (holder) {
             is MySiteInfoViewHolder -> holder.bind(items[position] as SiteInfoBlock)
             is QuickActionsViewHolder -> holder.bind(items[position] as QuickActionsBlock)
@@ -61,7 +61,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         }
     }
 
-    override fun onViewRecycled(holder: MySiteItemViewHolder) {
+    override fun onViewRecycled(holder: MySiteItemViewHolder<*>) {
         super.onViewRecycled(holder)
         if (holder is QuickStartCardViewHolder) {
             holder.onRecycled()
