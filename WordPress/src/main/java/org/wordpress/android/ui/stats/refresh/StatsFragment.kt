@@ -59,7 +59,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        binding = StatsFragmentBinding.bind(requireView())
+        binding = StatsFragmentBinding.bind(view)
         with(nonNullActivity as AppCompatActivity) {
             setSupportActionBar(binding.toolbar)
             supportActionBar?.let {
