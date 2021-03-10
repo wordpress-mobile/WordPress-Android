@@ -1,10 +1,12 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.espresso.ViewInteraction;
 
+import org.hamcrest.Matcher;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -60,23 +62,24 @@ public class MySitesPage {
     }
 
     public void clickSettingsItem() {
-        if (isElementDisplayed(R.id.recycler_view)) {
-            // If My Site Improvements are enabled, we reach the item in a different way
-            onView(withId(R.id.recycler_view))
-                    .perform(actionOnItem(hasDescendant(withText(R.string.my_site_btn_site_settings)), click()));
-        } else {
-            onView(withText(R.string.my_site_btn_site_settings))
-                    .perform(scrollTo(), click());
-        }
+        clickItemWithText(R.string.my_site_btn_site_settings);
     }
 
     public void clickBlogPostsItem() {
+        clickItemWithText(R.string.my_site_btn_blog_posts);
+    }
+
+    private void clickItemWithText(int stringResId) {
+        clickItem(withText(stringResId));
+    }
+
+    private void clickItem(final Matcher<View> itemViewMatcher) {
         if (isElementDisplayed(R.id.recycler_view)) {
             // If My Site Improvements are enabled, we reach the item in a different way
             onView(withId(R.id.recycler_view))
-                    .perform(actionOnItem(hasDescendant(withText(R.string.my_site_btn_blog_posts)), click()));
+                    .perform(actionOnItem(hasDescendant(itemViewMatcher), click()));
         } else {
-            onView(withText(R.string.my_site_btn_blog_posts))
+            onView(itemViewMatcher)
                     .perform(scrollTo(), click());
         }
     }
