@@ -71,8 +71,13 @@ public class MySitesPage {
     }
 
     public void clickBlogPosts() {
-        onView(withId(R.id.quick_action_posts_button))
-                .perform(scrollTo());
-        clickOn(R.id.quick_action_posts_button);
+        if (isElementDisplayed(R.id.recycler_view)) {
+            // If My Site Improvements are enabled, we reach the item in a different way
+            onView(withId(R.id.recycler_view))
+                    .perform(actionOnItem(hasDescendant(withText(R.string.my_site_btn_blog_posts)), click()));
+        } else {
+            onView(withText(R.string.my_site_btn_blog_posts))
+                    .perform(scrollTo(), click());
+        }
     }
 }
