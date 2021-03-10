@@ -572,24 +572,27 @@ public class SiteRestClient extends BaseWPComRestClient {
     public void fetchWpComBlockLayouts(final SiteModel site,
                                        List<String> supportedBlocks,
                                        Float previewWidth,
+                                       Float previewHeight,
                                        Float scale,
                                        Boolean isBeta) {
         String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale, isBeta);
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta);
     }
 
     public void fetchSelfHostedBlockLayouts(final SiteModel site,
                                             List<String> supportedBlocks,
                                             Float previewWidth,
+                                            Float previewHeight,
                                             Float scale,
                                             Boolean isBeta) {
         String url = WPCOMV2.common_block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale, isBeta);
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta);
     }
 
     private void fetchBlockLayouts(final SiteModel site, String url,
                                    List<String> supportedBlocks,
                                    Float previewWidth,
+                                   Float previewHeight,
                                    Float scale,
                                    Boolean isBeta) {
         Map<String, String> params = new HashMap<>();
@@ -600,6 +603,10 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         if (previewWidth != null) {
             params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
+        }
+
+        if (previewHeight != null) {
+            params.put("preview_height", String.format(Locale.US, "%.1f", previewHeight));
         }
 
         if (scale != null) {
