@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
+import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
@@ -53,6 +54,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val readerGetPostUseCase: ReaderGetPostUseCase,
     private val siteStore: SiteStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
@@ -136,6 +138,20 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
             _navigationEvents.value = event
         }
+    }
+
+    suspend fun getReaderPostFromDb(blogId: Long, postId: Long): ReaderPost? {
+        val (readerPost, isFeed) = readerGetPostUseCase.get(
+                blogId = blogId,
+                postId = postId,
+                isFeed = this@ReaderPostDetailViewModel.isFeed
+        )
+        readerPost?.let {
+            this.post = it
+            this.isFeed = isFeed
+        }
+
+        return readerPost
     }
 
     fun onMoreButtonClicked() {

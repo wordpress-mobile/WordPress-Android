@@ -44,12 +44,10 @@ import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_content.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -66,8 +64,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderPostDiscoverData
-import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
@@ -127,7 +123,6 @@ import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
 import javax.inject.Inject
-import javax.inject.Named
 
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
@@ -191,7 +186,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var viewModelFactory: Factory
     @Inject lateinit var uiHelpers: UiHelpers
-    @Named(IO_THREAD) private lateinit var ioDispatcher: CoroutineDispatcher
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1071,7 +1065,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // TODO: Move to ViewModel
         launch {
             isPostTaskRunning = true
-            val result = withContext(ioDispatcher) { doInBackgroundShowPost() }
+            val post = viewModel.getReaderPostFromDb(blogId = blogId, postId = postId)
+            val result = post != null
+
             onPostExecuteShowPost(result)
         }
     }
@@ -1110,33 +1106,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 Snackbar.LENGTH_LONG
         ).show()
         renderer?.beginRender()
-    }
-
-    private fun doInBackgroundShowPost(): Boolean {
-        viewModel.post = if (viewModel.isFeed)
-            ReaderPostTable.getFeedPost(blogId, postId, false)
-        else
-            ReaderPostTable.getBlogPost(blogId, postId, false)
-        if (viewModel.post == null) return false
-
-        // "discover" Editor Pick posts should open the original (source) post
-        viewModel.post?.takeIf { it.isDiscoverPost }?.let {
-            viewModel.post?.discoverData?.let {
-                if (
-                        it.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK &&
-                        it.blogId != 0L &&
-                        it.postId != 0L
-                ) {
-                    viewModel.isFeed = false
-                    blogId = it.blogId
-                    postId = it.postId
-                    viewModel.post = ReaderPostTable.getBlogPost(blogId, postId, false)
-                    if (viewModel.post == null) return false
-                }
-            }
-        }
-
-        return true
     }
 
     private fun onPostExecuteShowPost(result: Boolean) {
