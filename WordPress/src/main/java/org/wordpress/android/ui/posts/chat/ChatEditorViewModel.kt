@@ -40,7 +40,9 @@ class ChatEditorViewModel @Inject constructor(
     fun onSendButtonPressed(text: String) {
         _onClearInput.call()
         _onNewContent.value = getContent(text, _onMediaListChanged.value ?: listOf())
-        _onMediaListChanged.value = listOf()
+        if (_onMediaListChanged.value?.isNotEmpty() == true) {
+            _onMediaListChanged.value = listOf()
+        }
     }
 
     fun onAttachButtonPressed() {

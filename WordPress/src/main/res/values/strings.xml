@@ -3522,6 +3522,4 @@
     <string name="backup_download_status_bullet_clock_icon_content_desc" translatable="false">@string/restore_status_bullet_clock_icon_content_desc</string>
     <string name="backup_download_status_bullet_checkmark_icon_content_desc" translatable="false">@string/restore_status_bullet_checkmark_icon_content_desc</string>
 
-    <string name="chat_editor_media_attached">Attached %1$d media.\nTap again to clear!</string>
-    <string name="chat_editor_media_cleared">Cleared chat media!</string>
 </resources>

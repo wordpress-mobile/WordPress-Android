@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingEnd="@dimen/margin_extra_small"
-        android:paddingStart="@dimen/margin_small"
-        android:textSize="@dimen/text_sz_medium" />
+        android:paddingStart="@dimen/margin_medium"
+        android:textAppearance="?attr/textAppearanceSubtitle2" />
 
     <ImageButton
         android:id="@+id/attachButton"
@@ -22,7 +22,7 @@
         android:background="@color/transparent"
         android:contentDescription="@string/gutenberg_native_add_image_or_video"
         android:paddingEnd="@dimen/margin_small"
-        android:paddingStart="@dimen/margin_medium"
+        android:paddingStart="@dimen/margin_small"
         android:src="@drawable/ic_media_white_24dp"
         android:tint="?attr/colorControlNormal" />
 

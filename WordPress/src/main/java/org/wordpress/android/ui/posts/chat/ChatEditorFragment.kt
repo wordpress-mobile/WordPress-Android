@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.chat_editor_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.ActivityUtils
-import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 private const val BLOCK_LIST_CONTENT_DESCRIPTION = "block-list"
@@ -73,10 +72,10 @@ class ChatEditorFragment : Fragment() {
         viewModel.onMediaListChanged.observe(viewLifecycleOwner, Observer { media ->
             // TODO: It would be nice to have thumbnails
             mediaCount.text = if (media.isEmpty()) {
-                ToastUtils.showToast(requireContext(), getString(R.string.chat_editor_media_cleared))
+                attachButton.setImageResource(R.drawable.ic_media_white_24dp)
                 ""
             } else {
-                ToastUtils.showToast(requireContext(), getString(R.string.chat_editor_media_attached, media.size))
+                attachButton.setImageResource(R.drawable.ic_image_remove_white_24dp)
                 media.size.toString()
             }
         })
