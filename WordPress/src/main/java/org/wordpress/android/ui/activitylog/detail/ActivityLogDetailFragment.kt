@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogItemDetailBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
@@ -54,95 +54,96 @@ class ActivityLogDetailFragment : Fragment() {
         (activity?.application as WordPress).component()?.inject(this)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         activity?.let { activity ->
             viewModel = ViewModelProvider(activity, viewModelFactory)
                     .get(ActivityLogDetailViewModel::class.java)
+            with(ActivityLogItemDetailBinding.bind(view)) {
+                val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
+                val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
 
-            val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
-            val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
+                viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
+                    setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
+                    uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
+                    uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
 
-            viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
-                setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
-                uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
-                uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
+                    val spannable = activityLogModel?.content?.let {
+                        notificationsUtilsWrapper.getSpannableContentForRanges(
+                                it,
+                                activityMessage,
+                                { range ->
+                                    viewModel.onRangeClicked(range)
+                                },
+                                false
+                        )
+                    }
 
-                val spannable = activityLogModel?.content?.let {
-                    notificationsUtilsWrapper.getSpannableContentForRanges(
-                            it,
-                            activityMessage,
-                            { range ->
-                                viewModel.onRangeClicked(range)
-                            },
-                            false
+                    val noteBlockSpans = spannable?.getSpans(
+                            0,
+                            spannable.length,
+                            NoteBlockClickableSpan::class.java
                     )
-                }
 
-                val noteBlockSpans = spannable?.getSpans(
-                        0,
-                        spannable.length,
-                        NoteBlockClickableSpan::class.java
-                )
-
-                noteBlockSpans?.forEach {
-                    it.enableColors(activity)
-                }
-
-                uiHelpers.setTextOrHide(activityMessage, spannable)
-                uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
-
-                activityCreatedDate.text = activityLogModel?.createdDate
-                activityCreatedTime.text = activityLogModel?.createdTime
-
-                if (activityLogModel != null) {
-                    activityRestoreButton.setOnClickListener {
-                        viewModel.onRestoreClicked(activityLogModel)
+                    noteBlockSpans?.forEach {
+                        it.enableColors(activity)
                     }
-                    activityDownloadBackupButton.setOnClickListener {
-                        viewModel.onDownloadBackupClicked(activityLogModel)
+
+                    uiHelpers.setTextOrHide(activityMessage, spannable)
+                    uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
+
+                    activityCreatedDate.text = activityLogModel?.createdDate
+                    activityCreatedTime.text = activityLogModel?.createdTime
+
+                    if (activityLogModel != null) {
+                        activityRestoreButton.setOnClickListener {
+                            viewModel.onRestoreClicked(activityLogModel)
+                        }
+                        activityDownloadBackupButton.setOnClickListener {
+                            viewModel.onDownloadBackupClicked(activityLogModel)
+                        }
                     }
-                }
-            })
+                })
 
-            viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
-                activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-            })
-            viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
-                activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
-            })
+                viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+                    activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
+                })
+                viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+                    activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
+                })
 
-            viewModel.navigationEvents.observe(viewLifecycleOwner, {
-                it.applyIfNotHandled {
-                    when (this) {
-                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.BACKUP_DOWNLOAD,
-                                buildTrackingSource()
-                        )
-                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.RESTORE,
-                                buildTrackingSource()
-                        )
-                        is ShowRewindDialog -> onRewindButtonClicked(
-                                model
-                        )
+                viewModel.navigationEvents.observe(viewLifecycleOwner, {
+                    it.applyIfNotHandled {
+                        when (this) {
+                            is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                                    requireActivity(),
+                                    viewModel.site,
+                                    model.activityID,
+                                    RequestCodes.BACKUP_DOWNLOAD,
+                                    buildTrackingSource()
+                            )
+                            is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                                    requireActivity(),
+                                    viewModel.site,
+                                    model.activityID,
+                                    RequestCodes.RESTORE,
+                                    buildTrackingSource()
+                            )
+                            is ShowRewindDialog -> onRewindButtonClicked(
+                                    model
+                            )
+                        }
                     }
-                }
-            })
+                })
 
-            viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
-                if (range != null) {
-                    formattableContentClickHandler.onClick(activity, range)
-                }
-            })
+                viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
+                    if (range != null) {
+                        formattableContentClickHandler.onClick(activity, range)
+                    }
+                })
 
-            viewModel.start(site, activityLogId, areButtonsVisible)
+                viewModel.start(site, activityLogId, areButtonsVisible)
+            }
         }
     }
 
@@ -193,7 +194,7 @@ class ActivityLogDetailFragment : Fragment() {
         activity?.finish()
     }
 
-    private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
+    private fun ActivityLogItemDetailBinding.setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
         when {
             actorIcon != null && actorIcon != "" -> {
                 imageManager.loadIntoCircle(activityActorIcon, AVATAR_WITH_BACKGROUND, actorIcon)
