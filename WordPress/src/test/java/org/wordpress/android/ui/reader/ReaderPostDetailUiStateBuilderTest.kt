@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -21,12 +22,16 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ExcerptFooterUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
@@ -42,6 +47,9 @@ class ReaderPostDetailUiStateBuilderTest {
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var htmlUtilsWrapper: HtmlUtilsWrapper
+    @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     private lateinit var dummyRelatedPosts: ReaderSimplePostList
 
@@ -52,6 +60,7 @@ class ReaderPostDetailUiStateBuilderTest {
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
     private val dummyFeaturedImageUrl = "/image/url"
+    private val dummyVisitPostLinkText = "visit post"
     private val dummyDisplayPixelHeight = 100
 
     @Before
@@ -64,6 +73,9 @@ class ReaderPostDetailUiStateBuilderTest {
                 featuredImageUtils,
                 readerUtilsWrapper,
                 displayUtilsWrapper,
+                contextProvider,
+                htmlUtilsWrapper,
+                htmlMessageUtils,
                 resourceProvider
         )
     }
@@ -89,6 +101,34 @@ class ReaderPostDetailUiStateBuilderTest {
 
                 assertThat(postUiState.featuredImageUiState).isNull()
             }
+
+    /* EXCERPT FOOTER */
+    @Test
+    fun `given excerpt is shown, when post ui is built, then excerpt footer exists`() = test {
+        val readerPost = mock<ReaderPost>()
+        whenever(readerPost.blogName).thenReturn("blog name")
+        whenever(readerPost.url).thenReturn("url")
+        whenever(readerPost.shouldShowExcerpt()).thenReturn(true)
+
+        val postUiState = buildPostUiState(readerPost = readerPost)
+
+        assertThat(postUiState.excerptFooterUiState).isEqualTo(
+                ExcerptFooterUiState(
+                        visitPostExcerptFooterLinkText = UiStringText(dummyVisitPostLinkText),
+                        postLink = readerPost.url
+                )
+        )
+    }
+
+    @Test
+    fun `given excerpt is not shown, when post ui is built, then excerpt footer does not exists`() = test {
+        val readerPost = mock<ReaderPost>()
+        whenever(readerPost.shouldShowExcerpt()).thenReturn(false)
+
+        val postUiState = buildPostUiState(readerPost = readerPost)
+
+        assertThat(postUiState.excerptFooterUiState).isNull()
+    }
 
     /* RELATED POSTS */
     @Test
@@ -197,7 +237,23 @@ class ReaderPostDetailUiStateBuilderTest {
             onItemClicked = dummyOnRelatedPostItemClicked
     )
 
-    private fun buildPostUiState(shouldShowFeaturedImage: Boolean): ReaderPostDetailsUiState {
+    private fun buildPostUiState(
+        readerPost: ReaderPost? = null,
+        shouldShowFeaturedImage: Boolean = false
+    ): ReaderPostDetailsUiState {
+        val post = readerPost ?: dummySourceReaderPost
+
+        if (post.shouldShowExcerpt()) {
+            val dummyLinkHexColor = "#FFFFFF"
+            whenever(htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())).thenReturn(dummyLinkHexColor)
+            whenever(
+                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.reader_excerpt_link,
+                            "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
+                    )
+            ).thenReturn(dummyVisitPostLinkText)
+        }
+
         whenever(featuredImageUtils.shouldAddFeaturedImage(any())).thenReturn(shouldShowFeaturedImage)
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(dummyDisplayPixelHeight)
         whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
@@ -207,7 +263,7 @@ class ReaderPostDetailUiStateBuilderTest {
         whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())
 
         return builder.mapPostToUiState(
-                post = dummySourceReaderPost,
+                post = post,
                 moreMenuItems = null,
                 onButtonClicked = mock(),
                 onBlogSectionClicked = mock(),

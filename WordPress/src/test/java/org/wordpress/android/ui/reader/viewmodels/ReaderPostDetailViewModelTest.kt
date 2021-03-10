@@ -29,6 +29,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -350,6 +351,16 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    /* EXCERPT FOOTER */
+    @Test
+    fun `when visit excerpt link is clicked, then post blog url is opened`() = test {
+        val observers = init()
+
+        viewModel.onVisitPostExcerptFooterClicked(postLink = readerPost.url)
+
+        assertThat(observers.navigation[0].peekContent()).isEqualTo(OpenUrl(url = readerPost.url))
+    }
+
     /* RELATED POSTS */
     @Test
     fun `given local related posts fetch succeeds, when related posts are requested, then local related posts shown`() =
@@ -553,6 +564,7 @@ class ReaderPostDetailViewModelTest {
                         ),
                         ""
                 ),
+                excerptFooterUiState = mock(),
                 moreMenuItems = mock(),
                 actions = ReaderPostActions(
                     bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
