@@ -29,6 +29,7 @@ import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISI
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 private const val DETAIL_TRACKING_SOURCE = "detail"
@@ -112,27 +113,25 @@ class ActivityLogDetailFragment : Fragment() {
                 activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
-            viewModel.navigationEvents.observe(viewLifecycleOwner, {
-                it.applyIfNotHandled {
-                    when (this) {
-                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.BACKUP_DOWNLOAD,
-                                buildTrackingSource()
-                        )
-                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.RESTORE,
-                                buildTrackingSource()
-                        )
-                        is ShowRewindDialog -> onRewindButtonClicked(
-                                model
-                        )
-                    }
+            viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+                when (it) {
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            it.model.activityID,
+                            RequestCodes.BACKUP_DOWNLOAD,
+                            buildTrackingSource()
+                    )
+                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            it.model.activityID,
+                            RequestCodes.RESTORE,
+                            buildTrackingSource()
+                    )
+                    is ShowRewindDialog -> onRewindButtonClicked(
+                            it.model
+                    )
                 }
             })
 
