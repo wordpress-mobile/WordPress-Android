@@ -28,7 +28,6 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         with(binding.postSignupInterstitial) {
-
             viewModel.onInterstitialShown()
 
             createNewSiteButton.setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
