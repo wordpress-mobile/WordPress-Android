@@ -96,10 +96,10 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
 
     private fun getZoneOffset(zone: String): String {
         val zoneId = ZoneId.of(zone)
-        val zoneDateTime = ZonedDateTime.now(zoneId)
-        val offset = zoneDateTime.offset
+        val offset = ZonedDateTime.now(zoneId).offset
+        val offsetDisplay = if (offset.id == "Z") "" else  "(GMT$offset)"
 
-        return "${zoneId.getDisplayName(FULL, Locale.getDefault())} (GMT$offset)"
+        return "${zoneId.getDisplayName(FULL, Locale.getDefault())} $offsetDisplay"
     }
 
     private fun getTimeAtZone(zone: String): String {
