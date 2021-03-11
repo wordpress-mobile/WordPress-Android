@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
@@ -148,26 +148,20 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
 
-        viewModel.navigationTarget.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { navigationState ->
-                navigateToScreen(navigationState)
-            }
+        viewModel.navigationTarget.observeEvent(this, { navigationState ->
+            navigateToScreen(navigationState)
         })
 
-        viewModel.dismissBottomSheet.observe(this, Observer { event ->
-            event.applyIfNotHandled { dismiss() }
+        viewModel.dismissBottomSheet.observeEvent(this, {
+            dismiss()
         })
 
-        viewModel.triggerOnSubmitButtonClickedListener.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { publishPost ->
-                prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
-            }
+        viewModel.triggerOnSubmitButtonClickedListener.observeEvent(this, { publishPost ->
+            prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
         })
 
-        viewModel.dismissKeyboard.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                ActivityUtils.hideKeyboardForced(view)
-            }
+        viewModel.dismissKeyboard.observeEvent(this, {
+            ActivityUtils.hideKeyboardForced(view)
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(

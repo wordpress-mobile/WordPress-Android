@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsListFragment : ViewPagerFragment() {
@@ -156,7 +156,7 @@ class StatsListFragment : ViewPagerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(viewLifecycleOwner, Observer {
+        viewModel.uiModel.observe(viewLifecycleOwner, {
             when (it) {
                 is UiModel.Success -> {
                     updateInsights(it.data)
@@ -186,39 +186,31 @@ class StatsListFragment : ViewPagerFragment() {
             }
         })
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+            navigator.navigate(activity, target)
         })
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedSection)
             }
         })
 
-        viewModel.listSelected.observe(viewLifecycleOwner, Observer {
+        viewModel.listSelected.observe(viewLifecycleOwner, {
             viewModel.onListSelected()
         })
 
-        viewModel.typesChanged.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                viewModel.onTypesChanged()
-            }
+        viewModel.typesChanged.observeEvent(viewLifecycleOwner, {
+            viewModel.onTypesChanged()
         })
 
-        viewModel.scrollTo?.observe(viewLifecycleOwner, Observer { event ->
-            if (event != null) {
-                (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
-                    event.getContentIfNotHandled()?.let { statsType ->
-                        recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
-                    }
-                }
+        viewModel.scrollTo?.observeEvent(viewLifecycleOwner, { statsType ->
+            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         })
     }

@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.add_category.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
@@ -21,6 +20,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment) {
@@ -144,13 +144,11 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     private fun startObserving() {
-        viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                ActivityUtils.hideKeyboardForced(category_name)
-            }
+        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
+            ActivityUtils.hideKeyboardForced(category_name)
         })
 
-        viewModel.navigateBack.observe(viewLifecycleOwner, Observer { bundle ->
+        viewModel.navigateBack.observe(viewLifecycleOwner, { bundle ->
             val newBundle = Bundle()
             newBundle.putAll(arguments)
             bundle?.let {
@@ -159,17 +157,15 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             closeListener?.onBackClicked(newBundle)
         })
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                showToast()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+            it.showToast()
         })
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             loadCategories(uiState.categories)
             if (uiState.selectedParentCategoryPosition != parent_category.selectedItemPosition) {
                 parent_category.setSelection(uiState.selectedParentCategoryPosition)
@@ -177,10 +173,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             updateSubmitButton(uiState.submitButtonUiState)
         })
 
-        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                closeListener?.onBackClicked(arguments)
-            }
+        parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner, {
+            closeListener?.onBackClicked(arguments)
         })
     }
 

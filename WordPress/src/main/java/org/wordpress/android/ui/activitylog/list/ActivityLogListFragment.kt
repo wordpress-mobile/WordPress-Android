@@ -36,6 +36,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.DateRange
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -200,10 +201,8 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
             logListView.scrollToPosition(0)
         })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, {
-            it.applyIfNotHandled {
-                navigate(this)
-            }
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+            navigate(it)
         })
     }
 

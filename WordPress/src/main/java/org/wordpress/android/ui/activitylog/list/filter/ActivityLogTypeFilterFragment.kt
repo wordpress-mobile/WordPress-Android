@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +25,7 @@ import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.DateRange
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 private const val ARG_INITIAL_SELECTION = "arg_initial_selection"
@@ -92,7 +92,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         val parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(ActivityLogViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisibility)
             uiHelpers.updateVisibility(recyclerView, uiState.contentVisibility)
             uiHelpers.updateVisibility(progress.root, uiState.loadingVisibility)
@@ -103,8 +103,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
                 is Content -> refreshContentScreen(uiState)
             }
         })
-        viewModel.dismissDialog.observe(viewLifecycleOwner, Observer {
-            it.applyIfNotHandled { dismiss() }
+        viewModel.dismissDialog.observeEvent(viewLifecycleOwner, {
+            dismiss()
         })
 
         val afterDateRangeAvailable = requireNotNull(arguments).containsKey(ARG_DATE_RANGE_AFTER)
