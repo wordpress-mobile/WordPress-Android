@@ -1,5 +1,7 @@
-* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
-* [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
-* [**] The classic editor will no longer be available for new posts soon, but this won’t affect editing any existing posts or pages. Users should consider switching over to the Block Editor now. [#14205]
-* [**] My Site: Quick Start was completely redesigned and is now always shown after creating a site [https://github.com/wordpress-mobile/WordPress-Android/pull/14122]
+What’s new?
 
+The classic editor will soon be unavailable for composing new posts, but this won’t affect editing your existing posts and pages. We recommend that you switch to the block editor if you haven’t already.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.
