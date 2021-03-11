@@ -32,6 +32,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEdito
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -187,6 +188,13 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
+    fun `when post show is triggered, then post is shown in web view`() = test {
+        val uiStates = init()
+
+        assertThat(uiStates.navigation.first().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
+    }
+
+    @Test
     fun `when post is updated, then ui is updated`() = test {
         val uiStates = init().uiStates
 
@@ -268,7 +276,7 @@ class ReaderPostDetailViewModelTest {
 
         observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
 
-        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
@@ -337,7 +345,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
-        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowMediaPreview::class.java)
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowMediaPreview::class.java)
     }
 
     @Test
@@ -346,7 +354,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
-        assertThat(observers.navigation[0].peekContent() as ShowMediaPreview).isEqualTo(
+        assertThat(observers.navigation.last().peekContent() as ShowMediaPreview).isEqualTo(
                 ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
         )
     }
@@ -358,7 +366,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onVisitPostExcerptFooterClicked(postLink = readerPost.url)
 
-        assertThat(observers.navigation[0].peekContent()).isEqualTo(OpenUrl(url = readerPost.url))
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(OpenUrl(url = readerPost.url))
     }
 
     /* RELATED POSTS */
@@ -495,7 +503,7 @@ class ReaderPostDetailViewModelTest {
                 val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
+                assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
             }
 
     @Test
@@ -514,7 +522,7 @@ class ReaderPostDetailViewModelTest {
                 val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation[0].peekContent())
+                assertThat(observers.navigation.last().peekContent())
                         .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
             }
 
