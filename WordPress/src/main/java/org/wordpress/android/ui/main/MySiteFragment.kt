@@ -107,6 +107,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -176,8 +177,10 @@ import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Named
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
+@Deprecated(
+        "This class is being refactored, if you implement any change, please also update " +
+                "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}"
+)
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
@@ -426,90 +429,34 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewPages()
         }
         rowPages.setOnClickListener { viewPages() }
-        rowComments.setOnClickListener {
-            ActivityLauncher.viewCurrentBlogComments(
-                    activity,
-                    selectedSite
-            )
-        }
+        rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
         rowThemes.setOnClickListener {
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
             }
         }
-        rowPeople.setOnClickListener {
-            ActivityLauncher.viewCurrentBlogPeople(
-                    activity,
-                    selectedSite
-            )
-        }
-        rowPlugins.setOnClickListener {
-            ActivityLauncher.viewPluginBrowser(
-                    activity,
-                    selectedSite
-            )
-        }
-        rowActivityLog.setOnClickListener {
-            ActivityLauncher.viewActivityLogList(
-                    activity,
-                    selectedSite
-            )
-        }
-        rowBackup.setOnClickListener {
-            ActivityLauncher.viewBackupList(
-                    activity,
-                    selectedSite
-            )
-        }
-        rowScan.setOnClickListener {
-            ActivityLauncher.viewScan(
-                    activity,
-                    selectedSite
-            )
-        }
-        rowSettings.setOnClickListener {
-            ActivityLauncher.viewBlogSettingsForResult(
-                    activity,
-                    selectedSite
-            )
-        }
+        rowPeople.setOnClickListener { ActivityLauncher.viewCurrentBlogPeople(activity, selectedSite) }
+        rowPlugins.setOnClickListener { ActivityLauncher.viewPluginBrowser(activity, selectedSite) }
+        rowActivityLog.setOnClickListener { ActivityLauncher.viewActivityLogList(activity, selectedSite) }
+        rowBackup.setOnClickListener { ActivityLauncher.viewBackupList(activity, selectedSite) }
+        rowScan.setOnClickListener { ActivityLauncher.viewScan(activity, selectedSite) }
+        rowSettings.setOnClickListener { ActivityLauncher.viewBlogSettingsForResult(activity, selectedSite) }
         rowSharing.setOnClickListener {
-            if (isQuickStartTaskActive(ENABLE_POST_SHARING)) {
-                requestNextStepOfActiveQuickStartTask()
-            }
+            if (isQuickStartTaskActive(ENABLE_POST_SHARING)) requestNextStepOfActiveQuickStartTask()
             ActivityLauncher.viewBlogSharing(activity, selectedSite)
         }
-        rowAdmin.setOnClickListener {
-            ActivityLauncher.viewBlogAdmin(
-                    activity,
-                    selectedSite
-            )
-        }
+        rowAdmin.setOnClickListener { ActivityLauncher.viewBlogAdmin(activity, selectedSite) }
         actionableEmptyView.button.setOnClickListener {
-            SitePickerActivity.addSite(
-                    activity,
-                    accountStore.hasAccessToken()
-            )
+            SitePickerActivity.addSite(activity, accountStore.hasAccessToken())
         }
-        quickStartCustomize.setOnClickListener {
-            showQuickStartList(
-                    CUSTOMIZE
-            )
-        }
-        quickStartGrow.setOnClickListener {
-            showQuickStartList(
-                    GROW
-            )
-        }
+        quickStartCustomize.setOnClickListener { showQuickStartList(CUSTOMIZE) }
+        quickStartGrow.setOnClickListener { showQuickStartList(GROW) }
         quickStartMore.setOnClickListener { showQuickStartCardMenu() }
     }
 
     private fun registerDomain() {
         AnalyticsUtils.trackWithSiteDetails(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
-        ActivityLauncher.viewDomainRegistrationActivityForResult(
-                activity, selectedSite,
-                CTA_DOMAIN_CREDIT_REDEMPTION
-        )
+        ActivityLauncher.viewDomainRegistrationActivityForResult(activity, selectedSite, CTA_DOMAIN_CREDIT_REDEMPTION)
     }
 
     private fun viewMedia() {
@@ -860,40 +807,30 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                                data, activity, selectedSite, STORY_FROM_MY_SITE)) {
+                                data, activity, selectedSite, STORY_FROM_MY_SITE
+                        )
+                ) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         updateSiteIconMediaId(mediaId, true)
                     } else {
-                        val mediaUriStringsArray = data.getStringArrayExtra(
-                                MediaPickerConstants.EXTRA_MEDIA_URIS
-                        )
+                        val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                         if (mediaUriStringsArray.isNullOrEmpty()) {
-                            AppLog.e(
-                                    UTILS,
-                                    "Can't resolve picked or captured image"
-                            )
+                            AppLog.e(UTILS, "Can't resolve picked or captured image")
                             return
                         }
 
-                        val source = PhotoPickerMediaSource.fromString(
-                                data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
-                        )
+                        val source = PhotoPickerMediaSource.fromString(data.getStringExtra(EXTRA_MEDIA_SOURCE))
                         val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
                         AnalyticsTracker.track(stat)
                         val imageUri = Uri.parse(mediaUriStringsArray[0])
                         if (imageUri != null) {
-                            val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
-                                    activity, imageUri
-                            ) { uri: Uri ->
+                            val didGoWell = WPMediaUtils.fetchMediaAndDoNext(activity, imageUri) { uri: Uri ->
                                 selectedSiteRepository.showSiteIconProgressBar(true)
                                 startCropActivity(uri)
                             }
                             if (!didGoWell) {
-                                AppLog.e(
-                                        UTILS,
-                                        "Can't download picked or captured image"
-                                )
+                                AppLog.e(UTILS, "Can't download picked or captured image")
                             }
                         }
                     }
@@ -909,24 +846,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             UCrop.REQUEST_CROP -> if (resultCode == Activity.RESULT_OK) {
                 AnalyticsTracker.track(MY_SITE_ICON_CROPPED)
-                WPMediaUtils.fetchMediaAndDoNext(
-                        activity, UCrop.getOutput(data!!)
-                ) { uri: Uri? ->
-                    startSiteIconUpload(
-                            MediaUtils.getRealPathFromURI(activity, uri)
-                    )
+                WPMediaUtils.fetchMediaAndDoNext(activity, UCrop.getOutput(data!!)) { uri: Uri? ->
+                    startSiteIconUpload(MediaUtils.getRealPathFromURI(activity, uri))
                 }
             } else if (resultCode == UCrop.RESULT_ERROR) {
-                AppLog.e(
-                        MAIN,
-                        "Image cropping failed!",
-                        UCrop.getError(data!!)
-                )
-                ToastUtils.showToast(
-                        activity,
-                        R.string.error_cropping_image,
-                        SHORT
-                )
+                AppLog.e(MAIN, "Image cropping failed!", UCrop.getError(data!!))
+                ToastUtils.showToast(activity, R.string.error_cropping_image, SHORT)
             }
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK && isAdded && data != null) {
                 AnalyticsTracker.track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
@@ -1038,27 +963,27 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             return
         }
         if (site == null) {
-            scrollView.visibility = View.GONE
-            actionableEmptyView.visibility = View.VISIBLE
-
-            // Hide actionable empty view image when screen height is under 600 pixels.
-            if (DisplayUtils.getDisplayPixelHeight(activity) >= 600) {
-                actionableEmptyView.image.visibility = View.VISIBLE
-            } else {
-                actionableEmptyView.image.visibility = View.GONE
-            }
-            return
-        }
-        if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(
-                        site
-                )) {
-            isDomainCreditAvailable = false
-            toggleDomainRegistrationCtaVisibility()
-        } else if (!isDomainCreditChecked) {
-            fetchSitePlans(site)
+            showEmptyView()
         } else {
-            toggleDomainRegistrationCtaVisibility()
+            showContent(site)
         }
+    }
+
+    private fun MySiteFragmentBinding.showEmptyView() {
+        scrollView.visibility = View.GONE
+        actionableEmptyView.visibility = View.VISIBLE
+
+        // Hide actionable empty view image when screen height is under 600 pixels.
+        if (DisplayUtils.getDisplayPixelHeight(activity) >= 600) {
+            actionableEmptyView.image.visibility = View.VISIBLE
+        } else {
+            actionableEmptyView.image.visibility = View.GONE
+        }
+    }
+
+    private fun MySiteFragmentBinding.showContent(site: SiteModel) {
+        showDomainRegistrationIfNeeded(site)
+
         scrollView.visibility = View.VISIBLE
         actionableEmptyView.visibility = View.GONE
         toggleAdminVisibility(site)
@@ -1071,9 +996,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowSharing.visibility = sharingVisibility
 
         // show settings for all self-hosted to expose Delete Site
-        val isAdminOrSelfHosted = site.hasCapabilityManageOptions || !SiteUtils.isAccessedViaWPComRest(
-                site
-        )
+        val isAdminOrSelfHosted = site.hasCapabilityManageOptions || !SiteUtils.isAccessedViaWPComRest(site)
         rowSettings.visibility = if (isAdminOrSelfHosted) View.VISIBLE else View.GONE
         rowPeople.visibility = if (site.hasCapabilityListUsers) View.VISIBLE else View.GONE
         rowPlugins.visibility = if (PluginUtils.isPluginFeatureAvailable(site)) View.VISIBLE else View.GONE
@@ -1092,18 +1015,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = homeUrl
 
         // Hide the Plan item if the Plans feature is not available for this blog
-        val planShortName = site.planShortName
-        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions && !site.isWpForTeamsSite) {
-            if (site.isWPCom || site.isAutomatedTransfer) {
-                mySiteCurrentPlanTextView.text = planShortName
-                rowPlan.visibility = View.VISIBLE
-            } else {
-                // TODO: Support Jetpack plans
-                rowPlan.visibility = View.GONE
-            }
-        } else {
-            rowPlan.visibility = View.GONE
-        }
+        showPlanIfNeeded(site)
 
         val jetpackSectionVisible = site.isJetpackConnected && // jetpack is installed and connected
                 !site.isWPComAtomic // isn't atomic site
@@ -1120,6 +1032,32 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowPages.visibility = pageVisibility
         quickActionPagesContainer.visibility = pageVisibility
         middleQuickActionSpacing.visibility = pageVisibility
+    }
+
+    private fun MySiteFragmentBinding.showDomainRegistrationIfNeeded(site: SiteModel) {
+        if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(site)) {
+            isDomainCreditAvailable = false
+            toggleDomainRegistrationCtaVisibility()
+        } else if (!isDomainCreditChecked) {
+            fetchSitePlans(site)
+        } else {
+            toggleDomainRegistrationCtaVisibility()
+        }
+    }
+
+    private fun MySiteFragmentBinding.showPlanIfNeeded(site: SiteModel) {
+        val planShortName = site.planShortName
+        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions && !site.isWpForTeamsSite) {
+            if (site.isWPCom || site.isAutomatedTransfer) {
+                mySiteCurrentPlanTextView.text = planShortName
+                rowPlan.visibility = View.VISIBLE
+            } else {
+                // TODO: Support Jetpack plans
+                rowPlan.visibility = View.GONE
+            }
+        } else {
+            rowPlan.visibility = View.GONE
+        }
     }
 
     private fun MySiteFragmentBinding.toggleAdminVisibility(site: SiteModel?) {
@@ -1213,39 +1151,37 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         EventBus.getDefault().removeStickyEvent(event)
         val site = selectedSite
         if (site != null) {
-            if (isMediaUploadInProgress) {
-                if (event.mediaModelList.size > 0) {
-                    binding?.apply {
-                        val media = event.mediaModelList[0]
-                        imageManager.load(
-                                mySiteBlavatar,
-                                BLAVATAR,
-                                PhotonUtils
-                                        .getPhotonImageUrl(
-                                                media.url,
-                                                blavatarSz,
-                                                blavatarSz,
-                                                HIGH,
-                                                site.isPrivateWPComAtomic
-                                        )
+            binding?.handleUploadMediaSuccessEvent(site, event)
+        }
+    }
+
+    private fun MySiteFragmentBinding.handleUploadMediaSuccessEvent(site: SiteModel, event: UploadMediaSuccessEvent) {
+        if (isMediaUploadInProgress) {
+            if (event.mediaModelList.size > 0) {
+                val media = event.mediaModelList[0]
+                imageManager.load(
+                        mySiteBlavatar,
+                        BLAVATAR,
+                        PhotonUtils.getPhotonImageUrl(
+                                media.url,
+                                blavatarSz,
+                                blavatarSz,
+                                HIGH,
+                                site.isPrivateWPComAtomic
                         )
-                        updateSiteIconMediaId(media.mediaId.toInt(), false)
-                    }
-                } else {
-                    AppLog.w(
-                            MAIN,
-                            "Site icon upload completed, but mediaList is empty."
-                    )
-                }
-                selectedSiteRepository.showSiteIconProgressBar(false)
+                )
+                updateSiteIconMediaId(media.mediaId.toInt(), false)
             } else {
-                if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
-                    uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
-                            activity,
-                            requireActivity().findViewById(R.id.coordinator), false,
-                            event.mediaModelList, site, event.successMessage
-                    )
-                }
+                AppLog.w(MAIN, "Site icon upload completed, but mediaList is empty.")
+            }
+            selectedSiteRepository.showSiteIconProgressBar(false)
+        } else {
+            if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
+                uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                        activity,
+                        requireActivity().findViewById(R.id.coordinator), false,
+                        event.mediaModelList, site, event.successMessage
+                )
             }
         }
     }
