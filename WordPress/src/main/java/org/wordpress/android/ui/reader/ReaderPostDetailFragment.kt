@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
@@ -46,6 +44,12 @@ import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_content.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -63,6 +67,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
@@ -122,6 +127,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
 import javax.inject.Inject
+import javax.inject.Named
 
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
@@ -130,7 +136,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ReaderInterfaces.AutoHideToolbarListener {
+        ReaderInterfaces.AutoHideToolbarListener,
+        CoroutineScope by MainScope() {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -184,6 +191,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var viewModelFactory: Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Named(IO_THREAD) private lateinit var ioDispatcher: CoroutineDispatcher
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -574,6 +582,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
         bookmarksSavedLocallyDialog?.dismiss()
         moreMenuPopup?.dismiss()
+        cancel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -1059,7 +1068,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        // TODO: Move to ViewModel
+        launch {
+            isPostTaskRunning = true
+            val result = withContext(ioDispatcher) { doInBackgroundShowPost() }
+            onPostExecuteShowPost(result)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1098,62 +1112,50 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
-    // TODO replace this inner async task with a coroutine
-    @SuppressLint("StaticFieldLeak")
-    private inner class ShowPostTask : AsyncTask<Void, Void, Boolean>() {
-        override fun onPreExecute() {
-            isPostTaskRunning = true
-        }
+    private fun doInBackgroundShowPost(): Boolean {
+        viewModel.post = if (viewModel.isFeed)
+            ReaderPostTable.getFeedPost(blogId, postId, false)
+        else
+            ReaderPostTable.getBlogPost(blogId, postId, false)
+        if (viewModel.post == null) return false
 
-        override fun onCancelled() {
-            isPostTaskRunning = false
-        }
-
-        override fun doInBackground(vararg params: Void): Boolean? {
-            viewModel.post = if (viewModel.isFeed)
-                ReaderPostTable.getFeedPost(blogId, postId, false)
-            else
-                ReaderPostTable.getBlogPost(blogId, postId, false)
-            if (viewModel.post == null) return false
-
-            // "discover" Editor Pick posts should open the original (source) post
-            viewModel.post?.takeIf { it.isDiscoverPost }?.let {
-                viewModel.post?.discoverData?.let {
-                    if (
-                            it.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK &&
-                            it.blogId != 0L &&
-                            it.postId != 0L
-                    ) {
-                        viewModel.isFeed = false
-                        blogId = it.blogId
-                        postId = it.postId
-                        viewModel.post = ReaderPostTable.getBlogPost(blogId, postId, false)
-                        if (viewModel.post == null) return false
-                    }
+        // "discover" Editor Pick posts should open the original (source) post
+        viewModel.post?.takeIf { it.isDiscoverPost }?.let {
+            viewModel.post?.discoverData?.let {
+                if (
+                        it.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK &&
+                        it.blogId != 0L &&
+                        it.postId != 0L
+                ) {
+                    viewModel.isFeed = false
+                    blogId = it.blogId
+                    postId = it.postId
+                    viewModel.post = ReaderPostTable.getBlogPost(blogId, postId, false)
+                    if (viewModel.post == null) return false
                 }
             }
-
-            return true
         }
 
-        override fun onPostExecute(result: Boolean) {
-            isPostTaskRunning = false
+        return true
+    }
 
-            if (!isAdded) return
+    private fun onPostExecuteShowPost(result: Boolean) {
+        isPostTaskRunning = false
 
-            // make sure options menu reflects whether we now have a post
-            activity?.invalidateOptionsMenu()
+        if (!isAdded) return
 
-            if (handleShowPostResult(result)) return
+        // make sure options menu reflects whether we now have a post
+        activity?.invalidateOptionsMenu()
 
-            viewModel.post?.let {
-                if (handleDirectOperation()) return
+        if (handleShowPostResult(result)) return
 
-                scrollView.visibility = View.VISIBLE
-                layoutFooter.visibility = View.VISIBLE
+        viewModel.post?.let {
+            if (handleDirectOperation()) return
 
-                viewModel.onShowPost(it)
-            }
+            scrollView.visibility = View.VISIBLE
+            layoutFooter.visibility = View.VISIBLE
+
+            viewModel.onShowPost(it)
         }
     }
 
