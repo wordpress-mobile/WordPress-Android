@@ -31,6 +31,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
@@ -39,6 +41,8 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -55,6 +59,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
     private val readerGetPostUseCase: ReaderGetPostUseCase,
+    private val readerFetchPostUseCase: ReaderFetchPostUseCase,
     private val siteStore: SiteStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
@@ -140,18 +145,31 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun getReaderPostFromDb(blogId: Long, postId: Long): ReaderPost? {
-        val (readerPost, isFeed) = readerGetPostUseCase.get(
-                blogId = blogId,
-                postId = postId,
-                isFeed = this@ReaderPostDetailViewModel.isFeed
-        )
-        readerPost?.let {
-            this.post = it
-            this.isFeed = isFeed
-        }
+    suspend fun onShowPostStarted(blogId: Long, postId: Long) {
+        getOrFetchReaderPost(blogId = blogId, postId = postId)
+    }
 
-        return readerPost
+    private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
+        getReaderPostFromDb(blogId = blogId, postId = postId)
+        if (post == null) {
+            when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
+                FetchReaderPostState.Success -> getReaderPostFromDb(blogId, postId)
+
+                FetchReaderPostState.AlreadyRunning ->
+                    AppLog.i(T.READER, "reader post detail > post not found, requesting it")
+
+                FetchReaderPostState.Failed.NoNetwork,
+                FetchReaderPostState.Failed.RequestFailed,
+                FetchReaderPostState.Failed.NotAuthorised,
+                FetchReaderPostState.Failed.PostNotFound -> Unit // To be implemented
+            }
+        }
+    }
+
+    private suspend fun getReaderPostFromDb(blogId: Long, postId: Long) {
+        val (readerPost, isFeedPost) = readerGetPostUseCase.get(blogId = blogId, postId = postId, isFeed = this.isFeed)
+        this.post = readerPost
+        this.isFeed = isFeedPost
     }
 
     fun onMoreButtonClicked() {

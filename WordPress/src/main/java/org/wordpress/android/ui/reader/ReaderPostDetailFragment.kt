@@ -192,11 +192,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 .post(ReaderEvents.DoSignIn())
     }
 
-    /*
-     * AsyncTask to retrieve this post from SQLite and display it
-     */
-    private var isPostTaskRunning = false
-
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
@@ -1057,18 +1052,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        if (isPostTaskRunning) {
-            AppLog.w(T.READER, "reader post detail > show post task already running")
-            return
-        }
-
         // TODO: Move to ViewModel
         launch {
-            isPostTaskRunning = true
-            val post = viewModel.getReaderPostFromDb(blogId = blogId, postId = postId)
-            val result = post != null
-
-            onPostExecuteShowPost(result)
+            viewModel.onShowPostStarted(blogId = blogId, postId = postId)
+            onPostExecuteShowPost()
         }
     }
 
@@ -1108,15 +1095,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
-    private fun onPostExecuteShowPost(result: Boolean) {
-        isPostTaskRunning = false
-
+    private fun onPostExecuteShowPost() {
         if (!isAdded) return
 
         // make sure options menu reflects whether we now have a post
         activity?.invalidateOptionsMenu()
-
-        if (handleShowPostResult(result)) return
 
         viewModel.post?.let {
             if (handleDirectOperation()) return

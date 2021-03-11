@@ -51,6 +51,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
@@ -95,6 +96,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
     @Mock private lateinit var readerGetPostUseCase: ReaderGetPostUseCase
+    @Mock private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
@@ -121,6 +123,7 @@ class ReaderPostDetailViewModelTest {
                 reblogUseCase,
                 readerFetchRelatedPostsUseCase,
                 readerGetPostUseCase,
+                readerFetchPostUseCase,
                 siteStore,
                 analyticsUtilsWrapper,
                 eventBusWrapper,
