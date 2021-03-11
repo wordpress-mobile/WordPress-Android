@@ -7,9 +7,9 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.domain_suggestions_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.DomainSuggestionsActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -28,21 +28,30 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
+    private var binding: DomainSuggestionsActivityBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.domain_suggestions_activity)
+        with(DomainSuggestionsActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
 
-        domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                as DomainRegistrationPurpose
+            domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
+                    as DomainRegistrationPurpose
 
-        setSupportActionBar(toolbar_main)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
+            setSupportActionBar(toolbarMain)
+            supportActionBar?.let {
+                it.setHomeButtonEnabled(true)
+                it.setDisplayHomeAsUpEnabled(true)
+            }
+            setupViewModel()
         }
-        setupViewModel()
+    }
+
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
     }
 
     private fun setupViewModel() {
@@ -139,18 +148,20 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        if (containerId == R.id.domain_suggestions_list) {
-            appbar_main.post {
-                appbar_main.isLiftOnScroll = false
-                appbar_main.setLifted(false)
-                appbar_main.elevation = 0F
-                appbar_main.requestLayout()
-            }
-        } else {
-            appbar_main.post {
-                appbar_main.isLiftOnScroll = true
-                appbar_main.liftOnScrollTargetViewId = containerId
-                appbar_main.requestLayout()
+        binding?.apply {
+            if (containerId == R.id.domain_suggestions_list) {
+                appbarMain.post {
+                    appbarMain.isLiftOnScroll = false
+                    appbarMain.setLifted(false)
+                    appbarMain.elevation = 0F
+                    appbarMain.requestLayout()
+                }
+            } else {
+                appbarMain.post {
+                    appbarMain.isLiftOnScroll = true
+                    appbarMain.liftOnScrollTargetViewId = containerId
+                    appbarMain.requestLayout()
+                }
             }
         }
     }
