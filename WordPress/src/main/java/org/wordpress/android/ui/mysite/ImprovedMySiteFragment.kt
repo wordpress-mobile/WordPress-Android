@@ -175,13 +175,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     }
 
     private fun NewMySiteFragmentBinding.setupObservers() {
-        viewModel.uiModel.observe(viewLifecycleOwner, {
-            it?.let { uiModel ->
-                loadGravatar(uiModel.accountAvatarUrl)
-                when (val state = uiModel.state) {
-                    is State.SiteSelected -> loadData(state.items)
-                    is State.NoSites -> loadEmptyView(state.shouldShowImage)
-                }
+        viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+            loadGravatar(uiModel.accountAvatarUrl)
+            when (val state = uiModel.state) {
+                is State.SiteSelected -> loadData(state.items)
+                is State.NoSites -> loadEmptyView(state.shouldShowImage)
             }
         })
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
@@ -218,63 +216,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                     ))
                     .show(parentFragmentManager, dynamicCardMenuModel.id)
         })
-        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { action ->
-            when (action) {
-                is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-                is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
-                is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-                is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@ImprovedMySiteFragment, action.site)
-                is OpenCropActivity -> startCropActivity(action.imageUri)
-                is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-                is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
-                is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
-                is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
-                is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
-                is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-                is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
-                is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
-                is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-                is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
-                is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-                is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
-                is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-                is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
-                is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
-                is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@ImprovedMySiteFragment)
-                is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
-                is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-                is AddNewStory ->
-                    ActivityLauncher.addNewStoryForResult(
-                            activity,
-                            action.site,
-                            action.source
-                    )
-                is AddNewStoryWithMediaIds ->
-                    ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                            activity,
-                            action.site,
-                            action.source,
-                            action.mediaIds.toLongArray()
-                    )
-                is AddNewStoryWithMediaUris ->
-                    ActivityLauncher.addNewStoryWithMediaUrisForResult(
-                            activity,
-                            action.site,
-                            action.source,
-                            action.mediaUris.toTypedArray()
-                    )
-                is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
-                        activity,
-                        action.site,
-                        CTA_DOMAIN_CREDIT_REDEMPTION
-                )
-                is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-            }
-        })
-        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
-            showSnackbar(messageHolder)
-        })
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
             val message = quickStartUtils.stylizeThemedQuickStartPrompt(
                     requireContext(),
@@ -283,33 +226,83 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             )
             showSnackbar(SnackbarMessageHolder(UiStringText(message)))
         })
-        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner, { mediaModel ->
-            UploadService.uploadMedia(requireActivity(), mediaModel)
-        })
-        dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, { interaction ->
-            viewModel.onDialogInteraction(interaction)
-        })
+        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner, { UploadService.uploadMedia(requireActivity(), it) })
+        dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, { viewModel.onDialogInteraction(it) })
         dynamicCardMenuViewModel.onInteraction.observeEvent(viewLifecycleOwner, { interaction ->
             viewModel.onQuickStartMenuInteraction(interaction)
         })
-        viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { itemUploadedModel ->
-            when (itemUploadedModel) {
-                is ItemUploadedModel.PostUploaded -> {
-                    uploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                            activity,
-                            requireActivity().findViewById(R.id.coordinator), true, false,
-                            itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
-                    )
-                }
-                is ItemUploadedModel.MediaUploaded -> {
-                    uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
-                            activity,
-                            requireActivity().findViewById(R.id.coordinator), true,
-                            itemUploadedModel.media, itemUploadedModel.site, itemUploadedModel.errorMessage
-                    )
-                }
-            }
-        })
+        viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
+    }
+
+    @Suppress("ComplexMethod")
+    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
+        is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+        is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+        is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+        is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@ImprovedMySiteFragment, action.site)
+        is OpenCropActivity -> startCropActivity(action.imageUri)
+        is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+        is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
+        is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
+        is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
+        is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+        is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+        is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
+        is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
+        is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
+        is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
+        is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
+        is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
+        is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
+        is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+        is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@ImprovedMySiteFragment)
+        is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+        is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
+        is AddNewStory -> ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
+        is AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                activity,
+                action.site,
+                action.source,
+                action.mediaIds.toLongArray()
+        )
+        is AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
+                activity,
+                action.site,
+                action.source,
+                action.mediaUris.toTypedArray()
+        )
+        is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+                activity,
+                action.site,
+                CTA_DOMAIN_CREDIT_REDEMPTION
+        )
+        is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+    }
+
+    private fun handleUploadedItem(itemUploadedModel: ItemUploadedModel) = when (itemUploadedModel) {
+        is ItemUploadedModel.PostUploaded -> {
+            uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                    activity,
+                    requireActivity().findViewById(R.id.coordinator),
+                    isError = true,
+                    isFirstTimePublish = false,
+                    post = itemUploadedModel.post,
+                    errorMessage = itemUploadedModel.errorMessage,
+                    site = itemUploadedModel.site
+            )
+        }
+        is ItemUploadedModel.MediaUploaded -> {
+            uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                    activity,
+                    requireActivity().findViewById(R.id.coordinator),
+                    isError = true,
+                    mediaList = itemUploadedModel.media,
+                    site = itemUploadedModel.site,
+                    messageForUser = itemUploadedModel.errorMessage
+            )
+        }
     }
 
     private fun startCropActivity(imageUri: UriWrapper) {
