@@ -23,7 +23,7 @@ class ReaderGetPostUseCase @Inject constructor(
                 }
 
                 // "discover" Editor Pick posts should open the original (source) post
-                val discoverEditorPost = readerPost?.let { getDiscoverEditorPickSourcePost(it, blogId, postId) }
+                val discoverEditorPost = readerPost?.let { getDiscoverEditorPickSourcePost(it) }
 
                 val post = discoverEditorPost ?: readerPost
                 val isFeedPost = if (discoverEditorPost != null) false else isFeed
@@ -31,7 +31,7 @@ class ReaderGetPostUseCase @Inject constructor(
                 Pair(post, isFeedPost)
             }
 
-    private fun getDiscoverEditorPickSourcePost(post: ReaderPost, blogId: Long, postId: Long) =
+    private fun getDiscoverEditorPickSourcePost(post: ReaderPost) =
             post.takeIf { it.isDiscoverPost && isDiscoverEditorPickPost(it.discoverData) }?.let {
                 readerPostTableWrapper.getBlogPost(it.discoverData.blogId, it.discoverData.postId, false)
             }

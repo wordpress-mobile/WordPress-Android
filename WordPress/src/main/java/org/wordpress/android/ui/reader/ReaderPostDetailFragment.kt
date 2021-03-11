@@ -10,7 +10,6 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -471,11 +470,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                replaceRelatedPostDetailWithHistory(
-                        postId = this.postId,
-                        blogId = this.blogId,
-                        isGlobal = this.isGlobal
-                )
+                replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
 
@@ -826,7 +821,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
     }
 
-    private fun replaceRelatedPostDetailWithHistory(postId: Long, blogId: Long, isGlobal: Boolean) {
+    private fun replaceRelatedPostDetailWithHistory(postId: Long, blogId: Long) {
         viewModel.post?.let {
             postHistory.push(ReaderBlogIdPostId(it.blogId, it.postId))
             replacePost(blogId, postId, true)
