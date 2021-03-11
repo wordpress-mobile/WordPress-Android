@@ -53,10 +53,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -78,12 +74,7 @@ import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
-import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_LIKE
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_REPLY
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.POST_LIKE
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
@@ -98,9 +89,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ExcerptFooterUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
@@ -112,7 +100,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.StringUtils
@@ -479,7 +466,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateFeaturedImage(state: ReaderPostFeaturedImageUiState?) {
+    private fun updateFeaturedImage(state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?) {
         featured_image.setVisible(state != null)
         state?.let {
             featured_image.layoutParams.height = it.height
@@ -492,7 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateExcerptFooter(state: ExcerptFooterUiState?) {
+    private fun updateExcerptFooter(state: ReaderPostDetailsUiState.ExcerptFooterUiState?) {
         // if we're showing just the excerpt, show a footer which links to the full post
         excerpt_footer?.setVisible(state != null)
         state?.let {
@@ -620,7 +607,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     ReaderActivityLauncher.openPost(context, viewModel.post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
-                            DEEP_LINKED_FALLBACK,
+                            Stat.DEEP_LINKED_FALLBACK,
                             interceptedUri
                     )
                     ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
@@ -629,7 +616,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 return true
             }
             R.id.menu_share -> {
-                AnalyticsTracker.track(SHARED_ITEM)
+                AnalyticsTracker.track(Stat.SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, viewModel.post)
                 return true
             }
@@ -769,7 +756,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private fun showRelatedPosts(state: RelatedPostsUiState) {
+    private fun showRelatedPosts(state: ReaderPostDetailsUiState.RelatedPostsUiState) {
         // different container views for global/local related posts
         val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
         relatedPostsView.showPosts(state)
@@ -866,7 +853,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 setRefreshing(false)
 
-                if (directOperation != null && directOperation == POST_LIKE) {
+                if (directOperation != null && directOperation == DirectOperation.POST_LIKE) {
                     doLikePost()
                 }
             }
@@ -930,7 +917,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val isPrivatePost = viewModel?.post?.isPrivate == true
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
-            options.add(IS_PRIVATE_IMAGE)
+            options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
         }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
@@ -1022,9 +1009,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         else
                             R.string.reader_err_get_post_not_authorized_signin_fallback
                         signInButton.visibility = View.VISIBLE
-                        AnalyticsUtils.trackWithReaderPostDetails(READER_WPCOM_SIGN_IN_NEEDED, viewModel.post)
+                        AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_WPCOM_SIGN_IN_NEEDED, viewModel.post)
                     }
-                    AnalyticsUtils.trackWithReaderPostDetails(READER_USER_UNAUTHORIZED, viewModel.post)
+                    AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_USER_UNAUTHORIZED, viewModel.post)
                 }
                 404 -> errMsgResId = R.string.reader_err_get_post_not_found
                 else -> errMsgResId = R.string.reader_err_get_post_generic
@@ -1048,7 +1035,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val icon: Drawable? = try {
                 ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
             } catch (e: Resources.NotFoundException) {
-                AppLog.e(READER, "Drawable not found. See issue #11576", e)
+                AppLog.e(T.READER, "Drawable not found. See issue #11576", e)
                 null
             }
             icon?.let {
@@ -1085,10 +1072,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         if (event.isError) {
-            AppLog.e(
-                    READER,
-                    "Failed to load private AT cookie. $event.error.type - $event.error.message"
-            )
+            AppLog.e(T.READER, "Failed to load private AT cookie. $event.error.type - $event.error.message")
             WPSnackbar.make(
                     requireView(),
                     R.string.media_accessing_failed,
@@ -1181,7 +1165,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             // post couldn't be loaded which means it doesn't exist in db, so request it from
             // the server if it hasn't already been requested
             if (!hasAlreadyRequestedPost) {
-                AppLog.i(READER, "reader post detail > post not found, requesting it")
+                AppLog.i(T.READER, "reader post detail > post not found, requesting it")
                 requestPost()
             } else if (!TextUtils.isEmpty(errorMessage)) {
                 // post has already been requested and failed, so restore previous error message
@@ -1197,7 +1181,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun handleDirectOperation(): Boolean {
         if (directOperation != null) {
             when (directOperation) {
-                COMMENT_JUMP, COMMENT_REPLY, COMMENT_LIKE -> {
+                DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
                     viewModel.post?.let {
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
@@ -1209,7 +1193,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     activity?.overridePendingTransition(0, 0)
                     return true
                 }
-                POST_LIKE -> {
+                DirectOperation.POST_LIKE -> {
                 }
             }
             // Liking needs to be handled "later" after the post has been updated from the server so,
