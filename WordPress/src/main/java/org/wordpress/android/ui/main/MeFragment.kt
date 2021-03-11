@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -90,6 +92,16 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(toolbar_main)
+            supportActionBar?.apply {
+                setHomeButtonEnabled(true)
+                setDisplayHomeAsUpEnabled(true)
+                // We need to set the title this way so it can be updated on locale change
+                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+            }
+        }
+
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
@@ -138,10 +150,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MeViewModel::class.java)
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    true -> showDisconnectDialog()
-                    false -> hideDisconnectDialog()
-                }
+            when (it) {
+                true -> showDisconnectDialog()
+                false -> hideDisconnectDialog()
+            }
         })
     }
 
