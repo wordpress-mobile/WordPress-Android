@@ -179,6 +179,7 @@ class ReaderPostDetailViewModelTest {
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
     }
 
+    /* SHOW POST */
     @Test
     fun `when post show is triggered, then ui is updated`() = test {
         val uiStates = init().uiStates
@@ -194,6 +195,7 @@ class ReaderPostDetailViewModelTest {
         assertThat(uiStates.navigation.first().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
     }
 
+    /* UPDATE POST */
     @Test
     fun `when post is updated, then ui is updated`() = test {
         val uiStates = init().uiStates
@@ -204,6 +206,7 @@ class ReaderPostDetailViewModelTest {
         assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
+    /* FOOTER */
     @Test
     fun `when like button is clicked, then like action is invoked`() = test {
         val uiStates = init().uiStates
@@ -270,6 +273,7 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    /* HEADER */
     @Test
     fun `when tag is clicked, then posts for tag are shown`() = test {
         val observers = init()
@@ -293,6 +297,21 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
+    fun `when header follow button is clicked, then follow action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(FOLLOW),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    /* MORE MENU */
+    @Test
     fun `when more button is clicked, then more menu is shown`() = test {
         val uiStates = init().uiStates
 
@@ -315,20 +334,6 @@ class ReaderPostDetailViewModelTest {
         init().uiStates
 
         viewModel.onMoreMenuItemClicked(FOLLOW)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(FOLLOW),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    @Test
-    fun `when header follow button is clicked, then follow action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
