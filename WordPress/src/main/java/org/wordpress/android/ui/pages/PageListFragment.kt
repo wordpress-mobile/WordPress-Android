@@ -63,7 +63,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
 
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
-        with (PagesListFragmentBinding.bind(view)) {
+        with(PagesListFragmentBinding.bind(view)) {
             initializeViews(savedInstanceState)
             initializeViewModels(nonNullActivity)
         }
@@ -125,7 +125,11 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         })
     }
 
-    private fun PagesListFragmentBinding.setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean, isSitePrivateAt: Boolean) {
+    private fun PagesListFragmentBinding.setPages(
+        pages: List<PageItem>,
+        isSitePhotonCapable: Boolean,
+        isSitePrivateAt: Boolean
+    ) {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
@@ -170,18 +174,18 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     fun showSnackbar() {
-            view?.post {
-                val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                        requireContext(),
-                        R.string.quick_start_dialog_edit_homepage_message_pages_short,
-                        R.drawable.ic_homepage_16dp
-                )
+        view?.post {
+            val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
+                    requireContext(),
+                    R.string.quick_start_dialog_edit_homepage_message_pages_short,
+                    R.drawable.ic_homepage_16dp
+            )
 
-                snackbar = WPDialogSnackbar.make(
-                        requireView().findViewById(R.id.page_list_layout), title,
-                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                )
-                snackbar?.show()
-            }
+            snackbar = WPDialogSnackbar.make(
+                    requireView().findViewById(R.id.page_list_layout), title,
+                    resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
+            )
+            snackbar?.show()
+        }
     }
 }

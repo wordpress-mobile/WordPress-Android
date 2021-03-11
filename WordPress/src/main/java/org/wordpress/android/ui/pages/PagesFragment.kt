@@ -283,6 +283,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         mlpViewModel = ViewModelProvider(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 
         setupObservers(activity)
+        setupActions(activity)
+        setupMlpObservers(activity)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -298,9 +300,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
 
                 val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible)
+                        if (state.isAuthorFilterVisible) {
                             resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        else 0
+                        } else 0
                 tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
 
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
@@ -351,36 +353,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
-            createNewPage(request.title, request.content, request.template)
-        })
-
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitle == null) {
-                    WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val snackbar = WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    )
-                    snackbar.setAction(
-                            uiHelpers.getTextOfUiString(
-                                    requireContext(),
-                                    holder.buttonTitle
-                            )
-                    ) {
-                        holder.buttonAction()
-                    }
-                    snackbar.show()
-                }
-            }
+            showSnackbarInActivity(activity, holder)
         })
 
         viewModel.editPage.observe(viewLifecycleOwner, { (site, page, loadAutoRevision) ->
@@ -431,7 +405,40 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })
+    }
 
+    private fun showSnackbarInActivity(
+        activity: FragmentActivity,
+        holder: SnackbarMessageHolder?
+    ) {
+        val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+        if (holder != null && parent != null) {
+            if (holder.buttonTitle == null) {
+                WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                val snackbar = WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                )
+                snackbar.setAction(
+                        uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                holder.buttonTitle
+                        )
+                ) {
+                    holder.buttonAction()
+                }
+                snackbar.show()
+            }
+        }
+    }
+
+    private fun setupActions(activity: FragmentActivity) {
         viewModel.dialogAction.observe(viewLifecycleOwner, {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
@@ -444,15 +451,14 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                         data,
                         post,
                         site,
-                        uploadActionUseCase.getUploadAction(post),
-                        View.OnClickListener {
-                            uploadUtilsWrapper.publishPost(
-                                    activity,
-                                    post,
-                                    site
-                            )
-                        }
-                )
+                        uploadActionUseCase.getUploadAction(post)
+                ) {
+                    uploadUtilsWrapper.publishPost(
+                            activity,
+                            post,
+                            site
+                    )
+                }
             }
         })
 
@@ -475,7 +481,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 )
             }
         })
+    }
 
+    private fun setupMlpObservers(activity: FragmentActivity) {
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
+            createNewPage(request.title, request.content, request.template)
+        })
         mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
             val fm = activity.supportFragmentManager
             var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
