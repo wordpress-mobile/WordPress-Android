@@ -206,68 +206,55 @@ class ReaderPostDetailViewModelTest {
         assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
-    /* FOOTER */
+    /* READER POST FEATURED IMAGE */
     @Test
-    fun `when like button is clicked, then like action is invoked`() = test {
-        val uiStates = init().uiStates
+    fun `when featured image is clicked, then media preview is shown`() = test {
+        val observers = init()
 
-        uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(LIKE),
-                eq(false),
-                eq(true)
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowMediaPreview::class.java)
+    }
+
+    @Test
+    fun `when media preview is requested, then correct media from selected post's site is previewed`() = test {
+        val observers = init()
+
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
+
+        assertThat(observers.navigation.last().peekContent() as ShowMediaPreview).isEqualTo(
+                ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
         )
     }
 
+    /* MORE MENU */
     @Test
-    fun `when comments button is clicked, then comments action is invoked`() = test {
+    fun `when more button is clicked, then more menu is shown`() = test {
         val uiStates = init().uiStates
 
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
+        viewModel.onMoreButtonClicked()
 
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(COMMENTS),
-                eq(false),
-                eq(true)
-        )
+        assertThat(uiStates.last().moreMenuItems).isNotNull
     }
 
     @Test
-    fun `when reblog button is clicked, then reblog action is invoked`() = test {
+    fun `when user dismisses the menu, then more menu is not shown`() = test {
         val uiStates = init().uiStates
 
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
+        viewModel.onMoreMenuDismissed()
 
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(REBLOG),
-                eq(false),
-                eq(true)
-        )
+        assertThat(uiStates.last().moreMenuItems).isNull()
     }
 
     @Test
-    fun `when site is picked for reblog action, then editor is opened for reblog`() {
-        val navigaitonObserver = init().navigation
-        fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
+    fun `when more menu list item is clicked, then corresponding action is invoked`() = test {
+        init().uiStates
 
-        viewModel.onReblogSiteSelected(1)
-
-        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
-    }
-
-    @Test
-    fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
+        viewModel.onMoreMenuItemClicked(FOLLOW)
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
-                eq(BOOKMARK),
+                eq(FOLLOW),
                 eq(false),
                 eq(true)
         )
@@ -307,60 +294,6 @@ class ReaderPostDetailViewModelTest {
                 eq(FOLLOW),
                 eq(false),
                 eq(true)
-        )
-    }
-
-    /* MORE MENU */
-    @Test
-    fun `when more button is clicked, then more menu is shown`() = test {
-        val uiStates = init().uiStates
-
-        viewModel.onMoreButtonClicked()
-
-        assertThat(uiStates.last().moreMenuItems).isNotNull
-    }
-
-    @Test
-    fun `when user dismisses the menu, then more menu is not shown`() = test {
-        val uiStates = init().uiStates
-
-        viewModel.onMoreMenuDismissed()
-
-        assertThat(uiStates.last().moreMenuItems).isNull()
-    }
-
-    @Test
-    fun `when more menu list item is clicked, then corresponding action is invoked`() = test {
-        init().uiStates
-
-        viewModel.onMoreMenuItemClicked(FOLLOW)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(FOLLOW),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    /* READER POST FEATURED IMAGE */
-    @Test
-    fun `when featured image is clicked, then media preview is shown`() = test {
-        val observers = init()
-
-        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
-
-        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowMediaPreview::class.java)
-    }
-
-    @Test
-    fun `when media preview is requested, then correct media from selected post's site is previewed`() = test {
-        val observers = init()
-
-        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
-
-        assertThat(observers.navigation.last().peekContent() as ShowMediaPreview).isEqualTo(
-                ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
         )
     }
 
@@ -530,6 +463,73 @@ class ReaderPostDetailViewModelTest {
                 assertThat(observers.navigation.last().peekContent())
                         .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
             }
+
+    /* FOOTER */
+    @Test
+    fun `when like button is clicked, then like action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(LIKE),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when comments button is clicked, then comments action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(COMMENTS),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when reblog button is clicked, then reblog action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(REBLOG),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when site is picked for reblog action, then editor is opened for reblog`() {
+        val navigaitonObserver = init().navigation
+        fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
+
+        viewModel.onReblogSiteSelected(1)
+
+        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+    }
+
+    @Test
+    fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(BOOKMARK),
+                eq(false),
+                eq(true)
+        )
+    }
 
     private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
         this.postId = id
