@@ -1,0 +1,7 @@
+What’s new?
+
+The classic editor will soon be unavailable for composing new posts, but this won’t affect editing your existing posts and pages. We recommend that you switch to the block editor if you haven’t already.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.
