@@ -129,6 +129,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
@@ -215,40 +216,40 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
-        appBarLayout, verticalOffset ->
-        val collapsingToolbarLayout = appBarLayout
-                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+    private val appBarLayoutOffsetChangedListener =
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                val collapsingToolbarLayout = appBarLayout
+                        .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+                val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-        context?.let { context ->
-            val menu: Menu = toolbar.menu
-            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
+                context?.let { context ->
+                    val menu: Menu = toolbar.menu
+                    val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+                    val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+                    val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
-            val collapsingToolbarHeight = collapsingToolbarLayout.height
-            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                    collapsingToolbarLayout.scrimVisibleHeightTrigger
-            val isDarkTheme = context.resources.configuration.isDarkTheme()
+                    val collapsingToolbarHeight = collapsingToolbarLayout.height
+                    val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                            collapsingToolbarLayout.scrimVisibleHeightTrigger
+                    val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-            val colorAttr = if (isCollapsed || isDarkTheme) {
-                R.attr.colorOnSurface
-            } else {
-                R.attr.colorSurface
+                    val colorAttr = if (isCollapsed || isDarkTheme) {
+                        R.attr.colorOnSurface
+                    } else {
+                        R.attr.colorSurface
+                    }
+                    val color = context.getColorFromAttribute(colorAttr)
+                    val colorFilter = BlendModeColorFilterCompat
+                            .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+                    toolbar.setTitleTextColor(color)
+                    toolbar.navigationIcon?.colorFilter = colorFilter
+
+                    menuBrowse?.icon?.colorFilter = colorFilter
+                    menuShare?.icon?.colorFilter = colorFilter
+                    menuMore?.icon?.colorFilter = colorFilter
+                }
             }
-            val color = context.getColorFromAttribute(colorAttr)
-            val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
-
-            toolbar.setTitleTextColor(color)
-            toolbar.navigationIcon?.colorFilter = colorFilter
-
-            menuBrowse?.icon?.colorFilter = colorFilter
-            menuShare?.icon?.colorFilter = colorFilter
-            menuMore?.icon?.colorFilter = colorFilter
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -401,11 +402,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it, binding) })
 
-        viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar(binding) } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
         viewModel.start(isRelatedPost)
     }
@@ -990,16 +991,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     val offerSignIn = WPUrlUtils.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
 
                     if (!offerSignIn) {
-                        errMsgResId = if (interceptedUri == null)
+                        errMsgResId = if (interceptedUri == null) {
                             R.string.reader_err_get_post_not_authorized
-                        else
+                        } else {
                             R.string.reader_err_get_post_not_authorized_fallback
+                        }
                         signInButton.visibility = View.GONE
                     } else {
-                        errMsgResId = if (interceptedUri == null)
+                        errMsgResId = if (interceptedUri == null) {
                             R.string.reader_err_get_post_not_authorized_signin
-                        else
+                        } else {
                             R.string.reader_err_get_post_not_authorized_signin_fallback
+                        }
                         signInButton.visibility = View.VISIBLE
                         AnalyticsUtils.trackWithReaderPostDetails(
                                 READER_WPCOM_SIGN_IN_NEEDED,
@@ -1118,10 +1121,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         override fun doInBackground(vararg params: Void): Boolean? {
-            post = if (isFeed)
+            post = if (isFeed) {
                 ReaderPostTable.getFeedPost(blogId, postId, false)
-            else
+            } else {
                 ReaderPostTable.getBlogPost(blogId, postId, false)
+            }
             if (post == null) return false
 
             // "discover" Editor Pick posts should open the original (source) post

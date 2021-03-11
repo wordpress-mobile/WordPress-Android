@@ -22,6 +22,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -96,16 +97,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         }
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner) {
-            it?.applyIfNotHandled {
-                showSnackbar(binding.bottomBar)
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) {
+            it.showSnackbar(bottomBar)
         }
 
-        viewModel.closeReaderInterests.observe(viewLifecycleOwner) { event ->
-            event?.getContentIfNotHandled()?.let {
-                requireActivity().finish()
-            }
+        viewModel.closeReaderInterests.observeEvent(viewLifecycleOwner) {
+            requireActivity().finish()
         }
 
         viewModel.start(

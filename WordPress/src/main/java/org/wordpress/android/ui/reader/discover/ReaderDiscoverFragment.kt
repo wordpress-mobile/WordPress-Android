@@ -46,6 +46,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -124,52 +125,50 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             ptrLayout.isEnabled = it.swipeToRefreshEnabled
             ptrLayout.isRefreshing = it.reloadProgressVisibility
         }
-        viewModel.navigationEvents.observe(viewLifecycleOwner) {
-            it.applyIfNotHandled {
-                when (this) {
-                    is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
-                    is SharePost -> ReaderActivityLauncher.sharePost(context, post)
-                    is OpenPost -> ReaderActivityLauncher.openPost(context, post)
-                    is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
-                    is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    is ShowSitePickerForResult -> ActivityLauncher
-                            .showSitePickerForResult(this@ReaderDiscoverFragment, this.preselectedSite, this.mode)
-                    is OpenEditorForReblog -> ActivityLauncher
-                            .openEditorForReblog(activity, this.site, this.post, this.source)
-                    is ShowBookmarkedTab -> {
-                        ActivityLauncher.viewSavedPostsListInReader(activity)
-                    }
-                    is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
-                    is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
-                    is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, this.videoUrl)
-                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            context,
-                            this.siteId,
-                            this.feedId
-                    )
-                    is ShowReportPost -> {
-                        ReaderActivityLauncher.openUrl(
-                                context,
-                                readerUtilsWrapper.getReportPostUrl(url),
-                                OpenUrlType.INTERNAL
-                        )
-                    }
-                    is ShowReaderSubs -> {
-                        ReaderActivityLauncher.showReaderSubs(context)
-                    }
-                    is ShowRelatedPostDetails -> Unit // Do Nothing
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
+                        context,
+                        it.post.blogId,
+                        it.post.postId
+                )
+                is SharePost -> ReaderActivityLauncher.sharePost(context, it.post)
+                is OpenPost -> ReaderActivityLauncher.openPost(context, it.post)
+                is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, it.blogId, it.postId)
+                is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+                is ShowSitePickerForResult -> ActivityLauncher
+                        .showSitePickerForResult(this@ReaderDiscoverFragment, it.preselectedSite, it.mode)
+                is OpenEditorForReblog -> ActivityLauncher
+                        .openEditorForReblog(activity, it.site, it.post, it.source)
+                is ShowBookmarkedTab -> {
+                    ActivityLauncher.viewSavedPostsListInReader(activity)
                 }
+                is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(it)
+                is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, it.tag)
+                is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, it.videoUrl)
+                is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                        context,
+                        it.siteId,
+                        it.feedId
+                )
+                is ShowReportPost -> {
+                    ReaderActivityLauncher.openUrl(
+                            context,
+                            readerUtilsWrapper.getReportPostUrl(it.url),
+                            OpenUrlType.INTERNAL
+                    )
+                }
+                is ShowReaderSubs -> {
+                    ReaderActivityLauncher.showReaderSubs(context)
+                }
+                is ShowRelatedPostDetails -> Unit // Do Nothing
             }
         }
-        viewModel.snackbarEvents.observe(viewLifecycleOwner) {
-            it?.applyIfNotHandled {
-                showSnackbar()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) {
+            it.showSnackbar()
         }
-        viewModel.preloadPostEvents.observe(viewLifecycleOwner) {
-            it?.applyIfNotHandled {
-                addWebViewCachingFragment()
-            }
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner) {
+            it.addWebViewCachingFragment()
         }
     }
 

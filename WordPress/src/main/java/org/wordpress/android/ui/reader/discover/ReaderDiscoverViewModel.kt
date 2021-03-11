@@ -3,8 +3,8 @@ package org.wordpress.android.ui.reader.discover
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
@@ -121,7 +121,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Start with loading state
         _uiState.value = LoadingUiState
 
-        readerPostCardActionsHandler.initScope(this)
+        readerPostCardActionsHandler.initScope(viewModelScope)
 
         // Get the correct repository
         readerDiscoverDataProvider.start()

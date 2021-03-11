@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.observeEvent
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -138,40 +140,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             }
         }
 
-        viewModel.updateTags.observe(viewLifecycleOwner) { updateAcion ->
-            updateAcion?.getContentIfNotHandled()?.let {
-                ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
-            }
+        viewModel.updateTags.observeEvent(viewLifecycleOwner) {
+            ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
         }
 
-        viewModel.selectTab.observe(viewLifecycleOwner) { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let { navTarget ->
-                viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
-            }
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
+            view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
 
-        viewModel.showSearch.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.showReaderSearch(context)
-            }
+        viewModel.showSearch.observeEvent(viewLifecycleOwner) {
+            ReaderActivityLauncher.showReaderSearch(context)
         }
 
-        viewModel.showSettings.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.showReaderSubs(context)
-            }
+        viewModel.showSettings.observeEvent(viewLifecycleOwner) {
+            ReaderActivityLauncher.showReaderSubs(context)
         }
 
-        viewModel.showReaderInterests.observe(viewLifecycleOwner) { event ->
-            event?.getContentIfNotHandled()?.let {
-                showReaderInterests()
-            }
+        viewModel.showReaderInterests.observeEvent(viewLifecycleOwner) {
+            showReaderInterests()
         }
 
-        viewModel.closeReaderInterests.observe(viewLifecycleOwner) { event ->
-            event?.getContentIfNotHandled()?.let {
-                closeReaderInterests()
-            }
+        viewModel.closeReaderInterests.observeEvent(viewLifecycleOwner) {
+            closeReaderInterests()
         }
 
         viewModel.start()
