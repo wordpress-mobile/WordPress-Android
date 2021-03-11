@@ -57,9 +57,11 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
+
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
@@ -237,11 +239,11 @@ class ReaderPostDetailViewModelTest {
     /* MORE MENU */
     @Test
     fun `when more button is clicked, then more menu is shown`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
         viewModel.onMoreButtonClicked()
 
-        assertThat(uiStates.last().moreMenuItems).isNotNull
+        assertThat(uiState.moreMenuItems).isNotNull
     }
 
     @Test
@@ -250,7 +252,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onMoreMenuDismissed()
 
-        assertThat(uiStates.last().moreMenuItems).isNull()
+        assertThat((uiStates.last() as ReaderPostDetailsUiState).moreMenuItems).isNull()
     }
 
     @Test
@@ -271,17 +273,18 @@ class ReaderPostDetailViewModelTest {
     @Test
     fun `when tag is clicked, then posts for tag are shown`() = test {
         val observers = init()
+        val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
 
-        observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
+        uiState.headerUiState.tagItems[0].onClick!!.invoke("t")
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
     fun `when header blog section is clicked, then selected blog's header click action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
+        uiState.headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
                 .invoke(readerPost.postId, readerPost.blogId)
 
         verify(readerPostCardActionsHandler).handleHeaderClicked(
@@ -292,9 +295,9 @@ class ReaderPostDetailViewModelTest {
 
     @Test
     fun `when header follow button is clicked, then follow action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
+        uiState.headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
@@ -338,7 +341,8 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                assertThat(uiStates.last().localRelatedPosts).isEqualTo(localRelatedPostsUiState)
+                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+                assertThat(uiState.localRelatedPosts).isEqualTo(localRelatedPostsUiState)
             }
 
     @Test
@@ -364,7 +368,8 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                assertThat(uiStates.last().globalRelatedPosts).isEqualTo(globalRelatedPostsUiState)
+                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+                assertThat(uiState.globalRelatedPosts).isEqualTo(globalRelatedPostsUiState)
             }
 
     @Test
@@ -376,7 +381,8 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                with(uiStates.last()) {
+                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+                with(uiState) {
                     assertThat(localRelatedPosts).isNull()
                     assertThat(globalRelatedPosts).isNull()
                 }
@@ -391,7 +397,8 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                with(uiStates.last()) {
+                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+                with(uiState) {
                     assertThat(localRelatedPosts).isNull()
                     assertThat(globalRelatedPosts).isNull()
                 }
@@ -406,7 +413,8 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                with(uiStates.last()) {
+                val uiState = (uiStates.last() as ReaderPostDetailsUiState)
+                with(uiState) {
                     assertThat(localRelatedPosts).isNull()
                     assertThat(globalRelatedPosts).isNull()
                 }
@@ -445,7 +453,8 @@ class ReaderPostDetailViewModelTest {
                 val observers = init(isRelatedPost = false)
 
                 viewModel.onRelatedPostsRequested(readerPost)
-                val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
+                val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
+                val relatedPost = uiState.globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
                 assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
@@ -464,7 +473,8 @@ class ReaderPostDetailViewModelTest {
                 val observers = init(isRelatedPost = true)
 
                 viewModel.onRelatedPostsRequested(readerPost)
-                val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
+                val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
+                val relatedPost = uiState.globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
                 assertThat(observers.navigation.last().peekContent())
@@ -474,9 +484,9 @@ class ReaderPostDetailViewModelTest {
     /* FOOTER */
     @Test
     fun `when like button is clicked, then like action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
+        uiState.actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
@@ -488,9 +498,9 @@ class ReaderPostDetailViewModelTest {
 
     @Test
     fun `when comments button is clicked, then comments action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
+        uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
@@ -502,9 +512,9 @@ class ReaderPostDetailViewModelTest {
 
     @Test
     fun `when reblog button is clicked, then reblog action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
+        uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
@@ -526,9 +536,9 @@ class ReaderPostDetailViewModelTest {
 
     @Test
     fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
-        val uiStates = init().uiStates
+        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
+        uiState.actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
 
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
@@ -565,32 +575,32 @@ class ReaderPostDetailViewModelTest {
                         listOf(TagUiState("", "", false, onTagClicked)),
                         true,
                         ReaderBlogSectionUiState(
-                            postId = post.postId,
-                            blogId = post.blogId,
-                            dateLine = "",
-                            blogName = mock(),
-                            blogUrl = "",
-                            avatarOrBlavatarUrl = "",
-                            authorAvatarUrl = "",
-                            isAuthorAvatarVisible = false,
-                            blavatarType = BLAVATAR_CIRCULAR,
-                            blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
+                                postId = post.postId,
+                                blogId = post.blogId,
+                                dateLine = "",
+                                blogName = mock(),
+                                blogUrl = "",
+                                avatarOrBlavatarUrl = "",
+                                authorAvatarUrl = "",
+                                isAuthorAvatarVisible = false,
+                                blavatarType = BLAVATAR_CIRCULAR,
+                                blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
                         ),
                         FollowButtonUiState(
-                            onFollowButtonClicked = onFollowButtonClicked,
-                            isFollowed = false,
-                            isEnabled = true,
-                            isVisible = true
+                                onFollowButtonClicked = onFollowButtonClicked,
+                                isFollowed = false,
+                                isEnabled = true,
+                                isVisible = true
                         ),
                         ""
                 ),
                 excerptFooterUiState = mock(),
                 moreMenuItems = mock(),
                 actions = ReaderPostActions(
-                    bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
-                    likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
-                    reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
-                    commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS)
+                        bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
+                        likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
+                        reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
+                        commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS)
                 )
         )
     }
@@ -618,7 +628,7 @@ class ReaderPostDetailViewModelTest {
     )
 
     private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {
-        val uiStates = mutableListOf<ReaderPostDetailsUiState>()
+        val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
         }
@@ -644,7 +654,7 @@ class ReaderPostDetailViewModelTest {
     }
 
     private data class Observers(
-        val uiStates: List<ReaderPostDetailsUiState>,
+        val uiStates: List<UiState>,
         val navigation: List<Event<ReaderNavigationEvents>>,
         val snackbarMsgs: List<Event<SnackbarMessageHolder>>
     )

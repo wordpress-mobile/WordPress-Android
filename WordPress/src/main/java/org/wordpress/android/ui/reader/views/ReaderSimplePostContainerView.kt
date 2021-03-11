@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.image.ImageManager

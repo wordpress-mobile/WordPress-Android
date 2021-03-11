@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -66,8 +67,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MediatorLiveData<ReaderPostDetailsUiState>()
-    val uiState: LiveData<ReaderPostDetailsUiState> = _uiState
+    private val _uiState = MediatorLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
 
     private val _refreshPost = MediatorLiveData<Event<Unit>>()
     val refreshPost: LiveData<Event<Unit>> = _refreshPost
@@ -110,7 +111,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun init() {
         readerPostCardActionsHandler.initScope(this)
         _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
-            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+            val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
 
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
@@ -124,7 +125,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         _refreshPost.addSource(readerPostCardActionsHandler.refreshPosts) {
-            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+            val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     updatePostActions(post)
@@ -186,7 +187,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onMoreMenuItemClicked(type: ReaderPostCardActionType) {
-        val currentUiState = _uiState.value
+        val currentUiState = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
             onButtonClicked(currentUiState.postId, currentUiState.blogId, type)
         }
@@ -194,7 +195,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun changeMoreMenuVisibility(show: Boolean) {
-        val currentUiState = _uiState.value
+        val currentUiState = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
@@ -345,7 +346,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = _uiState.value?.copy(
+        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
                 actions = postDetailUiStateBuilder.buildPostActions(
                         post,
                         this@ReaderPostDetailViewModel::onButtonClicked
@@ -354,7 +355,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = _uiState.value?.copy(
+        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
                 localRelatedPosts = convertRelatedPostsToUiState(
                         sourcePost = sourcePost,
                         relatedPosts = state.localRelatedPosts,
@@ -368,38 +369,42 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    data class ReaderPostDetailsUiState(
-        val postId: Long,
-        val blogId: Long,
-        val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
-        val headerUiState: ReaderPostDetailsHeaderUiState,
-        val excerptFooterUiState: ExcerptFooterUiState?,
-        val moreMenuItems: List<ReaderPostCardAction>? = null,
-        val actions: ReaderPostActions,
-        val localRelatedPosts: RelatedPostsUiState? = null,
-        val globalRelatedPosts: RelatedPostsUiState? = null
-    ) {
-        data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
+    sealed class UiState {
+        object ErrorUiState : UiState()
 
-        data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
+        data class ReaderPostDetailsUiState(
+            val postId: Long,
+            val blogId: Long,
+            val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
+            val headerUiState: ReaderPostDetailsHeaderUiState,
+            val excerptFooterUiState: ExcerptFooterUiState?,
+            val moreMenuItems: List<ReaderPostCardAction>? = null,
+            val actions: ReaderPostActions,
+            val localRelatedPosts: RelatedPostsUiState? = null,
+            val globalRelatedPosts: RelatedPostsUiState? = null
+        ) : UiState() {
+            data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
 
-        data class RelatedPostsUiState(
-            val cards: List<ReaderRelatedPostUiState>?,
-            val isGlobal: Boolean,
-            val headerLabel: UiString?,
-            val railcarJsonStrings: List<String?>
-        ) {
-            data class ReaderRelatedPostUiState(
-                val postId: Long,
-                val blogId: Long,
+            data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
+
+            data class RelatedPostsUiState(
+                val cards: List<ReaderRelatedPostUiState>?,
                 val isGlobal: Boolean,
-                val title: UiString?,
-                val excerpt: UiString?,
-                val featuredImageUrl: String?,
-                val featuredImageVisibility: Boolean,
-                val featuredImageCornerRadius: UiDimen,
-                val onItemClicked: (Long, Long, Boolean) -> Unit
-            )
+                val headerLabel: UiString?,
+                val railcarJsonStrings: List<String?>
+            ) {
+                data class ReaderRelatedPostUiState(
+                    val postId: Long,
+                    val blogId: Long,
+                    val isGlobal: Boolean,
+                    val title: UiString?,
+                    val excerpt: UiString?,
+                    val featuredImageUrl: String?,
+                    val featuredImageVisibility: Boolean,
+                    val featuredImageCornerRadius: UiDimen,
+                    val onItemClicked: (Long, Long, Boolean) -> Unit
+                )
+            }
         }
     }
 
