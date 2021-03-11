@@ -471,6 +471,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         isGlobal = this.isGlobal
                 )
 
+            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
+
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
@@ -1169,8 +1171,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 scrollView.visibility = View.VISIBLE
                 layoutFooter.visibility = View.VISIBLE
 
-                renderPostInWebView(it)
-
                 viewModel.onShowPost(it)
             }
         }
@@ -1218,16 +1218,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return false
     }
 
-    private fun ReaderPostDetailFragment.renderPostInWebView(it: ReaderPost) {
-        readerWebView.setIsPrivatePost(it.isPrivate)
-        readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(it.blogUrl))
+    private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
+        readerWebView.setIsPrivatePost(post.isPrivate)
+        readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
         // if the post is from private atomic site postpone render until we have a special access cookie
-        if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.isCookieRefreshRequired()) {
+        if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
             PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
             requestPrivateAtomicCookie()
-        } else if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.exists()) {
+        } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
             CookieManager.getInstance().setCookie(
                     privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()

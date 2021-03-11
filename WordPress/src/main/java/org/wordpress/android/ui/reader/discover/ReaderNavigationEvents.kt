@@ -41,4 +41,5 @@ sealed class ReaderNavigationEvents {
             ReaderNavigationEvents()
     data class ShowMediaPreview(val site: SiteModel, val featuredImage: String) : ReaderNavigationEvents()
     data class OpenUrl(val url: String) : ReaderNavigationEvents()
+    data class ShowPostInWebView(val post: ReaderPost) : ReaderNavigationEvents()
 }

@@ -16,6 +16,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
@@ -195,6 +196,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onShowPost(post: ReaderPost) {
         analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, post)
+        post?.let { _navigationEvents.postValue(Event(ShowPostInWebView(it))) }
         _uiState.value = convertPostToUiState(post)
     }
 
