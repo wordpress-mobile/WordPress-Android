@@ -5,9 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,12 +16,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.me_action_layout.*
-import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.NewMySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
@@ -91,7 +88,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
-class ImprovedMySiteFragment : Fragment(),
+class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         TextInputDialogFragment.Callback {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
@@ -105,6 +102,8 @@ class ImprovedMySiteFragment : Fragment(),
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
 
+    private var binding: NewMySiteFragmentBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -115,27 +114,34 @@ class ImprovedMySiteFragment : Fragment(),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-                R.layout.new_my_site_fragment,
-                container,
-                false
-        )
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = NewMySiteFragmentBinding.bind(view).apply {
+            setupToolbar()
+            setupContentViews(savedInstanceState)
+            setupObservers()
+        }
+    }
 
-        appbar_main.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+    private fun NewMySiteFragmentBinding.setupToolbar() {
+        toolbarMain.let { toolbar ->
+            toolbar.inflateMenu(R.menu.my_site_menu)
+            toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
+                meMenu.actionView.let { actionView ->
+                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
+                    TooltipCompat.setTooltipText(actionView, meMenu.title)
+                }
+            }
+        }
+
+        val avatar = root.findViewById<ImageView>(R.id.avatar)
+
+        appbarMain.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
-            avatar?.let {
+            avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
                 val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
@@ -146,18 +152,10 @@ class ImprovedMySiteFragment : Fragment(),
                 avatar.scaleY = newScale
             }
         })
+    }
 
-        toolbar_main.let { toolbar ->
-            toolbar.inflateMenu(R.menu.my_site_menu)
-            toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
-                meMenu.actionView.let { actionView ->
-                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
-                    TooltipCompat.setTooltipText(actionView, meMenu.title)
-                }
-            }
-        }
-
-        actionable_empty_view.button.setOnClickListener { viewModel.onAddSitePressed() }
+    private fun NewMySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
+        actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
 
         val layoutManager = LinearLayoutManager(activity)
 
@@ -165,7 +163,7 @@ class ImprovedMySiteFragment : Fragment(),
             layoutManager.onRestoreInstanceState(it)
         }
 
-        recycler_view.layoutManager = layoutManager
+        recyclerView.layoutManager = layoutManager
 
         val adapter = MySiteAdapter(imageManager, uiHelpers)
 
@@ -173,8 +171,10 @@ class ImprovedMySiteFragment : Fragment(),
             adapter.onRestoreInstanceState(it)
         }
 
-        recycler_view.adapter = adapter
+        recyclerView.adapter = adapter
+    }
 
+    private fun NewMySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
@@ -185,7 +185,7 @@ class ImprovedMySiteFragment : Fragment(),
             }
         })
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
-            (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
+            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
         })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
@@ -207,7 +207,7 @@ class ImprovedMySiteFragment : Fragment(),
                     model.isInputEnabled,
                     model.callbackId
             )
-            inputDialog.setTargetFragment(this, 0)
+            inputDialog.setTargetFragment(this@ImprovedMySiteFragment, 0)
             inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
         })
         viewModel.onDynamicCardMenuShown.observeEvent(viewLifecycleOwner, { dynamicCardMenuModel ->
@@ -223,7 +223,7 @@ class ImprovedMySiteFragment : Fragment(),
                 is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
                 is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
                 is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-                is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
+                is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@ImprovedMySiteFragment, action.site)
                 is OpenCropActivity -> startCropActivity(action.imageUri)
                 is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
                 is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
@@ -241,7 +241,7 @@ class ImprovedMySiteFragment : Fragment(),
                 is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
                 is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
                 is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
+                is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@ImprovedMySiteFragment)
                 is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
                 is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
                 is AddNewStory ->
@@ -343,24 +343,30 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        recycler_view?.layoutManager?.let {
+        binding?.recyclerView?.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
-        (recycler_view?.adapter as? MySiteAdapter)?.let {
+        (binding?.recyclerView?.adapter as? MySiteAdapter)?.let {
             outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
     }
 
-    private fun loadGravatar(avatarUrl: String) = avatar?.let {
-        meGravatarLoader.load(
-                false,
-                meGravatarLoader.constructGravatarUrl(avatarUrl),
-                null,
-                it,
-                USER,
-                null
-        )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
+
+    private fun NewMySiteFragmentBinding.loadGravatar(avatarUrl: String) =
+            root.findViewById<ImageView>(R.id.avatar)?.let {
+                meGravatarLoader.load(
+                        false,
+                        meGravatarLoader.constructGravatarUrl(avatarUrl),
+                        null,
+                        it,
+                        USER,
+                        null
+                )
+            }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -427,16 +433,16 @@ class ImprovedMySiteFragment : Fragment(),
         }
     }
 
-    private fun loadData(items: List<MySiteItem>) {
-        recycler_view.setVisible(true)
-        actionable_empty_view.setVisible(false)
-        (recycler_view.adapter as? MySiteAdapter)?.loadData(items)
+    private fun NewMySiteFragmentBinding.loadData(items: List<MySiteItem>) {
+        recyclerView.setVisible(true)
+        actionableEmptyView.setVisible(false)
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(items)
     }
 
-    private fun loadEmptyView(shouldShowEmptyViewImage: Boolean) {
-        recycler_view.setVisible(false)
-        actionable_empty_view.setVisible(true)
-        actionable_empty_view.image.setVisible(shouldShowEmptyViewImage)
+    private fun NewMySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+        recyclerView.setVisible(false)
+        actionableEmptyView.setVisible(true)
+        actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -444,7 +450,7 @@ class ImprovedMySiteFragment : Fragment(),
             snackbarSequencer.enqueue(
                     SnackbarItem(
                             Info(
-                                    view = parent.coordinator,
+                                    view = parent.findViewById(R.id.coordinator),
                                     textRes = holder.message,
                                     duration = Snackbar.LENGTH_LONG
                             ),
