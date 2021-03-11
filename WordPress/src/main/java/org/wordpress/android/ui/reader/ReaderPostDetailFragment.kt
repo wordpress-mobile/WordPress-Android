@@ -157,7 +157,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
-    private var hasAlreadyRequestedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
 
     private var isRelatedPost: Boolean = false
@@ -662,7 +661,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 postSlugsResolutionUnderway
         )
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, hasAlreadyUpdatedPost)
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, hasAlreadyRequestedPost)
 
         outState.putBoolean(
                 ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS,
@@ -704,7 +702,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             interceptedUri = it.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             postSlugsResolutionUnderway = it.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             hasAlreadyUpdatedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
-            hasAlreadyRequestedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
             hasTrackedGlobalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS)
             hasTrackedLocalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS)
             if (it.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -754,7 +751,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             commentId = 0
         }
 
-        hasAlreadyRequestedPost = false
         hasAlreadyUpdatedPost = false
         hasTrackedGlobalRelatedPosts = false
         hasTrackedLocalRelatedPosts = false
@@ -953,40 +949,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /*
-     * called when the post doesn't exist in local db, need to get it from server
-     */
-    private fun requestPost() {
-        val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
-        progress.visibility = View.VISIBLE
-        progress.bringToFront()
-
-        val listener = object : ReaderActions.OnRequestListener {
-            override fun onSuccess() {
-                hasAlreadyRequestedPost = true
-                if (isAdded) {
-                    progress.visibility = View.GONE
-                    showPost()
-                    EventBus.getDefault().post(ReaderEvents.SinglePostDownloaded())
-                }
-            }
-
-            override fun onFailure(statusCode: Int) {
-                hasAlreadyRequestedPost = true
-                if (isAdded) {
-                    progress.visibility = View.GONE
-                    onRequestFailure(statusCode)
-                }
-            }
-        }
-
-        if (viewModel.isFeed) {
-            ReaderPostActions.requestFeedPost(blogId, postId, listener)
-        } else {
-            ReaderPostActions.requestBlogPost(blogId, postId, listener)
-        }
-    }
-
-    /*
      * post slugs resolution to IDs has completed
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1093,24 +1055,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 Snackbar.LENGTH_LONG
         ).show()
         renderer?.beginRender()
-    }
-
-    private fun handleShowPostResult(result: Boolean): Boolean {
-        if (!result) {
-            // post couldn't be loaded which means it doesn't exist in db, so request it from
-            // the server if it hasn't already been requested
-            if (!hasAlreadyRequestedPost) {
-                AppLog.i(T.READER, "reader post detail > post not found, requesting it")
-                requestPost()
-            } else if (!TextUtils.isEmpty(errorMessage)) {
-                // post has already been requested and failed, so restore previous error message
-                showError(errorMessage)
-            }
-            return true
-        } else {
-            showError(null)
-        }
-        return false
     }
 
     private fun handleDirectOperation(): Boolean {
