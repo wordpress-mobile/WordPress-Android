@@ -113,7 +113,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        with(StatsViewAllFragmentBinding.bind(requireView())) {
+        with(StatsViewAllFragmentBinding.bind(view)) {
             this@StatsViewAllFragment.binding = this
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
