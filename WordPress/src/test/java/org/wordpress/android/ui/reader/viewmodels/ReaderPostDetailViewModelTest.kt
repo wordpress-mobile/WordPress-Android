@@ -633,7 +633,7 @@ class ReaderPostDetailViewModelTest {
         viewModel.start(isRelatedPost = isRelatedPost, bundle = Bundle())
 
         if (showPost) {
-            viewModel.onShowPost(readerPost)
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
         }
 
         return Observers(

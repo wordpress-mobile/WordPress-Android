@@ -145,15 +145,18 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun onShowPostStarted(blogId: Long, postId: Long) {
-        getOrFetchReaderPost(blogId = blogId, postId = postId)
+    fun onShowPost(blogId: Long, postId: Long) {
+        launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
     }
 
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
         if (post == null) {
             when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
-                FetchReaderPostState.Success -> getReaderPostFromDb(blogId, postId)
+                FetchReaderPostState.Success -> {
+                    getReaderPostFromDb(blogId, postId)
+                    updatePostDetailsUi()
+                }
 
                 FetchReaderPostState.AlreadyRunning ->
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it")
@@ -163,6 +166,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 FetchReaderPostState.Failed.NotAuthorised,
                 FetchReaderPostState.Failed.PostNotFound -> Unit // To be implemented
             }
+        } else {
+            updatePostDetailsUi()
         }
     }
 
@@ -181,7 +186,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onMoreMenuItemClicked(type: ReaderPostCardActionType) {
-        val currentUiState = uiState.value
+        val currentUiState = _uiState.value
         currentUiState?.let {
             onButtonClicked(currentUiState.postId, currentUiState.blogId, type)
         }
@@ -189,7 +194,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun changeMoreMenuVisibility(show: Boolean) {
-        val currentUiState = uiState.value
+        val currentUiState = _uiState.value
         currentUiState?.let {
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
@@ -231,12 +236,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
             pendingReblogPost = null
         }
-    }
-
-    fun onShowPost(post: ReaderPost) {
-        analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, post)
-        post?.let { _navigationEvents.postValue(Event(ShowPostInWebView(it))) }
-        _uiState.value = convertPostToUiState(post)
     }
 
     fun onUpdatePost(post: ReaderPost) {
@@ -320,6 +319,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             isGlobal = isGlobal,
             onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
+
+    private fun updatePostDetailsUi() {
+        post?.let {
+            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, it)
+            _navigationEvents.postValue(Event(ShowPostInWebView(it)))
+            _uiState.value = convertPostToUiState(it)
+        }
+    }
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,

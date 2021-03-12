@@ -44,10 +44,6 @@ import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_content.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -131,8 +127,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ReaderInterfaces.AutoHideToolbarListener,
-        CoroutineScope by MainScope() {
+        ReaderInterfaces.AutoHideToolbarListener{
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -386,6 +381,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState) {
+        onPostExecuteShowPost()
+
         header_view.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
@@ -399,6 +396,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
+    }
+
+    // TODO: Update using UiState/ NavigationEvent
+    private fun onPostExecuteShowPost() {
+        // make sure options menu reflects whether we now have a post
+        activity?.invalidateOptionsMenu()
+
+        viewModel.post?.let {
+            if (handleDirectOperation()) return
+
+            scrollView.visibility = View.VISIBLE
+            layoutFooter.visibility = View.VISIBLE
+        }
     }
 
     private fun ReaderNavigationEvents.handleNavigationEvent() {
@@ -571,7 +581,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
         bookmarksSavedLocallyDialog?.dismiss()
         moreMenuPopup?.dismiss()
-        cancel()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -1052,11 +1061,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        // TODO: Move to ViewModel
-        launch {
-            viewModel.onShowPostStarted(blogId = blogId, postId = postId)
-            onPostExecuteShowPost()
-        }
+        viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1093,22 +1098,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 Snackbar.LENGTH_LONG
         ).show()
         renderer?.beginRender()
-    }
-
-    private fun onPostExecuteShowPost() {
-        if (!isAdded) return
-
-        // make sure options menu reflects whether we now have a post
-        activity?.invalidateOptionsMenu()
-
-        viewModel.post?.let {
-            if (handleDirectOperation()) return
-
-            scrollView.visibility = View.VISIBLE
-            layoutFooter.visibility = View.VISIBLE
-
-            viewModel.onShowPost(it)
-        }
     }
 
     private fun handleShowPostResult(result: Boolean): Boolean {
