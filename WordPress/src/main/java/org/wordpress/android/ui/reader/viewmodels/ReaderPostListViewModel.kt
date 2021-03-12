@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
@@ -81,7 +81,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun init() {
-        readerPostCardActionsHandler.initScope(this)
+        readerPostCardActionsHandler.initScope(viewModelScope)
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {

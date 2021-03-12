@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.stats_fragment.*
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -21,13 +20,7 @@ class StatsActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.stats_list_activity)
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
+        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,7 +46,6 @@ class StatsActivity : LocaleAwareActivity() {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
         const val ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM"
         const val ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME"
-        const val ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID"
         @JvmStatic
         fun start(context: Context, site: SiteModel) {
             context.startActivity(buildIntent(context, site))

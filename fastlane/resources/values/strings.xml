@@ -1094,17 +1094,19 @@
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
+    <!-- translators: %3$s: "here to help" clickable text linking to help screen inside the app. -->
+    <string name="scan_idle_threats_description_plural">The scan found %1$s potential threats with %2$s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <!-- translators: %2$s: "here to help" clickable text linking to help screen inside the app. -->
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1$s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
-    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; One potential threat found</string>
-    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; No threats found</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; One potential threat found</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
@@ -1875,6 +1877,7 @@
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
@@ -1912,7 +1915,7 @@
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
-    <string name="reader_choose_interests_content_description">Choose your interests</string>
+    <string name="reader_choose_interests_content_description">Choose your topics</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1937,10 +1940,10 @@
     <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
-    <string name="reader_label_local_related_posts">More in %s</string>
+    <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_choose_your_interests">Choose your interests</string>
+    <string name="reader_label_choose_your_interests">Choose your topics</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
     <string name="reader_label_toolbar_back">Back</string>
@@ -2597,7 +2600,7 @@
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
     <string name="login_prologue_title_third">See comments and notifications in real time.</string>
     <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new reads.</string>
+    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
     <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
@@ -2858,7 +2861,7 @@
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
@@ -3111,7 +3114,6 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
-    <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_notice_page_created">Page created</string>
@@ -3212,13 +3214,12 @@
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
-    <string name="gutenberg_native_add_a_description" tools:ignore="UnusedResources">Add a description</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
-    <string name="gutenberg_native_add_annotation" tools:ignore="UnusedResources">Add annotation</string>
     <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Add paragraph block</string>
@@ -3231,7 +3232,6 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
-    <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
     <!-- translators: accessibility text. Empty Audio caption. -->
     <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Audio caption. Empty</string>
     <!-- translators: accessibility text. %s: Audio caption. -->
@@ -3259,7 +3259,6 @@
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
     <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Choose images</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
-    <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
@@ -3313,7 +3312,6 @@
     <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
     <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Help button</string>
     <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
-    <string name="gutenberg_native_here_is_the_panel_content" tools:ignore="UnusedResources">Here is the panel content!</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
@@ -3337,10 +3335,6 @@
     <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
     <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Move to bottom</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">Move to top</string>
-    <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">My Document Setting Panel</string>
-    <string name="gutenberg_native_my_post_publish_panel" tools:ignore="UnusedResources">My post publish panel</string>
-    <string name="gutenberg_native_my_post_status_info" tools:ignore="UnusedResources">My post status info</string>
-    <string name="gutenberg_native_my_pre_publish_panel" tools:ignore="UnusedResources">My pre publish panel</string>
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
@@ -3367,13 +3361,11 @@
     <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem displaying block</string>
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
-    <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
-    <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for Android</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
@@ -3393,15 +3385,12 @@
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
-    <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
-    <string name="gutenberg_native_success_message" tools:ignore="UnusedResources">Success Message</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
-    <string name="gutenberg_native_title" tools:ignore="UnusedResources">Title:</string>
     <string name="gutenberg_native_translate" tools:ignore="UnusedResources">Translate</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Unsupported</string>
@@ -3411,7 +3400,6 @@
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <!-- translators: accessibility text. %s: video caption. -->
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
-    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources">Warning Message</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">We are working hard to add more blocks with each release.</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
     <!--/Autogenerated:Gutenberg Native-->

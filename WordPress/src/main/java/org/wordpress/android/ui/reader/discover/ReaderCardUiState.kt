@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
@@ -64,9 +65,43 @@ sealed class ReaderCardUiState {
     data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
-            val isDividerVisible: Boolean,
-            val onClicked: ((String) -> Unit)
+            val onClicked: ((String) -> Unit),
+            val chipStyle: ChipStyle
         )
+
+        sealed class ChipStyle(
+            @ColorRes val chipStrokeColorResId: Int,
+            @ColorRes val chipFontColorResId: Int,
+            @ColorRes val chipFillColorResId: Int
+        ) {
+            object ChipStyleGreen : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_green_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_green_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_green_fill
+            )
+            object ChipStylePurple : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_purple_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_purple_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_purple_fill
+            )
+            object ChipStyleYellow : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_yellow_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_yellow_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_yellow_fill
+            )
+            object ChipStyleOrange : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_orange_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_orange_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_orange_fill
+            )
+        }
+    }
+
+    enum class ReaderInterestChipStyleColor(val id: Int) {
+        GREEN(0),
+        PURPLE(1),
+        YELLOW(2),
+        ORANGE(3)
     }
 
     data class ReaderRecommendedBlogsCardUiState(

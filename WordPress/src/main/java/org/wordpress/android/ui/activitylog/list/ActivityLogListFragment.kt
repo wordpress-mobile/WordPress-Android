@@ -38,6 +38,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.DateRange
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -199,8 +200,8 @@ class ActivityLogListFragment : Fragment() {
             log_list_view.scrollToPosition(0)
         })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, {
-            it.applyIfNotHandled {
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+            with(it) {
                 val trackingSource = when {
                     requireNotNull(
                             requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)

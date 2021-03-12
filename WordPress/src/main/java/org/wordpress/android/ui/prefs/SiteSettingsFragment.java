@@ -228,10 +228,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mSortByPref;
     private Preference mThreadingPref;
     private Preference mPagingPref;
-    private DetailListPreference mWhitelistPref;
+    private DetailListPreference mAllowlistPref;
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
-    private Preference mBlacklistPref;
+    private Preference mDenylistPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -244,7 +244,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMonitorEmailNotesPref;
     private WPSwitchPreference mJpMonitorWpNotesPref;
     private WPSwitchPreference mJpBruteForcePref;
-    private WPPreference mJpWhitelistPref;
+    private WPPreference mJpAllowlistPref;
     private WPSwitchPreference mJpSsoPref;
     private WPSwitchPreference mJpMatchEmailPref;
     private WPSwitchPreference mJpUseTwoFactorPref;
@@ -276,7 +276,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
 
-    // Hold for Moderation and Blacklist settings
+    // Hold for Moderation and Denylist settings
     private Dialog mDialog;
     private ActionMode mActionMode;
     private MultiSelectRecyclerViewAdapter mAdapter;
@@ -557,15 +557,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
                     R.string.site_settings_hold_for_moderation_description);
-        } else if (preference == mBlacklistPref) {
-            mEditingList = mSiteSettings.getBlacklistKeys();
-            showListEditorDialog(R.string.site_settings_blacklist_title,
-                    R.string.site_settings_blacklist_description);
-        } else if (preference == mJpWhitelistPref) {
-            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED);
-            mEditingList = mSiteSettings.getJetpackWhitelistKeys();
-            showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
-                    R.string.site_settings_jetpack_whitelist_description);
+        } else if (preference == mDenylistPref) {
+            mEditingList = mSiteSettings.getDenylistKeys();
+            showListEditorDialog(R.string.site_settings_denylist_title,
+                    R.string.site_settings_denylist_description);
+        } else if (preference == mJpAllowlistPref) {
+            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED);
+            mEditingList = mSiteSettings.getJetpackAllowlistKeys();
+            showListEditorDialog(R.string.jetpack_brute_force_allowlist_title,
+                    R.string.site_settings_jetpack_allowlist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
         } else if (preference == mCloseAfterPref) {
@@ -615,11 +615,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             return false;
         }
 
-        if (preference == mJpWhitelistPref) {
-            if (mJpWhitelistPref.getSummary() != mSiteSettings.getJetpackProtectWhitelistSummary()) {
-                AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED);
+        if (preference == mJpAllowlistPref) {
+            if (mJpAllowlistPref.getSummary() != mSiteSettings.getJetpackProtectAllowlistSummary()) {
+                AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED);
             }
-            mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+            mJpAllowlistPref.setSummary(mSiteSettings.getJetpackProtectAllowlistSummary());
         } else if (preference == mJpMonitorActivePref) {
             mJpMonitorActivePref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackMonitor((Boolean) newValue);
@@ -709,8 +709,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setIdentityRequired((Boolean) newValue);
         } else if (preference == mUserAccountRequiredPref) {
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
-        } else if (preference == mWhitelistPref) {
-            updateWhitelistSettings(Integer.parseInt(newValue.toString()));
+        } else if (preference == mAllowlistPref) {
+            updateAllowlistSettings(Integer.parseInt(newValue.toString()));
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
             String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
@@ -738,8 +738,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mRelatedPostsPref.setSummary(newValue.toString());
         } else if (preference == mModerationHoldPref) {
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        } else if (preference == mBlacklistPref) {
-            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mDenylistPref) {
+            mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         } else if (preference == mWeekStartPref) {
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
@@ -806,10 +806,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDismiss(DialogInterface dialog) {
         if (mEditingList == mSiteSettings.getModerationKeys()) {
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
-            onPreferenceChange(mBlacklistPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getJetpackWhitelistKeys()) {
-            onPreferenceChange(mJpWhitelistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getDenylistKeys()) {
+            onPreferenceChange(mDenylistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getJetpackAllowlistKeys()) {
+            onPreferenceChange(mJpAllowlistPref, mEditingList.size());
         }
         mEditingList = null;
     }
@@ -906,7 +906,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_site_identity_required);
         mUserAccountRequiredPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_user_account_required);
         mSortByPref = (DetailListPreference) getChangePref(R.string.pref_key_site_sort_by);
-        mWhitelistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_whitelist);
+        mAllowlistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_allowlist);
         mMorePreference = (PreferenceScreen) getClickPref(R.string.pref_key_site_more_discussion);
         mRelatedPostsPref = getClickPref(R.string.pref_key_site_related_posts);
         mCloseAfterPref = getClickPref(R.string.pref_key_site_close_after);
@@ -914,7 +914,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref = getClickPref(R.string.pref_key_site_threading);
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -927,7 +927,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
         mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
         mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
-        mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
+        mJpAllowlistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_allowlist);
         mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
         mDateFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_date_format);
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
@@ -1034,11 +1034,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
-                mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
+                mSortByPref, mAllowlistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mDenylistPref, mWeekStartPref,
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
-                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
                 mGutenbergDefaultForNewPosts, mHomepagePref
         };
 
@@ -1294,9 +1294,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String.valueOf(mSiteSettings.getCommentSorting()),
                 mSiteSettings.getSortingDescription());
         int approval = mSiteSettings.getManualApproval()
-                ? mSiteSettings.getUseCommentWhitelist() ? 0
+                ? mSiteSettings.getUseCommentAllowlist() ? 0
                 : -1 : 1;
-        setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
+        setDetailListPreferenceValue(mAllowlistPref, String.valueOf(approval), getAllowlistSummary(approval));
         String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
                 R.string.site_settings_multiple_links_summary_one,
                 R.string.site_settings_multiple_links_summary_other,
@@ -1309,7 +1309,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
@@ -1317,7 +1317,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpSsoPref.setChecked(mSiteSettings.isJetpackSsoEnabled());
         mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
         mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
-        mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        mJpAllowlistPref.setSummary(mSiteSettings.getJetpackProtectAllowlistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
@@ -1565,26 +1565,26 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private String getWhitelistSummary(int value) {
+    private String getAllowlistSummary(int value) {
         if (isAdded()) {
             switch (value) {
                 case -1:
-                    return getString(R.string.site_settings_whitelist_none_summary);
+                    return getString(R.string.site_settings_allowlist_none_summary);
                 case 0:
-                    return getString(R.string.site_settings_whitelist_known_summary);
+                    return getString(R.string.site_settings_allowlist_known_summary);
                 case 1:
-                    return getString(R.string.site_settings_whitelist_all_summary);
+                    return getString(R.string.site_settings_allowlist_all_summary);
             }
         }
         return "";
     }
 
-    private void updateWhitelistSettings(int val) {
+    private void updateAllowlistSettings(int val) {
         mSiteSettings.setManualApproval(val == -1);
-        mSiteSettings.setUseCommentWhitelist(val == 0);
-        setDetailListPreferenceValue(mWhitelistPref,
+        mSiteSettings.setUseCommentAllowlist(val == 0);
+        setDetailListPreferenceValue(mAllowlistPref,
                 String.valueOf(val),
-                getWhitelistSummary(val));
+                getAllowlistSummary(val));
     }
 
     private void handleStartOver() {
@@ -1672,8 +1672,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                 String entry = input.getText().toString();
                 if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
-                    // don't modify mEditingList if it's not a reference to the JP whitelist keys
-                    if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                    // don't modify mEditingList if it's not a reference to the JP allowlist keys
+                    if (mEditingList == mSiteSettings.getJetpackAllowlistKeys() && !isValidIpOrRange(entry)) {
                         ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
                         return;
                     }
