@@ -76,7 +76,7 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given editor pick discover post is found, when reader post is retrieved, discover source post returned`() =
             test {
-                val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.EDITOR_PICK)
+                val readerPost = createPost(discoverType = DiscoverType.EDITOR_PICK)
                 whenever(
                         readerPostTableWrapper.getBlogPost(
                                 blogId = readerBlogId,
@@ -100,7 +100,7 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given non editor pick reader post is found, when reader post is retrieved, reader post is returned`() =
             test {
-                val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.SITE_PICK)
+                val readerPost = createPost(discoverType = DiscoverType.SITE_PICK)
                 whenever(
                         readerPostTableWrapper.getBlogPost(
                                 blogId = readerBlogId,
@@ -114,20 +114,15 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
                 assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
             }
 
-    private fun createPost(
-        isDiscoverPost: Boolean = false,
-        discoverType: DiscoverType = DiscoverType.OTHER
-    ): ReaderPost {
+    private fun createPost(discoverType: DiscoverType = DiscoverType.OTHER): ReaderPost {
         val post = spy(readerPost)
         // The ReaderPost contains business logic and accesses static classes. Using spy() allows us to use it in tests.
-        whenever(post.isDiscoverPost).thenReturn(isDiscoverPost)
-        if (isDiscoverPost) {
-            val mockedDiscoverData: ReaderPostDiscoverData = mock()
-            whenever(post.discoverData).thenReturn(mockedDiscoverData)
-            whenever(mockedDiscoverData.discoverType).thenReturn(discoverType)
-            whenever(mockedDiscoverData.postId).thenReturn(readerDiscoverSourcePost.postId)
-            whenever(mockedDiscoverData.blogId).thenReturn(readerDiscoverSourcePost.blogId)
-        }
+        whenever(post.isDiscoverPost).thenReturn(true)
+        val mockedDiscoverData: ReaderPostDiscoverData = mock()
+        whenever(post.discoverData).thenReturn(mockedDiscoverData)
+        whenever(mockedDiscoverData.discoverType).thenReturn(discoverType)
+        whenever(mockedDiscoverData.postId).thenReturn(readerDiscoverSourcePost.postId)
+        whenever(mockedDiscoverData.blogId).thenReturn(readerDiscoverSourcePost.blogId)
         return post
     }
 }
