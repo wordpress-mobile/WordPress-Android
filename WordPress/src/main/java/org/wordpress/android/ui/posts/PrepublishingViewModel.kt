@@ -69,6 +69,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
             navigateToScreen(screen)
         }
         fetchTags()
+        fetchCategories()
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen, bundle: Bundle? = null) {
@@ -140,6 +141,14 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
      */
     private fun fetchTags() {
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
+    }
+
+
+    /**
+     * Fetches the categories so that they will be available when the CATEGORIES action is clicked
+     */
+    private fun fetchCategories() {
+        dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(site))
     }
 
     @Suppress("unused")
