@@ -17,6 +17,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://www.jitpack.io" }
     maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.application'
