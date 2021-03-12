@@ -621,6 +621,21 @@ public class CommentsListFragment extends ViewPagerFragment {
         }
     }
 
+    private boolean shouldRefreshCommentsList(OnCommentChanged event) {
+        if (event.requestedStatus == null) {
+            return true;
+        }
+
+        if (event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
+            return true;
+        }
+
+        return event.causeOfChange == CommentAction.UPDATE_COMMENT
+               && mCommentStatusFilter.toCommentStatus().equals(CommentStatus.ALL) && (
+                       event.requestedStatus.equals(CommentStatus.UNAPPROVED) || event.requestedStatus
+                               .equals(CommentStatus.APPROVED));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(OnCommentChanged event) {
         mLoadMoreProgress.setVisibility(View.GONE);
@@ -629,8 +644,7 @@ public class CommentsListFragment extends ViewPagerFragment {
 
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            if ((event.requestedStatus == null || event.requestedStatus
-                    .equals(mCommentStatusFilter.toCommentStatus()))) {
+            if (shouldRefreshCommentsList(event)) {
                 if (event.offset > 0) {
                     getAdapter().loadMoreComments(mCommentStatusFilter.toCommentStatus(), event.offset);
                 } else {
