@@ -165,6 +165,7 @@ public class CommentStore extends Store {
 
     public static class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
+        public int offset;
         public CommentAction causeOfChange;
         public CommentStatus requestedStatus;
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
@@ -430,6 +431,7 @@ public class CommentStore extends Store {
         event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
         event.requestedStatus = payload.requestedStatus;
+        event.offset = payload.offset;
         emitChange(event);
     }
 
