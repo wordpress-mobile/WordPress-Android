@@ -25,7 +25,6 @@ class StoryTitleHeaderView @JvmOverloads constructor(
 
     fun init(uiHelpers: UiHelpers, imageManager: ImageManager, uiState: StoryTitleUiState) {
         with(PrepublishingStoryTitleListItemBinding.inflate(LayoutInflater.from(context), this, true)) {
-
             imageManager.loadImageWithCorners(
                     storyThumbnail,
                     ImageType.IMAGE,
