@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -145,7 +144,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
 
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
-            view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
 
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
