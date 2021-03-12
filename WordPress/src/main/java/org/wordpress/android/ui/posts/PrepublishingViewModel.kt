@@ -143,7 +143,6 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
     }
 
-
     /**
      * Fetches the categories so that they will be available when the CATEGORIES action is clicked
      */
