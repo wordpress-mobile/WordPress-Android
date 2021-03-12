@@ -117,7 +117,7 @@ public class CommentSqlUtils {
                                            .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                            .isIn(CommentModelTable.STATUS, targetStatuses)
                                            .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                           .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
+                                           .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
                                            .endWhere()
                                            .execute();
         }
@@ -129,7 +129,7 @@ public class CommentSqlUtils {
                                            .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                            .isIn(CommentModelTable.STATUS, targetStatuses)
                                            .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                           .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
+                                           .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
                                            .endWhere()
                                            .execute();
         }
@@ -140,8 +140,8 @@ public class CommentSqlUtils {
                                              .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                              .isIn(CommentModelTable.STATUS, targetStatuses)
                                              .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                             .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
-                                             .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
+                                             .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
+                                             .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
                                              .endWhere()
                                              .execute();
     }
