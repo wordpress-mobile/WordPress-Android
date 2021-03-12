@@ -185,7 +185,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 FetchReaderPostState.Failed.RequestFailed ->
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
 
-                FetchReaderPostState.Failed.NotAuthorised -> updateAndTrackNotAuthorisedErrorState()
+                FetchReaderPostState.Failed.NotAuthorised -> trackAndUpdateNotAuthorisedErrorState()
 
                 FetchReaderPostState.Failed.PostNotFound ->
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
@@ -202,7 +202,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onNotAuthorisedRequestFailure() {
-        updateAndTrackNotAuthorisedErrorState()
+        trackAndUpdateNotAuthorisedErrorState()
     }
 
     fun onMoreButtonClicked() {
@@ -396,25 +396,11 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun updateAndTrackNotAuthorisedErrorState() {
+    private fun trackAndUpdateNotAuthorisedErrorState() {
         trackNotAuthorisedState()
 
-        val notAuthorisedErrorMessageRes = if (!shouldOfferSignIn) {
-            if (interceptedUri == null) {
-                R.string.reader_err_get_post_not_authorized
-            } else {
-                R.string.reader_err_get_post_not_authorized_fallback
-            }
-        } else {
-            if (interceptedUri == null) {
-                R.string.reader_err_get_post_not_authorized_signin
-            } else {
-                R.string.reader_err_get_post_not_authorized_signin_fallback
-            }
-        }
-
         _uiState.value = ErrorUiState(
-                message = UiStringRes(notAuthorisedErrorMessageRes),
+                message = UiStringRes(getNotAuthorisedErrorMessageRes()),
                 signInButtonVisibility = shouldOfferSignIn
         )
     }
@@ -424,6 +410,20 @@ class ReaderPostDetailViewModel @Inject constructor(
             post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
         post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_USER_UNAUTHORIZED, it) }
+    }
+
+    private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
+        if (interceptedUri == null) {
+            R.string.reader_err_get_post_not_authorized
+        } else {
+            R.string.reader_err_get_post_not_authorized_fallback
+        }
+    } else {
+        if (interceptedUri == null) {
+            R.string.reader_err_get_post_not_authorized_signin
+        } else {
+            R.string.reader_err_get_post_not_authorized_signin_fallback
+        }
     }
 
     sealed class UiState(
