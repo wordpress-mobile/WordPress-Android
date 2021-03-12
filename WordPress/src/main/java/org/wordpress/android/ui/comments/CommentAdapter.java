@@ -395,14 +395,26 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    void loadInitialCachedComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, true, false));
+    }
+
+    void reloadComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, false, true));
+    }
+
+    void loadMoreComments(CommentStatus statusFilter, int offset) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(offset, false, false));
+    }
+
     /*
      * load comments using an AsyncTask
      */
-    void loadComments(CommentStatus statusFilter) {
+    private void loadComments(CommentStatus statusFilter, LoadCommentsTaskParameters params) {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
-            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
     }
 
@@ -411,7 +423,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private boolean mIsLoadTaskRunning = false;
 
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCommentsTask extends AsyncTask<LoadCommentsTaskParameters, Void, Boolean> {
         private CommentList mTmpComments;
         final CommentStatus mStatusFilter;
 
@@ -430,15 +442,25 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
+            LoadCommentsTaskParameters parameters = params[0];
+            int numOfCommentsToFetch;
+            if (parameters.mIsLoadingCache) {
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
+            } else if (parameters.mIsReloadingContent) {
+                numOfCommentsToFetch =
+                        (mComments.isEmpty()) ? CommentsListFragment.COMMENTS_PER_PAGE : mComments.size();
+            } else {
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE + parameters.mOffset;
+            }
+
             List<CommentModel> comments;
-            int commentsRequestLimit = CommentsListFragment.COMMENTS_PER_PAGE + mComments.size();
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-                comments = mCommentStore.getCommentsForSite(mSite, false, commentsRequestLimit, CommentStatus.APPROVED,
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch, CommentStatus.APPROVED,
                         CommentStatus.UNAPPROVED);
             } else {
-                comments = mCommentStore.getCommentsForSite(mSite, false, commentsRequestLimit,
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch,
                         mStatusFilter);
             }
 
@@ -470,6 +492,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             mIsLoadTaskRunning = false;
+        }
+    }
+
+    static class LoadCommentsTaskParameters {
+        int mOffset;
+        boolean mIsLoadingCache;
+        boolean mIsReloadingContent;
+
+        LoadCommentsTaskParameters(int offset, boolean isLoadingCache, boolean isReloadingContent) {
+            mOffset = offset;
+            mIsLoadingCache = isLoadingCache;
+            mIsReloadingContent = isReloadingContent;
         }
     }
 }

@@ -196,7 +196,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 updateComments(false);
                 mHasAutoRefreshedComments = true;
             } else {
-                getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
+                getAdapter().loadInitialCachedComments(mCommentStatusFilter.toCommentStatus());
             }
         }
     }
@@ -460,7 +460,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
-        getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
+        getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
     }
 
     /*
@@ -473,7 +473,7 @@ public class CommentsListFragment extends ViewPagerFragment {
             mSwipeRefreshLayout.setRefreshing(false);
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             // we're offline, load/refresh whatever we have in our local db
-            getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
+            getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
             return;
         }
 
@@ -484,7 +484,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         // immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
         if (!loadMore) {
             mSwipeRefreshLayout.setRefreshing(true);
-            getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
+            getAdapter().loadInitialCachedComments(mCommentStatusFilter.toCommentStatus());
         }
 
         int offset = 0;
@@ -629,7 +629,14 @@ public class CommentsListFragment extends ViewPagerFragment {
 
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            loadComments();
+            if ((event.requestedStatus == null || event.requestedStatus
+                    .equals(mCommentStatusFilter.toCommentStatus()))) {
+                if (event.offset > 0) {
+                    getAdapter().loadMoreComments(mCommentStatusFilter.toCommentStatus(), event.offset);
+                } else {
+                    getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
+                }
+            }
             return;
         }
 
@@ -638,7 +645,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
             // Reload the comment list in case of an error, we want to revert the UI to the previous state.
-            loadComments();
+            getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
         }
     }
 }
