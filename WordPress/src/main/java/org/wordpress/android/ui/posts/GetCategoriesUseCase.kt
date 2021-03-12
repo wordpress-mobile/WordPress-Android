@@ -47,10 +47,6 @@ class GetCategoriesUseCase @Inject constructor(
         return categoryNodeWrapper.getSortedListOfCategoriesFromRoot(rootCategory)
     }
 
-    fun fetchSiteCategories(siteModel: SiteModel) {
-            dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
-    }
-
     private fun formatCategories(categoryList: List<TermModel>): String {
         if (categoryList.isEmpty()) return ""
 
