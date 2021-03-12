@@ -174,8 +174,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                     updatePostDetailsUi()
                 }
 
-                FetchReaderPostState.AlreadyRunning ->
-                    AppLog.i(T.READER, "reader post detail > post not found, requesting it")
+                FetchReaderPostState.AlreadyRunning -> {
+                    AppLog.i(T.READER, "reader post detail > fetch post already running")
+                    _uiState.value = ErrorUiState(null)
+                }
 
                 FetchReaderPostState.Failed.NoNetwork ->
                     _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))

@@ -310,7 +310,7 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-                assertThat(observers.uiStates.filterIsInstance<ErrorUiState>()).isEmpty()
+                assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
             }
 
     @Test
