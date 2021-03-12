@@ -59,11 +59,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = ReaderFragmentLayoutBinding.bind(view)
         setHasOptionsMenu(true)
-        initToolbar(binding)
-        initViewPager(binding)
-        initViewModel(binding)
+        _binding = ReaderFragmentLayoutBinding.bind(view).apply {
+            initToolbar()
+            initViewPager()
+            initViewModel()
+        }
     }
 
     override fun onDestroyView() {
@@ -111,26 +112,26 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
-    private fun initToolbar(binding: ReaderFragmentLayoutBinding) = with(binding) {
+    private fun ReaderFragmentLayoutBinding.initToolbar() {
         toolbar.title = getString(string.reader_screen_title)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
-    private fun initViewPager(binding: ReaderFragmentLayoutBinding) = with(binding) {
+    private fun ReaderFragmentLayoutBinding.initViewPager() {
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
-    private fun initViewModel(binding: ReaderFragmentLayoutBinding) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderViewModel::class.java)
-        startObserving(binding)
+    private fun ReaderFragmentLayoutBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
+        startObserving()
     }
 
-    private fun startObserving(binding: ReaderFragmentLayoutBinding) = with(binding) {
+    private fun ReaderFragmentLayoutBinding.startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 when (it) {
                     is ContentUiState -> {
-                        updateTabs(it, binding)
+                        updateTabs(it)
                     }
                 }
                 uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
@@ -166,7 +167,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewModel.start()
     }
 
-    private fun updateTabs(uiState: ContentUiState, binding: ReaderFragmentLayoutBinding) = with(binding) {
+    private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
         val adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
         viewPager.adapter = adapter
 

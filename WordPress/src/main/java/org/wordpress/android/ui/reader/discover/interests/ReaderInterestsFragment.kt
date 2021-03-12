@@ -2,17 +2,13 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderFullscreenErrorWithRetryBinding
-import org.wordpress.android.databinding.ReaderInterestFilterChipBinding
 import org.wordpress.android.databinding.ReaderInterestsFragmentLayoutBinding
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
@@ -41,26 +37,27 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         super.onViewCreated(view, savedInstanceState)
         val entryPoint = requireActivity().intent.getSerializableExtra(READER_INTEREST_ENTRY_POINT) as? EntryPoint
                 ?: EntryPoint.DISCOVER
-        val binding = ReaderInterestsFragmentLayoutBinding.bind(view)
-        initDoneButton(binding)
-        initRetryButton(binding.includeErrorLayout)
-        initBackButton(entryPoint, binding)
-        initViewModel(entryPoint, binding)
+        with(ReaderInterestsFragmentLayoutBinding.bind(view)) {
+            initDoneButton()
+            initRetryButton()
+            initBackButton(entryPoint)
+            initViewModel(entryPoint)
+        }
     }
 
-    private fun initDoneButton(binding: ReaderInterestsFragmentLayoutBinding) = with(binding) {
+    private fun ReaderInterestsFragmentLayoutBinding.initDoneButton() {
         doneButton.setOnClickListener {
             viewModel.onDoneButtonClick()
         }
     }
 
-    private fun initRetryButton(binding: ReaderFullscreenErrorWithRetryBinding) = with(binding) {
-        errorRetry.setOnClickListener {
+    private fun ReaderInterestsFragmentLayoutBinding.initRetryButton() {
+        includeErrorLayout.errorRetry.setOnClickListener {
             viewModel.onRetryButtonClick()
         }
     }
 
-    private fun initBackButton(entryPoint: EntryPoint, binding: ReaderInterestsFragmentLayoutBinding) = with(binding) {
+    private fun ReaderInterestsFragmentLayoutBinding.initBackButton(entryPoint: EntryPoint) {
         if (entryPoint == EntryPoint.DISCOVER) {
             backButton.visibility = View.VISIBLE
             backButton.setOnClickListener {
@@ -69,27 +66,30 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun initViewModel(entryPoint: EntryPoint, binding: ReaderInterestsFragmentLayoutBinding) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
+    private fun ReaderInterestsFragmentLayoutBinding.initViewModel(entryPoint: EntryPoint) {
+        viewModel = ViewModelProvider(
+                this@ReaderInterestsFragment,
+                viewModelFactory
+        ).get(ReaderInterestsViewModel::class.java)
         if (entryPoint == EntryPoint.DISCOVER) {
             parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
         }
-        startObserving(entryPoint, binding)
+        startObserving(entryPoint)
     }
 
-    private fun startObserving(entryPoint: EntryPoint, binding: ReaderInterestsFragmentLayoutBinding) = with(binding) {
+    private fun ReaderInterestsFragmentLayoutBinding.startObserving(entryPoint: EntryPoint) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is InitialLoadingUiState -> {
                 }
                 is ContentUiState -> {
-                    updateInterests(uiState.interestsUiState, binding.interestsChipGroup)
+                    updateInterests(uiState.interestsUiState)
                 }
                 is ErrorUiState -> {
-                    updateErrorLayout(uiState, binding.includeErrorLayout)
+                    updateErrorLayout(uiState)
                 }
             }
-            updateDoneButton(uiState.doneButtonUiState, binding.doneButton)
+            updateDoneButton(uiState.doneButtonUiState)
             with(uiHelpers) {
                 updateVisibility(progressBar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
@@ -112,7 +112,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         )
     }
 
-    private fun updateDoneButton(doneButtonUiState: DoneButtonUiState, doneButton: Button) {
+    private fun ReaderInterestsFragmentLayoutBinding.updateDoneButton(doneButtonUiState: DoneButtonUiState) {
         with(doneButton) {
             isEnabled = doneButtonUiState.enabled
             text = getString(doneButtonUiState.titleRes)
@@ -120,10 +120,10 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         uiHelpers.updateVisibility(doneButton, doneButtonUiState.visible)
     }
 
-    private fun updateInterests(interestsUiState: List<TagUiState>, interestsChipGroup: ChipGroup) {
+    private fun ReaderInterestsFragmentLayoutBinding.updateInterests(interestsUiState: List<TagUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
             val chip = interestsChipGroup.findViewWithTag(interestTagUiState.slug)
-                    ?: createChipView(interestTagUiState.slug, index, interestsChipGroup)
+                    ?: createChipView(interestTagUiState.slug, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
@@ -131,15 +131,15 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun updateErrorLayout(uiState: ErrorUiState, binding: ReaderFullscreenErrorWithRetryBinding) {
+    private fun ReaderInterestsFragmentLayoutBinding.updateErrorLayout(uiState: ErrorUiState) {
         with(uiHelpers) {
-            setTextOrHide(binding.errorTitle, uiState.titleRes)
+            setTextOrHide(includeErrorLayout.errorTitle, uiState.titleRes)
         }
     }
 
-    private fun SnackbarMessageHolder.showSnackbar(bottomBar: MaterialCardView) {
+    private fun SnackbarMessageHolder.showSnackbar(anchorView: View) {
         val snackbar = WPSnackbar.make(
-                bottomBar,
+                anchorView,
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
         )
@@ -148,12 +148,16 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 this.buttonAction.invoke()
             }
         }
-        snackbar.anchorView = bottomBar
+        snackbar.anchorView = anchorView
         snackbar.show()
     }
 
-    private fun createChipView(slug: String, index: Int, interestsChipGroup: ChipGroup): Chip {
-        val chip = ReaderInterestFilterChipBinding.inflate(layoutInflater, interestsChipGroup, false).root
+    private fun ReaderInterestsFragmentLayoutBinding.createChipView(slug: String, index: Int): Chip {
+        val chip = layoutInflater.inflate(
+                R.layout.reader_interest_filter_chip,
+                interestsChipGroup,
+                false
+        ) as Chip
         with(chip) {
             tag = slug
             setOnCheckedChangeListener { compoundButton, isChecked ->
