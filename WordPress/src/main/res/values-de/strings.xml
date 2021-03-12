@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 23:23:30+0000
+Translation-Revision-Date: 2021-03-10 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
@@ -37,7 +37,6 @@ Language: de
     <string name="invite_links_get_status_retry">Link-Status aktualisieren</string>
     <string name="threats_found_plural">Bedrohungen gefunden</string>
     <string name="threats_found_singular">Bedrohung gefunden</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Scan abgeschlossen&lt;/b> &lt;br>&lt;/br> Keine Bedrohungen gefunden</string>
     <string name="disable">Deaktivieren</string>
     <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
     <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
@@ -154,6 +153,7 @@ Language: de
     <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
     <string name="threat_fix_all_error_message">Fehler beim Beheben von Bedrohungen. Bitte kontaktiere den Support.</string>
     <string name="threat_fix_all_status_success_message_singular">Die Bedrohung wurde erfolgreich behoben.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Bitte bestätige, dass du eine aktive Bedrohung beheben möchtest.</string>
     <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
     <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
@@ -361,7 +361,6 @@ Language: de
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Ich finde die Arbeit von Fotograf Cameron Karsten sehr inspirierend. Das nächste Mal probiere ich diese Techniken auch aus</string>
     <string name="login_prologue_second_subtitle_one">Inspiration</string>
-    <string name="login_prologue_title_fifth">Folge deinen Lieblingswebsites und entdecke neuen Lesestoff.</string>
     <string name="login_prologue_title_fourth">Sieh mithilfe von umfassenden Analysen dabei zu, wie deine Zielgruppe wächst.</string>
     <string name="login_prologue_title_second">Mit dem leistungsstarken Editor kannst du auch von unterwegs aus Beiträge veröffentlichen.</string>
     <string name="login_prologue_title_first">Willkommen beim beliebtesten Website-Baukasten der Welt.</string>
@@ -377,7 +376,6 @@ Language: de
     <string name="stories_intro_description_second">Sie werden auf deiner Website als ein neuer Blogbeitrag veröffentlicht, damit deine Leserschaft nie etwas verpasst.</string>
     <string name="stories_intro_title_second">Story-Beiträge verschwinden nicht</string>
     <string name="stories_intro_description_first">Kombiniere Fotos, Videos und Text, um ansprechende und antippbare Story-Beiträge zu erstellen, die deine Besucher begeistern.</string>
-    <string name="mlp_preview_title">Layout-Vorschau</string>
     <string name="stories_intro_title_first">Storys sind jetzt für alle verfügbar</string>
     <string name="stories_intro_image_caption_second">Beispieltitel für Story</string>
     <string name="stories_intro_image_caption_first">So erstellst du einen Story-Beitrag</string>
@@ -583,8 +581,6 @@ Language: de
     <string name="post_status_post_trashed">Im Papierkorb</string>
     <string name="post_status_post_published">Veröffentlicht</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Beitrag zu \"Entwürfe\" verschieben?</string>
-    <string name="reader_label_choose_your_interests">Wähle deine Interessengebiete aus</string>
-    <string name="reader_choose_interests_content_description">Wähle deine Interessengebiete aus</string>
     <string name="reader_btn_done">Fertig</string>
     <string name="reader_btn_select_few_interests">Wähle ein paar aus, um fortzufahren</string>
     <string name="ccpa_privacy_notice_read">CCPA-Datenschutzhinweis lesen</string>
@@ -707,9 +703,7 @@ Language: de
     <string name="editor_page_saved_locally">Die Seite wurde auf dem Gerät gespeichert</string>
     <string name="editor_page_saved_locally_failed_media">Es befinden sich nicht fertiggestellte Medien-Uploads in der Seite; sie wurde lokal gespeichert.</string>
     <string name="editor_uploading_page">Deine Seite wird hochgeladen</string>
-    <string name="gutenberg_native_warning_message">Warnmeldung</string>
     <string name="gutenberg_native_show_post_content">Beitragsinhalt anzeigen</string>
-    <string name="gutenberg_native_success_message">Erfolgsmeldung</string>
     <string name="gutenberg_native_link_to">Link zu</string>
     <string name="gutenberg_native_only_show_excerpt">Nur Textauszug anzeigen</string>
     <string name="gutenberg_native_link_settings">Link-Einstellungen</string>
@@ -813,7 +807,6 @@ Language: de
     <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>
     <string name="reader_filter_tags_title">Themen</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-Mediathek</string>
-    <string name="gutenberg_native_title">Titel:</string>
     <string name="gutenberg_native_ungroup">Gruppierung aufheben</string>
     <string name="gutenberg_native_unsupported">Nicht unterstützt</string>
     <string name="gutenberg_native_take_a_photo">Ein Foto aufnehmen</string>
@@ -823,13 +816,10 @@ Language: de
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Zum Ausblenden der Tastatur hier tippen</string>
     <string name="gutenberg_native_tap_here_to_show_help">Zum Anzeigen der Hilfe hier tippen</string>
     <string name="gutenberg_native_start_writing">Fang an zu schreiben…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Plugin für Seitenleisten-Titel</string>
     <string name="gutenberg_native_show_section">Abschnitt anzeigen</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block %s. Dieser Block hat ungültigen Inhalt</string>
     <string name="gutenberg_native_s_block_empty">Block %s. Leer</string>
-    <string name="gutenberg_native_reset_block">Block zurücksetzen</string>
     <string name="gutenberg_native_cut_block">Block ausschneiden</string>
-    <string name="gutenberg_native_remove_annotations">Anmerkungen entfernen</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem beim Öffnen des Videos</string>
     <string name="gutenberg_native_problem_displaying_block">Problem beim Anzeigen des Blocks</string>
     <string name="gutenberg_native_post_title_s">Beitragstitel. %s</string>
@@ -839,17 +829,12 @@ Language: de
     <string name="gutenberg_native_open_settings">Einstellungen öffnen</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Diese Anfrage kann von keiner Anwendung verarbeitet werden. Installiere bitte einen Webbrowser.</string>
     <string name="gutenberg_native_navigate_up">Nach oben</string>
-    <string name="gutenberg_native_my_post_publish_panel">Mein Bedienfeld nach der Beitragsveröffentlichung</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mein Bedienfeld vor der Beitragsveröffentlichung</string>
-    <string name="gutenberg_native_my_post_status_info">Meine Beitragsstatus-Info</string>
-    <string name="gutenberg_native_my_document_setting_panel">Mein Bedienfeld für Dokumenteinstellungen</string>
     <string name="gutenberg_native_move_block_up">Block nach oben verschieben</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Block von Zeile %1$s nach unten in Zeile %2$s verschieben</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Block von Zeile %1$s nach oben in Zeile %2$s verschieben</string>
     <string name="gutenberg_native_move_block_down">Block nach unten verschieben</string>
     <string name="gutenberg_native_image_caption_s">Bildunterschrift. %s</string>
     <string name="gutenberg_native_hide_keyboard">Tastatur ausblenden</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Hier ist der Bedienfeldinhalt!</string>
     <string name="gutenberg_native_help_icon">Hilfe-Icon</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Zum Rückgängigmachen der letzten Änderung zweimal tippen</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Das Einfügen von Medien ist fehlgeschlagen.\nFür Optionen bitte hier tippen.</string>
@@ -864,10 +849,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Zum Ändern des Werts mit dem Slider zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Zum Hinzufügen eines Blocks zweimal tippen</string>
     <string name="gutenberg_native_current_value_is_s">Der aktuelle Wert ist %s</string>
-    <string name="gutenberg_native_content">Inhalt…</string>
     <string name="gutenberg_native_choose_from_device">Vom Gerät auswählen</string>
-    <string name="gutenberg_native_annotations_sidebar">Seitenleiste für Anmerkungen</string>
-    <string name="gutenberg_native_add_a_description">Eine Beschreibung hinzufügen</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ein unbekannter Fehler ist aufgetreten. Bitte versuche es erneut.</string>
     <string name="gutenberg_native_alt_text">Alt-Text</string>
     <string name="gutenberg_native_add_video">VIDEO HINZUFÜGEN</string>
@@ -875,7 +857,6 @@ Language: de
     <string name="gutenberg_native_add_image_or_video">BILD ODER VIDEO HINZUFÜGEN</string>
     <string name="gutenberg_native_add_image">BILD HINZUFÜGEN</string>
     <string name="gutenberg_native_add_block_here">HIER BLOCK HINZUFÜGEN</string>
-    <string name="gutenberg_native_add_annotation">Anmerkung hinzufügen</string>
     <string name="reader_acessibility_list_loaded">„Die Liste wurde mit %1$d Einträgen geladen.“</string>
     <string name="reader_empty_saved_posts_content_description">Tippe auf den Button „Hinzufügen, um Beiträge zu speichern“, um einen Beitrag in deiner Liste zu speichern.</string>
     <string name="notifications_tab_dialog_switch_desc">Benachrichtigungen</string>
@@ -1166,6 +1147,8 @@ Language: de
     <string name="quick_start_dialog_upload_icon_title">Hochladen eines Website-Icons</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tippe auf %1$s Plan %2$s, um deinen aktuellen Plan und andere verfügbare Pläne anzuzeigen</string>
+    <string name="quick_start_sites_type_grow">Vergrößere deine Reichweite</string>
+    <string name="quick_start_sites_type_customize">Passe deine Website an</string>
     <string name="quick_start_dialog_check_stats_message_short">Tippe auf %1$s Statistiken %2$s, um zu sehen, wie deine Website funktioniert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tippe auf %1$s Dein Website-Icon %2$s, um ein neues hochzuladen.</string>
     <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche deinen ersten Beitrag.</string>
@@ -1361,7 +1344,6 @@ Language: de
     <string name="quick_start_dialog_need_help_button_positive">Akzeptieren</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nie</string>
     <string name="quick_start_dialog_follow_sites_title">Anderen Websites folgen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tippe auf %1$s Suche %2$s, um Websites zu ähnlichen Themen zu finden</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tippe auf %1$s Reader %2$s, um fortzufahren</string>
     <string name="quick_start_dialog_follow_sites_message">Suche Websites, die dich ansprechen, und folge diesen, um informiert zu werden, wenn auf diesen Inhalte veröffentlicht werden.</string>
     <string name="quick_start_dialog_need_help_button_negative">Nein, Danke</string>
@@ -2117,7 +2099,6 @@ Language: de
     <string name="sign_in_wpcom">Bei WordPress.com anmelden</string>
     <string name="comment_liked">Kommentar gefällt mir</string>
     <string name="reader_label_global_related_posts">Mehr auf WordPress.com</string>
-    <string name="reader_label_local_related_posts">Mehr zu %s</string>
     <string name="preference_open_device_settings">Geräte-Einstellungen öffnen</string>
     <string name="invite_user_blocked_invites">%s: Benutzer blockiert Einladungen</string>
     <string name="invite_invalid_email">%s: Ungültige E-Mail</string>
@@ -2175,6 +2156,7 @@ Language: de
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
     <string name="reader_empty_search_description">Keine Ergebnisse zu %s in deiner Sprache gefunden</string>
     <string name="reader_hint_post_search">WordPress.com durchsuchen</string>
+    <string name="reader_title_related_post_detail">Ähnliche Beiträge</string>
     <string name="preview_screen_links_disabled">Im Vorschaubildschirm sind Links deaktiviert.</string>
     <string name="send">Senden</string>
     <string name="user_remove_confirmation_message">Falls du %1$s entfernst, kann dieser Benutzer nicht länger auf die Website zugreifen, aber alle von %1$s erstellten Beiträge verbleiben auf der Website.\n\nMöchtest du diesen Benutzter noch immer entfernen?</string>
