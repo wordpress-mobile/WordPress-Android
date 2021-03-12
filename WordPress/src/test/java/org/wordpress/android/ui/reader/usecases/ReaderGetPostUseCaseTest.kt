@@ -19,17 +19,19 @@ import org.wordpress.android.test
 @InternalCoroutinesApi
 class ReaderGetPostUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
-    private val postId = 1L
-    private val blogId = 2L
+    private val readerPostId = 1L
+    private val readerBlogId = 2L
+    private val discoverPostId = 3L
+    private val discoverBlogId = 4L
 
     private val readerPost = ReaderPost().apply {
-        postId = this@ReaderGetPostUseCaseTest.postId
-        blogId = this@ReaderGetPostUseCaseTest.blogId
+        postId = readerPostId
+        blogId = readerBlogId
     }
 
     private val readerDiscoverSourcePost = ReaderPost().apply {
-        postId = 3L
-        blogId = 4L
+        postId = discoverPostId
+        blogId = discoverBlogId
     }
 
     private lateinit var useCase: ReaderGetPostUseCase
@@ -41,20 +43,32 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given feed, when reader post is retrieved, feed post is returned`() = test {
-        whenever(readerPostTableWrapper.getFeedPost(blogId = blogId, postId = postId, excludeTextColumn = false))
+        whenever(
+                readerPostTableWrapper.getFeedPost(
+                        blogId = readerBlogId,
+                        postId = readerPostId,
+                        excludeTextColumn = false
+                )
+        )
                 .thenReturn(readerPost)
 
-        val result = useCase.get(blogId = blogId, postId = postId, isFeed = true)
+        val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = true)
 
         assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, true))
     }
 
     @Test
     fun `given blog, when reader post is retrieved, blog post is returned`() = test {
-        whenever(readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false))
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        blogId = readerBlogId,
+                        postId = readerPostId,
+                        excludeTextColumn = false
+                )
+        )
                 .thenReturn(readerPost)
 
-        val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+        val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
         assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
     }
@@ -64,7 +78,11 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
             test {
                 val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.EDITOR_PICK)
                 whenever(
-                        readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false)
+                        readerPostTableWrapper.getBlogPost(
+                                blogId = readerBlogId,
+                                postId = readerPostId,
+                                excludeTextColumn = false
+                        )
                 ).thenReturn(readerPost)
                 whenever(
                         readerPostTableWrapper.getBlogPost(
@@ -74,7 +92,7 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
                         )
                 ).thenReturn(readerDiscoverSourcePost)
 
-                val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+                val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
                 assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerDiscoverSourcePost, false))
             }
@@ -84,10 +102,14 @@ class ReaderGetPostUseCaseTest : BaseUnitTest() {
             test {
                 val readerPost = createPost(isDiscoverPost = true, discoverType = DiscoverType.SITE_PICK)
                 whenever(
-                        readerPostTableWrapper.getBlogPost(blogId = blogId, postId = postId, excludeTextColumn = false)
+                        readerPostTableWrapper.getBlogPost(
+                                blogId = readerBlogId,
+                                postId = readerPostId,
+                                excludeTextColumn = false
+                        )
                 ).thenReturn(readerPost)
 
-                val result = useCase.get(blogId = blogId, postId = postId, isFeed = false)
+                val result = useCase.get(blogId = readerBlogId, postId = readerPostId, isFeed = false)
 
                 assertThat(result).isEqualTo(Pair<ReaderPost?, Boolean>(readerPost, false))
             }
