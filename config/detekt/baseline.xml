@@ -349,12 +349,6 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostsListActivity.kt:295</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1002</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1004</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1008</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1010</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1117</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1119</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:251</ID>
@@ -374,8 +368,6 @@
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
     <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
-    <ID>NestedBlockDepth:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun onRequestFailure(statusCode: Int)</ID>
-    <ID>NestedBlockDepth:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun doInBackground(vararg params: Void): Boolean?</ID>
     <ID>NestedBlockDepth:StoriesPrefs.kt$StoriesPrefs$private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$override fun onStorySaveButtonPressed()</ID>
     <ID>NestedBlockDepth:StoryComposerActivity.kt$StoryComposerActivity$private fun buildStoryMediaFileDataListFromStoryFrameIndexes( storyIndex: StoryIndex ): ArrayList&lt;StoryMediaFileData&gt;</ID>
@@ -416,8 +408,6 @@
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun doLikePost()</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun showPhotoViewer( imageUrl: String, sourceView: View, startX: Int, startY: Int ): Boolean</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun doInBackground(vararg params: Void): Boolean?</ID>
-    <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun onPostExecute(result: Boolean)</ID>
     <ID>ReturnCount:ReaderSeenStatusToggleUseCase.kt$ReaderSeenStatusToggleUseCase$private suspend fun markPostAsSeen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState</ID>
     <ID>ReturnCount:ReaderSeenStatusToggleUseCase.kt$ReaderSeenStatusToggleUseCase$private suspend fun markPostAsUnseen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState</ID>
     <ID>ReturnCount:ReaderSiteNotificationsUseCase.kt$ReaderSiteNotificationsUseCase$suspend fun toggleNotification(blogId: Long): SiteNotificationState</ID>
