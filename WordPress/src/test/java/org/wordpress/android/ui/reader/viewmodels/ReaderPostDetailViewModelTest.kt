@@ -874,7 +874,6 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.start(isRelatedPost = isRelatedPost, bundle = bundle)
 
-
         if (showPost) {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
         }

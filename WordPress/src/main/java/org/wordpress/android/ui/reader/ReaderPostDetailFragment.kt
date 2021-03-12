@@ -127,7 +127,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ReaderInterfaces.AutoHideToolbarListener{
+        ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
