@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,9 +18,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,6 +31,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -53,12 +57,17 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
@@ -68,6 +77,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
@@ -83,6 +93,8 @@ private const val ON_TAG_CLICKED_PARAM_POSITION = 5
 
 private const val IS_GLOBAL_RELATED_POSTS_PARAM_POSITION = 2
 private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
+
+private const val INTERCEPTED_URI = "intercepted uri"
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -138,6 +150,7 @@ class ReaderPostDetailViewModelTest {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
+        whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
         whenever(readerPostCardActionsHandler.refreshPosts).thenReturn(fakeRefreshPostFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
@@ -194,21 +207,210 @@ class ReaderPostDetailViewModelTest {
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
     }
 
-    /* SHOW POST */
+    /* SHOW POST - LOADING */
     @Test
-    fun `when post show is triggered, then ui is updated`() = test {
-        val uiStates = init().uiStates
+    fun `when show post is triggered, then loading state is shown`() = test {
+        val observers = init(showPost = false)
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(readerPost, false))
 
-        assertThat(uiStates.size).isEqualTo(1)
-        assertThat(uiStates.first()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+    }
+
+    /* SHOW POST - GET LOCAL POST */
+    @Test
+    fun `given local post is found, when show post is triggered, then ui is updated`() = test {
+        val observers = init(showPost = false)
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(readerPost, false))
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
-    fun `when post show is triggered, then post is shown in web view`() = test {
-        val uiStates = init()
+    fun `given local post is found, when show post is triggered, then post is updated in webview`() = test {
+        val observers = init(showPost = false)
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(readerPost, false))
 
-        assertThat(uiStates.navigation.first().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
     }
+
+    @Test
+    fun `given local post not found, when show post is triggered, then post is fetched from remote server`() =
+            testWithoutLocalPost {
+                init(showPost = false)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                verify(readerFetchPostUseCase).fetchPost(readerPost.blogId, readerPost.postId, false)
+            }
+
+    /* SHOW POST - FETCH SUCCESS HANDLING */
+    @Test
+    fun `given request succeeded, when post is fetched, then post details ui is updated`() = test {
+        val observers = init()
+        whenever(readerGetPostUseCase.get(any(), any(), any()))
+                .thenReturn(Pair(null, false))
+                .thenReturn(Pair(readerPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(FetchReaderPostState.Success)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        val postDetailsUiStates = observers.uiStates.filterIsInstance<ReaderPostDetailsUiState>()
+        assertThat(postDetailsUiStates.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `given request succeeded, when post is fetched, then post is shown in web view`() = test {
+        val observers = init()
+        whenever(readerGetPostUseCase.get(any(), any(), any()))
+                .thenReturn(Pair(null, false))
+                .thenReturn(Pair(readerPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(FetchReaderPostState.Success)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
+    }
+
+    /* SHOW POST - FETCH ERROR HANDLING */
+    @Test
+    fun `given no network, when post is fetched, then no network message is shown`() = testWithoutLocalPost {
+        val observers = init()
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean())).thenReturn(Failed.NoNetwork)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isEqualTo(ErrorUiState(UiStringRes(R.string.no_network_message)))
+    }
+
+    @Test
+    fun `given request failed, when post is fetched, then request failed message is shown`() = testWithoutLocalPost {
+        val observers = init()
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.RequestFailed)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+    }
+
+    @Test
+    fun `given request already running, when post is fetched, then no error is shown`() =
+            testWithoutLocalPost {
+                val observers = init()
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(AlreadyRunning)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat(observers.uiStates.filterIsInstance<ErrorUiState>()).isEmpty()
+            }
+
+    @Test
+    fun `given post not found, when post is fetched, then post not found message is shown`() = testWithoutLocalPost {
+        val observers = init()
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.PostNotFound)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last())
+                .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
+    }
+
+    @Test
+    fun `given unauthorised, when post is fetched, then error ui is shown`() = testWithoutLocalPost {
+        val observers = init()
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(Failed.PostNotFound)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState::class.java)
+    }
+
+    @Test
+    fun `given unauthorised with signin offer, when error ui shown, then sign in button is visible`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = true)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(true)
+            }
+
+    @Test
+    fun `given unauthorised without signin offer, when error ui shown, then sign in button is not visible`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = false)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).signInButtonVisibility).isEqualTo(false)
+            }
+
+    @Test
+    fun `given unauthorised with no signin offer and no intercept uri, when error ui shown, then correct msg exists`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = false, interceptedUrPresent = false)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).message)
+                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized))
+            }
+
+    @Test
+    fun `given unauthorised with no signin offer and intercept uri, when error ui shown, then correct msg exists`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = false, interceptedUrPresent = true)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).message)
+                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_fallback))
+            }
+
+    @Test
+    fun `given unauthorised with signin offer and no intercept uri, when error ui shown, then correct msg exists`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = true, interceptedUrPresent = false)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).message)
+                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin))
+            }
+
+    @Test
+    fun `given unauthorised with signin offer and intercept uri, when error ui shown, then correct msg exists`() =
+            testWithoutLocalPost {
+                val observers = init(offerSignIn = true, interceptedUrPresent = true)
+                whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                        .thenReturn(Failed.NotAuthorised)
+
+                viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+                assertThat((observers.uiStates.last() as ErrorUiState).message)
+                        .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
+            }
 
     /* UPDATE POST */
     @Test
@@ -217,8 +419,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onUpdatePost(readerPost)
 
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(uiStates.filterIsInstance<ReaderPostDetailsUiState>().size).isEqualTo(2)
     }
 
     /* READER POST FEATURED IMAGE */
@@ -554,6 +755,13 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(null, false))
+            block()
+        }
+    }
+
     private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
         this.postId = id
         this.blogId = id * 100
@@ -624,7 +832,7 @@ class ReaderPostDetailViewModelTest {
                         excerpt = UiStringText(""),
                         featuredImageUrl = "",
                         featuredImageVisibility = false,
-                        featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
+                        featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                         onItemClicked = onRelatedPostItemClicked ?: mock()
                 )
             },
@@ -633,7 +841,12 @@ class ReaderPostDetailViewModelTest {
             railcarJsonStrings = emptyList()
     )
 
-    private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {
+    private fun init(
+        showPost: Boolean = true,
+        isRelatedPost: Boolean = false,
+        offerSignIn: Boolean = false,
+        interceptedUrPresent: Boolean = false
+    ): Observers {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -646,7 +859,21 @@ class ReaderPostDetailViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start(isRelatedPost = isRelatedPost, bundle = Bundle())
+
+        val bundle = mock<Bundle>()
+        val interceptedUri = INTERCEPTED_URI.takeIf { interceptedUrPresent }
+
+        whenever(bundle.getString(ReaderConstants.ARG_INTERCEPTED_URI)).thenReturn(interceptedUri)
+
+        if (offerSignIn) {
+            whenever(wpUrlUtilsWrapper.isWordPressCom(interceptedUri)).thenReturn(true)
+            whenever(accountStore.hasAccessToken()).thenReturn(false)
+        } else {
+            whenever(wpUrlUtilsWrapper.isWordPressCom(interceptedUri)).thenReturn(false)
+        }
+
+        viewModel.start(isRelatedPost = isRelatedPost, bundle = bundle)
+
 
         if (showPost) {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
