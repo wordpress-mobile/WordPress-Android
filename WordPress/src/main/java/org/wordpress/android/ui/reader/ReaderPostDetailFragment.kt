@@ -960,7 +960,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
         progress.visibility = View.GONE
 
-        if (event.statusCode == 200) {
+        if (event.statusCode == HttpURLConnection.HTTP_OK) {
             replacePost(event.blogId, event.postId, false)
         } else {
             onRequestFailure(event.statusCode)
