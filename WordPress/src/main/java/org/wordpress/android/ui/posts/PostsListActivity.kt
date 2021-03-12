@@ -272,27 +272,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
         viewModel.viewState.observe(this@PostsListActivity, { state ->
             state?.let {
-                if (state.isFabVisible) {
-                    fabButton.show()
-                } else {
-                    fabButton.hide()
-                }
-
-                val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
-                postListAuthorSelection.visibility = authorSelectionVisibility
-                postListTabLayoutFadingEdge.visibility = authorSelectionVisibility
-
-                val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible) {
-                            resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        } else 0
-                tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
-                val authorSelectionAdapter = postListAuthorSelection.adapter as AuthorSelectionAdapter
-                authorSelectionAdapter.updateItems(state.authorFilterItems)
-
-                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-                    postListAuthorSelection.setSelection(selectionIndex)
-                }
+                loadViewState(state)
             }
         })
 
@@ -320,6 +300,9 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel.snackBarMessage.observe(this@PostsListActivity, {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
+        viewModel.toastMessage.observe(this@PostsListActivity, {
+            it?.show(this@PostsListActivity)
+        })
         viewModel.previewState.observe(this@PostsListActivity, {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                     this@PostsListActivity,
@@ -328,23 +311,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     uiHelpers
             )
         })
-        viewModel.dialogAction.observe(this@PostsListActivity, {
-            it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
-        })
-        viewModel.toastMessage.observe(this@PostsListActivity, {
-            it?.show(this@PostsListActivity)
-        })
-        viewModel.postUploadAction.observe(this@PostsListActivity, {
-            it?.let { uploadAction ->
-                handleUploadAction(
-                        uploadAction,
-                        this@PostsListActivity,
-                        findViewById(R.id.coordinator),
-                        uploadActionUseCase,
-                        uploadUtilsWrapper
-                )
-            }
-        })
+        setupActions()
         viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity, {
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
@@ -357,6 +324,27 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
+        setupFabEvents()
+    }
+
+    private fun setupActions() {
+        viewModel.dialogAction.observe(this@PostsListActivity, {
+            it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
+        })
+        viewModel.postUploadAction.observe(this@PostsListActivity, {
+            it?.let { uploadAction ->
+                handleUploadAction(
+                        uploadAction,
+                        this@PostsListActivity,
+                        findViewById(R.id.coordinator),
+                        uploadActionUseCase,
+                        uploadUtilsWrapper
+                )
+            }
+        })
+    }
+
+    private fun PostListActivityBinding.setupFabEvents() {
         viewModel.onFabClicked.observeEvent(this@PostsListActivity, {
             postListCreateMenuViewModel.onFabClicked()
         })
@@ -372,6 +360,30 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun PostListActivityBinding.loadViewState(state: PostListMainViewState) {
+        if (state.isFabVisible) {
+            fabButton.show()
+        } else {
+            fabButton.hide()
+        }
+
+        val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
+        postListAuthorSelection.visibility = authorSelectionVisibility
+        postListTabLayoutFadingEdge.visibility = authorSelectionVisibility
+
+        val tabLayoutPaddingStart =
+                if (state.isAuthorFilterVisible) {
+                    resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+                } else 0
+        tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
+        val authorSelectionAdapter = postListAuthorSelection.adapter as AuthorSelectionAdapter
+        authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+        authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+            postListAuthorSelection.setSelection(selectionIndex)
+        }
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
