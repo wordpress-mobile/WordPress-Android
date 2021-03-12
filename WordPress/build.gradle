@@ -334,18 +334,18 @@ dependencies {
     debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:analytics:WordPressAnalytics')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
@@ -508,4 +508,3 @@ assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-
