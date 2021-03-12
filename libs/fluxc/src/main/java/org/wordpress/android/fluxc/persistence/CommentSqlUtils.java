@@ -88,7 +88,7 @@ public class CommentSqlUtils {
             public int compare(CommentModel o1, CommentModel o2) {
                 long x = o2.getPublishedTimestamp();
                 long y = o1.getPublishedTimestamp();
-                return (y < y) ? -1 : ((x == y) ? 0 : 1);
+                return (x < y) ? -1 : ((x == y) ? 0 : 1);
             }
         });
 
