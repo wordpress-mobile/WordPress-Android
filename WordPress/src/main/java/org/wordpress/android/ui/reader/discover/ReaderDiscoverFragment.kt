@@ -60,8 +60,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     private lateinit var parentViewModel: ReaderViewModel
 
-    private var _binding: ReaderDiscoverFragmentLayoutBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ReaderDiscoverFragmentLayoutBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +69,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
+        binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
 
@@ -198,11 +197,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
-        _binding = null
+        binding = null
     }
 
-    override fun getScrollableViewForUniqueIdProvision(): View {
-        return binding.recyclerView
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+        return binding?.recyclerView
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

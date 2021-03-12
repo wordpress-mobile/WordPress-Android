@@ -38,8 +38,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private var searchMenuItem: MenuItem? = null
     private var settingsMenuItem: MenuItem? = null
 
-    private var _binding: ReaderFragmentLayoutBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ReaderFragmentLayoutBinding? = null
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -60,7 +59,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        _binding = ReaderFragmentLayoutBinding.bind(view).apply {
+        binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
             initViewModel()
@@ -71,7 +70,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         super.onDestroyView()
         searchMenuItem = null
         settingsMenuItem = null
-        _binding = null
+        binding = null
     }
 
     override fun onResume() {
@@ -219,6 +218,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        binding.appBar.liftOnScrollTargetViewId = containerId
+        binding?.appBar?.liftOnScrollTargetViewId = containerId
     }
 }
