@@ -10,6 +10,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchRead
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.NotAuthorised
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed.PostNotFound
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.net.HttpURLConnection
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -30,9 +31,9 @@ class ReaderFetchPostUseCase @Inject constructor(
                 AlreadyRunning
             } else {
                 when (fetchPostAndWaitForResult(requestParams)) {
-                    STATUS_CODE_200 -> Success
-                    STATUS_CODE_401, STATUS_CODE_403 -> NotAuthorised
-                    STATUS_CODE_404 -> PostNotFound
+                    HttpURLConnection.HTTP_OK -> Success
+                    HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
+                    HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
                     else -> RequestFailed
                 }
             }
@@ -42,7 +43,7 @@ class ReaderFetchPostUseCase @Inject constructor(
     private suspend fun fetchPostAndWaitForResult(requestParams: FetchPostRequestParams): Int {
         val listener = object : ReaderActions.OnRequestListener {
             override fun onSuccess() {
-                continuations[requestParams]?.resume(STATUS_CODE_200)
+                continuations[requestParams]?.resume(HttpURLConnection.HTTP_OK)
                 continuations[requestParams] = null
             }
 
@@ -87,11 +88,4 @@ class ReaderFetchPostUseCase @Inject constructor(
         val postId: Long,
         val isFeed: Boolean
     )
-
-    companion object {
-        const val STATUS_CODE_200 = 200
-        const val STATUS_CODE_401 = 401
-        const val STATUS_CODE_403 = 403
-        const val STATUS_CODE_404 = 404
-    }
 }

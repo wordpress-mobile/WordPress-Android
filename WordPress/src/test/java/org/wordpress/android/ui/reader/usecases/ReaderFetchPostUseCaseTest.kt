@@ -14,12 +14,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
-import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.Companion.STATUS_CODE_401
-import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.Companion.STATUS_CODE_403
-import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.Companion.STATUS_CODE_404
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.net.HttpURLConnection
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
@@ -86,10 +84,10 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given 404 status code, when reader post is fetched, then post not found is returned`() = test {
+    fun `given http not found status code, when reader post is fetched, then post not found is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onFailure(STATUS_CODE_404)
+                    .onFailure(HttpURLConnection.HTTP_NOT_FOUND)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -98,10 +96,10 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given 401 status code, when reader post is fetched, then not authorised is returned`() = test {
+    fun `given http unauthorised status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onFailure(STATUS_CODE_401)
+                    .onFailure(HttpURLConnection.HTTP_UNAUTHORIZED)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -110,10 +108,10 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given 403 status code, when reader post is fetched, then not authorised is returned`() = test {
+    fun `given http forbidden status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
             (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onFailure(STATUS_CODE_403)
+                    .onFailure(HttpURLConnection.HTTP_FORBIDDEN)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)

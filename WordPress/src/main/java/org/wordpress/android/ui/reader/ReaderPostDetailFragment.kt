@@ -117,6 +117,7 @@ import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
+import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -969,8 +970,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             showError(getString(R.string.no_network_message))
         } else {
             when (statusCode) {
-                401, 403 -> viewModel.onNotAuthorisedRequestFailure()
-                404 -> showError(getString(R.string.reader_err_get_post_not_found))
+                HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN ->
+                    viewModel.onNotAuthorisedRequestFailure()
+
+                HttpURLConnection.HTTP_NOT_FOUND -> showError(getString(R.string.reader_err_get_post_not_found))
                 else -> showError(getString(R.string.reader_err_get_post_generic))
             }
         }
