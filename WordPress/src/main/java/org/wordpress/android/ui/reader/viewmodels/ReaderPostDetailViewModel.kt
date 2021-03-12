@@ -21,8 +21,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -102,6 +102,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
+    private val shouldOfferSignIn: Boolean
+        get() = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
+
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
@@ -180,7 +183,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 FetchReaderPostState.Failed.RequestFailed ->
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
 
-                FetchReaderPostState.Failed.NotAuthorised -> updateNotAuthorisedErrorState()
+                FetchReaderPostState.Failed.NotAuthorised -> updateAndTrackNotAuthorisedErrorState()
 
                 FetchReaderPostState.Failed.PostNotFound ->
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
@@ -197,7 +200,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onNotAuthorisedRequestFailure() {
-        updateNotAuthorisedErrorState()
+        updateAndTrackNotAuthorisedErrorState()
     }
 
     fun onMoreButtonClicked() {
@@ -391,26 +394,34 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun updateNotAuthorisedErrorState() {
-        val offerSignIn = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
-        var errMsgResId: Int
-        var signInButtonVisibility = offerSignIn
+    private fun updateAndTrackNotAuthorisedErrorState() {
+        trackNotAuthorisedState()
 
-        if (!offerSignIn) {
-            errMsgResId = if (interceptedUri == null)
+        val notAuthorisedErrorMessageRes = if (!shouldOfferSignIn) {
+            if (interceptedUri == null) {
                 R.string.reader_err_get_post_not_authorized
-            else
+            } else {
                 R.string.reader_err_get_post_not_authorized_fallback
+            }
         } else {
-            errMsgResId = if (interceptedUri == null)
+            if (interceptedUri == null) {
                 R.string.reader_err_get_post_not_authorized_signin
-            else
+            } else {
                 R.string.reader_err_get_post_not_authorized_signin_fallback
+            }
+        }
+
+        _uiState.value = ErrorUiState(
+                message = UiStringRes(notAuthorisedErrorMessageRes),
+                signInButtonVisibility = shouldOfferSignIn
+        )
+    }
+
+    private fun trackNotAuthorisedState() {
+        if (shouldOfferSignIn) {
             post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
         post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_USER_UNAUTHORIZED, it) }
-
-        _uiState.value = ErrorUiState(UiStringRes(errMsgResId), signInButtonVisibility)
     }
 
     sealed class UiState(
