@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-28 17:15:46+0000
+Translation-Revision-Date: 2021-03-07 22:14:51+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="reader_title_interests">Konuları takip et</string>
+    <string name="activity_log_backup_download_notice_download_action">İndir</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
+    <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Lütfen tüm %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
     <string name="threat_fix_all_status_success_message_plural">Tehditler başarıyla düzeltildi.</string>
     <string name="scan_fixing_threats_description_plural">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal bir şekilde kullanmaya devam edebilirsiniz, ilerlemeyi istediğiniz zaman kontrol edebilirsiniz.</string>
     <string name="gutenberg_native_edit_focal_point">Odak noktasını düzenle</string>
@@ -31,7 +36,6 @@ Language: tr
     <string name="invite_links_share_invite_link">Davet bağlantısını paylaş</string>
     <string name="invite_links_disable_invite_link">Davet bağlantısını etkisizleştir</string>
     <string name="invite_links_expire_date">Son kullanma tarihi: %1$s</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Tarama tamamlandı&lt;/b> &lt;br>&lt;/br> Tehdit bulunamadı</string>
     <string name="threats_found_plural">Tehditler bulundu</string>
     <string name="threats_found_singular">Tehdit bulundu</string>
     <string name="disable">Etkisizleştir</string>
@@ -154,6 +158,7 @@ Language: tr
     <string name="threat_fix_all_status_error_message">Düzeltme durumu alınırken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
     <string name="threat_fix_all_status_success_message_singular">Tehditler başarıyla düzeltildi.</string>
     <string name="threat_fix_all_error_message">Tehditler düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Lütfen bir aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
     <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
     <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
     <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
@@ -362,7 +367,6 @@ Language: tr
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Fotoğrafçı Cameron Karsten\'in çalışmalarından çok ilham alıyorum. Bu teknikleri bir sonraki adımda deneyeceğim</string>
     <string name="login_prologue_second_subtitle_one">İlham Alma</string>
-    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni yazılar keşfedin.</string>
     <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
     <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
     <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
@@ -384,7 +388,6 @@ Language: tr
     <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
     <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
     <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>
-    <string name="mlp_preview_title">Düzen Önizlemesi</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s fotoğraflarınıza erişimi reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s ve %3$s özelliklerini açın.</string>
     <string name="media_insert_failed">Medya eklenemedi.</string>
     <string name="media_insert_failed_with_reason">Medya eklenemedi: %s</string>
@@ -587,8 +590,6 @@ Language: tr
     <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı gerektirir.</string>
     <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
-    <string name="reader_choose_interests_content_description">İlgi alanlarınızı seçin</string>
-    <string name="reader_label_choose_your_interests">İlgi alanlarınızı seçin</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
     <string name="update_now">Şimdi güncelle</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
@@ -708,8 +709,6 @@ Language: tr
     <string name="editor_page_saved_locally_failed_media">Sayfa, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="editor_uploading_page">Sayfanız yükleniyor</string>
     <string name="app_theme_default">Pil tasarrufu ile ayarlanır</string>
-    <string name="gutenberg_native_warning_message">Uyarı Mesajı</string>
-    <string name="gutenberg_native_success_message">Başarı Mesajı</string>
     <string name="gutenberg_native_show_post_content">Gönderi içeriğini göster</string>
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
@@ -819,18 +818,14 @@ Language: tr
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
-    <string name="gutenberg_native_title">Başlık:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klavyeyi gizlemek için dokunun</string>
     <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Kenar çubuğu başlık eklentisi</string>
     <string name="gutenberg_native_show_section">Bölümü göster</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
-    <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
     <string name="gutenberg_native_cut_block">Bloğu kes</string>
-    <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
     <string name="gutenberg_native_problem_displaying_block">Blok görüntülenirken bir sorun oluştu</string>
     <string name="gutenberg_native_post_title_s">Yazı başlığı. %s</string>
@@ -840,17 +835,12 @@ Language: tr
     <string name="gutenberg_native_open_settings">Ayarları aç</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Hiçbir uygulama bu isteği yerine getiremiyor. Lütfen bir Web tarayıcısı yükleyin.</string>
     <string name="gutenberg_native_navigate_up">Yukarı Git</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Yayımlama öncesi panelim</string>
-    <string name="gutenberg_native_my_post_status_info">Gönderi durumu bilgilerim</string>
-    <string name="gutenberg_native_my_post_publish_panel">Yayımlama sonrası panelim</string>
-    <string name="gutenberg_native_my_document_setting_panel">Belge ayarları panelim</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
-    <string name="gutenberg_native_here_is_the_panel_content">İşte panel içeriği!</string>
     <string name="gutenberg_native_help_icon">Yardım simgesi</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
@@ -864,18 +854,14 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_edit_this_value">Bu değeri düzenlemek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Kaydırıcıyı kullanarak değeri değiştirmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Blok eklemek için çift dokunun</string>
-    <string name="gutenberg_native_content">İçerik…</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
-    <string name="gutenberg_native_annotations_sidebar">Ek Açıklamalar Kenar Çubuğu</string>
     <string name="gutenberg_native_alt_text">Alternatif metin</string>
     <string name="gutenberg_native_add_video">VİDEO EKLE</string>
     <string name="gutenberg_native_add_url">URL ekle</string>
     <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
     <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>
-    <string name="gutenberg_native_add_annotation">Ek açıklama ekle</string>
-    <string name="gutenberg_native_add_a_description">Açıklama ekle</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
     <string name="reader_empty_saved_posts_content_description">Bir gönderiyi listenize kaydetmek için Gönderileri Kaydetmek için Ekle düğmesine dokunun.</string>
     <string name="reader_acessibility_list_loaded">\"Listeye %1$d öğe yüklendi.\"</string>
@@ -1167,6 +1153,8 @@ Language: tr
     <string name="quick_start_dialog_upload_icon_title">Bir site simgesi yükleyin</string>
     <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Mevcut paketi ve kullanılabilecek diğer paketleri görmek için %1$s Paket %2$s seçeneğine dokunun</string>
+    <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
+    <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">İlk gönderinizi taslak olarak yayınlayın.</string>
@@ -1364,7 +1352,6 @@ Language: tr
     <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
     <string name="quick_start_dialog_follow_sites_message">Size hitab eden siteleri bulun ve yayınladıkları zaman güncellemeleri almak için bunları takip edin.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Benzer alanlardaki siteleri aramak için %1$s Ara %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Devam etmek için %1$s Okuyucu %2$s seçeneğine dokunun.</string>
     <string name="quick_start_button_negative">Şimdi değil</string>
     <string name="quick_start_button_negative_short">Vazgeç</string>
@@ -2118,7 +2105,6 @@ Language: tr
     <string name="signout">Çıkış yap</string>
     <string name="sign_in_wpcom">WordPress.com hesabına giriş yap</string>
     <string name="reader_label_global_related_posts">WordPress.com üzerinden daha fazlası</string>
-    <string name="reader_label_local_related_posts">%s üzerinden daha fazlası</string>
     <string name="preference_open_device_settings">Cihaz ayarlarını aç</string>
     <string name="invite_invalid_email">%s: Geçersiz e-posta</string>
     <string name="invite_user_blocked_invites">%s: Kullanıcı bloklu davetler</string>
@@ -2176,6 +2162,7 @@ Language: tr
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
     <string name="reader_hint_post_search">WordPress üzerinde ara</string>
+    <string name="reader_title_related_post_detail">İlişkili yazı</string>
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
     <string name="send">Gönder</string>
     <string name="user_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>

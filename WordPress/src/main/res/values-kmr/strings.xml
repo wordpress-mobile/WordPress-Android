@@ -58,7 +58,6 @@ Language: ku_TR
     <string name="login_prologue_title_first">Tu bi xêr hatî avakera malperan a herî populer.</string>
     <string name="login_prologue_title_third">Di dema rasteqîne de şîrove û danezanan bibîne.</string>
     <string name="login_prologue_title_second">Bi edîtora bihêz re tu dikarî di meşê de jî şandiyan biweşîne.</string>
-    <string name="login_prologue_title_fifth">Malperên xwe yên favorî bişopîne û xwendinên nû keşf bike.</string>
     <string name="login_prologue_second_subtitle_one">Îlhamê Bistîne</string>
     <string name="login_prologue_title_fourth">Bi analîzên berfireh binêrin gelo girseya we çawa mezin dibe.</string>
     <string name="media_loading_failed">Medya nehat barkirin</string>
@@ -78,7 +77,6 @@ Language: ku_TR
     <string name="stories_intro_image_caption_first">Şandiya çîrokî çawa tê afirandin</string>
     <string name="mlp_notice_blank_page_created">Rûpela vala hat afirandin</string>
     <string name="stories_intro_main_title">Danasîna Şandiyên Çîrokî</string>
-    <string name="mlp_preview_title">Pêşdîtina Raxistinê</string>
     <string name="media_picker_soft_ask_permissions_denied">Hewla %1$s\'ê ya ji bo bigihîje wêneyên te hat redkirin. Ji bo vêya çareser bikî, destûrên xwe sererast bike, %2$s û %3$s\'ê veke.</string>
     <string name="media_insert_failed">Tevlîkirina medyayê bi ser neket.</string>
     <string name="media_insert_failed_with_reason">Tevlîkirina medyayê bi ser neket: %s</string>
@@ -272,7 +270,6 @@ Language: ku_TR
     <string name="prepublishing_tags_description">Etîket di derbarê mijara şandiyan de ji xwîneran re dibin alîkar.</string>
     <string name="prepublishing_nudges_home_submit_button">Aniha Bişîne</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Etîketan tevlî bike</string>
-    <string name="reader_choose_interests_content_description">Mijarên bala te dikişîne hilbijêre</string>
     <string name="reader_btn_done">Qediya</string>
     <string name="post_status_post_trashed">Çû jêbirdankê</string>
     <string name="publish_date">Demweşan</string>
@@ -280,7 +277,6 @@ Language: ku_TR
     <string name="post_status_post_scheduled">Demsazkirî</string>
     <string name="ccpa_privacy_notice_read">Hişyariya nihêniyê ya CCPA\'yê bixwîne</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Bila şandî veguheze nav Reşnivîsan?</string>
-    <string name="reader_label_choose_your_interests">Hobiyên xwe hilbijêre</string>
     <string name="reader_btn_select_few_interests">Ji bo domandinê hinekan hilbijêre</string>
     <string name="ccpa_privacy_notice_caption">Qanûna Ewlehiya Mezêxeran a Kalîforniyayê (\"CCPA\") li me ferz dike ji bo em zêdetir agahiyan bidin şêniyên Kalîforniyayê; derbarê kategoriyên agahiyên şexsî de yên ku em kom dikin û parve dikin, em wan agahiyên şexsî ji ku bi dest dixin û em wan çawa û çima bi kar tînin.</string>
     <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
@@ -399,8 +395,6 @@ Language: ku_TR
     <string name="editor_page_saved_locally_failed_media">Rûpelê, hilxistinên medyayê bi ser nexist û bi ew derhêlî hatin tomarkirin</string>
     <string name="quickpress_shortcut_activity_label">Ji bo kurterêya QuickPress\'ê, blogê hilbijêre</string>
     <string name="app_theme_default">Ji hêla tasarûfa bateryayê tê sazkirin</string>
-    <string name="gutenberg_native_warning_message">Peyama Hişyariyê</string>
-    <string name="gutenberg_native_success_message">Peyama Serkevtinê</string>
     <string name="gutenberg_native_show_post_content">Naveroka şandiyê nîşan bide</string>
     <string name="gutenberg_native_link_to">Girêdana:</string>
     <string name="gutenberg_native_only_show_excerpt">Tenê jêgirtinê nîşan bide</string>
@@ -504,7 +498,6 @@ Language: ku_TR
     <string name="reader_filter_tags_title">Mijar</string>
     <string name="gutenberg_native_wordpress_media_library">Medyageha WordPress\'ê</string>
     <string name="gutenberg_native_translate">Wergerîne</string>
-    <string name="gutenberg_native_title">Sernav:</string>
     <string name="gutenberg_native_start_writing">Dest bi nivîsandinê bike…</string>
     <string name="gutenberg_native_take_a_photo_or_video">Vîdyo an jî Wêne Bikişîne</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Ji bo klavyeyê veşêrî, bitikîne</string>
@@ -516,22 +509,15 @@ Language: ku_TR
     <string name="gutenberg_native_cut_block">Blokê jê bike</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloka %s. Di vê blokê de naveroka nederbasdar heye</string>
     <string name="gutenberg_native_s_block_empty">Bloka %s. Vala</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Pêveka sernavê kêlekbendê</string>
-    <string name="gutenberg_native_reset_block">Bilokê Nûsaz Bike</string>
     <string name="gutenberg_native_problem_opening_the_video">Pirsgirêk di vekirina vîdyoyê de derket</string>
     <string name="gutenberg_native_page_break_block_s">Bloka dawiya rûpelê. %s</string>
     <string name="gutenberg_native_open_settings">Sazkariyan Veke</string>
-    <string name="gutenberg_native_remove_annotations">Têbîniyan rake</string>
     <string name="gutenberg_native_problem_displaying_block">Pirsgirêk di nîşandana blokê de derket</string>
     <string name="gutenberg_native_post_title_s">Sernavê şandiyê. %s</string>
     <string name="gutenberg_native_post_title_empty">Sernavê şandiyê. Vala</string>
     <string name="gutenberg_native_paste_url">URL\'yê bizeliqîne</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ti sepan nikare vê daxwazê birêve bibe. Ji kerema xwe gerokeke Webê saz bike.</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Panela min a berî-weşanê</string>
-    <string name="gutenberg_native_my_post_status_info">Agahiyên rewşa şandiya min</string>
-    <string name="gutenberg_native_my_post_publish_panel">Panela min a piştî-weşanê</string>
     <string name="gutenberg_native_navigate_up">Here Jorê</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panela sazkariyên dosyeya min</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Blokê ji rêzika %1$sem veguhezîne rêzika %2$sem</string>
     <string name="gutenberg_native_move_block_up">Blokê veguhezîne jorê</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blokê ji rêzika %1$sem bi jêr ve veguhezîne rêzika %2$sem</string>
@@ -540,7 +526,6 @@ Language: ku_TR
     <string name="gutenberg_native_help_icon">Îkona alîkariyê</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Tevlîkirina medyayê bi ser neket.\nJi bo vebijarkan, bitepîne.</string>
     <string name="gutenberg_native_move_block_down">Blokê bikişîne jêrê</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Naveroka panelê li vir e!</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Ji bo guhertina dawî vegerînî, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_select">Ji bo bijartinê, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ji bo sazkariyê biguherînî, ducar bitikîne</string>
@@ -552,10 +537,8 @@ Language: ku_TR
     <string name="gutenberg_native_double_tap_to_edit_this_value">Ji bo vî nirxî sererast bikî, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Ji bo blokekê tevlê bikî, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Ji bo bi rêya kaşokê nirxî biguherînî, ducar bitepîne</string>
-    <string name="gutenberg_native_content">Naverok…</string>
     <string name="gutenberg_native_choose_from_device">Ji cîhazê hilbijêre</string>
     <string name="gutenberg_native_current_value_is_s">Nirxê heyî %s ye</string>
-    <string name="gutenberg_native_annotations_sidebar">Kêlekbenda Têbîniyan</string>
     <string name="gutenberg_native_alt_text">Nivîsa alternatîv</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Çewtiyeke nenas qewimî. Jkx dîsa hewl bide.</string>
     <string name="gutenberg_native_add_block_here">BLOKÊ TEVLÎ VIR BIKE</string>
@@ -563,8 +546,6 @@ Language: ku_TR
     <string name="gutenberg_native_add_url">URL tevlî bike</string>
     <string name="gutenberg_native_add_image_or_video">WÊNE AN VÎDYO TEVLÎ BIKE</string>
     <string name="gutenberg_native_add_image">WÊNE TEVLÎ BIKE</string>
-    <string name="gutenberg_native_add_a_description">Raveyekê tevlî bike</string>
-    <string name="gutenberg_native_add_annotation">Tebîniyekê tevlî bike</string>
     <string name="reader_acessibility_list_loaded">\"%1$d hêman li lîsteyê hatin barkirin.\"</string>
     <string name="reader_empty_saved_posts_content_description">Ji bo tu şandiyekê li lîsteya xwe qeyd bikî, ji bo tomarkirina şandiyan li \"Tevlî bike\"yê bitikîne.</string>
     <string name="notifications_tab_dialog_switch_desc">Danezan</string>
@@ -1051,7 +1032,6 @@ Language: ku_TR
     <string name="quick_start_dialog_follow_sites_title">Malperên din bişopîne</string>
     <string name="quick_start_dialog_need_help_button_negative">Na Spas</string>
     <string name="quick_start_dialog_need_help_button_neutral">Qet</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Ji bo tu malperên têkildarî mijarên wekhev bibînî li %1$sLê bigere%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ji bo domandinê li %1$sXwîner%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_follow_sites_message">Malperên ku îlhamê didine te bibîne û wan bişopîne ji bo ku hayê te ji hildemandinên weşanên wan çêbibe.</string>
     <string name="quick_start_button_positive">Here</string>
@@ -1800,7 +1780,6 @@ Language: ku_TR
     <string name="signout">Derkeve</string>
     <string name="sign_in_wpcom">Têkeve WordPress.com\'ê</string>
     <string name="reader_label_global_related_posts">Zêdetir li ser WordPress.com\'ê</string>
-    <string name="reader_label_local_related_posts">Zêdetir li ser %s\'ê</string>
     <string name="preference_open_device_settings">Sazkariyên cîhazê veke</string>
     <string name="invite_invalid_email">%s: Emaila nederbasdar</string>
     <string name="invite_user_blocked_invites">%s: Vexwendinên astengkirî</string>
@@ -1856,6 +1835,7 @@ Language: ku_TR
     <string name="dlg_confirm_clear_search_history">Raboriya lêgerînê paqij bike?</string>
     <string name="reader_empty_search_description">Di zimanê te de ji bo \"%s\"ê ti encam nehatin dîtin</string>
     <string name="reader_hint_post_search">Li ser WordPress\'ê bigere</string>
+    <string name="reader_title_related_post_detail">Şandiya Têkildar</string>
     <string name="preview_screen_links_disabled">Girêdan li ser ekrana pêşdîtinê neçalak in</string>
     <string name="send">Bişîne</string>
     <string name="person_removed">%1$s bi serkeftî hat rakirin</string>
