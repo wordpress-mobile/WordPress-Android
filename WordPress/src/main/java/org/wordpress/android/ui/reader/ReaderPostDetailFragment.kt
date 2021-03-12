@@ -374,9 +374,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             uiHelpers.updateVisibility(progress_loading, it.loadingVisible)
             when (it) {
                 is LoadingUiState -> Unit // Do Nothing
-
                 is ReaderPostDetailsUiState -> renderUiState(it)
-
                 is ErrorUiState -> {
                     uiHelpers.updateVisibility(signInButton, it.signInButtonVisibility)
                     val message = it.message?.let { msg -> uiHelpers.getTextOfUiString(requireContext(), msg) }
