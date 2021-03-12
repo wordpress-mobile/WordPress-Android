@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListBinding
@@ -79,6 +80,11 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 timezoneViewModel.onSearchCancelled()
                 hideSearchKeyboard()
             }
+
+            btnTimezoneSuggestion.setOnClickListener { it as MaterialButton
+                callback?.onSelectTimezone(it.text.toString())
+                dismiss()
+            }
         }
     }
 
@@ -93,6 +99,10 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
         timezoneViewModel.timezones.observe(viewLifecycleOwner, {
             timezoneAdapter.submitList(it)
+        })
+
+        timezoneViewModel.suggestedTimezone.observe(viewLifecycleOwner, {
+            binding?.btnTimezoneSuggestion?.text = it
         })
 
         timezoneViewModel.timezoneSearch.observe(viewLifecycleOwner, {

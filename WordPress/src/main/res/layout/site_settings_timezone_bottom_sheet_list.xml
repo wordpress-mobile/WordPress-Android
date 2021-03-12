@@ -38,18 +38,18 @@
         android:minHeight="480dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_extra_extra_medium_large"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/text_timezone_suggestion"
         tools:context=".ui.prefs.timezone.SiteSettingsTimezoneBottomSheet"
         tools:listitem="@layout/site_settings_timezone_bottom_sheet_list_item" />
 
@@ -73,5 +73,27 @@
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_timezone_suggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:text="@string/suggestion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_timezone_suggestion"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_timezone_suggestion"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+        tools:text="America/Los Angeles"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

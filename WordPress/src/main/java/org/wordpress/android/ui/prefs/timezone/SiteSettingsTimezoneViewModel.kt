@@ -33,20 +33,25 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         filterTimezones(term)
     }
 
+    private val _suggestedTimezone = MutableLiveData<String>()
+    val suggestedTimezone = _suggestedTimezone
+
     private val _timezones = MutableLiveData<List<TimezonesList>>()
     val timezones = _timezones
 
 
-    fun searchTimezones(city: CharSequence?) {
-        searchInput.value = city.toString()
+    fun searchTimezones(query: CharSequence?) {
+        searchInput.value = query.toString()
     }
 
-    private fun filterTimezones(city: String): LiveData<List<TimezonesList>> {
+    private fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
         val filteredTimezones = MutableLiveData<List<TimezonesList>>()
 
         timezonesList.filter { timezone ->
             when (timezone) {
-                is TimezoneItem -> timezone.label.contains(city, true)
+                is TimezoneItem -> {
+                    timezone.label.contains(query, true) or timezone.offset.contains(query, true)
+                }
                 else -> false
             }
         }.also {
@@ -61,6 +66,8 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getTimezones() {
+        _suggestedTimezone.postValue(ZoneId.systemDefault().id)
+
         timezonesList.clear()
 
         ZoneId.getAvailableZoneIds().groupBy {
@@ -88,6 +95,8 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
                 ))
             }
         }
+
+//        timezonesList.addAll(getManualOffsets())
 
         AppLog.d(SETTINGS, timezonesList.toString())
 
@@ -125,7 +134,72 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         AUSTRALIA("Australia"),
         EUROPE("Europe"),
         INDIAN("Indian"),
-        PACIFIC("Pacific")
+        PACIFIC("Pacific"),
+        UTC("Etc")
+    }
+
+    // Manual offsets that are return from api and accepted by backend are different from that of TimeZone class,
+    // hence adding the list manually.
+    private fun getManualOffsets(): List<TimezonesList> {
+        val manualOffsets = mutableListOf<TimezonesList>()
+
+        manualOffsets.add(TimezoneHeader("Manual Offsets"))
+
+        manualOffsets.add(TimezoneItem(value = "UTC-12", label = "UTC-12"))
+        manualOffsets.add(TimezoneItem(value = "UTC-11.5", label = "UTC-11:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-11", label = "UTC-11"))
+        manualOffsets.add(TimezoneItem(value = "UTC-10.5", label = "UTC-10:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-10", label = "UTC-10"))
+        manualOffsets.add(TimezoneItem(value = "UTC-9.5", label = "UTC-9:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-9", label = "UTC-9"))
+        manualOffsets.add(TimezoneItem(value = "UTC-8.5", label = "UTC-8:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-8", label = "UTC-8"))
+        manualOffsets.add(TimezoneItem(value = "UTC-7.5", label = "UTC-7:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-7", label = "UTC-7"))
+        manualOffsets.add(TimezoneItem(value = "UTC-6.5", label = "UTC-6:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-6", label = "UTC-6"))
+        manualOffsets.add(TimezoneItem(value = "UTC-5.5", label = "UTC-5:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-5", label = "UTC-5"))
+        manualOffsets.add(TimezoneItem(value = "UTC-4.5", label = "UTC-4:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-4", label = "UTC-4"))
+        manualOffsets.add(TimezoneItem(value = "UTC-3.5", label = "UTC-3:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-3", label = "UTC-3"))
+        manualOffsets.add(TimezoneItem(value = "UTC-2.5", label = "UTC-2:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-2", label = "UTC-2"))
+        manualOffsets.add(TimezoneItem(value = "UTC-1.5", label = "UTC-1:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC-1", label = "UTC-1"))
+        manualOffsets.add(TimezoneItem(value = "UTC-0.5", label = "UTC-0:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+0", label = "UTC+0"))
+        manualOffsets.add(TimezoneItem(value = "UTC+0.5", label = "UTC+0:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+1", label = "UTC+1"))
+        manualOffsets.add(TimezoneItem(value = "UTC+1.5", label = "UTC+1:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+2", label = "UTC+2"))
+        manualOffsets.add(TimezoneItem(value = "UTC+2.5", label = "UTC+2:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+3", label = "UTC+3"))
+        manualOffsets.add(TimezoneItem(value = "UTC+3.5", label = "UTC+3:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+4", label = "UTC+4"))
+        manualOffsets.add(TimezoneItem(value = "UTC+4.5", label = "UTC+4:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+5", label = "UTC+5"))
+        manualOffsets.add(TimezoneItem(value = "UTC+5.5", label = "UTC+5:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+6", label = "UTC+6"))
+        manualOffsets.add(TimezoneItem(value = "UTC+6.5", label = "UTC+6:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+7", label = "UTC+7"))
+        manualOffsets.add(TimezoneItem(value = "UTC+7.5", label = "UTC+7:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+8", label = "UTC+8"))
+        manualOffsets.add(TimezoneItem(value = "UTC+8.5", label = "UTC+8:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+9", label = "UTC+9"))
+        manualOffsets.add(TimezoneItem(value = "UTC+9.5", label = "UTC+9:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+10", label = "UTC+10"))
+        manualOffsets.add(TimezoneItem(value = "UTC+10.5", label = "UTC+10:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+11", label = "UTC+11"))
+        manualOffsets.add(TimezoneItem(value = "UTC+11.5", label = "UTC+11:30"))
+        manualOffsets.add(TimezoneItem(value = "UTC+12", label = "UTC+12"))
+        manualOffsets.add(TimezoneItem(value = "UTC+12.75", label = "UTC+12:45"))
+        manualOffsets.add(TimezoneItem(value = "UTC+13", label = "UTC+13"))
+        manualOffsets.add(TimezoneItem(value = "UTC+13.75", label = "UTC+13:45"))
+        manualOffsets.add(TimezoneItem(value = "UTC+14", label = "UTC+14"))
+
+        return manualOffsets
     }
 }
 
