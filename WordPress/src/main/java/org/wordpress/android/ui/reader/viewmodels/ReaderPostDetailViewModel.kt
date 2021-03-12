@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +17,6 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
@@ -109,14 +107,14 @@ class ReaderPostDetailViewModel @Inject constructor(
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
 
-    fun start(isRelatedPost: Boolean, bundle: Bundle?) {
+    fun start(isRelatedPost: Boolean, isFeed: Boolean, interceptedUri: String?) {
         if (isStarted) {
             return
         }
         isStarted = true
         this.isRelatedPost = isRelatedPost
-        this.isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
-        this.interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+        this.isFeed = isFeed
+        this.interceptedUri = interceptedUri
 
         init()
     }

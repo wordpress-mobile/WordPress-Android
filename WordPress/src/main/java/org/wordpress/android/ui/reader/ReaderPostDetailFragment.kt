@@ -389,7 +389,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
 
-        viewModel.start(isRelatedPost, savedInstanceState ?: arguments)
+        val bundle = savedInstanceState ?: arguments
+        val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
+        val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+
+        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState) {

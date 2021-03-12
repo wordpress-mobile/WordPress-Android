@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
@@ -31,7 +30,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -844,6 +842,7 @@ class ReaderPostDetailViewModelTest {
     private fun init(
         showPost: Boolean = true,
         isRelatedPost: Boolean = false,
+        isFeed: Boolean = false,
         offerSignIn: Boolean = false,
         interceptedUrPresent: Boolean = false
     ): Observers {
@@ -860,10 +859,7 @@ class ReaderPostDetailViewModelTest {
             msgs.add(it)
         }
 
-        val bundle = mock<Bundle>()
         val interceptedUri = INTERCEPTED_URI.takeIf { interceptedUrPresent }
-
-        whenever(bundle.getString(ReaderConstants.ARG_INTERCEPTED_URI)).thenReturn(interceptedUri)
 
         if (offerSignIn) {
             whenever(wpUrlUtilsWrapper.isWordPressCom(interceptedUri)).thenReturn(true)
@@ -872,7 +868,7 @@ class ReaderPostDetailViewModelTest {
             whenever(wpUrlUtilsWrapper.isWordPressCom(interceptedUri)).thenReturn(false)
         }
 
-        viewModel.start(isRelatedPost = isRelatedPost, bundle = bundle)
+        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
 
         if (showPost) {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
