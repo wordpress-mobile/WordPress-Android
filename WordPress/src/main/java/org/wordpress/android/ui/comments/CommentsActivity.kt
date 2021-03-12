@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.persistence.CommentSqlUtils
 import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload
 import org.wordpress.android.models.CommentList
@@ -62,7 +63,7 @@ class CommentsActivity : LocaleAwareActivity(),
     private lateinit var appBar: AppBarLayout
     private lateinit var site: SiteModel
 
-    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
+    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, SPAM, TRASH)
 
     private var disabledTabsOpacity: Float = 0F
 
