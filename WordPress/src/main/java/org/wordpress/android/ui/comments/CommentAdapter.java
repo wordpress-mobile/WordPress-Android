@@ -448,8 +448,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (parameters.mIsLoadingCache) {
                 numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
             } else if (parameters.mIsReloadingContent) {
-                numOfCommentsToFetch =
-                        (mComments.isEmpty()) ? CommentsListFragment.COMMENTS_PER_PAGE : mComments.size();
+                // round up to nearest page size (eg. 30, 60, 90, etc.)
+                numOfCommentsToFetch = ((mComments.size() + CommentsListFragment.COMMENTS_PER_PAGE - 1)
+                                        / CommentsListFragment.COMMENTS_PER_PAGE)
+                                       * CommentsListFragment.COMMENTS_PER_PAGE;
             } else {
                 numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE + parameters.mOffset;
             }
