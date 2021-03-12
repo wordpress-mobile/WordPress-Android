@@ -7,7 +7,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -155,7 +154,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             getCategoriesUseCase.getSiteCategories(siteModel)
 
     private fun getPostCategories() =
-            getCategoriesUseCase.getPostCategories(editPostRepository, siteModel)
+            getCategoriesUseCase.getPostCategories(editPostRepository)
 
     private fun hasChanges(): Boolean {
         val postCategories = getPostCategories()

@@ -2,8 +2,6 @@ package org.wordpress.android.ui.posts
 
 import dagger.Reusable
 import org.apache.commons.text.StringEscapeUtils
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
@@ -17,7 +15,6 @@ import javax.inject.Inject
 @Reusable
 class GetCategoriesUseCase @Inject constructor(
     private val taxonomyStore: TaxonomyStore,
-    private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val categoryNodeWrapper: CategoryNodeWrapper
 ) {
@@ -37,7 +34,7 @@ class GetCategoriesUseCase @Inject constructor(
         return formatCategories(categories)
     }
 
-    fun getPostCategories(editPostRepository: EditPostRepository, siteModel: SiteModel) =
+    fun getPostCategories(editPostRepository: EditPostRepository) =
             editPostRepository.getPost()?.categoryIdList ?: listOf()
 
     fun getSiteCategories(siteModel: SiteModel): ArrayList<CategoryNode> {

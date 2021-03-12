@@ -63,7 +63,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER
         )
 
-        whenever(getCategoriesUseCase.getPostCategories(anyOrNull(), anyOrNull()))
+        whenever(getCategoriesUseCase.getPostCategories(anyOrNull()))
                 .thenReturn(postCategoriesList())
         whenever(getCategoriesUseCase.getSiteCategories(any()))
                 .thenReturn(siteCategoriesList())
@@ -145,7 +145,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     fun `getPostCategories is invoked on start`() {
         viewModel.start(editPostRepository, siteModel, null, listOf())
 
-        verify(getCategoriesUseCase, times(1)).getPostCategories(editPostRepository, siteModel)
+        verify(getCategoriesUseCase, times(1)).getPostCategories(editPostRepository)
     }
 
     @Test
