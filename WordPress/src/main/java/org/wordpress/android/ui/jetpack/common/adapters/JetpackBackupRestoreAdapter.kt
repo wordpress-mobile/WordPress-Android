@@ -22,13 +22,13 @@ import org.wordpress.android.util.image.ImageManager
 class JetpackBackupRestoreAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
-) : RecyclerView.Adapter<JetpackViewHolder>() {
+) : RecyclerView.Adapter<JetpackViewHolder<*>>() {
     private val items = mutableListOf<JetpackListItemState>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): JetpackViewHolder {
+    ): JetpackViewHolder<*> {
         return when (viewType) {
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
@@ -37,7 +37,11 @@ class JetpackBackupRestoreAdapter(
             ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
             ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(
+                    imageManager,
+                    uiHelpers,
+                    parent
+            )
             ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
                     uiHelpers,
                     parent
@@ -53,7 +57,7 @@ class JetpackBackupRestoreAdapter(
         return position.toLong()
     }
 
-    override fun onBindViewHolder(holder: JetpackViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: JetpackViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
 

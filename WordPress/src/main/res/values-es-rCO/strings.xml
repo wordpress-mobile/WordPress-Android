@@ -121,7 +121,6 @@ Language: es_CO
     <string name="stories_intro_title_first">Ahora las historias son para todos</string>
     <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
     <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
-    <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>
@@ -257,7 +256,6 @@ Language: es_CO
     <string name="signup_confirmation_title">Confirmación del registro</string>
     <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
     <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Te enviaremos por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos esta dirección de correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_magic_link_message">Te hemos enviado por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
     <string name="enter_account_info_for_site">Introduce la información de tu cuenta para %1$s.</string>
@@ -897,8 +895,6 @@ Language: es_CO
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
-    <string name="quick_start_sites_type_grow">Haz crecer tu audiencia</string>
-    <string name="quick_start_sites_type_customize">Personaliza tu sitio</string>
     <string name="quick_start_sites">Siguientes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">¡Disfruta tu producto terminado!</string>
@@ -940,7 +936,6 @@ Language: es_CO
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
     <string name="notification_new_site_creation_title">Creación de un sitio</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en Internet.</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
     <string name="site_creation_error_generic_subtitle">Error durante la comunicación con el servidor. Inténtalo de nuevo</string>

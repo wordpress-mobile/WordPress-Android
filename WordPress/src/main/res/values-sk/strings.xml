@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-30 08:37:04+0000
+Translation-Revision-Date: 2021-02-27 18:15:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sk
@@ -17,6 +17,7 @@ Language: sk
     <string name="app_theme">Vzhľad</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
+    <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
     <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
@@ -234,8 +235,14 @@ Language: sk
     <string name="support_contact_email">Kontaktný email</string>
     <string name="application_log_button">Aplikačný záznam</string>
     <string name="my_tickets">Moje tickety</string>
+    <string name="activity_log_rewind_dialog_message">Naozaj chcete vrátiť svoje stránky späť na %1$s o %2$s? Tým sa odstráni všetok obsah a možnosti, ktoré boli odvtedy vytvorené alebo zmenené.</string>
+    <string name="activity_log_rewind_site">Obnoviť webovú stránku</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Prebieha obnovenie</string>
+    <string name="activity_log_currently_restoring_message">Obnovovanie na %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Prebieha obnovenie Vašej webovej stránky</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Vaša webová stránka bola úspešne obnovená</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Vaša webová stránka bola úspešne obnovená\nObnovená na %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Vaša webová stránka sa obnovuje\nObnova na %1$s %2$s</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
     <string name="plugin_auto_managed">automaticky spravované</string>
     <string name="reader_save_posts_locally_dialog_message">Uložte tento článok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii na tomto zariadení - uložené články sa nesynchronizujú s vašimi ďalšími zariadeniami.</string>
@@ -964,7 +971,9 @@ Language: sk
     <string name="invite_error_invalid_usernames_multiple">Nemožno poslať: Nachdázajú sa tu neplatné používateľské mená alebo e-mailové adresy.</string>
     <string name="invite_error_invalid_usernames_one">Nemožno poslať: Používateľské meno alebo e-mailová adresa je neplatné</string>
     <string name="invite_error_no_usernames">Pridajte aspoň jedno používateľské meno</string>
+    <string name="invite_message_title">Vlastná správa</string>
     <string name="invite">Pozvať</string>
+    <string name="invite_names_title">Používateľské mená alebo emaily</string>
     <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
     <string name="send_link">Poslať odkaz</string>

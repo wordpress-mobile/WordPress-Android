@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.discover.interests
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
-    private lateinit var parentViewModel: ReaderViewModel
+    private var parentViewModel: ReaderViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +35,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val entryPoint = requireActivity().intent.getSerializableExtra(READER_INTEREST_ENTRY_POINT) as? EntryPoint
+                ?: EntryPoint.DISCOVER
         initDoneButton()
         initRetryButton()
-        initBackButton()
-        initViewModel()
+        initBackButton(entryPoint)
+        initViewModel(entryPoint)
     }
 
     private fun initDoneButton() {
@@ -53,20 +55,25 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun initBackButton() {
-        back_button.setOnClickListener {
-            viewModel.onBackButtonClick()
+    private fun initBackButton(entryPoint: EntryPoint) {
+        if (entryPoint == EntryPoint.DISCOVER) {
+            back_button.visibility = View.VISIBLE
+            back_button.setOnClickListener {
+                viewModel.onBackButtonClick()
+            }
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(entryPoint: EntryPoint) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
-        parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        startObserving()
+        if (entryPoint == EntryPoint.DISCOVER) {
+            parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
+        }
+        startObserving(entryPoint)
     }
 
-    private fun startObserving() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+    private fun startObserving(entryPoint: EntryPoint) {
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             when (uiState) {
                 is InitialLoadingUiState -> {
                 }
@@ -85,13 +92,19 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                showSnackbar()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+                it.showSnackbar()
         })
 
-        viewModel.start(parentViewModel, LocaleManager.getLanguage(WordPress.getContext()))
+        viewModel.closeReaderInterests.observeEvent(viewLifecycleOwner, {
+            requireActivity().finish()
+        })
+
+        viewModel.start(
+                LocaleManager.getLanguage(WordPress.getContext()),
+                parentViewModel,
+                entryPoint
+        )
     }
 
     private fun updateDoneButton(doneButtonUiState: DoneButtonUiState) {
@@ -105,7 +118,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun updateInterests(interestsUiState: List<TagUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
             val chip = interests_chip_group.findViewWithTag(interestTagUiState.slug)
-                ?: createChipView(interestTagUiState.slug, index)
+                    ?: createChipView(interestTagUiState.slug, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
@@ -115,7 +128,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun updateErrorLayout(uiState: ErrorUiState) {
         with(uiHelpers) {
-            setTextOrHide(error_title, uiState.titleResId)
+            setTextOrHide(error_title, uiState.titleRes)
         }
     }
 
@@ -130,15 +143,15 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 this.buttonAction.invoke()
             }
         }
-        snackbar.setAnchorView(bottom_bar)
+        snackbar.anchorView = bottom_bar
         snackbar.show()
     }
 
     private fun createChipView(slug: String, index: Int): Chip {
         val chip = layoutInflater.inflate(
-            R.layout.reader_interest_filter_chip,
-            interests_chip_group,
-            false
+                R.layout.reader_interest_filter_chip,
+                interests_chip_group,
+                false
         ) as Chip
         with(chip) {
             tag = slug
@@ -154,5 +167,11 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     companion object {
         const val TAG = "reader_interests_fragment_tag"
+        const val READER_INTEREST_ENTRY_POINT = "reader_interest_entry_point"
+    }
+
+    enum class EntryPoint {
+        DISCOVER,
+        SETTINGS
     }
 }

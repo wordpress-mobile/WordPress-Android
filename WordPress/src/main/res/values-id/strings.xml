@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 11:54:10+0000
+Translation-Revision-Date: 2021-03-04 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Lepas sematan</string>
+    <string name="threat_fix_all_status_success_message_plural">Ancaman berhasil ditangani.</string>
+    <string name="scan_fixing_threats_description_plural">Kami kesulitan di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
+    <string name="gutenberg_native_edit_focal_point">Edit titik fokus</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Ketuk dua kali untuk membuka Lembar Bawah, untuk mengedit, mengganti, atau menghapus gambar</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Ketuk dua kali untuk membuka Lembar Tindakan, untuk mengedit, mengganti, atau menghapus gambar</string>
+    <string name="new_site_creation_search_domain_example">contoh.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Ketik nama untuk situs Anda</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Semua tugas selesai&lt;/b>&lt;br/>Anda akan menjangkau lebih banyak orang. Kerja bagus!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Semua tugas selesai&lt;/b>&lt;br/>Anda telah menyesuaikan situs Anda. Bagus!</string>
+    <string name="quick_start_card_menu_hide">Sembunyikan untuk sekarang</string>
+    <string name="magic_link_not_meaning_to_create_account">Tidak ingin membuat akun baru? Silakan kembali dan masukkan lagi alamat email Anda.</string>
+    <string name="invite_links_disable_dialog_message">Setelah tautan undangan ini dinonaktifkan, tidak ada yang dapat menggunakannya lagi untuk bergabung dengan tim Anda. Apakah Anda yakin?</string>
+    <string name="invite_links_disable_dialog_title">Nonaktifkan tautan undangan</string>
+    <string name="invite_links_bad_format_response">Respons yang diterima tidak valid</string>
+    <string name="invite_links_null_response">Tidak ada respons yang diterima</string>
+    <string name="invite_links_cannot_get_role_data_error">Terjadi error saat mengambil data untuk peran %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">Terjadi error saat mengambil peran</string>
+    <string name="invite_links_generic_get_data_error">Terjadi error saat mengambil data tautan undangan</string>
+    <string name="invite_links_helper_text">Gunakan tautan ini untuk mendaftarkan anggota tim Anda tanpa harus mengundang mereka satu per satu. Siapa pun yang mengunjungi URL berikut akan dapat mendaftar ke organisasi Anda, meski pun mereka menerima tautan dari orang lain, jadi pastikan Anda membagikannya dengan orang tepercaya.</string>
+    <string name="invite_links_expire_date">Kadaluarsa %1$s</string>
+    <string name="invite_links_disable_invite_link">Nonaktifkan tautan undangan</string>
+    <string name="invite_links_share_invite_link">Bagikan tautan undangan</string>
+    <string name="invite_links_generate">Hasilkan tautan baru</string>
+    <string name="invite_links_get_status_retry">Segarkan status tautan</string>
+    <string name="invite_links_section_title">Tautan Undangan</string>
+    <string name="threats_found_singular">Ancaman ditemukan</string>
+    <string name="threats_found_plural">Ancaman ditemukan</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Pemindaian Selesai&lt;/b> &lt;br>&lt;/br> potensi ancaman tidak ditemukan</string>
+    <string name="scan_fixing_threats_title_singular">Memperbaiki Ancaman</string>
+    <string name="disable">Nonaktifkan</string>
     <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
+    <string name="quick_start_card_menu_unpin">Lepas sematan ini</string>
     <string name="quick_start_list_view_site_title">Kunjungi situs Anda</string>
     <string name="quick_start_list_upload_icon_subtitle">Tambahkan ikon situs untuk tampilan yang lebih pro dan elegan.</string>
     <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
@@ -32,8 +62,6 @@ Language: id
     <string name="backup_item_content_hint">(kecuali tema, plugin, dan unggahan)</string>
     <string name="backup_item_contents">Direktori konten-WP</string>
     <string name="backup_item_roots">Root WordPress</string>
-    <string name="backup_download_progress_action_button_content_description">Tombol beri tahu saya jika sudah selesai</string>
-    <string name="backup_download_progress_action_button">Beri tahu saya jika sudah selesai!</string>
     <string name="backup_download_details_choose_items_header">Item yang disertakan di unduhan ini</string>
     <string name="gutenberg_native_uploading">Mengunggah…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blok pakai ulang tidak dapat disunting di WordPress untuk iOS</string>
@@ -61,13 +89,11 @@ Language: id
     <string name="threat_status_fixed">Diperbaiki</string>
     <string name="threat_found_header">Ditemukan</string>
     <string name="scan_here_to_help">siap membantu</string>
-    <string name="scan_idle_with_threats_description">Pemindaian menemukan %1s potensi ancaman dengan %2s. Tinjau di bawah ini dan ambil tindakan atau ketuk tombol perbaiki semua. Kami %3$s jika Anda membutuhkan kami.</string>
     <string name="scan_idle_manual_scan_description">Untuk meninjau situs Anda lagi, jalankan pemindaian manual atau tunggu Jetpack memindai situs Anda nanti.</string>
     <string name="scan_provisioning_description">Selamat datang di Jetpack Scan! Kami mengamati situs Anda untuk mempersiapkan pemindaian menyeluruh. Kami akan memberi tahu Anda jika kami menemukan kendala yang mungkin memengaruhi proses pemindaian, kemudian pemindaian menyeluruh yang pertama akan dimulai.</string>
     <string name="scan_scanning_is_initial_description">Selamat datang di Jetpack Scan, kami sedang melakukan pemeriksaan perdana untuk situs Anda dan hasilnya akan segera ditampilkan.</string>
-    <string name="scan_fixing_threats_description">Kami kesulitan memperbaiki ancaman ini di latar belakang. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_scanning_description">Kami akan mengirimkan pemberitahuan setelah pemindaian selesai dilakukan. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
-    <string name="scan_fixing_threats_title">Memperbaiki Ancaman</string>
+    <string name="scan_fixing_threats_description_singular">Kami kesulitan di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan tidak dapat menyelesaikan pemindaian situs Anda. Harap periksa apakah situs Anda tidak aktif – jika tidak, coba lagi. Jika tidak aktif, atau jika Jetpack Scan masih mengalami masalah, hubungi tim dukungan kami.</string>
     <string name="scan_request_failed_title">Terjadi kesalahan</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Mencadangkan situs</string>
@@ -111,9 +137,7 @@ Language: id
     <string name="backup_download_complete_failed_title">Pengunduhan gagal</string>
     <string name="web_preview_mobile">Seluler</string>
     <string name="quick_start_card_menu_remove">Jangan tampilkan lagi</string>
-    <string name="quick_start_card_menu_hide">Sembunyikan</string>
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
-    <string name="quick_start_card_menu_pin">Sematkan</string>
     <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
     <string name="quick_start_dialog_edit_homepage_title">Sunting halaman beranda</string>
     <string name="reader_menu_mark_as_unseen">Tandai sebagai belum dilihat</string>
@@ -123,10 +147,9 @@ Language: id
     <string name="reader_error_changing_seen_status_of_unsupported_post">Tidak dapat mengubah status dilihat pos ini</string>
     <string name="reader_marked_post_as_unseen">Menandai pos sebagai belum dilihat</string>
     <string name="reader_marked_post_as_seen">Menandai pos sebagai dilihat</string>
-    <string name="threat_fix_all_status_success_message">Ancaman berhasil ditangani.</string>
     <string name="threat_fix_all_status_error_message">Terjadi error saat mendapatkan status perbaikan. Silakan hubungi tim dukungan kami.</string>
     <string name="threat_fix_all_error_message">Terjadi error saat memperbaiki ancaman. Silakan hubungi tim dukungan kami.</string>
-    <string name="threat_fix_all_warning_message">Harap konfirmasi bahwa Anda ingin memperbaiki %s ancaman aktif.</string>
+    <string name="threat_fix_all_status_success_message_singular">Ancaman berhasil diperbaiki.</string>
     <string name="threat_ignore_success_message">Ancaman diabaikan.</string>
     <string name="threat_fix_all_warning_title">Perbaiki semua ancaman</string>
     <string name="threat_ignore_error_message">Terjadi error saat mengabaikan ancaman. Silakan hubungi dukungan.</string>
@@ -207,13 +230,10 @@ Language: id
     <string name="threat_item_header_database_threat">Ancaman %s basis data</string>
     <string name="threat_item_header_infected_core_file">%s: file inti yang terinfeksi</string>
     <string name="threat_item_header_threat_found">Ancaman ditemukan</string>
-    <string name="threats_found">Ancaman ditemukan</string>
-    <string name="scan_in_few_seconds">dalam beberapa detik</string>
-    <string name="scan_in_minutes_ago">%s menit yang lalu</string>
-    <string name="scan_in_hours_ago">%s jam yang lalu</string>
     <string name="scan_this_site">situs ini</string>
     <string name="threats_fix_all">Perbaiki Semua</string>
     <string name="scan_idle_last_scan_description">Pemindaian Jetpack terakhir berjalan %s dan tidak menemukan risiko apa pun. %s</string>
+    <string name="scan_in_few_seconds">beberapa detik yang lalu</string>
     <string name="scan_idle_threats_found_title">Situs Anda mungkin berada dalam risiko</string>
     <string name="scan_idle_no_threats_found_title">Jangan khawatir</string>
     <string name="scan_again">Pindai lagi</string>
@@ -231,7 +251,6 @@ Language: id
     <string name="activity_log_date_range_filter_label_content_description">Penyaringan Rentang Tanggal</string>
     <string name="activity_log_active_filter_empty_subtitle">Coba sesuaikan rentang tanggal atau penyaring jenis aktivitas</string>
     <string name="activity_log_active_filter_empty_title">Tidak ditemukan acara yang cocok</string>
-    <string name="rewind">Pulihkan</string>
     <string name="backup_item_media_uploads">Unggahan Media</string>
     <string name="backup_item_plugins">Plugin WordPress</string>
     <string name="backup_item_themes">Tema WordPress</string>
@@ -354,7 +373,6 @@ Language: id
     <string name="stories_intro_title_first">Sekarang cerita tersedia untuk semua orang</string>
     <string name="stories_intro_image_caption_second">Contoh judul cerita</string>
     <string name="stories_intro_image_caption_first">Cara membuat pos cerita</string>
-    <string name="stories_intro_main_subtitle">Anda memiliki akses awal e Pos Cerita dan kami ingin Anda mencobanya.</string>
     <string name="stories_intro_main_title">Memperkenalkan Pos Cerita</string>
     <string name="mlp_notice_blank_page_created">Halaman kosong dibuat</string>
     <string name="mlp_notice_page_created">Halaman dibuat</string>
@@ -491,7 +509,6 @@ Language: id
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="enter_your_site_address">Masukkan alamat situs Anda yang sudah ada</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
-    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi tautan pendaftaran untuk membuat akun WordPress.com baru.</string>
     <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
     <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi tautan masuk untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
     <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
@@ -1136,13 +1153,11 @@ Language: id
     <string name="menu_switch_to_aztec_editor">Beralih ke penyunting klasik</string>
     <string name="exit">keluar</string>
     <string name="quick_start_sites_type_subtitle">%1$d dari %2$d selesai</string>
-    <string name="quick_start_sites_type_customize">Sesuaikan Situs Anda</string>
     <string name="quick_start_sites">Langkah Berikutnya</string>
     <string name="quick_start_complete_tasks_header">Selesai (%d)</string>
     <string name="quick_start_dialog_view_site_message">Nikmati hasil akhir produk Anda!</string>
     <string name="quick_start_dialog_upload_icon_title">Unggah ikon situs</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ketuk %1$s Paket %2$s untuk melihat paket Anda saat ini dan paket yang tersedia</string>
-    <string name="quick_start_sites_type_grow">Perbesar jumlah pengunjung Anda</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Ketuk %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>
@@ -1179,7 +1194,6 @@ Language: id
     <string name="notification_new_site_creation_failed">Ada masalah</string>
     <string name="notification_new_site_creation_title">Buat Situs</string>
     <string name="new_site_creation_create_site_button">Buat Situs</string>
-    <string name="new_site_creation_search_domain_input_hint">Cari Domain</string>
     <string name="new_site_creation_domain_header_subtitle">Anda akan ditemukan di internet melalui nama domain.</string>
     <string name="new_site_creation_empty_domain_list_message">Tidak ada alamat yang cocok dengan pencarian Anda</string>
     <string name="site_creation_error_generic_subtitle">Terjadi error saat berkomunikasi dengan server, harap coba lagi</string>

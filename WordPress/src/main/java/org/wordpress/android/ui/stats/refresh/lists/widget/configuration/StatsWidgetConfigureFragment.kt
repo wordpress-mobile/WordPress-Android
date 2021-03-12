@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
@@ -29,6 +28,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.merge
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class StatsWidgetConfigureFragment : DaggerFragment() {
@@ -100,30 +100,24 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             viewModel.addWidget()
         }
 
-        siteSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-            }
+        siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
         })
 
-        colorSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
+        colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetColorSelectionDialogFragment().show(
                         requireFragmentManager(),
                         "stats_view_mode_selection_fragment"
                 )
-            }
         })
 
-        merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observe(
+        merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
                 viewLifecycleOwner,
-                Observer { event ->
-                    event?.applyIfNotHandled {
-                        ToastUtils.showToast(activity, this)
-                    }
+                {
+                    ToastUtils.showToast(activity, it)
                 })
 
-        viewModel.settingsModel.observe(viewLifecycleOwner, Observer { uiModel ->
+        viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
             uiModel?.let {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle
@@ -133,25 +127,23 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             }
         })
 
-        viewModel.widgetAdded.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
-                when (it.widgetType) {
-                    WEEK_VIEWS -> {
-                        viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
-                    }
-                    ALL_TIME_VIEWS -> {
-                        allTimeWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
-                    }
-                    TODAY_VIEWS -> {
-                        todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
-                    }
+        viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
+            analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
+            when (it.widgetType) {
+                WEEK_VIEWS -> {
+                    viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
                 }
-                val resultValue = Intent()
-                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                activity?.setResult(RESULT_OK, resultValue)
-                activity?.finish()
+                ALL_TIME_VIEWS -> {
+                    allTimeWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                }
+                TODAY_VIEWS -> {
+                    todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                }
             }
+            val resultValue = Intent()
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            activity?.setResult(RESULT_OK, resultValue)
+            activity?.finish()
         })
     }
 

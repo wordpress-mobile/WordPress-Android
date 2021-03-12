@@ -78,10 +78,10 @@
     <string name="pref_key_site_paging" translatable="false">wp_pref_site_paging</string>
     <string name="pref_key_site_identity_required" translatable="false">wp_pref_site_identity_required</string>
     <string name="pref_key_site_user_account_required" translatable="false">wp_pref_site_user_account_required</string>
-    <string name="pref_key_site_whitelist" translatable="false">wp_pref_site_whitelist</string>
+    <string name="pref_key_site_allowlist" translatable="false">wp_pref_site_whitelist</string>
     <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
-    <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
+    <string name="pref_key_site_denylist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
     <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
@@ -129,14 +129,14 @@
     <string name="pref_key_jetpack_send_email_notifications" translatable="false">wp_pref_jetpack_send_email_notifications</string>
     <string name="pref_key_jetpack_send_wp_notifications" translatable="false">wp_pref_jetpack_send_wp_notifications</string>
     <string name="pref_key_jetpack_prevent_brute_force" translatable="false">wp_pref_jetpack_prevent_brute_force</string>
-    <string name="pref_key_jetpack_brute_force_whitelist" translatable="false">wp_pref_jetpack_brute_force_whitelist</string>
+    <string name="pref_key_jetpack_brute_force_allowlist" translatable="false">wp_pref_jetpack_brute_force_whitelist</string>
     <string name="pref_key_jetpack_allow_wpcom_sign_in" translatable="false">wp_pref_jetpack_allow_wpcom_sign_in</string>
     <string name="pref_key_jetpack_match_via_email" translatable="false">wp_pref_jetpack_match_via_email</string>
     <string name="pref_key_jetpack_require_two_factor" translatable="false">wp_pref_jetpack_require_two_factor</string>
     <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
-    <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
+    <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
     <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
     <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>

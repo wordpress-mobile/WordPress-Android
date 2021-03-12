@@ -6,6 +6,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -50,7 +51,6 @@ import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
@@ -74,14 +74,13 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
@@ -203,7 +202,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun setupViewModelObservers() {
-        viewModel.mediaFilesUris.observe(this, Observer { uriList ->
+        viewModel.mediaFilesUris.observe(this, { uriList ->
             val filteredList = uriList.filterNot { MediaUtils.isGif(it.toString()) }
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
@@ -229,30 +228,24 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         })
 
-        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
-                openPrepublishingBottomSheet()
-            }
+        viewModel.openPrepublishingBottomSheet.observeEvent(this, {
+            analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
+            openPrepublishingBottomSheet()
         })
 
-        viewModel.submitButtonClicked.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
-                processStorySaving()
-            }
+        viewModel.submitButtonClicked.observeEvent(this, {
+            analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
+            processStorySaving()
         })
 
-        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                site?.let {
-                    analyticsUtilsWrapper.trackEditorCreatedPost(
-                            intent.action,
-                            intent,
-                            it,
-                            editPostRepository.getPost()
-                    )
-                }
+        viewModel.trackEditorCreatedPost.observeEvent(this, {
+            site?.let {
+                analyticsUtilsWrapper.trackEditorCreatedPost(
+                        intent.action,
+                        intent,
+                        it,
+                        editPostRepository.getPost()
+                )
             }
         })
     }
@@ -382,13 +375,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        storyEditorMedia.snackBarMessage.observe(this,
-                Observer<Event<SnackbarMessageHolder>> { event: Event<SnackbarMessageHolder?> ->
-                    val messageHolder = event.getContentIfNotHandled()
-                    if (messageHolder != null) {
+        storyEditorMedia.snackBarMessage.observeEvent(this,
+                { messageHolder ->
+                    findViewById<View>(R.id.compose_loop_frame_layout)?.let {
                         WPSnackbar
                                 .make(
-                                        findViewById(org.wordpress.android.R.id.editor_activity),
+                                        it,
                                         uiHelpers.getTextOfUiString(this, messageHolder.message),
                                         Snackbar.LENGTH_SHORT
                                 )
@@ -609,14 +601,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
         return saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
-                        temporaryId = tempId,
-                        url = if (frame.source is FileBackgroundSource) {
-                            (frame.source as FileBackgroundSource).file.toString()
-                        } else {
-                            (frame.source as UriBackgroundSource).contentUri.toString()
-                        },
-                        isVideo = (frame.frameItemType is VIDEO)
-                )
+                temporaryId = tempId,
+                url = if (frame.source is FileBackgroundSource) {
+                    (frame.source as FileBackgroundSource).file.toString()
+                } else {
+                    (frame.source as UriBackgroundSource).contentUri.toString()
+                },
+                isVideo = (frame.frameItemType is VIDEO)
+        )
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

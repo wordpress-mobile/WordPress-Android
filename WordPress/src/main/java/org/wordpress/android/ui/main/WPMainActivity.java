@@ -120,6 +120,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -215,6 +216,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -451,10 +453,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_POST:
                     // complete quick start task outside of QS process
                     if (getSelectedSite() != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
-                        QuickStartUtils.completeTaskAndRemindNextOne(
-                                mQuickStartStore,
+                        mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                                 QuickStartTask.PUBLISH_POST,
-                                mDispatcher,
                                 getSelectedSite(),
                                 null,
                                 this
@@ -479,10 +479,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
             // complete quick start task during QS process and remind of a next one
             if (getSelectedSite() != null) {
-                QuickStartUtils.completeTaskAndRemindNextOne(
-                        mQuickStartStore,
+                mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         QuickStartTask.PUBLISH_POST,
-                        mDispatcher,
                         getSelectedSite(),
                         new QuickStartEvent(QuickStartTask.PUBLISH_POST),
                         this
@@ -578,19 +576,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mViewModel.getStartLoginFlow().observe(this, event -> {
-            event.applyIfNotHandled(startLoginFlow -> {
+            event.applyIfNotHandled(unit -> {
+                ActivityLauncher.viewMeActivityForResult(this);
+
+                return null;
+            });
+        });
+
+        mViewModel.getSwitchToMySite().observe(this, event -> {
+            event.applyIfNotHandled(unit -> {
                 if (mBottomNav != null) {
-                    mBottomNav.postDelayed(new Runnable() {
-                        @Override public void run() {
-                            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-                        }
-                    }, 500);
-                    ActivityLauncher.viewMeActivityForResult(this);
+                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                 }
 
                 return null;
             });
         });
+
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
@@ -1056,7 +1058,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.CREATE_SITE:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
                 AppPrefs.setLastSkippedQuickStartTask(null);
@@ -1092,7 +1093,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
                                                  && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs

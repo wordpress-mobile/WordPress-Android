@@ -115,6 +115,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -181,6 +182,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
+    @Inject ExPlat mExPlat;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -271,7 +273,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.enableLogFilePersistence(this.getBaseContext(), 30);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 5);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
@@ -362,6 +364,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
+
+        mExPlat.forceRefresh();
     }
 
     protected void initWorkManager() {
@@ -617,6 +621,9 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(this,
                     new Intent(this, GCMRegistrationIntentService.class));
+
+            // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
+            mExPlat.forceRefresh();
         }
     }
 
@@ -670,6 +677,9 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         // Remove private Atomic cookie
         mPrivateAtomicCookie.clearCookie();
+
+        // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
+        mExPlat.clear();
     }
 
     private static String mDefaultUserAgent;
@@ -988,6 +998,12 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
             SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mAccountStore, mSiteStore, mDispatcher);
+
+            if (!mFirstActivityResumed) {
+                // Since we're force refreshing on app startup, we don't need to try refreshing again
+                // when starting our first Activity.
+                mExPlat.refreshIfNeeded();
+            }
 
             if (mFirstActivityResumed) {
                 deferredInit();

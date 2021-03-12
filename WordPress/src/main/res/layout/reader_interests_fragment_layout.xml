@@ -10,12 +10,14 @@
 
     <RelativeLayout
         android:id="@+id/back_button"
+        android:visibility="gone"
         android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/scroll_view">
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -65,18 +67,20 @@
                 style="@style/ReaderTextView.Interests.Title"
                 android:id="@+id/title"
                 android:text="@string/reader_label_choose_your_interests"
+                android:visibility="gone"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/interests_chip_group"
                 app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Choose your interests" />
+                tools:text="Choose your interests"
+                tools:visibility="visible" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/interests_chip_group"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layoutDirection="locale"
                 app:chipSpacing="@dimen/margin_small_medium"

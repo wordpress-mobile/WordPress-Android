@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-29 22:51:28+0000
+Translation-Revision-Date: 2021-03-02 08:49:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="backup_item_sqls">Base de datos do sitio</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
     <string name="backup_item_plugins">Plugins de WordPress</string>
     <string name="backup_item_themes">Temas de WordPress</string>
@@ -18,6 +19,8 @@ Language: gl_ES
     <string name="gutenberg_native_choose_file">Elixir arquivo</string>
     <string name="activity_log_item_menu_download_backup_label">Descargar copia de seguridade</string>
     <string name="activity_log_item_menu_restore_label">Restaurar até este punto</string>
+    <string name="activity_log_activity_type_filter_label">Tipo de actividade</string>
+    <string name="activity_log_date_range_filter_label">Rango de datas</string>
     <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividade</string>
     <string name="dialog_confirm_copy_local_copy_button">Copiar a versión desta aplicación</string>
     <string name="dialog_confirm_copy_local_edit_button">Editar a entrada primeiro</string>
@@ -30,7 +33,10 @@ Language: gl_ES
     <string name="gutenberg_native_copy_file_url">Copiar a URL do arquivo </string>
     <string name="gutenberg_native_choose_a_file">ELIXIR UN ARQUIVO</string>
     <string name="new_site_creation_domain_header_title">Elixe un dominio</string>
+    <string name="my_site_btn_jetpack_settings">Axustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Seguindo a conversa por correo electrónico</string>
+    <string name="reader_btn_follow_comments">Seguir a conversa por correo electrónico</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Non se puido crear a subscrición aos comentarios desta entrada</string>
     <string name="reader_follow_comments_get_status_error">Erro ao recuperar o estado da subscrición para a entrada</string>
     <string name="reader_follow_comments_unsubscribe_success">Cancelada correctamente a subscrición aos comentarios</string>
@@ -287,11 +293,13 @@ Language: gl_ES
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
+    <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dúas veces pata abrir a folla de acción coas opcións dispoñibles</string>
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="pages_set_as_posts_page">Establecer como páxina de entradas</string>
     <string name="pages_set_as_homepage">Establecer como páxina de inicio</string>
+    <string name="suggestion_invalid">%s non é unha %s válida</string>
     <string name="site_settings_select_page">Seleccionar a páxina</string>
     <string name="site_settings_posts_page">Páxina de entradas</string>
     <string name="site_settings_static_homepage">Páxina de inicio estática</string>
@@ -404,6 +412,7 @@ Language: gl_ES
     <string name="gutenberg_native_show_post_content">Amosar o contido da entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
+    <string name="gutenberg_native_link_settings">Axustes da ligazón</string>
     <string name="gutenberg_native_excerpt_length_words">Lonxitude do extracto (palabras)</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
     <string name="gutenberg_native_add_paragraph_block">Engadir un bloque de parágrafo</string>
@@ -500,6 +509,7 @@ Language: gl_ES
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sG</string>
     <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">Non podemos abrir as entradas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="site_cannot_be_loaded">Non puidemos cargar os datos para o teu sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
@@ -849,8 +859,6 @@ Language: gl_ES
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">saír</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
-    <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
-    <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
     <string name="quick_start_sites">Seguintes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">Goza do teu produto terminado!</string>
@@ -892,7 +900,6 @@ Language: gl_ES
     <string name="notification_new_site_creation_failed">Houbo un problema</string>
     <string name="notification_new_site_creation_title">Crear sitio</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí é onde a xente te encontra en Internet.</string>
     <string name="new_site_creation_empty_domain_list_message">Non hai direccións dispoñibles que coincidan coa túa busca</string>
     <string name="site_creation_error_generic_subtitle">Erro durante a comunicación co servidor. Inténtao de novo</string>
@@ -1120,8 +1127,14 @@ Language: gl_ES
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Rexistro da aplicación</string>
     <string name="my_tickets">Os meus tickets</string>
+    <string name="activity_log_rewind_dialog_message">Queres rebobinar o teu sitio ao %1$s ás %2$s? Isto borrará todo o contido e opcións creadas ou cambiadas desde entón.</string>
+    <string name="activity_log_rewind_site">Restaurar o sitio</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
+    <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">O teu sitio restaurouse satisfactoriamente</string>
+    <string name="activity_log_rewind_finished_snackbar_message">O teu sitio restaurouse con éxito\nRebobinado a %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">O teu sitio está a ser restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción do rexistro de actividade</string>
     <string name="plugin_auto_managed">Xestionado automaticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Garda esta entrada e volve cando queiras para lela. Só estará dispoñible neste dispositivo — as entradas gardadas non se sincronizan con outros dispositivos.</string>
@@ -1851,7 +1864,9 @@ Language: gl_ES
     <string name="invite_error_invalid_usernames_multiple">Non se pode enviar: Hai nomes de usuario ou enderezos de correo non válidos.</string>
     <string name="invite_error_invalid_usernames_one">Fallou o envío: un nome de usuario ou un enderezo non é válido.</string>
     <string name="invite_error_no_usernames">Introduce como mínimo un nome de usuario</string>
+    <string name="invite_message_title">Mensaxe personalizada</string>
     <string name="invite">Invitar</string>
+    <string name="invite_names_title">Nomes de usuario ou enderezos de correo electrónico</string>
     <string name="invite_people">Invitar xente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar o enlace</string>

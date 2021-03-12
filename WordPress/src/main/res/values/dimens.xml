@@ -159,6 +159,8 @@
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
+    <!-- reader more menu spacer height -->
+    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
     <!-- collapsing toolbar scrim visible height trigger -->
     <dimen name="scrim_visible_height_trigger">150dp</dimen>
 
@@ -195,7 +197,6 @@
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
-    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
     <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
@@ -206,7 +207,7 @@
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
     <dimen name="reader_image_featured_border_width">1dp</dimen>
 
-    <dimen name="reader_simple_post_image_width">72dp</dimen>
+    <dimen name="reader_related_post_image_width">150dp</dimen>
 
     <dimen name="reader_subfilter_end_guideline_margin">16dp</dimen>
 
@@ -434,6 +435,7 @@
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
+    <dimen name="jetpack_backup_restore_footnote_icon_size">24dp</dimen>
 
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
@@ -496,6 +498,14 @@
 
     <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
 
+    <dimen name="site_creation_domains_example_top_cell_height">28dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_height">23dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_top_margin">44dp</dimen>
+    <dimen name="site_creation_domains_example_bottom_cell_top_margin">75dp</dimen>
+    <dimen name="site_creation_domains_example_left_cell_width">97dp</dimen>
+    <dimen name="site_creation_domains_example_right_cell_width">49dp</dimen>
+    <dimen name="site_creation_domains_example_top_margin">40dp</dimen>
+
     <dimen name="site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="site_creation_preview_skeleton_large_block_height">136dp</dimen>
     <dimen name="site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
@@ -539,7 +549,7 @@
     <!--settings username changer-->
     <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
-    <!--preferences master switch -->
+    <!--preferences main switch -->
     <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
     <dimen name="notifications_settings_dialog_divider_height">1dp</dimen>
 
@@ -584,13 +594,13 @@
     <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
-    <dimen name="mlp_layouts_row_height">281dp</dimen>
+    <dimen name="mlp_layouts_row_height">317dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_categories_bar_height">44dp</dimen>
-    <dimen name="mlp_layout_card_height">204dp</dimen>
-    <dimen name="mlp_layout_card_width">153dp</dimen>
+    <dimen name="mlp_layout_card_height">240dp</dimen>
+    <dimen name="mlp_layout_card_width">160dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
@@ -607,14 +617,8 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
-    <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
-    <dimen name="hpp_card_width">160dp</dimen>
-    <dimen name="hpp_card_padding">16dp</dimen>
-    <dimen name="hpp_card_margin_outer">40dp</dimen>
-    <dimen name="hpp_maximum_container_width">728dp</dimen>
-    <dimen name="hpp_subtitle_width">350dp</dimen>
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 

@@ -70,8 +70,14 @@ class ScanStateListItemsBuilder @Inject constructor(
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
-        val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
-        val scanDescription = DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        val scanHeaderResId = if (fixingThreatIds.size > 1) {
+            R.string.scan_fixing_threats_title_plural
+        } else R.string.scan_fixing_threats_title_singular
+        val scanHeader = HeaderState(UiStringRes(scanHeaderResId))
+        val scanDescriptionResId = if (fixingThreatIds.size > 1) {
+            R.string.scan_fixing_threats_description_plural
+        } else R.string.scan_fixing_threats_description_singular
+        val scanDescription = DescriptionState(UiStringRes(scanDescriptionResId))
         val scanProgress = ProgressState(isIndeterminate = true, isVisible = fixingThreatIds.isNotEmpty())
 
         items.add(scanIcon)
@@ -81,7 +87,7 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         items.addAll(
             fixingThreatIds.mapNotNull { threatId ->
-                items.add(ThreatsHeaderItemState())
+                items.add(ThreatsHeaderItemState(threatsCount = fixingThreatIds.size))
                 scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
                     val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
                         isFixing = true,
@@ -123,7 +129,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanButton)
 
         threats.takeIf { it.isNotEmpty() }?.let {
-            items.add(ThreatsHeaderItemState())
+            items.add(ThreatsHeaderItemState(threatsCount = threats.size))
             items.addAll(threats.map { threat -> threatItemBuilder.buildThreatItem(threat, onThreatItemClicked) })
         }
 
@@ -250,13 +256,22 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): DescriptionState {
         val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
 
-        val descriptionText = htmlMessageUtils
-            .getHtmlMessageFromStringFormatResId(
-                R.string.scan_idle_with_threats_description,
-                "<b>$threatsCount</b>",
-                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
-                clickableText
-            )
+        val descriptionText = if (threatsCount > 1) {
+            htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_idle_threats_description_plural,
+                            "<b>$threatsCount</b>",
+                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                            clickableText
+                    )
+        } else {
+            htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_idle_threats_description_singular,
+                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                            clickableText
+                    )
+        }
 
         val clickableTextStartIndex = descriptionText.indexOf(clickableText)
         val clickableTextEndIndex = clickableTextStartIndex + clickableText.length

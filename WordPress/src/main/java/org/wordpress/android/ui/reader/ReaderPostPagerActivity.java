@@ -121,6 +121,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private boolean mPostSlugsResolutionUnderway;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+    private boolean mIsRelatedPostView;
 
     private boolean mBackFromLogin;
 
@@ -153,6 +154,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -177,6 +179,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -299,6 +302,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
             mIsSinglePostView = true;
+            mIsRelatedPostView = false;
 
             switch (interceptType) {
                 case READER_BLOG:
@@ -518,6 +522,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
@@ -867,6 +872,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     mIdList.get(position).getPostId(),
                     mDirectOperation,
                     mCommentId,
+                    mIsRelatedPostView,
                     mInterceptedUri,
                     getPostListType(),
                     mPostSlugsResolutionUnderway);

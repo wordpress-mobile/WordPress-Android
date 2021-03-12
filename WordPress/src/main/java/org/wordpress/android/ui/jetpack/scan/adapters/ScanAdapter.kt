@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackProgressViewHo
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatLoadingSkeletonViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsDateHeaderViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsHeaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -20,14 +21,14 @@ import org.wordpress.android.util.image.ImageManager
 class ScanAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
-) : Adapter<JetpackViewHolder>() {
+) : Adapter<JetpackViewHolder<*>>() {
     private val items = mutableListOf<JetpackListItemState>()
 
     init {
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder<*> {
         return when (viewType) {
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
@@ -38,11 +39,12 @@ class ScanAdapter(
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM_LOADING_SKELETON.id -> ThreatLoadingSkeletonViewHolder(parent)
+            ViewType.THREAT_DETECTED_DATE.id -> ThreatsDateHeaderViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
 
-    override fun onBindViewHolder(holder: JetpackViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: JetpackViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
 

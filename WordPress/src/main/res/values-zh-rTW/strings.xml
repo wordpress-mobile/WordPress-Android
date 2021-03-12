@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-19 10:54:07+0000
+Translation-Revision-Date: 2021-03-04 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">取消釘選</string>
+    <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
+    <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟動作工作表，然後編輯、取代或清除圖片</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>已完成所有任務&lt;/b>&lt;br/>你將觸及更多使用者。 做得好！</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>已完成所有任務&lt;/b>&lt;br/>你已自訂你的網站。 做得好！</string>
+    <string name="quick_start_card_menu_hide">暫時隱藏</string>
+    <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
+    <string name="invite_links_disable_dialog_message">一旦你停用此邀請連結，就沒有人可以再用此連結加入你的團隊。 你確定嗎？</string>
+    <string name="invite_links_disable_dialog_title">停用邀請連結</string>
+    <string name="invite_links_bad_format_response">收到無效回應</string>
+    <string name="invite_links_null_response">未收到回應</string>
+    <string name="invite_links_cannot_get_role_data_error">取得角色的資料時發生錯誤%1$s</string>
+    <string name="invite_links_cannot_get_roles_error">取得角色發生錯誤</string>
+    <string name="invite_links_generic_get_data_error">擷取邀請連結資料時發生未知錯誤</string>
+    <string name="invite_links_helper_text">用這個連結直接加入成員，就不需要一個一個邀請。 造訪此 URL 的人都可以註冊你的組織，即使他們是從其他人那裡收到連結，因此請務必與值得信任的人分享。</string>
+    <string name="invite_links_expire_date">過期 %1$s</string>
+    <string name="invite_links_disable_invite_link">停用邀請連結</string>
+    <string name="invite_links_share_invite_link">分享邀請連結</string>
+    <string name="invite_links_generate">產生新連結</string>
+    <string name="invite_links_get_status_retry">重新整理連結狀態</string>
+    <string name="invite_links_section_title">邀請連結</string>
+    <string name="threats_found_singular">發現威脅</string>
+    <string name="threats_found_plural">發現數個威脅</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br>沒有發現潛在威脅</string>
+    <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
+    <string name="disable">停用</string>
+    <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
     <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
     <string name="quick_start_list_view_site_title">造訪你的網站</string>
     <string name="quick_start_list_upload_icon_subtitle">新增網站圖示，讓網站看起來更專業幹練。</string>
@@ -32,8 +62,6 @@ Language: zh_TW
     <string name="backup_item_content_hint">(排除佈景主題、外掛程式和上傳內容)</string>
     <string name="backup_item_contents">WP 內容目錄</string>
     <string name="backup_item_roots">WordPress 根目錄</string>
-    <string name="backup_download_progress_action_button_content_description">「完成時通知我」按鈕</string>
-    <string name="backup_download_progress_action_button">完成時通知我！</string>
     <string name="backup_download_details_choose_items_header">包含在這次下載中的項目</string>
     <string name="gutenberg_native_uploading">上傳中…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重複使用區塊無法在 iOS 版 WordPress 中編輯</string>
@@ -61,13 +89,11 @@ Language: zh_TW
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">隨時為你提供協助</string>
-    <string name="scan_idle_with_threats_description">掃瞄作業透過 %2s 找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
-    <string name="scan_fixing_threats_description">我們正努力在背景修正此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_fixing_threats_description_singular">我們正致力在背景解決此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="scan_scanning_description">掃瞄作業完成後，我們會傳送通知給你。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
-    <string name="scan_fixing_threats_title">正在修正威脅</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan 無法完成網站掃瞄作業。 請檢查你的網站是否已經關閉。若否，請再試一次。 如果網站已關閉，或 Jetpack Scan 仍無法順利掃瞄，請與我們的支援團隊聯絡。</string>
     <string name="scan_request_failed_title">發生錯誤</string>
     <string name="activity_log_currently_backing_up_message_no_dates">正在備份網站</string>
@@ -107,8 +133,6 @@ Language: zh_TW
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
     <string name="quick_start_card_menu_remove">不要再顯示</string>
-    <string name="quick_start_card_menu_hide">隱藏</string>
-    <string name="quick_start_card_menu_pin">釘選</string>
     <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
@@ -124,9 +148,8 @@ Language: zh_TW
     <string name="reader_marked_post_as_unseen">已將文章標示為未讀</string>
     <string name="reader_marked_post_as_seen">已將文章標示為已讀</string>
     <string name="threat_fix_all_status_error_message">取得修正狀態時發生錯誤。 請聯絡我們的支援團隊。</string>
-    <string name="threat_fix_all_status_success_message">已順利修正威脅。</string>
+    <string name="threat_fix_all_status_success_message_singular">已成功修正威脅。</string>
     <string name="threat_fix_all_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
-    <string name="threat_fix_all_warning_message">請確認你要修正 %s 個作用中威脅</string>
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
     <string name="threat_ignore_success_message">已忽略威脅。</string>
@@ -161,6 +184,7 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
+    <string name="backup_download_progress_footnote">無須等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
     <string name="backup_download_progress_header">目前正在為你的網站建立可下載的備份</string>
@@ -206,10 +230,7 @@ Language: zh_TW
     <string name="threat_item_header_database_threat">資料庫有 %s 個威脅</string>
     <string name="threat_item_header_infected_core_file">%s：受感染的核心檔案</string>
     <string name="threat_item_header_threat_found">發現威脅</string>
-    <string name="threats_found">發現數個威脅</string>
-    <string name="scan_in_few_seconds">幾秒鐘</string>
-    <string name="scan_in_minutes_ago">%s 分鐘前</string>
-    <string name="scan_in_hours_ago">%s 小時前</string>
+    <string name="scan_in_few_seconds">幾秒鐘前</string>
     <string name="scan_this_site">此網站</string>
     <string name="scan_idle_last_scan_description">最近一次 Jetpack 掃瞄已執行 %s，且未找到任何風險。 %s</string>
     <string name="scan_idle_threats_found_title">你的網站可能存在風險</string>
@@ -229,7 +250,6 @@ Language: zh_TW
     <string name="activity_log_date_range_filter_label_content_description">日期範圍篩選器</string>
     <string name="activity_log_active_filter_empty_subtitle">請嘗試調整日期範圍或活動類型篩選條件</string>
     <string name="activity_log_active_filter_empty_title">找不到符合的活動</string>
-    <string name="rewind">還原</string>
     <string name="backup_item_sqls">網站資料庫</string>
     <string name="backup_item_roots_hint">(包括 wp-config.php 和任何非 WordPress 檔案)</string>
     <string name="backup_item_media_uploads">媒體上傳</string>
@@ -350,7 +370,6 @@ Language: zh_TW
     <string name="stories_intro_title_first">現在人人都可以發佈限時動態</string>
     <string name="stories_intro_image_caption_second">限時動態標題例子</string>
     <string name="stories_intro_image_caption_first">如何建立限時動態文章</string>
-    <string name="stories_intro_main_subtitle">你可以搶先使用「限時動態文章」 (Story Posts)，我們很樂意為你開放試用。</string>
     <string name="stories_intro_main_title">限時動態文章介紹</string>
     <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
     <string name="mlp_notice_page_created">已建立頁面</string>
@@ -486,7 +505,6 @@ Language: zh_TW
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
     <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
-    <string name="signup_confirmation_magic_link_message">我們會透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。</string>
     <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
     <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
     <string name="enter_account_info_for_site">輸入你的 %1$s 帳號資訊。</string>
@@ -1125,8 +1143,6 @@ Language: zh_TW
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
-    <string name="quick_start_sites_type_grow">拓展你的讀者群</string>
-    <string name="quick_start_sites_type_customize">自訂你的網站</string>
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受完成的成果！</string>
@@ -1168,7 +1184,6 @@ Language: zh_TW
     <string name="notification_new_site_creation_failed">發生問題</string>
     <string name="notification_new_site_creation_title">建立網站</string>
     <string name="new_site_creation_create_site_button">建立網站</string>
-    <string name="new_site_creation_search_domain_input_hint">搜尋網域</string>
     <string name="new_site_creation_domain_header_subtitle">這是人們在網際網路上找到你的地方。</string>
     <string name="new_site_creation_empty_domain_list_message">找不到你搜尋的網址</string>
     <string name="site_creation_error_generic_subtitle">與伺服器通訊時發生錯誤，請再試一次</string>

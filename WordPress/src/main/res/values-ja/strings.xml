@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 11:54:10+0000
+Translation-Revision-Date: 2021-03-05 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">ピンを外す</string>
+    <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">サイトの名前を入力してください</string>
+    <string name="quick_start_card_menu_hide">今は非表示にする</string>
+    <string name="invite_links_disable_dialog_title">招待リンクを無効化</string>
+    <string name="invite_links_bad_format_response">無効な応答を受信しました</string>
+    <string name="invite_links_null_response">応答がありませんでした</string>
+    <string name="invite_links_cannot_get_role_data_error">権限グループ「%1$s」のデータ取得中にエラーが発生しました</string>
+    <string name="invite_links_cannot_get_roles_error">権限グループの取得中にエラーが発生しました</string>
+    <string name="invite_links_generic_get_data_error">招待リンクデータの取得中に不明なエラーが発生しました</string>
+    <string name="invite_links_disable_invite_link">招待リンクを無効化</string>
+    <string name="invite_links_share_invite_link">招待リンクを共有</string>
+    <string name="invite_links_generate">新規リンクを作成</string>
+    <string name="invite_links_get_status_retry">リンクのステータスを更新</string>
+    <string name="invite_links_section_title">招待リンク</string>
+    <string name="threats_found_singular">検出された脅威</string>
+    <string name="threats_found_plural">検出された脅威</string>
+    <string name="scan_fixing_threats_title_singular">脅威の修正</string>
+    <string name="disable">無効化</string>
+    <string name="quick_start_card_menu_unpin">これを固定解除</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_list_view_site_title">サイトを表示</string>
     <string name="quick_start_list_upload_icon_subtitle">センスのよいサイトアイコンを追加しましょう。</string>
@@ -32,8 +51,6 @@ Language: ja_JP
     <string name="backup_item_content_hint">(テーマ、プラグイン、アップロードを除く)</string>
     <string name="backup_item_contents">WP-content ディレクトリ</string>
     <string name="backup_item_roots">WordPress ルート</string>
-    <string name="backup_download_progress_action_button_content_description">完了時間を知らせるボタン</string>
-    <string name="backup_download_progress_action_button">完了時間を知らせてください !</string>
     <string name="backup_download_details_choose_items_header">このダウンロードに含まれるアイテム</string>
     <string name="gutenberg_native_uploading">アップロード中…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">WordPress for iOS では再利用可能ブロックを編集できません</string>
@@ -61,13 +78,11 @@ Language: ja_JP
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">検出</string>
     <string name="scan_here_to_help">サポートはこちら</string>
-    <string name="scan_idle_with_threats_description">スキャンで %2s に%1s個の潜在的な脅威が見つかりました。 以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
     <string name="scan_idle_manual_scan_description">サイトを再度確認するには、手動スキャンを実行するか、本日中に行われる Jetpack のサイトスキャンをお待ちください。</string>
     <string name="scan_provisioning_description">Jetpack Scan へようこそ ! お客様のサイトを調査し、フルスキャンを実行するための設定を行います。 スキャンに影響する可能性のある問題を見つけたらお知らせします。その後、最初のフルスキャンが開始されます。</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan へようこそ。現在サイトの初回チェックを行っており、結果はすぐに表示されます。</string>
-    <string name="scan_fixing_threats_description">バックグラウンドでこれらの脅威を修正しています。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
+    <string name="scan_fixing_threats_description_singular">バックグラウンドでこの脅威を修正しています。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
     <string name="scan_scanning_description">スキャンが完了したら、通知が送信されます。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
-    <string name="scan_fixing_threats_title">脅威の修正</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan はサイトのスキャンを完了できませんでした。 サイトがダウンしていないか確認してください。ダウンしていない場合、再度実行してください。 ダウンしている場合、または Jetpack Scan に問題がある場合、サポートチームまでご連絡ください。</string>
     <string name="scan_request_failed_title">問題が発生しました。</string>
     <string name="activity_log_currently_backing_up_message_no_dates">サイトのバックアップ</string>
@@ -107,8 +122,7 @@ Language: ja_JP
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
     <string name="quick_start_card_menu_remove">二度と表示しない</string>
-    <string name="quick_start_card_menu_hide">非表示</string>
-    <string name="quick_start_card_menu_pin">ピン</string>
+    <string name="quick_start_card_menu_pin">上部固定</string>
     <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
@@ -124,9 +138,7 @@ Language: ja_JP
     <string name="reader_marked_post_as_unseen">投稿を未読にする</string>
     <string name="reader_marked_post_as_seen">投稿を既読にする</string>
     <string name="threat_fix_all_status_error_message">修正のステータスの取得中にエラーが発生しました。 サポートにご連絡ください。</string>
-    <string name="threat_fix_all_status_success_message">脅威は正常に修正されました。</string>
     <string name="threat_fix_all_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
-    <string name="threat_fix_all_warning_message">%s件のアクティブな脅威を修正してよろしいですか ?</string>
     <string name="threat_fix_all_warning_title">すべての脅威を修正</string>
     <string name="threat_ignore_error_message">脅威を無視する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_ignore_success_message">脅威を無視しました。</string>
@@ -162,6 +174,7 @@ Language: ja_JP
     <string name="backup_download_complete_header">バックアップをダウンロードする準備が整いました</string>
     <string name="backup_download_complete_page_title">バックアップ</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_footnote">お待ちいただく必要はありません。 バックアップが完了したら通知します。</string>
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>
     <string name="backup_download_progress_header">現在、サイトのダウンロード可能なバックアップを作成中です</string>
@@ -207,10 +220,7 @@ Language: ja_JP
     <string name="threat_item_header_database_threat">データベース %s 脅威</string>
     <string name="threat_item_header_infected_core_file">%s: 感染したコアファイル</string>
     <string name="threat_item_header_threat_found">脅威を検出しました</string>
-    <string name="threats_found">検出された脅威</string>
-    <string name="scan_in_few_seconds">数秒以内</string>
-    <string name="scan_in_minutes_ago">%s分前</string>
-    <string name="scan_in_hours_ago">%s時間前</string>
+    <string name="scan_in_few_seconds">数秒前</string>
     <string name="scan_this_site">このサイト</string>
     <string name="scan_idle_last_scan_description">前回の Jetpack スキャンは%sに実行され、リスクは見つかりませんでした。 %s</string>
     <string name="scan_idle_threats_found_title">サイトが危険にさらされている可能性があります</string>
@@ -230,7 +240,6 @@ Language: ja_JP
     <string name="activity_log_date_range_filter_label_content_description">日付の範囲フィルター</string>
     <string name="activity_log_active_filter_empty_subtitle">データ範囲またはアクティビティタイプフィルターを調整してみてください</string>
     <string name="activity_log_active_filter_empty_title">一致するイベントは見つかりませんでした</string>
-    <string name="rewind">復元</string>
     <string name="backup_item_sqls">サイトデータベース</string>
     <string name="backup_item_roots_hint">(wp-config.php と WordPress 以外のすべてのファイルを含む)</string>
     <string name="backup_item_media_uploads">メディアのアップロード</string>
@@ -353,7 +362,6 @@ Language: ja_JP
     <string name="stories_intro_title_first">いまやストーリーはみなさんのためのものです</string>
     <string name="stories_intro_image_caption_second">ストーリーのタイトルの例</string>
     <string name="stories_intro_image_caption_first">ストーリー投稿の作り方</string>
-    <string name="stories_intro_main_subtitle">ストーリー投稿への早期アクセスへの権利を得ました。ぜひお試しください。</string>
     <string name="stories_intro_main_title">ストーリー投稿の紹介</string>
     <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
     <string name="mlp_notice_page_created">ページが作成されました</string>
@@ -490,7 +498,6 @@ Language: ja_JP
     <string name="signup_confirmation_title">登録の確認</string>
     <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
     <string name="continue_terms_of_service_text">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
-    <string name="signup_confirmation_magic_link_message">新しい WordPress.com アカウントを作成するための登録リンクをメールでお送りします。</string>
     <string name="signup_confirmation_message">このメールアドレスは新しい WordPress.com アカウントの作成に使用します。</string>
     <string name="signup_magic_link_message">新しい WordPress.com アカウントを作成するための登録リンクをメールでお送りしました。現在の端末でメールをチェックし、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
     <string name="enter_account_info_for_site">%1$s のアカウント情報を入力してください。</string>
@@ -1135,8 +1142,6 @@ Language: ja_JP
     <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
-    <string name="quick_start_sites_type_grow">訪問者を増やす</string>
-    <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
     <string name="quick_start_complete_tasks_header">完了 (%d)</string>
     <string name="quick_start_dialog_view_site_message">完成しました。お楽しみください !</string>
@@ -1178,7 +1183,6 @@ Language: ja_JP
     <string name="notification_new_site_creation_failed">問題が発生しました</string>
     <string name="notification_new_site_creation_title">サイトを作成</string>
     <string name="new_site_creation_create_site_button">サイトを作成</string>
-    <string name="new_site_creation_search_domain_input_hint">ドメインを検索</string>
     <string name="new_site_creation_domain_header_subtitle">これが、インターネット上で他の人があなたを見つける場所です。</string>
     <string name="new_site_creation_empty_domain_list_message">検索条件一致する利用可能なアドレスはありません</string>
     <string name="site_creation_error_generic_subtitle">サーバーエラーです。もう一度お試しください</string>

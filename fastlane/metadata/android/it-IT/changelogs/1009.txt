@@ -1,0 +1,2 @@
+16.8:
+Ecco gli ultimi aggiornamenti all'app per Android di WordPress. Abbiamo migliorato la funzionalità delle homepage pubblicate, assicurando che l'eliminazione o il recupero nel modulo delle bozze non comprometta il tuo sito. Abbiamo aggiunto il supporto per le impostazioni del punto focale del blocco Copertina. Inoltre, abbiamo migliorato la gestione di P2, in modo da poter generare, condividere e disabilitare i link di invito per i ruoli P2.

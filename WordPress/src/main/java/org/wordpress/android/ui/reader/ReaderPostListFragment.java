@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
-import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
@@ -77,6 +76,9 @@ import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView;
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
@@ -118,12 +120,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -219,11 +221,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
-    @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject QuickStartRepository mQuickStartRepository;
+    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -595,7 +598,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             ((OpenSubsAtPage) action).getTabIndex()
                     );
                 } else {
-                    wpMainActivityViewModel.onOpenLoginPage();
+                    wpMainActivityViewModel.onOpenLoginPage(
+                            WPMainNavigationView.Companion.getPosition(PageType.MY_SITE)
+                    );
                 }
 
                 return null;
@@ -895,6 +900,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
             Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                    requireContext(),
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
@@ -904,8 +910,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
 
             if (getSelectedSite() != null) {
-                QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
-                        mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
+                if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+                    mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
+                } else {
+                    mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(QuickStartTask.FOLLOW_SITE,
+                            getSelectedSite(), mQuickStartEvent, getContext());
+                }
             }
         }
     }

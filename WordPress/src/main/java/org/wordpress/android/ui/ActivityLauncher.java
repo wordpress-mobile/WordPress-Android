@@ -126,6 +126,7 @@ import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_I
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
@@ -629,6 +630,7 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             String activityId,
+            boolean isButtonVisible,
             boolean rewindableOnly
     ) {
         Map<String, Object> properties = new HashMap<>();
@@ -645,6 +647,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, isButtonVisible);
         intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
@@ -950,7 +953,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
@@ -969,28 +971,12 @@ public class ActivityLauncher {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
-    }
-
-    public static void previewPageForResult(
-            @NonNull Fragment fragment,
-            @NonNull SiteModel site,
-            @NonNull String content,
-            @Nullable String template) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
-        fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {

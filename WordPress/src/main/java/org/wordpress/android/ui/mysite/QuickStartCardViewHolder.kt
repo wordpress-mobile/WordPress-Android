@@ -17,31 +17,35 @@ import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import kotlinx.android.synthetic.main.quick_start_card.view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.QuickStartCardBinding
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.widgets.RecyclerItemDecoration
+import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.viewBinding
 
 class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val viewPool: RecycledViewPool,
     private val nestedScrollStates: Bundle,
     private val uiHelpers: UiHelpers
-) : MySiteItemViewHolder(parent, R.layout.quick_start_card) {
+) : MySiteItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
     private var currentItem: QuickStartCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
 
     init {
-        itemView.apply {
-            quick_start_card_more_button.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
-            quick_start_card_recycler_view.apply {
+        with(binding) {
+            quickStartCardMoreButton.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
+            quickStartCardRecyclerView.apply {
                 adapter = QuickStartTaskCardAdapter(uiHelpers)
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
-                addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 2), 0))
+                addItemDecoration(
+                        QuickStartListItemDecoration(
+                                resources.getDimensionPixelSize(R.dimen.margin_extra_small),
+                                resources.getDimensionPixelSize(R.dimen.margin_large)
+                        )
+                )
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -53,34 +57,34 @@ class QuickStartCardViewHolder(
         }
     }
 
-    fun bind(item: QuickStartCard) = itemView.apply {
+    fun bind(item: QuickStartCard) = with(binding) {
         currentItem = item
 
-        ObjectAnimator.ofInt(quick_start_card_progress, "progress", item.progress).setDuration(600).start()
+        ObjectAnimator.ofInt(quickStartCardProgress, "progress", item.progress).setDuration(600).start()
 
-        val progressIndicatorColor = ContextCompat.getColor(context, item.accentColor)
+        val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            quick_start_card_progress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
-            quick_start_card_progress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
+            quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
+            quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
         } else {
             // Workaround for Lollipop
-            val progressDrawable = quick_start_card_progress.progressDrawable.mutate() as LayerDrawable
+            val progressDrawable = quickStartCardProgress.progressDrawable.mutate() as LayerDrawable
             val backgroundLayer = progressDrawable.findDrawableByLayerId(android.R.id.background)
             val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress)
             backgroundLayer.colorFilter = createBlendModeColorFilterCompat(progressTrackColor, SRC_IN)
             progressLayer.colorFilter = createBlendModeColorFilterCompat(progressIndicatorColor, SRC_IN)
-            quick_start_card_progress.progressDrawable = progressDrawable
+            quickStartCardProgress.progressDrawable = progressDrawable
         }
 
-        quick_start_card_title.text = uiHelpers.getTextOfUiString(context, item.title)
-        (quick_start_card_recycler_view.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
-        restoreScrollState(quick_start_card_recycler_view, item.id.toString())
-        quick_start_card_more_button.setOnClickListener { item.onMoreClick.click() }
+        quickStartCardTitle.text = uiHelpers.getTextOfUiString(root.context, item.title)
+        (quickStartCardRecyclerView.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
+        restoreScrollState(quickStartCardRecyclerView, item.id.toString())
+        quickStartCardMoreButton.setOnClickListener { item.onMoreClick.click() }
     }
 
     fun onRecycled() {
-        currentItem?.let { saveScrollState(itemView.quick_start_card_recycler_view, it.id.toString()) }
+        currentItem?.let { saveScrollState(binding.quickStartCardRecyclerView, it.id.toString()) }
         currentItem = null
     }
 

@@ -6,8 +6,9 @@ import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -23,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -30,8 +32,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -88,7 +90,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -117,6 +119,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongMethod")
 class MySiteViewModel
 @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -147,10 +150,20 @@ class MySiteViewModel
     private val _onDynamicCardMenuShown = MutableLiveData<Event<DynamicCardMenuModel>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
-    private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
+    private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
 
-    val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
+    val onScrollTo: LiveData<Event<Int>> = merge(
+            _activeTaskPosition.distinctUntilChanged(),
+            quickStartRepository.activeTask
+    ) { pair, activeTask ->
+        if (pair != null && activeTask != null && pair.first == activeTask) {
+            Event(pair.second)
+        } else {
+            null
+        }
+    }
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
+    val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onDynamicCardMenuShown = _onDynamicCardMenuShown as LiveData<Event<DynamicCardMenuModel>>
@@ -159,7 +172,7 @@ class MySiteViewModel
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            this,
+            viewModelScope,
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,
@@ -253,9 +266,9 @@ class MySiteViewModel
         position: Int
     ) {
         if (quickStartTask == null) {
-            _scrollToQuickStartTask.postValue(null)
-        } else if (_scrollToQuickStartTask.value?.peekContent()?.first != quickStartTask && position >= 0) {
-            _scrollToQuickStartTask.postValue(Event(quickStartTask to position))
+            _activeTaskPosition.postValue(null)
+        } else if (_activeTaskPosition.value?.first != quickStartTask && position >= 0) {
+            _activeTaskPosition.postValue(quickStartTask to position)
         }
     }
 
@@ -309,7 +322,6 @@ class MySiteViewModel
 
     private fun titleClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
@@ -333,7 +345,6 @@ class MySiteViewModel
     private fun iconClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
-        quickStartRepository.completeTask(UPLOAD_SITE_ICON)
         val hasIcon = site.iconUrl != null
         if (site.hasCapabilityManageOptions && site.hasCapabilityUploadFiles) {
             if (hasIcon) {
@@ -406,6 +417,10 @@ class MySiteViewModel
         currentAvatarSource.refresh()
     }
 
+    fun clearActiveQuickStartTask() {
+        quickStartRepository.clearActiveTask()
+    }
+
     fun onSiteNameChosen(input: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.postValue(
@@ -417,26 +432,35 @@ class MySiteViewModel
     }
 
     fun onSiteNameChooserDismissed() {
-        // do nothing
+        // This callback is called even when the dialog interaction is positive,
+        // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE, true)
     }
 
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
             is Positive -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
                             Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite())))
                     )
                 }
             }
             is Negative -> when (interaction.tag) {
+                TAG_ADD_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(MY_SITE_ICON_REMOVED)
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
             }
-            is Dismissed -> {
-                // do nothing
+            is Dismissed -> when (interaction.tag) {
+                TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                }
             }
         }
     }
@@ -550,22 +574,25 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart() {
-        quickStartRepository.startQuickStart()
+    fun startQuickStart(newSiteLocalID: Int) {
+        quickStartRepository.startQuickStart(newSiteLocalID)
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        when (interaction) {
-            is DynamicCardMenuInteraction.Remove -> {
-                analyticsTrackerWrapper.track(QUICK_START_REMOVE_CARD_TAPPED)
-                quickStartRepository.removeCategory(interaction.cardType)
-                dynamicCardsSource.hideItem(interaction.cardType)
-            }
-            is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
-            is Hide -> {
-                analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
-                quickStartRepository.hideCategory(interaction.cardType)
-                dynamicCardsSource.hideItem(interaction.cardType)
+        launch {
+            when (interaction) {
+                is DynamicCardMenuInteraction.Remove -> {
+                    analyticsTrackerWrapper.track(QUICK_START_REMOVE_CARD_TAPPED)
+                    dynamicCardsSource.removeItem(interaction.cardType)
+                    quickStartRepository.refresh()
+                }
+                is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
+                is Unpin -> dynamicCardsSource.unpinItem()
+                is Hide -> {
+                    analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
+                    dynamicCardsSource.hideItem(interaction.cardType)
+                    quickStartRepository.refresh()
+                }
             }
         }
     }

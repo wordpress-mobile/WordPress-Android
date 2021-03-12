@@ -69,7 +69,8 @@ import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
-import org.wordpress.android.ui.mlp.LayoutsAdapter;
+import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
@@ -85,6 +86,7 @@ import org.wordpress.android.ui.pages.PageParentSearchFragment;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.pages.SearchListFragment;
+import org.wordpress.android.ui.people.PeopleInviteDialogFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -170,6 +172,7 @@ import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -342,6 +345,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(RoleSelectDialogFragment object);
 
+    void inject(PeopleInviteDialogFragment object);
+
     void inject(PlansActivity object);
 
     void inject(MediaBrowserActivity object);
@@ -433,6 +438,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderLikingUsersView object);
 
     void inject(ReaderWebView object);
+
+    void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
 
@@ -563,6 +570,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(HomePagePickerFragment object);
 
     void inject(DesignPreviewFragment object);
+
+    void inject(BlockLayoutPreviewFragment object);
 
     void inject(SubfilterBottomSheetFragment object);
 

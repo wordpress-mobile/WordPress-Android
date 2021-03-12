@@ -148,4 +148,12 @@
 
     <string name="menu_toolbar_title">Edit %s block"</string>
 
+    <!-- Aztec Try Block Editor Dialog -->
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
+
+
+
 </resources>

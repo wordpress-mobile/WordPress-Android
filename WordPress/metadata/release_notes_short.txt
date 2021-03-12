@@ -1,4 +1,7 @@
-- Jetpack customers can now restore a site or download a backup, scan, and fix threats
-- Various block editor updates, including a new Audio block and the ability to set anchors in the Heading block
-- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
-- .blog subdomains now available
+What’s new?
+
+The classic editor will soon be unavailable for composing new posts, but this won’t affect editing your existing posts and pages. We recommend that you switch to the block editor if you haven’t already.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.

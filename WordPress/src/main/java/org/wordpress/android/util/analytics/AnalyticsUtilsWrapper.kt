@@ -27,6 +27,9 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
 
     fun trackWithSiteId(stat: AnalyticsTracker.Stat, blogId: Long) = AnalyticsUtils.trackWithSiteId(stat, blogId)
 
+    fun trackWithReaderPostDetails(stat: AnalyticsTracker.Stat, blogId: Long, postId: Long) =
+            AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
+
     fun trackWithReaderPostDetails(stat: AnalyticsTracker.Stat, post: ReaderPost) =
             AnalyticsUtils.trackWithReaderPostDetails(stat, post)
 
@@ -40,4 +43,10 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
         post: ReaderPost?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackFollowCommentsWithReaderPostDetails(stat, blogId, postId, post, properties)
+
+    fun trackInviteLinksAction(
+        stat: AnalyticsTracker.Stat,
+        site: SiteModel?,
+        properties: Map<String, Any?>?
+    ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
 }

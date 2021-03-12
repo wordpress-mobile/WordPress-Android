@@ -1,16 +1,15 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_detail_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsDetailFragmentBinding
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -18,7 +17,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
-class StatsDetailFragment : DaggerFragment() {
+class StatsDetailFragment : DaggerFragment(R.layout.stats_detail_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsDetailViewModel
@@ -29,21 +28,24 @@ class StatsDetailFragment : DaggerFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_detail_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-
+        val binding = StatsDetailFragmentBinding.bind(view)
+        with(nonNullActivity as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.let {
+                it.setHomeButtonEnabled(true)
+                it.setDisplayHomeAsUpEnabled(true)
+            }
+        }
         initializeViewModels(nonNullActivity)
-        initializeViews()
+        initializeViews(binding)
     }
 
-    private fun initializeViews() {
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
+    private fun initializeViews(binding: StatsDetailFragmentBinding) {
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.pullToRefresh) {
             viewModel.onPullToRefresh()
         }
     }

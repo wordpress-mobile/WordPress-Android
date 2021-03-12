@@ -57,8 +57,12 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                             add(SET_AS_POSTS_PAGE)
                         }
                     }
-                    add(MOVE_TO_DRAFT)
-                    add(MOVE_TO_TRASH)
+
+                    if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
+                        add(MOVE_TO_DRAFT)
+                        add(MOVE_TO_TRASH)
+                    }
+
                     if (canCancelPendingAutoUpload(uploadUiState)) {
                         add(CANCEL_AUTO_UPLOAD)
                     }

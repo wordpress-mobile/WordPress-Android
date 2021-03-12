@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.AD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
@@ -123,28 +123,24 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun startObserving() {
-        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
+        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
                 closeListener?.onBackClicked()
-            }
         })
 
-        viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, Observer { bundle ->
+        viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, { bundle ->
             actionListener?.onActionClicked(ADD_CATEGORY, bundle)
         }
         )
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                showToast()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+                it.showToast()
         })
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner, {
             (recycler_view.adapter as PrepublishingCategoriesAdapter).update(
                     it.categoriesListItemUiState
             )
@@ -154,10 +150,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
                 updateVisibility(recycler_view, it.categoryListVisibility)
             }
         })
-        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                viewModel.onBackButtonClick()
-            }
+        parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner, {
+            viewModel.onBackButtonClick()
         })
     }
 
