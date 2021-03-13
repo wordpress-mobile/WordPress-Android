@@ -120,6 +120,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -214,6 +215,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -450,10 +452,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_POST:
                     // complete quick start task outside of QS process
                     if (getSelectedSite() != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
-                        QuickStartUtils.completeTaskAndRemindNextOne(
-                                mQuickStartStore,
+                        mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                                 QuickStartTask.PUBLISH_POST,
-                                mDispatcher,
                                 getSelectedSite(),
                                 null,
                                 this
@@ -478,10 +478,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
             // complete quick start task during QS process and remind of a next one
             if (getSelectedSite() != null) {
-                QuickStartUtils.completeTaskAndRemindNextOne(
-                        mQuickStartStore,
+                mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         QuickStartTask.PUBLISH_POST,
-                        mDispatcher,
                         getSelectedSite(),
                         new QuickStartEvent(QuickStartTask.PUBLISH_POST),
                         this

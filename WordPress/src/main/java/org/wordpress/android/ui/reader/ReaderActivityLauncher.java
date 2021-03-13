@@ -37,7 +37,7 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, null, 0, null);
+        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null);
     }
 
     public static void showReaderPostDetail(Context context,
@@ -46,6 +46,7 @@ public class ReaderActivityLauncher {
                                             long postId,
                                             DirectOperation directOperation,
                                             int commentId,
+                                            boolean isRelatedPost,
                                             String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
@@ -54,6 +55,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         context.startActivity(intent);
     }

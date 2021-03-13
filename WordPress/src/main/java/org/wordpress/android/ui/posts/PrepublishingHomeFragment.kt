@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_home_fragment.*
@@ -16,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment() {
@@ -73,25 +73,21 @@ class PrepublishingHomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.storyTitleUiState.observe(viewLifecycleOwner, Observer { storyTitleUiState ->
+        viewModel.storyTitleUiState.observe(viewLifecycleOwner, { storyTitleUiState ->
             uiHelpers.updateVisibility(story_title_header_view, true)
             story_title_header_view.init(uiHelpers, imageManager, storyTitleUiState)
         })
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             (actions_recycler_view.adapter as PrepublishingHomeAdapter).update(uiState)
         })
 
-        viewModel.onActionClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { actionType ->
-                actionClickedListener?.onActionClicked(actionType)
-            }
+        viewModel.onActionClicked.observeEvent(viewLifecycleOwner, { actionType ->
+            actionClickedListener?.onActionClicked(actionType)
         })
 
-        viewModel.onSubmitButtonClicked.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let { publishPost ->
-                actionClickedListener?.onSubmitButtonClicked(publishPost)
-            }
+        viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner, { publishPost ->
+            actionClickedListener?.onSubmitButtonClicked(publishPost)
         })
 
         val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {

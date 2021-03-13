@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-20 14:19:26+0000
+Translation-Revision-Date: 2021-03-09 14:04:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
+    <string name="reader_title_interests">Seguir temáticas</string>
+    <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>
+    <string name="activity_log_backup_download_notice_download_action">Descargar</string>
+    <string name="threat_fix_all_status_success_message_plural">Las amenazas se solucionaron con éxito.</string>
+    <string name="gutenberg_native_edit_focal_point">Editar punto focal</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Toca dos veces para abrir la hoja inferior y editar, reemplazar o borrar la imagen</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Toca dos veces para abrir la hoja de acción y editar, reemplazar o borrar la imagen</string>
+    <string name="new_site_creation_search_domain_input_hint">Introduce un nombre para tu sitio</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Todas las tareas completadas&lt;/b>&lt;br/> Llegará a más personas. ¡Buen trabajo! </string>
     <string name="backup_download_complete_info">También te hemos enviado por correo electrónico un enlace a tu archivo.</string>
     <string name="jetpack_icon_content_description">icono</string>
     <string name="label_control_upload">Subir</string>
@@ -131,7 +141,6 @@ Language: es_MX
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Estoy muy inspirado por el trabajo del fotógrafo Cameron Karsten. Probaré estas técnicas en mi próximo</string>
     <string name="login_prologue_second_subtitle_one">Inspírate</string>
-    <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevas lecturas.</string>
     <string name="login_prologue_title_fourth">Observa cómo crece tu audiencia con analíticas avanzadas.</string>
     <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
     <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
@@ -148,11 +157,9 @@ Language: es_MX
     <string name="stories_intro_description_first">Combina fotos, vídeos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
     <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
-    <string name="mlp_preview_title">Vista previa del layout</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
-    <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
     <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
     <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
     <string name="stories_intro_title_first">Ahora las historias son para todos</string>
@@ -349,8 +356,6 @@ Language: es_MX
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Fecha de publicación</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
-    <string name="reader_label_choose_your_interests">Elige tus intereses</string>
-    <string name="reader_choose_interests_content_description">Elige tus intereses</string>
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
     <string name="post_status_post_published">Publicado</string>
@@ -476,8 +481,6 @@ Language: es_MX
     <string name="app_theme">Apariencia</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recientemente has hecho cambios en esta página, pero no los has guardado. Elige una versión para cargar:\n\n</string>
     <string name="app_theme_default">Establecido por el ahorrador de batería</string>
-    <string name="gutenberg_native_warning_message">Mensaje de advertencia</string>
-    <string name="gutenberg_native_success_message">Mensaje de éxito</string>
     <string name="gutenberg_native_show_post_content">Mostrar el contenido de la entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
@@ -583,20 +586,16 @@ Language: es_MX
     <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
-    <string name="gutenberg_native_title">Titulo:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar el teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para mostrar la ayuda</string>
     <string name="gutenberg_native_take_a_photo">Toma una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
     <string name="gutenberg_native_take_a_video">Toma un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Toma una foto o un video</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Título del plugin en la barra lateral</string>
     <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
-    <string name="gutenberg_native_reset_block">Restablecer el bloque</string>
     <string name="gutenberg_native_cut_block">Bloque cortado</string>
-    <string name="gutenberg_native_remove_annotations">Eliminar las notas</string>
     <string name="gutenberg_native_problem_displaying_block">Problema al mostrar el bloque</string>
     <string name="gutenberg_native_post_title_s">Título de la entrada. %s</string>
     <string name="gutenberg_native_post_title_empty">Título de la entrada. Vacío</string>
@@ -605,18 +604,13 @@ Language: es_MX
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el video</string>
     <string name="gutenberg_native_page_break_block_s">Bloque de separación de página. %s</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ninguna aplicación puede manejar esta petición. Por favor, instala un navegador web.</string>
-    <string name="gutenberg_native_my_post_status_info">Información del estado de mi entrada</string>
-    <string name="gutenberg_native_my_post_publish_panel">Mi panel de publicación de entradas</string>
-    <string name="gutenberg_native_my_document_setting_panel">Mi panel de ajustes de documentos</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover el bloque hacia arriba desde la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo desde la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover el bloque hacia arriba</string>
     <string name="gutenberg_native_navigate_up">Navegar hacia arriba</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mi panel de pre-publicación</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque hacia abajo</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar teclado</string>
-    <string name="gutenberg_native_here_is_the_panel_content">¡Aquí está el contenido del panel!</string>
     <string name="gutenberg_native_help_icon">Icono de ayuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dos veces para deshacer el último cambio</string>
@@ -631,17 +625,13 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toca dos veces para cambiar el valor usando el control deslizante</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dos veces para añadir un bloque</string>
     <string name="gutenberg_native_current_value_is_s">El valor actual es %s</string>
-    <string name="gutenberg_native_content">Contenido…</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
-    <string name="gutenberg_native_annotations_sidebar">Barra lateral de notas</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">AÑADIR UN VIDEO</string>
     <string name="gutenberg_native_add_url">Añadir URL</string>
     <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
     <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
-    <string name="gutenberg_native_add_annotation">Añadir anotación</string>
-    <string name="gutenberg_native_add_a_description">Añadir una descripción</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón \"Añadir a las entradas guardadas\" para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">\"La lista se ha cargado con %1$d elementos.\"</string>
@@ -926,7 +916,6 @@ Language: es_MX
     <string name="site_settings_gutenberg_default_for_new_posts">Usar Editor de Bloques</string>
     <string name="plans_loading_error_no_plans_title">No se pueden cargar los Planes</string>
     <string name="exit">salir</string>
-    <string name="quick_start_sites_type_customize">Personaliza Tu Sitio</string>
     <string name="quick_start_sites">Siguientes Pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
@@ -934,7 +923,6 @@ Language: es_MX
     <string name="quick_start_dialog_upload_icon_title">Carga un icono del sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
-    <string name="quick_start_sites_type_grow">Haz Crecer Tu Audiencia</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos por los básicos de la construcción y el crecimiento de tu sitio.</string>
@@ -1130,7 +1118,6 @@ Language: es_MX
     <string name="quick_start_dialog_need_help_button_positive">Aceptar</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con intereses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
     <string name="quick_start_dialog_need_help_button_negative">No, gracias</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>
@@ -1880,7 +1867,6 @@ Language: es_MX
     <string name="signout">Cerrar sesión</string>
     <string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
     <string name="reader_label_global_related_posts">Más en WordPress.com</string>
-    <string name="reader_label_local_related_posts">Más en %s</string>
     <string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
     <string name="invite_user_blocked_invites">%s: Invitaciones bloqueadas por el usuario</string>
     <string name="invite_invalid_email">%s: Correo electrónico no válido</string>
@@ -1936,6 +1922,7 @@ Language: es_MX
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se han encontrado resultados con %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
+    <string name="reader_title_related_post_detail">Entrada relacionada</string>
     <string name="preview_screen_links_disabled">Los enlaces están inhabilitados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">\@%1$s eliminado correctamente.</string>

@@ -205,8 +205,6 @@ Language: nb_NO
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Avbryt</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
-    <string name="reader_label_choose_your_interests">Velg dine interesser</string>
-    <string name="reader_choose_interests_content_description">Velg dine interesser</string>
     <string name="reader_btn_done">Utført</string>
     <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
     <string name="post_status_post_published">Publisert</string>
@@ -310,8 +308,6 @@ Language: nb_NO
     <string name="app_theme_light">Lys</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du gjorde nylig endringer på denne siden, men lagret dem ikke. Velg en versjon å laste:\n</string>
-    <string name="gutenberg_native_warning_message">Advarselsmelding</string>
-    <string name="gutenberg_native_success_message">Vellykketmelding</string>
     <string name="gutenberg_native_show_post_content">Vis innhold av innlegg</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
@@ -406,7 +402,6 @@ Language: nb_NO
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
     <string name="gutenberg_native_ungroup">Fjern fra gruppe</string>
     <string name="gutenberg_native_translate">Oversett</string>
-    <string name="gutenberg_native_title">Tittel:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Trykk for å skjule tatstaturet</string>
     <string name="gutenberg_native_tap_here_to_show_help">Trykk her for å vise hjelp</string>
     <string name="gutenberg_native_take_a_video">Ta en video</string>
@@ -417,7 +412,6 @@ Language: nb_NO
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_cut_block">Kutt blokk</string>
-    <string name="gutenberg_native_reset_block">Tilbakestill blokk</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem under åpning av videoen</string>
     <string name="gutenberg_native_problem_displaying_block">Problem ved visning av blokk</string>
     <string name="gutenberg_native_post_title_s">Overskrift innlegg. %s</string>
@@ -427,17 +421,12 @@ Language: nb_NO
     <string name="gutenberg_native_open_settings">Åpne innstillinger</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ingen app kan håndtere denne forespørselen. Vennligst installer en nettleser.</string>
     <string name="gutenberg_native_navigate_up">Naviger opp</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mitt førpubliseringspanel</string>
-    <string name="gutenberg_native_my_post_status_info">Min informasjon om innleggsstatus</string>
-    <string name="gutenberg_native_my_post_publish_panel">Mitt etterpubliseringspanel</string>
-    <string name="gutenberg_native_my_document_setting_panel">Mitt innstillingspanel for dokument</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Flytt blokk opp fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Her er panelinnholdet!</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Mislyktes i å sette inn media.\nVennligst trykk for alternativer.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dobbelttrykk for å angre siste endring</string>
@@ -452,9 +441,7 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dobbelttrykk for å redigere verdien med glidekontroll</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dobbelttrykk for å legge til en blokk</string>
     <string name="gutenberg_native_current_value_is_s">Nåværende verdi er %s</string>
-    <string name="gutenberg_native_content">Innhold…</string>
     <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
-    <string name="gutenberg_native_annotations_sidebar">Sidekolonne for merknader</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">En ukjent feil oppstod. Vennligst prøv igjen.</string>
     <string name="gutenberg_native_alt_text">Alt-tekst</string>
     <string name="gutenberg_native_add_video">LEGG TIL VIDEO</string>
@@ -462,8 +449,6 @@ Language: nb_NO
     <string name="gutenberg_native_add_image_or_video">LEGG TIL BILDE ELLER VIDEO</string>
     <string name="gutenberg_native_add_image">LEGG TIL BILDE</string>
     <string name="gutenberg_native_add_block_here">LEGG TIL BLOKK HER</string>
-    <string name="gutenberg_native_add_annotation">Legg til merknad</string>
-    <string name="gutenberg_native_add_a_description">Legg til en beskrivelse</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
     <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>
@@ -746,8 +731,6 @@ Language: nb_NO
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
     <string name="exit">gå ut</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
-    <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
-    <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
@@ -948,7 +931,6 @@ Language: nb_NO
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
     <string name="quick_start_dialog_need_help_button_negative">Nei takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende interesser</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
     <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som inspirerer deg og følg dem for å få oppdateringer når de publiserer.</string>
     <string name="quick_start_button_positive">Gå</string>
@@ -1675,7 +1657,6 @@ Language: nb_NO
     <string name="signout">Logg av</string>
     <string name="sign_in_wpcom">Logg inn til WordPress.com</string>
     <string name="reader_label_global_related_posts">Mere på WordPress.com</string>
-    <string name="reader_label_local_related_posts">Mere i %s</string>
     <string name="preference_open_device_settings">Åpne enhetsinnstillingene</string>
     <string name="invite_invalid_email">%s: Ugyldig E-post</string>
     <string name="invite_user_blocked_invites">%s: Brukeren har blokkert invitasjoner</string>
@@ -1731,6 +1712,7 @@ Language: nb_NO
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
     <string name="reader_empty_search_description">Ingen innlegg ble funnet for %s på språket ditt</string>
     <string name="reader_hint_post_search">Søk i WordPress</string>
+    <string name="reader_title_related_post_detail">Relatert innlegg</string>
     <string name="preview_screen_links_disabled">Lenker er deaktivert på forhåndsvisningsskjermen</string>
     <string name="send">Send</string>
     <string name="person_removed">%1$s ble vellykket fjernet</string>

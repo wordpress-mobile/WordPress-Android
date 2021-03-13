@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -23,15 +24,16 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
 
     @Override
     public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile,
-                                                   String siteUrl) {
+                                                   @Nullable SiteModel site) {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
             if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
                 mSaveStoryGutenbergBlockUseCase
-                    .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, mediaFile);
+                    .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, site, mediaFile);
             } else if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
+                String siteUrl = site != null ? site.getUrl() : "";
                 post.setContent(
                         PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile,
                                 siteUrl));

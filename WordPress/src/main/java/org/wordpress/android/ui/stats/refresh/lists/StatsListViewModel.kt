@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -70,7 +71,7 @@ abstract class StatsListViewModel(
     val listSelected = statsUseCase.listSelected
 
     val uiModel: LiveData<UiModel> by lazy {
-        statsUseCase.data.throttle(this, distinct = true)
+        statsUseCase.data.throttle(viewModelScope, distinct = true)
     }
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {

@@ -1,1 +1,7 @@
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+What’s new?
+
+The classic editor will soon be unavailable for composing new posts, but this won’t affect editing your existing posts and pages. We recommend that you switch to the block editor if you haven’t already.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.

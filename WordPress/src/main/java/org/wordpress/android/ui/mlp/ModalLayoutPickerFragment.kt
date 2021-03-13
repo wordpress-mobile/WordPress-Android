@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.mlp
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,24 +17,25 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.backButton
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.previewTypeSelectorButton
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.PreviewModeSelectorPopup
-import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.layoutpicker.ButtonsUiState
+import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -51,9 +49,6 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
-        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
-        const val SELECTED_CATEGORIES = "SELECTED_CATEGORIES"
-        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
     }
 
     override fun onCreateView(
@@ -94,7 +89,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             viewModel.onCreatePageClicked()
         }
         previewButton.setOnClickListener {
-            viewModel.onPreviewPageClicked()
+            viewModel.onPreviewTapped()
         }
         retryButton.setOnClickListener {
             viewModel.onRetryClicked()
@@ -119,21 +114,6 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     /**
-     * Sets the header and title visibility
-     * @param visible if true the title is shown and the header is hidden
-     */
-    private fun setTitleVisibility(visible: Boolean) {
-        if (title == null || header == null || visible == (title.visibility == View.VISIBLE)) return // No change
-        if (visible) {
-            AniUtils.fadeIn(title, Duration.SHORT)
-            AniUtils.fadeOut(header, Duration.SHORT, View.INVISIBLE)
-        } else {
-            AniUtils.fadeIn(header, Duration.SHORT)
-            AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
-        }
-    }
-
-    /**
      * Sets the header description visibility
      * @param visible if true the description is visible else invisible
      */
@@ -151,61 +131,55 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        (viewModel.uiState.value as? ContentUiState)?.let {
-            outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
-            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
-        }
-        outState.putParcelable(FETCHED_LAYOUTS, viewModel.fetchedLayouts())
-
         super.onSaveInstanceState(outState)
-    }
-
-    private fun loadSavedState(savedInstanceState: Bundle?) {
-        savedInstanceState?.let {
-            val layouts = it.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)
-            val selected = it.getString(SELECTED_LAYOUT)
-            val categories = (it.getSerializable(SELECTED_CATEGORIES) as? List<*>)?.filterIsInstance<String>()
-            viewModel.loadSavedState(layouts, selected, categories)
-        }
+        viewModel.writeToBundle(outState)
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        loadSavedState(savedInstanceState)
+        viewModel.loadSavedState(savedInstanceState)
 
-        viewModel.uiState.observe(this, Observer { uiState ->
-            setTitleVisibility(uiState.isHeaderVisible)
+        viewModel.uiState.observe(this, { uiState ->
+            uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             when (uiState) {
-                is LoadingUiState -> {
+                is Loading -> {
                 }
-                is ContentUiState -> {
+                is Content -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
-                is ErrorUiState -> {
-                    actionableEmptyView.title.setText(uiState.title)
-                    actionableEmptyView.subtitle.setText(uiState.subtitle)
+                is Error -> {
+                    uiState.title?.let { actionableEmptyView.title.setText(it) }
+                    uiState.subtitle?.let { actionableEmptyView.subtitle.setText(it) }
                 }
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onPreviewPageRequested.observe(this, Observer { request ->
-            ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+            activity?.supportFragmentManager?.let { fm ->
+                when (action) {
+                    is Show -> {
+                        val previewFragment = BlockLayoutPreviewFragment.newInstance()
+                        previewFragment.show(fm, BLOCK_LAYOUT_PREVIEW_TAG)
+                    }
+                    is Dismiss -> {
+                        (fm.findFragmentByTag(BLOCK_LAYOUT_PREVIEW_TAG) as? BlockLayoutPreviewFragment)?.dismiss()
+                    }
+                }
+            }
         })
 
-        viewModel.onCategorySelected.observe(this, Observer {
-            it?.applyIfNotHandled {
-                layoutsRecyclerView?.smoothScrollToPosition(0)
-            }
+        viewModel.onCategorySelectionChanged.observeEvent(this, {
+            layoutsRecyclerView?.smoothScrollToPosition(0)
         })
     }
 
@@ -223,13 +197,5 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         previewButton.setVisible(uiState.previewVisible)
         retryButton.setVisible(uiState.retryVisible)
         createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCodes.PREVIEW_POST) {
-            if (resultCode == Activity.RESULT_OK) {
-                viewModel.onCreatePageClicked()
-            }
-        }
     }
 }

@@ -343,7 +343,6 @@ Language: ms
     <string name="signout">Log keluar</string>
     <string name="sign_in_wpcom">Log masuk ke WordPress.com</string>
     <string name="reader_label_global_related_posts">Selanjutnya tentang WordPress.com</string>
-    <string name="reader_label_local_related_posts">Selanjutnya dalam %s</string>
     <string name="preference_open_device_settings">Buka tetapan peranti</string>
     <string name="invite_invalid_email">%s: Emel tidak sah</string>
     <string name="invite_user_blocked_invites">%s: Pengguna menghalang jemputan</string>
@@ -397,6 +396,7 @@ Language: ms
     <string name="invite_people">Jemput Orang</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
+    <string name="reader_title_related_post_detail">Kiriman Berkaitan</string>
     <string name="preview_screen_links_disabled">Pautan dinyah boleh pada skrin pratonton</string>
     <string name="send">Hantar</string>
     <string name="person_removed">Berjaya membuang %1$s</string>
