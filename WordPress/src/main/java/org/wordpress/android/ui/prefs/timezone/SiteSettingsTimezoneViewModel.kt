@@ -1,18 +1,29 @@
 package org.wordpress.android.ui.prefs.timezone
 
+import android.app.Activity
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import org.wordpress.android.Constants
+import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
-import java.time.DateTimeException
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle.FULL
+import java.time.zone.ZoneRulesException
 import java.util.Locale
 import javax.inject.Inject
 
@@ -65,62 +76,112 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         _timezones.postValue(timezonesList)
     }
 
-    fun getTimezones() {
+    fun getTimezones(context: Activity) {
         _suggestedTimezone.postValue(ZoneId.systemDefault().id)
 
-        timezonesList.clear()
+        requestTimezones(context)
+    }
 
-        ZoneId.getAvailableZoneIds().groupBy {
-            it.split('/').first()
-        }.entries.sortedBy {
-            it.key
-        }.filter {
-            Continents.values().any { continent ->
-                it.key == continent.s
-            }
-        }.map {
-            timezonesList.add(TimezoneHeader(it.key))
+    private fun requestTimezones(context: Activity) {
+        val listener = Response.Listener { response: String? ->
+            AppLog.d(SETTINGS, "timezones requested")
+            _showProgress.postValue(false)
 
-            // sort by city with timezone
-            val sortedList = it.value.sortedBy { zone ->
-                zone.split("/").last()
-            }
-
-            sortedList.map { zone ->
-                timezonesList.add(TimezoneItem(
-                        zone.split("/").last().replace("_", " "),
-                        zone,
-                        getZoneOffset(zone),
-                        getTimeAtZone(zone)
-                ))
+            if (!TextUtils.isEmpty(response)) {
+                timezonesList.clear()
+                loadTimezones(response)
+            } else {
+                AppLog.w(SETTINGS, "empty response requesting timezones")
+                _dismiss.postValue(Unit)
             }
         }
 
-//        timezonesList.addAll(getManualOffsets())
+        val errorListener = Response.ErrorListener { error: VolleyError? ->
+            AppLog.e(SETTINGS, "Error requesting timezones", error)
+            _dismiss.postValue(Unit)
+        }
 
-        AppLog.d(SETTINGS, timezonesList.toString())
+        val request: StringRequest = object : StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
+            override fun getParams(): Map<String, String> {
+                return RestClientUtils.getRestLocaleParams(context)
+            }
+        }
 
-        _timezones.postValue(timezonesList)
+        _showProgress.postValue(true)
+        val queue = Volley.newRequestQueue(context)
+        queue.add(request)
+    }
+
+    private fun loadTimezones(responseJson: String?) {
+        try {
+            val jsonResponse = JSONObject(responseJson.orEmpty())
+            val jsonTimezonesByContinent = jsonResponse.getJSONObject("timezones_by_continent")
+            val jsonTimezonesManualOffsets = jsonResponse.getJSONArray("manual_utc_offsets")
+
+            Continents.values().map {
+                timezonesList.add(TimezoneHeader(it.s))
+                addTimezoneItems(jsonTimezonesByContinent.getJSONArray(it.s))
+            }
+
+            timezonesList.add(TimezoneHeader("Manual Offsets"))
+            addManualTimezoneItems(jsonTimezonesManualOffsets)
+
+            AppLog.d(SETTINGS, timezonesList.toString())
+            _timezones.postValue(timezonesList)
+        } catch (e: JSONException) {
+            AppLog.e(SETTINGS, "Error parsing timezones", e)
+            _dismiss.postValue(Unit)
+        }
+    }
+
+    private fun addTimezoneItems(jsonTimezones: JSONArray) {
+        for (i in 0 until jsonTimezones.length()) {
+            val timezone = jsonTimezones.getJSONObject(i)
+            val city = timezone.getString("label")
+            val zone = timezone.getString("value")
+            val zoneOffset = getZoneOffset(zone)
+            val zoneTime = getTimeAtZone(zone)
+            timezonesList.add(TimezoneItem(city, zone, zoneOffset, zoneTime))
+        }
+    }
+
+    private fun addManualTimezoneItems(jsonTimezones: JSONArray) {
+        for (i in 0 until jsonTimezones.length()) {
+            val timezone = jsonTimezones.getJSONObject(i)
+            timezonesList.add(TimezoneItem(timezone.getString("label"), timezone.getString("value")))
+        }
     }
 
     private fun getZoneOffset(zone: String): String {
-        val zoneId = ZoneId.of(zone)
-        val offset = ZonedDateTime.now(zoneId).offset
-        val offsetDisplay = if (offset.id == "Z") "" else  "(GMT$offset)"
+        val zoneId = getZoneId(zone)
 
-        return "${zoneId.getDisplayName(FULL, Locale.getDefault())} $offsetDisplay"
+        return if (zoneId != null) {
+            val offset = ZonedDateTime.now(zoneId).offset
+            val offsetDisplay = if (offset.id == "Z") "" else "(GMT$offset)"
+            "${zoneId.getDisplayName(FULL, Locale.getDefault())} $offsetDisplay"
+        } else {
+            ""
+        }
     }
 
     private fun getTimeAtZone(zone: String): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
-        val zoneId = ZoneId.of(zone)
-        val zoneDateTime = ZonedDateTime.now(zoneId)
+        val zoneId = getZoneId(zone)
 
-        return try {
+        return if (zoneId != null) {
+            val zoneDateTime = ZonedDateTime.now(zoneId)
             zoneDateTime.format(dateTimeFormatter)
-        } catch (e: DateTimeException) {
-            AppLog.d(SETTINGS, e.localizedMessage)
+        } else  {
             ""
+        }
+    }
+
+    private fun getZoneId(zone: String): ZoneId? {
+        return try {
+            ZoneId.of(zone)
+        } catch (e: ZoneRulesException) {
+            AppLog.e(SETTINGS, "Error parsing zoneId", e)
+            null
         }
     }
 
@@ -135,71 +196,6 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         EUROPE("Europe"),
         INDIAN("Indian"),
         PACIFIC("Pacific"),
-        UTC("Etc")
-    }
-
-    // Manual offsets that are return from api and accepted by backend are different from that of TimeZone class,
-    // hence adding the list manually.
-    private fun getManualOffsets(): List<TimezonesList> {
-        val manualOffsets = mutableListOf<TimezonesList>()
-
-        manualOffsets.add(TimezoneHeader("Manual Offsets"))
-
-        manualOffsets.add(TimezoneItem(value = "UTC-12", label = "UTC-12"))
-        manualOffsets.add(TimezoneItem(value = "UTC-11.5", label = "UTC-11:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-11", label = "UTC-11"))
-        manualOffsets.add(TimezoneItem(value = "UTC-10.5", label = "UTC-10:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-10", label = "UTC-10"))
-        manualOffsets.add(TimezoneItem(value = "UTC-9.5", label = "UTC-9:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-9", label = "UTC-9"))
-        manualOffsets.add(TimezoneItem(value = "UTC-8.5", label = "UTC-8:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-8", label = "UTC-8"))
-        manualOffsets.add(TimezoneItem(value = "UTC-7.5", label = "UTC-7:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-7", label = "UTC-7"))
-        manualOffsets.add(TimezoneItem(value = "UTC-6.5", label = "UTC-6:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-6", label = "UTC-6"))
-        manualOffsets.add(TimezoneItem(value = "UTC-5.5", label = "UTC-5:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-5", label = "UTC-5"))
-        manualOffsets.add(TimezoneItem(value = "UTC-4.5", label = "UTC-4:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-4", label = "UTC-4"))
-        manualOffsets.add(TimezoneItem(value = "UTC-3.5", label = "UTC-3:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-3", label = "UTC-3"))
-        manualOffsets.add(TimezoneItem(value = "UTC-2.5", label = "UTC-2:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-2", label = "UTC-2"))
-        manualOffsets.add(TimezoneItem(value = "UTC-1.5", label = "UTC-1:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC-1", label = "UTC-1"))
-        manualOffsets.add(TimezoneItem(value = "UTC-0.5", label = "UTC-0:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+0", label = "UTC+0"))
-        manualOffsets.add(TimezoneItem(value = "UTC+0.5", label = "UTC+0:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+1", label = "UTC+1"))
-        manualOffsets.add(TimezoneItem(value = "UTC+1.5", label = "UTC+1:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+2", label = "UTC+2"))
-        manualOffsets.add(TimezoneItem(value = "UTC+2.5", label = "UTC+2:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+3", label = "UTC+3"))
-        manualOffsets.add(TimezoneItem(value = "UTC+3.5", label = "UTC+3:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+4", label = "UTC+4"))
-        manualOffsets.add(TimezoneItem(value = "UTC+4.5", label = "UTC+4:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+5", label = "UTC+5"))
-        manualOffsets.add(TimezoneItem(value = "UTC+5.5", label = "UTC+5:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+6", label = "UTC+6"))
-        manualOffsets.add(TimezoneItem(value = "UTC+6.5", label = "UTC+6:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+7", label = "UTC+7"))
-        manualOffsets.add(TimezoneItem(value = "UTC+7.5", label = "UTC+7:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+8", label = "UTC+8"))
-        manualOffsets.add(TimezoneItem(value = "UTC+8.5", label = "UTC+8:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+9", label = "UTC+9"))
-        manualOffsets.add(TimezoneItem(value = "UTC+9.5", label = "UTC+9:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+10", label = "UTC+10"))
-        manualOffsets.add(TimezoneItem(value = "UTC+10.5", label = "UTC+10:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+11", label = "UTC+11"))
-        manualOffsets.add(TimezoneItem(value = "UTC+11.5", label = "UTC+11:30"))
-        manualOffsets.add(TimezoneItem(value = "UTC+12", label = "UTC+12"))
-        manualOffsets.add(TimezoneItem(value = "UTC+12.75", label = "UTC+12:45"))
-        manualOffsets.add(TimezoneItem(value = "UTC+13", label = "UTC+13"))
-        manualOffsets.add(TimezoneItem(value = "UTC+13.75", label = "UTC+13:45"))
-        manualOffsets.add(TimezoneItem(value = "UTC+14", label = "UTC+14"))
-
-        return manualOffsets
     }
 }
 

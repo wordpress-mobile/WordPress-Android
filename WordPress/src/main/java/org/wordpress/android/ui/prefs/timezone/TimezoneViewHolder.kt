@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.timezone
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListItemBinding
@@ -12,8 +13,21 @@ class TimezoneViewHolder(
     fun bind(timezone: TimezoneItem, onClick: (timezone: TimezoneItem) -> Unit) {
         binding.apply {
             timeZone.text = timezone.label
-            zoneOffset.text = timezone.offset
-            zoneTime.text = timezone.time
+
+            if (timezone.offset.isNotBlank()) {
+                zoneOffset.text = timezone.offset
+                zoneOffset.visibility = View.VISIBLE
+            } else {
+                zoneOffset.visibility = View.GONE
+            }
+
+            if (timezone.time.isNotBlank()) {
+                zoneTime.text = timezone.time
+                zoneTime.visibility = View.VISIBLE
+            } else {
+                zoneTime.visibility = View.GONE
+            }
+
             itemTimeZone.setOnClickListener {
                 onClick(timezone)
             }

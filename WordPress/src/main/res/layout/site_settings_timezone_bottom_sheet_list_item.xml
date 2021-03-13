@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:minHeight="64dp"
     android:paddingTop="@dimen/margin_extra_large"
     android:paddingBottom="@dimen/margin_extra_large">
 
@@ -24,20 +23,20 @@
 
     <TextView
         android:id="@+id/zone_offset"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceBody2"
         android:maxLines="1"
         android:textColor="@color/zs_request_list_light_text_color"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_zone"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Abidjan Time (GMT-9:00)" />
+        app:layout_constraintEnd_toStartOf="@id/zone_time"
+        tools:text="Australian Central Western Time (GMT-9:00)" />
 
     <TextView
         android:id="@+id/zone_time"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/zs_request_list_light_text_color"

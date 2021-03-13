@@ -444,11 +444,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                         onPreferenceChange(mPostsPerPagePref, numPosts);
                     }
                     break;
-                case TIMEZONE_REQUEST_CODE:
-                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
-                    mSiteSettings.setTimezone(timezone);
-                    onPreferenceChange(mTimezonePref, timezone);
-                    break;
+//                case TIMEZONE_REQUEST_CODE:
+//                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
+//                    mSiteSettings.setTimezone(timezone);
+//                    onPreferenceChange(mTimezonePref, timezone);
+//                    break;
             }
         } else {
             if (requestCode == DELETE_SITE_REQUEST_CODE) {
@@ -1991,7 +1991,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
     // can't use neither setTargetFragment nor onActivityResult before re-writing this!
-    @Override public void onSelectTimezone(@NotNull String timezone) {
+    @Override
+    public void onSelectTimezone(@NotNull String timezone) {
         mSiteSettings.setTimezone(timezone);
         onPreferenceChange(mTimezonePref, timezone);
     }
