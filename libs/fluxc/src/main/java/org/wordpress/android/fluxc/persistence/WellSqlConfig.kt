@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 139
     }
 
     override fun getDbName(): String {
@@ -1511,6 +1511,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "CONTENT TEXT NOT NULL," +
                                     "DEMO_URL TEXT NOT NULL)"
                     )
+                }
+                138 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
                 }
             }
         }
