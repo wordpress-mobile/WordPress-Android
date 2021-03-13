@@ -6,7 +6,6 @@
 
 16.9
 -----
-* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
 * [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
 * [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
 * [**] The classic editor will no longer be available for new posts soon, but this won’t affect editing any existing posts or pages. Users should consider switching over to the Block Editor now. [#14205]
