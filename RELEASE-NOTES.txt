@@ -2,11 +2,10 @@
 
 17.0
 -----
-
+* [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
 
 16.9
 -----
-* [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
 * [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
 * [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
 * [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
