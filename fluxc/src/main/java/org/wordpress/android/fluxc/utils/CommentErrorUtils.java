@@ -26,7 +26,7 @@ public class CommentErrorUtils {
     public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error,
                                                                                   SiteModel site) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>(), site,
-                0, 0);
+                0, 0, null);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
