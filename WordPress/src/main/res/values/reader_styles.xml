@@ -121,6 +121,7 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ReaderTextView.Date" parent="ReaderTextView">
