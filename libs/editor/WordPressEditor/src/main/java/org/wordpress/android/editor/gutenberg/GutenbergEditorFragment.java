@@ -67,9 +67,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendBu
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,7 +88,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
-    private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
     public static final String ARG_STORY_BLOCK_ID = "story_block_id";
@@ -144,7 +140,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String content,
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
-                                                      boolean tenorEnabled,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
                                                       int storyBlockEditRequestCode) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
@@ -153,7 +148,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
-        args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         fragment.setArguments(args);
@@ -608,7 +602,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
                 arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
         boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
-        boolean supportGifs = arguments.getBoolean(ARG_TENOR_ENABLED, false);
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
@@ -617,11 +610,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
         }
-        if (supportGifs) {
-            int gifMediaResourceId =
-                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
-            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
-        }
+        int gifMediaResourceId =
+                getResources().getIdentifier("photo_picker_gif", "string", packageName);
+        otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
 
         return otherMediaOptions;
     }
