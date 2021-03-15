@@ -109,6 +109,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
                     null, mInputPath);
             properties.put("was_npe_detected", wasNpeDetected);
+            properties.put("optimizer-lib", "m4m");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
@@ -145,6 +146,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             properties.put("exception_message", exception.getMessage());
             AppLog.e(T.MEDIA, exception);
         }
+        properties.put("optimizer-lib", "m4m");
 
         AnalyticsTracker.Stat currentStatToTrack = isError ? MEDIA_VIDEO_OPTIMIZE_ERROR : MEDIA_VIDEO_OPTIMIZED;
         AnalyticsTracker.track(currentStatToTrack, properties);
