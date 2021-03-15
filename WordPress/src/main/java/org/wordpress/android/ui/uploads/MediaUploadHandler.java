@@ -22,6 +22,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.Mp4ComposerVideoOptimizationFeatureConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +40,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject Mp4ComposerVideoOptimizationFeatureConfig mMp4ComposerVideoOptimizationFeatureConfig;
 
     MediaUploadHandler() {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -282,7 +284,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private void prepareForUpload(@NonNull MediaModel media) {
         if (media.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
             addUniqueMediaToInProgressUploads(media);
-            new VideoOptimizer(media, this).start();
+
+            if (mMp4ComposerVideoOptimizationFeatureConfig.isEnabled()) {
+                new Mp4ComposerVideoOptimizer(media, this).start();
+            } else {
+                new VideoOptimizer(media, this).start();
+            }
         } else {
             dispatchUploadAction(media);
         }
