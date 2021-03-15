@@ -161,7 +161,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     private fun showErrorToastAndFinish() {
         AppLog.e(NOTIFS, "Note could not be found.")
-        requireActivity().let {
+        activity?.let {
             ToastUtils.showToast(activity, string.error_notification_open)
             it.finish()
         }
@@ -515,7 +515,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     mImageManager,
                     mNotificationsUtilsWrapper,
                     onNoteBlockTextClickListener,
-                    pingbackUrl ?: ""
+                    pingbackUrl!!
             )
         }
 
