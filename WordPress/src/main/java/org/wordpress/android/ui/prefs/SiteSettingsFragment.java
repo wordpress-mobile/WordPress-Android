@@ -444,11 +444,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                         onPreferenceChange(mPostsPerPagePref, numPosts);
                     }
                     break;
-//                case TIMEZONE_REQUEST_CODE:
-//                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
-//                    mSiteSettings.setTimezone(timezone);
-//                    onPreferenceChange(mTimezonePref, timezone);
-//                    break;
             }
         } else {
             if (requestCode == DELETE_SITE_REQUEST_CODE) {
@@ -542,8 +537,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
-            // TODO: Remove all realted before raising PR
-//            showTimezoneDialog();
             showTimezoneBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
@@ -1141,12 +1134,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         int requestCode = formatType == FormatType.DATE_FORMAT ? DATE_FORMAT_REQUEST_CODE : TIME_FORMAT_REQUEST_CODE;
         dialog.setTargetFragment(this, requestCode);
         dialog.show(getFragmentManager(), "format-dialog-tag");
-    }
-
-    private void showTimezoneDialog() {
-        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
-        dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
-        dialog.show(getFragmentManager(), "timezone-dialog-tag");
     }
 
     private void showTimezoneBottomSheet() {
