@@ -88,6 +88,7 @@ android {
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
+        buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -128,6 +129,7 @@ android {
             dimension "buildType"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
+            buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -196,6 +198,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(path: ':mp4compose')
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
@@ -333,18 +336,18 @@ dependencies {
     debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:analytics:WordPressAnalytics')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
