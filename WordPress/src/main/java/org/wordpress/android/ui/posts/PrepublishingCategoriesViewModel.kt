@@ -39,6 +39,8 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private lateinit var siteModel: SiteModel
     private var updateCategoriesJob: Job? = null
     private var addCategoryJob: Job? = null
+    private lateinit var selectedCategoryIds: List<Long>
+    private var addCategoryRequest: PrepublishingAddCategoryRequest? = null
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
@@ -63,19 +65,33 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     ) {
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
+        this.selectedCategoryIds = selectedCategoryIds
+        this.addCategoryRequest = addCategoryRequest
 
         if (isStarted) return
         isStarted = true
 
-        initialize(addCategoryRequest, selectedCategoryIds)
+        initialize(addCategoryRequest)
     }
 
     private fun initialize(
-        addCategoryRequest: PrepublishingAddCategoryRequest?,
-        selectedCategoryIds: List<Long>
+        addCategoryRequest: PrepublishingAddCategoryRequest?
     ) {
         setToolbarTitleUiState()
 
+        getCategoriesUseCase.fetchSiteCategories(siteModel)
+
+        updateCategoriesListItemUiState()
+
+        addCategoryRequest?.let {
+            addCategoryJob?.cancel()
+            addCategoryJob = launch(bgDispatcher) {
+                addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
+            }
+        }
+    }
+
+    fun updateCategoriesListItemUiState() {
         val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
             selectedCategoryIds
         } else {
@@ -89,13 +105,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                         selectedCategoryIds = selectedIds
                 ), progressVisibility = addCategoryRequest != null
         )
-
-        addCategoryRequest?.let {
-            addCategoryJob?.cancel()
-            addCategoryJob = launch(bgDispatcher) {
-                addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
-            }
-        }
     }
 
     private fun setToolbarTitleUiState() {
