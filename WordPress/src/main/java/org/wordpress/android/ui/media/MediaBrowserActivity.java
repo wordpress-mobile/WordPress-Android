@@ -87,7 +87,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.AnyFileUploadFeatureConfig;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -122,7 +121,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
-    @Inject AnyFileUploadFeatureConfig mAnyFileUploadFeatureConfig;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
@@ -149,8 +147,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
-        ITEM_CHOOSE_PHOTO,
-        ITEM_CHOOSE_VIDEO,
         ITEM_CHOOSE_FILE,
         ITEM_CHOOSE_STOCK_MEDIA,
         ITEM_CHOOSE_GIF
@@ -943,27 +939,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        if (!mAnyFileUploadFeatureConfig.isEnabled()) {
-            popup.getMenu().add(R.string.photo_picker_choose_photo).setOnMenuItemClickListener(
-                    item -> {
-                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_PHOTO);
-                        return true;
-                    });
-
-            if (!mBrowserType.isSingleImagePicker()) {
-                popup.getMenu().add(R.string.photo_picker_choose_video).setOnMenuItemClickListener(
-                        item -> {
-                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_VIDEO);
-                            return true;
-                        });
-            }
-        } else {
-            popup.getMenu().add(R.string.photo_picker_choose_file).setOnMenuItemClickListener(
-                    item -> {
-                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_FILE);
-                        return true;
-                    });
-        }
+        popup.getMenu().add(R.string.photo_picker_choose_file).setOnMenuItemClickListener(
+                item -> {
+                    doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_FILE);
+                    return true;
+                });
 
         if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
             popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
@@ -1007,12 +987,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case ITEM_CAPTURE_VIDEO:
                 WPMediaUtils.launchVideoCamera(this);
-                break;
-            case ITEM_CHOOSE_PHOTO:
-                WPMediaUtils.launchPictureLibrary(this, true);
-                break;
-            case ITEM_CHOOSE_VIDEO:
-                WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_FILE:
                 mMediaPickerLauncher.showFilePicker(this, true);
