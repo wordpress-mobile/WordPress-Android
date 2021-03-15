@@ -73,14 +73,14 @@ import javax.inject.Inject
 // and so further opportunity to iterate for review/refactor
 @Suppress("TooManyFunctions")
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
-    private var mRestoredListPosition = 0
-    private var mNote: Note? = null
-    private var mRootLayout: LinearLayout? = null
-    private var mFooterView: ViewGroup? = null
-    private var mRestoredNoteId: String? = null
-    private var mCommentListPosition = ListView.INVALID_POSITION
-    private var mOnCommentStatusChangeListener: OnCommentStatusChangeListener? = null
-    private var mNoteBlockAdapter: NoteBlockAdapter? = null
+    private var restoredListPosition = 0
+    private var notification: Note? = null
+    private var rootLayout: LinearLayout? = null
+    private var footerView: ViewGroup? = null
+    private var restoredNoteId: String? = null
+    private var commentListPosition = ListView.INVALID_POSITION
+    private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
+    private var noteBlockAdapter: NoteBlockAdapter? = null
 
     @Inject lateinit var mImageManager: ImageManager
 
@@ -94,14 +94,14 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
             // The note will be set in onResume()
             // See WordPress.deferredInit()
-            mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
-            mRestoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
+            restoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
+            restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layout.notifications_fragment_detail_list, container, false)
-        mRootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
+        rootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
         return view
     }
 
@@ -111,8 +111,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         listView.divider = null
         listView.dividerHeight = 0
         listView.setHeaderDividersEnabled(false)
-        if (mFooterView != null) {
-            listView.addFooterView(mFooterView)
+        if (footerView != null) {
+            listView.addFooterView(footerView)
         }
         reloadNoteBlocks()
     }
@@ -125,10 +125,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         // Set the note if we retrieved the noteId from savedInstanceState
-        if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNote(mRestoredNoteId)
+        if (!TextUtils.isEmpty(restoredNoteId)) {
+            setNote(restoredNoteId)
             reloadNoteBlocks()
-            mRestoredNoteId = null
+            restoredNoteId = null
         }
         if (note == null) {
             showErrorToastAndFinish()
@@ -143,7 +143,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     override fun getNote(): Note? {
-        return mNote
+        return notification
     }
 
     override fun setNote(noteId: String?) {
@@ -156,7 +156,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             showErrorToastAndFinish()
             return
         }
-        mNote = note
+        notification = note
     }
 
     private fun showErrorToastAndFinish() {
@@ -168,7 +168,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        mNote?.let {
+        notification?.let {
             outState.putString(KEY_NOTE_ID, it.id)
             outState.putInt(KEY_LIST_POSITION, listView.firstVisiblePosition)
         }
@@ -181,7 +181,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     fun setFooterView(footerView: ViewGroup?) {
-        mFooterView = footerView
+        this.footerView = footerView
     }
 
     private val mOnNoteBlockTextClickListener: OnNoteBlockTextClickListener = object : OnNoteBlockTextClickListener {
@@ -193,12 +193,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         override fun showDetailForNoteIds() {
-            if (!isAdded || mNote == null || activity !is NotificationsDetailActivity) {
+            if (!isAdded || notification == null || activity !is NotificationsDetailActivity) {
                 return
             }
             val detailActivity = activity as NotificationsDetailActivity
 
-            requireNotNull(mNote).let { note ->
+            requireNotNull(notification).let { note ->
                 if (note.isCommentReplyType || !note.isCommentType && note.commentId > 0) {
                     val commentId = if (note.isCommentReplyType) note.parentCommentId else note.commentId
 
@@ -218,11 +218,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         override fun showReaderPostComments() {
-            if (!isAdded || mNote == null || mNote!!.commentId == 0L) {
+            if (!isAdded || notification == null || notification!!.commentId == 0L) {
                 return
             }
 
-            requireNotNull(mNote).let { note ->
+            requireNotNull(notification).let { note ->
                 ReaderActivityLauncher.showReaderComments(
                         activity, note.siteId.toLong(), note.postId.toLong(),
                         note.commentId
@@ -231,7 +231,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         override fun showSitePreview(siteId: Long, siteUrl: String) {
-            if (!isAdded || mNote == null || activity !is NotificationsDetailActivity) {
+            if (!isAdded || notification == null || activity !is NotificationsDetailActivity) {
                 return
             }
             val detailActivity = activity as NotificationsDetailActivity
@@ -341,7 +341,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             if (note.isCommentType) {
                 // Set comment position so we can target it later
                 // See refreshBlocksForCommentStatus()
-                mCommentListPosition = index + listSize
+                commentListPosition = index + listSize
                 var commentTextBlock: FormattableContent? = null
                 // Next item in the bodyArray is comment text
                 if (index + 1 < bodyArray.length()) {
@@ -363,7 +363,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
                 // Set listener for comment status changes, so we can update bg and text colors
                 val commentUserNoteBlock: CommentUserNoteBlock = noteBlock
-                mOnCommentStatusChangeListener = commentUserNoteBlock.onCommentChangeListener
+                onCommentStatusChangeListener = commentUserNoteBlock.onCommentChangeListener
                 commentUserNoteBlock.setCommentStatus(note.commentStatus)
                 commentUserNoteBlock.configureResources(activity)
             } else {
@@ -439,12 +439,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         override fun doInBackground(vararg params: Void): List<NoteBlock>? {
-            if (mNote == null) {
+            if (notification == null) {
                 return null
             }
             requestReaderContentForNote()
 
-            requireNotNull(mNote).let { note ->
+            requireNotNull(notification).let { note ->
                 val bodyArray = note.body
                 val noteList: MutableList<NoteBlock> = ArrayList()
 
@@ -524,27 +524,27 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 return
             }
             if (mIsBadgeView) {
-                mRootLayout!!.gravity = Gravity.CENTER_VERTICAL
+                rootLayout!!.gravity = Gravity.CENTER_VERTICAL
             }
-            if (mNoteBlockAdapter == null) {
-                mNoteBlockAdapter = NoteBlockAdapter(activity, noteList)
-                listAdapter = mNoteBlockAdapter
+            if (noteBlockAdapter == null) {
+                noteBlockAdapter = NoteBlockAdapter(activity, noteList)
+                listAdapter = noteBlockAdapter
             } else {
-                mNoteBlockAdapter!!.setNoteList(noteList)
+                noteBlockAdapter!!.setNoteList(noteList)
             }
-            if (mRestoredListPosition > 0) {
-                listView.setSelectionFromTop(mRestoredListPosition, 0)
-                mRestoredListPosition = 0
+            if (restoredListPosition > 0) {
+                listView.setSelectionFromTop(restoredListPosition, 0)
+                restoredListPosition = 0
             }
         }
     }
 
     private fun isFooterBlock(blockObject: FormattableContent?): Boolean {
-        if (mNote == null || blockObject == null) {
+        if (notification == null || blockObject == null) {
             return false
         }
 
-        return requireNotNull(mNote).let { note ->
+        return requireNotNull(notification).let { note ->
             if (note.isCommentType) {
                 val commentReplyId = blockObject.getRangeIdOrZero(1)
                 // Check if this is a comment notification that has been replied to
@@ -561,10 +561,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     fun refreshBlocksForCommentStatus(newStatus: CommentStatus) {
-        mOnCommentStatusChangeListener?.let { listener ->
+        onCommentStatusChangeListener?.let { listener ->
             listener.onCommentStatusChanged(newStatus)
             val listView: ListView? = listView
-            if (listView == null || mCommentListPosition == ListView.INVALID_POSITION) {
+            if (listView == null || commentListPosition == ListView.INVALID_POSITION) {
                 return
             }
 
@@ -573,7 +573,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             val firstPosition = listView.firstVisiblePosition
             val endPosition = listView.lastVisiblePosition
             for (i in firstPosition until endPosition) {
-                if (mCommentListPosition == i) {
+                if (commentListPosition == i) {
                     val view = listView.getChildAt(i - firstPosition)
                     listView.adapter.getView(i, view, listView)
                     break
@@ -584,16 +584,16 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     // Requests Reader content for certain notification types
     private fun requestReaderContentForNote() {
-        if (mNote == null || !isAdded) {
+        if (notification == null || !isAdded) {
             return
         }
 
         // Request the reader post so that loading reader activities will work.
-        if (mNote!!.isUserList && !ReaderPostTable.postExists(mNote!!.siteId.toLong(), mNote!!.postId.toLong())) {
-            ReaderPostActions.requestBlogPost(mNote!!.siteId.toLong(), mNote!!.postId.toLong(), null)
+        if (notification!!.isUserList && !ReaderPostTable.postExists(notification!!.siteId.toLong(), notification!!.postId.toLong())) {
+            ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
         }
 
-        requireNotNull(mNote).let { note ->
+        requireNotNull(notification).let { note ->
             // Request reader comments until we retrieve the comment for this note
             val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
             val commentNotExists = !ReaderCommentTable.commentExists(
