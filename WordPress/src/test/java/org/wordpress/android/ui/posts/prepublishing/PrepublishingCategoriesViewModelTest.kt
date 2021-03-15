@@ -149,6 +149,13 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `fetchSiteCategories is invoked on start`() {
+        viewModel.start(editPostRepository, siteModel, null, listOf())
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+    }
+
+    @Test
     fun `selected categories are correctly shown on successful start`() {
         val uiStates = init().uiStates
         viewModel.start(editPostRepository, siteModel, null, listOf())
