@@ -98,13 +98,15 @@ public class CommentStore extends Store {
         @NonNull public final SiteModel site;
         public final int number;
         public final int offset;
+        public final CommentStatus requestedStatus;
 
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
-                                            int offset) {
+                                            int offset, CommentStatus status) {
             this.comments = comments;
             this.site = site;
             this.number = number;
             this.offset = offset;
+            this.requestedStatus = status;
         }
     }
 
@@ -163,7 +165,9 @@ public class CommentStore extends Store {
 
     public static class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
+        public int offset;
         public CommentAction causeOfChange;
+        public CommentStatus requestedStatus;
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
@@ -189,12 +193,13 @@ public class CommentStore extends Store {
      * @param orderByDateAscending If true order the results by ascending published date.
      *                             If false, order the results by descending published date.
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
+     * @param limit Maximum number of comments to return. 0 is unlimited.
      */
     @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
+    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit,
                                                  CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
-        return CommentSqlUtils.getCommentsForSite(site, order, statuses);
+        return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
     }
 
     public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
@@ -413,11 +418,10 @@ public class CommentStore extends Store {
         int rowsAffected = 0;
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         if (!payload.isError()) {
-            // Clear existing comments in case some were deleted on the server. Only remove them if we request the
-            // first comments (offset == 0).
-            if (payload.offset == 0) {
-                CommentSqlUtils.removeComments(payload.site);
-            }
+            // Find comments that were deleted or moved to a different status on the server and remove them from
+            // local DB.
+            CommentSqlUtils.removeCommentGaps(payload.site, payload.comments, payload.number, payload.offset,
+                    payload.requestedStatus);
 
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
@@ -426,6 +430,8 @@ public class CommentStore extends Store {
         }
         event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
+        event.requestedStatus = payload.requestedStatus;
+        event.offset = payload.offset;
         emitChange(event);
     }
 

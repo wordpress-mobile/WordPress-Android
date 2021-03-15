@@ -33,6 +33,7 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mPostTitle;
     @Column private String mStatus;
     @Column private String mDatePublished;
+    @Column private long mPublishedTimestamp;
     @Column private String mContent;
     @Column private String mUrl;
 
@@ -167,5 +168,13 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public long getPublishedTimestamp() {
+        return mPublishedTimestamp;
+    }
+
+    public void setPublishedTimestamp(long publishedTimestamp) {
+        mPublishedTimestamp = publishedTimestamp;
     }
 }
