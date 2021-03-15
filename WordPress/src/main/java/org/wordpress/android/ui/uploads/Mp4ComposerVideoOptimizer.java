@@ -36,7 +36,7 @@ public class Mp4ComposerVideoOptimizer extends VideoOptimizerBase implements Lis
         // NOTE: progress can be -1 with Mp4Composer library
         if (progress < 0) return;
 
-        sendProgressIfNeeded((float)progress);
+        sendProgressIfNeeded((float) progress);
     }
 
     @Override

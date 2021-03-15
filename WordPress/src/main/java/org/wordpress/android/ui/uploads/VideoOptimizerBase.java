@@ -39,7 +39,6 @@ public abstract class VideoOptimizerBase implements VideoOptimizerProvider {
         mMedia = media;
         mInputPath = mMedia.getFilePath();
         mFilename = MediaUtils.generateTimeStampedFileName("video/mp4");
-
     }
 
     protected Context getContext() {

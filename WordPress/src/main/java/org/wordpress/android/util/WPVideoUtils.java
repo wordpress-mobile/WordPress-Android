@@ -131,7 +131,7 @@ public class WPVideoUtils {
                 true
         ));
 
-        Size srvVideoResolution = ((Mp4ComposerBasic)composer).getSrcVideoResolution();
+        Size srvVideoResolution = ((Mp4ComposerBasic) composer).getSrcVideoResolution();
 
         if (srvVideoResolution == null) {
             AppLog.w(AppLog.T.MEDIA, "Could not rescue source video resolution");
