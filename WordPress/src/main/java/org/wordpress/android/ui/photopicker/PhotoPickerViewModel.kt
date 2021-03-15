@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -54,7 +53,6 @@ import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -75,7 +73,6 @@ class PhotoPickerViewModel @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
-    private val tenorFeatureConfig: TenorFeatureConfig,
     private val resourceProvider: ResourceProvider,
     private val copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase
@@ -423,7 +420,7 @@ class PhotoPickerViewModel @Inject constructor(
                 )
             })
             // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (tenorFeatureConfig.isEnabled() && !browserType.isWPStoriesPicker) {
+            if (!browserType.isWPStoriesPicker) {
                 items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
                     clickIcon(
                             GIF
