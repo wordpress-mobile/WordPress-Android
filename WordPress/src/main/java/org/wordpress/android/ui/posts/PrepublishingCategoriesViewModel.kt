@@ -10,8 +10,10 @@ import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
@@ -20,6 +22,8 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -89,7 +93,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
-    fun updateCategoriesListItemUiState(addCategoryRequest: PrepublishingAddCategoryRequest? = null) {
+    private fun updateCategoriesListItemUiState(addCategoryRequest: PrepublishingAddCategoryRequest? = null) {
         val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
             selectedCategoryIds
         } else {
@@ -220,6 +224,17 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             )
         } else {
             _uiState.value = uiState.value?.copy(progressVisibility = false)
+        }
+    }
+
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.isError) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+            return
+        }
+
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
+            updateCategoriesListItemUiState()
         }
     }
 

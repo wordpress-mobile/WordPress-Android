@@ -215,12 +215,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
-        if (event.isError) {
-            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
-            return
-        }
-        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
-            viewModel.updateCategoriesListItemUiState()
-        }
+        viewModel.onTaxonomyChanged(event)
     }
 }
