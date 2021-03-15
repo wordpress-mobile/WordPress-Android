@@ -40,7 +40,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private var updateCategoriesJob: Job? = null
     private var addCategoryJob: Job? = null
     private lateinit var selectedCategoryIds: List<Long>
-    private var addCategoryRequest: PrepublishingAddCategoryRequest? = null
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
@@ -66,7 +65,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
         this.selectedCategoryIds = selectedCategoryIds
-        this.addCategoryRequest = addCategoryRequest
 
         if (isStarted) return
         isStarted = true
@@ -81,7 +79,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
         getCategoriesUseCase.fetchSiteCategories(siteModel)
 
-        updateCategoriesListItemUiState()
+        updateCategoriesListItemUiState(addCategoryRequest)
 
         addCategoryRequest?.let {
             addCategoryJob?.cancel()
@@ -91,7 +89,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
-    fun updateCategoriesListItemUiState() {
+    fun updateCategoriesListItemUiState(addCategoryRequest: PrepublishingAddCategoryRequest? = null) {
         val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
             selectedCategoryIds
         } else {
