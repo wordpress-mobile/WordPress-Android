@@ -4,6 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.preference.PreferenceManager
+import android.view.Gravity
+import android.widget.Toast
 import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
@@ -28,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 139
+        return 140
     }
 
     override fun getDbName(): String {
@@ -1510,7 +1512,10 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "DEMO_URL TEXT NOT NULL)"
                     )
                 }
-                138 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                138 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
+                }
+                139 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCCustomerModel")
                     db.execSQL("CREATE TABLE WCCustomerModel (AVATAR_URL TEXT NOT NULL," +
                             "DATE_CREATED TEXT NOT NULL,DATE_CREATED_GMT TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL," +
@@ -1531,6 +1536,29 @@ open class WellSqlConfig : DefaultWellConfig {
         }
         db.setTransactionSuccessful()
         db.endTransaction()
+    }
+
+    /**
+     * Detect when the database is downgraded in debug builds so we can recreate all the tables. Note that we
+     * hide this behind a BuildConfig flag as a protection against accidentally deleting the data (ie: we
+     * don't want this to ever be enabled for release builds by mistake).
+     */
+    override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
+        if (BuildConfig.DEBUG && BuildConfig.WP_ENABLE_DATABASE_DOWNGRADE) {
+            // note: don't call super() here because it throws an exception
+            val toast = Toast.makeText(
+                    context,
+                    "Database downgraded from version $oldVersion to $newVersion",
+                    Toast.LENGTH_LONG
+            )
+            toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+            toast.show()
+
+            AppLog.d(T.DB, "Database downgraded from version $oldVersion to $newVersion")
+            helper?.let { reset(it) }
+        } else {
+            super.onDowngrade(db, helper, oldVersion, newVersion)
+        }
     }
 
     @Suppress("CheckStyle")

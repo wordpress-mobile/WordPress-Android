@@ -43,7 +43,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
-    public void fetchComments(final SiteModel site, final int number, final int offset, CommentStatus status) {
+    public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
         List<Object> params = new ArrayList<>(4);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("number", number);
@@ -63,7 +63,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     public void onResponse(Object response) {
                         List<CommentModel> comments = commentsResponseToCommentList(response, site);
                         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                                offset);
+                                offset, status);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                     }
                 },
