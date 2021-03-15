@@ -589,7 +589,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         // Request the reader post so that loading reader activities will work.
-        if (notification!!.isUserList && !ReaderPostTable.postExists(notification!!.siteId.toLong(), notification!!.postId.toLong())) {
+        if (notification!!.isUserList && !ReaderPostTable.postExists(
+                        notification!!.siteId.toLong(),
+                        notification!!.postId.toLong())) {
             ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
         }
 
