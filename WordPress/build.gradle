@@ -212,6 +212,8 @@ dependencies {
 
     implementation "androidx.core:core:$coreVersion"
     implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 

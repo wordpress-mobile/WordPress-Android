@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.prefs.timezone
 
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListBinding
@@ -26,6 +29,15 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
     private val timezoneAdapter = TimezoneAdapter { timezone ->
         setSelectedTimezone(timezone)
+    }
+
+    private var searchJob: Job? = null
+
+    private fun search(query: CharSequence?) {
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            timezoneViewModel.searchTimezones(query)
+        }
     }
 
     private var _binding: SiteSettingsTimezoneBottomSheetListBinding? = null
@@ -52,7 +64,6 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         return binding?.root
     }
 
-    @RequiresApi(VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
         setupLiveData()
@@ -64,14 +75,32 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             list.adapter = timezoneAdapter
             list.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
 
-            searchInputLayout.editText?.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
+                search(inputText)
+            }
+
+            searchInputLayout.editText?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     hideSearchKeyboard()
                 }
             }
 
-            searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
-                timezoneViewModel.searchTimezones(inputText)
+            searchInputLayout.editText?.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    updateTimezonesFromInput()
+                    true
+                } else {
+                    false
+                }
+            }
+
+            searchInputLayout.editText?.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    updateTimezonesFromInput()
+                    true
+                } else {
+                    false
+                }
             }
 
             searchInputLayout.setEndIconOnClickListener {
@@ -112,6 +141,14 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         timezoneViewModel.dismissWithError.observe(viewLifecycleOwner, {
             dismissWithError()
         })
+    }
+
+    private fun updateTimezonesFromInput() {
+        binding?.searchInputLayout?.editText?.text?.trim().let {
+            if (it?.isNotEmpty() == true) {
+                search(it)
+            }
+        }
     }
 
     override fun onDestroyView() {
