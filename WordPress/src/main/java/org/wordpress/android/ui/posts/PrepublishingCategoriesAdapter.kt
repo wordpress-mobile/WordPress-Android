@@ -9,13 +9,13 @@ import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.Prepublis
 import org.wordpress.android.ui.utils.UiHelpers
 
 class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
-        RecyclerView.Adapter<PrepublishingCategoriesViewHolder>() {
+        RecyclerView.Adapter<PrepublishingCategoriesViewHolder<*>>() {
     private val items = mutableListOf<PrepublishingCategoriesListItemUiState>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PrepublishingCategoriesViewHolder {
+    ): PrepublishingCategoriesViewHolder<*> {
         return PrepublishingCategoriesListItemViewHolder(parent, uiHelpers)
     }
 
@@ -25,8 +25,8 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
         return position.toLong()
     }
 
-    override fun onBindViewHolder(holder: PrepublishingCategoriesViewHolder, position: Int) {
-        holder.onBind(items[position])
+    override fun onBindViewHolder(holder: PrepublishingCategoriesViewHolder<*>, position: Int) {
+        holder.onBind(items[position], position)
     }
 
     @MainThread
