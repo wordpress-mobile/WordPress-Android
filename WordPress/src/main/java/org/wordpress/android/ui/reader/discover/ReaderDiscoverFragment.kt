@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderDiscoverFragmentLayoutBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
@@ -35,7 +35,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostD
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -61,6 +60,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     private lateinit var parentViewModel: ReaderViewModel
 
+    private var binding: ReaderDiscoverFragmentLayoutBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -68,98 +69,83 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        initViewModel()
-    }
+        binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
+            recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
 
-    private fun setupViews() {
-        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+            val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
+            val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
+            recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
 
-        val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
-        val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
-        recycler_view.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
+            WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) { viewModel.swipeToRefresh() }
 
-        WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
-            viewModel.swipeToRefresh()
+            initViewModel()
         }
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
+    private fun ReaderDiscoverFragmentLayoutBinding.initViewModel() {
+        viewModel = ViewModelProvider(
+                this@ReaderDiscoverFragment,
+                viewModelFactory
+        ).get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        viewModel.uiState.observe(viewLifecycleOwner, {
+
+        viewModel.uiState.observe(viewLifecycleOwner) {
             when (it) {
                 is ContentUiState -> {
-                    (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
+                    (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
                     if (it.scrollToTop) {
-                        recycler_view.scrollToPosition(0)
+                        recyclerView.scrollToPosition(0)
                     }
                 }
                 is EmptyUiState -> {
-                    uiHelpers.setTextOrHide(actionable_empty_view.title, it.titleResId)
-                    uiHelpers.setTextOrHide(actionable_empty_view.subtitle, it.subTitleRes)
-                    uiHelpers.setImageOrHide(actionable_empty_view.image, it.illustrationResId)
-                    uiHelpers.setTextOrHide(actionable_empty_view.button, it.buttonResId)
-                    actionable_empty_view.button.setOnClickListener { _ ->
-                        it.action.invoke()
-                    }
+                    uiHelpers.setTextOrHide(actionableEmptyView.title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionableEmptyView.subtitle, it.subTitleRes)
+                    uiHelpers.setImageOrHide(actionableEmptyView.image, it.illustrationResId)
+                    uiHelpers.setTextOrHide(actionableEmptyView.button, it.buttonResId)
+                    actionableEmptyView.button.setOnClickListener { _ -> it.action.invoke() }
                 }
             }
-            uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
-            uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
-            uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
-            uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
-            uiHelpers.updateVisibility(actionable_empty_view, it.fullscreenEmptyVisibility)
-            ptr_layout.isEnabled = it.swipeToRefreshEnabled
-            ptr_layout.isRefreshing = it.reloadProgressVisibility
-        })
-        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
-            when (it) {
-                is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
-                        context,
-                        it.post.blogId,
-                        it.post.postId
-                )
-                is SharePost -> ReaderActivityLauncher.sharePost(context, it.post)
-                is OpenPost -> ReaderActivityLauncher.openPost(context, it.post)
-                is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, it.blogId, it.postId)
-                is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                is ShowSitePickerForResult -> ActivityLauncher
-                        .showSitePickerForResult(this@ReaderDiscoverFragment, it.preselectedSite, it.mode)
-                is OpenEditorForReblog -> ActivityLauncher
-                        .openEditorForReblog(activity, it.site, it.post, it.source)
-                is ShowBookmarkedTab -> {
-                    ActivityLauncher.viewSavedPostsListInReader(activity)
-                }
-                is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(it)
-                is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, it.tag)
-                is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, it.videoUrl)
-                is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                        context,
-                        it.siteId,
-                        it.feedId
-                )
-                is ShowReportPost -> {
-                    ReaderActivityLauncher.openUrl(
-                            context,
-                            readerUtilsWrapper.getReportPostUrl(it.url),
-                            OpenUrlType.INTERNAL
-                    )
-                }
-                is ShowReaderSubs -> {
-                    ReaderActivityLauncher.showReaderSubs(context)
-                }
-                is ShowRelatedPostDetails -> Unit // Do Nothing
-            }
-        })
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
-            it.showSnackbar()
-        })
-        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, {
-            it.addWebViewCachingFragment()
-        })
+            uiHelpers.updateVisibility(recyclerView, it.contentVisiblity)
+            uiHelpers.updateVisibility(progressBar, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progressText, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progressLoadingMore, it.loadMoreProgressVisibility)
+            uiHelpers.updateVisibility(actionableEmptyView, it.fullscreenEmptyVisibility)
+            ptrLayout.isEnabled = it.swipeToRefreshEnabled
+            ptrLayout.isRefreshing = it.reloadProgressVisibility
+        }
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner) { it.addWebViewCachingFragment() }
+
         viewModel.start(parentViewModel)
+    }
+
+    @Suppress("ComplexMethod")
+    private fun handleNavigation(event: ReaderNavigationEvents) = when (event) {
+        is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, event.post.blogId, event.post.postId)
+        is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
+        is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
+        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, event.blogId, event.postId)
+        is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+        is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
+                this@ReaderDiscoverFragment,
+                event.preselectedSite,
+                event.mode
+        )
+        is OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(activity, event.site, event.post, event.source)
+        is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+        is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(event)
+        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, event.tag)
+        is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
+        is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(context, event.siteId, event.feedId)
+        is ShowReportPost -> ReaderActivityLauncher.openUrl(
+                context,
+                readerUtilsWrapper.getReportPostUrl(event.url),
+                OpenUrlType.INTERNAL
+        )
+        is ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
+        else -> Unit // Do Nothing
     }
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
@@ -211,10 +197,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
+        binding = null
     }
 
-    override fun getScrollableViewForUniqueIdProvision(): View {
-        return recycler_view
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+        return binding?.recyclerView
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

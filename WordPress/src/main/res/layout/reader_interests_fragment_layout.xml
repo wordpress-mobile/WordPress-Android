@@ -129,6 +129,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <include
+        android:id="@+id/include_error_layout"
         layout="@layout/reader_fullscreen_error_with_retry"
         android:visibility="gone"/>
 

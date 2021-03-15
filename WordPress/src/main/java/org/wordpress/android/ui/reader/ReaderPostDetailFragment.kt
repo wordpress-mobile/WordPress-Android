@@ -43,8 +43,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
-import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -57,6 +55,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REND
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
+import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -394,31 +393,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        val binding = ReaderFragmentPostDetailBinding.bind(view)
+        initViewModel(binding)
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(binding: ReaderFragmentPostDetailBinding) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
+        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it, binding) })
 
         viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
         viewModel.start(isRelatedPost)
     }
 
-    private fun renderUiState(state: ReaderPostDetailsUiState) {
-        header_view.updatePost(state.headerUiState)
+    private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
+        binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
-        updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
-        updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-        updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
-        updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        with(binding.layoutPostDetailFooter) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+            updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        }
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
@@ -542,9 +544,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun SnackbarMessageHolder.showSnackbar() {
+    private fun SnackbarMessageHolder.showSnackbar(binding: ReaderFragmentPostDetailBinding) {
         val snackbar = WPSnackbar.make(
-                layout_post_detail_container,
+                binding.layoutPostDetailContainer,
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
         )
