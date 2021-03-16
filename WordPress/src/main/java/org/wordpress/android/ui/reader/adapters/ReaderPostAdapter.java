@@ -639,8 +639,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private int getItemPositionOffset() {
-        int headersOffset = hasHeader() ? 1 : 0;
-        return headersOffset;
+        return hasHeader() ? 1 : 0;
     }
 
     private int getHeaderPosition() {
