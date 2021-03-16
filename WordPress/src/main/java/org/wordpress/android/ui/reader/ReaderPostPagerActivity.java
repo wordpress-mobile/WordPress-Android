@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -60,7 +61,6 @@ import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
-import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -219,8 +219,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             }
         });
 
-        mViewPager.setPageTransformer(false,
-                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        mViewPager.setPageTransformer(
+                false,
+                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
+        );
     }
 
     private void handleDeepLinking() {
@@ -307,8 +309,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             switch (interceptType) {
                 case READER_BLOG:
                     if (parseIds(blogIdentifier, postIdentifier)) {
-                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                                                                mBlogId, mPostId);
+                        AnalyticsUtils.trackWithBlogPostDetails(
+                                AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
+                                mBlogId,
+                                mPostId
+                        );
                         // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                     } else {
                         ToastUtils.showToast(this, R.string.error_generic);
@@ -316,8 +321,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     break;
                 case READER_FEED:
                     if (parseIds(blogIdentifier, postIdentifier)) {
-                        AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                                                                mBlogId, mPostId);
+                        AnalyticsUtils.trackWithFeedPostDetails(
+                                AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                                mBlogId,
+                                mPostId
+                        );
                         // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                     } else {
                         ToastUtils.showToast(this, R.string.error_generic);
@@ -337,33 +345,39 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     } else {
                         // not stored locally, so request it
                         ReaderPostActions.requestBlogPost(
-                            blogIdentifier, postIdentifier,
-                            new ReaderActions.OnRequestListener() {
-                                @Override
-                                public void onSuccess() {
-                                    mPostSlugsResolutionUnderway = false;
-                                    ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier,
-                                                                                  true);
-                                    ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
-                                            ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId, post.postId)
-                                            : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault().post(slugsResolved);
+                                blogIdentifier, postIdentifier,
+                                new ReaderActions.OnRequestListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        mPostSlugsResolutionUnderway = false;
+                                        ReaderPost post = ReaderPostTable.getBlogPost(
+                                                blogIdentifier,
+                                                postIdentifier,
+                                                true
+                                        );
+                                        ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
+                                                ? new ReaderEvents.PostSlugsRequestCompleted(
+                                                200,
+                                                post.blogId,
+                                                post.postId
+                                        ) : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault().post(slugsResolved);
 
-                                    // post wasn't available locally earlier so, track it now
-                                    if (post != null) {
-                                        trackPost(post.blogId, post.postId);
+                                        // post wasn't available locally earlier so, track it now
+                                        if (post != null) {
+                                            trackPost(post.blogId, post.postId);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(int statusCode) {
-                                    mPostSlugsResolutionUnderway = false;
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault()
-                                            .post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(int statusCode) {
+                                        mPostSlugsResolutionUnderway = false;
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault()
+                                                .post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
+                                    }
+                                });
                         mPostSlugsResolutionUnderway = true;
                     }
 
@@ -572,11 +586,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         if (fragment != null && fragment.isCustomViewShowing()) {
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
-        } else //noinspection StatementWithEmptyBody
-            if (fragment != null && fragment.goBackInPostHistory()) {
-            // noop - fragment moved back to a previous post
         } else {
-            super.onBackPressed();
+            if (fragment != null && fragment.goBackInPostHistory()) {
+                // noop - fragment moved back to a previous post
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -810,7 +825,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
      * pager adapter containing post detail fragments
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private ReaderBlogIdPostIdList mIdList;
+        private final ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
