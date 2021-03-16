@@ -855,7 +855,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // string
                             int localMediaId
                                     = StringUtils.stringToInt(
-                                    ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
+                                            ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
                             getGutenbergContainerFragment().mediaFileUploadFailed(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
                         }
