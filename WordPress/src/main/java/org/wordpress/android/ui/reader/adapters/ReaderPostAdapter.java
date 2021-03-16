@@ -115,7 +115,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
-    private static final long ITEM_ID_NEWS_CARD = -3L;
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
@@ -379,10 +378,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post, position));
+        holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post));
     }
 
-    private void undoPostUnbookmarked(final ReaderPost post, final int position) {
+    private void undoPostUnbookmarked(final ReaderPost post) {
         if (!post.isBookmarked) {
             mOnPostListItemButtonListener.onButtonClicked(post, ReaderPostCardActionType.BOOKMARK);
         }
@@ -607,21 +606,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void reload() {
         clear();
         loadPosts();
-    }
-
-    public void removePostsInBlog(long blogId) {
-        int numRemoved = 0;
-        ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
-        for (ReaderPost post : postsInBlog) {
-            int index = mPosts.indexOfPost(post);
-            if (index > -1) {
-                numRemoved++;
-                mPosts.remove(index);
-            }
-        }
-        if (numRemoved > 0) {
-            notifyDataSetChanged();
-        }
     }
 
     private void loadPosts() {
