@@ -97,7 +97,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
-    
+
     protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
