@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +17,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.backButton
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.previewTypeSelectorButton
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
@@ -28,16 +25,17 @@ import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.ButtonsUiState
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -143,7 +141,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
         viewModel.loadSavedState(savedInstanceState)
 
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(this, { uiState ->
             uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
@@ -162,11 +160,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, Observer { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -180,10 +178,8 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
-        viewModel.onCategorySelectionChanged.observe(this, Observer {
-            it?.applyIfNotHandled {
-                layoutsRecyclerView?.smoothScrollToPosition(0)
-            }
+        viewModel.onCategorySelectionChanged.observeEvent(this, {
+            layoutsRecyclerView?.smoothScrollToPosition(0)
         })
     }
 

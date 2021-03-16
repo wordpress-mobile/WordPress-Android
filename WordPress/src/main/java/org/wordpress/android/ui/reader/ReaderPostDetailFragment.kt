@@ -43,8 +43,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
-import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -57,6 +55,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REND
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
+import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -130,6 +129,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
@@ -216,40 +216,40 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
-        appBarLayout, verticalOffset ->
-        val collapsingToolbarLayout = appBarLayout
-                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+    private val appBarLayoutOffsetChangedListener =
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                val collapsingToolbarLayout = appBarLayout
+                        .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+                val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-        context?.let { context ->
-            val menu: Menu = toolbar.menu
-            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
+                context?.let { context ->
+                    val menu: Menu = toolbar.menu
+                    val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+                    val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+                    val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
-            val collapsingToolbarHeight = collapsingToolbarLayout.height
-            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                    collapsingToolbarLayout.scrimVisibleHeightTrigger
-            val isDarkTheme = context.resources.configuration.isDarkTheme()
+                    val collapsingToolbarHeight = collapsingToolbarLayout.height
+                    val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                            collapsingToolbarLayout.scrimVisibleHeightTrigger
+                    val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-            val colorAttr = if (isCollapsed || isDarkTheme) {
-                R.attr.colorOnSurface
-            } else {
-                R.attr.colorSurface
+                    val colorAttr = if (isCollapsed || isDarkTheme) {
+                        R.attr.colorOnSurface
+                    } else {
+                        R.attr.colorSurface
+                    }
+                    val color = context.getColorFromAttribute(colorAttr)
+                    val colorFilter = BlendModeColorFilterCompat
+                            .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+                    toolbar.setTitleTextColor(color)
+                    toolbar.navigationIcon?.colorFilter = colorFilter
+
+                    menuBrowse?.icon?.colorFilter = colorFilter
+                    menuShare?.icon?.colorFilter = colorFilter
+                    menuMore?.icon?.colorFilter = colorFilter
+                }
             }
-            val color = context.getColorFromAttribute(colorAttr)
-            val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
-
-            toolbar.setTitleTextColor(color)
-            toolbar.navigationIcon?.colorFilter = colorFilter
-
-            menuBrowse?.icon?.colorFilter = colorFilter
-            menuShare?.icon?.colorFilter = colorFilter
-            menuMore?.icon?.colorFilter = colorFilter
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -393,31 +393,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        val binding = ReaderFragmentPostDetailBinding.bind(view)
+        initViewModel(binding)
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(binding: ReaderFragmentPostDetailBinding) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
+        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it, binding) })
 
-        viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
         viewModel.start(isRelatedPost)
     }
 
-    private fun renderUiState(state: ReaderPostDetailsUiState) {
-        header_view.updatePost(state.headerUiState)
+    private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
+        binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
-        updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
-        updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-        updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
-        updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        with(binding.layoutPostDetailFooter) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+            updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        }
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
@@ -541,9 +544,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun SnackbarMessageHolder.showSnackbar() {
+    private fun SnackbarMessageHolder.showSnackbar(binding: ReaderFragmentPostDetailBinding) {
         val snackbar = WPSnackbar.make(
-                layout_post_detail_container,
+                binding.layoutPostDetailContainer,
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
         )
@@ -988,16 +991,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     val offerSignIn = WPUrlUtils.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
 
                     if (!offerSignIn) {
-                        errMsgResId = if (interceptedUri == null)
+                        errMsgResId = if (interceptedUri == null) {
                             R.string.reader_err_get_post_not_authorized
-                        else
+                        } else {
                             R.string.reader_err_get_post_not_authorized_fallback
+                        }
                         signInButton.visibility = View.GONE
                     } else {
-                        errMsgResId = if (interceptedUri == null)
+                        errMsgResId = if (interceptedUri == null) {
                             R.string.reader_err_get_post_not_authorized_signin
-                        else
+                        } else {
                             R.string.reader_err_get_post_not_authorized_signin_fallback
+                        }
                         signInButton.visibility = View.VISIBLE
                         AnalyticsUtils.trackWithReaderPostDetails(
                                 READER_WPCOM_SIGN_IN_NEEDED,
@@ -1116,10 +1121,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         override fun doInBackground(vararg params: Void): Boolean? {
-            post = if (isFeed)
+            post = if (isFeed) {
                 ReaderPostTable.getFeedPost(blogId, postId, false)
-            else
+            } else {
                 ReaderPostTable.getBlogPost(blogId, postId, false)
+            }
             if (post == null) return false
 
             // "discover" Editor Pick posts should open the original (source) post

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 15:54:58+0000
+Translation-Revision-Date: 2021-03-10 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="reader_title_interests">לעקוב אחר נושאים</string>
+    <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">ביטול</string>
+    <string name="activity_log_backup_download_notice_download_action">הורדה</string>
     <string name="threat_fix_all_status_success_message_plural">האיומים תוקנו בהצלחה.</string>
     <string name="scan_fixing_threats_description_plural">אנחנו משקיעים המון מאמצים ברקע כדי לתקן את האיומים האלה. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
     <string name="gutenberg_native_edit_focal_point">לערוך נקודת מוקד</string>
@@ -33,7 +37,6 @@ Language: he_IL
     <string name="invite_links_section_title">קישור להזמנה</string>
     <string name="threats_found_singular">אותר איום</string>
     <string name="threats_found_plural">נמצאו איומים</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br>&lt;/br> לא נמצאו איומים</string>
     <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
     <string name="disable">להשבית</string>
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
@@ -150,6 +153,7 @@ Language: he_IL
     <string name="threat_fix_all_status_error_message">שגיאה בקבלה של מצב התיקון. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_fix_all_error_message">שגיאה בתיקון האיומים. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_fix_all_status_success_message_singular">האיום תוקן בהצלחה.</string>
+    <string name="threat_fix_all_confirmation_message_singular">עליך לאשר שברצונך לתקן איום פעיל אחד.</string>
     <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
     <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
     <string name="threat_ignore_success_message">התעלמת מהאיום.</string>
@@ -354,7 +358,6 @@ Language: he_IL
     <string name="login_prologue_fifth_subtitle_one">פמלה גואן</string>
     <string name="login_prologue_second_subtitle_two">העבודות של הצלם קמרון קרסטן הן השראה עצומה עבורי. את הטכניקות האלה אביא לידי ביטוי בפעם הבאה שאצור</string>
     <string name="login_prologue_second_subtitle_one">לקבל השראה</string>
-    <string name="login_prologue_title_fifth">כדאי לעקוב אחר האתרים המועדפים שלך ולגלות חומרי קריאה חדשים.</string>
     <string name="login_prologue_title_fourth">באמצעות ניתוחי עומק ניתן לעקוב אחר הצמיחה של קהל המבקרים.</string>
     <string name="login_prologue_title_second">העורך העוצמתי הזה מאפשר לפרסם מכל מקום.</string>
     <string name="login_prologue_title_first">ברוך בואך לכלי הפופולרי ביותר בעולם לבניית אתרי אינטרנט.</string>
@@ -376,7 +379,6 @@ Language: he_IL
     <string name="stories_intro_main_title">אנו שמחים להציג את האפשרות \'פוסטים של סטורי\'</string>
     <string name="mlp_notice_blank_page_created">נוצר עמוד ריק</string>
     <string name="mlp_notice_page_created">העמוד נוצר</string>
-    <string name="mlp_preview_title">תצוגה מקדימה של הפריסה</string>
     <string name="media_picker_soft_ask_permissions_denied">הגישה של ⁦%1$s⁩ אל תמונות שלך נדחתה. כדי לתקן זאת, יש לערוך את ההרשאות ולהפעיל את ⁦%2$s⁩ ואת ⁦%3$s⁩.</string>
     <string name="media_insert_failed">הכנסת המדיה נכשלה.</string>
     <string name="media_insert_failed_with_reason">הכנסת המדיה נכשלה: %s</string>
@@ -572,8 +574,6 @@ Language: he_IL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">תאריך פרסום</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
-    <string name="reader_label_choose_your_interests">לבחור את תחומי העניין שלך</string>
-    <string name="reader_choose_interests_content_description">לבחור את תחומי העניין שלך</string>
     <string name="reader_btn_done">סיימתי</string>
     <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
     <string name="post_status_post_published">פורסם</string>
@@ -700,8 +700,6 @@ Language: he_IL
     <string name="app_theme_light">צבעים בהירים</string>
     <string name="app_theme">מראה</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">לאחרונה ביצעת שינויים בעמוד וטרם שמרת אותם. לבחור גרסה לטעינה:\n\n</string>
-    <string name="gutenberg_native_warning_message">הודעת אזהרה</string>
-    <string name="gutenberg_native_success_message">הודעת הצלחה</string>
     <string name="gutenberg_native_show_post_content">להציג את תוכן הפוסט</string>
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
@@ -808,7 +806,6 @@ Language: he_IL
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
     <string name="gutenberg_native_ungroup">לפרק קבוצה</string>
     <string name="gutenberg_native_translate">לתרגם</string>
-    <string name="gutenberg_native_title">כותרת:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">יש להקיש כדי להסתיר את המקלדת</string>
     <string name="gutenberg_native_tap_here_to_show_help">יש להקיש כאן כי להציג את העזרה</string>
     <string name="gutenberg_native_take_a_video">לצלם וידאו</string>
@@ -816,13 +813,10 @@ Language: he_IL
     <string name="gutenberg_native_take_a_photo">לצלם תמונה</string>
     <string name="gutenberg_native_start_writing">להתחיל לכתוב…</string>
     <string name="gutenberg_native_unsupported">לא נתמך</string>
-    <string name="gutenberg_native_sidebar_title_plugin">תוסף לכותרת הסרגל הצדי</string>
     <string name="gutenberg_native_show_section">להציג את המקטע</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
     <string name="gutenberg_native_s_block_empty">הבלוק %s. ריק</string>
-    <string name="gutenberg_native_reset_block">לאפס את הבלוק</string>
     <string name="gutenberg_native_cut_block">לחתוך את הבלוק</string>
-    <string name="gutenberg_native_remove_annotations">להסיר את ההסברים</string>
     <string name="gutenberg_native_problem_opening_the_video">בעיה בפתיחת הווידאו</string>
     <string name="gutenberg_native_problem_displaying_block">בעיה בהצגת הבלוק</string>
     <string name="gutenberg_native_post_title_s">כותרת הפוסט. %s</string>
@@ -832,17 +826,12 @@ Language: he_IL
     <string name="gutenberg_native_open_settings">פתיחת הגדרות</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">אין אפליקציה שיכולה לטפל בבקשה הזאת. עליך להתקין דפדפן אינטרנט.</string>
     <string name="gutenberg_native_navigate_up">לנווט למעלה</string>
-    <string name="gutenberg_native_my_pre_publish_panel">החלונית של תוכן שטרם פרסמתי</string>
-    <string name="gutenberg_native_my_post_status_info">המידע לגבי מצב הפוסט שלי</string>
-    <string name="gutenberg_native_my_post_publish_panel">החלונית של תוכן שפרסמתי</string>
-    <string name="gutenberg_native_my_document_setting_panel">החלונית של הגדרות המסמכים שלי</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">להזיז את הבלוק למעלה משורה %1$s לשורה %2$s</string>
     <string name="gutenberg_native_move_block_up">להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">להזיז את הבלוק למטה משורה %1$s לשורה %2$s</string>
     <string name="gutenberg_native_move_block_down">להזיז את הבלוק למטה</string>
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
     <string name="gutenberg_native_hide_keyboard">הסתרת מקלדת</string>
-    <string name="gutenberg_native_here_is_the_panel_content">זהו התוכן של החלונית!</string>
     <string name="gutenberg_native_help_icon">סמל עזרה</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">יש להקיש פעמיים כדי לבטל את השינוי האחרון</string>
@@ -857,9 +846,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">יש להקיש פעמיים כדי לשנות את הערך באמצעות הסליידר</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">יש להקיש פעמיים כדי להוסיף בלוק</string>
     <string name="gutenberg_native_current_value_is_s">הערך הנוכחי הוא %s</string>
-    <string name="gutenberg_native_content">תוכן…</string>
     <string name="gutenberg_native_choose_from_device">לבחור מהמכשיר</string>
-    <string name="gutenberg_native_annotations_sidebar">סרגל צדי להסברים</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">אירעה שגיאה לא מזוהה. יש לנסות שוב.</string>
     <string name="gutenberg_native_alt_text">טקסט חלופי</string>
     <string name="gutenberg_native_add_video">להוסיף וידאו</string>
@@ -867,8 +854,6 @@ Language: he_IL
     <string name="gutenberg_native_add_image_or_video">להוסיף תמונה או וידאו</string>
     <string name="gutenberg_native_add_image">להוסיף תמונה</string>
     <string name="gutenberg_native_add_block_here">להוסיף בלוק כאן</string>
-    <string name="gutenberg_native_add_annotation">להוסיף הסבר</string>
-    <string name="gutenberg_native_add_a_description">להוסיף תיאור</string>
     <string name="reader_acessibility_list_loaded">\"הרשימה נטענה עם %1$d פריטים.\"</string>
     <string name="reader_empty_saved_posts_content_description">יש להקיש על הכפתור \'הוספה\' ו-\'שמירת פוסט\' כדי לשמור את הפוסט ברשימה שלך.</string>
     <string name="notifications_tab_dialog_switch_desc">הודעות</string>
@@ -1159,6 +1144,8 @@ Language: he_IL
     <string name="quick_start_dialog_upload_icon_title">העלאה של סמל לאתר</string>
     <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
     <string name="quick_start_dialog_explore_plans_message_short">יש להקיש על %1$s התוכנית %2$s כדי להציג את התוכנית הנוכחית שלך ותוכניות אחרות שזמינות</string>
+    <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
+    <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
     <string name="quick_start_dialog_check_stats_message_short">יש להקיש על %1$s נתונים סטטיסטיים %2$s כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
     <string name="quick_start_dialog_publish_post_message">אפשר כעת לכתוב טיוטה ולפרסם את הפוסט הראשון שלך.</string>
@@ -1354,7 +1341,6 @@ Language: he_IL
     <string name="quick_start_dialog_need_help_button_positive">אשר</string>
     <string name="quick_start_dialog_need_help_button_neutral">לעולם לא</string>
     <string name="quick_start_dialog_follow_sites_title">מעקב אחר אתרים אחרים</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">יש להקיש על %1$sחיפוש%2$s כדי למצוא אתרים בתחומי עניין דומים</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
     <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
     <string name="quick_start_dialog_follow_sites_message">כדאי לחפש אתרים שנותנים לך השראה ולעקוב אחריהם כדי לקבל עדכונים כשהם יפרסמו תוכן חדש.</string>
@@ -2110,7 +2096,6 @@ Language: he_IL
     <string name="comment_liked">סימנת לייק לתגובה</string>
     <string name="sign_in_wpcom">התחברות ל-WordPress.com</string>
     <string name="reader_label_global_related_posts">עוד מ-WordPress.com</string>
-    <string name="reader_label_local_related_posts">מידע נוסף ב-%s</string>
     <string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
     <string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
     <string name="invite_invalid_email">%s: אימייל לא תקין</string>
@@ -2167,6 +2152,7 @@ Language: he_IL
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
     <string name="reader_empty_search_description">לא נמצאו תוצאות עבור %s בשפה שבחרת</string>
     <string name="reader_hint_post_search">חיפוש ב-WordPress.com</string>
+    <string name="reader_title_related_post_detail">באותו נושא</string>
     <string name="preview_screen_links_disabled">קישורים מושבתים במסך התצוגה המקדימה</string>
     <string name="send">שלח</string>
     <string name="user_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>

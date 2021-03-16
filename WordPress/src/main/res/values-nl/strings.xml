@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-05 07:43:28+0000
+Translation-Revision-Date: 2021-03-09 08:03:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Voeg knoptekst toe</string>
     <string name="reader_title_interests">Volg onderwerpen</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
     <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="threat_fix_all_status_success_message_plural">Bedreigingen zijn met succes opgelost.</string>
+    <string name="scan_idle_threats_description_plural">De scan vond %1$s potentiële bedreigingen met %2$s. Bekijk ze hieronder en onderneem actie of tik op de knop Alles herstellen. We zijn %3$s als je ons nodig hebt.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Bevestig dat je alle %s actieve bedreigingen wil oplossen.</string>
     <string name="scan_fixing_threats_description_plural">We zijn hard aan het werk om deze bedreigingen op de achtergrond te verhelpen. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
     <string name="gutenberg_native_edit_focal_point">Focuspunt bewerken</string>
     <string name="quick_start_completed_type_grow_message">&lt;b>Alle taken zijn afgerond&lt;/b>&lt;br/> Je bereikt meer mensen. Goed werk!</string>
@@ -35,9 +38,11 @@ Language: nl
     <string name="invite_links_share_invite_link">Deel de uitnodigingslink</string>
     <string name="invite_links_disable_invite_link">Schakel uitnodigingslink uit</string>
     <string name="invite_links_expire_date">Vervalt op %1$s</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Scan afgerond&lt;/b>&lt;br>&lt;/br> Geen bedreigingen gevonden</string>
     <string name="threats_found_plural">Bedreigingen gevonden</string>
     <string name="threats_found_singular">Bedreiging gevonden</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scan afgerond&lt;/b>&lt;br>Geen bedreigingen gevonden</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scan afgerond&lt;/b>&lt;br> 1 potentiële dreiging gevonden</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scan afgerond&lt;/b>&lt;br> %s potentiële bedreigingen gevonden</string>
     <string name="disable">Uitschakelen</string>
     <string name="scan_fixing_threats_title_singular">Bedreiging oplossen</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
@@ -93,6 +98,7 @@ Language: nl
     <string name="threat_found_header">Gevonden</string>
     <string name="threat_status_fixed">Opgelost</string>
     <string name="people_learn_more_about_roles">Leer meer over rollen</string>
+    <string name="scan_idle_threats_description_singular">De scan vond één potentiële bedreiging met %1$s. Bekijk de bedreiging hieronder en onderneem actie of tik op de knop Alles herstellen. We zijn %2$s als je ons nodig hebt.</string>
     <string name="scan_provisioning_description">Welkom bij Jetpack Scan! We verkennen je site en maken een volledige scan. We laten het je weten als we problemen ontdekken die van invloed kunnen zijn op een scan, waarna je eerste volledige scan start.</string>
     <string name="scan_idle_manual_scan_description">Om je site opnieuw te bekijken, voer je een handmatige scan uit, of wacht tot Jetpack je site later vandaag scant.</string>
     <string name="scan_scanning_description">We sturen je een bericht zodra de scan is afgerond. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
@@ -158,6 +164,7 @@ Language: nl
     <string name="threat_fix_all_error_message">Fout bij oplossen van bedreigingen. Neem contact op met ondersteuning.</string>
     <string name="threat_fix_all_status_error_message">Fout bij verkrijgen van de oplossingstatus. Neem contact op met ondersteuning.</string>
     <string name="threat_fix_all_status_success_message_singular">Bedreiging is met succes opgelost.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Bevestig dat je één actieve bedreiging wil oplossen.</string>
     <string name="threat_ignore_success_message">Bedreiging genegeerd.</string>
     <string name="threat_ignore_error_message">Fout bij negeren van de bedreiging, Neem contact op met ondersteuning.</string>
     <string name="threat_fix_all_warning_title">Alle bedreigingen oplossen</string>
@@ -369,8 +376,8 @@ Language: nl
     <string name="login_prologue_title_second">Met deze krachtige editor kun je onderweg publiceren.</string>
     <string name="login_prologue_title_third">Bekijk reacties en berichten in real time.</string>
     <string name="login_prologue_title_fourth">Bekijk hoe je publiek groeit met in-dept analytics.</string>
-    <string name="login_prologue_title_fifth">Volg je favoriete sites en ontdek nieuwe reads.</string>
     <string name="login_prologue_second_subtitle_one">Raak geinspireerd</string>
+    <string name="login_prologue_title_fifth">Volg je favoriete sites en ontdek nieuwe blogs.</string>
     <string name="reader_discover_recommended_blogs_header">Sites om te volgen</string>
     <string name="media_loading_failed">Media laden is mislukt</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' wordt niet volledig ondersteund</string>
@@ -383,7 +390,6 @@ Language: nl
     <string name="stories_intro_description_first">Combineer foto\'s, video\'s en tekst om boeiende en tikbare verhalen te maken die je bezoekers geweldig zullen vinden.</string>
     <string name="stories_intro_title_second">Verhalen verdwijnen niet</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s heeft geen toegang tot je foto\'s. Om dit op te lossen, bewerk je je rechten en schakel je %2$s en %3$s in.</string>
-    <string name="mlp_preview_title">Lay-out voorbeeld</string>
     <string name="mlp_notice_page_created">Pagina aangemaakt</string>
     <string name="mlp_notice_blank_page_created">Blanco pagina aangemaakt</string>
     <string name="stories_intro_image_caption_second">Voorbeeld verhaaltitel</string>
@@ -589,11 +595,11 @@ Language: nl
     <string name="post_status_post_published">Gepubliceerd</string>
     <string name="reader_btn_select_few_interests">Selecteer een paar om verder te gaan</string>
     <string name="reader_btn_done">Klaar</string>
-    <string name="reader_choose_interests_content_description">Kies je interesses</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Verplaats bericht naar concept?</string>
-    <string name="reader_label_choose_your_interests">Kies je interesses</string>
     <string name="ccpa_privacy_notice_read">Lees CCPA privacy bericht</string>
     <string name="ccpa_privacy_notice_caption">De Californische Consumer Privacy Act (\"CCPA\") vereist dat je ons de Californische inwonenden aanlevert met enige toegevoegde informatie over de categorieën van de persoonlijke informatie die we verzamelen en delen, daar waar we persoonlijke informatie krijgen, en waarom we het gebruiken.</string>
+    <string name="reader_choose_interests_content_description">Kies je onderwerpen</string>
+    <string name="reader_label_choose_your_interests">Kies je onderwerpen</string>
     <string name="update_now">Update nu</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
@@ -712,8 +718,6 @@ Language: nl
     <string name="app_theme_light">Licht</string>
     <string name="app_theme">Weergave</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Je hebt onlangs wijzigingen aangebracht aan deze pagina, maar deze niet opgeslagen. Kies een versie om te laden:\n\n</string>
-    <string name="gutenberg_native_warning_message">Waarschuwingsmelding</string>
-    <string name="gutenberg_native_success_message">Succesmelding</string>
     <string name="gutenberg_native_show_post_content">Berichtcontent weergeven</string>
     <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_link_to">Link naar</string>
@@ -819,7 +823,6 @@ Language: nl
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-mediabibliotheek</string>
     <string name="gutenberg_native_translate">Vertalen</string>
-    <string name="gutenberg_native_title">Titel:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tik om toetsenbord te verbergen</string>
     <string name="gutenberg_native_unsupported">Niet-ondersteund</string>
     <string name="gutenberg_native_ungroup">Groep opheffen</string>
@@ -828,13 +831,10 @@ Language: nl
     <string name="gutenberg_native_take_a_photo_or_video">Maak een foto of video</string>
     <string name="gutenberg_native_take_a_photo">Maak een foto</string>
     <string name="gutenberg_native_start_writing">Begin met schrijven …</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Sidebartitel-plugin</string>
     <string name="gutenberg_native_show_section">Sectie tonen</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty">%s-blok. Leegmaken</string>
-    <string name="gutenberg_native_reset_block">Blok resetten</string>
     <string name="gutenberg_native_cut_block">Blok knippen</string>
-    <string name="gutenberg_native_remove_annotations">Aantekeningen verwijderen</string>
     <string name="gutenberg_native_problem_opening_the_video">Probleem bij het openen van de video</string>
     <string name="gutenberg_native_problem_displaying_block">Probleem bij het weergeven van het blok</string>
     <string name="gutenberg_native_post_title_s">Berichttitel. %s</string>
@@ -844,17 +844,12 @@ Language: nl
     <string name="gutenberg_native_open_settings">Open Instellingen</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Er is geen toepassing die deze aanvraag kan verwerken. Installeer een webbrowser.</string>
     <string name="gutenberg_native_navigate_up">Omhoog navigeren</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mijn venster voor pre-publicatie</string>
-    <string name="gutenberg_native_my_post_status_info">Mijn berichtstatusinformatie</string>
-    <string name="gutenberg_native_my_post_publish_panel">Mijn venster voor publicatie van berichten</string>
-    <string name="gutenberg_native_my_document_setting_panel">Mijn venster met documentinstellingen</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Blok omhoog bewegen van rij %1$s naar rij %2$s</string>
     <string name="gutenberg_native_move_block_up">Blok omhoog verplaatsen</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blok omlaag bewegen van rij %1$s naar rij %2$s</string>
     <string name="gutenberg_native_move_block_down">Blok omlaag verplaatsen</string>
     <string name="gutenberg_native_image_caption_s">Afbeelding vastleggen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Toetsenbord verbergen</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Dit is de inhoud van het venster!</string>
     <string name="gutenberg_native_help_icon">Help-pictogram</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Invoegen van media mislukt.\nTik voor opties.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Tik tweemaal om laatste wijziging ongedaan te maken</string>
@@ -869,9 +864,7 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Tik tweemaal om de waarde te wijzigen met behulp van de schuifbalk</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Tik tweemaal om een blok toe te voegen</string>
     <string name="gutenberg_native_current_value_is_s">Huidige waarde is %s</string>
-    <string name="gutenberg_native_content">Inhoud…</string>
     <string name="gutenberg_native_choose_from_device">Kiezen op apparaat</string>
-    <string name="gutenberg_native_annotations_sidebar">Sidebar met opmerkingen</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Er is een onbekende fout opgetreden. Probeer het nog eens.</string>
     <string name="gutenberg_native_alt_text">Alt. tekst</string>
     <string name="gutenberg_native_add_video">VIDEO TOEVOEGEN</string>
@@ -879,8 +872,6 @@ Language: nl
     <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>
-    <string name="gutenberg_native_add_annotation">Opmerking toevoegen</string>
-    <string name="gutenberg_native_add_a_description">Een beschrijving toevoegen</string>
     <string name="reader_empty_saved_posts_content_description">Tik op de knop \'Toevoegen om berichten op te slaan\' om een bericht op te slaan in je lijst.</string>
     <string name="reader_acessibility_list_loaded">\"De lijst is geladen met %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Meldingen</string>
@@ -1171,6 +1162,8 @@ Language: nl
     <string name="quick_start_dialog_upload_icon_title">Upload een favicon</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
+    <string name="quick_start_sites_type_grow">Breid je publiek uit</string>
+    <string name="quick_start_sites_type_customize">Pas je site aan</string>
     <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel je eerste bericht op en publiceer het.</string>
@@ -1366,10 +1359,10 @@ Language: nl
     <string name="quick_start_dialog_need_help_button_positive">Accepteer</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nooit</string>
     <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde interesses</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tik op %1$s Reader %2$s om door te gaan</string>
     <string name="quick_start_dialog_need_help_button_negative">Nee dank je</string>
     <string name="quick_start_dialog_follow_sites_message">Ontdek sites die je aanspreken en volg ze om updates te ontvangen wanneer nieuwe inhoud wordt gepost.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde onderwerpen</string>
     <string name="quick_start_button_positive">Starten</string>
     <string name="quick_start_button_negative_short">Annuleren</string>
     <string name="quick_start_button_negative">Niet nu</string>
@@ -2122,7 +2115,7 @@ Language: nl
     <string name="signout">Uitloggen</string>
     <string name="sign_in_wpcom">Inloggen op WordPress.com</string>
     <string name="reader_label_global_related_posts">Meer op WordPress.com</string>
-    <string name="reader_label_local_related_posts">Meer in %s</string>
+    <string name="reader_label_local_related_posts">Meer van %s</string>
     <string name="preference_open_device_settings">Open apparaat instellingen</string>
     <string name="invite_invalid_email">%s: Ongeldige e-mail</string>
     <string name="invite_user_blocked_invites">%s: Gebruiker blokkeert uitnodigingen</string>
@@ -2180,6 +2173,7 @@ Language: nl
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal.</string>
     <string name="reader_hint_post_search">Zoek op WordPress</string>
+    <string name="reader_title_related_post_detail">Gerelateerd bericht</string>
     <string name="preview_screen_links_disabled">Links uitgeschakeld op voorbeeldscherm</string>
     <string name="send">Verzenden</string>
     <string name="user_remove_confirmation_message">Als je %1$s verwijdert, kan die gebruiker deze site niet meer openen. Alle content die door %1$s is gemaakt, blijft echter op de site staan.\n\nWil je deze gebruiker toch verwijderen?</string>

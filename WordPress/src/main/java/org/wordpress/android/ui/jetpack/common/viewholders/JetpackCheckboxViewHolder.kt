@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.jetpack_list_checkbox_item.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.JetpackListCheckboxItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -10,15 +9,18 @@ import org.wordpress.android.ui.utils.UiHelpers
 class JetpackCheckboxViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
-) : JetpackViewHolder(R.layout.jetpack_list_checkbox_item, parent) {
-    override fun onBind(itemUiState: JetpackListItemState) {
+) : JetpackViewHolder<JetpackListCheckboxItemBinding>(
+        parent,
+        JetpackListCheckboxItemBinding::inflate
+) {
+    override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val checkboxState = itemUiState as CheckboxState
         if (checkboxState.labelSpannable == null) {
-            uiHelpers.setTextOrHide(checkbox_label, checkboxState.label)
+            uiHelpers.setTextOrHide(checkboxLabel, checkboxState.label)
         } else {
-            checkbox_label.text = checkboxState.labelSpannable
+            checkboxLabel.text = checkboxState.labelSpannable
         }
         checkbox.isChecked = checkboxState.checked
-        item_container.setOnClickListener { checkboxState.onClick.invoke() }
+        itemContainer.setOnClickListener { checkboxState.onClick.invoke() }
     }
 }

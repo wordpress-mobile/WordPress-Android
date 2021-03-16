@@ -2,26 +2,18 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
-import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.chooseButton
-import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
-import kotlinx.android.synthetic.main.home_page_picker_fragment.categoriesRecyclerView
-import kotlinx.android.synthetic.main.home_page_picker_fragment.errorView
-import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
+import kotlinx.android.synthetic.main.home_page_picker_fragment.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
-import kotlinx.android.synthetic.main.home_page_picker_titlebar.backButton
-import kotlinx.android.synthetic.main.home_page_picker_titlebar.previewTypeSelectorButton
-import kotlinx.android.synthetic.main.home_page_picker_titlebar.title
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
@@ -31,16 +23,17 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -104,7 +97,7 @@ class HomePagePickerFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
@@ -122,7 +115,7 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, Observer { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -136,14 +129,12 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onCategorySelectionChanged.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
+        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
                 layoutsRecyclerView?.smoothScrollToPosition(0)
-            }
         })
 
         viewModel.start(displayUtils.isTablet())

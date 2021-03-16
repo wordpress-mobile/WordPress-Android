@@ -2,10 +2,10 @@ package org.wordpress.android.ui.reader.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.RelativeLayout
-import kotlinx.android.synthetic.main.reader_tag_header_view.view.*
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
@@ -18,25 +18,22 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
+    private val binding = ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
+
     @Inject lateinit var uiHelpers: UiHelpers
 
     private var onFollowBtnClicked: (() -> Unit)? = null
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        initView(context)
+        binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
 
-    private fun initView(context: Context) {
-        inflate(context, R.layout.reader_tag_header_view, this)
-        follow_button.setOnClickListener { onFollowBtnClicked?.invoke() }
-    }
-
-    fun updateUi(uiState: ReaderTagHeaderUiState) {
-        text_tag.text = uiState.title
+    fun updateUi(uiState: ReaderTagHeaderUiState) = with(binding) {
+        textTag.text = uiState.title
         with(uiState.followButtonUiState) {
-            follow_button.setIsFollowed(isFollowed)
-            follow_button.isEnabled = isEnabled
+            followButton.setIsFollowed(isFollowed)
+            followButton.isEnabled = isEnabled
             onFollowBtnClicked = onFollowButtonClicked
         }
     }

@@ -43,7 +43,6 @@ Language: vi_VN
     <string name="quick_start_dialog_need_help_button_neutral">Không bao giờ</string>
     <string name="quick_start_dialog_need_help_button_negative">Không</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các site khác</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Nhấp %1$s Tìm kiếm %2$s để tìm các site với các quan tâm tương tự</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấp %1$s Ngước đọc %2$s để tiếp tục</string>
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
@@ -100,6 +99,7 @@ Language: vi_VN
     <string name="dlg_confirm_clear_search_history">Xóa lịch sử tìm kiếm?</string>
     <string name="reader_empty_search_description">Không tìm thấy kết quả cho %s với ngôn ngữ của bạn</string>
     <string name="reader_hint_post_search">Tìm trong WordPress</string>
+    <string name="reader_title_related_post_detail">Bài viết có liên quan</string>
     <string name="preview_screen_links_disabled">Các liên kết bị vô hiệu trên màn hình xem trước</string>
     <string name="send">Gửi</string>
     <string name="user_remove_confirmation_message">Nếu bạn loại bỏ %1$s, người dùng đó sẽ không còn có thể truy cập site này, nhưng bất kì nội dung nào được tạo bởi %1$s sẽ còn lại trên site.\n\nBạn vẫn muốn loại bỏ người dùng này?</string>
