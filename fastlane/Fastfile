@@ -461,7 +461,13 @@ ENV["validate_translations"]="lintVanillaRelease"
   ]
 
   BINARY_IMPORTED_LIBRARIES = [
-    { name: "Gutenberg Native",   import_key: "gutenbergMobileVersion",   repository: "wordpress-mobile/gutenberg-mobile",   strings_file_path: "bundle/android/strings.xml", github_release_prefix: "v" },
+    {
+      name: "Gutenberg Native",
+      import_key: "gutenbergMobileVersion",
+      repository: "wordpress-mobile/gutenberg-mobile",
+      strings_file_path: "bundle/android/strings.xml",
+      github_release_prefix: "v"
+    },
   ]
 
   private_lane :send_strings_for_translation do | options |
