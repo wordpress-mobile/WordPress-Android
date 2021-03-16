@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_CARD_TAPPED
 import org.wordpress.android.databinding.ReaderCardviewPostBinding
@@ -17,6 +16,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -32,6 +32,7 @@ import org.wordpress.android.util.viewBinding
 class ReaderPostViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
+    private val readerTracker: ReaderTracker,
     parentView: ViewGroup
 ) : ReaderViewHolder<ReaderCardviewPostBinding>(parentView.viewBinding(ReaderCardviewPostBinding::inflate)) {
     val viewContext: Context = binding.postContainer.context
@@ -72,7 +73,7 @@ class ReaderPostViewHolder(
         uiHelpers.setTextOrHide(textTitle, state.title)
         uiHelpers.setTextOrHide(textExcerpt, state.excerpt)
         postContainer.setOnClickListener {
-            AnalyticsTracker.track(READER_POST_CARD_TAPPED)
+            readerTracker.track(READER_POST_CARD_TAPPED)
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
 
@@ -204,7 +205,7 @@ class ReaderPostViewHolder(
     }
 
     private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<ReaderPostCardAction>, v: View) {
-        AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
+        readerTracker.track(Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))

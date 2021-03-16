@@ -71,7 +71,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         super.onViewCreated(view, savedInstanceState)
         binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager, readerTracker)
 
             val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
             val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
