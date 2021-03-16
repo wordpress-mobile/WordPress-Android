@@ -765,6 +765,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                         mBlogId,
                         ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER);
                 break;
+            case SEARCH_RESULTS:
+                break;
         }
     }
 
