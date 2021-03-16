@@ -310,7 +310,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             switch (interceptType) {
                 case READER_BLOG:
                     if (parseIds(blogIdentifier, postIdentifier)) {
-                        AnalyticsUtils.trackWithBlogPostDetails(
+                        mReaderTracker.trackBlogPost(
                                 AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
                                 mBlogId,
                                 mPostId
