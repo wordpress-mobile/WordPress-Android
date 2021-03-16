@@ -91,16 +91,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
     protected EditorImagePreviewListener mEditorImagePreviewListener;
-    // protected EditPostSettingsFragment mEditPostSettingsFragment;
     protected EditorEditMediaListener mEditorEditMediaListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
-
-    // protected EditPostSettingsFragment mEditPostSettingsFragment;
-
+    
     protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
