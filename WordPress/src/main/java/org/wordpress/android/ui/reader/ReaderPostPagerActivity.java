@@ -667,30 +667,27 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 final int currentPosition = mViewPager.getCurrentItem();
                 final int newPosition = idList.indexOf(blogId, postId);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFinishing()) {
-                            return;
-                        }
+                runOnUiThread(() -> {
+                    if (isFinishing()) {
+                        return;
+                    }
 
-                        AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
-                        PostPagerAdapter adapter =
-                                new PostPagerAdapter(getSupportFragmentManager(), idList);
-                        mViewPager.setAdapter(adapter);
-                        if (adapter.isValidPosition(newPosition)) {
-                            mViewPager.setCurrentItem(newPosition);
-                            trackPostAtPositionIfNeeded(newPosition);
-                        } else if (adapter.isValidPosition(currentPosition)) {
-                            mViewPager.setCurrentItem(currentPosition);
-                            trackPostAtPositionIfNeeded(currentPosition);
-                        }
+                    AppLog.d(T.READER, "reader pager > creating adapter");
+                    PostPagerAdapter adapter =
+                            new PostPagerAdapter(getSupportFragmentManager(), idList);
+                    mViewPager.setAdapter(adapter);
+                    if (adapter.isValidPosition(newPosition)) {
+                        mViewPager.setCurrentItem(newPosition);
+                        trackPostAtPositionIfNeeded(newPosition);
+                    } else if (adapter.isValidPosition(currentPosition)) {
+                        mViewPager.setCurrentItem(currentPosition);
+                        trackPostAtPositionIfNeeded(currentPosition);
+                    }
 
-                        // let the user know they can swipe between posts
-                        if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                            WPSwipeSnackbar.show(mViewPager);
-                            AppPrefs.setReaderSwipeToNavigateShown(true);
-                        }
+                    // let the user know they can swipe between posts
+                    if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                        WPSwipeSnackbar.show(mViewPager);
+                        AppPrefs.setReaderSwipeToNavigateShown(true);
                     }
                 });
             }
@@ -962,12 +959,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                             post,
                             site,
                             mUploadActionUseCase.getUploadAction(post),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils.publishPost(ReaderPostPagerActivity.this, post, site, mDispatcher);
-                                }
-                            });
+                            v -> UploadUtils.publishPost(ReaderPostPagerActivity.this, post, site, mDispatcher));
                 }
                 break;
             case RequestCodes.DO_LOGIN:
