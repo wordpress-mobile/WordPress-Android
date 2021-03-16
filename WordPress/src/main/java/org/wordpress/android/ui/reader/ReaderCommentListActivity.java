@@ -7,10 +7,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.HapticFeedbackConstants;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,8 +47,6 @@ import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -255,15 +250,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         });
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
         mSubmitReplyBtn.setEnabled(false);
-        mSubmitReplyBtn.setOnLongClickListener(new OnLongClickListener() {
-            @Override public boolean onLongClick(View view) {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
-                return true;
+        mSubmitReplyBtn.setOnLongClickListener(view -> {
+            if (view.isHapticFeedbackEnabled()) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+            return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
@@ -310,26 +303,20 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
                     new Builder(ReaderCommentListActivity.this)
                             .setTitle(R.string.comment)
-                            .setOnCollapseListener(new OnCollapseListener() {
-                                @Override
-                                public void onCollapse(@Nullable Bundle result) {
-                                    if (result != null) {
-                                        mEditComment.setText(result.getString(RESULT_REPLY));
-                                        mEditComment.setSelection(
-                                                result.getInt(RESULT_SELECTION_START),
-                                                result.getInt(RESULT_SELECTION_END)
-                                        );
-                                        mEditComment.requestFocus();
-                                    }
+                            .setOnCollapseListener(result -> {
+                                if (result != null) {
+                                    mEditComment.setText(result.getString(RESULT_REPLY));
+                                    mEditComment.setSelection(
+                                            result.getInt(RESULT_SELECTION_START),
+                                            result.getInt(RESULT_SELECTION_END)
+                                    );
+                                    mEditComment.requestFocus();
                                 }
                             })
-                            .setOnConfirmListener(new OnConfirmListener() {
-                                @Override
-                                public void onConfirm(@Nullable Bundle result) {
-                                    if (result != null) {
-                                        mEditComment.setText(result.getString(RESULT_REPLY));
-                                        submitComment();
-                                    }
+                            .setOnConfirmListener(result -> {
+                                if (result != null) {
+                                    mEditComment.setText(result.getString(RESULT_REPLY));
+                                    submitComment();
                                 }
                             })
                             .setContent(CommentFullScreenDialogFragment.class, bundle)
@@ -428,18 +415,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         );
 
         if (doFocus) {
-            mEditComment.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    final boolean isFocusableInTouchMode = mEditComment.isFocusableInTouchMode();
+            mEditComment.postDelayed(() -> {
+                final boolean isFocusableInTouchMode = mEditComment.isFocusableInTouchMode();
 
-                    mEditComment.setFocusableInTouchMode(true);
-                    EditTextUtils.showSoftInput(mEditComment);
+                mEditComment.setFocusableInTouchMode(true);
+                EditTextUtils.showSoftInput(mEditComment);
 
-                    mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
+                mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
 
-                    setupReplyToComment();
-                }
+                setupReplyToComment();
             }, 200);
         } else {
             setupReplyToComment();
@@ -457,12 +441,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
             // reset to replying to the post when user hasn't entered any text and hits
             // the back button in the editText to hide the soft keyboard
-            mEditComment.setOnBackListener(new SuggestionAutoCompleteText.OnEditTextBackListener() {
-                @Override
-                public void onEditTextBack() {
-                    if (EditTextUtils.isEmpty(mEditComment)) {
-                        setReplyToCommentId(0, false);
-                    }
+            mEditComment.setOnBackListener(() -> {
+                if (EditTextUtils.isEmpty(mEditComment)) {
+                    setReplyToCommentId(0, false);
                 }
             });
         } else {
@@ -503,22 +484,14 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mCommentBox.setVisibility(View.VISIBLE);
             showCommentsClosedMessage(false);
 
-            mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                        submitComment();
-                    }
-                    return false;
-                }
-            });
-
-            mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            mEditComment.setOnEditorActionListener((v, actionId, event) -> {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment();
                 }
+                return false;
             });
+
+            mSubmitReplyBtn.setOnClickListener(v -> submitComment());
         } else {
             mCommentBox.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
@@ -545,12 +518,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
 
             // adapter calls this when user taps reply icon
-            mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
-                @Override
-                public void onRequestReply(long commentId) {
-                    setReplyToCommentId(commentId, true);
-                }
-            });
+            mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {
@@ -558,37 +526,31 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             }
 
             // adapter calls this when data has been loaded & displayed
-            mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (!isFinishing()) {
-                        if (isEmpty || !mHasUpdatedComments) {
-                            updateComments(isEmpty, false);
-                        } else if (mCommentId > 0 || mDirectOperation != null) {
-                            if (mCommentId > 0) {
-                                // Scroll to the commentId once if it was passed to this activity
-                                smoothScrollToCommentId(mCommentId);
-                            }
-
-                            doDirectOperation();
-                        } else if (mRestorePosition > 0) {
-                            mViewModel.scrollToPosition(mRestorePosition, false);
+            mCommentAdapter.setDataLoadedListener(isEmpty -> {
+                if (!isFinishing()) {
+                    if (isEmpty || !mHasUpdatedComments) {
+                        updateComments(isEmpty, false);
+                    } else if (mCommentId > 0 || mDirectOperation != null) {
+                        if (mCommentId > 0) {
+                            // Scroll to the commentId once if it was passed to this activity
+                            smoothScrollToCommentId(mCommentId);
                         }
-                        mRestorePosition = 0;
-                        checkEmptyView();
+
+                        doDirectOperation();
+                    } else if (mRestorePosition > 0) {
+                        mViewModel.scrollToPosition(mRestorePosition, false);
                     }
+                    mRestorePosition = 0;
+                    checkEmptyView();
                 }
             });
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
-            mCommentAdapter.setDataRequestedListener(new ReaderActions.DataRequestedListener() {
-                @Override
-                public void onRequestData() {
-                    if (!mIsUpdatingComments) {
-                        AppLog.i(T.READER, "reader comments > requesting next page of comments");
-                        updateComments(true, true);
-                    }
+            mCommentAdapter.setDataRequestedListener(() -> {
+                if (!mIsUpdatingComments) {
+                    AppLog.i(T.READER, "reader comments > requesting next page of comments");
+                    updateComments(true, true);
                 }
             });
         }
@@ -804,32 +766,29 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         // and reflect it in the adapter before the API call returns
         final long fakeCommentId = ReaderCommentActions.generateFakeCommentId();
 
-        ReaderActions.CommentActionListener actionListener = new ReaderActions.CommentActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded, ReaderComment newComment) {
-                if (isFinishing()) {
-                    return;
-                }
-                mIsSubmittingComment = false;
-                mEditComment.setEnabled(true);
-                if (succeeded) {
-                    mSubmitReplyBtn.setEnabled(false);
-                    // stop highlighting the fake comment and replace it with the real one
-                    getCommentAdapter().setHighlightCommentId(0, false);
-                    getCommentAdapter().replaceComment(fakeCommentId, newComment);
-                    getCommentAdapter().refreshPost();
-                    setReplyToCommentId(0, false);
-                    mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
-                } else {
-                    mEditComment.setText(commentText);
-                    mSubmitReplyBtn.setEnabled(true);
-                    getCommentAdapter().removeComment(fakeCommentId);
-                    ToastUtils.showToast(
-                            ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed,
-                            ToastUtils.Duration.LONG);
-                }
-                checkEmptyView();
+        ReaderActions.CommentActionListener actionListener = (succeeded, newComment) -> {
+            if (isFinishing()) {
+                return;
             }
+            mIsSubmittingComment = false;
+            mEditComment.setEnabled(true);
+            if (succeeded) {
+                mSubmitReplyBtn.setEnabled(false);
+                // stop highlighting the fake comment and replace it with the real one
+                getCommentAdapter().setHighlightCommentId(0, false);
+                getCommentAdapter().replaceComment(fakeCommentId, newComment);
+                getCommentAdapter().refreshPost();
+                setReplyToCommentId(0, false);
+                mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
+            } else {
+                mEditComment.setText(commentText);
+                mSubmitReplyBtn.setEnabled(true);
+                getCommentAdapter().removeComment(fakeCommentId);
+                ToastUtils.showToast(
+                        ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed,
+                        ToastUtils.Duration.LONG);
+            }
+            checkEmptyView();
         };
 
         long wpComUserId = mAccountStore.getAccount().getUserId();
