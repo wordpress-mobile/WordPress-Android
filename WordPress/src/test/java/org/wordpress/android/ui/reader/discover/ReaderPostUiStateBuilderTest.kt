@@ -59,7 +59,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -203,7 +202,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.discoverSection!!.imageType).isEqualTo(AVATAR_WITH_BACKGROUND)
+        assertThat(uiState.discoverSection!!.imageType).isEqualTo(ImageType.AVATAR)
     }
 
     @Test

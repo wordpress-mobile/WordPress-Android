@@ -52,7 +52,7 @@ import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
-import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 import javax.inject.Named
@@ -357,10 +357,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 R.dimen.avatar_sz_small
         )
         val discoverAvatarImageType = when (discoverData.discoverType) {
-            EDITOR_PICK -> AVATAR_WITH_BACKGROUND
+            EDITOR_PICK -> AVATAR
             SITE_PICK -> BLAVATAR
             OTHER -> throw IllegalStateException("This could should be unreachable.")
-            else -> AVATAR_WITH_BACKGROUND
+            else -> AVATAR
         }
         return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
     }
