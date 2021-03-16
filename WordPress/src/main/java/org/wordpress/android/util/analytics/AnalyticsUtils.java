@@ -426,14 +426,6 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(FEED_ID_KEY, feedId);
-        properties.put(FEED_ITEM_ID_KEY, feedItemId);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
     public static void trackWithReblogDetails(
             AnalyticsTracker.Stat stat,
             long sourceBlogId,
