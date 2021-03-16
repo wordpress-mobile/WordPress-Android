@@ -631,9 +631,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         // analytics tracking
-        AnalyticsUtils.trackWithReaderPostDetails(
+        mReaderTracker.trackPost(
                 AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                ReaderPostTable.getBlogPost(blogId, postId, true));
+                ReaderPostTable.getBlogPost(blogId, postId, true)
+        );
     }
 
     /*
