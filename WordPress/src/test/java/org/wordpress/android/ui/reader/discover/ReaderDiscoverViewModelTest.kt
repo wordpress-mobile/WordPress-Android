@@ -476,12 +476,12 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user picks a site for reblog action the app shows the editor`() {
         // Arrange
-        val navigaitonObserver = init().navigation
+        val navigationObserver = init().navigation
         fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
         // Act
         viewModel.onReblogSiteSelected(1)
         // Assert
-        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+        assertThat(navigationObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
     @Test
