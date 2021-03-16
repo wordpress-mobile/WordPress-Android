@@ -460,7 +460,7 @@ ENV["validate_translations"]="lintVanillaRelease"
     {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
-  binary_imported_libraries = [
+  BINARY_IMPORTED_LIBRARIES = [
     { name: "Gutenberg Native",   import_key: "gutenbergMobileVersion",   repository: "wordpress-mobile/gutenberg-mobile",   strings_file_path: "bundle/android/strings.xml", github_release_prefix: "v" },
   ]
 
