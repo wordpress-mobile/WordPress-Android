@@ -656,6 +656,7 @@ class ReaderDiscoverViewModelTest {
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
+                isFollowed = post.isFollowedByCurrentUser,
                 blogSection = ReaderBlogSectionUiState(
                         post.postId,
                         post.blogId,

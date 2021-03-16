@@ -23,9 +23,9 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestChipStyleColor
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -52,7 +52,7 @@ import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
-import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 import javax.inject.Named
@@ -130,6 +130,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
+                isFollowed = post.isFollowedByCurrentUser,
                 blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isP2orA8C),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
@@ -352,10 +353,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 R.dimen.avatar_sz_small
         )
         val discoverAvatarImageType = when (discoverData.discoverType) {
-            EDITOR_PICK -> AVATAR
+            EDITOR_PICK -> AVATAR_WITH_BACKGROUND
             SITE_PICK -> BLAVATAR
             OTHER -> throw IllegalStateException("This could should be unreachable.")
-            else -> AVATAR
+            else -> AVATAR_WITH_BACKGROUND
         }
         return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
     }

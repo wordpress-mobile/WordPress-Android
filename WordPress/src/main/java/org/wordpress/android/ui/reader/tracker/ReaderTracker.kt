@@ -120,9 +120,10 @@ class ReaderTracker @Inject constructor(
 
     /* BLOG */
 
-    fun trackBlog(stat: Stat, blogId: Long) {
+    fun trackBlog(stat: Stat, blogId: Long, isFollowed: Boolean) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId
+                BLOG_ID_KEY to blogId,
+                FOLLOW_KEY to isFollowed
         )
         track(stat, properties)
     }
@@ -171,6 +172,7 @@ class ReaderTracker @Inject constructor(
 
     companion object {
         private const val BLOG_ID_KEY = "blog_id"
+        private const val FOLLOW_KEY = "follow"
         private const val TAG_KEY = "tag"
         private const val INTERCEPTED_URI = "intercepted_uri"
     }

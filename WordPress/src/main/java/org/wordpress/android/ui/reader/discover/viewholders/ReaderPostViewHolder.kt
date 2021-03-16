@@ -74,7 +74,8 @@ class ReaderPostViewHolder(
         postContainer.setOnClickListener {
             readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
-                    state.blogId
+                    state.blogId,
+                    state.isFollowed
             )
             state.onItemClicked(uiState.postId, uiState.blogId)
         }

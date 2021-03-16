@@ -22,6 +22,7 @@ sealed class ReaderCardUiState {
     data class ReaderPostUiState(
         val postId: Long,
         val blogId: Long,
+        val isFollowed: Boolean,
         val blogSection: ReaderBlogSectionUiState,
         val title: UiString?,
         val excerpt: String?, // mTxtText
