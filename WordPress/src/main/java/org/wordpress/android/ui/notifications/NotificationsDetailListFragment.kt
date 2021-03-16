@@ -82,11 +82,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var noteBlockAdapter: NoteBlockAdapter? = null
 
-    @Inject lateinit var mImageManager: ImageManager
+    @Inject lateinit var imageManager: ImageManager
 
-    @Inject lateinit var mNotificationsUtilsWrapper: NotificationsUtilsWrapper
+    @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
 
-    @Inject lateinit var mScanScreenFeatureConfig: ScanScreenFeatureConfig
+    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -269,7 +269,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     } else {
                         activity.showWebViewActivityForUrl(clickedSpan.url)
                     }
-                SCAN -> if (mScanScreenFeatureConfig.isEnabled()) {
+                SCAN -> if (scanScreenFeatureConfig.isEnabled()) {
                     activity.showScanActivityForSite(clickedSpan.siteId)
                 } else {
                     if (!TextUtils.isEmpty(clickedSpan.url)) {
@@ -321,8 +321,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     imageType,
                     mOnNoteBlockTextClickListener,
                     mOnGravatarClickedListener,
-                    mImageManager,
-                    mNotificationsUtilsWrapper
+                    imageManager,
+                    notificationsUtilsWrapper
             )
             headerNoteBlock.setIsComment(note.isCommentType)
             noteList.add(headerNoteBlock)
@@ -345,7 +345,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 var commentTextBlock: FormattableContent? = null
                 // Next item in the bodyArray is comment text
                 if (index + 1 < bodyArray.length()) {
-                    commentTextBlock = mNotificationsUtilsWrapper
+                    commentTextBlock = notificationsUtilsWrapper
                             .mapJsonToFormattableContent(bodyArray.getJSONObject(index + 1))
                     index++
                 }
@@ -356,8 +356,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         note.timestamp,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
-                        mImageManager,
-                        mNotificationsUtilsWrapper
+                        imageManager,
+                        notificationsUtilsWrapper
                 )
                 pingbackUrl = noteBlock.getMetaSiteUrl()
 
@@ -372,8 +372,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         noteObject,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
-                        mImageManager,
-                        mNotificationsUtilsWrapper
+                        imageManager,
+                        notificationsUtilsWrapper
                 )
             }
 
@@ -390,7 +390,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             var i = 0
             while (i < bodyArray.length()) {
                 try {
-                    val noteObject = mNotificationsUtilsWrapper
+                    val noteObject = notificationsUtilsWrapper
                             .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
 
                     // Determine NoteBlock type and add it to the array
@@ -403,7 +403,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         pingbackUrl = manageUserBlockResults.pingbackUrl
                     } else if (isFooterBlock(noteObject)) {
                         noteBlock = FooterNoteBlock(
-                                noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                noteObject, imageManager, notificationsUtilsWrapper,
                                 mOnNoteBlockTextClickListener
                         ).also {
                             if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
@@ -413,7 +413,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         }
                     } else {
                         noteBlock = NoteBlock(
-                                noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                noteObject, imageManager, notificationsUtilsWrapper,
                                 mOnNoteBlockTextClickListener
                         )
                     }
@@ -476,7 +476,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 for (i in 0 until headerArray.length()) {
                     try {
                         headersList.add(
-                                mNotificationsUtilsWrapper.mapJsonToFormattableContent(
+                                notificationsUtilsWrapper.mapJsonToFormattableContent(
                                         headerArray.getJSONObject(i)
                                 )
                         )
@@ -512,8 +512,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         ): NoteBlock {
             return GeneratedNoteBlock(
                     message,
-                    mImageManager,
-                    mNotificationsUtilsWrapper,
+                    imageManager,
+                    notificationsUtilsWrapper,
                     onNoteBlockTextClickListener,
                     pingbackUrl!!
             )
