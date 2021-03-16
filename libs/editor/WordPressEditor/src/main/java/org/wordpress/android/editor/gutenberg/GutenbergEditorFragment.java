@@ -221,7 +221,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                         mEditorFragmentListener.onAddMediaImageClicked(allowMultipleSelection);
-                        // private EditPostSettingsFragment mEditPostSettingsFragment;
                     }
 
                     @Override
@@ -289,7 +288,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void onSetFeaturedImageButtonClicked(int mediaId) {
                         showFeaturedImageConfirmationDialog(mediaId);
-                       //mEditorFragmentListener.setFeaturedImageId(mediaId, true);
+                    }
+
+                    @Override
+                    public void onGetFeaturedImageId(int mediaId) {
+                        if (mFeaturedImageId == mediaId) {
+                            getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
+                        }
                     }
 
                     @Override
@@ -432,7 +437,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         showCancelMediaCollectionSaveDialog(mediaFiles);
                     }
 
-                    /* @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
+                    @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
                         if (mStoryBlockReplacedSignalWait) {
                             // in case we were expecting a fresh block replacement sync signal, let the fragment
                             // listener know so it can process all of the pending block save / update / upload events
@@ -464,7 +469,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 // other than the one that was actually edited. Just skip it.
                             }
                         }
-                    } */
+                    }
                 },
                 new OnFocalPointPickerTooltipShownEventListener() {
                     @Override
@@ -804,23 +809,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
-
-        if (mFeaturedImageId != mediaId) {
+        if (mFeaturedImageId == 0) {
+            featuredImageSet(mediaId);
+        } else if (mFeaturedImageId != mediaId) {
             Builder builder = new MaterialAlertDialogBuilder(getActivity());
-            builder.setTitle("Replace current?");
-            builder.setMessage("You already have a featured image set. Do you want to replace it?");
-            builder.setPositiveButton("Replace",
+            builder.setTitle(R.string.replace_current_title);
+            builder.setMessage(R.string.replace_current_description);
+            builder.setPositiveButton(R.string.replace_current_confirmation,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            mEditorFragmentListener.updateFeaturedImage(mediaId, true);
-                            setFeaturedImageId(mediaId);
                             dialog.dismiss();
-                            ToastUtils.showToast(getActivity(), "Set as Featured Image").show();
-                            getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
+                            featuredImageSet(mediaId);
                         }
                     });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.replace_current_cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
                 }
@@ -829,6 +832,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             AlertDialog dialog = builder.create();
             dialog.show();
         }
+    }
+
+    private void featuredImageSet(int mediaId) {
+        mEditorFragmentListener.updateFeaturedImage(mediaId, true);
+        setFeaturedImageId(mediaId);
+        ToastUtils.showToast(getActivity(), R.string.featured_image_confirmation).show();
+        getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
     }
 
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
@@ -845,7 +855,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // string
                             int localMediaId
                                     = StringUtils.stringToInt(
-                                            ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
+                                    ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
                             getGutenbergContainerFragment().mediaFileUploadFailed(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
                         }
@@ -1368,10 +1378,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
     }
-
-    /* public void onFeaturedImageSet(int mediaId) {
-        getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
-    } */
 
     @Override public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
         mUploadingMediaProgressMax.remove(localId);
