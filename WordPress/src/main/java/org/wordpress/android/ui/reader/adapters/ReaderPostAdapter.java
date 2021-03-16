@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -739,6 +740,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
