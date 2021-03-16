@@ -51,6 +51,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
+import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -147,6 +148,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var excerptFooter: ViewGroup
+    private lateinit var textExcerptFooter: TextView
 
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ImageView
@@ -324,6 +327,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
 
+        excerptFooter = view.findViewById(R.id.excerpt_footer)
+        textExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer)
+
         // setup the ReaderWebView
         readerWebView = view.findViewById(R.id.reader_webview)
         readerWebView.setCustomViewListener(this)
@@ -393,6 +399,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
+
+        updateFeaturedImage(state.featuredImageUiState, binding)
+        updateExcerptFooter(state.excerptFooterUiState)
 
         with(binding.layoutPostDetailFooter) {
             updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
@@ -465,13 +474,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateFeaturedImage(state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?) {
-        featured_image.setVisible(state != null)
+    private fun updateFeaturedImage(
+        state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?,
+        binding: ReaderFragmentPostDetailBinding
+    ) {
+        val featuredImage = binding.appbarWithCollapsingToolbarLayout.featuredImage
+        featuredImage.setVisible(state != null)
         state?.let {
-            featured_image.layoutParams.height = it.height
+            featuredImage.layoutParams.height = it.height
             it.url?.let { url ->
-                imageManager.load(featured_image, PHOTO, url, CENTER_CROP)
-                featured_image.setOnClickListener {
+                imageManager.load(featuredImage, PHOTO, url, CENTER_CROP)
+                featuredImage.setOnClickListener {
                     viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
                 }
             }
@@ -480,10 +493,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun updateExcerptFooter(state: ReaderPostDetailsUiState.ExcerptFooterUiState?) {
         // if we're showing just the excerpt, show a footer which links to the full post
-        excerpt_footer?.setVisible(state != null)
+        excerptFooter.setVisible(state != null)
         state?.let {
-            uiHelpers.setTextOrHide(text_excerpt_footer, it.visitPostExcerptFooterLinkText)
-            text_excerpt_footer?.setOnClickListener {
+            uiHelpers.setTextOrHide(textExcerptFooter, state.visitPostExcerptFooterLinkText)
+            textExcerptFooter.setOnClickListener {
                 state.postLink?.let { link -> viewModel.onVisitPostExcerptFooterClicked(postLink = link) }
             }
         }
@@ -1012,12 +1025,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         signInButton.visibility = View.VISIBLE
                         AnalyticsUtils.trackWithReaderPostDetails(
                                 READER_WPCOM_SIGN_IN_NEEDED,
-                                post
+                                viewModel.post
                         )
                     }
                     AnalyticsUtils.trackWithReaderPostDetails(
                             READER_USER_UNAUTHORIZED,
-                            post
+                            viewModel.post
                     )
                 }
                 404 -> errMsgResId = R.string.reader_err_get_post_not_found

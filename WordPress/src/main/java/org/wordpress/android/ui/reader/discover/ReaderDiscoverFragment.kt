@@ -83,7 +83,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         }
     }
 
-    private fun initViewModel() {
+    private fun ReaderDiscoverFragmentLayoutBinding.initViewModel() {
         viewModel = ViewModelProvider(this@ReaderDiscoverFragment, viewModelFactory)
                 .get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
@@ -114,8 +114,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             ptrLayout.isRefreshing = it.reloadProgressVisibility
         })
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
-        viewModel.preloadPostEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { addWebViewCachingFragment() } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, { it.addWebViewCachingFragment() })
         viewModel.start(parentViewModel)
     }
 
@@ -198,7 +198,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         binding = null
     }
 
-    override fun getScrollableViewForUniqueIdProvision(): View {
+    override fun getScrollableViewForUniqueIdProvision(): View? {
         return binding?.recyclerView
     }
 
