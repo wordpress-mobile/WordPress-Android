@@ -507,7 +507,10 @@ ENV["validate_translations"]="lintVanillaRelease"
         github_release_prefix: lib[:github_release_prefix])
 
       if download_path.nil?
-        UI.error "Abort." unless UI.confirm("Can't download strings file for #{lib[:name]}. Do you want to continue?")
+        error_message = "Can't download strings file for #{lib[:name]}.\r\n"
+        error_message += "Strings for this library won't get translated.\r\n"
+        error_message += "Do you want to continue anyway?"
+        UI.user_error! "Abort." unless UI.confirm(error_message)
       else
         UI.message("Strings.xml file downloaded to #{download_path}.")
         sh(merge_strings_tool_file_path, lib[:name], download_path)
