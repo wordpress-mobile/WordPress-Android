@@ -1900,8 +1900,6 @@
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
-    <string name="reader_btn_bookmark">Save</string>
-    <string name="reader_btn_bookmarked">Saved</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>

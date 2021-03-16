@@ -2,22 +2,24 @@ package org.wordpress.android.ui.mysite
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.quick_actions_block.view.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.QuickActionsBlockBinding
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.util.viewBinding
 
-class QuickActionsViewHolder(parent: ViewGroup) : MySiteItemViewHolder(parent, R.layout.quick_actions_block) {
-    fun bind(item: QuickActionsBlock) = itemView.apply {
-        quick_action_stats_button.setOnClickListener { item.onStatsClick.click() }
-        quick_action_posts_button.setOnClickListener { item.onPostsClick.click() }
-        quick_action_media_button.setOnClickListener { item.onMediaClick.click() }
-        quick_action_pages_button.setOnClickListener { item.onPagesClick.click() }
+class QuickActionsViewHolder(
+    parent: ViewGroup
+) : MySiteItemViewHolder<QuickActionsBlockBinding>(parent.viewBinding(QuickActionsBlockBinding::inflate)) {
+    fun bind(item: QuickActionsBlock) = with(binding) {
+        quickActionStatsButton.setOnClickListener { item.onStatsClick.click() }
+        quickActionPostsButton.setOnClickListener { item.onPostsClick.click() }
+        quickActionMediaButton.setOnClickListener { item.onMediaClick.click() }
+        quickActionPagesButton.setOnClickListener { item.onPagesClick.click() }
 
         val pagesVisibility = if (item.showPages) View.VISIBLE else View.GONE
-        quick_action_pages_container.visibility = pagesVisibility
-        middle_quick_action_spacing.visibility = pagesVisibility
+        quickActionPagesContainer.visibility = pagesVisibility
+        middleQuickActionSpacing.visibility = pagesVisibility
 
-        quick_start_stats_focus_point.setVisibleOrGone(item.showStatsFocusPoint)
-        quick_start_pages_focus_point.setVisibleOrGone(item.showPagesFocusPoint)
+        quickStartStatsFocusPoint.setVisibleOrGone(item.showStatsFocusPoint)
+        quickStartPagesFocusPoint.setVisibleOrGone(item.showPagesFocusPoint)
     }
 }

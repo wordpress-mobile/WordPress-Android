@@ -3,22 +3,21 @@ package org.wordpress.android.ui.main
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.me_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,6 +30,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
+import org.wordpress.android.databinding.MeFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -63,9 +63,10 @@ import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
 
-class MeFragment : Fragment(), OnScrollToTopListener {
+class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private var disconnectProgressDialog: ProgressDialog? = null
     private var isUpdatingGravatar = false
+    private var binding: MeFragmentBinding? = null
 
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
@@ -84,43 +85,41 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.me_fragment, container, false) as ViewGroup
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = MeFragmentBinding.bind(view).apply { onBind(savedInstanceState) }
+    }
+
+    private fun MeFragmentBinding.onBind(savedInstanceState: Bundle?) {
+        with(requireActivity() as AppCompatActivity) {
+            setSupportActionBar(toolbarMain)
+            supportActionBar?.apply {
+                setHomeButtonEnabled(true)
+                setDisplayHomeAsUpEnabled(true)
+                // We need to set the title this way so it can be updated on locale change
+                setTitle(packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).labelRes)
+            }
+        }
+
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
         }
-        avatar_container.setOnClickListener(showPickerListener)
-        change_photo.setOnClickListener(showPickerListener)
-        row_my_profile.setOnClickListener {
-            ActivityLauncher.viewMyProfile(
-                    activity
-            )
+        avatarContainer.setOnClickListener(showPickerListener)
+        changePhoto.setOnClickListener(showPickerListener)
+        rowMyProfile.setOnClickListener {
+            ActivityLauncher.viewMyProfile(activity)
         }
-        row_account_settings.setOnClickListener {
-            ActivityLauncher.viewAccountSettings(
-                    activity
-            )
+        rowAccountSettings.setOnClickListener {
+            ActivityLauncher.viewAccountSettings(activity)
         }
-        row_app_settings.setOnClickListener {
-            ActivityLauncher.viewAppSettingsForResult(
-                    activity
-            )
+        rowAppSettings.setOnClickListener {
+            ActivityLauncher.viewAppSettingsForResult(activity)
         }
-        row_support.setOnClickListener {
-            ActivityLauncher
-                    .viewHelpAndSupport(
-                            requireContext(),
-                            ME_SCREEN_HELP,
-                            selectedSite,
-                            null
-                    )
+        rowSupport.setOnClickListener {
+            ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, selectedSite, null)
         }
-        row_logout.setOnClickListener {
+        rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
             } else {
@@ -136,12 +135,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MeViewModel::class.java)
+        viewModel = ViewModelProvider(this@MeFragment, viewModelFactory).get(MeViewModel::class.java)
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    true -> showDisconnectDialog()
-                    false -> hideDisconnectDialog()
-                }
+            when (it) {
+                true -> showDisconnectDialog()
+                false -> hideDisconnectDialog()
+            }
         })
     }
 
@@ -155,7 +154,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onScrollToTop() {
         if (isAdded) {
-            scroll_view.smoothScrollTo(0, 0)
+            binding?.scrollView?.smoothScrollTo(0, 0)
         }
     }
 
@@ -173,7 +172,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onResume() {
         super.onResume()
-        refreshAccountDetails()
+        binding?.refreshAccountDetails()
     }
 
     override fun onDestroy() {
@@ -182,50 +181,50 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         super.onDestroy()
     }
 
-    private fun refreshAccountDetails() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun MeFragmentBinding.refreshAccountDetails() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
             return
         }
         // we only want to show user details for WordPress.com users
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
-            me_display_name.visibility = View.VISIBLE
-            me_username.visibility = View.VISIBLE
-            card_avatar.visibility = View.VISIBLE
-            row_my_profile.visibility = View.VISIBLE
+            meDisplayName.visibility = View.VISIBLE
+            meUsername.visibility = View.VISIBLE
+            cardAvatar.visibility = View.VISIBLE
+            rowMyProfile.visibility = View.VISIBLE
             loadAvatar(null)
-            me_username.text = getString(R.string.at_username, defaultAccount.userName)
-            me_login_logout_text_view.setText(R.string.me_disconnect_from_wordpress_com)
-            val displayName = defaultAccount.displayName
-            if (!TextUtils.isEmpty(displayName)) {
-                me_display_name.text = displayName
-            } else {
-                me_display_name.text = defaultAccount.userName
-            }
+            meUsername.text = getString(R.string.at_username, defaultAccount.userName)
+            meLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com)
+            meDisplayName.text = defaultAccount.displayName.ifEmpty { defaultAccount.userName }
         } else {
-            me_display_name.visibility = View.GONE
-            me_username.visibility = View.GONE
-            card_avatar.visibility = View.GONE
-            avatar_progress.visibility = View.GONE
-            row_my_profile.visibility = View.GONE
-            row_account_settings.visibility = View.GONE
-            me_login_logout_text_view.setText(R.string.me_connect_to_wordpress_com)
+            meDisplayName.visibility = View.GONE
+            meUsername.visibility = View.GONE
+            cardAvatar.visibility = View.GONE
+            avatarProgress.visibility = View.GONE
+            rowMyProfile.visibility = View.GONE
+            rowAccountSettings.visibility = View.GONE
+            meLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com)
         }
     }
 
-    private fun showGravatarProgressBar(isUpdating: Boolean) {
-        avatar_progress.visibility = if (isUpdating) View.VISIBLE else View.GONE
+    private fun MeFragmentBinding.showGravatarProgressBar(isUpdating: Boolean) {
+        avatarProgress.visibility = if (isUpdating) View.VISIBLE else View.GONE
         isUpdatingGravatar = isUpdating
     }
 
-    private fun loadAvatar(injectFilePath: String?) {
+    private fun MeFragmentBinding.loadAvatar(injectFilePath: String?) {
         val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
                 newAvatarUploaded,
                 avatarUrl,
                 injectFilePath,
-                me_avatar,
+                meAvatar,
                 AVATAR_WITHOUT_BACKGROUND,
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
@@ -407,7 +406,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             )
             return
         }
-        showGravatarProgressBar(true)
+        binding?.showGravatarProgressBar(true)
         GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
                 object : GravatarUploadListener {
                     override fun onSuccess() {
@@ -424,10 +423,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: GravatarUploadFinished) {
-        showGravatarProgressBar(false)
+        binding?.showGravatarProgressBar(false)
         if (event.success) {
             AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
-            loadAvatar(event.filePath)
+            binding?.loadAvatar(event.filePath)
         } else {
             ToastUtils.showToast(
                     activity,
@@ -439,7 +438,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged?) {
-        refreshAccountDetails()
+        binding?.refreshAccountDetails()
     }
 
     private val selectedSite: SiteModel?

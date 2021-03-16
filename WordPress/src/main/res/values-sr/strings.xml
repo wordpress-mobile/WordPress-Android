@@ -94,7 +94,6 @@ Language: sr_RS
     <string name="login_prologue_title_third">Видите коментаре и обавештења у реалном времену.</string>
     <string name="login_prologue_title_first">Добродошли у најпопуларнији градитељ веб страница на свету.</string>
     <string name="login_prologue_title_fourth">Гледајте раст ваше публике помоћу дубинске аналитике.</string>
-    <string name="login_prologue_title_fifth">Пратите своје омиљене локације и откривајте нове ствари за читање.</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
     <string name="reader_discover_recommended_blogs_header">Веб места за праћење</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' није у потпуности подржан</string>
@@ -110,7 +109,6 @@ Language: sr_RS
     <string name="stories_intro_main_title">Представљамо чланке приче</string>
     <string name="mlp_notice_blank_page_created">Празна страница је направљена</string>
     <string name="mlp_notice_page_created">Страница направљена</string>
-    <string name="mlp_preview_title">Претпреглед распореда</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_post_details_header_by_author_name">Од</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Означи као непожељно</string>
@@ -252,8 +250,6 @@ Language: sr_RS
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Откажи</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Пребаци у Нацрте</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Пребаци чланак у Нацрте?</string>
-    <string name="reader_label_choose_your_interests">Одаберите своја интересовања</string>
-    <string name="reader_choose_interests_content_description">Одаберите своја интересовања</string>
     <string name="reader_btn_done">Готово</string>
     <string name="reader_btn_select_few_interests">Одаберите неколико за наставак</string>
     <string name="post_status_post_published">Објављено</string>
@@ -318,8 +314,6 @@ Language: sr_RS
     <string name="app_theme_dark">Тамна</string>
     <string name="app_theme_light">Светла</string>
     <string name="app_theme">Изглед</string>
-    <string name="gutenberg_native_warning_message">Порука упозорења</string>
-    <string name="gutenberg_native_success_message">Порука успеха</string>
     <string name="gutenberg_native_show_post_content">Прикажи садржај чланка</string>
     <string name="gutenberg_native_only_show_excerpt">Прикажи само одломак </string>
     <string name="gutenberg_native_link_to">Повежи са</string>
@@ -391,7 +385,6 @@ Language: sr_RS
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_ungroup">Разгрупиши</string>
     <string name="gutenberg_native_translate">Преведи</string>
-    <string name="gutenberg_native_title">Наслов:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Додирни да сакријеш тастатуру</string>
     <string name="gutenberg_native_tap_here_to_show_help">Додирни овде да се прикаже помоћ</string>
     <string name="gutenberg_native_start_writing">Почни да пишеш…</string>
@@ -399,7 +392,6 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
     <string name="gutenberg_native_cut_block">Исеци блок</string>
-    <string name="gutenberg_native_reset_block">Ресетуј блок</string>
     <string name="gutenberg_native_show_section">Прикажи одељак</string>
     <string name="gutenberg_native_s_block_empty">%s блок. Празно</string>
     <string name="gutenberg_native_post_title_s">Наслов чланка. %s</string>
@@ -412,7 +404,6 @@ Language: sr_RS
     <string name="gutenberg_native_help_icon">Иконица помоћи</string>
     <string name="gutenberg_native_hide_keyboard">Сакриј тастатуру</string>
     <string name="gutenberg_native_move_block_down">Помери блок доле</string>
-    <string name="gutenberg_native_content">Садржај…</string>
     <string name="gutenberg_native_current_value_is_s">Тренутна вредност је %s</string>
     <string name="gutenberg_native_choose_from_device">Одабери свој уређај</string>
     <string name="gutenberg_native_alt_text">Алтернативни текст</string>
@@ -421,7 +412,6 @@ Language: sr_RS
     <string name="gutenberg_native_add_image_or_video">ДОДАЈ СЛИКУ ИЛИ ВИДЕО ЗАПИС</string>
     <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
-    <string name="gutenberg_native_add_a_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
     <string name="master_switch_default_title_off">Искључи</string>
@@ -1382,7 +1372,6 @@ Language: sr_RS
     <string name="signout">Одјави се</string>
     <string name="sign_in_wpcom">Пријави се у WordPress.com</string>
     <string name="reader_label_global_related_posts">Више на WordPress.com</string>
-    <string name="reader_label_local_related_posts">Више у %s</string>
     <string name="preference_open_device_settings">Отвори подешавања телефона</string>
     <string name="invite_invalid_email">%s: Неисправан емаил</string>
     <string name="invite_user_blocked_invites">%s: Корисник је блокирао позивнице</string>

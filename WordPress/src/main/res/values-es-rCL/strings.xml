@@ -260,7 +260,6 @@ Language: es_CL
     <string name="quick_start_dialog_need_help_button_positive">Aceptar</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Seguir otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Buscar %2$s para encontrar sitios con intereses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Lector %2$s para continuar</string>
     <string name="quick_start_dialog_need_help_button_negative">No Gracias</string>
     <string name="quick_start_dialog_follow_sites_message">Encuentra sitios que te inspiren y síguelos para recibir actualizaciones cuando publiquen.</string>
@@ -992,7 +991,6 @@ Language: es_CL
     <string name="comment_liked">Me gusta el comentario</string>
     <string name="sign_in_wpcom">Inicia sesión en WordPress.com</string>
     <string name="reader_label_global_related_posts">Más en WordPress.com</string>
-    <string name="reader_label_local_related_posts">Más en %s</string>
     <string name="preference_open_device_settings">Abrir configuración del dispositivo</string>
     <string name="invite_invalid_email">%s: Correo no válido</string>
     <string name="invite_user_blocked_invites">%s: El usuario bloqueó las invitaciones</string>
@@ -1048,6 +1046,7 @@ Language: es_CL
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se encontraron resultados para %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
+    <string name="reader_title_related_post_detail">Entradas Relacionadas</string>
     <string name="preview_screen_links_disabled">Los vínculos se desactivan en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">Eliminado con éxito %1$s</string>

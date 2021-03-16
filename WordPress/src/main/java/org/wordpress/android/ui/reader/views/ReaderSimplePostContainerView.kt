@@ -2,11 +2,11 @@ package org.wordpress.android.ui.reader.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderSimplePostsContainerViewBinding
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -23,6 +23,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
+    private val binding = ReaderSimplePostsContainerViewBinding.inflate(LayoutInflater.from(context), this, true)
     private val railcarJsonStrings = mutableListOf<String?>()
 
     @Inject lateinit var uiHelpers: UiHelpers
@@ -30,27 +31,22 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        initView(context)
+        binding.initRecyclerView(context)
     }
 
-    private fun initView(context: Context) {
-        inflate(context, R.layout.reader_simple_posts_container_view, this)
-        initRecyclerView(context)
+    private fun ReaderSimplePostsContainerViewBinding.initRecyclerView(context: Context) {
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
-    private fun initRecyclerView(context: Context) {
-        recycler_view.layoutManager = LinearLayoutManager(context)
-        recycler_view.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
-    }
-
-    fun showPosts(state: RelatedPostsUiState) {
+    fun showPosts(state: RelatedPostsUiState) = with(binding) {
         if (state.cards?.size == 0) return
 
         railcarJsonStrings.clear()
         railcarJsonStrings.addAll(state.railcarJsonStrings)
 
-        state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
-        uiHelpers.setTextOrHide(text_related_posts_label, state.headerLabel)
+        state.cards?.let { (recyclerView.adapter as ReaderRelatedPostsAdapter).update(it) }
+        uiHelpers.setTextOrHide(textRelatedPostsLabel, state.headerLabel)
     }
 
     /*
