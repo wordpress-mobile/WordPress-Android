@@ -498,7 +498,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
+                replaceRelatedPostDetailWithHistory(
+                        postId = this.postId,
+                        blogId = this.blogId
+                )
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
 
