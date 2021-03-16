@@ -497,7 +497,7 @@ ENV["validate_translations"]="lintVanillaRelease"
 
   desc "Import strings from binary dependencies"
   lane :localize_binary_deps do | options |
-    merge_strings_tool_file_path = File.join(ENV["PROJECT_ROOT_FOLDER"], 'tools/merge_strings_xml.py')
+    merge_strings_tool_file_path = File.join(ENV["PROJECT_ROOT_FOLDER"], 'tools', 'merge_strings_xml.py')
     binary_imported_libraries.each do  | lib |
       download_path = android_download_file_by_version(
         library_name: lib[:name],
