@@ -38,9 +38,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.UserSuggestion;
@@ -119,10 +117,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
-    private SiteModel mSite;
 
     @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
-    @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
@@ -287,8 +283,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
-
-        mSite = mSiteStore.getSiteBySiteId(mBlogId);
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
