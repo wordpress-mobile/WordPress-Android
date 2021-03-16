@@ -1050,6 +1050,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
         if (!isAdded) {
