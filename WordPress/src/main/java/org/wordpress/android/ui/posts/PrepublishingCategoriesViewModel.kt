@@ -81,7 +81,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     ) {
         setToolbarTitleUiState()
 
-        getCategoriesUseCase.fetchSiteCategories(siteModel)
+        performInitialFetchSiteCategories(siteModel, addCategoryRequest)
 
         updateCategoriesListItemUiState(addCategoryRequest)
 
@@ -90,6 +90,15 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             addCategoryJob = launch(bgDispatcher) {
                 addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
             }
+        }
+    }
+
+    private fun performInitialFetchSiteCategories(
+        siteModel: SiteModel,
+        addCategoryRequest: PrepublishingAddCategoryRequest?
+    ) {
+        if (addCategoryRequest == null) {
+            getCategoriesUseCase.fetchSiteCategories(siteModel)
         }
     }
 
