@@ -817,7 +817,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return;
         }
 
-        AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+        mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
         ActivityLauncher.loginWithoutMagicLink(this);
     }
 

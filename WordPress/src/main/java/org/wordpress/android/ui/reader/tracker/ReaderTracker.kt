@@ -124,8 +124,24 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    /* OTHER */
+
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param interceptedUri The fallback URI the app was started with
+     */
+    fun trackUri(stat: Stat, interceptedUri: String) {
+        val properties = mutableMapOf<String, Any>(
+                INTERCEPTED_URI to interceptedUri
+        )
+        track(stat, properties)
+    }
+
     companion object {
         private const val TAG_KEY = "tag"
+        private const val INTERCEPTED_URI = "intercepted_uri"
     }
 }
 

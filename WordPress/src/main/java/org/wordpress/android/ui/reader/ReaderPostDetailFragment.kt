@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.fluxc.Dispatcher
@@ -652,10 +653,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     readerTracker.track(Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, viewModel.post)
                 } else if (viewModel.interceptedUri != null) {
-                    AnalyticsUtils.trackWithInterceptedUri(
-                            Stat.DEEP_LINKED_FALLBACK,
-                            viewModel.interceptedUri
-                    )
+                    readerTracker.trackUri(DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
                     ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
                     requireActivity().finish()
                 }

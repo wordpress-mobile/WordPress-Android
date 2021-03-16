@@ -73,7 +73,6 @@ public class AnalyticsUtils {
     private static final String INTENT_ACTION = "intent_action";
     private static final String INTENT_HOST = "intent_host";
     private static final String INTENT_DATA = "intent_data";
-    private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
     private static final String NEWS_CARD_ORIGIN = "origin";
     private static final String NEWS_CARD_VERSION = "version";
@@ -463,19 +462,6 @@ public class AnalyticsUtils {
         properties.put(INTENT_ACTION, action);
         properties.put(INTENT_HOST, host);
         properties.put(INTENT_DATA, data != null ? data.toString() : null);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    /**
-     * Track when app launched via deep-linking but then fell back to external browser
-     *
-     * @param stat           The Stat to bump
-     * @param interceptedUri The fallback URI the app was started with
-     */
-    public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(INTERCEPTED_URI, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
     }

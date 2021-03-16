@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -122,6 +123,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject ReaderTracker mReaderTracker;
+
     private ReaderCommentListViewModel mViewModel;
 
     @Override
@@ -339,7 +342,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 return;
             }
 
-            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+            mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
             ActivityLauncher.loginWithoutMagicLink(ReaderCommentListActivity.this);
         }
     };
