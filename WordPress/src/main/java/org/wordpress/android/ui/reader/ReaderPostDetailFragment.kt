@@ -43,8 +43,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.fluxc.Dispatcher
@@ -584,7 +583,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun createMoreMenuPopup(actions: List<ReaderPostCardAction>, v: View) {
-        readerTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {
             it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
@@ -650,7 +649,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (viewModel.hasPost) {
-                    readerTracker.track(Stat.READER_ARTICLE_VISITED)
+                    readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, viewModel.post)
                 } else if (viewModel.interceptedUri != null) {
                     readerTracker.trackUri(DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
@@ -660,7 +659,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 return true
             }
             R.id.menu_share -> {
-                readerTracker.track(Stat.SHARED_ITEM)
+                readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, viewModel.post)
                 return true
             }
