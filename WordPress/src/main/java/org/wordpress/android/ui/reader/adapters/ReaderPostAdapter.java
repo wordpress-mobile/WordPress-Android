@@ -45,6 +45,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuild
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
@@ -92,7 +93,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean mCanRequestMorePosts;
 
-    private final ReaderTypes.ReaderPostListType mPostListType;
+    @NonNull private final ReaderTypes.ReaderPostListType mPostListType;
+    @NonNull private String mSource;
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
@@ -467,7 +469,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiStateBlocking(
-                        "source",
+                        mSource,
                         post,
                         false,
                         mPhotonWidth,
@@ -512,6 +514,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ((WordPress) context.getApplicationContext()).component().inject(this);
         this.mImageManager = imageManager;
         mPostListType = postListType;
+        mSource = mReaderTracker.getSource(mPostListType);
         mUiHelpers = uiHelpers;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
@@ -570,6 +573,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     // used when the viewing tagged posts
     public void setCurrentTag(ReaderTag tag) {
+        mSource = mReaderTracker.getSource(mPostListType, ReaderTab.transformTagToTab(tag));
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
             mCurrentTag = tag;
             mRenderedIds.clear();

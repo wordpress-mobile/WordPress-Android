@@ -12,6 +12,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_S
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.tracker.ReaderTab.A8C
 import org.wordpress.android.ui.reader.tracker.ReaderTab.CUSTOM
 import org.wordpress.android.ui.reader.tracker.ReaderTab.DISCOVER
@@ -171,6 +173,18 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    /* HELPER */
+
+    @JvmOverloads
+    fun getSource(
+        postListType: ReaderPostListType,
+        readerTab: ReaderTab? = null
+    ): String = if (postListType == TAG_FOLLOWED) {
+        readerTab?.source ?: UNKNOWN_VALUE
+    } else {
+        postListType.source
+    }
+
     companion object {
         private const val BLOG_ID_KEY = "blog_id"
         private const val FOLLOW_KEY = "follow"
@@ -178,11 +192,39 @@ class ReaderTracker @Inject constructor(
         private const val INTERCEPTED_URI = "intercepted_uri"
 
         private const val SOURCE_KEY = "source"
+        const val SOURCE_FOLLOWING = "following"
+        const val SOURCE_DISCOVER = "discover"
+        const val SOURCE_LIKED = "liked"
+        const val SOURCE_SAVED = "saved"
+        const val SOURCE_CUSTOM = "custom"
+        const val SOURCE_A8C = "a8c"
+        const val SOURCE_P2 = "p2"
+        const val SOURCE_SETTINGS = "subscriptions"
+        const val SOURCE_SEARCH = "search"
+        const val SOURCE_SITE_PREVIEW = "site_preview"
+        const val SOURCE_TAG_PREVIEW = "tag_preview"
+        const val SOURCE_POST_DETAIL = "post_detail"
+        const val SOURCE_COMMENT = "comment"
+        const val SOURCE_USER = "user"
+        const val SOURCE_STATS = "stats"
+        const val SOURCE_NOTIFICATION = "notification"
+        const val SOURCE_ACTIVITY_LOG_DETAIL = "activity_log_detail"
+
+        private const val UNKNOWN_VALUE = "unknown"
     }
 }
 
-enum class ReaderTab(val id: Int) {
-    FOLLOWING(1), DISCOVER(2), LIKED(3), SAVED(4), CUSTOM(5), A8C(6), P2(7);
+enum class ReaderTab(
+    val id: Int,
+    val source: String
+) {
+    FOLLOWING(1, ReaderTracker.SOURCE_FOLLOWING),
+    DISCOVER(2, ReaderTracker.SOURCE_DISCOVER),
+    LIKED(3, ReaderTracker.SOURCE_LIKED),
+    SAVED(4, ReaderTracker.SOURCE_SAVED),
+    CUSTOM(5, ReaderTracker.SOURCE_CUSTOM),
+    A8C(6, ReaderTracker.SOURCE_A8C),
+    P2(7, ReaderTracker.SOURCE_P2);
 
     companion object {
         fun fromId(id: Int): ReaderTab {
@@ -198,6 +240,7 @@ enum class ReaderTab(val id: Int) {
             }
         }
 
+        @JvmStatic
         fun transformTagToTab(readerTag: ReaderTag): ReaderTab {
             return when {
                 readerTag.isFollowedSites -> FOLLOWING
