@@ -118,7 +118,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
-    private boolean mIsMainReader;
+    private final boolean mIsMainReader;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -274,9 +274,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void renderTagHeader(
-        ReaderTag currentTag,
-        TagHeaderViewHolder tagHolder,
-        Boolean isFollowButtonEnabled
+            ReaderTag currentTag,
+            TagHeaderViewHolder tagHolder,
+            Boolean isFollowButtonEnabled
     ) {
         if (currentTag == null) {
             return;
@@ -287,21 +287,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         ReaderTagHeaderUiState uiState = new ReaderTagHeaderUiState(
-            currentTag.getLabel(),
-            new FollowButtonUiState(
-                onFollowButtonClicked,
-                ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                true
-            )
+                currentTag.getLabel(),
+                new FollowButtonUiState(
+                        onFollowButtonClicked,
+                        ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                        isFollowButtonEnabled,
+                        true
+                )
         );
         tagHolder.onBind(uiState);
     }
 
     private void toggleFollowButton(
-        Context context,
-        @NotNull ReaderTag currentTag,
-        TagHeaderViewHolder tagHolder
+            Context context,
+            @NotNull ReaderTag currentTag,
+            TagHeaderViewHolder tagHolder
     ) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
@@ -327,7 +327,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             });
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                            new HashMap<String, String>() {
+                                {
+                                    put("tag", slugForTracking);
+                                }
+                            });
                 }
             }
             renderTagHeader(currentTag, tagHolder, true);
@@ -371,7 +375,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
         Drawable drawable =
-                ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
+                ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post, position));
