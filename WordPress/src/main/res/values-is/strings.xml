@@ -81,7 +81,6 @@ Language: is
     <string name="comment_liked">Líkar við athugasemd</string>
     <string name="sign_in_wpcom">WordPress.com innskráning</string>
     <string name="reader_label_global_related_posts">Meira á WordPress.com</string>
-    <string name="reader_label_local_related_posts">Meira í %s</string>
     <string name="preference_open_device_settings">Opna stillingar tækis</string>
     <string name="invite_invalid_email">%s: Ógilt netfang</string>
     <string name="invite_user_blocked_invites">%s: Notandi lokaði á öll boð</string>
@@ -135,6 +134,7 @@ Language: is
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
+    <string name="reader_title_related_post_detail">Tengdar færslur</string>
     <string name="preview_screen_links_disabled">Tenglar eru óvirkir í forsýn</string>
     <string name="send">Senda</string>
     <string name="person_removed">Fjarlægði %1$s</string>

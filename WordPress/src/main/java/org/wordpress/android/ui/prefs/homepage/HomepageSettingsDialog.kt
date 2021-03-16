@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class HomepageSettingsDialog : DialogFragment() {
@@ -101,10 +102,8 @@ class HomepageSettingsDialog : DialogFragment() {
                 }
             }
         })
-        viewModel.dismissDialogEvent.observe(this, Observer {
-            it?.applyIfNotHandled {
+        viewModel.dismissDialogEvent.observeEvent(this, {
                 requireDialog().dismiss()
-            }
         })
         viewModel.start(requireNotNull(siteId), isClassicBlog, pageForPostsId, pageOnFrontId)
         return builder.create()

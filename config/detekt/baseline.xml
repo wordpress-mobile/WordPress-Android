@@ -524,7 +524,7 @@
     <ID>TooManyFunctions:PostListViewModel.kt$PostListViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:PostUtilsWrapper.kt$PostUtilsWrapper</ID>
     <ID>TooManyFunctions:PostsListActivity.kt$PostsListActivity : LocaleAwareActivityEditPostActivityHookPrepublishingBottomSheetListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfaceScrollableViewInitializedListener</ID>
-    <ID>TooManyFunctions:PrefMasterSwitchToolbarView.kt$PrefMasterSwitchToolbarView : LinearLayoutOnCheckedChangeListenerOnLongClickListenerOnClickListener</ID>
+    <ID>TooManyFunctions:PrefMainSwitchToolbarView.kt$PrefMainSwitchToolbarView : LinearLayoutOnCheckedChangeListenerOnLongClickListenerOnClickListener</ID>
     <ID>TooManyFunctions:PrepublishingAddCategoryFragment.kt$PrepublishingAddCategoryFragment : Fragment</ID>
     <ID>TooManyFunctions:PrepublishingAddCategoryViewModel.kt$PrepublishingAddCategoryViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:PrepublishingBottomSheetFragment.kt$PrepublishingBottomSheetFragment : WPBottomSheetDialogFragmentPrepublishingScreenClosedListenerPrepublishingActionClickedListener</ID>

@@ -25,6 +25,7 @@ import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun initRecyclerView() {
         recycler_view.itemAnimator = null
         recycler_view.addItemDecoration(
-            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
         recycler_view.setEmptyView(actionable_empty_view)
         initAdapter()
@@ -67,45 +68,43 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun setupObservers() {
         viewModel.uiState.observe(
-            viewLifecycleOwner,
-            { uiState ->
-                uiHelpers.updateVisibility(progress_bar, uiState.loadingVisible)
-                uiHelpers.updateVisibility(recycler_view, uiState.contentVisible)
-                uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisible)
+                viewLifecycleOwner,
+                { uiState ->
+                    uiHelpers.updateVisibility(progress_bar, uiState.loadingVisible)
+                    uiHelpers.updateVisibility(recycler_view, uiState.contentVisible)
+                    uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisible)
 
-                when (uiState) {
-                    is ContentUiState -> updateContentLayout(uiState)
+                    when (uiState) {
+                        is ContentUiState -> updateContentLayout(uiState)
 
-                    is FullScreenLoadingUiState -> { // Do Nothing
+                        is FullScreenLoadingUiState -> { // Do Nothing
+                        }
+
+                        is ErrorUiState.NoConnection,
+                        is ErrorUiState.GenericRequestFailed,
+                        is ErrorUiState.ScanRequestFailed -> updateErrorLayout(uiState as ErrorUiState)
                     }
-
-                    is ErrorUiState.NoConnection,
-                    is ErrorUiState.GenericRequestFailed,
-                    is ErrorUiState.ScanRequestFailed -> updateErrorLayout(uiState as ErrorUiState)
                 }
-            }
         )
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
 
-        viewModel.navigationEvents.observe(
-            viewLifecycleOwner,
-            {
-                it.applyIfNotHandled {
-                    when (this) {
-                        is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(this)
+        viewModel.navigationEvents.observeEvent(
+                viewLifecycleOwner,
+                { events ->
+                    when (events) {
+                        is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(events)
 
                         is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
-                            this@ScanFragment,
-                            siteModel,
-                            threatId
+                                this@ScanFragment,
+                                events.siteModel,
+                                events.threatId
                         )
 
                         is ShowContactSupport ->
-                            ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, this.site, null)
+                            ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, events.site, null)
                     }
                 }
-            }
         )
     }
 
@@ -124,9 +123,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun SnackbarMessageHolder.showSnackbar() {
         view?.let {
             val snackbar = WPSnackbar.make(
-                it,
-                uiHelpers.getTextOfUiString(requireContext(), message),
-                Snackbar.LENGTH_LONG
+                    it,
+                    uiHelpers.getTextOfUiString(requireContext(), message),
+                    Snackbar.LENGTH_LONG
             )
             snackbar.show()
         }
@@ -134,12 +133,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun showFixThreatsConfirmationDialog(holder: OpenFixThreatsConfirmationDialog) {
         fixThreatsConfirmationDialog = MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
-            .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
-            .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
-            .setNegativeButton(holder.negativeButtonLabel) { _, _ -> fixThreatsConfirmationDialog?.dismiss() }
-            .setCancelable(true)
-            .create()
+                .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
+                .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
+                .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
+                .setNegativeButton(holder.negativeButtonLabel) { _, _ -> fixThreatsConfirmationDialog?.dismiss() }
+                .setCancelable(true)
+                .create()
         fixThreatsConfirmationDialog?.show()
     }
 

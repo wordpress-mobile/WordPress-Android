@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-05 08:41:56+0000
+Translation-Revision-Date: 2021-03-09 08:20:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
     <string name="reader_title_interests">Seguir temas</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenidos atrayentes en tu sitio.</string>
     <string name="threat_fix_all_status_success_message_plural">Amenazas corregidas correctamente.</string>
     <string name="threat_fix_all_confirmation_message_plural">Por favor, confirma que quieres corregir todas las %s amenazas activas.</string>
-    <string name="scan_idle_threats_description_plural">La exploración ha encontrado %1s amenazas potenciales con %2s. Por favor, revísalas a continuación y lleva a cabo alguna acción o toca el botón de corregir todo. Estamos %3$s si nos necesitas.</string>
+    <string name="scan_idle_threats_description_plural">La exploración ha encontrado %1$s amenazas potenciales con %2$s. Por favor, revísalas a continuación y lleva a cabo alguna acción o toca el botón de corregir todo. Estamos %3$s si nos necesitas.</string>
     <string name="scan_fixing_threats_description_plural">Trabajamos duro para corregir estas amenazas en segundo plano. Mientras tanto puedes seguir usando tu sitio como siempre, puedes volver a comprobar el progreso en cualquier momento.</string>
     <string name="gutenberg_native_edit_focal_point">Editar el punto focal</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
@@ -39,9 +40,9 @@ Language: es
     <string name="invite_links_section_title">Enlace de invitación</string>
     <string name="threats_found_singular">Se ha encontrado una amenaza</string>
     <string name="threats_found_plural">Se han encontrado amenazas</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Exploración finalizada&lt;/b> &lt;br>&lt;/br> No se han encontrado amenazas potenciales</string>
-    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Exploración finalizada&lt;/b> &lt;br>&lt;/br> %s amenazas potenciales encontradas</string>
-    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Exploración finalizada&lt;/b> &lt;br>&lt;/br> Una amenaza potencial encontrada</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Exploración finalizada&lt;/b>&lt;br>No se han encontrado amenazas potenciales</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Exploración finalizada&lt;/b>&lt;br>%s amenazas potenciales encontradas</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Exploración finalizada&lt;/b>&lt;br>Una amenaza potencial encontrada</string>
     <string name="disable">Desactivar</string>
     <string name="scan_fixing_threats_title_singular">Corrigiendo la amenaza</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa tus páginas y haz cambios, o añade o elimina páginas.</string>
@@ -97,7 +98,7 @@ Language: es
     <string name="threat_status_fixed">Corregido</string>
     <string name="threat_found_header">Encontrado</string>
     <string name="scan_here_to_help">aquí para ayudar</string>
-    <string name="scan_idle_threats_description_singular">La exploración ha encontrado una amenaza potencial con %1s. Por favor, revísalas a continuación y lleva a cabo alguna acción o toca el botón de corregir todo. Estamos %2$s si nos necesitas.</string>
+    <string name="scan_idle_threats_description_singular">La exploración ha encontrado una amenaza potencial con %1$s. Por favor, revísalas a continuación y lleva a cabo alguna acción o toca el botón de corregir todo. Estamos %2$s si nos necesitas.</string>
     <string name="scan_idle_manual_scan_description">Para revisar tu sitio de nuevo ejecuta una exploración manual, o espera a que Jetpack explore tu sitio más tarde hoy mismo. </string>
     <string name="scan_provisioning_description">¡Bienvenido a la exploración de Jetpack! Le estamos echando un vistazo a tu web para dejarlo todo a punto para el primer análisis completo. Te informaremos si encontramos algún problema que le pueda afectar y después comenzará tu primer análisis.</string>
     <string name="scan_scanning_is_initial_description">Bienvenido a la herramienta de exploración de Jetpack, estamos echándole un primer vistazo a tu web en estos momentos, te mostraremos los resultados enseguida.</string>
@@ -372,11 +373,11 @@ Language: es
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Estoy muy inspirado por el trabajo del fotógrafo Cameron Karsten. Probaré estas técnicas en mi próximo</string>
     <string name="login_prologue_second_subtitle_one">Inspírate</string>
-    <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevas lecturas.</string>
     <string name="login_prologue_title_fourth">Observa cómo crece tu audiencia con analíticas avanzadas.</string>
     <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
     <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
     <string name="login_prologue_title_third">Mira los comentarios y avisos en tiempo real.</string>
+    <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevos blogs.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
     <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
@@ -389,7 +390,6 @@ Language: es
     <string name="stories_intro_description_first">Combina fotos, vídeos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
     <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
-    <string name="mlp_preview_title">Vista previa del diseño</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
@@ -590,8 +590,6 @@ Language: es
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Fecha de publicación</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
-    <string name="reader_label_choose_your_interests">Elige tus intereses</string>
-    <string name="reader_choose_interests_content_description">Elige tus intereses</string>
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
     <string name="post_status_post_published">Publicado</string>
@@ -600,6 +598,8 @@ Language: es
     <string name="publish_date">Fecha de publicación</string>
     <string name="ccpa_privacy_notice_read">Lee el aviso de privacidad de CCPA</string>
     <string name="ccpa_privacy_notice_caption">La Ley de Privacidad del Consumidor de California («CCPA») nos obliga a que proporcionemos información adicional a los residentes de California sobre las categorías de información personal que recopilamos y compartimos, dónde obtenemos esa información personal y cómo y por qué la usamos.</string>
+    <string name="reader_label_choose_your_interests">Elige tus temáticas</string>
+    <string name="reader_choose_interests_content_description">Elige tus temáticas</string>
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
@@ -718,8 +718,6 @@ Language: es
     <string name="app_theme_default">Establecido por el ahorrador de batería</string>
     <string name="editor_page_saved_locally_failed_media">La página ha fallado al subir los medios y ha sido guardada localmente</string>
     <string name="quickpress_shortcut_activity_label">Selecciona un blog para el atajo a QuickPress</string>
-    <string name="gutenberg_native_warning_message">Mensaje de advertencia</string>
-    <string name="gutenberg_native_success_message">Mensaje de éxito</string>
     <string name="gutenberg_native_show_post_content">Mostrar el contenido de la entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
@@ -827,20 +825,16 @@ Language: es
     <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
-    <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar el teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para mostrar la ayuda</string>
     <string name="gutenberg_native_take_a_video">Haz un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Haz una foto o un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Haz una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Título del plugin en la barra lateral</string>
     <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
-    <string name="gutenberg_native_reset_block">Restablecer el bloque</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
-    <string name="gutenberg_native_remove_annotations">Eliminar las notas</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el vídeo</string>
     <string name="gutenberg_native_problem_displaying_block">Problema al mostrar el bloque</string>
     <string name="gutenberg_native_post_title_s">Título de la entrada. %s</string>
@@ -850,17 +844,12 @@ Language: es
     <string name="gutenberg_native_open_settings">Abrir los ajustes</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ninguna aplicación puede manejar esta petición. Por favor, instala un navegador web.</string>
     <string name="gutenberg_native_navigate_up">Navegar arriba</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mi panel de prepublicación</string>
-    <string name="gutenberg_native_my_post_status_info">Información del estado de mi entrada</string>
-    <string name="gutenberg_native_my_post_publish_panel">Mi panel de publicación de entradas</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panel de ajustes de mis documentos</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover el bloque hacia arriba, de la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover el bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, de la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque abajo</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar el teclado</string>
-    <string name="gutenberg_native_here_is_the_panel_content">¡Aquí está el panel de contenido!</string>
     <string name="gutenberg_native_help_icon">Icono de ayuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dos veces para deshacer el último cambio</string>
@@ -875,9 +864,7 @@ Language: es
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toca dos veces para cambiar el valor usando el control deslizante</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dos veces para añadir un bloque</string>
     <string name="gutenberg_native_current_value_is_s">El valor actual es %s</string>
-    <string name="gutenberg_native_content">Contenido…</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
-    <string name="gutenberg_native_annotations_sidebar">Barra lateral de notas</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">AÑADIR UN VÍDEO</string>
@@ -885,8 +872,6 @@ Language: es
     <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
     <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
-    <string name="gutenberg_native_add_annotation">Añadir una nota</string>
-    <string name="gutenberg_native_add_a_description">Añadir una descripción</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón «Añadir a las entradas guardadas» para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">La lista se ha cargado con %1$d elementos.</string>
     <string name="notifications_tab_dialog_switch_desc">Avisos</string>
@@ -1374,10 +1359,10 @@ Language: es
     <string name="quick_start_dialog_need_help_button_positive">Acepto</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con intereses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
     <string name="quick_start_dialog_need_help_button_negative">No gracias</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, y síguelos para obtener actualizaciones cuando publiquen.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con temáticas similares</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">Ahora no</string>
@@ -2130,7 +2115,7 @@ Language: es
     <string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
     <string name="signout">Cerrar sesión</string>
     <string name="reader_label_global_related_posts">Más en WordPress.com</string>
-    <string name="reader_label_local_related_posts">Más en %s</string>
+    <string name="reader_label_local_related_posts">Más de %s</string>
     <string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
     <string name="invite_invalid_email">%s: Correo electrónico no válido</string>
     <string name="invite_user_blocked_invites">%s: Invitaciones bloqueadas por el usuario</string>
@@ -2188,6 +2173,7 @@ Language: es
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se han encontrado resultados con %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
+    <string name="reader_title_related_post_detail">Entrada relacionada</string>
     <string name="preview_screen_links_disabled">Los enlaces están desactivados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="user_remove_confirmation_message">Si eliminas %1$s, ese usuario ya no será capaz de acceder a este sitio, pero cualquier contenido que fuera creado por %1$s permanecerá en el sitio.\n\n¿Aún te gustaría eliminar este usuario?</string>

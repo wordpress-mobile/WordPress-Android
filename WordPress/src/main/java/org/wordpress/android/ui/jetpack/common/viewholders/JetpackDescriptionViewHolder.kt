@@ -6,8 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.jetpack_list_description_item.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.JetpackListDescriptionItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
@@ -16,14 +15,17 @@ import org.wordpress.android.ui.utils.UiHelpers
 class JetpackDescriptionViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
-) : JetpackViewHolder(R.layout.jetpack_list_description_item, parent) {
+) : JetpackViewHolder<JetpackListDescriptionItemBinding>(
+        parent,
+        JetpackListDescriptionItemBinding::inflate
+) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val descriptionState = itemUiState as DescriptionState
-        uiHelpers.setTextOrHide(description, descriptionState.text)
+        uiHelpers.setTextOrHide(binding.description, descriptionState.text)
         descriptionState.clickableTextsInfo?.let { setClickableSpan(it) }
     }
 
-    private fun setClickableSpan(clickableTextsInfo: List<ClickableTextInfo>) {
+    private fun setClickableSpan(clickableTextsInfo: List<ClickableTextInfo>) = with(binding) {
         val spannableString = SpannableString(description.text)
         for (clickableTextInfo in clickableTextsInfo) {
             val (startIndex, endIndex, onClick) = clickableTextInfo

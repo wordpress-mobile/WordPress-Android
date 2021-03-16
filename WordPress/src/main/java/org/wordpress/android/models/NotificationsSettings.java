@@ -135,19 +135,19 @@ public class NotificationsSettings {
     }
 
     /**
-     * Determines if the master switch should be displayed on a notifications settings preference screen
+     * Determines if the main switch should be displayed on a notifications settings preference screen
      * for the given {@link Channel} and {@link Type}
      *
      * @param channel The {@link Channel}
      * @param type The {@link Type}
-     * @return A flag indicating whether master switch should be displayed.
+     * @return A flag indicating whether main switch should be displayed.
      */
-    public boolean shouldDisplayMasterSwitch(Channel channel, Type type) {
-        boolean displayMasterSwitch = false;
+    public boolean shouldDisplayMainSwitch(Channel channel, Type type) {
+        boolean displayMainSwitch = false;
         switch (channel) {
             case BLOGS:
                 if (type == Type.TIMELINE) {
-                    displayMasterSwitch = true;
+                    displayMainSwitch = true;
                 }
                 break;
             case OTHER:
@@ -156,7 +156,7 @@ public class NotificationsSettings {
                 break;
         }
 
-        return displayMasterSwitch;
+        return displayMainSwitch;
     }
 
     /**

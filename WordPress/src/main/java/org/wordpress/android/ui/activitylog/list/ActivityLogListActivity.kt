@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.activity_log_list_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
@@ -30,11 +30,11 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        val binding = ActivityLogListActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.checkAndUpdateUiToBackupScreen()
 
-        setContentView(R.layout.activity_log_list_activity)
-        checkAndUpdateUiToBackupScreen()
-
-        setSupportActionBar(toolbar_main)
+        setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
@@ -51,10 +51,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
      * necessity to split those features in separate screens in order not to increase further the complexity of this
      * screen's architecture.
      */
-    private fun checkAndUpdateUiToBackupScreen() {
+    private fun ActivityLogListActivityBinding.checkAndUpdateUiToBackupScreen() {
         if (intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)) {
             setTitle(R.string.backup)
-            activity_type_filter.visibility = View.GONE
+            activityTypeFilter.visibility = View.GONE
         }
     }
 
