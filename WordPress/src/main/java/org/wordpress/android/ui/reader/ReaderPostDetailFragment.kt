@@ -38,10 +38,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
-import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
-import kotlinx.android.synthetic.main.reader_include_post_detail_content.*
-import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -283,13 +279,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val swipeToRefreshOffset = resources.getDimensionPixelSize(R.dimen.toolbar_content_offset)
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(
-                swipeRefreshLayout
-        ) {
-            if (isAdded) {
-                updatePost()
-            }
-        }
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) { if (isAdded) updatePost() }
     }
 
     private fun initAppBar(view: View) {
@@ -399,8 +389,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, {
-            uiHelpers.updateVisibility(text_error, it.errorVisible)
-            uiHelpers.updateVisibility(progress_loading, it.loadingVisible)
+            uiHelpers.updateVisibility(binding.textError, it.errorVisible)
+            uiHelpers.updateVisibility(binding.progressLoading, it.loadingVisible)
             when (it) {
                 is LoadingUiState -> Unit // Do Nothing
                 is ReaderPostDetailsUiState -> renderUiState(it, binding)
