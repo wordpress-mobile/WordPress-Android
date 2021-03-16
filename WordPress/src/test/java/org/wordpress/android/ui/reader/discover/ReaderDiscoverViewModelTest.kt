@@ -64,13 +64,13 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -102,7 +102,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock private lateinit var parentViewModel: ReaderViewModel
@@ -124,7 +124,7 @@ class ReaderDiscoverViewModelTest {
                 reblogUseCase,
                 readerUtilsWrapper,
                 appPrefsWrapper,
-                analyticsTrackerWrapper,
+                readerTracker,
                 displayUtilsWrapper,
                 getFollowedTagsUseCase,
                 TEST_DISPATCHER,
