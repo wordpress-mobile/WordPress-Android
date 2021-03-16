@@ -21,13 +21,18 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.dimen
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -90,6 +95,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var siteStore: SiteStore
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -97,6 +103,7 @@ class ReaderPostDetailViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
+    private val site = SiteModel().apply { siteId = readerPost.blogId }
 
     private lateinit var relatedPosts: ReaderSimplePostList
 
@@ -110,6 +117,7 @@ class ReaderPostDetailViewModelTest {
                 postDetailsUiStateBuilder,
                 reblogUseCase,
                 readerFetchRelatedPostsUseCase,
+                siteStore,
                 analyticsUtilsWrapper,
                 eventBusWrapper,
                 TEST_DISPATCHER,
@@ -119,6 +127,7 @@ class ReaderPostDetailViewModelTest {
         whenever(readerPostCardActionsHandler.refreshPosts).thenReturn(fakeRefreshPostFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
+        whenever(siteStore.getSiteBySiteId(readerPost.blogId)).thenReturn(site)
 
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
 
@@ -170,6 +179,7 @@ class ReaderPostDetailViewModelTest {
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
     }
 
+    /* SHOW POST */
     @Test
     fun `when post show is triggered, then ui is updated`() = test {
         val uiStates = init().uiStates
@@ -178,6 +188,14 @@ class ReaderPostDetailViewModelTest {
         assertThat(uiStates.first()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
+    @Test
+    fun `when post show is triggered, then post is shown in web view`() = test {
+        val uiStates = init()
+
+        assertThat(uiStates.navigation.first().peekContent()).isInstanceOf(ShowPostInWebView::class.java)
+    }
+
+    /* UPDATE POST */
     @Test
     fun `when post is updated, then ui is updated`() = test {
         val uiStates = init().uiStates
@@ -188,94 +206,28 @@ class ReaderPostDetailViewModelTest {
         assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
+    /* READER POST FEATURED IMAGE */
     @Test
-    fun `when like button is clicked, then like action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(LIKE),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    @Test
-    fun `when comments button is clicked, then comments action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(COMMENTS),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    @Test
-    fun `when reblog button is clicked, then reblog action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(REBLOG),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    @Test
-    fun `when site is picked for reblog action, then editor is opened for reblog`() {
-        val navigaitonObserver = init().navigation
-        fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
-
-        viewModel.onReblogSiteSelected(1)
-
-        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
-    }
-
-    @Test
-    fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
-        val uiStates = init().uiStates
-
-        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
-
-        verify(readerPostCardActionsHandler).onAction(
-                eq(readerPost),
-                eq(BOOKMARK),
-                eq(false),
-                eq(true)
-        )
-    }
-
-    @Test
-    fun `when tag is clicked, then posts for tag are shown`() = test {
+    fun `when featured image is clicked, then media preview is shown`() = test {
         val observers = init()
 
-        observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
-        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowMediaPreview::class.java)
     }
 
     @Test
-    fun `when header blog section is clicked, then selected blog's header click action is invoked`() = test {
-        val uiStates = init().uiStates
+    fun `when media preview is requested, then correct media from selected post's site is previewed`() = test {
+        val observers = init()
 
-        uiStates.last().headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
-                .invoke(readerPost.postId, readerPost.blogId)
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
 
-        verify(readerPostCardActionsHandler).handleHeaderClicked(
-                eq(readerPost.blogId),
-                eq(readerPost.feedId)
+        assertThat(observers.navigation.last().peekContent() as ShowMediaPreview).isEqualTo(
+                ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
         )
     }
 
+    /* MORE MENU */
     @Test
     fun `when more button is clicked, then more menu is shown`() = test {
         val uiStates = init().uiStates
@@ -308,6 +260,29 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    /* HEADER */
+    @Test
+    fun `when tag is clicked, then posts for tag are shown`() = test {
+        val observers = init()
+
+        observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
+
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostsByTag::class.java)
+    }
+
+    @Test
+    fun `when header blog section is clicked, then selected blog's header click action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
+                .invoke(readerPost.postId, readerPost.blogId)
+
+        verify(readerPostCardActionsHandler).handleHeaderClicked(
+                eq(readerPost.blogId),
+                eq(readerPost.feedId)
+        )
+    }
+
     @Test
     fun `when header follow button is clicked, then follow action is invoked`() = test {
         val uiStates = init().uiStates
@@ -322,6 +297,17 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    /* EXCERPT FOOTER */
+    @Test
+    fun `when visit excerpt link is clicked, then post blog url is opened`() = test {
+        val observers = init()
+
+        viewModel.onVisitPostExcerptFooterClicked(postLink = readerPost.url)
+
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(OpenUrl(url = readerPost.url))
+    }
+
+    /* RELATED POSTS */
     @Test
     fun `given local related posts fetch succeeds, when related posts are requested, then local related posts shown`() =
             test {
@@ -455,7 +441,7 @@ class ReaderPostDetailViewModelTest {
                 val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
+                assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
             }
 
     @Test
@@ -474,9 +460,76 @@ class ReaderPostDetailViewModelTest {
                 val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
-                assertThat(observers.navigation[0].peekContent())
+                assertThat(observers.navigation.last().peekContent())
                         .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
             }
+
+    /* FOOTER */
+    @Test
+    fun `when like button is clicked, then like action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(LIKE),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when comments button is clicked, then comments action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(COMMENTS),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when reblog button is clicked, then reblog action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(REBLOG),
+                eq(false),
+                eq(true)
+        )
+    }
+
+    @Test
+    fun `when site is picked for reblog action, then editor is opened for reblog`() {
+        val navigaitonObserver = init().navigation
+        fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
+
+        viewModel.onReblogSiteSelected(1)
+
+        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+    }
+
+    @Test
+    fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
+        val uiStates = init().uiStates
+
+        uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
+
+        verify(readerPostCardActionsHandler).onAction(
+                eq(readerPost),
+                eq(BOOKMARK),
+                eq(false),
+                eq(true)
+        )
+    }
 
     private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
         this.postId = id
@@ -484,6 +537,7 @@ class ReaderPostDetailViewModelTest {
         this.feedId = id * 1000
         this.title = "DummyPost"
         this.featuredVideo = id.toString()
+        this.featuredImage = "/featured_image/$id/url"
         this.isExternal = !isWpComPost
     }
 
@@ -497,6 +551,7 @@ class ReaderPostDetailViewModelTest {
         return ReaderPostDetailsUiState(
                 postId = post.postId,
                 blogId = post.blogId,
+                featuredImageUiState = mock(),
                 headerUiState = ReaderPostDetailsHeaderUiState(
                         UiStringText(post.title),
                         post.authorName,
@@ -522,6 +577,7 @@ class ReaderPostDetailViewModelTest {
                         ),
                         ""
                 ),
+                excerptFooterUiState = mock(),
                 moreMenuItems = mock(),
                 actions = ReaderPostActions(
                     bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),

@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
@@ -14,6 +16,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
@@ -48,6 +51,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val siteStore: SiteStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -72,6 +76,10 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private var isStarted = false
     var isRelatedPost: Boolean = false
+
+    var post: ReaderPost? = null
+    val hasPost: Boolean
+        get() = post != null
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
@@ -158,6 +166,13 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onFeaturedImageClicked(blogId: Long, featuredImageUrl: String) {
+        val site = siteStore.getSiteBySiteId(blogId)
+        _navigationEvents.value = Event(
+                ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
+        )
+    }
+
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
@@ -180,6 +195,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(post: ReaderPost) {
+        analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, post)
+        post?.let { _navigationEvents.postValue(Event(ShowPostInWebView(it))) }
         _uiState.value = convertPostToUiState(post)
     }
 
@@ -200,6 +217,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 readerPostCardActionsHandler.handleHeaderClicked(blogId, it.feedId)
             }
         }
+    }
+
+    fun onVisitPostExcerptFooterClicked(postLink: String) {
+        _navigationEvents.value = Event(ReaderNavigationEvents.OpenUrl(url = postLink))
     }
 
     private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
@@ -304,12 +325,18 @@ class ReaderPostDetailViewModel @Inject constructor(
     data class ReaderPostDetailsUiState(
         val postId: Long,
         val blogId: Long,
+        val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
         val headerUiState: ReaderPostDetailsHeaderUiState,
+        val excerptFooterUiState: ExcerptFooterUiState?,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
         val actions: ReaderPostActions,
         val localRelatedPosts: RelatedPostsUiState? = null,
         val globalRelatedPosts: RelatedPostsUiState? = null
     ) {
+        data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
+
+        data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
+
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,
             val isGlobal: Boolean,
