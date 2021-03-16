@@ -259,7 +259,7 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.mediaCollectionFinalSaveResult(storyFirstMediaId, success);
     }
 
-    public void onMediaModelCreatedForFile(String oldId, String newId, final String oldUrl) {
+    public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
     }
 
