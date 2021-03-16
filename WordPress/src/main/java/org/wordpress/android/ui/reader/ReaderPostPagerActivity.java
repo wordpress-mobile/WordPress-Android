@@ -57,7 +57,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -333,9 +332,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     }
                     break;
                 case WPCOM_POST_SLUG:
-                    AnalyticsUtils.trackWithBlogPostDetails(
-                            AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, blogIdentifier,
-                            postIdentifier, mCommentId);
+                    mReaderTracker.trackBlogPost(
+                            AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED,
+                            blogIdentifier,
+                            postIdentifier,
+                            mCommentId
+                    );
 
                     // try to get the post from the local db
                     ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);

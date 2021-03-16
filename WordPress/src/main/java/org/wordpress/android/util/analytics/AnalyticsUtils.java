@@ -416,16 +416,6 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
-            commentId) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(BLOG_ID_KEY, blogId);
-        properties.put(POST_ID_KEY, postId);
-        properties.put(COMMENT_ID_KEY, commentId);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
     public static void trackWithReblogDetails(
             AnalyticsTracker.Stat stat,
             long sourceBlogId,
