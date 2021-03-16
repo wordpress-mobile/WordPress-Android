@@ -64,10 +64,10 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -265,17 +265,17 @@ class ReaderDiscoverViewModelTest {
 
     @Test
     fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
-        test {
-            // Arrange
-            val uiStates = init(autoUpdateFeed = false).uiStates
+            test {
+                // Arrange
+                val uiStates = init(autoUpdateFeed = false).uiStates
 
-            // Act
-            fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
 
-            // Assert
-            val contentUiState = uiStates[1] as ContentUiState
-            assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
-        }
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+            }
 
     @Test
     fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
@@ -329,7 +329,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_FIRST_PAGE)))
         // Assert
-        assertThat(uiStates.last().reloadProgressVisibility).isTrue()
+        assertThat(uiStates.last().reloadProgressVisibility).isTrue
     }
 
     @Test
@@ -339,7 +339,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_MORE)))
         // Assert
-        assertThat(uiStates.last().loadMoreProgressVisibility).isTrue()
+        assertThat(uiStates.last().loadMoreProgressVisibility).isTrue
     }
 
     @Test
@@ -349,7 +349,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenProgressVisibility).isTrue()
+        assertThat(uiStates.last().fullscreenProgressVisibility).isTrue
     }
 
     @Test
@@ -370,9 +370,9 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenProgressVisibility).isFalse()
-        assertThat(uiStates.last().reloadProgressVisibility).isFalse()
-        assertThat(uiStates.last().loadMoreProgressVisibility).isFalse()
+        assertThat(uiStates.last().fullscreenProgressVisibility).isFalse
+        assertThat(uiStates.last().reloadProgressVisibility).isFalse
+        assertThat(uiStates.last().loadMoreProgressVisibility).isFalse
     }
 
     @Test
@@ -546,7 +546,7 @@ class ReaderDiscoverViewModelTest {
         viewModel.swipeToRefresh()
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isTrue()
+        assertThat(uiStates.last().scrollToTop).isTrue
     }
 
     @Test
@@ -561,7 +561,7 @@ class ReaderDiscoverViewModelTest {
         }
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isFalse()
+        assertThat(uiStates.last().scrollToTop).isFalse
     }
 
     @Test
