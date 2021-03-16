@@ -107,7 +107,11 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         verify(postSeenStatusApiCallsProvider, times(0)).markPostAsSeen(any())
         verify(readerPostTableWrapper, times(0)).setPostSeenStatusInDb(any(), any())
-        verify(analyticsUtilsWrapper, times(0)).trackWithReaderPostDetails(any(), any(), any())
+        verify(analyticsUtilsWrapper, times(0)).trackWithReaderPostDetails(
+                stat = any(),
+                post = any(),
+                properties = any()
+        )
 
         seenStatusToggleUseCase.markPostAsSeenIfNecessary(unseenPost)
 

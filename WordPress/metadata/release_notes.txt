@@ -1,6 +1,7 @@
-* [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
-* [**] Block Editor: Add support for setting Cover block focal point. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3028]
-* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
-* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
-* [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
+What’s new?
 
+The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.

@@ -43,6 +43,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class QuickStartRepositoryTest : BaseUnitTest() {
@@ -55,6 +56,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
     @Mock lateinit var htmlCompat: HtmlCompatWrapper
+    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -75,7 +77,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
-                htmlCompat
+                htmlCompat,
+                mySiteImprovementsFeatureConfig
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -139,12 +142,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
-        quickStartRepository.startQuickStart()
+        quickStartRepository.startQuickStart(siteId)
 
-        verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
+        verify(quickStartUtils).startQuickStart(siteId)
         assertModel()
     }
 

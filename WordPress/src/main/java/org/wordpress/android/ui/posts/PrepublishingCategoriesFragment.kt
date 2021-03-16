@@ -4,17 +4,16 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.prepublishing_categories_fragment.*
-import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PrepublishingCategoriesFragmentBinding
+import org.wordpress.android.databinding.PrepublishingToolbarBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.AD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
@@ -74,41 +74,43 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBackButton()
-        initAddCategoryButton()
-        initRecyclerView()
-        initViewModel()
+        with(PrepublishingCategoriesFragmentBinding.bind(view)) {
+            includePrepublishingToolbar.initBackButton()
+            includePrepublishingToolbar.initAddCategoryButton()
+            initRecyclerView()
+            initViewModel()
+        }
     }
 
-    private fun initBackButton() {
-        back_button.setOnClickListener {
+    private fun PrepublishingToolbarBinding.initBackButton() {
+        backButton.setOnClickListener {
             viewModel.onBackButtonClick()
         }
     }
 
-    private fun initAddCategoryButton() {
-        add_action_button.setOnClickListener {
+    private fun PrepublishingToolbarBinding.initAddCategoryButton() {
+        addActionButton.setOnClickListener {
             viewModel.onAddCategoryClick()
         }
     }
 
-    private fun initRecyclerView() {
-        recycler_view.layoutManager = LinearLayoutManager(
+    private fun PrepublishingCategoriesFragmentBinding.initRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(
                 context,
                 RecyclerView.VERTICAL,
                 false
         )
-        recycler_view.adapter = PrepublishingCategoriesAdapter(uiHelpers)
-        recycler_view.addItemDecoration(
+        recyclerView.adapter = PrepublishingCategoriesAdapter(uiHelpers)
+        recyclerView.addItemDecoration(
                 DividerItemDecoration(
-                        recycler_view.context,
+                        recyclerView.context,
                         DividerItemDecoration.VERTICAL
                 )
         )
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
+    private fun PrepublishingCategoriesFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@PrepublishingCategoriesFragment, viewModelFactory)
                 .get(PrepublishingCategoriesViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
@@ -122,42 +124,36 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         viewModel.start(getEditPostRepository(), siteModel, addCategoryRequest, selectedCategoryIds)
     }
 
-    private fun startObserving() {
-        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onBackClicked()
-            }
+    private fun PrepublishingCategoriesFragmentBinding.startObserving() {
+        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
+            closeListener?.onBackClicked()
         })
 
-        viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, Observer { bundle ->
+        viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, { bundle ->
             actionListener?.onActionClicked(ADD_CATEGORY, bundle)
         }
         )
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
-            toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
+            includePrepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                showToast()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+            it.showToast()
         })
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            (recycler_view.adapter as PrepublishingCategoriesAdapter).update(
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            (recyclerView.adapter as PrepublishingCategoriesAdapter).update(
                     it.categoriesListItemUiState
             )
             with(uiHelpers) {
-                updateVisibility(add_action_button, it.addCategoryActionButtonVisibility)
-                updateVisibility(progress_loading, it.progressVisibility)
-                updateVisibility(recycler_view, it.categoryListVisibility)
+                updateVisibility(includePrepublishingToolbar.addActionButton, it.addCategoryActionButtonVisibility)
+                updateVisibility(progressLoading, it.progressVisibility)
+                updateVisibility(recyclerView, it.categoryListVisibility)
             }
         })
-        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                viewModel.onBackButtonClick()
-            }
+        parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner, {
+            viewModel.onBackButtonClick()
         })
     }
 

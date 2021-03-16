@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-13 09:10:37+0000
+Translation-Revision-Date: 2021-03-09 09:09:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Shfiksoje</string>
+    <string name="reader_title_interests">Ndiqni tema</string>
+    <string name="stories_intro_main_subtitle">Një rrugë e re për të krijuar dhe botuar lëndë tërheqëse në sajtin tuaj.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
+    <string name="activity_log_backup_download_notice_download_action">Shkarkoje</string>
+    <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Ju lutemi, ripohoni se doni të zgjidhni krejt %s kërcënimet aktive.</string>
+    <string name="scan_idle_threats_description_plural">Kontrolli gjeti %1$s kërcënime potenciale me %2$s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
+    <string name="scan_fixing_threats_description_plural">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
+    <string name="gutenberg_native_edit_focal_point">Përpunoni pikë vatrore</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Poshtme për përpunim, zëvendësim ose spastrim të figurës</string>
+    <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Krejt punët të mbaruara&lt;/b>&lt;br/>Do të mbërrini në më shumë njerëz. Punë e paqme!</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Veprimeve për përpunim, zëvendësim ose spastrim të figurës</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Krejt punët të mbaruara&lt;/b>&lt;br/>E keni përshtatur sajtin tuaj. Ju lumtë!</string>
+    <string name="quick_start_card_menu_hide">Fshihe hëpërhë</string>
+    <string name="magic_link_not_meaning_to_create_account">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
+    <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
+    <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
+    <string name="invite_links_bad_format_response">U mor përgjigje e pavlefshme</string>
+    <string name="invite_links_null_response">S’u mor përgjigje</string>
+    <string name="invite_links_cannot_get_role_data_error">Pati një gabim në marrjen e të dhënave për rolin %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">Pati një gabim në marrje rolesh</string>
+    <string name="invite_links_generic_get_data_error">Gabim i panjohur në prurje të dhënash lidhjesh ftese</string>
+    <string name="invite_links_helper_text">Përdoreni këtë lidhje për mirëseardhjen e anëtarëve të ekipit tuaj, pa pasur nevojë t’i ftoni ata tek për tek. Cilido që viziton këtë URL, do të jetë në gjendje të regjistrohet në entin tuaj, madje edhe nëse lidhjen e morën nga dikush tjetër, ndaj kujdesuni t’ua jepni personave të besuar.</string>
+    <string name="invite_links_expire_date">Skadon më: %1$s</string>
+    <string name="invite_links_disable_invite_link">Çaktivizo lidhje ftese</string>
+    <string name="invite_links_share_invite_link">Jepni lidhje ftese</string>
+    <string name="invite_links_generate">Prodho lidhje të re</string>
+    <string name="invite_links_get_status_retry">Rifresko gjendje lidhjesh</string>
+    <string name="invite_links_section_title">Lidhje Ftese</string>
+    <string name="threats_found_singular">U gjet kërcënim</string>
+    <string name="threats_found_plural">U gjetën kërcënime</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br> S’u gjetën kërcënime</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br> U gjetën %s kërcënime potenciale</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br> U gjet 1 kërcënim potencial</string>
+    <string name="scan_fixing_threats_title_singular">Po zgjidhet Kërcënimi</string>
+    <string name="disable">Çaktivizoje</string>
     <string name="quick_start_list_review_pages_subtitle">Shihni faqe dhe bëni ndryshime, ose shtoni dhe hiqni faqe.</string>
+    <string name="quick_start_card_menu_unpin">Shfiksoje këtë</string>
     <string name="quick_start_list_view_site_title">Vizitoni sajtin tuaj</string>
     <string name="quick_start_list_upload_icon_subtitle">Shtoni një ikonë sajti, për një pamje të rafinuar, profesionale.</string>
     <string name="quick_start_list_follow_site_subtitle">Zbuloni dhe ndiqni sajte që ju frymëzojnë.</string>
@@ -32,8 +70,6 @@ Language: sq_AL
     <string name="backup_item_content_hint">(përjashton tema, shtojca dhe ngarkime)</string>
     <string name="backup_item_contents">Drejtoria WP-content</string>
     <string name="backup_item_roots">Rrënjë WordPress-i</string>
-    <string name="backup_download_progress_action_button_content_description">Buton “Bëmani të ditur kur të mbarojë”</string>
-    <string name="backup_download_progress_action_button">Bëmani të ditur kur të mbarojë!</string>
     <string name="backup_download_details_choose_items_header">Elementë të përfshirë në këtë shkarkim</string>
     <string name="gutenberg_native_uploading">Po ngarkohet…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për iOS</string>
@@ -61,19 +97,22 @@ Language: sq_AL
     <string name="threat_status_fixed">Të zgjidhur</string>
     <string name="threat_found_header">Gjetur</string>
     <string name="scan_here_to_help">këtu për t’ju ndihmuar</string>
-    <string name="scan_idle_with_threats_description">Kontrolli gjeti %1s kërcënime potenciale me %2s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
+    <string name="scan_idle_threats_description_singular">Kontrolli gjeti një kërcënim potencial me %1$s. Ju lutemi, shqyrtojeni më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqe”. Jemi %2$s, nëse keni nevojë për ne.</string>
     <string name="scan_idle_manual_scan_description">Që ta shqyrtoni sajtin tuaj sërish, bëni një kontroll dorazi, ose prisni që Jetpack-u të kontrollojë sajtin tuaj më vonë sot.</string>
     <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
-    <string name="scan_fixing_threats_description">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
     <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, sapo kontrolli të jetë i plotë. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>
-    <string name="scan_fixing_threats_title">Zgjidhje Kërcënimesh</string>
+    <string name="scan_fixing_threats_description_singular">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këtë kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
+    <string name="scan_fixing_threats_title_plural">Zgjidhje Kërcënimesh</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan s’plotësoi dot një kontroll të sajtit tuaj. Ju lutemi, kontrolloni se mos sajti juaj s’është në funksionim – nëse s’është, riprovoni. Nëse është jashtë funksionimi, ose në Jetpack Scan prapë ka probleme, lidhuni me ekipin tonë të asistencës.</string>
     <string name="scan_request_failed_title">Diçka shkoi ters</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Kopjeruajtje sajti</string>
     <string name="activity_log_currently_backing_up_title">Po krijohet kopjeruajtje e shkarkueshme</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Sajti juaj u kopjeruajt me sukses</string>
+    <string name="activity_log_currently_backing_up_message">Sajti po rikthehet sipas %1$s %2$s</string>
     <string name="pick_audio">Përzgjidhni audio</string>
+    <string name="activity_log_backup_finished_snackbar_message">Sajti juaj u rikthye me sukses\nU rikthye sipas %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">Sajti juaj po rikthehet\nRikthim sipas %1$s %2$s</string>
     <string name="restore_complete_failed_icon_content_description">Ikonë gabimi</string>
     <string name="restore_complete_failed_action_button_content_description">Buton “U bë”</string>
     <string name="restore_another_process_running">Ka një rikthim në kryerje e sipër.</string>
@@ -106,13 +145,12 @@ Language: sq_AL
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Celular</string>
     <string name="quick_start_card_menu_remove">Mos e shfaq sërish</string>
-    <string name="quick_start_card_menu_hide">Fshihe</string>
     <string name="quick_start_dialog_review_pages_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
     <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
     <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Që të përpunoni Faqen tuaj hyrëse, përzgjidhni %1$s Faqe hyrëse %2$s.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
-    <string name="quick_start_card_menu_pin">Fiksoje</string>
+    <string name="quick_start_card_menu_pin">Fiksoje këtë</string>
     <string name="quick_start_dialog_edit_homepage_message">Ndryshoni, shtoni ose hiqni lëndë nga faqja hyrëse e sajtit tuaj.</string>
     <string name="quick_start_dialog_edit_homepage_title">Përpunoni faqen tuaj hyrëse</string>
     <string name="reader_menu_mark_as_unseen">Hiqi shenjë si i parë</string>
@@ -123,9 +161,9 @@ Language: sq_AL
     <string name="reader_marked_post_as_unseen">Postimit iu hoq shenja si i parë</string>
     <string name="reader_marked_post_as_seen">Postimit iu vu shenjë si i parë</string>
     <string name="threat_fix_all_status_error_message">Gabim në marrje gjendje zgjidhjeje. Ju lutemi, lidhuni me asistencën tonë.</string>
-    <string name="threat_fix_all_status_success_message">Kërcënimet u zgjidhën me sukses.</string>
     <string name="threat_fix_all_error_message">Gabim në zgjidhje kërcënimesh. Ju lutemi, lidhuni me asistencën tonë.</string>
-    <string name="threat_fix_all_warning_message">Ju lutemi, ripohoni se doni të zgjidhni %s kërcënime aktive.</string>
+    <string name="threat_fix_all_status_success_message_singular">Kërcënimi u zgjidh me sukses.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Ju lutemi, ripohoni se doni të zgjidhni një kërcënim aktiv.</string>
     <string name="threat_fix_all_warning_title">Zgjidhi krejt kërcënimet</string>
     <string name="threat_ignore_error_message">Gabim në shpërfillje kërcënimi. Ju lutemi, lidhuni me ata të asistencës.</string>
     <string name="threat_ignore_success_message">Kërcënimi u shpërfill.</string>
@@ -162,9 +200,9 @@ Language: sq_AL
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
     <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
-    <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_progress_header">Aktualisht duke krijuar një kopjeruajtje të shkarkueshme të sajtit tuaj</string>
+    <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati.</string>
     <string name="backup_download_progress_page_title">Shkarkoje Kopjeruajtjen</string>
     <string name="backup_download_another_download_running">Po kryhet një shkarkim tjetër.</string>
     <string name="backup_download_generic_failure">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
@@ -203,15 +241,15 @@ Language: sq_AL
     <string name="threat_item_header_vulnerable_plugin">Shtojcë e Cenueshme: %s (version %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: rregullsi kodi dashakeq</string>
     <string name="threat_item_sub_header_file_signature">%s kërcënimi të gjetur</string>
+    <string name="threat_item_header_database_threat">Kërcënime ndaj bazës së të dhënave %s</string>
     <string name="threat_item_header_infected_core_file">%s: kartelë bazë e infektuar</string>
     <string name="threat_item_header_threat_found">U gjet kërcënim</string>
-    <string name="threats_found">U gjetën kërcënime</string>
-    <string name="scan_in_few_seconds">pak sekonda</string>
-    <string name="scan_in_minutes_ago">%s minuta më parë</string>
-    <string name="scan_in_hours_ago">%s orë më parë</string>
     <string name="scan_this_site">këtë sajt</string>
     <string name="threats_fix_all">Ndreqi Krejt</string>
     <string name="scan_idle_last_scan_description">Kontrolli i fundit nga Jetpack-u u krye më %s dhe s’gjeti ndonjë rrezik. %s</string>
+    <string name="scan_in_few_seconds">pak sekonda më parë</string>
+    <string name="scan_in_minutes_ago">%s minutë(a) më parë</string>
+    <string name="scan_in_hours_ago">%s orë më parë</string>
     <string name="scan_idle_threats_found_title">Sajti juaj mund të jetë i rrezikuar</string>
     <string name="scan_idle_no_threats_found_title">Mos vrisni mendjen</string>
     <string name="scan_again">Riskanoje</string>
@@ -229,7 +267,6 @@ Language: sq_AL
     <string name="activity_log_date_range_filter_label_content_description">Filtër Interval Datash</string>
     <string name="activity_log_active_filter_empty_subtitle">Provoni të ndryshoni filtrat për intervalin tuaj të datave ose për lloj veprimtarie</string>
     <string name="activity_log_active_filter_empty_title">S’u gjetën veprimtari me përputhje</string>
-    <string name="rewind">Riktheje</string>
     <string name="backup_item_media_uploads">Ngarkime Media</string>
     <string name="backup_item_plugins">Shtojca WordPress</string>
     <string name="backup_item_themes">Tema WordPress</string>
@@ -334,11 +371,11 @@ Language: sq_AL
     <string name="login_prologue_fifth_subtitle_one">Xhike Baulja</string>
     <string name="login_prologue_second_subtitle_two">Jam kaq i frymëzuar nga vepra e gdhendësit Çome Çomanga. Do t’i provoj këto teknika në veprën time të ardhshme</string>
     <string name="login_prologue_second_subtitle_one">Frymëzohuni</string>
-    <string name="login_prologue_title_fifth">Ndiqni sajtet tuaj të parapëlqyer dhe zbuloni gjëra të reja për të lexuar.</string>
     <string name="login_prologue_title_fourth">Vëzhgoni shtimin e publikut tuaj, me mjete analizimi në thellësi.</string>
     <string name="login_prologue_title_third">Shihni aty për aty komente  dhe njoftime.</string>
     <string name="login_prologue_title_second">Me fuqinë e përpunuesit mund të postoni kudo që ndodheni.</string>
     <string name="login_prologue_title_first">Mirë se vini te krijuesi më popullor në botë i sajteve.</string>
+    <string name="login_prologue_title_fifth">Ndiqni sajtet tuaj të parapëlqyer dhe zbuloni blogje të rinj.</string>
     <string name="media_loading_failed">Dështoi ngarkimi i medias</string>
     <string name="reader_discover_recommended_blogs_header">Sajte për t’u ndjekur</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim.</string>
@@ -352,11 +389,9 @@ Language: sq_AL
     <string name="stories_intro_description_first">Ndërthurni foto, video dhe tekst, që të krijoni postime shkrimesh tërheqës, që vizitorët tuaj do t’i duan fort.</string>
     <string name="stories_intro_image_caption_second">Titull shembulli shkrimi</string>
     <string name="stories_intro_image_caption_first">Si të krijohet një postim shkrimi</string>
-    <string name="stories_intro_main_subtitle">Ju është dhënë mundësia e përdorimit të hershëm të Postimeve të Shkrimeve dhe do të donim ta provonit.</string>
     <string name="stories_intro_main_title">Ju Paraqesim Postime Shkrimesh</string>
     <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
     <string name="mlp_notice_page_created">Faqja u krijua</string>
-    <string name="mlp_preview_title">Paraparje Skeme</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s-it iu mohua hyrja te fotot tuaj. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s dhe %3$s.</string>
     <string name="stories_intro_title_first">Tanimë shkrimet janë për këdo</string>
     <string name="media_insert_failed">Dështoi futje medie.</string>
@@ -490,7 +525,6 @@ Language: sq_AL
     <string name="continue_with_google_terms_of_service_text">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
     <string name="continue_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Do t’ju dërgojmë me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com.</string>
     <string name="signup_confirmation_message">Këtë adresë email do ta përdorim për të krijuar llogarinë tuaj të re WordPress.com.</string>
     <string name="signup_magic_link_message">Ju dërguam me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com. Kontrolloni email-et në këtë pajisje dhe prekni lidhjen te email-i i ardhur nga WordPress.com.</string>
     <string name="enter_account_info_for_site">Jepni të dhënat e llogarisë suaj për %1$s.</string>
@@ -554,8 +588,6 @@ Language: sq_AL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Postimet e shpënë në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e këtij postimi në “skicë”, që të mund të merreni me të?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datë Botimi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Të kalohet postimi te Skicat?</string>
-    <string name="reader_label_choose_your_interests">Zgjidhni ç’ju intereson</string>
-    <string name="reader_choose_interests_content_description">Zgjidhni ç’ju intereson</string>
     <string name="reader_btn_done">U bë</string>
     <string name="reader_btn_select_few_interests">Që të vazhdohet, përzgjidhni ndoca</string>
     <string name="post_status_post_published">Të botuar</string>
@@ -564,6 +596,8 @@ Language: sq_AL
     <string name="publish_date">Datë Botimi</string>
     <string name="ccpa_privacy_notice_read">Lexoni shënimin CCPA mbi privatësinë</string>
     <string name="ccpa_privacy_notice_caption">Ligji i Privatësisë së Konsumatorit në Kaliforni (\"CCPA\") kërkon prej nesh t’u japim banuesve në Kaliforni disa të dhëna shtesë rreth kategorive të të dhënave personale që grumbullojmë dhe ndajmë me të tjerë, prej nga i marrim këto të dhëna personale, dhe si dhe pse i përdorim.</string>
+    <string name="reader_label_choose_your_interests">Zgjidhni temat tuaja</string>
+    <string name="reader_choose_interests_content_description">Zgjidhni temat tuaja</string>
     <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
@@ -682,8 +716,6 @@ Language: sq_AL
     <string name="app_theme_light">E çelët</string>
     <string name="app_theme">Dukje</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Së fundi keni bëtë ndryshime te kjo faqe, por nuk i ruajtët. Zgjidhni një version për ngarkim:\n\n</string>
-    <string name="gutenberg_native_warning_message">Mesazh Sinjalizimi</string>
-    <string name="gutenberg_native_success_message">Mesazh Suksesi</string>
     <string name="gutenberg_native_show_post_content">Shfaq lëndë postimi</string>
     <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
     <string name="gutenberg_native_link_to">Lidhje Te</string>
@@ -791,20 +823,16 @@ Language: sq_AL
     <string name="gutenberg_native_unsupported">E pambuluar</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
     <string name="gutenberg_native_translate">Përktheni</string>
-    <string name="gutenberg_native_title">Titull:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Prekeni që të fshihet tastiera</string>
     <string name="gutenberg_native_tap_here_to_show_help">Prekeni këtu që të shfaqet ndihmë</string>
     <string name="gutenberg_native_take_a_video">Bëni një Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
     <string name="gutenberg_native_start_writing">Nisni të shkruani…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Shtojcë titulli anështylle</string>
     <string name="gutenberg_native_show_section">Shfaq ndarje</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>
     <string name="gutenberg_native_s_block_empty">Bllok %s. I zbrazët</string>
-    <string name="gutenberg_native_reset_block">Rikthejeni Bllokun Te Parazgjedhjet</string>
     <string name="gutenberg_native_cut_block">Bllok Prije</string>
-    <string name="gutenberg_native_remove_annotations">Hiqi shënimet</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem me hapjen e videos</string>
     <string name="gutenberg_native_problem_displaying_block">Problem me shfaqjen e bllokut</string>
     <string name="gutenberg_native_post_title_s">Titull postimi. %s</string>
@@ -814,17 +842,12 @@ Language: sq_AL
     <string name="gutenberg_native_open_settings">Hap Rregullimet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">S’ka aplikacion për ta trajtuar këtë kërkesë. Ju lutemi, instaloni një shfletues.</string>
     <string name="gutenberg_native_navigate_up">Ngjituni</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Paneli im para-publikim</string>
-    <string name="gutenberg_native_my_post_status_info">Të dhëna gjendjeje postimi</string>
-    <string name="gutenberg_native_my_post_publish_panel">Paneli im i botimit të postimeve</string>
-    <string name="gutenberg_native_my_document_setting_panel">Paneli Im i Rregullimeve Për Dokumente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s sipër te rreshti %2$s</string>
     <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
     <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Ja lënda e panelit!</string>
     <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
@@ -839,9 +862,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Që ta ndryshoni vlerën duke përdorur rrëshqitësin, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Që të shtoni një bllok, prekeni dyfish</string>
     <string name="gutenberg_native_current_value_is_s">Vlera e tanishme është %s</string>
-    <string name="gutenberg_native_content">Lëndë…</string>
     <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
-    <string name="gutenberg_native_annotations_sidebar">Anështyllë Shënimesh</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ndodhi një gabim i panjohur. Ju lutemi, riprovoni.</string>
     <string name="gutenberg_native_alt_text">Tekst Alternativ</string>
     <string name="gutenberg_native_add_video">SHTONI VIDEO</string>
@@ -849,8 +870,6 @@ Language: sq_AL
     <string name="gutenberg_native_add_image_or_video">SHTONI FIGURË OSE VIDEO</string>
     <string name="gutenberg_native_add_image">SHTONI FIGURË</string>
     <string name="gutenberg_native_add_block_here">SHTONI BLLOK KËTU</string>
-    <string name="gutenberg_native_add_annotation">Shtoni shënim</string>
-    <string name="gutenberg_native_add_a_description">Shtoni një përshkrim</string>
     <string name="reader_empty_saved_posts_content_description">Prekni butonin “Shtoje te Postime të Ruajtur” që të ruhet një postim te lista juaj.</string>
     <string name="reader_acessibility_list_loaded">\"Lista është ngarkuar me %1$d zëra.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Njoftime</string>
@@ -1135,14 +1154,14 @@ Language: sq_AL
     <string name="menu_switch_to_aztec_editor">Kaloni nën përpunuesin klasik</string>
     <string name="exit">dalje</string>
     <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
-    <string name="quick_start_sites_type_grow">Shtoni Publikun Tuaj</string>
-    <string name="quick_start_sites_type_customize">Përshtatni Sajtin Tuaj</string>
     <string name="quick_start_sites">Hapat Pasues</string>
     <string name="quick_start_complete_tasks_header">Të plotësuar (%d)</string>
     <string name="quick_start_dialog_view_site_message">Kënaquni me produktin tuaj të përfunduar!</string>
     <string name="quick_start_dialog_upload_icon_title">Ngarkoni një ikonë sajti</string>
     <string name="quick_start_dialog_upload_icon_message">Vizitorët tuaj do ta shohin në shfletuesin e tyre ikonën tuaj. Shtoni një ikonë vetjake, për një pamje të rafinuar, profesionale.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Prekni %1$s Plan %2$s që të shihni planin tuaj të tanishëm dhe të tjerë plane të mundshëm</string>
+    <string name="quick_start_sites_type_grow">Shtoni publikun tuaj</string>
+    <string name="quick_start_sites_type_customize">Përshtatni sajtin tuaj</string>
     <string name="quick_start_dialog_check_stats_message_short">Prekni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
     <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni postimin tuaj të parë fare.</string>
@@ -1178,7 +1197,6 @@ Language: sq_AL
     <string name="notification_new_site_creation_failed">Pati një problem</string>
     <string name="notification_new_site_creation_title">Krijoni Sajt</string>
     <string name="new_site_creation_create_site_button">Krijoje Sajtin</string>
-    <string name="new_site_creation_search_domain_input_hint">Kërkoni te Përkatësitë</string>
     <string name="new_site_creation_domain_header_subtitle">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
     <string name="new_site_creation_empty_domain_list_message">S’ka adresa me përputhje me kërkimin tuaj</string>
     <string name="site_creation_error_generic_subtitle">Gabim gjatë komunikimit me shërbyesin, ju lutemi, riprovoni</string>
@@ -1339,10 +1357,10 @@ Language: sq_AL
     <string name="quick_start_dialog_need_help_button_positive">Pranoj</string>
     <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
     <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me interesa të ngjashëm</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Prekni %1$s Lexues %2$s që të vazhdohet</string>
     <string name="quick_start_dialog_need_help_button_negative">Jo, Faleminderit</string>
     <string name="quick_start_dialog_follow_sites_message">Gjeni sajte që ju frymëzojnë, dhe ndiqini që të merrni të rejat kur botojnë të tilla.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me tema të ngjashme</string>
     <string name="quick_start_button_positive">Jepi</string>
     <string name="quick_start_button_negative_short">Anuloje</string>
     <string name="quick_start_button_negative">Jo tani</string>
@@ -2095,7 +2113,7 @@ Language: sq_AL
     <string name="signout">Dilni</string>
     <string name="sign_in_wpcom">Hyni te WordPress.com</string>
     <string name="reader_label_global_related_posts">Më tepër mbi WordPress.com</string>
-    <string name="reader_label_local_related_posts">Më tepër te %s</string>
+    <string name="reader_label_local_related_posts">Më tepër nga %s</string>
     <string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
     <string name="invite_invalid_email">%s: Email i pavlefshëm</string>
     <string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
@@ -2153,6 +2171,7 @@ Language: sq_AL
     <string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
     <string name="reader_empty_search_description">S’u gjetën përfundime në gjuhën tuaj për %s</string>
     <string name="reader_hint_post_search">Kërkoni te WordPress</string>
+    <string name="reader_title_related_post_detail">Postim i Afërt</string>
     <string name="preview_screen_links_disabled">Në skenën paraparje lidhjet janë të çaktivizuara</string>
     <string name="send">Dërgoje</string>
     <string name="person_removed">U hoq me sukses %1$s</string>

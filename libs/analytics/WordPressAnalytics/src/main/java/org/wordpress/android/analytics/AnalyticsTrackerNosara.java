@@ -752,8 +752,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_session_switch_editor";
             case EDITOR_SESSION_TEMPLATE_APPLY:
                 return "editor_session_template_apply";
-            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                return "editor_session_template_preview";
             case EDITOR_SESSION_END:
                 return "editor_session_end";
             case EDITOR_GUTENBERG_ENABLED:
@@ -1400,6 +1398,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
                 return "enhanced_site_creation_site_design_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
+                return "layout_picker_preview_mode_changed";
+            case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "layout_picker_thumbnail_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_MODE_BUTTON_TAPPED:
+                return "layout_picker_preview_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_LOADING:
+                return "layout_picker_preview_loading";
+            case LAYOUT_PICKER_PREVIEW_LOADED:
+                return "layout_picker_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_VIEWED:
+                return "layout_picker_preview_viewed";
+            case LAYOUT_PICKER_ERROR_SHOWN:
+                return "layout_picker_error_shown";
+            case CATEGORY_FILTER_SELECTED:
+                return "category_filter_selected";
+            case CATEGORY_FILTER_DESELECTED:
+                return "category_filter_deselected";
             case SITE_CREATED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
@@ -1524,10 +1540,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
                 return "jetpack_settings_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
-                return "jetpack_whitelisted_ips_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
-                return "jetpack_whitelisted_ips_changed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED:
+                return "jetpack_allowlisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED:
+                return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
@@ -1728,6 +1744,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
+            case QUICK_START_STARTED:
+                return "quick_start_started";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
@@ -2000,6 +2018,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
             case READER_POST_MARKED_AS_SEEN:
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
@@ -2036,6 +2056,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "invite_links_disable";
             case INVITE_LINKS_SHARE:
                 return "invite_links_share";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_notice_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "jetpack_backup_download_file_notice_dismissed_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "activity_log_download_file_notice_download_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "activity_log_download_file_notice_dismissed_tapped";
         }
         return null;
     }

@@ -25,7 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
-import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
+import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ContextUtilsKt;
@@ -35,7 +35,7 @@ import java.util.Iterator;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
 public class NotificationsSettingsDialogPreference extends DialogPreference
-        implements MasterSwitchToolbarListener {
+        implements MainSwitchToolbarListener {
     private static final String SETTING_VALUE_ACHIEVEMENT = "achievement";
 
     private NotificationsSettings.Channel mChannel;
@@ -44,15 +44,15 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     private JSONObject mUpdatedJson = new JSONObject();
     private long mBlogId;
 
-    private ViewGroup mTitleViewWithMasterSwitch;
+    private ViewGroup mTitleViewWithMainSwitch;
 
-    // view to display when master switch is on
+    // view to display when main switch is on
     private View mDisabledView;
-    // view to display when master switch is off
+    // view to display when main switch is off
     private LinearLayout mOptionsView;
 
-    private PrefMasterSwitchToolbarView mMasterSwitchToolbarView;
-    private boolean mShouldDisplayMasterSwitch;
+    private PrefMainSwitchToolbarView mMainSwitchToolbarView;
+    private boolean mShouldDisplayMainSwitch;
 
     private String[] mSettingsArray = new String[0], mSettingsValues = new String[0];
 
@@ -72,26 +72,26 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         mBlogId = blogId;
         mSettings = settings;
         mOnNotificationsSettingsChangedListener = listener;
-        mShouldDisplayMasterSwitch = mSettings.shouldDisplayMasterSwitch(mChannel, mType);
+        mShouldDisplayMainSwitch = mSettings.shouldDisplayMainSwitch(mChannel, mType);
     }
 
     @Override
     protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
-        if (mShouldDisplayMasterSwitch) {
-            setupTitleViewWithMasterSwitch(view);
+        if (mShouldDisplayMainSwitch) {
+            setupTitleViewWithMainSwitch(view);
         }
     }
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         super.onPrepareDialogBuilder(builder);
-        if (mShouldDisplayMasterSwitch) {
-            if (mTitleViewWithMasterSwitch == null) {
-                AppLog.e(T.NOTIFS, "Master switch enabled but layout not set");
+        if (mShouldDisplayMainSwitch) {
+            if (mTitleViewWithMainSwitch == null) {
+                AppLog.e(T.NOTIFS, "Main switch enabled but layout not set");
                 return;
             }
-            builder.setCustomTitle(mTitleViewWithMasterSwitch);
+            builder.setCustomTitle(mTitleViewWithMainSwitch);
         }
     }
 
@@ -106,7 +106,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 LinearLayout.LayoutParams.MATCH_PARENT));
         innerView.setOrientation(LinearLayout.VERTICAL);
 
-        if (mShouldDisplayMasterSwitch) {
+        if (mShouldDisplayMainSwitch) {
             View dividerView = new View(getContext());
             int dividerHeight = getContext().getResources().getDimensionPixelSize(
                     R.dimen.notifications_settings_dialog_divider_height
@@ -206,7 +206,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     }
                 });
 
-                if (mShouldDisplayMasterSwitch && i == mSettingsArray.length - 1) {
+                if (mShouldDisplayMainSwitch && i == mSettingsArray.length - 1) {
                     View divider = commentsSetting.findViewById(R.id.notifications_list_divider);
                     if (divider != null) {
                         MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
@@ -230,12 +230,12 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     try {
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
 
-                        // Switch off master switch if all current settings switches are off
-                        if (mMasterSwitchToolbarView != null
+                        // Switch off main switch if all current settings switches are off
+                        if (mMainSwitchToolbarView != null
                             && !isChecked
                             && areAllSettingsSwitchesUnchecked()
                         ) {
-                            mMasterSwitchToolbarView.setChecked(false);
+                            mMainSwitchToolbarView.setChecked(false);
                         }
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
@@ -260,11 +260,11 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         }
     }
 
-    private void setupTitleViewWithMasterSwitch(View view) {
+    private void setupTitleViewWithMainSwitch(View view) {
         switch (mChannel) {
             case BLOGS:
                 if (mType == Type.TIMELINE) {
-                    mTitleViewWithMasterSwitch = (ViewGroup) LayoutInflater
+                    mTitleViewWithMainSwitch = (ViewGroup) LayoutInflater
                             .from(getContext())
                             .inflate(R.layout.notifications_tab_for_blog_title_layout, (ViewGroup) view, false);
                 }
@@ -275,36 +275,36 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 break;
         }
 
-        if (mTitleViewWithMasterSwitch != null) {
-            TextView titleView = mTitleViewWithMasterSwitch.findViewById(R.id.title);
+        if (mTitleViewWithMainSwitch != null) {
+            TextView titleView = mTitleViewWithMainSwitch.findViewById(R.id.title);
             CharSequence dialogTitle = getDialogTitle();
             if (dialogTitle != null) {
                 titleView.setText(dialogTitle);
             }
 
-            mMasterSwitchToolbarView = mTitleViewWithMasterSwitch.findViewById(R.id.master_switch);
+            mMainSwitchToolbarView = mTitleViewWithMainSwitch.findViewById(R.id.main_switch);
 
-            mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
-            mMasterSwitchToolbarView
+            mMainSwitchToolbarView.setMainSwitchToolbarListener(this);
+            mMainSwitchToolbarView
                     .setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
 
-            // Master Switch initial state:
+            // Main Switch initial state:
             // On: If at least one of the settings options is on
             // Off: If all settings options are off
             JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
-            boolean checkMasterSwitch = mSettings.isAtLeastOneSettingsEnabled(
+            boolean checkMainSwitch = mSettings.isAtLeastOneSettingsEnabled(
                     settingsJson,
                     mSettingsArray,
                     mSettingsValues
             );
-            mMasterSwitchToolbarView.loadInitialState(checkMasterSwitch);
+            mMainSwitchToolbarView.loadInitialState(checkMainSwitch);
 
-            hideDisabledView(mMasterSwitchToolbarView.isMasterChecked());
+            hideDisabledView(mMainSwitchToolbarView.isMainChecked());
         }
     }
 
     @Override
-    public void onMasterSwitchCheckedChanged(
+    public void onMainSwitchCheckedChanged(
             CompoundButton buttonView,
             boolean isChecked) {
         setSettingsSwitchesChecked(isChecked);
@@ -312,26 +312,26 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     }
 
     /**
-     * Hide view when Notifications Tab Settings are disabled by toggling the master switch off.
+     * Hide view when Notifications Tab Settings are disabled by toggling the main switch off.
      *
-     * @param isMasterChecked TRUE to hide disabled view, FALSE to show disabled view
+     * @param isMainChecked TRUE to hide disabled view, FALSE to show disabled view
      */
-    private void hideDisabledView(boolean isMasterChecked) {
-        mDisabledView.setVisibility(isMasterChecked ? View.GONE : View.VISIBLE);
-        mOptionsView.setVisibility(isMasterChecked ? View.VISIBLE : View.GONE);
+    private void hideDisabledView(boolean isMainChecked) {
+        mDisabledView.setVisibility(isMainChecked ? View.GONE : View.VISIBLE);
+        mOptionsView.setVisibility(isMainChecked ? View.VISIBLE : View.GONE);
     }
 
     /**
-     * Updates Notifications current settings switches state based on the master switch state
+     * Updates Notifications current settings switches state based on the main switch state
      *
-     * @param isMasterChecked TRUE to switch on the settings switches.
+     * @param isMainChecked TRUE to switch on the settings switches.
      *                        FALSE to switch off the settings switches.
      */
-    private void setSettingsSwitchesChecked(boolean isMasterChecked) {
+    private void setSettingsSwitchesChecked(boolean isMainChecked) {
         for (String settingValue : mSettingsValues) {
             final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
             if (toggleSwitch != null) {
-                toggleSwitch.setChecked(isMasterChecked);
+                toggleSwitch.setChecked(isMainChecked);
             }
         }
     }

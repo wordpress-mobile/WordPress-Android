@@ -1,12 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-16 22:32:52+0000
+Translation-Revision-Date: 2021-03-09 11:00:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Unpin</string>
+    <string name="gutenberg_native_add_button_text">Add button text</string>
+    <string name="reader_title_interests">Follow topics</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Please confirm you want to fix all %s active threats.</string>
+    <string name="scan_idle_threats_description_plural">The scan found %1$s potential threats with %2$s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="gutenberg_native_edit_focal_point">Edit focal point</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Action Sheet to edit, replace, or clear the image</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>All tasks completed&lt;/b>&lt;br/>You’ll reach more people. Nice job!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>All tasks completed&lt;/b>&lt;br/>You’ve customized your site. Well done!</string>
+    <string name="quick_start_card_menu_hide">Hide for now</string>
+    <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
+    <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
+    <string name="invite_links_disable_dialog_title">Disable invite link</string>
+    <string name="invite_links_bad_format_response">Invalid response received</string>
+    <string name="invite_links_null_response">No response received</string>
+    <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
+    <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
+    <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
+    <string name="invite_links_expire_date">Expires %1$s</string>
+    <string name="invite_links_disable_invite_link">Disable invite link</string>
+    <string name="invite_links_share_invite_link">Share invite link</string>
+    <string name="invite_links_generate">Generate new link</string>
+    <string name="invite_links_get_status_retry">Refresh links status</string>
+    <string name="invite_links_section_title">Invite Link</string>
+    <string name="threats_found_singular">Threat found</string>
+    <string name="threats_found_plural">Threats found</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scan Finished&lt;/b> &lt;br> %s potential threats found</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scan Finished&lt;/b> &lt;br> One potential threat found</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scan Finished&lt;/b> &lt;br> No threats found</string>
+    <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
+    <string name="disable">Disable</string>
+    <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_view_site_title">Visit your site</string>
     <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
@@ -32,8 +71,6 @@ Language: en_CA
     <string name="backup_item_content_hint">(excludes themes, plugins, and uploads)</string>
     <string name="backup_item_contents">WP-content directory</string>
     <string name="backup_item_roots">WordPress root</string>
-    <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
-    <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_details_choose_items_header">Items included in this download</string>
     <string name="gutenberg_native_uploading">Uploading…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Reusable blocks aren\'t editable on WordPress for iOS</string>
@@ -61,13 +98,13 @@ Language: en_CA
     <string name="threat_status_fixed">Fixed</string>
     <string name="threat_found_header">Found</string>
     <string name="scan_here_to_help">here to help</string>
-    <string name="scan_idle_with_threats_description">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1$s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
-    <string name="scan_fixing_threats_description">We\'re hard at work fixing these threats in the background. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description_singular">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
-    <string name="scan_fixing_threats_title">Fixing Threats</string>
+    <string name="scan_fixing_threats_title_plural">Fixing Threats</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
     <string name="scan_request_failed_title">Something went wrong</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Backing up site</string>
@@ -109,8 +146,7 @@ Language: en_CA
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobile</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
-    <string name="quick_start_card_menu_hide">Hide</string>
-    <string name="quick_start_card_menu_pin">Pin</string>
+    <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
@@ -126,9 +162,9 @@ Language: en_CA
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
-    <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
-    <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Please confirm you want to fix one active threat.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
@@ -164,7 +200,7 @@ Language: en_CA
     <string name="backup_download_complete_header">Your backup is now available for download</string>
     <string name="backup_download_complete_page_title">Your Backup</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
     <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
@@ -210,11 +246,10 @@ Language: en_CA
     <string name="threat_item_header_database_threat">Database %s threats</string>
     <string name="threat_item_header_infected_core_file">%s: infected core file</string>
     <string name="threat_item_header_threat_found">Threat found</string>
-    <string name="threats_found">Threats found</string>
     <string name="threats_fix_all">Fix All</string>
-    <string name="scan_in_few_seconds">in a few seconds</string>
-    <string name="scan_in_minutes_ago">%s minutes ago</string>
-    <string name="scan_in_hours_ago">%s hours ago</string>
+    <string name="scan_in_few_seconds">a few seconds ago</string>
+    <string name="scan_in_minutes_ago">%s minute(s) ago</string>
+    <string name="scan_in_hours_ago">%s hour(s) ago</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
@@ -234,7 +269,6 @@ Language: en_CA
     <string name="activity_log_date_range_filter_label_content_description">Date Range filter</string>
     <string name="activity_log_active_filter_empty_subtitle">Try adjusting your date range or activity type filters</string>
     <string name="activity_log_active_filter_empty_title">No matching events found</string>
-    <string name="rewind">Restore</string>
     <string name="backup_item_sqls">Site database</string>
     <string name="backup_item_roots_hint">(includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
@@ -339,7 +373,7 @@ Language: en_CA
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
-    <string name="login_prologue_title_fifth">Follow your favourite sites and discover new reads.</string>
+    <string name="login_prologue_title_fifth">Follow your favourite sites and discover new blogs.</string>
     <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
     <string name="login_prologue_title_third">See comments and notifications in real time.</string>
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
@@ -358,11 +392,9 @@ Language: en_CA
     <string name="stories_intro_title_first">Now stories are for everyone</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
     <string name="stories_intro_main_title">Introducing Story Posts</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_notice_page_created">Page created</string>
-    <string name="mlp_preview_title">Layout Preview</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
@@ -495,7 +527,6 @@ Language: en_CA
     <string name="signup_confirmation_title">Signup confirmation</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">We’ll email you a signup link to create your new WordPress.com account.</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
     <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
@@ -559,8 +590,8 @@ Language: en_CA
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Move to Draft</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Trashed posts can\'t be edited. Do you want change the status of this post to \"draft\" so you can work on it?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Move post to Drafts?</string>
-    <string name="reader_label_choose_your_interests">Choose your interests</string>
-    <string name="reader_choose_interests_content_description">Choose your interests</string>
+    <string name="reader_label_choose_your_interests">Choose your topics</string>
+    <string name="reader_choose_interests_content_description">Choose your topics</string>
     <string name="reader_btn_done">Done</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="post_status_post_published">Published</string>
@@ -687,8 +718,6 @@ Language: en_CA
     <string name="app_theme_light">Light</string>
     <string name="app_theme">Appearance</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">You recently made changes to this page but didn\'t save them. Choose a version to load:\n\n</string>
-    <string name="gutenberg_native_warning_message">Warning Message</string>
-    <string name="gutenberg_native_success_message">Success Message</string>
     <string name="gutenberg_native_show_post_content">Show post content</string>
     <string name="gutenberg_native_only_show_excerpt">Only show excerpt</string>
     <string name="gutenberg_native_link_to">Link To</string>
@@ -796,20 +825,16 @@ Language: en_CA
     <string name="gutenberg_native_unsupported">Unsupported</string>
     <string name="gutenberg_native_ungroup">Ungroup</string>
     <string name="gutenberg_native_translate">Translate</string>
-    <string name="gutenberg_native_title">Title:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap to hide the keyboard</string>
     <string name="gutenberg_native_tap_here_to_show_help">Tap here to show help</string>
     <string name="gutenberg_native_take_a_video">Take a Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_photo">Take a Photo</string>
     <string name="gutenberg_native_start_writing">Start writing…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Sidebar title plugin</string>
     <string name="gutenberg_native_show_section">Show section</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>
     <string name="gutenberg_native_s_block_empty">%s block. Empty</string>
     <string name="gutenberg_native_cut_block">Cut block</string>
-    <string name="gutenberg_native_reset_block">Reset Block</string>
-    <string name="gutenberg_native_remove_annotations">Remove annotations</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem opening the video</string>
     <string name="gutenberg_native_problem_displaying_block">Problem displaying block</string>
     <string name="gutenberg_native_post_title_s">Post title. %s</string>
@@ -819,17 +844,12 @@ Language: en_CA
     <string name="gutenberg_native_open_settings">Open Settings</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">No application can handle this request. Please install a Web browser.</string>
     <string name="gutenberg_native_navigate_up">Navigate Up</string>
-    <string name="gutenberg_native_my_pre_publish_panel">My pre publish panel</string>
-    <string name="gutenberg_native_my_post_status_info">My post status info</string>
-    <string name="gutenberg_native_my_post_publish_panel">My post publish panel</string>
-    <string name="gutenberg_native_my_document_setting_panel">My Document Setting Panel</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Move block up from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_block_up">Move block up</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Move block down from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_block_down">Move block down</string>
     <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
     <string name="gutenberg_native_hide_keyboard">Hide keyboard</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Here is the panel content!</string>
     <string name="gutenberg_native_help_icon">Help icon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Double tap to undo last change</string>
@@ -844,9 +864,7 @@ Language: en_CA
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Double tap to change the value using slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Double tap to add a block</string>
     <string name="gutenberg_native_current_value_is_s">Current value is %s</string>
-    <string name="gutenberg_native_content">Content…</string>
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
-    <string name="gutenberg_native_annotations_sidebar">Annotations Sidebar</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_alt_text">Alt Text</string>
     <string name="gutenberg_native_add_video">ADD VIDEO</string>
@@ -854,8 +872,6 @@ Language: en_CA
     <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_image">ADD IMAGE</string>
     <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_annotation">Add annotation</string>
-    <string name="gutenberg_native_add_a_description">Add a description</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">\"The list has loaded with %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
@@ -1140,8 +1156,8 @@ Language: en_CA
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
+    <string name="quick_start_sites_type_grow">Grow your audience</string>
+    <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
@@ -1183,7 +1199,6 @@ Language: en_CA
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
-    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
@@ -1345,7 +1360,7 @@ Language: en_CA
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="quick_start_button_positive">Go</string>
@@ -2100,7 +2115,7 @@ Language: en_CA
     <string name="signout">Log out</string>
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
-    <string name="reader_label_local_related_posts">More in %s</string>
+    <string name="reader_label_local_related_posts">More from %s</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
@@ -2158,6 +2173,7 @@ Language: en_CA
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_hint_post_search">Search WordPress</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
     <string name="send">Send</string>
     <string name="person_removed">Successfully removed %1$s</string>

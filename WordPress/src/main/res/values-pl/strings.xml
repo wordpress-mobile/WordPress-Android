@@ -115,12 +115,10 @@ Language: pl
     <string name="stories_intro_description_first">Połącz zdjęcia, filmy i tekst aby utworzyć interesujące wpisy z relacjami.</string>
     <string name="stories_intro_image_caption_second">Przykładowy tytuł relacji</string>
     <string name="stories_intro_image_caption_first">Jak utworzyć wpis z relacją</string>
-    <string name="stories_intro_main_subtitle">Uzyskałeś/aś wczesny dostęp do wpisów z relacjami. Zachęcamy ciebie do wypróbowania tej funkcji.</string>
     <string name="stories_intro_main_title">Wprowadzamy wpisy z relacjami</string>
     <string name="stories_intro_title_first">Nowe relacje są dla każdego</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
-    <string name="mlp_preview_title">Podgląd układu</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s i %3$s.</string>
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
     <string name="media_insert_failed_with_reason">Nie udało się osadzić plików mediów: %s</string>
@@ -252,7 +250,6 @@ Language: pl
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
     <string name="continue_terms_of_service_text">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Prześlemy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com.</string>
     <string name="signup_confirmation_message">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
     <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com. Sprawdź pocztę na tym urządzeniu, i stuknij odnośnik we wiadomości email, którą otrzymasz od WordPress.com</string>
     <string name="enter_account_info_for_site">Wprowadź informacje dotyczące swoje konta dla %1$s.</string>
@@ -316,8 +313,6 @@ Language: pl
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publikacji</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
-    <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
-    <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
     <string name="reader_btn_done">Gotowe</string>
     <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>
     <string name="post_status_post_published">Opublikowano</string>
@@ -442,9 +437,7 @@ Language: pl
     <string name="editor_page_saved_online">Strona zapisana online</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
-    <string name="gutenberg_native_warning_message">Ostrzeżenie</string>
     <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
-    <string name="gutenberg_native_success_message">Komunikat o pozytywnym zakończeniu</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
@@ -549,7 +542,6 @@ Language: pl
     <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
-    <string name="gutenberg_native_title">Tytuł:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Stuknij aby ukryć klawiaturę</string>
     <string name="gutenberg_native_tap_here_to_show_help">Stuknij tutaj aby otworzyć pomoc</string>
     <string name="gutenberg_native_take_a_video">Nakręć film</string>
@@ -559,10 +551,7 @@ Language: pl
     <string name="gutenberg_native_show_section">Wybierz sekcję</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
-    <string name="gutenberg_native_reset_block">Resetuj blok</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Wtyczka paska bocznego</string>
     <string name="gutenberg_native_cut_block">Wytnij blok</string>
-    <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
     <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
     <string name="gutenberg_native_post_title_s">Tytuł wpisu. %s</string>
@@ -572,10 +561,6 @@ Language: pl
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Żadna aplikacja nie jest w stanie obsłużyć tego zapytania. Proszę zainstalować przeglądarkę.</string>
     <string name="gutenberg_native_page_break_block_s">Blok końca strony. %s</string>
     <string name="gutenberg_native_navigate_up">Nawiguj w górę</string>
-    <string name="gutenberg_native_my_post_status_info">Informacje o statusie mojego wpisu</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Panel wstępnej publikacji</string>
-    <string name="gutenberg_native_my_post_publish_panel">Panel publikacji mojego wpisu</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panel ustawień dokumentu</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
     <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
@@ -583,7 +568,6 @@ Language: pl
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Tutaj jest zawartość panelu!</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
@@ -597,9 +581,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Stuknij dwukrotnie aby zmienić wartość przy użyciu suwaka</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Stuknij dwukrotnie aby dodać blok</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
-    <string name="gutenberg_native_content">Treść…</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
-    <string name="gutenberg_native_annotations_sidebar">Pasek boczny przypisu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
     <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
     <string name="gutenberg_native_add_video">DODAJ FILM</string>
@@ -607,8 +589,6 @@ Language: pl
     <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
     <string name="gutenberg_native_add_image">DODAJ ZDJĘCIE</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
-    <string name="gutenberg_native_add_a_description">Dodaj opis</string>
-    <string name="gutenberg_native_add_annotation">Dodaj przypis</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
@@ -893,8 +873,6 @@ Language: pl
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
     <string name="exit">wyjdź</string>
     <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
-    <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
-    <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_sites">Kolejne kroki</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>
@@ -936,7 +914,6 @@ Language: pl
     <string name="notification_new_site_creation_failed">Wystąpił problem</string>
     <string name="notification_new_site_creation_title">Tworzenie nowej witryny</string>
     <string name="new_site_creation_create_site_button">Tworzenie nowej witryny</string>
-    <string name="new_site_creation_search_domain_input_hint">Przeszukaj domeny</string>
     <string name="new_site_creation_domain_header_subtitle">To tu ludzie odnajdą ciebie w internecie.</string>
     <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
     <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>
@@ -1097,7 +1074,6 @@ Language: pl
     <string name="quick_start_dialog_need_help_button_positive">Akceptuj</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny z podobnymi zainteresowaniami</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
     <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które ciebie inspirują i obserwuj je aby otrzymywać aktualizacje kiedy te coś opublikują.</string>
@@ -1847,7 +1823,6 @@ Language: pl
     <string name="sign_in_wpcom">Zaloguj się do WordPress.com</string>
     <string name="signout">Wyloguj się</string>
     <string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
-    <string name="reader_label_local_related_posts">Więcej w %s</string>
     <string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
     <string name="invite_invalid_email">%s: Nieprawidłowy email</string>
     <string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
@@ -1903,6 +1878,7 @@ Language: pl
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
     <string name="reader_hint_post_search">Przeszukaj WordPressa</string>
+    <string name="reader_title_related_post_detail">Powiązany wpis</string>
     <string name="preview_screen_links_disabled">Odnośniki są wyłączone na ekranie podglądu</string>
     <string name="send">Wyślij</string>
     <string name="user_remove_confirmation_message">Jeśli usuniesz %1$s, użytkownik utraci dostęp do tej witryny, jednakże treści dodawane przez %1$s pozostaną na tej witrynie.\nCzy chciałbyś nadal usunąć tego użytkownika?</string>

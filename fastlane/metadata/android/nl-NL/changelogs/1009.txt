@@ -1,0 +1,2 @@
+16.8:
+De nieuwste updates voor de WordPress Android app zijn hier. We hebben de functionaliteit van gepubliceerde homepages verbeterd, zodat het verwijderen of terugzetten naar conceptvorm je site niet zal vernielen. We hebben ondersteuning toegevoegd voor het instellen van het Cover blok focus punt. Bovendien hebben we het P2 beheer verbeterd, zodat je uitnodigingslinks voor P2 rollen kunt aanmaken, delen en uitschakelen.

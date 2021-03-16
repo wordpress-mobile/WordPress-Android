@@ -48,7 +48,6 @@ Language: cy_GB
     <string name="signout">Allgofnodi</string>
     <string name="sign_in_wpcom">Mewngofnodi i WordPress.com</string>
     <string name="reader_label_global_related_posts">Rhagor am WordPress.com</string>
-    <string name="reader_label_local_related_posts">Rhagor yn %s</string>
     <string name="preference_open_device_settings">Agor gosodiadau\'r ddyfais</string>
     <string name="invite_invalid_email">%s: E-bost annilys</string>
     <string name="invite_user_blocked_invites">%s: Mae\'r defnyddiwr wedi rhwystro gwahoddiadau</string>
@@ -102,6 +101,7 @@ Language: cy_GB
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
+    <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
     <string name="preview_screen_links_disabled">Mae dolenni wedi eu hanalluogi ar y sgrin rhagolwg</string>
     <string name="send">Anfon</string>
     <string name="user_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
