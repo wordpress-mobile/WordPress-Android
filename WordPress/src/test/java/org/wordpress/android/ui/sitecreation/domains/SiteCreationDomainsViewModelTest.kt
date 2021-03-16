@@ -35,7 +35,6 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.HomePagePickerFeatureConfig
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
@@ -62,7 +61,6 @@ class SiteCreationDomainsViewModelTest {
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var mSiteCreationDomainSanitizer: SiteCreationDomainSanitizer
-    @Mock private lateinit var homePagePickerFeatureConfig: HomePagePickerFeatureConfig
 
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
@@ -74,7 +72,6 @@ class SiteCreationDomainsViewModelTest {
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,
-                homePagePickerFeatureConfig = homePagePickerFeatureConfig,
                 bgDispatcher = TEST_DISPATCHER,
                 mainDispatcher = TEST_DISPATCHER
         )
