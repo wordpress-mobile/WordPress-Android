@@ -114,6 +114,19 @@ class ReaderTracker @Inject constructor(
     fun track(stat: Stat, properties: Map<String, *>) {
         analyticsTrackerWrapper.track(stat, properties)
     }
+
+    /* TAG */
+
+    fun trackTag(stat: Stat, tag: String) {
+        val properties = mutableMapOf<String, Any>(
+                TAG_KEY to tag
+        )
+        track(stat, properties)
+    }
+
+    companion object {
+        private const val TAG_KEY = "tag"
+    }
 }
 
 enum class ReaderTab(val id: Int) {
