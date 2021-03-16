@@ -2,6 +2,7 @@ package org.wordpress.android.util.analytics
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -49,4 +50,11 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
         site: SiteModel?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
+
+    fun trackWithDeepLinkData(
+        stat: AnalyticsTracker.Stat,
+        action: String,
+        host: String,
+        data: Uri?
+    ) = AnalyticsUtils.trackWithDeepLinkData(stat, action, host, data)
 }

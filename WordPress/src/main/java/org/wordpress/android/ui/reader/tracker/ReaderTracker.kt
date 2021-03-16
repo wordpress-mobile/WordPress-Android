@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.tracker
 
+import android.net.Uri
 import androidx.annotation.MainThread
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_A8C_SHOWN
@@ -171,6 +172,10 @@ class ReaderTracker @Inject constructor(
                 INTERCEPTED_URI to interceptedUri
         )
         track(stat, properties)
+    }
+
+    fun trackDeepLink(stat: Stat, action: String, host: String, uri: Uri?) {
+        analyticsUtilsWrapper.trackWithDeepLinkData(stat, action, host, uri)
     }
 
     /* HELPER */

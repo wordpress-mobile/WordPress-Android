@@ -235,7 +235,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
+        mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
 
         if (uri == null) {
             // invalid uri so, just show the entry screen
