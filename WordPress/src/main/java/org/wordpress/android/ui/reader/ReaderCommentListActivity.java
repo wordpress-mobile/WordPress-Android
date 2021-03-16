@@ -470,7 +470,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             return false;
         }
 
-        TextView txtCommentsClosed = findViewById(R.id.text_comments_closed);
         if (!mAccountStore.hasAccessToken()) {
             mCommentBox.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
