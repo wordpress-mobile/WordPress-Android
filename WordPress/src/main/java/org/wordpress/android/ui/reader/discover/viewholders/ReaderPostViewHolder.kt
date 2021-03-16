@@ -72,7 +72,10 @@ class ReaderPostViewHolder(
         uiHelpers.setTextOrHide(textTitle, state.title)
         uiHelpers.setTextOrHide(textExcerpt, state.excerpt)
         postContainer.setOnClickListener {
-            readerTracker.track(AnalyticsTracker.Stat.READER_POST_CARD_TAPPED)
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+                    state.blogId
+            )
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
 
