@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -75,16 +76,18 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
-private const val POST_PARAM_POSITION = 0
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 7
-private const val ON_TAG_CLICKED_PARAM_POSITION = 13
-private const val ON_BUTTON_CLICKED_PARAM_POSITION = 5
-private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 11
-private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 12
-private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 6
-private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 9
-private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 10
+private const val POST_PARAM_POSITION = 1
+private const val ON_BUTTON_CLICKED_PARAM_POSITION = 6
+private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 7
+private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
+private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 10
+private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 11
+private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 12
+private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 13
+private const val ON_TAG_CLICKED_PARAM_POSITION = 14
+
 private const val NUMBER_OF_ITEMS = 10L
+
 private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
 private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
 private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
@@ -137,15 +140,26 @@ class ReaderDiscoverViewModelTest {
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                        anyOrNull(), anyOrNull()
+                        source = anyString(),
+                        post = anyOrNull(),
+                        isDiscover = anyBoolean(),
+                        photonWidth = anyInt(),
+                        photonHeight = anyInt(),
+                        postListType = anyOrNull(),
+                        onButtonClicked = anyOrNull(),
+                        onItemClicked = anyOrNull(),
+                        onItemRendered = anyOrNull(),
+                        onDiscoverSectionClicked = anyOrNull(),
+                        onMoreButtonClicked = anyOrNull(),
+                        onMoreDismissed = anyOrNull(),
+                        onVideoOverlayClicked = anyOrNull(),
+                        onPostHeaderViewClicked = anyOrNull(),
+                        onTagItemClicked = anyOrNull(),
+                        moreMenuItems = anyOrNull()
                 )
         ).thenAnswer {
-            val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
-            // propagate some of the arguments
             createDummyReaderPostUiState(
-                    post,
+                    it.getArgument(POST_PARAM_POSITION),
                     it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
                     it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
                     it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
@@ -654,6 +668,7 @@ class ReaderDiscoverViewModelTest {
         onMoreMenuDismissed: (ReaderPostUiState) -> Unit
     ): ReaderPostUiState {
         return ReaderPostUiState(
+                source = "source",
                 postId = post.postId,
                 blogId = post.blogId,
                 isFollowed = post.isFollowedByCurrentUser,

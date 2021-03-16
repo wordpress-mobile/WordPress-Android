@@ -72,6 +72,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun mapPostToUiState(
+        source: String,
         post: ReaderPost,
         isDiscover: Boolean = false,
         photonWidth: Int,
@@ -90,6 +91,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     ): ReaderPostUiState {
         return withContext(bgDispatcher) {
             mapPostToUiStateBlocking(
+                    source,
                     post,
                     isDiscover,
                     photonWidth,
@@ -111,6 +113,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     @Suppress("LongParameterList")
     fun mapPostToUiStateBlocking(
+        source: String,
         post: ReaderPost,
         isDiscover: Boolean = false,
         photonWidth: Int,
@@ -128,6 +131,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         moreMenuItems: List<ReaderPostCardAction>? = null
     ): ReaderPostUiState {
         return ReaderPostUiState(
+                source = source,
                 postId = post.postId,
                 blogId = post.blogId,
                 isFollowed = post.isFollowedByCurrentUser,

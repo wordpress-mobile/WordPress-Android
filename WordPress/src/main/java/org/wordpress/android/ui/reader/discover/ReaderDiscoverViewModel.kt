@@ -174,6 +174,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         titleRes = R.string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                        source = "source",
                         post = card.post,
                         isDiscover = true,
                         photonWidth = photonWidth,

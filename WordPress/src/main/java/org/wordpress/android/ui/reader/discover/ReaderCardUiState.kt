@@ -20,6 +20,7 @@ sealed class ReaderCardUiState {
     data class ReaderWelcomeBannerCardUiState(@StringRes val titleRes: Int) : ReaderCardUiState()
 
     data class ReaderPostUiState(
+        val source: String,
         val postId: Long,
         val blogId: Long,
         val isFollowed: Boolean,
