@@ -69,6 +69,11 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         }
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
