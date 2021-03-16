@@ -512,7 +512,7 @@ ENV["validate_translations"]="lintVanillaRelease"
         error_message += "Do you want to continue anyway?"
         UI.user_error! "Abort." unless UI.confirm(error_message)
       else
-        UI.message("Strings.xml file downloaded to #{download_path}.")
+        UI.message("Strings.xml file for #{lib[:name]} downloaded to #{download_path}.")
         sh(merge_strings_tool_file_path, lib[:name], download_path)
         File.delete(download_path) if File.exist?(download_path)
       end
