@@ -70,7 +70,6 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "TENOR_AVAILABLE", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
@@ -107,7 +106,6 @@ android {
             }
             versionCode 1014
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
-            buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"

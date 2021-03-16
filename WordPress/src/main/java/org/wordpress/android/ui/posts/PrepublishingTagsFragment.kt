@@ -4,11 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
-import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.utils.UiHelpers
@@ -59,11 +58,13 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        back_button.setOnClickListener {
-            trackTagsChangedEvent()
-            viewModel.onBackButtonClicked()
+        with(PrepublishingTagsFragmentBinding.bind(view)) {
+            prepublishingToolbar.backButton.setOnClickListener {
+                trackTagsChangedEvent()
+                viewModel.onBackButtonClicked()
+            }
+            initViewModel()
         }
-        initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -81,12 +82,12 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         super.onResume()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
+    private fun PrepublishingTagsFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
         viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
-            ActivityUtils.hideKeyboardForced(tags_edit_text)
+            ActivityUtils.hideKeyboardForced(fragmentPostSettingsTags.tagsEditText)
         })
 
         viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
@@ -94,7 +95,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         })
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
-            toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
+            prepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
         val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)

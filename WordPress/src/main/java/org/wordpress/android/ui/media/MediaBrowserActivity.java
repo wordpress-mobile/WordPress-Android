@@ -88,7 +88,6 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
-import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.ArrayList;
@@ -120,7 +119,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject SiteStore mSiteStore;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
-    @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
@@ -953,7 +951,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        if (mBrowserType.isBrowser() && mTenorFeatureConfig.isEnabled()) {
+        if (mBrowserType.isBrowser()) {
             popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);

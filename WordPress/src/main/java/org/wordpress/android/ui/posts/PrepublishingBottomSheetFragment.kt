@@ -15,10 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
@@ -94,21 +94,23 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel(savedInstanceState)
-        dialog?.setOnShowListener { dialogInterface ->
-            val sheetDialog = dialogInterface as? BottomSheetDialog
+        with(PostPrepublishingBottomSheetBinding.bind(view)) {
+            initViewModel(savedInstanceState)
+            dialog?.setOnShowListener { dialogInterface ->
+                val sheetDialog = dialogInterface as? BottomSheetDialog
 
-            val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
-            ) as? FrameLayout
+                val bottomSheet = sheetDialog?.findViewById<View>(
+                        com.google.android.material.R.id.design_bottom_sheet
+                ) as? FrameLayout
 
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheet?.let {
+                    val behavior = BottomSheetBehavior.from(it)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
             }
+            setupMinimumHeightForFragmentContainer()
+            addWindowInsetToFragmentContainer()
         }
-        setupMinimumHeightForFragmentContainer()
-        addWindowInsetToFragmentContainer()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -120,26 +122,26 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
      * On Android 10, the bottom sheet is not above the window inset so that leads to the publish button being cut
      * off. To fix this, we add the bottom inset as the margin bottom of the fragment container.
      */
-    private fun addWindowInsetToFragmentContainer() {
+    private fun PostPrepublishingBottomSheetBinding.addWindowInsetToFragmentContainer() {
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
             activity?.window?.decorView?.rootWindowInsets?.systemWindowInsetBottom?.let { bottomInset ->
-                val param = prepublishing_content_fragment.layoutParams as ViewGroup.MarginLayoutParams
+                val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0, 0, 0, bottomInset)
-                prepublishing_content_fragment.layoutParams = param
+                prepublishingContentFragment.layoutParams = param
             }
         }
     }
 
-    private fun setupMinimumHeightForFragmentContainer() {
+    private fun PostPrepublishingBottomSheetBinding.setupMinimumHeightForFragmentContainer() {
         val isPage = checkNotNull(arguments?.getBoolean(IS_PAGE)) {
             "arguments can't be null."
         }
 
         if (isPage) {
-            prepublishing_content_fragment.minimumHeight =
+            prepublishingContentFragment.minimumHeight =
                     resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
         } else {
-            prepublishing_content_fragment.minimumHeight =
+            prepublishingContentFragment.minimumHeight =
                     resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
         }
     }
