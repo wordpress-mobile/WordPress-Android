@@ -521,7 +521,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
-        val navigaitonObserver = init()
+        init()
         // Act
         viewModel.swipeToRefresh()
         // Assert
@@ -531,7 +531,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Data are refreshed when the user clicks on retry`() = test {
         // Arrange
-        val navigaitonObserver = init()
+        init()
         // Act
         viewModel.onRetryButtonClick()
         // Assert
@@ -590,7 +590,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Action button on error empty screen invokes refresh cards`() = test {
         // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
+        init(autoUpdateFeed = false).uiStates
         viewModel.start(parentViewModel)
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Act
