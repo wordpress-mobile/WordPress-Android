@@ -35,10 +35,10 @@ import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragme
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.config.HomePagePickerFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class SiteCreationActivity : LocaleAwareActivity(),
         SegmentsScreenListener,
         DomainsScreenListener,
@@ -48,7 +48,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
         BasicDialogNegativeClickInterface {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
-    @Inject internal lateinit var homePagePickerFeatureConfig: HomePagePickerFeatureConfig
     private lateinit var mainViewModel: SiteCreationMainVM
     private lateinit var hppViewModel: HomePagePickerViewModel
 
@@ -138,8 +137,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
-            SEGMENTS -> if (homePagePickerFeatureConfig.isEnabled()) HomePagePickerFragment()
-            else SiteCreationSegmentsFragment.newInstance(screenTitle)
+            SEGMENTS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle,
                     target.wizardState.segmentId
