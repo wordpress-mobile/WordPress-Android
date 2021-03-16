@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestRe
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void fetchComments(final SiteModel site, final int number, final int offset, CommentStatus status) {
+    public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.getUrlV1_1();
         Map<String, String> params = new HashMap<>();
         params.put("status", status.toString());
@@ -55,7 +56,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     public void onResponse(CommentsWPComRestResponse response) {
                         List<CommentModel> comments = commentsResponseToCommentList(response, site);
                         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                                offset);
+                                offset, status);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                     }
                 },
@@ -281,6 +282,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setContent(response.content);
         comment.setILike(response.i_like);
         comment.setUrl(response.URL);
+        comment.setPublishedTimestamp(DateTimeUtils.timestampFromIso8601(response.date));
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
