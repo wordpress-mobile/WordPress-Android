@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
-import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
