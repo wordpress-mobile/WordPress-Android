@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -834,7 +835,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // retain *every* fragment
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
 
-        PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
+        @SuppressLint("WrongConstant") PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mIdList = (ReaderBlogIdPostIdList) ids.clone();
         }
