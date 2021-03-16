@@ -22,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -152,7 +151,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var textExcerptFooter: TextView
 
     private lateinit var signInButton: WPTextView
-    private lateinit var readerBookmarkButton: ImageView
 
     private lateinit var appBar: AppBarLayout
     private lateinit var toolBar: Toolbar
@@ -272,6 +270,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     ): View? {
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
+        initSwipeRefreshLayout(view)
+        initAppBar(view)
+        initScrollView(view)
+        initWebView(view)
+        initExcerptFooter(view)
+        initRelatedPostsView(view)
+        initLayoutFooter(view)
+        initSignInButton(view)
+        initProgressView(view)
+
+        return view
+    }
+
+    private fun initSwipeRefreshLayout(view: View) {
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)
 
         // this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
@@ -286,10 +298,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 updatePost()
             }
         }
+    }
 
-        scrollView = view.findViewById(R.id.scroll_view_reader)
-        scrollView.setScrollDirectionListener(this)
-
+    private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
@@ -317,44 +328,54 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         }
+    }
 
+    private fun initScrollView(view: View) {
+        scrollView = view.findViewById(R.id.scroll_view_reader)
+        scrollView.setScrollDirectionListener(this)
+        scrollView.visibility = View.INVISIBLE
+    }
+
+    private fun initWebView(view: View) {
+        // setup the ReaderWebView
+        readerWebView = view.findViewById(R.id.reader_webview)
+        readerWebView.setCustomViewListener(this)
+        readerWebView.setUrlClickListener(this)
+        readerWebView.setPageFinishedListener(this)
+    }
+
+    private fun initExcerptFooter(view: View) {
+        excerptFooter = view.findViewById(R.id.excerpt_footer)
+        textExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer)
+    }
+
+    private fun initRelatedPostsView(view: View) {
+        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
+        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
+        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
+    }
+
+    private fun initLayoutFooter(view: View) {
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
-
         val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
         val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
         val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
                 appbarElevation
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-
-        excerptFooter = view.findViewById(R.id.excerpt_footer)
-        textExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer)
-
-        // setup the ReaderWebView
-        readerWebView = view.findViewById(R.id.reader_webview)
-        readerWebView.setCustomViewListener(this)
-        readerWebView.setUrlClickListener(this)
-        readerWebView.setPageFinishedListener(this)
-
-        // hide footer and scrollView until the post is loaded
         layoutFooter.visibility = View.INVISIBLE
-        scrollView.visibility = View.INVISIBLE
+    }
 
-        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
-        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
-        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
-
+    private fun initSignInButton(view: View) {
         signInButton = view.findViewById(R.id.nux_sign_in_button)
         signInButton.setOnClickListener(mSignInClickListener)
+    }
 
-        readerBookmarkButton = view.findViewById(R.id.bookmark)
-
+    private fun initProgressView(view: View) {
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
             progress.visibility = View.VISIBLE
         }
-
-        return view
     }
 
     override fun onResume() {
