@@ -110,11 +110,13 @@ def main():
 
     project_root_path = os.path.dirname(os.path.dirname(__file__))
     main_strings_file = os.path.join(project_root_path, 'WordPress/src/main/res/values/strings.xml')
-    print('Merging strings for: ', sys.argv[1])
+    library_name = sys.argv[1]
+    input_file = sys.argv[2]
+    print('Merging strings for: ', library_name)
     merge_strings(
         main_strings_file,
         [
-            { 'name': sys.argv[1], 'file': sys.argv[2] },
+            { 'name': library_name, 'file': input_file },
         ]
     )
 
