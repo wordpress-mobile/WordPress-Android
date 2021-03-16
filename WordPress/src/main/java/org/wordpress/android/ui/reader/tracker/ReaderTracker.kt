@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.tracker
 
 import androidx.annotation.MainThread
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_A8C_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
@@ -102,6 +103,16 @@ class ReaderTracker @Inject constructor(
 
     fun onBottomNavigationTabChanged() {
         appPrefsWrapper.setReaderActiveTab(null)
+    }
+
+    /* TRACK */
+
+    fun track(stat: Stat) {
+        analyticsTrackerWrapper.track(stat)
+    }
+
+    fun track(stat: Stat, properties: Map<String, *>) {
+        analyticsTrackerWrapper.track(stat, properties)
     }
 }
 
