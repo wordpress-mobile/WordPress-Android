@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
+import androidx.annotation.NonNull
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
@@ -27,16 +28,27 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
                 .get(PostSignupInterstitialViewModel::class.java)
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        with(binding.postSignupInterstitial) {
+        with(binding) {
             viewModel.onInterstitialShown()
-
-            createNewSiteButton.setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
-            addSelfHostedSiteButton.setOnClickListener { viewModel.onAddSelfHostedSiteButtonPressed() }
-            dismissButton.setOnClickListener { viewModel.onDismissButtonPressed() }
+            createNewSiteButton().setOnClickListener { viewModel.onCreateNewSiteButtonPressed() }
+            addSelfHostedSiteButton().setOnClickListener { viewModel.onAddSelfHostedSiteButtonPressed() }
+            dismissButton().setOnClickListener { viewModel.onDismissButtonPressed() }
         }
 
         viewModel.navigationAction.observe(this, { executeAction(it) })
     }
+
+    private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
+            (postSignupInterstitial?.createNewSiteButton
+                    ?: postSignupInterstitialLandscape?.createNewSiteButton)!!
+
+    private fun PostSignupInterstitialActivityBinding.addSelfHostedSiteButton() =
+            (postSignupInterstitial?.addSelfHostedSiteButton
+                    ?: postSignupInterstitialLandscape?.addSelfHostedSiteButton)!!
+
+    private fun PostSignupInterstitialActivityBinding.dismissButton() =
+            (postSignupInterstitial?.dismissButton
+                    ?: postSignupInterstitialLandscape?.dismissButton)!!
 
     override fun onBackPressed() {
         viewModel.onBackButtonPressed()
