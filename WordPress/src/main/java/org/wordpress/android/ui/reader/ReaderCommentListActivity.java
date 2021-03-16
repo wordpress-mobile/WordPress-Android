@@ -283,8 +283,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         mUpdateOnResume = (savedInstanceState == null);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
-                                                              mPost.isWP());
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
+                mBlogId,
+                this,
+                mSuggestionServiceConnectionManager,
+                mPost.isWP()
+        );
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
@@ -297,39 +301,42 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         buttonExpand.setOnClickListener(
                 v -> {
                     Bundle bundle = CommentFullScreenDialogFragment.Companion
-                            .newBundle(mEditComment.getText().toString(),
+                            .newBundle(
+                                    mEditComment.getText().toString(),
                                     mEditComment.getSelectionStart(),
                                     mEditComment.getSelectionEnd(),
                                     mBlogId
                             );
 
                     new Builder(ReaderCommentListActivity.this)
-                        .setTitle(R.string.comment)
-                        .setOnCollapseListener(new OnCollapseListener() {
-                            @Override
-                            public void onCollapse(@Nullable Bundle result) {
-                                if (result != null) {
-                                    mEditComment.setText(result.getString(RESULT_REPLY));
-                                    mEditComment.setSelection(result.getInt(RESULT_SELECTION_START),
-                                            result.getInt(RESULT_SELECTION_END));
-                                    mEditComment.requestFocus();
+                            .setTitle(R.string.comment)
+                            .setOnCollapseListener(new OnCollapseListener() {
+                                @Override
+                                public void onCollapse(@Nullable Bundle result) {
+                                    if (result != null) {
+                                        mEditComment.setText(result.getString(RESULT_REPLY));
+                                        mEditComment.setSelection(
+                                                result.getInt(RESULT_SELECTION_START),
+                                                result.getInt(RESULT_SELECTION_END)
+                                        );
+                                        mEditComment.requestFocus();
+                                    }
                                 }
-                            }
-                        })
-                        .setOnConfirmListener(new OnConfirmListener() {
-                            @Override
-                            public void onConfirm(@Nullable Bundle result) {
-                                if (result != null) {
-                                    mEditComment.setText(result.getString(RESULT_REPLY));
-                                    submitComment();
+                            })
+                            .setOnConfirmListener(new OnConfirmListener() {
+                                @Override
+                                public void onConfirm(@Nullable Bundle result) {
+                                    if (result != null) {
+                                        mEditComment.setText(result.getString(RESULT_REPLY));
+                                        submitComment();
+                                    }
                                 }
-                            }
-                        })
-                        .setContent(CommentFullScreenDialogFragment.class, bundle)
-                        .setAction(R.string.send)
-                        .setHideActivityBar(true)
-                        .build()
-                        .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+                            })
+                            .setContent(CommentFullScreenDialogFragment.class, bundle)
+                            .setAction(R.string.send)
+                            .setHideActivityBar(true)
+                            .build()
+                            .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
                 }
         );
 
@@ -416,7 +423,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     private void setReplyToCommentId(long commentId, boolean doFocus) {
         mReplyToCommentId = commentId;
         mEditComment.setHint(mReplyToCommentId == 0
-                                     ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
+                ? R.string.reader_hint_comment_on_post
+                : R.string.reader_hint_comment_on_comment
+        );
 
         if (doFocus) {
             mEditComment.postDelayed(new Runnable() {
@@ -474,7 +483,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     }
 
     private void showCommentsClosedMessage(boolean show) {
-        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        TextView txtCommentsClosed = findViewById(R.id.text_comments_closed);
         if (txtCommentsClosed != null) {
             txtCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
         }
@@ -486,7 +495,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             return false;
         }
 
-        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        TextView txtCommentsClosed = findViewById(R.id.text_comments_closed);
         if (!mAccountStore.hasAccessToken()) {
             mCommentBox.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
@@ -607,18 +616,22 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     if (!mAccountStore.hasAccessToken()) {
                         WPSnackbar.make(mRecyclerView,
-                                      R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                                      Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.sign_in, mSignInClickListener)
-                                .show();
+                                R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                                Snackbar.LENGTH_INDEFINITE)
+                                  .setAction(R.string.sign_in, mSignInClickListener)
+                                  .show();
                     } else {
                         ReaderComment comment = ReaderCommentTable.getComment(mPost.blogId, mPost.postId, mCommentId);
                         if (comment == null) {
-                            ToastUtils.showToast(ReaderCommentListActivity.this,
-                                                 R.string.reader_toast_err_comment_not_found);
+                            ToastUtils.showToast(
+                                    ReaderCommentListActivity.this,
+                                    R.string.reader_toast_err_comment_not_found
+                            );
                         } else if (comment.isLikedByCurrentUser) {
-                            ToastUtils.showToast(ReaderCommentListActivity.this,
-                                                 R.string.reader_toast_err_already_liked);
+                            ToastUtils.showToast(
+                                    ReaderCommentListActivity.this,
+                                    R.string.reader_toast_err_already_liked
+                            );
                         } else {
                             long wpComUserId = mAccountStore.getAccount().getUserId();
                             if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId)
@@ -630,8 +643,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                                 AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_LIKED,
                                         AnalyticsCommentActionSource.READER, mPost);
                             } else {
-                                ToastUtils.showToast(ReaderCommentListActivity.this,
-                                                     R.string.reader_toast_err_generic);
+                                ToastUtils.showToast(
+                                        ReaderCommentListActivity.this,
+                                        R.string.reader_toast_err_generic
+                                );
                             }
                         }
 
@@ -653,14 +668,14 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     }
 
     private void showProgress() {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        ProgressBar progress = findViewById(R.id.progress_loading);
         if (progress != null) {
             progress.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideProgress() {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        ProgressBar progress = findViewById(R.id.progress_loading);
         if (progress != null) {
             progress.setVisibility(View.GONE);
         }
@@ -715,7 +730,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     }
 
     private void checkEmptyView() {
-        TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+        TextView txtEmpty = findViewById(R.id.text_empty);
         if (txtEmpty == null) {
             return;
         }
