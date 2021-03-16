@@ -15,6 +15,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.PAGED_POST
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.SUBFILTERED_LIST
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import java.util.Calendar
 import java.util.Date
 
@@ -23,12 +24,18 @@ class ReaderTrackerTest {
     @Mock lateinit var dateProvider: DateProvider
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var tracker: ReaderTracker
 
     @Before
     fun setup() {
-        tracker = ReaderTracker(dateProvider, appPrefsWrapper, analyticsTrackerWrapper)
+        tracker = ReaderTracker(
+                dateProvider,
+                appPrefsWrapper,
+                analyticsTrackerWrapper,
+                analyticsUtilsWrapper
+        )
     }
 
     @Test

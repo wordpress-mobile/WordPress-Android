@@ -9,6 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_FOLLOWING_SH
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LIKED_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_P2_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTab.A8C
@@ -24,6 +25,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +34,8 @@ import javax.inject.Singleton
 class ReaderTracker @Inject constructor(
     private val dateProvider: DateProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) {
     // TODO: evaluate to use something like Dispatchers.Main.Immediate in the fun(s)
     // to sync the access to trackers; so to remove the @MainThread and make the
@@ -122,6 +125,24 @@ class ReaderTracker @Inject constructor(
                 TAG_KEY to tag
         )
         track(stat, properties)
+    }
+
+    /* POST */
+
+    fun trackPost(stat: Stat, post: ReaderPost?) {
+        trackPost(stat, post, mutableMapOf<String, Any>())
+    }
+
+    private fun trackPost(
+        stat: Stat,
+        post: ReaderPost?,
+        properties: MutableMap<String, *>
+    ) {
+        analyticsUtilsWrapper.trackWithReaderPostDetails(
+                stat,
+                post,
+                properties
+        )
     }
 
     /* OTHER */
