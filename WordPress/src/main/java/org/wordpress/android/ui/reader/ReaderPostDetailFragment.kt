@@ -76,6 +76,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -179,6 +180,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var viewModelFactory: Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var readerTracker: ReaderTracker
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -452,7 +454,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
                     .showPreview(requireContext(), site, featuredImage)
 
-            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+                    context,
+                    this.tag,
+                    readerTracker
+            )
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,

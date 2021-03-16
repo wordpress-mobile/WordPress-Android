@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -58,6 +59,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     private lateinit var viewModel: ReaderDiscoverViewModel
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel
 
     private var binding: ReaderDiscoverFragmentLayoutBinding? = null
@@ -134,7 +136,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(activity, event.site, event.post, event.source)
         is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
         is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(event)
-        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, event.tag)
+        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+                context,
+                event.tag,
+                readerTracker
+        )
         is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
         is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(context, event.siteId, event.feedId)
         is ShowReportPost -> ReaderActivityLauncher.openUrl(

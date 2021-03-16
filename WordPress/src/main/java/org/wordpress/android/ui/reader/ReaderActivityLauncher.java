@@ -22,12 +22,11 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT;
 
@@ -130,13 +129,12 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts with a specific tag
      */
-    public static void showReaderTagPreview(Context context, ReaderTag tag) {
+    public static void showReaderTagPreview(Context context, ReaderTag tag,
+                                            ReaderTracker readerTracker) {
         if (tag == null) {
             return;
         }
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
+        readerTracker.trackTag(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, tag.getTagSlug());
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
