@@ -237,8 +237,8 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
      *
-     * @param stat The Stat to bump
-     * @param site The site object
+     * @param stat       The Stat to bump
+     * @param site       The site object
      * @param properties Properties to attach to the event
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
@@ -310,9 +310,9 @@ public class AnalyticsUtils {
      * Bump Analytics for comment reply, and add blog and comment details into properties.
      *
      * @param isQuickReply Whether is a quick reply or not
-     * @param site The site object
-     * @param comment The comment object
-     * @param source The source of the comment action
+     * @param site         The site object
+     * @param comment      The comment object
+     * @param source       The source of the comment action
      */
     public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
                                                     CommentModel comment, AnalyticsCommentActionSource source) {
@@ -354,7 +354,7 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics and add blog_id into properties
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param blogID The REMOTE blog ID.
      */
     public static void trackWithSiteId(AnalyticsTracker.Stat stat, long blogID) {
@@ -453,10 +453,10 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param action The Intent action the app was started with
-     * @param host The host if applicable
-     * @param data The data URI the app was started with
+     * @param host   The host if applicable
+     * @param data   The data URI the app was started with
      */
     public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, String host, Uri data) {
         Map<String, Object> properties = new HashMap<>();
@@ -470,7 +470,7 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
+     * @param stat           The Stat to bump
      * @param interceptedUri The fallback URI the app was started with
      */
     public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
@@ -483,7 +483,7 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
+     * @param stat                 The Stat to bump
      * @param interceptorClassname The name of the class that handles the intercept by default
      */
     public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
@@ -509,7 +509,7 @@ public class AnalyticsUtils {
     /**
      * Track when a railcar item has been interacted with
      *
-     * @param stat The event that caused the interaction
+     * @param stat        The event that caused the interaction
      * @param railcarJson The JSON string of the railcar
      */
     private static void trackRailcarInteraction(AnalyticsTracker.Stat stat, String railcarJson) {
@@ -579,7 +579,7 @@ public class AnalyticsUtils {
         try {
             if (!file.exists()) {
                 AppLog.e(AppLog.T.MEDIA,
-                         "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
+                        "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
                 return properties;
             }
 
@@ -723,7 +723,8 @@ public class AnalyticsUtils {
 
 
     public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
-                                                         AnalyticsCommentActionSource actionSource, ReaderPost post) {
+                                                               AnalyticsCommentActionSource actionSource,
+                                                               ReaderPost post) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 
@@ -740,8 +741,7 @@ public class AnalyticsUtils {
         if (post != null) {
             AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
         } else {
-            AppLog.w(AppLog.T.READER, "The passed post obj is null."
-                                     + " Tracking analytics without post details info");
+            AppLog.w(AppLog.T.READER, "The passed post obj is null. Tracking analytics without post details info");
             // let's log basic info
             if (properties == null) {
                 properties = new HashMap<>();
