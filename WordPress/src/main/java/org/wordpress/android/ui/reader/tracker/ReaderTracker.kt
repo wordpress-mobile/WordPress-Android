@@ -118,6 +118,15 @@ class ReaderTracker @Inject constructor(
         analyticsTrackerWrapper.track(stat, properties)
     }
 
+    /* BLOG */
+
+    fun trackBlog(stat: Stat, blogId: Long) {
+        val properties = mutableMapOf<String, Any>(
+                BLOG_ID_KEY to blogId
+        )
+        track(stat, properties)
+    }
+
     /* TAG */
 
     fun trackTag(stat: Stat, tag: String) {
@@ -161,6 +170,7 @@ class ReaderTracker @Inject constructor(
     }
 
     companion object {
+        private const val BLOG_ID_KEY = "blog_id"
         private const val TAG_KEY = "tag"
         private const val INTERCEPTED_URI = "intercepted_uri"
     }
