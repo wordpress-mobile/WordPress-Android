@@ -7,6 +7,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class FormattableContentMapperTest {
@@ -44,6 +45,7 @@ class FormattableContentMapperTest {
                 .getStringFromResourceFile(this.javaClass, "notifications/body-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
         assertEquals("This site was created by Author", formattableContent.text)
+        assertTrue(formattableContent.meta!!.isButton == true)
         assertEquals(2, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
             assertEquals(FormattableRangeType.USER, this.rangeType())
