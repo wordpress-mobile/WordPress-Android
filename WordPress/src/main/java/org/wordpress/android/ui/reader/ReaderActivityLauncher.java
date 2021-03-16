@@ -166,12 +166,12 @@ public class ReaderActivityLauncher {
     /**
      * Show comments for passed Ids and directly perform an action on a specifc comment
      *
-     * @param context context to use to start the activity
-     * @param blogId blog id
-     * @param postId post id
+     * @param context         context to use to start the activity
+     * @param blogId          blog id
+     * @param postId          post id
      * @param directOperation operation to perform on the specific comment. Can be null for no operation.
-     * @param commentId specific comment id to perform an action on
-     * @param interceptedUri URI to fall back into (i.e. to be able to open in external browser)
+     * @param commentId       specific comment id to perform an action on
+     * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri) {
