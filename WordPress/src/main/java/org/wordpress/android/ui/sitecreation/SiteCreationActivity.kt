@@ -132,8 +132,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val fragment = when (target.wizardStep) {
             SEGMENTS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
-                    screenTitle,
-                    target.wizardState.segmentId
+                    screenTitle
             )
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
