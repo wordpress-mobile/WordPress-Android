@@ -1,6 +1,5 @@
 package org.wordpress.android.util.config
 
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.annotation.Feature
 import org.wordpress.android.util.config.ExampleRemoteFeature.Companion.EXAMPLE_REMOTE_FEATURE_FIELD
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class ExampleRemoteFeature
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.TENOR_AVAILABLE,
+        false,
         EXAMPLE_REMOTE_FEATURE_FIELD
 ) {
     companion object {

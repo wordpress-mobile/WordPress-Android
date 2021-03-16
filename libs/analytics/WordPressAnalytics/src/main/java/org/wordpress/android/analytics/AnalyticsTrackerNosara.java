@@ -1540,10 +1540,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
                 return "jetpack_settings_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
-                return "jetpack_whitelisted_ips_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
-                return "jetpack_whitelisted_ips_changed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED:
+                return "jetpack_allowlisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED:
+                return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
@@ -2018,6 +2018,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
             case READER_POST_MARKED_AS_SEEN:
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:

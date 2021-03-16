@@ -21,6 +21,7 @@ import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapt
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -56,39 +57,37 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun setupObservers() {
         viewModel.uiState.observe(
-            viewLifecycleOwner,
-            { uiState ->
-                if (uiState is Content) {
-                    refreshContentScreen(uiState)
+                viewLifecycleOwner,
+                { uiState ->
+                    if (uiState is Content) {
+                        refreshContentScreen(uiState)
+                    }
                 }
-            }
         )
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
 
-        viewModel.navigationEvents.observe(
-            viewLifecycleOwner,
-            {
-                it.applyIfNotHandled {
-                    when (this) {
-                        is OpenThreatActionDialog -> showThreatActionDialog(this)
+        viewModel.navigationEvents.observeEvent(
+                viewLifecycleOwner,
+                { events ->
+                    when (events) {
+                        is OpenThreatActionDialog -> showThreatActionDialog(events)
 
                         is ShowUpdatedScanStateWithMessage -> {
                             val site = requireNotNull(requireActivity().intent.extras)
-                                .getSerializable(WordPress.SITE) as SiteModel
-                            ActivityLauncher.viewScanRequestScanState(requireActivity(), site, this.messageRes)
+                                    .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestScanState(requireActivity(), site, events.messageRes)
                         }
                         is ShowUpdatedFixState -> {
                             val site = requireNotNull(requireActivity().intent.extras)
-                                .getSerializable(WordPress.SITE) as SiteModel
-                            ActivityLauncher.viewScanRequestFixState(requireActivity(), site, this.threatId)
+                                    .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
                         }
                         is ThreatDetailsNavigationEvents.ShowGetFreeEstimate -> {
-                            ActivityLauncher.openUrlExternal(context, this.url())
+                            ActivityLauncher.openUrlExternal(context, events.url())
                         }
                     }
                 }
-            }
         )
     }
 
@@ -109,12 +108,12 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun showThreatActionDialog(holder: OpenThreatActionDialog) {
         threatActionDialog = MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
-            .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
-            .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
-            .setNegativeButton(holder.negativeButtonLabel) { _, _ -> threatActionDialog?.dismiss() }
-            .setCancelable(true)
-            .create()
+                .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
+                .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
+                .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
+                .setNegativeButton(holder.negativeButtonLabel) { _, _ -> threatActionDialog?.dismiss() }
+                .setCancelable(true)
+                .create()
         threatActionDialog?.show()
     }
 

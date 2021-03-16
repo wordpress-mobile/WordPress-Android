@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:text="@string/notifications_tab_dialog_master_off_title"
+        android:text="@string/notifications_tab_dialog_main_off_title"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -25,7 +25,7 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:text="@string/notifications_tab_dialog_master_off_message"
+        android:text="@string/notifications_tab_dialog_main_off_message"
         android:textAppearance="?attr/textAppearanceBody2" />
 
     <View

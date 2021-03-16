@@ -46,7 +46,6 @@ Language: hr
     <string name="stories_intro_main_title">Predstavljamo vam članke priče</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
-    <string name="mlp_preview_title">Pretpregled izgleda</string>
     <string name="reader_label_toolbar_back">Povratak</string>
     <string name="reader_discover_empty_button_text">Započnite</string>
     <string name="reader_post_details_header_by_author_name">Od</string>
@@ -97,6 +96,7 @@ Language: hr
     <string name="invite">Pozovi</string>
     <string name="invite_people">Pozovi osobe</string>
     <string name="send_link">Pošalji link</string>
+    <string name="reader_title_related_post_detail">Vezana objava</string>
     <string name="send">Pošalji</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>

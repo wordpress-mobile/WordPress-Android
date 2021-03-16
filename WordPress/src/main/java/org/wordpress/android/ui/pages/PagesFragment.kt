@@ -55,9 +55,9 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -327,11 +327,11 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.listState.observe(viewLifecycleOwner, Observer {
+        viewModel.listState.observe(viewLifecycleOwner, {
             refreshProgressBars(it)
         })
 
-        viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
+        viewModel.createNewPage.observe(viewLifecycleOwner, {
             if (mlpViewModel.canShowModalLayoutPicker()) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
@@ -339,11 +339,11 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer { request ->
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
             createNewPage(request.title, request.content, request.template)
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitle == null) {
@@ -359,33 +359,37 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                             Snackbar.LENGTH_LONG
                     )
                     snackbar.setAction(
-                            uiHelpers.getTextOfUiString(requireContext(),
-                            holder.buttonTitle)) { holder.buttonAction()
+                            uiHelpers.getTextOfUiString(
+                                    requireContext(),
+                                    holder.buttonTitle
+                            )
+                    ) {
+                        holder.buttonAction()
                     }
                     snackbar.show()
                 }
             }
         })
 
-        viewModel.editPage.observe(viewLifecycleOwner, Observer { (site, page, loadAutoRevision) ->
+        viewModel.editPage.observe(viewLifecycleOwner, { (site, page, loadAutoRevision) ->
             page?.let {
                 ActivityLauncher.editPageForResult(this, site, page.id, loadAutoRevision)
             }
         })
 
-        viewModel.previewPage.observe(viewLifecycleOwner, Observer { post ->
+        viewModel.previewPage.observe(viewLifecycleOwner, { post ->
             post?.let {
                 previewPage(activity, post)
             }
         })
 
-        viewModel.browsePreview.observe(viewLifecycleOwner, Observer { preview ->
+        viewModel.browsePreview.observe(viewLifecycleOwner, { preview ->
             preview?.let {
                 ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, preview.post, preview.previewType)
             }
         })
 
-        viewModel.previewState.observe(viewLifecycleOwner, Observer {
+        viewModel.previewState.observe(viewLifecycleOwner, {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                     activity,
                     progressDialog,
@@ -394,11 +398,11 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             )
         })
 
-        viewModel.setPageParent.observe(viewLifecycleOwner, Observer { page ->
+        viewModel.setPageParent.observe(viewLifecycleOwner, { page ->
             page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
-        viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, Observer { isVisible ->
+        viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, { isVisible ->
             isVisible?.let {
                 if (isVisible) {
                     newPageButton.show()
@@ -408,7 +412,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        viewModel.scrollToPage.observe(viewLifecycleOwner, Observer { requestedPage ->
+        viewModel.scrollToPage.observe(viewLifecycleOwner, { requestedPage ->
             requestedPage?.let { page ->
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
                 pagesPager.currentItem = pagerIndex
@@ -416,11 +420,11 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        viewModel.dialogAction.observe(viewLifecycleOwner, Observer {
+        viewModel.dialogAction.observe(viewLifecycleOwner, {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
 
-        viewModel.postUploadAction.observe(viewLifecycleOwner, Observer {
+        viewModel.postUploadAction.observe(viewLifecycleOwner, {
             it?.let { (post, site, data) ->
                 uploadUtilsWrapper.handleEditPostResultSnackbars(
                         activity,
@@ -440,13 +444,13 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        viewModel.publishAction.observe(this, Observer {
+        viewModel.publishAction.observe(this, {
             it?.let {
                 uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }
         })
 
-        viewModel.uploadFinishedAction.observe(viewLifecycleOwner, Observer {
+        viewModel.uploadFinishedAction.observe(viewLifecycleOwner, {
             it?.let { (page, isError, isFirstTimePublish) ->
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
@@ -460,16 +464,14 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        mlpViewModel.isModalLayoutPickerShowing.observe(viewLifecycleOwner, Observer { event: Event<Boolean> ->
-            event.applyIfNotHandled {
-                val fm = activity.supportFragmentManager
-                var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
-                if (this && mlpFragment == null) {
-                    mlpFragment = ModalLayoutPickerFragment()
-                    mlpFragment.show(fm, MODAL_LAYOUT_PICKER_TAG)
-                } else if (!this && mlpFragment != null) {
-                    mlpFragment.dismiss()
-                }
+        mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
+            val fm = activity.supportFragmentManager
+            var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
+            if (isShowing && mlpFragment == null) {
+                mlpFragment = ModalLayoutPickerFragment()
+                mlpFragment.show(fm, MODAL_LAYOUT_PICKER_TAG)
+            } else if (!isShowing && mlpFragment != null) {
+                mlpFragment.dismiss()
             }
         })
     }

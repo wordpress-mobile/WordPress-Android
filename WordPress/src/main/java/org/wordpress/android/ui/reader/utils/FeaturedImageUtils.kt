@@ -19,10 +19,10 @@ class FeaturedImageUtils
     ): Boolean {
         return try {
             val featuredImageUrl = URL(featuredImage)
-            val endIndex = featuredImageUrl.path.lastIndexOf("-", featuredImageUrl.path.lastIndexOf("/"))
+            val endIndex = getLastIndexOfDashInUrl(featuredImageUrl)
             val featuredImageFile = featuredImageUrl.file
             val featuredImagePath = if (endIndex > 0 && !featuredImageFile.startsWith("-")) {
-                featuredImageUrl.path.substring(0, endIndex)
+                featuredImageUrl.path.substring(0, endIndex + 1)
             } else {
                 featuredImageUrl.path
             }
@@ -36,6 +36,10 @@ class FeaturedImageUtils
             false
         }
     }
+
+    private fun getLastIndexOfDashInUrl(url: URL) = url.path.split("/").last()
+            .lastIndexOf("-").takeIf { it > 0 }
+            ?.let { it + url.path.lastIndexOf("/") } ?: -1
 
     /*
      * returns true if the post has a featured image and the featured image is not found in the post body

@@ -1,30 +1,27 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.reader_recommended_blog_item.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderRecommendedBlogItemBinding
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
+import org.wordpress.android.util.viewBinding
 
 class ReaderRecommendedBlogViewHolder(
-    internal val parent: ViewGroup,
+    parent: ViewGroup,
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers,
-    override val containerView: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.reader_recommended_blog_item, parent, false)
-) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-    fun onBind(uiState: ReaderRecommendedBlogUiState) {
+    private val binding: ReaderRecommendedBlogItemBinding =
+            parent.viewBinding(ReaderRecommendedBlogItemBinding::inflate)
+) : RecyclerView.ViewHolder(binding.root) {
+    fun onBind(uiState: ReaderRecommendedBlogUiState) = with(binding) {
         with(uiState) {
-            site_name.text = name
-            site_url.text = url
-            uiHelpers.setTextOrHide(site_description, description)
-            site_follow_icon.apply {
+            siteName.text = name
+            siteUrl.text = url
+            uiHelpers.setTextOrHide(siteDescription, description)
+            siteFollowIcon.apply {
                 setIsFollowed(isFollowed)
                 contentDescription = context.getString(followContentDescription.stringRes)
                 setOnClickListener {
@@ -32,21 +29,21 @@ class ReaderRecommendedBlogViewHolder(
                 }
             }
             updateBlogImage(iconUrl)
-            containerView.setOnClickListener {
+            root.setOnClickListener {
                 onItemClicked(blogId, feedId)
             }
         }
     }
 
-    private fun updateBlogImage(iconUrl: String?) {
+    private fun updateBlogImage(iconUrl: String?) = with(binding) {
         if (iconUrl != null) {
             imageManager.loadIntoCircle(
-                    imageView = site_icon,
+                    imageView = siteIcon,
                     imageType = BLAVATAR_CIRCULAR,
                     imgUrl = iconUrl
             )
         } else {
-            imageManager.cancelRequestAndClearImageView(site_icon)
+            imageManager.cancelRequestAndClearImageView(siteIcon)
         }
     }
 }

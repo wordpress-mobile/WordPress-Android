@@ -19,8 +19,9 @@
             android:layout_height="wrap_content">
 
             <include
-                   android:duplicateParentState="true"
-                layout="@layout/stats_date_selector" />
+                android:id="@+id/date_selector"
+                layout="@layout/stats_date_selector"
+                android:duplicateParentState="true" />
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,12 +34,13 @@
 
 
         <include
+            android:id="@+id/error_view"
             layout="@layout/stats_error_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <include layout="@layout/stats_empty_view" />
+        <include android:id="@+id/empty_view" layout="@layout/stats_empty_view" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/loadingContainer"

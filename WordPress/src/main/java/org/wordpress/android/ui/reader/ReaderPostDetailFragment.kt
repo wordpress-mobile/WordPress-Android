@@ -19,7 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -51,6 +50,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -113,6 +113,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
@@ -145,9 +146,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var excerptFooter: ViewGroup
+    private lateinit var textExcerptFooter: TextView
 
     private lateinit var signInButton: WPTextView
-    private lateinit var readerBookmarkButton: ImageView
 
     private lateinit var appBar: AppBarLayout
     private lateinit var toolBar: Toolbar
@@ -190,40 +192,40 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
-        appBarLayout, verticalOffset ->
-        val collapsingToolbarLayout = appBarLayout
-                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+    private val appBarLayoutOffsetChangedListener =
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                val collapsingToolbarLayout = appBarLayout
+                        .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+                val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-        context?.let { context ->
-            val menu: Menu = toolbar.menu
-            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
+                context?.let { context ->
+                    val menu: Menu = toolbar.menu
+                    val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+                    val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+                    val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
-            val collapsingToolbarHeight = collapsingToolbarLayout.height
-            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                    collapsingToolbarLayout.scrimVisibleHeightTrigger
-            val isDarkTheme = context.resources.configuration.isDarkTheme()
+                    val collapsingToolbarHeight = collapsingToolbarLayout.height
+                    val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                            collapsingToolbarLayout.scrimVisibleHeightTrigger
+                    val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-            val colorAttr = if (isCollapsed || isDarkTheme) {
-                R.attr.colorOnSurface
-            } else {
-                R.attr.colorSurface
+                    val colorAttr = if (isCollapsed || isDarkTheme) {
+                        R.attr.colorOnSurface
+                    } else {
+                        R.attr.colorSurface
+                    }
+                    val color = context.getColorFromAttribute(colorAttr)
+                    val colorFilter = BlendModeColorFilterCompat
+                            .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+                    toolbar.setTitleTextColor(color)
+                    toolbar.navigationIcon?.colorFilter = colorFilter
+
+                    menuBrowse?.icon?.colorFilter = colorFilter
+                    menuShare?.icon?.colorFilter = colorFilter
+                    menuMore?.icon?.colorFilter = colorFilter
+                }
             }
-            val color = context.getColorFromAttribute(colorAttr)
-            val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
-
-            toolbar.setTitleTextColor(color)
-            toolbar.navigationIcon?.colorFilter = colorFilter
-
-            menuBrowse?.icon?.colorFilter = colorFilter
-            menuShare?.icon?.colorFilter = colorFilter
-            menuMore?.icon?.colorFilter = colorFilter
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -260,6 +262,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     ): View? {
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
+        initSwipeRefreshLayout(view)
+        initAppBar(view)
+        initScrollView(view)
+        initWebView(view)
+        initExcerptFooter(view)
+        initRelatedPostsView(view)
+        initLayoutFooter(view)
+        initSignInButton(view)
+        initProgressView(view)
+
+        return view
+    }
+
+    private fun initSwipeRefreshLayout(view: View) {
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)
 
         // this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
@@ -274,10 +290,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 updatePost()
             }
         }
+    }
 
-        scrollView = view.findViewById(R.id.scroll_view_reader)
-        scrollView.setScrollDirectionListener(this)
-
+    private fun initAppBar(view: View) {
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
@@ -305,41 +320,54 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         }
+    }
 
+    private fun initScrollView(view: View) {
+        scrollView = view.findViewById(R.id.scroll_view_reader)
+        scrollView.setScrollDirectionListener(this)
+        scrollView.visibility = View.INVISIBLE
+    }
+
+    private fun initWebView(view: View) {
+        // setup the ReaderWebView
+        readerWebView = view.findViewById(R.id.reader_webview)
+        readerWebView.setCustomViewListener(this)
+        readerWebView.setUrlClickListener(this)
+        readerWebView.setPageFinishedListener(this)
+    }
+
+    private fun initExcerptFooter(view: View) {
+        excerptFooter = view.findViewById(R.id.excerpt_footer)
+        textExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer)
+    }
+
+    private fun initRelatedPostsView(view: View) {
+        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
+        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
+        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
+    }
+
+    private fun initLayoutFooter(view: View) {
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
-
         val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
         val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
         val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
                 appbarElevation
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-
-        // setup the ReaderWebView
-        readerWebView = view.findViewById(R.id.reader_webview)
-        readerWebView.setCustomViewListener(this)
-        readerWebView.setUrlClickListener(this)
-        readerWebView.setPageFinishedListener(this)
-
-        // hide footer and scrollView until the post is loaded
         layoutFooter.visibility = View.INVISIBLE
-        scrollView.visibility = View.INVISIBLE
+    }
 
-        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
-        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
-        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
-
+    private fun initSignInButton(view: View) {
         signInButton = view.findViewById(R.id.nux_sign_in_button)
         signInButton.setOnClickListener(mSignInClickListener)
+    }
 
-        readerBookmarkButton = view.findViewById(R.id.bookmark)
-
+    private fun initProgressView(view: View) {
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
             progress.visibility = View.VISIBLE
         }
-
-        return view
     }
 
     override fun onResume() {
@@ -361,12 +389,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel(savedInstanceState)
+        val binding = ReaderFragmentPostDetailBinding.bind(view)
+        initViewModel(binding, savedInstanceState)
 
         showPost()
     }
 
-    private fun initViewModel(savedInstanceState: Bundle?) {
+    private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, {
@@ -374,7 +403,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             uiHelpers.updateVisibility(progress_loading, it.loadingVisible)
             when (it) {
                 is LoadingUiState -> Unit // Do Nothing
-                is ReaderPostDetailsUiState -> renderUiState(it)
+                is ReaderPostDetailsUiState -> renderUiState(it, binding)
                 is ErrorUiState -> {
                     uiHelpers.updateVisibility(signInButton, it.signInButtonVisibility)
                     val message = it.message?.let { msg -> uiHelpers.getTextOfUiString(requireContext(), msg) }
@@ -383,11 +412,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         })
 
-        viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
         val bundle = savedInstanceState ?: arguments
         val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
@@ -396,19 +425,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
-    private fun renderUiState(state: ReaderPostDetailsUiState) {
+    private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
-
-        header_view.updatePost(state.headerUiState)
+        binding.headerView.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
-        updateFeaturedImage(state.featuredImageUiState)
+        updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
-        updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
-        updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-        updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
-        updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        with(binding.layoutPostDetailFooter) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+            updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        }
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
@@ -483,13 +513,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateFeaturedImage(state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?) {
-        featured_image.setVisible(state != null)
+    private fun updateFeaturedImage(
+        state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?,
+        binding: ReaderFragmentPostDetailBinding
+    ) {
+        val featuredImage = binding.appbarWithCollapsingToolbarLayout.featuredImage
+        featuredImage.setVisible(state != null)
         state?.let {
-            featured_image.layoutParams.height = it.height
+            featuredImage.layoutParams.height = it.height
             it.url?.let { url ->
-                imageManager.load(featured_image, PHOTO, url, CENTER_CROP)
-                featured_image.setOnClickListener {
+                imageManager.load(featuredImage, PHOTO, url, CENTER_CROP)
+                featuredImage.setOnClickListener {
                     viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
                 }
             }
@@ -498,10 +532,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun updateExcerptFooter(state: ReaderPostDetailsUiState.ExcerptFooterUiState?) {
         // if we're showing just the excerpt, show a footer which links to the full post
-        excerpt_footer?.setVisible(state != null)
+        excerptFooter.setVisible(state != null)
         state?.let {
-            uiHelpers.setTextOrHide(text_excerpt_footer, it.visitPostExcerptFooterLinkText)
-            text_excerpt_footer?.setOnClickListener {
+            uiHelpers.setTextOrHide(textExcerptFooter, state.visitPostExcerptFooterLinkText)
+            textExcerptFooter.setOnClickListener {
                 state.postLink?.let { link -> viewModel.onVisitPostExcerptFooterClicked(postLink = link) }
             }
         }
@@ -572,9 +606,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun SnackbarMessageHolder.showSnackbar() {
+    private fun SnackbarMessageHolder.showSnackbar(binding: ReaderFragmentPostDetailBinding) {
         val snackbar = WPSnackbar.make(
-                layout_post_detail_container,
+                binding.layoutPostDetailContainer,
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
         )
