@@ -146,14 +146,14 @@ class ReaderDiscoverViewModelTest {
             // propagate some of the arguments
             createDummyReaderPostUiState(
                     post,
-                    it.getArgument<(ReaderCardUiState) -> Unit>(ON_ITEM_RENDERED_PARAM_POSITION),
-                    it.getArgument<(String) -> Unit>(ON_TAG_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long, ReaderPostCardActionType) -> Unit>(ON_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_POST_HEADER_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_POST_ITEM_CLICKED_PARAM_POSITION),
-                    it.getArgument<(ReaderPostUiState) -> Unit>(ON_MORE_MENU_CLICKED_PARAM_POSITION),
-                    it.getArgument<(ReaderPostUiState) -> Unit>(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
+                    it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
+                    it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_HEADER_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_ITEM_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_MORE_MENU_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
             )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(fakeCommunicationChannel)
@@ -168,11 +168,11 @@ class ReaderDiscoverViewModelTest {
                 )
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
-                    recommendedBlogs = it.getArgument<List<ReaderBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
-                    onItemClicked = it.getArgument<(Long, Long) -> Unit>(
+                    recommendedBlogs = it.getArgument(RECOMMENDED_BLOG_PARAM_POSITION),
+                    onItemClicked = it.getArgument(
                             ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
                     ),
-                    onFollowClicked = it.getArgument<(ReaderRecommendedBlogUiState) -> Unit>(
+                    onFollowClicked = it.getArgument(
                             ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION
                     )
             )
