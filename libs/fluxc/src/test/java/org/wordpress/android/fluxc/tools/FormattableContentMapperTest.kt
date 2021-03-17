@@ -45,7 +45,7 @@ class FormattableContentMapperTest {
                 .getStringFromResourceFile(this.javaClass, "notifications/body-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
         assertEquals("This site was created by Author", formattableContent.text)
-        assertTrue(formattableContent.meta!!.isButton == true)
+        assertTrue(formattableContent.meta!!.isMobileButton == true)
         assertEquals(2, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
             assertEquals(FormattableRangeType.USER, this.rangeType())
