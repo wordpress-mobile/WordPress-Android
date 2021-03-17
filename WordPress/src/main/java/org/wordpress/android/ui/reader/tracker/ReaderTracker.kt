@@ -124,6 +124,13 @@ class ReaderTracker @Inject constructor(
 
     /* BLOG */
 
+    fun trackBlog(stat: Stat, blogId: Long) {
+        val properties = mutableMapOf<String, Any>(
+                BLOG_ID_KEY to blogId
+        )
+        track(stat, properties)
+    }
+
     fun trackBlog(stat: Stat, blogId: Long, isFollowed: Boolean, source: String) {
         val properties = mutableMapOf<String, Any>(
                 BLOG_ID_KEY to blogId,

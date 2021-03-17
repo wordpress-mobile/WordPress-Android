@@ -102,7 +102,7 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        readerTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
