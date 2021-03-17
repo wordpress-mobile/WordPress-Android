@@ -102,35 +102,32 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected boolean mIsDisplayingEmailHints;
     protected String mLoginSiteUrl;
 
+    public static LoginEmailFragment newInstance(String url) {
+        return newInstance(url, false, false, false);
+    }
+
     public static LoginEmailFragment newInstance(String url, boolean optionalSiteCredsLayout) {
+        return newInstance(url, optionalSiteCredsLayout, false, false);
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled) {
+        return newInstance(null, false, isSignupFromLoginEnabled, false);
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean hideTos) {
+        return newInstance(null, false, isSignupFromLoginEnabled, hideTos);
+    }
+
+    private static LoginEmailFragment newInstance(String url,
+                                                  boolean optionalSiteCredsLayout,
+                                                  boolean isSignupFromLoginEnabled,
+                                                  boolean hideTos) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_LOGIN_SITE_URL, url);
         args.putBoolean(ARG_OPTIONAL_SITE_CREDS_LAYOUT, optionalSiteCredsLayout);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled) {
-        return newInstance(isSignupFromLoginEnabled, null);
-    }
-
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean hideTos) {
-        LoginEmailFragment fragment = new LoginEmailFragment();
-        Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_HIDE_TOS, hideTos);
-        args.putString(ARG_LOGIN_SITE_URL, null);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, String url) {
-        LoginEmailFragment fragment = new LoginEmailFragment();
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
-        args.putBoolean(ARG_HIDE_TOS, false);
-        args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
     }
