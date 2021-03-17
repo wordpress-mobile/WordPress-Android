@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
@@ -97,12 +98,13 @@ public class ReaderActivityLauncher {
      * show a list of posts in a specific blog or feed
      */
     public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId,
+                                                   @Nullable Boolean isFollowed,
                                                    ReaderTracker readerTracker) {
         if (siteId == 0 && feedId == 0) {
             return;
         }
 
-        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId);
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId, isFollowed);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
@@ -125,16 +127,19 @@ public class ReaderActivityLauncher {
                 context,
                 post.blogId,
                 post.feedId,
+                post.isFollowedByCurrentUser,
                 readerTracker
         );
     }
 
     public static void showReaderBlogPreview(Context context, long siteId,
+                                             @Nullable Boolean isFollowed,
                                              ReaderTracker readerTracker) {
         showReaderBlogOrFeedPreview(
                 context,
                 siteId,
                 0,
+                isFollowed,
                 readerTracker
         );
     }

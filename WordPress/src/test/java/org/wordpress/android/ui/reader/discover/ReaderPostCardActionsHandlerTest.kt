@@ -834,7 +834,7 @@ class ReaderPostCardActionsHandlerTest {
         val observedValues = startObserving()
 
         // Act
-        actionHandler.handleHeaderClicked(0L, 0L)
+        actionHandler.handleHeaderClicked(0L, 0L, false)
 
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)

@@ -1983,6 +1983,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             getActivity(),
                             site.getSiteId(),
                             site.getFeedId(),
+                            site.isFollowing(),
                             mReaderTracker
                     );
                 }

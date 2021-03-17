@@ -220,7 +220,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         detailActivity.showWebViewActivityForUrl(note.url)
                     }
                 } else if (note.isFollowType) {
-                    detailActivity.showBlogPreviewActivity(note.siteId.toLong())
+                    detailActivity.showBlogPreviewActivity(note.siteId.toLong(), note.isFollowType)
                 } else {
                     // otherwise, load the post in the Reader
                     detailActivity.showPostActivity(note.siteId.toLong(), note.postId.toLong())
@@ -247,7 +247,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
             val detailActivity = activity as NotificationsDetailActivity
             if (siteId != 0L) {
-                detailActivity.showBlogPreviewActivity(siteId)
+                detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl)
             }
@@ -260,10 +260,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             when (clickedSpan.rangeType) {
                 SITE ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.id)
+                    activity.showBlogPreviewActivity(clickedSpan.id, note?.isFollowType)
                 USER ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.siteId)
+                    activity.showBlogPreviewActivity(clickedSpan.siteId, note?.isFollowType)
                 POST ->
                     // Show post detail
                     activity.showPostActivity(clickedSpan.siteId, clickedSpan.id)
@@ -312,7 +312,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (siteId == 0L && !TextUtils.isEmpty(siteUrl)) {
             detailActivity.showWebViewActivityForUrl(siteUrl)
         } else if (siteId != 0L) {
-            detailActivity.showBlogPreviewActivity(siteId)
+            detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
         }
     }
 
@@ -370,7 +370,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         imageManager,
                         notificationsUtilsWrapper
                 )
-                pingbackUrl = noteBlock.getMetaSiteUrl()
+                pingbackUrl = noteBlock.metaSiteUrl
 
                 // Set listener for comment status changes, so we can update bg and text colors
                 val commentUserNoteBlock: CommentUserNoteBlock = noteBlock

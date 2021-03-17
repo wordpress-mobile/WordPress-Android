@@ -415,7 +415,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         return fragment;
     }
 
-    public void showBlogPreviewActivity(long siteId) {
+    public void showBlogPreviewActivity(long siteId, @Nullable Boolean isFollowed) {
         if (isFinishing()) {
             return;
         }
@@ -423,6 +423,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ReaderActivityLauncher.showReaderBlogPreview(
                 this,
                 siteId,
+                isFollowed,
                 mReaderTracker
         );
     }

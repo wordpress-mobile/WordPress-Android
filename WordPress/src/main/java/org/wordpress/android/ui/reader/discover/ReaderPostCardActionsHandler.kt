@@ -208,9 +208,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleHeaderClicked(siteId: Long, feedId: Long) {
+    suspend fun handleHeaderClicked(siteId: Long, feedId: Long, isFollowed: Boolean) {
         withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId, isFollowed)))
         }
     }
 

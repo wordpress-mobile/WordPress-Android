@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -84,9 +86,11 @@ public class StatsUtils {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
+                ReaderPost post = ReaderPostTable.getBlogPost(blogID, itemID, true);
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
                         blogID,
+                        post != null ? post.isFollowedByCurrentUser : null,
                         readerTracker
                 );
             } else {
@@ -97,9 +101,11 @@ public class StatsUtils {
                 );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
+            ReaderPost post = ReaderPostTable.getBlogPost(blogID, itemID, true);
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID,
+                    post != null ? post.isFollowedByCurrentUser : null,
                     readerTracker
             );
         } else {

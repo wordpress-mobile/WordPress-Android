@@ -288,7 +288,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.handleHeaderClicked(it.blogId, it.feedId)
+                readerPostCardActionsHandler.handleHeaderClicked(
+                        it.blogId,
+                        it.feedId,
+                        it.isFollowedByCurrentUser
+                )
             }
         }
     }
@@ -308,9 +312,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long) {
+    private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long, isFollowed: Boolean) {
         readerTracker.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED, mapOf("blog_id" to blogId))
-        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId)))
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId, isFollowed)))
     }
 
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {

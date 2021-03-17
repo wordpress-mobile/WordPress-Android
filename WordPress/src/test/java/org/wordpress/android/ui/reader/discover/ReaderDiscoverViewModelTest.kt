@@ -446,7 +446,8 @@ class ReaderDiscoverViewModelTest {
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId)
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId),
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.isFollowedByCurrentUser)
         )
     }
 
@@ -507,7 +508,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         (uiStates.last() as ContentUiState).let {
             (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
-                card.blogs[0].onItemClicked.invoke(1, 0L)
+                card.blogs[0].onItemClicked.invoke(1, 0L, false)
             }
         }
 
@@ -716,7 +717,7 @@ class ReaderDiscoverViewModelTest {
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
-        onItemClicked: (Long, Long) -> Unit,
+        onItemClicked: (Long, Long, Boolean) -> Unit,
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(

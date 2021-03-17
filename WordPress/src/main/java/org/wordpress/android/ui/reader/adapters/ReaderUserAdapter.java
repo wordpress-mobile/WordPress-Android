@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
  * users to display
  */
 public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
+    @Nullable private Boolean mIsFollowed;
     private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
@@ -75,6 +77,7 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
                         ReaderActivityLauncher.showReaderBlogPreview(
                                 v.getContext(),
                                 user.blogId,
+                                mIsFollowed,
                                 mReaderTracker
                         );
                     }
@@ -112,6 +115,10 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
             mTxtUrl = view.findViewById(R.id.text_url);
             mImgAvatar = view.findViewById(R.id.image_avatar);
         }
+    }
+
+    public void setIsFollowed(@Nullable Boolean isFollowed) {
+        mIsFollowed = isFollowed;
     }
 
     public void setUsers(final ReaderUserList users) {

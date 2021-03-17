@@ -271,6 +271,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ReaderActivityLauncher.showReaderBlogPreview(
                             view.getContext(),
                             comment.authorBlogId,
+                            mPost.isFollowedByCurrentUser,
                             mReaderTracker
                     );
                 }

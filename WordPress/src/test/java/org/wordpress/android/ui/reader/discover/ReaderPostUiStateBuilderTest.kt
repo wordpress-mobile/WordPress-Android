@@ -869,7 +869,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 listOf(blog),
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
         // Assert
@@ -885,7 +885,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 blogs,
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
 
@@ -902,7 +902,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 blogs,
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
 

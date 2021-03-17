@@ -462,6 +462,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     context,
                     this.siteId,
                     this.feedId,
+                    this.isFollowed,
                     readerTracker
             )
 
@@ -1212,6 +1213,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.showReaderBlogPreview(
                         activity,
                         siteId,
+                        viewModel.post?.isFollowedByCurrentUser,
                         readerTracker
                 )
             }

@@ -496,7 +496,8 @@ class ReaderPostDetailViewModelTest {
 
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq(readerPost.blogId),
-                eq(readerPost.feedId)
+                eq(readerPost.feedId),
+                eq(readerPost.isFollowedByCurrentUser)
         )
     }
 

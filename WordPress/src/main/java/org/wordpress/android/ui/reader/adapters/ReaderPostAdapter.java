@@ -434,6 +434,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         ReaderActivityLauncher.showReaderBlogPreview(
                                 ctx,
                                 discoverData.getBlogId(),
+                                post.isFollowedByCurrentUser,
                                 mReaderTracker
                         );
                     } else if (discoverData.hasBlogUrl()) {

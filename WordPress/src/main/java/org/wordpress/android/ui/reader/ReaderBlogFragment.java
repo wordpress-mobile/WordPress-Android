@@ -266,6 +266,7 @@ public class ReaderBlogFragment extends Fragment
                     getActivity(),
                     blog.blogId,
                     blog.feedId,
+                    blog.isFollowing,
                     mReaderTracker
             );
         }
