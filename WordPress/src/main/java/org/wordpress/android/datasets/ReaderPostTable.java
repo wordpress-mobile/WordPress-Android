@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -343,21 +344,25 @@ public class ReaderPostTable {
         addOrUpdatePosts(null, posts);
     }
 
+    @Nullable
     public static ReaderPost getBlogPost(long blogId, long postId, boolean excludeTextColumn) {
         return getPost("blog_id=? AND post_id=?", new String[]{Long.toString(blogId), Long.toString(postId)},
                 excludeTextColumn);
     }
 
+    @Nullable
     public static ReaderPost getBlogPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
         return getPost("blog_url LIKE ? AND url LIKE ?", new String[]{"%//" + blogSlug, "%/" + postSlug + "/"},
                 excludeTextColumn);
     }
 
+    @Nullable
     public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
         return getPost("feed_id=? AND feed_item_id=?", new String[]{Long.toString(feedId), Long.toString(feedItemId)},
                 excludeTextColumn);
     }
 
+    @Nullable
     private static ReaderPost getPost(String where, String[] args, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts WHERE " + where + " LIMIT 1";

@@ -126,8 +126,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(it, BOOKMARK, isBookmarkList)
+            }
         }
     }
 
@@ -139,8 +140,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onSiteNotificationMenuClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, SITE_NOTIFICATIONS, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(it, SITE_NOTIFICATIONS, isBookmarkList)
+            }
         }
     }
 
