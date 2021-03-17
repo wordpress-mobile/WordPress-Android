@@ -220,9 +220,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }

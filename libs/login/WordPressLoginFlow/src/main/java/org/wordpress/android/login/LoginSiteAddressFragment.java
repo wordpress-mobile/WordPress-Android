@@ -117,9 +117,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 discover();
             }

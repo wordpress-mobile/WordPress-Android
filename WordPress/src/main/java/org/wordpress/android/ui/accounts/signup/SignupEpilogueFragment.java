@@ -279,8 +279,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        primaryButton.setOnClickListener(new View.OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mUnifiedLoginTracker.trackClick(Click.CONTINUE);
