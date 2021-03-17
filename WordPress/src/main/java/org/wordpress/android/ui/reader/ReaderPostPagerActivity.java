@@ -633,10 +633,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         // analytics tracking
-        mReaderTracker.trackPost(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                ReaderPostTable.getBlogPost(blogId, postId, true)
-        );
+        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, blogId, postId);
     }
 
     /*

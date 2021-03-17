@@ -10,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_FOLLOWING_SH
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LIKED_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_P2_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -166,6 +167,10 @@ class ReaderTracker @Inject constructor(
                 FEED_ITEM_ID_KEY to feedItemId
         )
         track(stat, properties)
+    }
+
+    fun trackPost(stat: Stat, blogId: Long, postId: Long) {
+        trackPost(stat, ReaderPostTable.getBlogPost(blogId, postId, true))
     }
 
     fun trackPost(stat: Stat, post: ReaderPost?) {

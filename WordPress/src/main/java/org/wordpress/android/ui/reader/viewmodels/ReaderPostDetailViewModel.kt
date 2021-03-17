@@ -9,7 +9,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -313,10 +312,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
         val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
-        readerTracker.trackPost(
-                stat,
-                ReaderPostTable.getBlogPost(blogId, postId, true)
-        )
+        readerTracker.trackPost(stat, blogId, postId)
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
