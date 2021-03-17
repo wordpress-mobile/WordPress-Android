@@ -5,10 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -311,7 +308,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
+        val stat = if (isGlobal) {
+            AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+        } else {
+            AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
+        }
         readerTracker.trackPost(stat, blogId, postId)
     }
 
@@ -348,7 +349,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updatePostDetailsUi() {
         post?.let {
-            readerTracker.trackPost(READER_ARTICLE_RENDERED, it)
+            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
             _uiState.value = convertPostToUiState(it)
         }
@@ -405,9 +406,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackNotAuthorisedState() {
         if (shouldOfferSignIn) {
-            post?.let { readerTracker.trackPost(READER_WPCOM_SIGN_IN_NEEDED, it) }
+            post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
-        post?.let { readerTracker.trackPost(READER_USER_UNAUTHORIZED, it) }
+        post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, it) }
     }
 
     private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
