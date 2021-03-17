@@ -44,8 +44,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -101,7 +101,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -655,7 +654,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, viewModel.post)
                 } else if (viewModel.interceptedUri != null) {
-                    readerTracker.trackUri(DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
+                    readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
                     ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
                     requireActivity().finish()
                 }
@@ -956,7 +955,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         val postContent = viewModel.post?.text
-        val isPrivatePost = viewModel?.post?.isPrivate == true
+        val isPrivatePost = viewModel.post?.isPrivate == true
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
             options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
