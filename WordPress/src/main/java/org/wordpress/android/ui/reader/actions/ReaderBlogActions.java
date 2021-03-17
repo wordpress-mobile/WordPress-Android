@@ -220,9 +220,9 @@ public class ReaderBlogActions {
         }
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+            readerTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
+            readerTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
