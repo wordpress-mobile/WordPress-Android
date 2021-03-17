@@ -463,18 +463,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
     }
 
-    @Override
-    public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds, false);
-    }
-
-    @Override
-    public void newUserCreatedButErrored(String email, String password) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
-        slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
-    }
-
     // LoginListener implementation methods
 
     @Override
