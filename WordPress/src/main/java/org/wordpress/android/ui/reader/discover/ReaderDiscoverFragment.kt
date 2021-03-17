@@ -84,13 +84,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     }
 
     private fun ReaderDiscoverFragmentLayoutBinding.initViewModel() {
-        viewModel = ViewModelProvider(
-                this@ReaderDiscoverFragment,
-                viewModelFactory
-        ).get(ReaderDiscoverViewModel::class.java)
+        viewModel = ViewModelProvider(this@ReaderDiscoverFragment, viewModelFactory)
+                .get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner) {
+        viewModel.uiState.observe(viewLifecycleOwner, {
             when (it) {
                 is ContentUiState -> {
                     (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
@@ -106,6 +104,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     actionableEmptyView.button.setOnClickListener { _ -> it.action.invoke() }
                 }
             }
+
             uiHelpers.updateVisibility(recyclerView, it.contentVisiblity)
             uiHelpers.updateVisibility(progressBar, it.fullscreenProgressVisibility)
             uiHelpers.updateVisibility(progressText, it.fullscreenProgressVisibility)
@@ -113,11 +112,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             uiHelpers.updateVisibility(actionableEmptyView, it.fullscreenEmptyVisibility)
             ptrLayout.isEnabled = it.swipeToRefreshEnabled
             ptrLayout.isRefreshing = it.reloadProgressVisibility
-        }
+        })
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
-        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner) { it.addWebViewCachingFragment() }
-
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, { it.addWebViewCachingFragment() })
         viewModel.start(parentViewModel)
     }
 
