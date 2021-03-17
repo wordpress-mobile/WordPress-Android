@@ -43,7 +43,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchAuthOptionsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthOptionsFetched;
-import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.util.ContextExtensionsKt;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
@@ -271,10 +270,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
             OnClickListener onClickListener = new OnClickListener() {
                 public void onClick(View view) {
-                    Context context = getContext();
-                    if ((context instanceof SignupSheetListener)) {
-                        ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
-                    }
+                    mLoginListener.onTermsOfServiceClicked();
                 }
             };
 
