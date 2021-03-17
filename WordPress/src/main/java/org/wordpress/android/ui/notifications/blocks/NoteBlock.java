@@ -235,13 +235,13 @@ public class NoteBlock {
                         noteBlockHolder.getTextView().setLongClickable(false);
                     }
                     if (mIsViewMilestone) {
-                        if (FormattableContentUtilsKt.isButton(mNoteData)) {
+                        if (FormattableContentUtilsKt.isMobileButton(mNoteData)) {
                             textViewVisibility = View.GONE;
                             noteBlockHolder.getButton().setVisibility(View.GONE);
                             noteBlockHolder.getMaterialButton().setVisibility(View.VISIBLE);
                             noteBlockHolder.getMaterialButton().setText(noteText.toString());
                             noteBlockHolder.getMaterialButton().setOnClickListener(v -> {
-                                FormattableRange buttonRange = FormattableContentUtilsKt.getButtonRange(mNoteData);
+                                FormattableRange buttonRange = FormattableContentUtilsKt.getMobileButtonRange(mNoteData);
                                 if (getOnNoteBlockTextClickListener() != null && buttonRange != null) {
                                     NoteBlockClickableSpan clickableSpan =
                                             new NoteBlockClickableSpan(buttonRange, true, false);

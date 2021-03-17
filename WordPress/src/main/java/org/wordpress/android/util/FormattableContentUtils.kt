@@ -40,12 +40,12 @@ fun FormattableContent?.getMediaOrNull(mediaIndex: Int): FormattableMedia? {
     }
 }
 
-fun FormattableContent?.isButton(): Boolean {
-    return this?.meta?.isButton == true
+fun FormattableContent?.isMobileButton(): Boolean {
+    return this?.meta?.isMobileButton == true
 }
 
-fun FormattableContent?.getButtonRange(): FormattableRange? {
-    return if (isButton()) {
+fun FormattableContent?.getMobileButtonRange(): FormattableRange? {
+    return if (isMobileButton()) {
         this?.ranges?.firstOrNull()
     } else {
         null
