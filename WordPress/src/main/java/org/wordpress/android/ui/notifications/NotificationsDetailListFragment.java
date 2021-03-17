@@ -105,8 +105,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
-        mRootLayout = (LinearLayout) view.findViewById(R.id.notifications_list_root);
-
+        mRootLayout = view.findViewById(R.id.notifications_list_root);
         return view;
     }
 
@@ -121,12 +120,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         if (mFooterView != null) {
             listView.addFooterView(mFooterView);
-        }
-
-        if (mNote != null && mNote.isViewMilestoneType() && !mConfettiShown) {
-            LottieAnimationView confetti = requireActivity().findViewById(R.id.confetti);
-            confetti.playAnimation();
-            mConfettiShown = true;
         }
 
         reloadNoteBlocks();
@@ -151,6 +144,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         if (getNote() == null) {
             showErrorToastAndFinish();
+        }
+
+        LottieAnimationView confetti = requireActivity().findViewById(R.id.confetti);
+        if (mNote != null && mNote.isViewMilestoneType() && !mConfettiShown) {
+            confetti.playAnimation();
+            mConfettiShown = true;
         }
     }
 
