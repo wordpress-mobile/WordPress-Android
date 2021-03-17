@@ -52,6 +52,7 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -130,7 +131,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
         post: ReaderPost,
         type: ReaderPostCardActionType,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean = false,
         source: String
     ) {
         withContext(bgDispatcher) {
@@ -146,7 +146,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
             handleAction(
                     post,
                     type,
-                    fromPostDetails,
                     isBookmarkList,
                     source
             )
@@ -180,7 +179,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private suspend fun handleAction(
         post: ReaderPost,
         type: ReaderPostCardActionType,
-        fromPostDetails: Boolean,
         isBookmarkList: Boolean,
         source: String
     ) {
@@ -190,12 +188,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
-            LIKE -> handleLikeClicked(post, fromPostDetails)
-            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
+            LIKE -> handleLikeClicked(post, source)
+            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
             REPORT_POST -> handleReportPostClicked(post)
-            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
+            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
         }
     }
 
@@ -233,8 +231,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, fromPostDetails: Boolean) {
-        val actionSource = if (fromPostDetails) {
+    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, source: String) {
+        val actionSource = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
             READER_POST_DETAILS
         } else {
             READER_POST_CARD
@@ -392,8 +390,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleLikeClicked(post: ReaderPost, fromPostDetails: Boolean) {
-        likeUseCase.perform(post, !post.isLikedByCurrentUser, fromPostDetails).collect {
+    private suspend fun handleLikeClicked(post: ReaderPost, source: String) {
+        likeUseCase.perform(post, !post.isLikedByCurrentUser, source).collect {
             when (it) {
                 is PostLikeState.PostLikedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
@@ -417,9 +415,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
         postId: Long,
         blogId: Long,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean
+        source: String
     ) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList, fromPostDetails).collect {
+        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList, source).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
                 is Success -> {

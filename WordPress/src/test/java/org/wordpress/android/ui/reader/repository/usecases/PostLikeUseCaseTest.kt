@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -32,6 +31,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 private const val POST_AND_BLOG_ID = 1L
+private const val SOURCE = "source"
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -69,10 +69,14 @@ class PostLikeUseCaseTest {
         val readerPost = init(isNetworkAvailable = false)
 
         // When
-        val result = useCase.perform(readerPost, true).toList(mutableListOf())
+        val result = useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Then
-        Assertions.assertThat(result[0]).isEqualTo(NoNetwork)
+        assertThat(result[0]).isEqualTo(NoNetwork)
     }
 
     @Test
@@ -81,7 +85,11 @@ class PostLikeUseCaseTest {
         val readerPost = init(isLikedByCurrentUser = true, localSucceeds = false)
 
         // When
-        val result = useCase.perform(readerPost, true).toList(mutableListOf())
+        val result = useCase.perform(
+                readerPost,
+                true,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Then
         assertThat(result[0]).isEqualTo(Unchanged)
@@ -93,7 +101,11 @@ class PostLikeUseCaseTest {
         val readerPost = init(isLikedByCurrentUser = false, localSucceeds = false)
 
         // When
-        val result = useCase.perform(readerPost, false).toList(mutableListOf())
+        val result = useCase.perform(
+                readerPost,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Then
         assertThat(result[0]).isEqualTo(Unchanged)
@@ -104,7 +116,11 @@ class PostLikeUseCaseTest {
             test {
                 val readerPost = init(isLikedByCurrentUser = false)
                 // Act
-                val result = useCase.perform(readerPost, true).toList(mutableListOf())
+                val result = useCase.perform(
+                        readerPost,
+                        true,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(Success)
@@ -116,7 +132,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = true)
 
                 // Act
-                val result = useCase.perform(readerPost, false).toList(mutableListOf())
+                val result = useCase.perform(
+                        readerPost,
+                        false,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(Success)
@@ -128,7 +148,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = false, remoteSucceeds = false)
 
                 // Act
-                val result = useCase.perform(readerPost, true).toList(mutableListOf())
+                val result = useCase.perform(
+                        readerPost,
+                        true,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(Failed.RequestFailed)
@@ -140,7 +164,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = true, remoteSucceeds = false)
 
                 // Act
-                val result = useCase.perform(readerPost, false).toList(mutableListOf())
+                val result = useCase.perform(
+                        readerPost,
+                        false,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(Failed.RequestFailed)
@@ -152,7 +180,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = false)
 
                 // Act
-                useCase.perform(readerPost, true).toList(mutableListOf())
+                useCase.perform(
+                        readerPost,
+                        true,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 verify(readerPostActionsWrapper).performLikeActionLocal(
@@ -168,7 +200,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = false)
 
                 // Act
-                useCase.perform(readerPost, true).toList(mutableListOf())
+                useCase.perform(
+                        readerPost,
+                        true,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 verify(readerPostActionsWrapper).performLikeActionRemote(
@@ -184,7 +220,11 @@ class PostLikeUseCaseTest {
             test {
                 val readerPost = init(isLikedByCurrentUser = false)
                 // Act
-                useCase.perform(readerPost, true).toList(mutableListOf())
+                useCase.perform(
+                        readerPost,
+                        true,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 verify(readerPostActionsWrapper).bumpPageViewForPost(anyOrNull())
@@ -196,7 +236,11 @@ class PostLikeUseCaseTest {
                 val readerPost = init(isLikedByCurrentUser = true)
 
                 // Act
-                useCase.perform(readerPost, false).toList(mutableListOf())
+                useCase.perform(
+                        readerPost,
+                        false,
+                        SOURCE
+                ).toList(mutableListOf())
 
                 // Assert
                 verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())

@@ -22,6 +22,8 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+private const val SOURCE = "source"
+
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostBookmarkUseCaseTest {
@@ -49,7 +51,7 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = false)
         // Act
-        useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
+        useCase.toggleBookmark(0L, 0L, false, SOURCE).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
@@ -60,7 +62,7 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = true)
         // Act
-        useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
+        useCase.toggleBookmark(0L, 0L, false, SOURCE).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).removeFromBookmarked(dummyPost)
@@ -72,10 +74,15 @@ class ReaderPostBookmarkUseCaseTest {
         init(isBookmarked = false, networkAvailable = true)
 
         // Act
-        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
+        val result = useCase.toggleBookmark(
+                0L,
+                0L,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
-        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isTrue()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isTrue
     }
 
     @Test
@@ -84,10 +91,15 @@ class ReaderPostBookmarkUseCaseTest {
         init(isBookmarked = false, networkAvailable = false)
 
         // Act
-        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
+        val result = useCase.toggleBookmark(
+                0L,
+                0L,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
-        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse
     }
 
     @Test
@@ -96,10 +108,15 @@ class ReaderPostBookmarkUseCaseTest {
         init(isBookmarked = true)
 
         // Act
-        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
+        val result = useCase.toggleBookmark(
+                0L,
+                0L,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
-        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse
     }
 
     @Test
@@ -108,10 +125,15 @@ class ReaderPostBookmarkUseCaseTest {
         init()
         val isBookmarkList = true
         // Act
-        val result = useCase.toggleBookmark(0L, 0L, isBookmarkList).toList(mutableListOf())
+        val result = useCase.toggleBookmark(
+                0L,
+                0L,
+                isBookmarkList,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
-        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse
     }
 
     private fun init(isBookmarked: Boolean = false, networkAvailable: Boolean = true): ReaderPost {

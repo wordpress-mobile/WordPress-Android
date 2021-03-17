@@ -136,7 +136,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `shows dialog when bookmark action is successful and shouldShowDialog returns true`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
                 .thenReturn(true)
@@ -146,7 +146,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 BOOKMARK,
-                false,
                 false,
                 SOURCE
         )
@@ -158,7 +157,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `doesn't shows when dialog bookmark action is successful and shouldShowDialog returns false`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
                 .thenReturn(false)
@@ -168,7 +167,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 BOOKMARK,
-                false,
                 false,
                 SOURCE
         )
@@ -180,7 +178,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `shows snackbar on successful bookmark action`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
@@ -188,7 +186,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 BOOKMARK,
-                false,
                 false,
                 SOURCE
         )
@@ -200,7 +197,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Doesn't show snackbar on successful bookmark action when on bookmark(saved) tab`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
@@ -210,7 +207,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 BOOKMARK,
                 isBookmarkList,
-                false,
                 SOURCE
         )
 
@@ -221,7 +217,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Doesn't show snackbar on successful UNbookmark action`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(false)))
 
         val observedValues = startObserving()
@@ -231,7 +227,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 BOOKMARK,
                 isBookmarkList,
-                false,
                 SOURCE
         )
 
@@ -242,7 +237,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `navigates to bookmark tab on bookmark snackbar action clicked`() = test {
         // Arrange
-        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyBoolean()))
+        whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
@@ -250,7 +245,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 BOOKMARK,
-                false,
                 false,
                 SOURCE
         )
@@ -274,7 +268,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -292,7 +285,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 FOLLOW,
-                false,
                 false,
                 SOURCE
         )
@@ -314,7 +306,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -332,7 +323,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 FOLLOW,
-                false,
                 false,
                 SOURCE
         )
@@ -352,7 +342,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 FOLLOW,
-                false,
                 false,
                 SOURCE
         )
@@ -377,7 +366,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -398,7 +386,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -416,7 +403,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 FOLLOW,
-                false,
                 false,
                 SOURCE
         )
@@ -440,7 +426,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -461,7 +446,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 dummyReaderPostModel(),
                 FOLLOW,
-                false,
                 false,
                 SOURCE
         )
@@ -485,7 +469,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 FOLLOW,
                 false,
-                false,
                 SOURCE
         )
 
@@ -504,7 +487,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 SITE_NOTIFICATIONS,
-                false,
                 false,
                 SOURCE
         )
@@ -525,7 +507,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 SITE_NOTIFICATIONS,
                 false,
-                false,
                 SOURCE
         )
 
@@ -544,7 +525,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 SITE_NOTIFICATIONS,
-                false,
                 false,
                 SOURCE
         )
@@ -565,7 +545,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 SITE_NOTIFICATIONS,
                 false,
-                false,
                 SOURCE
         )
 
@@ -584,7 +563,6 @@ class ReaderPostCardActionsHandlerTest {
                 actionHandler.onAction(
                         dummyReaderPostModel(),
                         SITE_NOTIFICATIONS,
-                        false,
                         false,
                         SOURCE
                 )
@@ -608,7 +586,6 @@ class ReaderPostCardActionsHandlerTest {
                 dummyReaderPostModel(),
                 SITE_NOTIFICATIONS,
                 false,
-                false,
                 SOURCE
         )
 
@@ -630,7 +607,6 @@ class ReaderPostCardActionsHandlerTest {
                 actionHandler.onAction(
                         dummyReaderPostModel(),
                         SITE_NOTIFICATIONS,
-                        false,
                         false,
                         SOURCE
                 )
@@ -655,7 +631,6 @@ class ReaderPostCardActionsHandlerTest {
                         dummyReaderPostModel(),
                         SITE_NOTIFICATIONS,
                         false,
-                        false,
                         SOURCE
                 )
 
@@ -674,7 +649,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 SHARE,
                 false,
-                false,
                 SOURCE
         )
 
@@ -692,7 +666,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 VISIT_SITE,
-                false,
                 false,
                 SOURCE
         )
@@ -714,7 +687,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 BLOCK_SITE,
                 false,
-                false,
                 SOURCE
         )
 
@@ -732,7 +704,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 BLOCK_SITE,
-                false,
                 false,
                 SOURCE
         )
@@ -752,7 +723,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 BLOCK_SITE,
                 false,
-                false,
                 SOURCE
         )
 
@@ -770,7 +740,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 BLOCK_SITE,
-                false,
                 false,
                 SOURCE
         )
@@ -790,7 +759,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 BLOCK_SITE,
                 false,
-                false,
                 SOURCE
         )
 
@@ -807,7 +775,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 BLOCK_SITE,
-                false,
                 false,
                 SOURCE
         )
@@ -827,7 +794,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 BLOCK_SITE,
                 false,
-                false,
                 SOURCE
         )
         // Act
@@ -841,24 +807,23 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Like action is initiated when user clicks on like button`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf())
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
                 false,
-                false,
                 SOURCE
         )
         // Assert
-        verify(likeUseCase).perform(anyOrNull(), anyBoolean(), anyBoolean())
+        verify(likeUseCase).perform(anyOrNull(), anyBoolean(), anyString())
     }
 
     @Test
     fun `Like use cases is initiated with like action when the post is not liked by the current user`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf())
         val isLiked = false
         val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
@@ -867,17 +832,16 @@ class ReaderPostCardActionsHandlerTest {
                 post,
                 LIKE,
                 false,
-                false,
                 SOURCE
         )
         // Assert
-        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), eq(false))
+        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), anyString())
     }
 
     @Test
     fun `Like use cases is initiated with unlike action when the post is not liked by the current user`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf())
         val isLiked = true
         val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
@@ -886,24 +850,22 @@ class ReaderPostCardActionsHandlerTest {
                 post,
                 LIKE,
                 false,
-                false,
                 SOURCE
         )
         // Assert
-        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), eq(false))
+        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked), anyString())
     }
 
     @Test
     fun `Posts are refreshed when user likes a post`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikedInLocalDb))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -914,14 +876,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Posts are refreshed when like action fails with RequestFailed error`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -932,14 +893,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Snackbar shown when like action fails with no network error`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.Failed.NoNetwork))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -950,14 +910,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Snackbar shown when like action fails with no RequestFailed error`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -968,14 +927,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Nothing happens when like action succeeds`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.Success))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -990,14 +948,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Nothing happens when like action results in Unchanged state`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.Unchanged))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -1012,14 +969,13 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Nothing happens when like action results in AlreadyRunning`() = test {
         // Arrange
-        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyBoolean()))
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(PostLikeState.AlreadyRunning))
         val observedValues = startObserving()
         // Act
         actionHandler.onAction(
                 mock(),
                 LIKE,
-                false,
                 false,
                 SOURCE
         )
@@ -1046,7 +1002,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 REBLOG,
                 false,
-                false,
                 SOURCE
         )
         // Assert
@@ -1065,7 +1020,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 REBLOG,
-                false,
                 false,
                 SOURCE
         )
@@ -1086,7 +1040,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 REBLOG,
                 false,
-                false,
                 SOURCE
         )
         // Assert
@@ -1105,7 +1058,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 REBLOG,
-                false,
                 false,
                 SOURCE
         )
@@ -1126,7 +1078,6 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 REBLOG,
                 false,
-                false,
                 SOURCE
         )
         // Assert
@@ -1143,7 +1094,6 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(
                 mock(),
                 COMMENTS,
-                false,
                 false,
                 SOURCE
         )

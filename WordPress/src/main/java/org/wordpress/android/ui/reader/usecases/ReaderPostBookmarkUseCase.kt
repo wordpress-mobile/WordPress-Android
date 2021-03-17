@@ -2,13 +2,14 @@ package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -29,10 +30,10 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         blogId: Long,
         postId: Long,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean = false
+        source: String
     ) = flow<BookmarkPostState> {
         val bookmarked = updatePostInDb(blogId, postId)
-        trackEvent(bookmarked, isBookmarkList, fromPostDetails)
+        trackEvent(bookmarked, isBookmarkList, source)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
         emit(Success(bookmarked))
     }
@@ -63,7 +64,12 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         return setToBookmarked
     }
 
-    private fun trackEvent(bookmarked: Boolean, isBookmarkList: Boolean, fromPostDetails: Boolean) {
+    private fun trackEvent(
+        bookmarked: Boolean,
+        isBookmarkList: Boolean,
+        source: String
+    ) {
+        val fromPostDetails = source == ReaderTracker.SOURCE_POST_DETAIL
         val trackingEvent = when {
             !fromPostDetails && bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
             !fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST

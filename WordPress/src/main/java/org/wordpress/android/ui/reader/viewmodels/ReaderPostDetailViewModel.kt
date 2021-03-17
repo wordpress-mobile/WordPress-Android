@@ -247,8 +247,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                         it,
                         type,
                         isBookmarkList = false,
-                        fromPostDetails = true,
-                        ReaderTracker.SOURCE_POST_DETAIL
+                        source = ReaderTracker.SOURCE_POST_DETAIL
                 )
             }
         }

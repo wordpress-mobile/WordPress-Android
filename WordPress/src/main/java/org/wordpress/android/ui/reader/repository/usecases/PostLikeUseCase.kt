@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Unchanged
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class PostLikeUseCase @Inject constructor(
     suspend fun perform(
         post: ReaderPost,
         isAskingToLike: Boolean,
-        fromPostDetails: Boolean = false
+        source: String
     ) = flow<PostLikeState> {
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
@@ -55,7 +56,7 @@ class PostLikeUseCase @Inject constructor(
         }
 
         // track like event
-        trackEvent(request, post, fromPostDetails)
+        trackEvent(request, post, source)
 
         handleLocalDb(post, request)
     }
@@ -63,10 +64,10 @@ class PostLikeUseCase @Inject constructor(
     private fun trackEvent(
         request: PostLikeRequest,
         post: ReaderPost,
-        fromPostDetails: Boolean
+        source: String
     ) {
         if (request.isAskingToLike) {
-            val likedStat = if (fromPostDetails) {
+            val likedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
                 READER_ARTICLE_DETAIL_LIKED
             } else {
                 READER_ARTICLE_LIKED
@@ -76,7 +77,7 @@ class PostLikeUseCase @Inject constructor(
             // from folks who ask 'why do I have more likes than page views?'.
             readerPostActionsWrapper.bumpPageViewForPost(post)
         } else {
-            val unLikedStat = if (fromPostDetails) {
+            val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
                 READER_ARTICLE_DETAIL_UNLIKED
             } else {
                 READER_ARTICLE_UNLIKED

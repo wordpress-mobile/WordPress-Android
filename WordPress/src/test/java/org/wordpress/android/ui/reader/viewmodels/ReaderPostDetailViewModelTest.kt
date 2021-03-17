@@ -473,7 +473,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
@@ -513,7 +512,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
@@ -703,7 +701,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(LIKE),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
@@ -718,7 +715,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(COMMENTS),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
@@ -733,7 +729,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(REBLOG),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
@@ -758,7 +753,6 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(BOOKMARK),
                 eq(false),
-                eq(true),
                 anyString()
         )
     }
