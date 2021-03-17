@@ -461,7 +461,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     this.siteId,
-                    this.feedId
+                    this.feedId,
+                    readerTracker
             )
 
             is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
@@ -1208,7 +1209,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (ReaderUtils.isBlogPreviewUrl(url)) {
             val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
             if (siteId != 0L) {
-                ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
+                ReaderActivityLauncher.showReaderBlogPreview(
+                        activity,
+                        siteId,
+                        readerTracker
+                )
             }
             return true
         }

@@ -148,6 +148,7 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
+import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -441,6 +442,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderPostPagerActivity object);
 
     void inject(ReaderPostListActivity object);
+
+    void inject(ReaderBlogFragment object);
 
     void inject(ReaderBlogAdapter object);
 

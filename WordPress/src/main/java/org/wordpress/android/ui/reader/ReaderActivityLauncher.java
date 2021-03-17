@@ -96,12 +96,13 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog or feed
      */
-    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId) {
+    public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId,
+                                                   ReaderTracker readerTracker) {
         if (siteId == 0 && feedId == 0) {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
+        readerTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
@@ -115,15 +116,27 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderBlogPreview(Context context, ReaderPost post) {
+    public static void showReaderBlogPreview(Context context, ReaderPost post,
+                                             ReaderTracker readerTracker) {
         if (post == null) {
             return;
         }
-        showReaderBlogOrFeedPreview(context, post.blogId, post.feedId);
+        showReaderBlogOrFeedPreview(
+                context,
+                post.blogId,
+                post.feedId,
+                readerTracker
+        );
     }
 
-    public static void showReaderBlogPreview(Context context, long siteId) {
-        showReaderBlogOrFeedPreview(context, siteId, 0);
+    public static void showReaderBlogPreview(Context context, long siteId,
+                                             ReaderTracker readerTracker) {
+        showReaderBlogOrFeedPreview(
+                context,
+                siteId,
+                0,
+                readerTracker
+        );
     }
 
     /*

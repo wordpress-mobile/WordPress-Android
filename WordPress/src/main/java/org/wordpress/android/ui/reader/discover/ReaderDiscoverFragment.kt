@@ -140,7 +140,12 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 readerTracker
         )
         is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
-        is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(context, event.siteId, event.feedId)
+        is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                context,
+                event.siteId,
+                event.feedId,
+                readerTracker
+        )
         is ShowReportPost -> ReaderActivityLauncher.openUrl(
                 context,
                 readerUtilsWrapper.getReportPostUrl(event.url),

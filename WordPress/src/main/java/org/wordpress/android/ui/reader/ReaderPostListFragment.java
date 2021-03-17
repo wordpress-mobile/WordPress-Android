@@ -108,6 +108,7 @@ import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetV
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
@@ -227,6 +228,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
+    @Inject ReaderTracker mReaderTracker;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -1978,7 +1980,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 public void onSiteClicked(@NonNull ReaderSiteModel site) {
                     mLastTappedSiteSearchResult = site;
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            getActivity(), site.getSiteId(), site.getFeedId());
+                            getActivity(),
+                            site.getSiteId(),
+                            site.getFeedId(),
+                            mReaderTracker
+                    );
                 }
 
                 @Override

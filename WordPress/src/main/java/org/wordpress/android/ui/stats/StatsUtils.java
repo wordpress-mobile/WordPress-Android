@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.viewmodel.ResourceProvider;
@@ -71,7 +72,8 @@ public class StatsUtils {
                                                       final long remoteBlogID,
                                                       final String remoteItemID,
                                                       @Nullable final String itemType,
-                                                      final String itemURL) {
+                                                      final String itemURL,
+                                                      final ReaderTracker readerTracker) {
         final long blogID = remoteBlogID;
         final long itemID = Long.parseLong(remoteItemID);
         if (itemType == null) {
@@ -84,7 +86,8 @@ public class StatsUtils {
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
-                        blogID
+                        blogID,
+                        readerTracker
                 );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
@@ -96,7 +99,8 @@ public class StatsUtils {
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
-                    blogID
+                    blogID,
+                    readerTracker
             );
         } else {
             // For now, itemType.ATTACHMENT falls down this path. No need to repeat unless we

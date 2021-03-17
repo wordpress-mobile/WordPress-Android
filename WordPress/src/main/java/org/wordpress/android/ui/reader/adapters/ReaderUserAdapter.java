@@ -15,6 +15,7 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -31,6 +32,7 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
     private final int mAvatarSz;
 
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderUserAdapter(Context context) {
         super();
@@ -70,7 +72,11 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), user.blogId);
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                v.getContext(),
+                                user.blogId,
+                                mReaderTracker
+                        );
                     }
                 });
                 holder.mRootView.setEnabled(true);

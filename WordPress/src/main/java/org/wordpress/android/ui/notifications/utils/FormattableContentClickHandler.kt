@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.util.AppLog
@@ -33,8 +34,10 @@ import javax.inject.Inject
 
 private const val DOMAIN_WP_COM = "wordpress.com"
 
-class FormattableContentClickHandler
-@Inject constructor(val siteStore: SiteStore) {
+class FormattableContentClickHandler @Inject constructor(
+    val siteStore: SiteStore,
+    val readerTracker: ReaderTracker
+) {
     fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
         if (activity.isFinishing) {
             return
@@ -81,7 +84,11 @@ class FormattableContentClickHandler
     }
 
     private fun showBlogPreviewActivity(activity: FragmentActivity, siteId: Long) {
-        ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
+        ReaderActivityLauncher.showReaderBlogPreview(
+                activity,
+                siteId,
+                readerTracker
+        )
     }
 
     private fun showPostActivity(activity: FragmentActivity, siteId: Long, postId: Long) {

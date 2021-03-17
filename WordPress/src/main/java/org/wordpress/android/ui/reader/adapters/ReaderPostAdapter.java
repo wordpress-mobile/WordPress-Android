@@ -431,7 +431,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
                 case SITE_PICK:
                     if (discoverData.getBlogId() != 0) {
-                        ReaderActivityLauncher.showReaderBlogPreview(ctx, discoverData.getBlogId());
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                ctx,
+                                discoverData.getBlogId(),
+                                mReaderTracker
+                        );
                     } else if (discoverData.hasBlogUrl()) {
                         ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
                     }
@@ -458,7 +462,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
-            ReaderActivityLauncher.showReaderBlogPreview(ctx, post);
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    post,
+                    mReaderTracker
+            );
             return Unit.INSTANCE;
         };
 

@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
@@ -84,6 +85,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject ReaderTracker mReaderTracker;
 
     private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -418,7 +420,11 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             return;
         }
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
+        ReaderActivityLauncher.showReaderBlogPreview(
+                this,
+                siteId,
+                mReaderTracker
+        );
     }
 
     public void showPostActivity(long siteId, long postId) {

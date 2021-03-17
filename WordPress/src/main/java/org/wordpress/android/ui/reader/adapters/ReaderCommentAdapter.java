@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -84,6 +85,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
+    @Inject ReaderTracker mReaderTracker;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -266,7 +268,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            view.getContext(),
+                            comment.authorBlogId,
+                            mReaderTracker
+                    );
                 }
             };
             commentHolder.mAuthorContainer.setOnClickListener(authorListener);
