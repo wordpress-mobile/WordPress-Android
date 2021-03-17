@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -63,6 +64,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private String mSearchFilter;
 
     @Inject protected ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType, String searchFilter) {
         super();
@@ -228,9 +230,19 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final boolean result;
 
         if (blog.feedId != 0) {
-            result = ReaderBlogActions.followFeedById(blog.feedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(
+                    blog.feedId,
+                    isAskingToFollow,
+                    listener,
+                    mReaderTracker
+            );
         } else {
-            result = ReaderBlogActions.followBlogById(blog.blogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(
+                    blog.blogId,
+                    isAskingToFollow,
+                    listener,
+                    mReaderTracker
+            );
         }
 
         if (result) {

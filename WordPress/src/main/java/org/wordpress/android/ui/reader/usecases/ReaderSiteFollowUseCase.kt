@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
@@ -24,7 +25,8 @@ class ReaderSiteFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    private val readerUtilsWrapper: ReaderUtilsWrapper
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val readerTracker: ReaderTracker
 ) {
     private val continuations: MutableMap<Param, Continuation<Boolean>?> = mutableMapOf()
 
@@ -73,7 +75,13 @@ class ReaderSiteFollowUseCase @Inject constructor(
 
         return suspendCoroutine { cont ->
             continuations[param] = cont
-            readerBlogActionsWrapper.followBlog(param.blogId, param.feedId, isAskingToFollow, actionListener)
+            readerBlogActionsWrapper.followBlog(
+                    param.blogId,
+                    param.feedId,
+                    isAskingToFollow,
+                    actionListener,
+                    readerTracker
+            )
         }
     }
 

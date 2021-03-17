@@ -21,6 +21,7 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -41,6 +42,7 @@ class ReaderSiteFollowUseCaseTest {
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerBlogActionsWrapper: ReaderBlogActionsWrapper
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
 
     private val useCaseParam = ReaderSiteFollowUseCase.Param(11L, 13L, "FakeBlogName")
 
@@ -50,7 +52,8 @@ class ReaderSiteFollowUseCaseTest {
                 networkUtilsWrapper,
                 readerBlogActionsWrapper,
                 readerBlogTableWrapper,
-                readerUtilsWrapper
+                readerUtilsWrapper,
+                readerTracker
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -99,7 +102,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isTrue()
+                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isTrue
             }
 
     @Test
@@ -110,7 +113,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse()
+                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse
             }
 
     @Test
@@ -121,7 +124,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).following).isTrue()
+                assertThat((result[0] as FollowStatusChanged).following).isTrue
             }
 
     @Test
@@ -132,7 +135,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).following).isFalse()
+                assertThat((result[0] as FollowStatusChanged).following).isFalse
             }
 
     @Test
@@ -144,7 +147,7 @@ class ReaderSiteFollowUseCaseTest {
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
-                assertThat((result[1] as FollowStatusChanged).deleteNotificationSubscription).isFalse()
+                assertThat((result[1] as FollowStatusChanged).deleteNotificationSubscription).isFalse
             }
 
     @Test
@@ -156,7 +159,7 @@ class ReaderSiteFollowUseCaseTest {
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
-                assertThat((result[1] as FollowStatusChanged).deleteNotificationSubscription).isTrue()
+                assertThat((result[1] as FollowStatusChanged).deleteNotificationSubscription).isTrue
             }
 
     @Test
@@ -168,7 +171,7 @@ class ReaderSiteFollowUseCaseTest {
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
-                assertThat((result[1] as FollowStatusChanged).following).isTrue()
+                assertThat((result[1] as FollowStatusChanged).following).isTrue
             }
 
     @Test
@@ -180,7 +183,7 @@ class ReaderSiteFollowUseCaseTest {
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
-                assertThat((result[1] as FollowStatusChanged).following).isFalse()
+                assertThat((result[1] as FollowStatusChanged).following).isFalse
             }
 
     @Test
@@ -194,7 +197,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse()
+                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse
             }
 
     @Test
@@ -208,7 +211,7 @@ class ReaderSiteFollowUseCaseTest {
                         .toList(mutableListOf())
 
                 // Assert
-                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse()
+                assertThat((result[0] as FollowStatusChanged).showEnableNotification).isFalse
             }
 
     @Test
@@ -218,7 +221,13 @@ class ReaderSiteFollowUseCaseTest {
                 useCase.toggleFollow(useCaseParam).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlog(anyLong(), anyLong(), eq(true), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(
+                        anyLong(),
+                        anyLong(),
+                        eq(true),
+                        anyOrNull(),
+                        eq(readerTracker)
+                )
             }
 
     @Test
@@ -228,7 +237,13 @@ class ReaderSiteFollowUseCaseTest {
                 useCase.toggleFollow(useCaseParam).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlog(anyLong(), anyLong(), eq(false), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(
+                        anyLong(),
+                        anyLong(),
+                        eq(false),
+                        anyOrNull(),
+                        eq(readerTracker)
+                )
             }
 
     @Test
@@ -242,14 +257,23 @@ class ReaderSiteFollowUseCaseTest {
                         eq(useCaseParam.blogId),
                         eq(useCaseParam.feedId),
                         anyBoolean(),
-                        anyOrNull()
+                        anyOrNull(),
+                        eq(readerTracker)
                 )
             }
 
     private fun <T> testWithFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+            whenever(
+                    readerBlogActionsWrapper.followBlog(
+                            anyLong(),
+                            anyLong(),
+                            anyBoolean(),
+                            anyOrNull(),
+                            eq(readerTracker)
+                    )
+            ).then {
                 (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
                 true
             }
@@ -261,7 +285,15 @@ class ReaderSiteFollowUseCaseTest {
     private fun <T> testWithUnFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+            whenever(
+                    readerBlogActionsWrapper.followBlog(
+                            anyLong(),
+                            anyLong(),
+                            anyBoolean(),
+                            anyOrNull(),
+                            eq(readerTracker)
+                    )
+            ).then {
                 (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
                 true
             }
@@ -273,7 +305,15 @@ class ReaderSiteFollowUseCaseTest {
     private fun <T> testWithFailedResponseForFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+            whenever(
+                    readerBlogActionsWrapper.followBlog(
+                            anyLong(),
+                            anyLong(),
+                            anyBoolean(),
+                            anyOrNull(),
+                            eq(readerTracker)
+                    )
+            ).then {
                 (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
                 true
             }
@@ -285,7 +325,15 @@ class ReaderSiteFollowUseCaseTest {
     private fun <T> testWithFailedResponseForUnFollowedSitePost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerBlogTableWrapper.isSiteFollowed(useCaseParam.blogId, useCaseParam.feedId)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+            whenever(
+                    readerBlogActionsWrapper.followBlog(
+                            anyLong(),
+                            anyLong(),
+                            anyBoolean(),
+                            anyOrNull(),
+                            eq(readerTracker)
+                    )
+            ).then {
                 (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
                 true
             }

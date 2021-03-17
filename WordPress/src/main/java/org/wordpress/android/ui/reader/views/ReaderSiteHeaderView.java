@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -51,6 +52,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -231,9 +233,19 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         boolean result;
         if (mIsFeed) {
-            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(
+                    mFeedId,
+                    isAskingToFollow,
+                    listener,
+                    mReaderTracker
+            );
         } else {
-            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(
+                    mBlogId,
+                    isAskingToFollow,
+                    listener,
+                    mReaderTracker
+            );
         }
 
         if (result) {

@@ -53,6 +53,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListFragment;
+import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -69,7 +70,6 @@ import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
-import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
@@ -175,6 +175,7 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
@@ -426,6 +427,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PlansListFragment object);
 
     void inject(ReaderSiteHeaderView object);
+
+    void inject(ReaderSiteSearchResultView object);
 
     void inject(ReaderTagHeaderView object);
 

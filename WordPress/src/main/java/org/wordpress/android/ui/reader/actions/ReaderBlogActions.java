@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -45,7 +46,8 @@ public class ReaderBlogActions {
 
     public static boolean followBlogById(final long blogId,
                                          final boolean isAskingToFollow,
-                                         final ActionListener actionListener) {
+                                         final ActionListener actionListener,
+                                         final ReaderTracker readerTracker) {
         if (blogId == 0) {
             ReaderActions.callActionListener(actionListener, false);
             return false;
@@ -127,10 +129,17 @@ public class ReaderBlogActions {
 
     public static boolean followFeedById(final long feedId,
                                          final boolean isAskingToFollow,
-                                         final ActionListener actionListener) {
+                                         final ActionListener actionListener,
+                                         final ReaderTracker readerTracker) {
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(feedId);
         if (blogInfo != null) {
-            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+            return internalFollowFeed(
+                    blogInfo.feedId,
+                    blogInfo.getFeedUrl(),
+                    isAskingToFollow,
+                    actionListener,
+                    readerTracker
+            );
         }
 
         updateFeedInfo(feedId, null, new UpdateBlogInfoListener() {
@@ -141,7 +150,9 @@ public class ReaderBlogActions {
                             blogInfo.feedId,
                             blogInfo.getFeedUrl(),
                             isAskingToFollow,
-                            actionListener);
+                            actionListener,
+                            readerTracker
+                    );
                 } else {
                     ReaderActions.callActionListener(actionListener, false);
                 }
@@ -152,7 +163,8 @@ public class ReaderBlogActions {
     }
 
     public static void followFeedByUrl(final String feedUrl,
-                                       final ActionListener actionListener) {
+                                       final ActionListener actionListener,
+                                       final ReaderTracker readerTracker) {
         if (TextUtils.isEmpty(feedUrl)) {
             ReaderActions.callActionListener(actionListener, false);
             return;
@@ -161,7 +173,13 @@ public class ReaderBlogActions {
         // use existing blog info if we can
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
-            internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
+            internalFollowFeed(
+                    blogInfo.feedId,
+                    blogInfo.getFeedUrl(),
+                    true,
+                    actionListener,
+                    readerTracker
+            );
             return;
         }
 
@@ -177,7 +195,9 @@ public class ReaderBlogActions {
                         feedIdToFollow,
                         feedUrlToFollow,
                         true,
-                        actionListener);
+                        actionListener,
+                        readerTracker
+                );
             }
         });
     }
@@ -186,7 +206,9 @@ public class ReaderBlogActions {
             final long feedId,
             final String feedUrl,
             final boolean isAskingToFollow,
-            final ActionListener actionListener) {
+            final ActionListener actionListener,
+            final ReaderTracker readerTracker
+    ) {
         // feedUrl is required
         if (TextUtils.isEmpty(feedUrl)) {
             ReaderActions.callActionListener(actionListener, false);
@@ -242,11 +264,12 @@ public class ReaderBlogActions {
     public static boolean followBlog(final Long blogId,
                                      final Long feedId,
                                      boolean isAskingToFollow,
-                                     ActionListener actionListener) {
+                                     ActionListener actionListener,
+                                     ReaderTracker readerTracker) {
         if (ReaderUtils.isExternalFeed(blogId, feedId)) {
-            return followFeedById(feedId, isAskingToFollow, actionListener);
+            return followFeedById(feedId, isAskingToFollow, actionListener, readerTracker);
         } else {
-            return followBlogById(blogId, isAskingToFollow, actionListener);
+            return followBlogById(blogId, isAskingToFollow, actionListener, readerTracker);
         }
     }
 
@@ -473,11 +496,12 @@ public class ReaderBlogActions {
         };
 
         AppLog.i(T.READER, "blocking blog " + blockResult.blogId);
-        String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/new";
+        String path = "me/block/sites/" + blockResult.blogId + "/new";
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult) {
+    public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult,
+                                               final ReaderTracker readerTracker) {
         if (blockResult == null) {
             return;
         }
@@ -489,7 +513,7 @@ public class ReaderBlogActions {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 // re-follow the blog if it was being followed prior to the block
                 if (success && blockResult.wasFollowing) {
-                    followBlogById(blockResult.blogId, true, null);
+                    followBlogById(blockResult.blogId, true, null, readerTracker);
                 } else if (!success) {
                     AppLog.w(T.READER, "failed to unblock blog " + blockResult.blogId);
                 }
@@ -503,7 +527,7 @@ public class ReaderBlogActions {
         };
 
         AppLog.i(T.READER, "unblocking blog " + blockResult.blogId);
-        String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/delete";
+        String path = "me/block/sites/" + blockResult.blogId + "/delete";
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
