@@ -50,7 +50,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 
-    private Button mPrimaryButton;
+    private Button mBottomButton;
     private ProgressDialog mProgressDialog;
 
     protected LoginListenerType mLoginListener;
@@ -82,8 +82,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return mInProgress;
     }
 
-    protected Button getPrimaryButton() {
-        return mPrimaryButton;
+    protected Button getBottomButton() {
+        return mBottomButton;
     }
 
     protected abstract void onHelp();
@@ -108,8 +108,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
         setupLabel((TextView) rootView.findViewById(R.id.label));
         setupContent(rootView);
-        mPrimaryButton = rootView.findViewById(R.id.primary_button);
-        setupBottomButton(mPrimaryButton);
+        mBottomButton = rootView.findViewById(R.id.bottom_button);
+        setupBottomButton(mBottomButton);
         return rootView;
     }
 
@@ -217,7 +217,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     @Override public void onDestroyView() {
-        mPrimaryButton = null;
+        mBottomButton = null;
 
         if (mProgressDialog != null) {
             mProgressDialog.setOnCancelListener(null);
@@ -237,7 +237,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress(boolean cancellable) {
-        mPrimaryButton.setEnabled(false);
+        mBottomButton.setEnabled(false);
 
         mProgressDialog =
                 ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
@@ -265,8 +265,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mProgressDialog.setOnCancelListener(null);
             mProgressDialog = null;
         }
-        if (mPrimaryButton != null) {
-            mPrimaryButton.setEnabled(true);
+        if (mBottomButton != null) {
+            mBottomButton.setEnabled(true);
         }
     }
 

@@ -147,7 +147,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private void updatePrimaryButtonEnabledStatus() {
         String currentPassword = mPasswordInput.getEditText().getText().toString();
-        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty());
+        getBottomButton().setEnabled(!currentPassword.trim().isEmpty());
     }
 
     @Override

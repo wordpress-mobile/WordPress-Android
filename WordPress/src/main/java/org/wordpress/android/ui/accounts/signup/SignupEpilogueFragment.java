@@ -190,7 +190,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             @Override
             public boolean onLongClick(View view) {
                 ToastUtils.showToast(getActivity(), getString(R.string.content_description_add_avatar),
-                                     ToastUtils.Duration.SHORT);
+                        ToastUtils.Duration.SHORT);
                 return true;
             }
         });
@@ -373,8 +373,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                             data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-                                                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                                : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                    : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
 
@@ -403,13 +403,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         case UCrop.REQUEST_CROP:
                             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED);
                             WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
-                                                             new WPMediaUtils.MediaFetchDoNext() {
-                                                                 @Override
-                                                                 public void doNext(Uri uri) {
-                                                                     startGravatarUpload(MediaUtils.getRealPathFromURI(
-                                                                             getActivity(), uri));
-                                                                 }
-                                                             });
+                                    new WPMediaUtils.MediaFetchDoNext() {
+                                        @Override
+                                        public void doNext(Uri uri) {
+                                            startGravatarUpload(MediaUtils.getRealPathFromURI(
+                                                    getActivity(), uri));
+                                        }
+                                    });
 
                             break;
                     }
@@ -504,8 +504,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } else {
                 showErrorDialog(getString(R.string.signup_epilogue_error_generic));
             }
-        // Wait to populate epilogue for email interface until account is fetched and email address
-        // is available since flow is coming from magic link with no instance argument values.
+            // Wait to populate epilogue for email interface until account is fetched and email address
+            // is available since flow is coming from magic link with no instance argument values.
         } else if (mIsEmailSignup && event.causeOfChange == AccountAction.FETCH_ACCOUNT
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();

@@ -31,7 +31,7 @@
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/primary_button"
+            android:id="@+id/bottom_button"
             style="@style/Widget.LoginFlow.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
