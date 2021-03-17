@@ -156,6 +156,16 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    /* FEED */
+
+    fun trackFeed(stat: Stat, feedId: Long, source: String) {
+        val properties = mutableMapOf<String, Any>(
+                FEED_ID_KEY to feedId,
+                SOURCE_KEY to source
+        )
+        track(stat, properties)
+    }
+
     /* TAG */
 
     fun trackTag(stat: Stat, tag: String) {
