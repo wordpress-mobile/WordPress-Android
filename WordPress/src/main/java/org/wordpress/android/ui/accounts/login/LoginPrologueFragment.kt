@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -59,19 +58,14 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
         val firstButton: MaterialButton
         val secondButton: MaterialButton
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            binding.bottomButtons.removeAllViews()
-            val bottomButtonsBinding = LoginPrologueBottomButtonsContainerUnifiedBinding.inflate(
-                    LayoutInflater.from(context),
-                    binding.bottomButtons,
-                    true
-            )
-            firstButton = bottomButtonsBinding.firstButton
-            secondButton = bottomButtonsBinding.secondButton
-        } else {
-            firstButton = binding.loginPrologueBottomButtonsContainer.firstButton
-            secondButton = binding.loginPrologueBottomButtonsContainer.secondButton
-        }
+        binding.bottomButtons.removeAllViews()
+        val bottomButtonsBinding = LoginPrologueBottomButtonsContainerUnifiedBinding.inflate(
+                LayoutInflater.from(context),
+                binding.bottomButtons,
+                true
+        )
+        firstButton = bottomButtonsBinding.firstButton
+        secondButton = bottomButtonsBinding.secondButton
 
         firstButton.setOnClickListener {
             unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
@@ -79,12 +73,8 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         }
 
         secondButton.setOnClickListener {
-            if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-                unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
-                loginPrologueListener.loginViaSiteAddress()
-            } else {
-                loginPrologueListener.doStartSignup()
-            }
+            unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
+            loginPrologueListener.loginViaSiteAddress()
         }
 
         val adapter = LoginProloguePagerAdapter(this)
