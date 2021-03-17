@@ -415,10 +415,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, mViewModelFactory)
-                                       .get(ReaderPostListViewModel.class);
+                .get(ReaderPostListViewModel.class);
         if (mIsTopLevel) {
             mReaderViewModel = new ViewModelProvider(getParentFragment(), mViewModelFactory)
-                                                 .get(ReaderViewModel.class);
+                    .get(ReaderViewModel.class);
         }
 
         if (isFilterableScreen()) {
@@ -451,9 +451,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     } else if (navTarget instanceof ShowReportPost) {
                         ShowReportPost data = (ShowReportPost) navTarget;
                         ReaderActivityLauncher.openUrl(
-                            getContext(),
-                            ReaderUtils.getReportPostUrl(data.getUrl()),
-                            INTERNAL);
+                                getContext(),
+                                ReaderUtils.getReportPostUrl(data.getUrl()),
+                                INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
@@ -523,14 +523,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (getParentFragmentManager().findFragmentByTag(tag) == null) {
             getParentFragmentManager().beginTransaction()
-                                 .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                                 .commit();
+                                      .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                      .commit();
         }
     }
 
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
-                                                     .get(WPMainActivityViewModel.class);
+                .get(WPMainActivityViewModel.class);
         mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
                 SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
                 SubFilterViewModel.class
@@ -1140,7 +1140,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mIsUpdating = true;
             mRecyclerView.setRefreshing(true);
         }
-
 
 
         if (isFilterableScreen()) {
@@ -1821,21 +1820,21 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
-            ReaderTag tag = null;
+        ReaderTag tag = null;
 
-            switch (button) {
-                case DISCOVER:
-                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                    break;
-                case FOLLOWED:
-                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
-                    break;
-            }
-            if (tag == null) {
-                tag = ReaderUtils.getDefaultTag();
-            }
+        switch (button) {
+            case DISCOVER:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+                break;
+            case FOLLOWED:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
+                break;
+        }
+        if (tag == null) {
+            tag = ReaderUtils.getDefaultTag();
+        }
 
-            mViewModel.onEmptyStateButtonTapped(tag);
+        mViewModel.onEmptyStateButtonTapped(tag);
     }
 
     /*
