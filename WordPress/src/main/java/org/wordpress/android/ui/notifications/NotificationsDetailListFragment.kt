@@ -436,6 +436,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     if (mIsBadgeView) {
                         noteBlock.setIsBadge()
                     }
+                    if (note.isViewMilestoneType) {
+                        noteBlock.setIsViewMilestone()
+                    }
                     if (isPingback) {
                         noteBlock.setIsPingback()
                     }
