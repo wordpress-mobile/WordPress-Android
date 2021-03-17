@@ -108,14 +108,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected boolean mIsDisplayingEmailHints;
     protected String mLoginSiteUrl;
 
-    public static LoginEmailFragment newInstance(String url) {
-        LoginEmailFragment fragment = new LoginEmailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_LOGIN_SITE_URL, url);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static LoginEmailFragment newInstance(String url, boolean optionalSiteCredsLayout) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
@@ -165,7 +157,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected @LayoutRes int getContentLayout() {
         if (mShouldUseNewLayout) {
-           return R.layout.login_email_screen;
+            return R.layout.login_email_screen;
         } else if (mOptionalSiteCredsLayout) {
             return R.layout.login_email_optional_site_creds_screen;
         } else {
