@@ -2565,6 +2565,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
                 }
                 break;
+            case SPACER_NO_ACTION:
+                break;
         }
     }
 
