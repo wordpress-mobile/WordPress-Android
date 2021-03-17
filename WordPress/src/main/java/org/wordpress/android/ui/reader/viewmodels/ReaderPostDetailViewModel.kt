@@ -88,7 +88,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
-    var isRelatedPost: Boolean = false
+    private var isRelatedPost: Boolean = false
 
     var isFeed: Boolean = false
     var interceptedUri: String? = null
