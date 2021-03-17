@@ -313,9 +313,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setVisibility(View.GONE);
+    protected void setupBottomButton(Button button) {
+        button.setVisibility(View.GONE);
     }
 
     private Spanned formatTosText(int stringResId) {

@@ -121,10 +121,8 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-
-        mPrimaryButton = primaryButton;
+    protected void setupBottomButton(Button button) {
+        mPrimaryButton = button;
         mPrimaryButton.setEnabled(false);
         mPrimaryButton.setOnClickListener(new OnClickListener() {
             @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
@@ -218,7 +216,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         mLoginListener = null;
     }
 
-    @Override 
+    @Override
     public void onDestroyView() {
         mEmailInput = null;
 
