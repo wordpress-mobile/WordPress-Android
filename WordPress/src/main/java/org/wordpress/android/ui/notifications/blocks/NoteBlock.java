@@ -241,7 +241,8 @@ public class NoteBlock {
                             noteBlockHolder.getMaterialButton().setVisibility(View.VISIBLE);
                             noteBlockHolder.getMaterialButton().setText(noteText.toString());
                             noteBlockHolder.getMaterialButton().setOnClickListener(v -> {
-                                FormattableRange buttonRange = FormattableContentUtilsKt.getMobileButtonRange(mNoteData);
+                                FormattableRange buttonRange =
+                                        FormattableContentUtilsKt.getMobileButtonRange(mNoteData);
                                 if (getOnNoteBlockTextClickListener() != null && buttonRange != null) {
                                     NoteBlockClickableSpan clickableSpan =
                                             new NoteBlockClickableSpan(buttonRange, true, false);
