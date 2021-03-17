@@ -16,6 +16,7 @@ import org.wordpress.android.databinding.PrepublishingCategoriesFragmentBinding
 import org.wordpress.android.databinding.PrepublishingToolbarBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -208,5 +209,11 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
         viewModel.onTermUploadedComplete(event)
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        viewModel.onTaxonomyChanged(event)
     }
 }

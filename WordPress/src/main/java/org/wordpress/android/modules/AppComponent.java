@@ -407,7 +407,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(NotificationsPendingDraftsReceiver object);
 
-    void inject(NotificationsDetailListFragment notificationsDetailListFragment);
+    void inject(NotificationsDetailListFragment object);
 
     void inject(ReaderCommentListActivity object);
 

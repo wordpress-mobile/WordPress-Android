@@ -1,22 +1,22 @@
 package org.wordpress.android.ui.pages
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,9 +26,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PagesFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -70,12 +70,13 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class PagesFragment : Fragment(), ScrollableViewInitializedListener {
+class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+    private var binding: PagesFragmentBinding? = null
 
     /**
      * PostStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
@@ -107,18 +108,28 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.pages_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+        with(PagesFragmentBinding.bind(view)) {
+            binding = this
+            with(nonNullActivity as AppCompatActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.let {
+                    it.setHomeButtonEnabled(true)
+                    it.setDisplayHomeAsUpEnabled(true)
+                }
+            }
+            initializeViews(nonNullActivity)
+            initializeViewModels(nonNullActivity, savedInstanceState)
+        }
+    }
 
-        initializeViews(nonNullActivity)
-        initializeViewModels(nonNullActivity, savedInstanceState)
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -162,7 +173,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         viewModel.onPageParentSet(pageId, parentId)
     }
 
-    private fun initializeViews(activity: FragmentActivity) {
+    @SuppressLint("ClickableViewAccessibility")
+    private fun PagesFragmentBinding.initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
 
@@ -211,8 +223,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         }
 
         authorSelectionAdapter = AuthorSelectionAdapter(activity)
-        pages_author_selection.adapter = authorSelectionAdapter
-        pages_author_selection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        pagesAuthorSelection.adapter = authorSelectionAdapter
+        pagesAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>) {}
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -221,7 +233,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         }
     }
 
-    private fun initializeSearchView() {
+    private fun PagesFragmentBinding.initializeSearchView() {
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
@@ -257,7 +269,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
-        viewModel.isSearchExpanded.observe(this, Observer {
+        viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
             if (it == true) {
                 showSearchList(actionMenuItem)
             } else {
@@ -266,11 +278,13 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    private fun PagesFragmentBinding.initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
         mlpViewModel = ViewModelProvider(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 
         setupObservers(activity)
+        setupActions(activity)
+        setupMlpObservers(activity)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -282,19 +296,19 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
         viewModel.authorUIState.observe(activity, Observer { state ->
             state?.let {
-                uiHelpers.updateVisibility(pages_author_selection, state.isAuthorFilterVisible)
-                uiHelpers.updateVisibility(pages_tab_layout_fading_edge, state.isAuthorFilterVisible)
+                uiHelpers.updateVisibility(pagesAuthorSelection, state.isAuthorFilterVisible)
+                uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
 
                 val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible)
+                        if (state.isAuthorFilterVisible) {
                             resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        else 0
+                        } else 0
                 tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
 
                 authorSelectionAdapter.updateItems(state.authorFilterItems)
 
                 authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-                    pages_author_selection.setSelection(selectionIndex)
+                    pagesAuthorSelection.setSelection(selectionIndex)
                 }
             }
         })
@@ -326,7 +340,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         )
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun PagesFragmentBinding.setupObservers(activity: FragmentActivity) {
         viewModel.listState.observe(viewLifecycleOwner, {
             refreshProgressBars(it)
         })
@@ -339,41 +353,13 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
-            createNewPage(request.title, request.content, request.template)
-        })
-
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitle == null) {
-                    WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val snackbar = WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    )
-                    snackbar.setAction(
-                            uiHelpers.getTextOfUiString(
-                                    requireContext(),
-                                    holder.buttonTitle
-                            )
-                    ) {
-                        holder.buttonAction()
-                    }
-                    snackbar.show()
-                }
-            }
+            showSnackbarInActivity(activity, holder)
         })
 
         viewModel.editPage.observe(viewLifecycleOwner, { (site, page, loadAutoRevision) ->
             page?.let {
-                ActivityLauncher.editPageForResult(this, site, page.id, loadAutoRevision)
+                ActivityLauncher.editPageForResult(this@PagesFragment, site, page.id, loadAutoRevision)
             }
         })
 
@@ -399,7 +385,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.setPageParent.observe(viewLifecycleOwner, { page ->
-            page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
+            page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, page) }
         })
 
         viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, { isVisible ->
@@ -419,7 +405,40 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })
+    }
 
+    private fun showSnackbarInActivity(
+        activity: FragmentActivity,
+        holder: SnackbarMessageHolder?
+    ) {
+        val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+        if (holder != null && parent != null) {
+            if (holder.buttonTitle == null) {
+                WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                val snackbar = WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                )
+                snackbar.setAction(
+                        uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                holder.buttonTitle
+                        )
+                ) {
+                    holder.buttonAction()
+                }
+                snackbar.show()
+            }
+        }
+    }
+
+    private fun setupActions(activity: FragmentActivity) {
         viewModel.dialogAction.observe(viewLifecycleOwner, {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
@@ -432,19 +451,18 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                         data,
                         post,
                         site,
-                        uploadActionUseCase.getUploadAction(post),
-                        View.OnClickListener {
-                            uploadUtilsWrapper.publishPost(
-                                    activity,
-                                    post,
-                                    site
-                            )
-                        }
-                )
+                        uploadActionUseCase.getUploadAction(post)
+                ) {
+                    uploadUtilsWrapper.publishPost(
+                            activity,
+                            post,
+                            site
+                    )
+                }
             }
         })
 
-        viewModel.publishAction.observe(this, {
+        viewModel.publishAction.observe(this@PagesFragment, {
             it?.let {
                 uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }
@@ -463,7 +481,12 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                 )
             }
         })
+    }
 
+    private fun setupMlpObservers(activity: FragmentActivity) {
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
+            createNewPage(request.title, request.content, request.template)
+        })
         mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
             val fm = activity.supportFragmentManager
             var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
@@ -496,7 +519,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             "Menu does not contain mandatory search item"
         }
 
-        initializeSearchView()
+        binding!!.initializeSearchView()
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
@@ -507,7 +530,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         swipeToRefreshHelper.isRefreshing = listState == FETCHING
     }
 
-    private fun hideSearchList(myActionMenuItem: MenuItem) {
+    private fun PagesFragmentBinding.hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
         tabContainer.visibility = View.VISIBLE
@@ -515,12 +538,12 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
-        appbar_main.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
-            appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
+        appbarMain.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
+            appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
         }
     }
 
-    private fun showSearchList(myActionMenuItem: MenuItem) {
+    private fun PagesFragmentBinding.showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
         tabContainer.visibility = View.GONE
@@ -528,7 +551,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(R.id.pages_search_recycler_view_id)
+        appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(R.id.pages_search_recycler_view_id)
     }
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -540,8 +563,10 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-        appbar_main.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
+        with(binding!!) {
+            appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+            appbarMain.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
+        }
     }
 }
 
