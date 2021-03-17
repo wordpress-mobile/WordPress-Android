@@ -21,7 +21,6 @@ import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -402,10 +401,6 @@ public class AnalyticsUtils {
         if (canTrackRailcarInteraction(stat) && post.hasRailcar()) {
             trackRailcarInteraction(stat, post.getRailcarJson());
         }
-    }
-
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
-        trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
     public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
