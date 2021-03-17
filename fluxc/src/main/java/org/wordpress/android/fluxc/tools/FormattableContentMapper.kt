@@ -43,7 +43,7 @@ data class FormattableMeta(
     @SerializedName("ids") val ids: Ids? = null,
     @SerializedName("links") val links: Links? = null,
     @SerializedName("titles") val titles: Titles? = null,
-    @SerializedName("button") val isButton: Boolean? = null
+    @SerializedName("is_mobile_button") val isMobileButton: Boolean? = null
 ) {
     data class Ids(
         @SerializedName("site") val site: Long? = null,

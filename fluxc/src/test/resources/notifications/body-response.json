@@ -51,7 +51,7 @@
     "titles": {
       "home": "Title"
     },
-    "button": true
+    "is_mobile_button": true
   },
   "type": "user"
 }
