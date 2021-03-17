@@ -39,7 +39,11 @@ class FormattableContentClickHandler @Inject constructor(
     val siteStore: SiteStore,
     val readerTracker: ReaderTracker
 ) {
-    fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
+    fun onClick(
+        activity: FragmentActivity,
+        clickedSpan: FormattableRange,
+        source: String
+    ) {
         if (activity.isFinishing) {
             return
         }
@@ -49,10 +53,10 @@ class FormattableContentClickHandler @Inject constructor(
         when (val rangeType = clickedSpan.rangeType()) {
             SITE ->
                 // Show blog preview
-                showBlogPreviewActivity(activity, id, postId)
+                showBlogPreviewActivity(activity, id, postId, source)
             USER ->
                 // Show blog preview
-                showBlogPreviewActivity(activity, siteId, postId)
+                showBlogPreviewActivity(activity, siteId, postId, source)
             PAGE, POST ->
                 // Show post detail
                 showPostActivity(activity, siteId, id)
@@ -87,13 +91,15 @@ class FormattableContentClickHandler @Inject constructor(
     private fun showBlogPreviewActivity(
         activity: FragmentActivity,
         siteId: Long,
-        postId: Long
+        postId: Long,
+        source: String
     ) {
         val post: ReaderPost? = ReaderPostTable.getBlogPost(siteId, postId, true)
         ReaderActivityLauncher.showReaderBlogPreview(
                 activity,
                 siteId,
                 post?.isFollowedByCurrentUser,
+                source,
                 readerTracker
         )
     }

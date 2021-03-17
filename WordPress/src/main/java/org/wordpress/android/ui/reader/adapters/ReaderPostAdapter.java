@@ -129,6 +129,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
 
+    public String getSource() {
+        return mSource;
+    }
+
     /*
      * cross-post
      */
@@ -435,6 +439,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 ctx,
                                 discoverData.getBlogId(),
                                 post.isFollowedByCurrentUser,
+                                mSource,
                                 mReaderTracker
                         );
                     } else if (discoverData.hasBlogUrl()) {
@@ -466,6 +471,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     post,
+                    mSource,
                     mReaderTracker
             );
             return Unit.INSTANCE;

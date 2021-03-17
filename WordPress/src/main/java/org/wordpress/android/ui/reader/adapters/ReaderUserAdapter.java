@@ -78,6 +78,7 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
                                 v.getContext(),
                                 user.blogId,
                                 mIsFollowed,
+                                ReaderTracker.SOURCE_USER,
                                 mReaderTracker
                         );
                     }

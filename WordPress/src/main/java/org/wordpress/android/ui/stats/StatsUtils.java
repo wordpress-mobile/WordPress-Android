@@ -91,6 +91,7 @@ public class StatsUtils {
                         ctx,
                         blogID,
                         post != null ? post.isFollowedByCurrentUser : null,
+                        ReaderTracker.SOURCE_STATS,
                         readerTracker
                 );
             } else {
@@ -106,6 +107,7 @@ public class StatsUtils {
                     ctx,
                     blogID,
                     post != null ? post.isFollowedByCurrentUser : null,
+                    ReaderTracker.SOURCE_STATS,
                     readerTracker
             );
         } else {

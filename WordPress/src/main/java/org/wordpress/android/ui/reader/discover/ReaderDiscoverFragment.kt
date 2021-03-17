@@ -145,6 +145,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 event.siteId,
                 event.feedId,
                 event.isFollowed,
+                ReaderTracker.SOURCE_DISCOVER,
                 readerTracker
         )
         is ShowReportPost -> ReaderActivityLauncher.openUrl(

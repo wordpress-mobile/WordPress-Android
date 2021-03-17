@@ -98,13 +98,13 @@ public class ReaderActivityLauncher {
      * show a list of posts in a specific blog or feed
      */
     public static void showReaderBlogOrFeedPreview(Context context, long siteId, long feedId,
-                                                   @Nullable Boolean isFollowed,
+                                                   @Nullable Boolean isFollowed, String source,
                                                    ReaderTracker readerTracker) {
         if (siteId == 0 && feedId == 0) {
             return;
         }
 
-        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId, isFollowed);
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId, isFollowed, source);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
@@ -119,6 +119,7 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderBlogPreview(Context context, ReaderPost post,
+                                             String source,
                                              ReaderTracker readerTracker) {
         if (post == null) {
             return;
@@ -128,18 +129,20 @@ public class ReaderActivityLauncher {
                 post.blogId,
                 post.feedId,
                 post.isFollowedByCurrentUser,
+                source,
                 readerTracker
         );
     }
 
     public static void showReaderBlogPreview(Context context, long siteId,
-                                             @Nullable Boolean isFollowed,
+                                             @Nullable Boolean isFollowed, String source,
                                              ReaderTracker readerTracker) {
         showReaderBlogOrFeedPreview(
                 context,
                 siteId,
                 0,
                 isFollowed,
+                source,
                 readerTracker
         );
     }

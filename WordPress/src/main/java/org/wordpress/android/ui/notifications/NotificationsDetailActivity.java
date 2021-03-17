@@ -424,6 +424,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 this,
                 siteId,
                 isFollowed,
+                ReaderTracker.SOURCE_NOTIFICATION,
                 mReaderTracker
         );
     }

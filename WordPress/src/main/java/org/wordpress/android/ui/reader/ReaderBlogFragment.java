@@ -267,6 +267,7 @@ public class ReaderBlogFragment extends Fragment
                     blog.blogId,
                     blog.feedId,
                     blog.isFollowing,
+                    ReaderTracker.SOURCE_SETTINGS,
                     mReaderTracker
             );
         }

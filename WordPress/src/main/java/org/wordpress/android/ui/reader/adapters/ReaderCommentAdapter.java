@@ -272,6 +272,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                             view.getContext(),
                             comment.authorBlogId,
                             mPost.isFollowedByCurrentUser,
+                            ReaderTracker.SOURCE_COMMENT,
                             mReaderTracker
                     );
                 }
