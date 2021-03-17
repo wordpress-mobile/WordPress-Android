@@ -18,8 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.autofill.AutofillManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -317,104 +315,16 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
     }
 
-    private void setupAlternativeButtons(LinearLayout googleLoginButton, LinearLayout siteLoginButton) {
-        googleLoginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onGoogleSigninClicked();
-            }
-        });
-
-        siteLoginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mLoginListener != null) {
-                    LoginMode loginMode = mLoginListener.getLoginMode();
-                    if (loginMode == LoginMode.JETPACK_STATS) {
-                        mLoginListener.loginViaWpcomUsernameInstead();
-                    } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
-                        mLoginListener.loginViaSiteCredentials(mLoginSiteUrl);
-                    } else {
-                        mLoginListener.loginViaSiteAddress();
-                    }
-                }
-            }
-        });
-
-        ImageView siteLoginButtonIcon = siteLoginButton.findViewById(R.id.login_site_button_icon);
-        TextView siteLoginButtonText = siteLoginButton.findViewById(R.id.login_site_button_text);
-
-        switch (mLoginListener.getLoginMode()) {
-            case WOO_LOGIN_MODE:
-                siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
-                siteLoginButtonText.setText(R.string.enter_site_credentials_instead);
-                break;
-            case FULL:
-            case WPCOM_LOGIN_ONLY:
-            case SHARE_INTENT:
-                siteLoginButton.setVisibility(View.GONE);
-                siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
-                siteLoginButtonText.setText(R.string.enter_site_address_instead);
-                break;
-            case JETPACK_STATS:
-                siteLoginButtonIcon.setImageResource(R.drawable.ic_user_circle_grey_24dp);
-                siteLoginButtonText.setText(R.string.enter_username_instead);
-                break;
-            case WPCOM_LOGIN_DEEPLINK:
-            case WPCOM_REAUTHENTICATE:
-                siteLoginButton.setVisibility(View.GONE);
-                break;
-        }
-    }
-
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
         secondaryButton.setVisibility(View.GONE);
         primaryButton.setVisibility(View.GONE);
     }
 
-    private void setupSecondaryButton(Button secondaryButton) {
-        // Show Sign-Up button if login mode is Jetpack and signup from login is not enabled
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS && !mIsSignupFromLoginEnabled) {
-            secondaryButton.setText(formatUnderlinedText(R.string.login_email_button_signup));
-            secondaryButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    mLoginListener.doStartSignup();
-                    mGoogleApiClient.stopAutoManage(getActivity());
-
-                    if (mGoogleApiClient.isConnected()) {
-                        mGoogleApiClient.disconnect();
-                    }
-                }
-            });
-        } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            secondaryButton.setText(getResources().getString(R.string.login_need_help_finding_connected_email));
-            secondaryButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    mLoginListener.showHelpFindingConnectedEmail();
-                }
-            });
-        } else {
-            secondaryButton.setVisibility(View.GONE);
-        }
-    }
-
-    private void setupPrimaryButton(Button primaryButton) {
-        primaryButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View view) {
-                onContinueClicked();
-            }
-        });
-    }
-
     private Spanned formatTosText(int stringResId) {
         final int primaryColorResId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.colorPrimary);
         final String primaryColorHtml = HtmlUtils.colorResToHtmlColor(getContext(), primaryColorResId);
         return Html.fromHtml(getString(stringResId, "<u><font color='" + primaryColorHtml + "'>", "</font></u>"));
-    }
-
-    private Spanned formatUnderlinedText(int stringResId) {
-        return Html.fromHtml(getString(stringResId, "<u>", "</u>"));
     }
 
     private void onContinueClicked() {
