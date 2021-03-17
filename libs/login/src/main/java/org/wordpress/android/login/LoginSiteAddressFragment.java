@@ -162,7 +162,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mLoginSiteAddressValidator.getIsValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override public void onChanged(Boolean enabled) {
-                getPrimaryButton().setEnabled(enabled);
+                getBottomButton().setEnabled(enabled);
             }
         });
         mLoginSiteAddressValidator.getErrorMessageResId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -216,7 +216,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void onEditorCommit() {
-        if (getPrimaryButton().isEnabled()) {
+        if (getBottomButton().isEnabled()) {
             discover();
         }
     }

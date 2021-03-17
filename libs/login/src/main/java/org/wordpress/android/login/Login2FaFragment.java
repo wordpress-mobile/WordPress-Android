@@ -387,7 +387,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     private void updateContinueButtonEnabledStatus() {
         String currentVerificationCode = m2FaInput.getEditText().getText().toString();
-        getPrimaryButton().setEnabled(!currentVerificationCode.trim().isEmpty());
+        getBottomButton().setEnabled(!currentVerificationCode.trim().isEmpty());
     }
 
     @Override
