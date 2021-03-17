@@ -960,7 +960,7 @@ public class ReaderPostTable {
         sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
@@ -978,7 +978,7 @@ public class ReaderPostTable {
                 "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
@@ -1005,7 +1005,7 @@ public class ReaderPostTable {
                 "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(feedId)});
@@ -1037,7 +1037,7 @@ public class ReaderPostTable {
         sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
@@ -1052,7 +1052,7 @@ public class ReaderPostTable {
         String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_type=?";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {Integer.toString(tagType.toInt())};
@@ -1081,7 +1081,7 @@ public class ReaderPostTable {
         String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
