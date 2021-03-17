@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/margin_large">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/first_button"
+        android:id="@+id/continue_with_wpcom_button"
         style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         android:text="@string/continue_with_wpcom" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/second_button"
+        android:id="@+id/enter_your_site_address_button"
         style="@style/Widget.LoginFlow.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
