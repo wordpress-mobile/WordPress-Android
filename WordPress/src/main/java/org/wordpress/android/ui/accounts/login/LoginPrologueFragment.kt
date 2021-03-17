@@ -53,7 +53,7 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         }
         val binding = LoginSignupScreenBinding.bind(view)
 
-        with(binding.loginPrologueBottomButtonsContainer) {
+        with(binding.bottomButtonsContainer) {
             firstButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
                 loginPrologueListener.showEmailLoginScreen()
