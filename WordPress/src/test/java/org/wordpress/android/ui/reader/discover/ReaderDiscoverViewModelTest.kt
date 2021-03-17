@@ -420,7 +420,8 @@ class ReaderDiscoverViewModelTest {
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
                 eq(LIKE),
                 eq(false),
-                eq(false)
+                eq(false),
+                anyString()
         )
     }
 
@@ -530,7 +531,10 @@ class ReaderDiscoverViewModelTest {
         }
 
         // Assert
-        verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(blog)
+        verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(
+                eq(blog),
+                anyString()
+        )
     }
 
     @Test

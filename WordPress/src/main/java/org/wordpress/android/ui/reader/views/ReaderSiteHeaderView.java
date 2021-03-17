@@ -82,7 +82,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogInfoListener = listener;
     }
 
-    public void loadBlogInfo(long blogId, long feedId) {
+    public void loadBlogInfo(
+            final long blogId,
+            final long feedId,
+            final String source
+    ) {
         mBlogId = blogId;
         mFeedId = feedId;
 
@@ -101,7 +105,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (localBlogInfo != null) {
-            showBlogInfo(localBlogInfo);
+            showBlogInfo(localBlogInfo, source);
         }
 
         // then get from server if doesn't exist locally or is time to update it
@@ -110,7 +114,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 @Override
                 public void onResult(ReaderBlog serverBlogInfo) {
                     if (isAttachedToWindow()) {
-                        showBlogInfo(serverBlogInfo);
+                        showBlogInfo(serverBlogInfo, source);
                     }
                 }
             };
@@ -123,7 +127,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void showBlogInfo(ReaderBlog blogInfo) {
+    private void showBlogInfo(ReaderBlog blogInfo, String source) {
         // do nothing if unchanged
         if (blogInfo == null || blogInfo.isSameAs(mBlogInfo)) {
             return;
@@ -175,7 +179,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollowStatus(v);
+                    toggleFollowStatus(v, source);
                 }
             });
         }
@@ -189,7 +193,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void toggleFollowStatus(final View followButton) {
+    private void toggleFollowStatus(final View followButton, final String source) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -237,6 +241,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
                     mFeedId,
                     isAskingToFollow,
                     listener,
+                    source,
                     mReaderTracker
             );
         } else {
@@ -244,6 +249,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
                     mBlogId,
                     isAskingToFollow,
                     listener,
+                    source,
                     mReaderTracker
             );
         }

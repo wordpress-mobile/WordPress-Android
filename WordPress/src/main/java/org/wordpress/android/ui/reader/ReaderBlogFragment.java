@@ -242,7 +242,12 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), mSearchFilter);
+            mAdapter = new ReaderBlogAdapter(
+                    getActivity(),
+                    getBlogType(),
+                    mSearchFilter,
+                    ReaderTracker.SOURCE_SETTINGS
+            );
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override

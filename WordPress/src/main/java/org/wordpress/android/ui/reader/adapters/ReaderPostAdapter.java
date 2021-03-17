@@ -268,9 +268,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
             siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
             if (isDiscover()) {
-                siteHolder.mSiteHeaderView.loadBlogInfo(ReaderConstants.DISCOVER_SITE_ID, 0);
+                siteHolder.mSiteHeaderView.loadBlogInfo(
+                        ReaderConstants.DISCOVER_SITE_ID,
+                        0,
+                        mSource
+                );
             } else {
-                siteHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+                siteHolder.mSiteHeaderView.loadBlogInfo(
+                        mCurrentBlogId,
+                        mCurrentFeedId,
+                        mSource
+                );
             }
         } else if (holder instanceof TagHeaderViewHolder) {
             TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;

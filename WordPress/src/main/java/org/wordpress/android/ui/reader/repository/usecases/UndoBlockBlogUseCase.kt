@@ -13,9 +13,16 @@ class UndoBlockBlogUseCase @Inject constructor(
     private val readerTracker: ReaderTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun undoBlockBlog(blockedBlogData: BlockedBlogResult) {
+    suspend fun undoBlockBlog(
+        blockedBlogData: BlockedBlogResult,
+        source: String
+    ) {
         withContext(bgDispatcher) {
-            ReaderBlogActions.undoBlockBlogFromReader(blockedBlogData, readerTracker)
+            ReaderBlogActions.undoBlockBlogFromReader(
+                    blockedBlogData,
+                    source,
+                    readerTracker
+            )
         }
     }
 }

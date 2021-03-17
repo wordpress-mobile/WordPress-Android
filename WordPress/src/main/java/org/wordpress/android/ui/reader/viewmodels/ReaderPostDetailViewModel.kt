@@ -243,7 +243,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false, fromPostDetails = true)
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        type,
+                        isBookmarkList = false,
+                        fromPostDetails = true,
+                        ReaderTracker.SOURCE_POST_DETAIL
+                )
             }
         }
     }

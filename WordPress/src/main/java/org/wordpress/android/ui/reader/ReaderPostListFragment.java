@@ -2537,10 +2537,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                mViewModel.onFollowSiteClicked(post, isBookmarksList());
+                mViewModel.onFollowSiteClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case SITE_NOTIFICATIONS:
-                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
+                mViewModel.onSiteNotificationMenuClicked(
+                        post.blogId,
+                        post.postId,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case SHARE:
                 AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
@@ -2551,26 +2560,51 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
             case LIKE:
-                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                mViewModel.onLikeButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case REBLOG:
-                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                mViewModel.onReblogButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case REPORT_POST:
-                mViewModel.onReportPostButtonClicked(post, isBookmarksList());
+                mViewModel.onReportPostButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case BLOCK_SITE:
-                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                mViewModel.onBlockSiteButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case BOOKMARK:
-                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                mViewModel.onBookmarkButtonClicked(
+                        post.blogId,
+                        post.postId,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
                 break;
             case TOGGLE_SEEN_STATUS:
                 if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
-                    mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                    mViewModel.onToggleSeenStatusClicked(
+                            post,
+                            isBookmarksList(),
+                            mPostAdapter.getSource()
+                    );
                 }
                 break;
             case SPACER_NO_ACTION:

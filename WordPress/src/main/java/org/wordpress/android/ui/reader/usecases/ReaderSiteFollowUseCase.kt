@@ -30,7 +30,10 @@ class ReaderSiteFollowUseCase @Inject constructor(
 ) {
     private val continuations: MutableMap<Param, Continuation<Boolean>?> = mutableMapOf()
 
-    suspend fun toggleFollow(param: Param) = flow {
+    suspend fun toggleFollow(
+        param: Param,
+        source: String
+    ) = flow {
         val (blogId, feedId) = param
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(NoNetwork)
@@ -44,12 +47,16 @@ class ReaderSiteFollowUseCase @Inject constructor(
             val showEnableNotification = !readerUtilsWrapper.isExternalFeed(blogId, feedId) && isAskingToFollow
 
             emit(FollowStatusChanged(blogId, isAskingToFollow, showEnableNotification))
-            performAction(param, isAskingToFollow)
+            performAction(param, isAskingToFollow, source)
         }
     }
 
-    private suspend fun FlowCollector<FollowSiteState>.performAction(param: Param, isAskingToFollow: Boolean) {
-        val succeeded = followSiteAndWaitForResult(param, isAskingToFollow)
+    private suspend fun FlowCollector<FollowSiteState>.performAction(
+        param: Param,
+        isAskingToFollow: Boolean,
+        source: String
+    ) {
+        val succeeded = followSiteAndWaitForResult(param, isAskingToFollow, source)
         if (!succeeded) {
             emit(FollowStatusChanged(param.blogId, !isAskingToFollow))
             emit(RequestFailed)
@@ -67,7 +74,11 @@ class ReaderSiteFollowUseCase @Inject constructor(
         }
     }
 
-    private suspend fun followSiteAndWaitForResult(param: Param, isAskingToFollow: Boolean): Boolean {
+    private suspend fun followSiteAndWaitForResult(
+        param: Param,
+        isAskingToFollow: Boolean,
+        source: String
+    ): Boolean {
         val actionListener = ActionListener { succeeded ->
             continuations[param]?.resume(succeeded)
             continuations[param] = null
@@ -80,6 +91,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
                     param.feedId,
                     isAskingToFollow,
                     actionListener,
+                    source,
                     readerTracker
             )
         }

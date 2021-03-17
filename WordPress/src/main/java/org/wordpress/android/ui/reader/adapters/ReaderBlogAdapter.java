@@ -62,16 +62,23 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
     private String mSearchFilter;
+    private final String mSource;
 
     @Inject protected ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
 
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType, String searchFilter) {
+    public ReaderBlogAdapter(
+            Context context,
+            ReaderBlogType blogType,
+            String searchFilter,
+            String source
+    ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         setHasStableIds(false);
         mBlogType = blogType;
         mSearchFilter = searchFilter;
+        mSource = source;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -234,6 +241,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blog.feedId,
                     isAskingToFollow,
                     listener,
+                    mSource,
                     mReaderTracker
             );
         } else {
@@ -241,6 +249,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     blog.blogId,
                     isAskingToFollow,
                     listener,
+                    mSource,
                     mReaderTracker
             );
         }

@@ -20,12 +20,14 @@ class ReaderBlogActionsWrapper @Inject constructor(
         feedId: Long,
         isAskingToFollow: Boolean,
         actionListener: ActionListener,
+        source: String,
         readerTracker: ReaderTracker
     ) = ReaderBlogActions.followBlog(
             blogId,
             feedId,
             isAskingToFollow,
             actionListener,
+            source,
             readerTracker
     )
 

@@ -115,6 +115,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
                 mSite.getFeedId(),
                 isAskingToFollow,
                 listener,
+                ReaderTracker.SOURCE_SEARCH,
                 mReaderTracker
         );
         if (result) {

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -472,7 +473,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 
@@ -511,7 +513,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 
@@ -700,7 +703,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(LIKE),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 
@@ -714,7 +718,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(COMMENTS),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 
@@ -728,7 +733,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(REBLOG),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 
@@ -752,7 +758,8 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(BOOKMARK),
                 eq(false),
-                eq(true)
+                eq(true),
+                anyString()
         )
     }
 

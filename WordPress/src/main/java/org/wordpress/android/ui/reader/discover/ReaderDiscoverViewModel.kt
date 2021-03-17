@@ -272,7 +272,12 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false)
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        type,
+                        isBookmarkList = false,
+                        source = ReaderTracker.SOURCE_DISCOVER
+                )
             }
         }
     }
@@ -324,7 +329,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                     "follow" to !recommendedBlogUiState.isFollowed
             )
             readerTracker.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW, properties)
-            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(recommendedBlogUiState)
+            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(
+                    recommendedBlogUiState,
+                    ReaderTracker.SOURCE_DISCOVER
+            )
         }
     }
 

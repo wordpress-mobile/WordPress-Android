@@ -46,6 +46,7 @@ public class ReaderBlogActions {
     public static boolean followBlogById(final long blogId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener,
+                                         final String source,
                                          final ReaderTracker readerTracker) {
         if (blogId == 0) {
             ReaderActions.callActionListener(actionListener, false);
@@ -56,9 +57,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
+            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId, source);
         } else {
-            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
+            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId, source);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -129,6 +130,7 @@ public class ReaderBlogActions {
     public static boolean followFeedById(final long feedId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener,
+                                         final String source,
                                          final ReaderTracker readerTracker) {
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(feedId);
         if (blogInfo != null) {
@@ -137,6 +139,7 @@ public class ReaderBlogActions {
                     blogInfo.getFeedUrl(),
                     isAskingToFollow,
                     actionListener,
+                    source,
                     readerTracker
             );
         }
@@ -150,6 +153,7 @@ public class ReaderBlogActions {
                             blogInfo.getFeedUrl(),
                             isAskingToFollow,
                             actionListener,
+                            source,
                             readerTracker
                     );
                 } else {
@@ -163,6 +167,7 @@ public class ReaderBlogActions {
 
     public static void followFeedByUrl(final String feedUrl,
                                        final ActionListener actionListener,
+                                       final String source,
                                        final ReaderTracker readerTracker) {
         if (TextUtils.isEmpty(feedUrl)) {
             ReaderActions.callActionListener(actionListener, false);
@@ -177,6 +182,7 @@ public class ReaderBlogActions {
                     blogInfo.getFeedUrl(),
                     true,
                     actionListener,
+                    source,
                     readerTracker
             );
             return;
@@ -195,6 +201,7 @@ public class ReaderBlogActions {
                         feedUrlToFollow,
                         true,
                         actionListener,
+                        source,
                         readerTracker
                 );
             }
@@ -206,6 +213,7 @@ public class ReaderBlogActions {
             final String feedUrl,
             final boolean isAskingToFollow,
             final ActionListener actionListener,
+            final String source,
             final ReaderTracker readerTracker
     ) {
         // feedUrl is required
@@ -264,11 +272,12 @@ public class ReaderBlogActions {
                                      final Long feedId,
                                      boolean isAskingToFollow,
                                      ActionListener actionListener,
+                                     final String source,
                                      ReaderTracker readerTracker) {
         if (ReaderUtils.isExternalFeed(blogId, feedId)) {
-            return followFeedById(feedId, isAskingToFollow, actionListener, readerTracker);
+            return followFeedById(feedId, isAskingToFollow, actionListener, source, readerTracker);
         } else {
-            return followBlogById(blogId, isAskingToFollow, actionListener, readerTracker);
+            return followBlogById(blogId, isAskingToFollow, actionListener, source, readerTracker);
         }
     }
 
@@ -500,6 +509,7 @@ public class ReaderBlogActions {
     }
 
     public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult,
+                                               final String source,
                                                final ReaderTracker readerTracker) {
         if (blockResult == null) {
             return;
@@ -512,7 +522,13 @@ public class ReaderBlogActions {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 // re-follow the blog if it was being followed prior to the block
                 if (success && blockResult.wasFollowing) {
-                    followBlogById(blockResult.blogId, true, null, readerTracker);
+                    followBlogById(
+                            blockResult.blogId,
+                            true,
+                            null,
+                            source,
+                            readerTracker
+                    );
                 } else if (!success) {
                     AppLog.w(T.READER, "failed to unblock blog " + blockResult.blogId);
                 }

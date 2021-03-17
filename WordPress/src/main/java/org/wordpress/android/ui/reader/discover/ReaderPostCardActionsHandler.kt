@@ -130,7 +130,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         post: ReaderPost,
         type: ReaderPostCardActionType,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean = false
+        fromPostDetails: Boolean = false,
+        source: String
     ) {
         withContext(bgDispatcher) {
             if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
@@ -142,7 +143,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     }
                 }
             }
-            handleAction(post, type, fromPostDetails, isBookmarkList)
+            handleAction(
+                    post,
+                    type,
+                    fromPostDetails,
+                    isBookmarkList,
+                    source
+            )
         }
     }
 
@@ -174,14 +181,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
         post: ReaderPost,
         type: ReaderPostCardActionType,
         fromPostDetails: Boolean,
-        isBookmarkList: Boolean
+        isBookmarkList: Boolean,
+        source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post)
+            FOLLOW -> handleFollowClicked(post, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
             LIKE -> handleLikeClicked(post, fromPostDetails)
             BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
             REBLOG -> handleReblogClicked(post)
@@ -257,21 +265,36 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
+    suspend fun handleFollowRecommendedSiteClicked(
+        recommendedBlogUiState: ReaderRecommendedBlogUiState,
+        source: String
+    ) {
         val param = ReaderSiteFollowUseCase.Param(
                 blogId = recommendedBlogUiState.blogId,
                 blogName = recommendedBlogUiState.name,
                 feedId = recommendedBlogUiState.feedId
         )
-        followSite(param)
+        followSite(param, source)
     }
 
-    private suspend fun handleFollowClicked(post: ReaderPost) {
-        followSite(ReaderSiteFollowUseCase.Param(post.blogId, post.feedId, post.blogName))
+    private suspend fun handleFollowClicked(
+        post: ReaderPost,
+        source: String
+    ) {
+        followSite(
+                ReaderSiteFollowUseCase.Param(
+                        post.blogId,
+                        post.feedId,
+                        post.blogName
+                ), source
+        )
     }
 
-    private suspend fun followSite(followSiteParam: ReaderSiteFollowUseCase.Param) {
-        followUseCase.toggleFollow(followSiteParam).collect {
+    private suspend fun followSite(
+        followSiteParam: ReaderSiteFollowUseCase.Param,
+        source: String
+    ) {
+        followUseCase.toggleFollow(followSiteParam, source).collect {
             when (it) {
                 is FollowSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
@@ -331,7 +354,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private suspend fun handleBlockSiteClicked(blogId: Long) {
+    private suspend fun handleBlockSiteClicked(
+        blogId: Long,
+        source: String
+    ) {
         blockBlogUseCase.blockBlog(blogId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
@@ -343,7 +369,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                             UiStringRes(R.string.undo),
                                             {
                                                 coroutineScope.launch {
-                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
+                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
                                                     _refreshPosts.postValue(Event(Unit))
                                                 }
                                             })
