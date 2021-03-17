@@ -39,7 +39,4 @@
     <dimen name="google_button_icon_sz">24dp</dimen>
     <dimen name="textinputlayout_correction_padding_right">9dp</dimen>
 
-    <!-- signup -->
-    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
-
 </resources>
