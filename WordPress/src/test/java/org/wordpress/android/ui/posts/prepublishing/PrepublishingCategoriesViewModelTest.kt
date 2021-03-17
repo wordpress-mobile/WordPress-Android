@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -63,7 +64,7 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER
         )
 
-        whenever(getCategoriesUseCase.getPostCategories(anyOrNull(), anyOrNull()))
+        whenever(getCategoriesUseCase.getPostCategories(anyOrNull()))
                 .thenReturn(postCategoriesList())
         whenever(getCategoriesUseCase.getSiteCategories(any()))
                 .thenReturn(siteCategoriesList())
@@ -145,7 +146,21 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
     fun `getPostCategories is invoked on start`() {
         viewModel.start(editPostRepository, siteModel, null, listOf())
 
-        verify(getCategoriesUseCase, times(1)).getPostCategories(editPostRepository, siteModel)
+        verify(getCategoriesUseCase, times(1)).getPostCategories(editPostRepository)
+    }
+
+    @Test
+    fun `fetchSiteCategories is invoked on start when not an addCategoryRequest`() {
+        viewModel.start(editPostRepository, siteModel, null, listOf())
+
+        verify(getCategoriesUseCase, times(1)).fetchSiteCategories(siteModel)
+    }
+
+    @Test
+    fun `fetchSiteCategories is not invoked on start when there is an addCategoryRequest`() {
+        viewModel.start(editPostRepository, siteModel, addCategoryRequest, listOf())
+
+        verify(getCategoriesUseCase, never()).fetchSiteCategories(siteModel)
     }
 
     @Test

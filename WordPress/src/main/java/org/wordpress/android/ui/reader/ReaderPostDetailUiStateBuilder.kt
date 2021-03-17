@@ -8,24 +8,39 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ExcerptFooterUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
+const val READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 const val RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 @Reusable
 class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    private val featuredImageUtils: FeaturedImageUtils,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val contextProvider: ContextProvider,
+    private val htmlUtilsWrapper: HtmlUtilsWrapper,
+    private val htmlMessageUtils: HtmlMessageUtils,
     resourceProvider: ResourceProvider
 ) {
     private val relatedPostFeaturedImageWidth: Int = resourceProvider
@@ -43,12 +58,14 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     ) = ReaderPostDetailsUiState(
             postId = post.postId,
             blogId = post.blogId,
+            featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
             headerUiState = buildPostDetailsHeaderUiState(
                     post,
                     onBlogSectionClicked,
                     onFollowClicked,
                     onTagItemClicked
             ),
+            excerptFooterUiState = buildExcerptFooterUiState(post),
             moreMenuItems = moreMenuItems,
             actions = buildPostActions(post, onButtonClicked)
     )
@@ -91,6 +108,24 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             onItemClicked = onItemClicked
     )
 
+    private fun buildReaderPostFeaturedImageUiState(post: ReaderPost) =
+            post.takeIf { featuredImageUtils.shouldAddFeaturedImage(post) }?.let {
+                ReaderPostFeaturedImageUiState(
+                        blogId = post.blogId,
+                        url = buildReaderPostFeaturedImageUrl(post),
+                        height = (displayUtilsWrapper.getDisplayPixelHeight() *
+                                READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+                )
+            }
+
+    private fun buildReaderPostFeaturedImageUrl(post: ReaderPost) = readerUtilsWrapper.getResizedImageUrl(
+            post.featuredImage,
+            displayUtilsWrapper.getDisplayPixelWidth(),
+            0,
+            post.isPrivate,
+            post.isPrivateAtomic
+    )
+
     private fun buildPostDetailsHeaderUiState(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
@@ -101,6 +136,24 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             onBlogSectionClicked,
             onFollowClicked,
             onTagItemClicked
+    )
+
+    private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =
+            post.takeIf { post.shouldShowExcerpt() }?.let {
+                ExcerptFooterUiState(
+                        visitPostExcerptFooterLinkText = buildPostExcerptFooterLinkText(post),
+                        postLink = post.url
+                )
+            }
+
+    private fun buildPostExcerptFooterLinkText(post: ReaderPost) = UiStringText(
+            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.reader_excerpt_link,
+                    "<font color='" +
+                            htmlUtilsWrapper
+                                    .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
+                            post.blogName + "</font>"
+            )
     )
 
     fun buildPostActions(
