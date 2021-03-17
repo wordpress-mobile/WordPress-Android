@@ -3,6 +3,7 @@
 17.0
 -----
 * [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
+* [*] [Block Editor] Remove the cancel button from settings options [https://github.com/WordPress/gutenberg/pull/29599]
 
 16.9
 -----
