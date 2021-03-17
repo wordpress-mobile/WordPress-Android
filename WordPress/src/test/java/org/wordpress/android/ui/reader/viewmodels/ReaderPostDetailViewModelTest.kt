@@ -157,11 +157,13 @@ class ReaderPostDetailViewModelTest {
 
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
 
-        whenever(readerPostTableWrapper.getBlogPost(
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull()
-        )).thenReturn(readerPost)
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(readerPost)
 
         whenever(
                 postDetailsUiStateBuilder.mapPostToUiState(
