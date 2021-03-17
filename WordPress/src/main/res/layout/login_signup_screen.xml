@@ -42,6 +42,6 @@
 
         <include
             android:id="@+id/login_prologue_bottom_buttons_container"
-            layout="@layout/login_prologue_bottom_buttons_container_default" />
+            layout="@layout/login_prologue_bottom_buttons_container_unified" />
     </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>
