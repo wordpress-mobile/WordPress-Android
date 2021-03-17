@@ -165,7 +165,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return
         }
         if (noteId != note.id) {
-            confettiShown = false;
+            confettiShown = false
         }
         notification = note
     }
