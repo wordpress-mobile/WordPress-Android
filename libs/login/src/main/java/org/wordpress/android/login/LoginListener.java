@@ -33,6 +33,7 @@ public interface LoginListener {
     void helpSocialEmailScreen(String email);
     void addGoogleLoginFragment(boolean isSignupFromLoginEnabled);
     void showHelpFindingConnectedEmail();
+    void onTermsOfServiceClicked();
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email, boolean allowPassword);
@@ -80,7 +81,6 @@ public interface LoginListener {
     void startPostLoginServices();
 
     // Signup
-    void doStartSignup();
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
     void helpSignupConfirmationScreen(String email);
