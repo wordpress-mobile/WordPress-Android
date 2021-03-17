@@ -2,6 +2,9 @@ package org.wordpress.android.ui.accounts
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.post_signup_interstitial_landscape.view.*
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
@@ -38,16 +41,13 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     }
 
     private fun PostSignupInterstitialActivityBinding.createNewSiteButton() =
-            (postSignupInterstitial?.createNewSiteButton
-                    ?: postSignupInterstitialLandscape?.createNewSiteButton)!!
+            root.findViewById<MaterialButton>(R.id.create_new_site_button)
 
     private fun PostSignupInterstitialActivityBinding.addSelfHostedSiteButton() =
-            (postSignupInterstitial?.addSelfHostedSiteButton
-                    ?: postSignupInterstitialLandscape?.addSelfHostedSiteButton)!!
+            root.findViewById<MaterialButton>(R.id.add_self_hosted_site_button)
 
     private fun PostSignupInterstitialActivityBinding.dismissButton() =
-            (postSignupInterstitial?.dismissButton
-                    ?: postSignupInterstitialLandscape?.dismissButton)!!
+            root.findViewById<MaterialButton>(R.id.dismiss_button)
 
     override fun onBackPressed() {
         viewModel.onBackButtonPressed()
