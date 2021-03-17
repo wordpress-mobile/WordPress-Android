@@ -74,7 +74,6 @@ android {
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
         buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
-        buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
