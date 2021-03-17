@@ -82,8 +82,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
     private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
-    private static final String ARG_SITE_LOGIN_ENABLED = "ARG_SITE_LOGIN_ENABLED";
-    private static final String ARG_SHOULD_USE_NEW_LAYOUT = "ARG_SHOULD_USE_NEW_LAYOUT";
     private static final String ARG_OPTIONAL_SITE_CREDS_LAYOUT = "ARG_OPTIONAL_SITE_CREDS_LAYOUT";
     private static final String ARG_HIDE_TOS = "ARG_HIDE_TOS";
 
@@ -98,8 +96,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private boolean mIsSocialLogin;
     private Integer mCurrentEmailErrorRes = null;
     private boolean mIsSignupFromLoginEnabled;
-    private boolean mIsSiteLoginEnabled;
-    private boolean mShouldUseNewLayout;
     private boolean mOptionalSiteCredsLayout;
     private boolean mHideTos;
 
@@ -117,37 +113,24 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
-                                                 boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout) {
-        return newInstance(
-                isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled) {
+        return newInstance(isSignupFromLoginEnabled, null);
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
-                                                 boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout,
-                                                 boolean hideTos) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean hideTos) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
-        args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
-        args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
         args.putBoolean(ARG_HIDE_TOS, hideTos);
         args.putString(ARG_LOGIN_SITE_URL, null);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
-                                                 boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout,
-                                                 String url) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
-        args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
-        args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
         args.putBoolean(ARG_HIDE_TOS, false);
         args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
@@ -156,12 +139,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        if (mShouldUseNewLayout) {
-            return R.layout.login_email_screen;
-        } else if (mOptionalSiteCredsLayout) {
+        if (mOptionalSiteCredsLayout) {
             return R.layout.login_email_optional_site_creds_screen;
         } else {
-            return R.layout.login_email_screen_old;
+            return R.layout.login_email_screen;
         }
     }
 
@@ -182,9 +163,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case FULL:
             case WPCOM_LOGIN_ONLY:
             case SELFHOSTED_ONLY:
-                if (!mShouldUseNewLayout) {
-                    label.setText(R.string.enter_email_wordpress_com);
-                } else if (!TextUtils.isEmpty(mLoginSiteUrl)) {
+                if (!TextUtils.isEmpty(mLoginSiteUrl)) {
                     label.setText(Html.fromHtml(
                             getString(R.string.enter_email_for_site, mLoginSiteUrl)));
                 } else {
@@ -215,21 +194,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         setupEmailInput((WPLoginInputRow) rootView.findViewById(R.id.login_email_row));
 
-        if (mShouldUseNewLayout) {
-            setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
-            setupTosButtons(
-                    (Button) rootView.findViewById(R.id.continue_tos),
-                    (Button) rootView.findViewById(R.id.continue_with_google_tos));
-            setupSocialButtons((Button) rootView.findViewById(R.id.continue_with_google));
-        } else if (mOptionalSiteCredsLayout) {
+        if (mOptionalSiteCredsLayout) {
             setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
             setupSiteCredsButton((Button) rootView.findViewById(R.id.login_site_creds));
             setupFindEmailHelpButton(
                     (Button) rootView.findViewById(R.id.login_find_connected_email));
         } else {
-            setupAlternativeButtons(
-                    (LinearLayout) rootView.findViewById(R.id.login_google_button),
-                    (LinearLayout) rootView.findViewById(R.id.login_site_button));
+            setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
+            setupTosButtons(
+                    (Button) rootView.findViewById(R.id.continue_tos),
+                    (Button) rootView.findViewById(R.id.continue_with_google_tos));
+            setupSocialButtons((Button) rootView.findViewById(R.id.continue_with_google));
         }
     }
 
@@ -377,7 +352,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case FULL:
             case WPCOM_LOGIN_ONLY:
             case SHARE_INTENT:
-                siteLoginButton.setVisibility(mIsSiteLoginEnabled ? View.VISIBLE : View.GONE);
+                siteLoginButton.setVisibility(View.GONE);
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
                 break;
@@ -394,13 +369,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
-            secondaryButton.setVisibility(View.GONE);
-            primaryButton.setVisibility(View.GONE);
-        } else {
-            setupSecondaryButton(secondaryButton);
-            setupPrimaryButton(primaryButton);
-        }
+        secondaryButton.setVisibility(View.GONE);
+        primaryButton.setVisibility(View.GONE);
     }
 
     private void setupSecondaryButton(Button secondaryButton) {
@@ -494,8 +464,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (args != null) {
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
             mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
-            mIsSiteLoginEnabled = args.getBoolean(ARG_SITE_LOGIN_ENABLED, true);
-            mShouldUseNewLayout = args.getBoolean(ARG_SHOULD_USE_NEW_LAYOUT, false);
             mOptionalSiteCredsLayout = args.getBoolean(ARG_OPTIONAL_SITE_CREDS_LAYOUT, false);
             mHideTos = args.getBoolean(ARG_HIDE_TOS, false);
         }
@@ -546,9 +514,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onResume() {
         super.onResume();
         mAnalyticsListener.emailFormScreenResumed();
-        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
-            updateContinueButtonEnabledStatus();
-        }
+        updateContinueButtonEnabledStatus();
     }
 
     @Override
@@ -572,10 +538,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             return;
         }
 
-        if (mShouldUseNewLayout) {
-            actionBar.setTitle(R.string.get_started);
-        } else {
+        if (mOptionalSiteCredsLayout) {
             super.buildToolbar(toolbar, actionBar);
+        } else {
+            actionBar.setTitle(R.string.get_started);
         }
     }
 
@@ -644,9 +610,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.setError(null);
         mIsSocialLogin = false;
         clearEmailError();
-        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
-            updateContinueButtonEnabledStatus();
-        }
+        updateContinueButtonEnabledStatus();
     }
 
     private void showEmailError(int messageId) {
