@@ -26,7 +26,7 @@ class BlockBlogUseCase @Inject constructor(
     private var continuation: Continuation<Boolean>? = null
 
     // TODO use .flowOn(ioDispatcher) when the experimental flag is removed
-    suspend fun blockBlog(blogId: Long) = flow<BlockSiteState> {
+    suspend fun blockBlog(blogId: Long) = flow {
         // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
         if (continuation == null) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
