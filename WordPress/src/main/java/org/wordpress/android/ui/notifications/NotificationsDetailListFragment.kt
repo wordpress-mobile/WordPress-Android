@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
+import com.airbnb.lottie.LottieAnimationView
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
@@ -81,6 +82,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var commentListPosition = ListView.INVALID_POSITION
     private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var noteBlockAdapter: NoteBlockAdapter? = null
+    private var confettiShown = false
 
     @Inject lateinit var imageManager: ImageManager
 
@@ -133,6 +135,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (note == null) {
             showErrorToastAndFinish()
         }
+
+        val confetti: LottieAnimationView = requireActivity().findViewById(R.id.confetti)
+        if (note?.isViewMilestoneType() == true && !confettiShown) {
+            confetti.playAnimation()
+            confettiShown = true
+        }
     }
 
     override fun onPause() {
@@ -155,6 +163,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (note == null) {
             showErrorToastAndFinish()
             return
+        }
+        if (noteId != note.id) {
+            confettiShown = false
         }
         notification = note
     }
@@ -425,6 +436,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     if (mIsBadgeView) {
                         noteBlock.setIsBadge()
                     }
+                    if (note.isViewMilestoneType) {
+                        noteBlock.setIsViewMilestone()
+                    }
                     if (isPingback) {
                         noteBlock.setIsPingback()
                     }
@@ -591,7 +605,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         // Request the reader post so that loading reader activities will work.
         if (notification!!.isUserList && !ReaderPostTable.postExists(
                         notification!!.siteId.toLong(),
-                        notification!!.postId.toLong())) {
+                        notification!!.postId.toLong()
+                )) {
             ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
         }
 

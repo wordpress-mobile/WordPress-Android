@@ -556,8 +556,6 @@
     <ID>TooManyFunctions:SiteCreationDomainsViewModel.kt$SiteCreationDomainsViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:SiteCreationMainVM.kt$SiteCreationMainVM : ViewModel</ID>
     <ID>TooManyFunctions:SiteCreationPreviewFragment.kt$SiteCreationPreviewFragment : SiteCreationBaseFormFragmentErrorManagedWebViewClientListener</ID>
-    <ID>TooManyFunctions:SiteCreationSegmentsFragment.kt$SiteCreationSegmentsFragment : SiteCreationBaseFormFragment</ID>
-    <ID>TooManyFunctions:SiteCreationSegmentsViewModel.kt$SiteCreationSegmentsViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker : LayoutPickerTracker</ID>
     <ID>TooManyFunctions:SiteListItemBuilder.kt$SiteListItemBuilder</ID>
     <ID>TooManyFunctions:SitePreviewViewModel.kt$SitePreviewViewModel : ViewModelCoroutineScope</ID>
@@ -594,9 +592,6 @@
     <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val welcomeBannerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionErrorViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionItemViewType: Int = 1</ID>
-    <ID>TopLevelPropertyNaming:SiteCreationSegmentsAdapter.kt$private const val headerViewType: Int = 1</ID>
-    <ID>TopLevelPropertyNaming:SiteCreationSegmentsAdapter.kt$private const val progressViewType: Int = 2</ID>
-    <ID>TopLevelPropertyNaming:SiteCreationSegmentsAdapter.kt$private const val segmentViewType: Int = 3</ID>
     <ID>TopLevelPropertyNaming:SupportedBlocks.kt$private const val defaultAssetFilename = "supported-blocks.json"</ID>
     <ID>TopLevelPropertyNaming:ZendeskHelper.kt$private const val enablePushNotificationsDelayAfterIdentityChange: Long = 2500</ID>
     <ID>TopLevelPropertyNaming:ZendeskHelper.kt$private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"</ID>

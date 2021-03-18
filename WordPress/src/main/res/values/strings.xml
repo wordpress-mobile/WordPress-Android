@@ -2703,7 +2703,7 @@
 
     <!-- Signup -->
     <string name="sign_up_label">Sign Up</string>
-    <string name="sign_up">Sign Up for WordPress.com</string>
+    <string name="sign_up" tools:ignore="UnusedResources">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
@@ -3032,8 +3032,6 @@
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
-    <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
-    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
