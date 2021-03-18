@@ -403,7 +403,7 @@ public class ReaderBlogActions {
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                requestListener.onSuccess();
+                requestListener.onSuccess(null);
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -421,7 +421,7 @@ public class ReaderBlogActions {
                 // Volley treats a 301 redirect as a failure here, we should treat it as
                 // success since it means the blog url is reachable
                 if (statusCode == 301) {
-                    requestListener.onSuccess();
+                    requestListener.onSuccess(null);
                 } else {
                     requestListener.onFailure(statusCode);
                 }
