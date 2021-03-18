@@ -11,8 +11,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -47,7 +45,7 @@ class ReaderTracker @Inject constructor(
     fun start(type: ReaderTrackerType) {
         trackers[type]?.let {
             if (!isRunning(type)) {
-                AppLog.d(MAIN, "ReaderTracker: started $type")
+                AppLog.d(AppLog.T.MAIN, "ReaderTracker: started $type")
                 trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
             }
         }
@@ -56,13 +54,13 @@ class ReaderTracker @Inject constructor(
     fun stop(type: ReaderTrackerType) {
         trackers[type]?.let { trackerInfo ->
             if (isRunning(type)) {
-                AppLog.d(MAIN, "ReaderTracker: stopped $type")
+                AppLog.d(AppLog.T.MAIN, "ReaderTracker: stopped $type")
                 trackerInfo.startDate?.let { startDate ->
                     val accumulatedTime = trackerInfo.accumulatedTime +
                             DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
                     // let reset the startDate to null
                     trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
-                } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
+                } ?: AppLog.e(AppLog.T.READER, "ReaderTracker > stop found a null startDate")
             }
         }
     }
