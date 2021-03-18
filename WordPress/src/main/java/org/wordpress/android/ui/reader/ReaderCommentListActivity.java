@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
@@ -595,9 +594,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                                 && getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
 
-                                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
                                 mReaderTracker.trackPost(
-                                        Stat.COMMENT_LIKED,
+                                        AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED,
+                                        mPost
+                                );
+                                mReaderTracker.trackPost(
+                                        AnalyticsTracker.Stat.COMMENT_LIKED,
                                         mPost,
                                         AnalyticsCommentActionSource.READER.toString()
                                 );
@@ -750,9 +752,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         if (mReplyToCommentId != 0) {
-            mReaderTracker.trackPost(Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
+            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
         } else {
-            mReaderTracker.trackPost(Stat.READER_ARTICLE_COMMENTED_ON, mPost);
+            mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost);
         }
 
         mSubmitReplyBtn.setEnabled(false);
