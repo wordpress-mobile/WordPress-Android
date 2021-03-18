@@ -1109,7 +1109,7 @@ class ReaderPostCardActionsHandlerTest {
         val observedValues = startObserving()
 
         // Act
-        actionHandler.handleOnItemClicked(mock())
+        actionHandler.handleOnItemClicked(mock(), anyString())
 
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowPostDetail::class.java)

@@ -198,7 +198,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleOnItemClicked(post: ReaderPost) {
+    suspend fun handleOnItemClicked(
+        post: ReaderPost,
+        source: String
+    ) {
         withContext(bgDispatcher) {
             appRatingDialogWrapper.incrementInteractions(
                     AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
@@ -208,7 +211,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 readerTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
                         post.blogId,
-                        post.isFollowedByCurrentUser
+                        post.isFollowedByCurrentUser,
+                        source
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))

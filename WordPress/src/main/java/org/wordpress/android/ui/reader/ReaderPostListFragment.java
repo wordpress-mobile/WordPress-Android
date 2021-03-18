@@ -2437,13 +2437,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
                         post.blogId,
-                        post.isFollowedByCurrentUser
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
                 );
             } else {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
                         post.blogId,
-                        post.isFollowedByCurrentUser
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
                 );
             }
         }

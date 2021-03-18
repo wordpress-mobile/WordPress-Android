@@ -460,7 +460,8 @@ class ReaderDiscoverViewModelTest {
                 .onItemClicked.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleOnItemClicked(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post)
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
+                eq(ReaderTracker.SOURCE_DISCOVER)
         )
     }
 
