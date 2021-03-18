@@ -2,8 +2,7 @@ package org.wordpress.android.ui.reader.usecases
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -69,9 +68,9 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 
     private fun trackEvent(blogId: Long) {
         val trackingEvent = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
-            FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
+            AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
         } else {
-            FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
+            AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
         }
 
         readerTracker.trackBlog(trackingEvent, blogId)
