@@ -19,7 +19,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -48,14 +47,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_QUICKPRESS;
 
@@ -320,8 +311,9 @@ public class AnalyticsUtils {
                     : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
         }
 
-        AnalyticsTracker.Stat stat = isQuickReply ? Stat.COMMENT_QUICK_ACTION_REPLIED_TO
-                : Stat.COMMENT_REPLIED_TO;
+        AnalyticsTracker.Stat stat = isQuickReply
+                ? AnalyticsTracker.Stat.COMMENT_QUICK_ACTION_REPLIED_TO
+                : AnalyticsTracker.Stat.COMMENT_REPLIED_TO;
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
@@ -466,7 +458,7 @@ public class AnalyticsUtils {
             return;
         }
 
-        AnalyticsTracker.track(TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
+        AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
     }
 
     /**
@@ -482,7 +474,7 @@ public class AnalyticsUtils {
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
         properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
-        AnalyticsTracker.track(TRAIN_TRACKS_INTERACT, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT, properties);
     }
 
     /**
@@ -490,12 +482,12 @@ public class AnalyticsUtils {
      * @return True if the passed stat event can be recorded as a railcar interaction
      */
     private static boolean canTrackRailcarInteraction(AnalyticsTracker.Stat stat) {
-        return stat == READER_ARTICLE_LIKED
-               || stat == READER_ARTICLE_OPENED
-               || stat == READER_SEARCH_RESULT_TAPPED
-               || stat == READER_ARTICLE_COMMENTED_ON
-               || stat == READER_GLOBAL_RELATED_POST_CLICKED
-               || stat == READER_LOCAL_RELATED_POST_CLICKED;
+        return stat == AnalyticsTracker.Stat.READER_ARTICLE_LIKED
+               || stat == AnalyticsTracker.Stat.READER_ARTICLE_OPENED
+               || stat == AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED
+               || stat == AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON
+               || stat == AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+               || stat == AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
     }
 
     /*
@@ -598,7 +590,7 @@ public class AnalyticsUtils {
         AnalyticsUtils.refreshMetadataNewUser(username, email);
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(Stat.CREATED_ACCOUNT, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
     public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
@@ -617,7 +609,7 @@ public class AnalyticsUtils {
     public static void trackLoginProloguePages(int page) {
         Map<String, Integer> properties = new HashMap<>();
         properties.put("page_number", page);
-        AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED, properties);
     }
 
     @VisibleForTesting
