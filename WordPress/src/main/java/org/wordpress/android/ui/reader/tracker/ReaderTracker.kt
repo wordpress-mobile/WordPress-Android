@@ -274,6 +274,10 @@ class ReaderTracker @Inject constructor(
         analyticsUtilsWrapper.trackWithDeepLinkData(stat, action, host, uri)
     }
 
+    fun trackRailcar(railcarJson: String) {
+        analyticsUtilsWrapper.trackRailcarRender(railcarJson)
+    }
+
     /* HELPER */
 
     @JvmOverloads

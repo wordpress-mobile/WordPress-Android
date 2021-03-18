@@ -62,4 +62,8 @@ class AnalyticsUtilsWrapper @Inject constructor(
         host: String,
         data: Uri?
     ) = AnalyticsUtils.trackWithDeepLinkData(stat, action, host, data)
+
+    fun trackRailcarRender(
+        railcarJson: String
+    ) = AnalyticsUtils.trackRailcarRender(railcarJson)
 }

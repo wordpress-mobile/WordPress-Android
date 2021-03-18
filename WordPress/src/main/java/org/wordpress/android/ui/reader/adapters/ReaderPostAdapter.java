@@ -63,7 +63,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -425,7 +424,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // to the rendered list and record the TrainTracks render event
             if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
                 mRenderedIds.add(post.getPseudoId());
-                AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
+                mReaderTracker.trackRailcar(post.getRailcarJson());
             }
             return Unit.INSTANCE;
         };
