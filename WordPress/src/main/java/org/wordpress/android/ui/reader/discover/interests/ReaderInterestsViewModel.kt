@@ -239,12 +239,10 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun trackInterests(tags: List<ReaderTag>) {
         tags.forEach {
-            readerTracker.track(
+            readerTracker.trackTag(
                     READER_TAG_FOLLOWED,
-                    mapOf(
-                            "tag" to it.tagSlug,
-                            "source" to "discover"
-                    )
+                    it.tagSlug,
+                    "discover"
             )
         }
         readerTracker.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size))
