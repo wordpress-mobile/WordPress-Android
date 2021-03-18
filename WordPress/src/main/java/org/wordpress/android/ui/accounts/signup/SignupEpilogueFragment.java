@@ -90,6 +90,9 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
+
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener {
     private EditText mEditTextDisplayName;
@@ -373,8 +376,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                             data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-                                                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                                    : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                                    ? SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                    : SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
 
