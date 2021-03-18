@@ -2436,12 +2436,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
             if (isBookmarksList()) {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
-                        post.blogId
+                        post.blogId,
+                        post.isFollowedByCurrentUser
                 );
             } else {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
-                        post.blogId
+                        post.blogId,
+                        post.isFollowedByCurrentUser
                 );
             }
         }
