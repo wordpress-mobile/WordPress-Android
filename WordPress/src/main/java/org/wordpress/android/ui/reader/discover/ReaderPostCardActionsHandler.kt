@@ -74,7 +74,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppRatingDialogWrapper
@@ -82,7 +81,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderPostCardActionsHandler @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val readerTracker: ReaderTracker,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
@@ -202,7 +201,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             appRatingDialogWrapper.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
 
             if (post.isBookmarked) {
-                analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+                readerTracker.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
@@ -226,7 +225,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             properties["blog_id"] = post.blogId
             properties["is_jetpack"] = post.isJetpack
             properties["post_id"] = post.postId
-            analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
+            readerTracker.track(READER_POST_REPORTED, properties)
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
     }
@@ -339,7 +338,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleShareClicked(post: ReaderPost) {
-        analyticsTrackerWrapper.track(SHARED_ITEM_READER, post.blogId)
+        readerTracker.trackBlog(SHARED_ITEM_READER, post.blogId)
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {
@@ -348,7 +347,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
-        analyticsTrackerWrapper.track(READER_ARTICLE_VISITED)
+        readerTracker.track(READER_ARTICLE_VISITED)
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
@@ -432,7 +431,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                                 UiStringRes(R.string.reader_bookmark_snack_title),
                                                 UiStringRes(R.string.reader_bookmark_snack_btn),
                                                 buttonAction = {
-                                                    analyticsTrackerWrapper.track(
+                                                    readerTracker.track(
                                                             READER_SAVED_LIST_SHOWN,
                                                             mapOf("source" to "post_list_saved_post_notice")
                                                     )
@@ -493,8 +492,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
                                         coroutineScope.launch(bgDispatcher) {
-                                            analyticsTrackerWrapper
-                                                    .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
+                                            readerTracker
+                                                    .trackBlog(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
                                             siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
                                         }

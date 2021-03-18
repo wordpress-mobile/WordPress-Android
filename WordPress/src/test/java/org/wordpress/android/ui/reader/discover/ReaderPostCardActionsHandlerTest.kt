@@ -63,6 +63,7 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.PostLikedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -77,7 +78,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val SOURCE = "source"
@@ -89,7 +89,7 @@ class ReaderPostCardActionsHandlerTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     private lateinit var actionHandler: ReaderPostCardActionsHandler
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var bookmarkUseCase: ReaderPostBookmarkUseCase
     @Mock private lateinit var followUseCase: ReaderSiteFollowUseCase
@@ -108,7 +108,7 @@ class ReaderPostCardActionsHandlerTest {
     @Before
     fun setUp() = test {
         actionHandler = ReaderPostCardActionsHandler(
-                analyticsTrackerWrapper,
+                readerTracker,
                 reblogUseCase,
                 bookmarkUseCase,
                 followUseCase,
