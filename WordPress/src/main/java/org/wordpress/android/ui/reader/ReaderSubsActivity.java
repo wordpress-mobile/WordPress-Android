@@ -3,13 +3,11 @@ package org.wordpress.android.ui.reader;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,12 +105,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -131,26 +124,18 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         bottomBar.setBackgroundColor(elevatedColor);
 
         mEditAdd = findViewById(R.id.edit_add);
-        mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addCurrentEntry();
-                }
-                return false;
+        mEditAdd.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addCurrentEntry();
             }
+            return false;
         });
 
         mFabButton = findViewById(R.id.fab_button);
         mFabButton.setOnClickListener(view -> ReaderActivityLauncher.showReaderInterests(this));
 
         mBtnAdd = findViewById(R.id.btn_add);
-        mBtnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCurrentEntry();
-            }
-        });
+        mBtnAdd.setOnClickListener(v -> addCurrentEntry());
 
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
@@ -341,28 +326,25 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         showProgress();
         final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
+        ReaderActions.ActionListener actionListener = succeeded -> {
+            if (isFinishing()) {
+                return;
+            }
 
-                hideProgress();
-                getPageAdapter().refreshFollowedTagFragment();
+            hideProgress();
+            getPageAdapter().refreshFollowedTagFragment();
 
-                if (succeeded) {
-                    showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
-                    mLastAddedTagName = tag.getTagSlug();
-                    mReaderTracker.trackTag(
-                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            mLastAddedTagName,
-                            "unknown"
-                    );
-                } else {
-                    showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
-                    mLastAddedTagName = null;
-                }
+            if (succeeded) {
+                showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                mLastAddedTagName = tag.getTagSlug();
+                mReaderTracker.trackTag(
+                        AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                        mLastAddedTagName,
+                        "unknown"
+                );
+            } else {
+                showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
+                mLastAddedTagName = null;
             }
         };
 
@@ -415,26 +397,23 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     }
 
     private void followBlogUrl(String normUrl) {
-        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
-                hideProgress();
-                if (succeeded) {
-                    // clear the edit text and hide the soft keyboard
-                    mEditAdd.setText(null);
-                    EditTextUtils.hideSoftInput(mEditAdd);
-                    showInfoSnackbar(getString(R.string.reader_label_followed_blog));
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    // update tags if the site we added belongs to a tag we don't yet have
-                    // also update followed blogs so lists are ready in case we need to present them
-                    // in bottom sheet reader filtering
-                    performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
-                } else {
-                    showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
-                }
+        ReaderActions.ActionListener followListener = succeeded -> {
+            if (isFinishing()) {
+                return;
+            }
+            hideProgress();
+            if (succeeded) {
+                // clear the edit text and hide the soft keyboard
+                mEditAdd.setText(null);
+                EditTextUtils.hideSoftInput(mEditAdd);
+                showInfoSnackbar(getString(R.string.reader_label_followed_blog));
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                // update tags if the site we added belongs to a tag we don't yet have
+                // also update followed blogs so lists are ready in case we need to present them
+                // in bottom sheet reader filtering
+                performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+            } else {
+                showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
