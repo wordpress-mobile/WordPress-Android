@@ -179,7 +179,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         when (type) {
             FOLLOW -> handleFollowClicked(post, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-            SHARE -> handleShareClicked(post)
+            SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
             LIKE -> handleLikeClicked(post, source)
@@ -336,11 +336,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleShareClicked(post: ReaderPost) {
+    private fun handleShareClicked(
+        post: ReaderPost,
+        source: String
+    ) {
         readerTracker.trackBlog(
                 AnalyticsTracker.Stat.SHARED_ITEM_READER,
                 post.blogId,
-                post.isFollowedByCurrentUser
+                post.isFollowedByCurrentUser,
+                source
         )
         try {
             _navigationEvents.postValue(Event(SharePost(post)))

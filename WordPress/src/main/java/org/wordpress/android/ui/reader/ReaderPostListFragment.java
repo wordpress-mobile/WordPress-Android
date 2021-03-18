@@ -2554,7 +2554,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.SHARED_ITEM_READER,
                         post.blogId,
-                        post.isFollowedByCurrentUser
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
                 );
                 sharePost(post);
                 break;
