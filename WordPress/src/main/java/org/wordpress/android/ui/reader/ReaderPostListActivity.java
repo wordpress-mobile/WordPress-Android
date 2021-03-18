@@ -229,7 +229,10 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
 
             try {
-                mReaderTracker.track(AnalyticsTracker.Stat.READER_SITE_SHARED);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SITE_SHARED,
+                        blog.blogId
+                );
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
                 ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
