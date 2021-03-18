@@ -34,6 +34,14 @@ class AnalyticsUtilsWrapper @Inject constructor(
         post: PostImmutableModel?
     ) = AnalyticsUtils.trackEditorCreatedPost(action, intent, site, post)
 
+    fun trackInviteLinksAction(
+        stat: AnalyticsTracker.Stat,
+        site: SiteModel?,
+        properties: Map<String, Any?>?
+    ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
+
+    /* READER */
+
     fun trackWithReaderPostDetails(
         stat: AnalyticsTracker.Stat,
         post: ReaderPost?,
@@ -47,12 +55,6 @@ class AnalyticsUtilsWrapper @Inject constructor(
         post: ReaderPost?,
         properties: Map<String, Any?>
     ) = AnalyticsUtils.trackFollowCommentsWithReaderPostDetails(stat, blogId, postId, post, properties)
-
-    fun trackInviteLinksAction(
-        stat: AnalyticsTracker.Stat,
-        site: SiteModel?,
-        properties: Map<String, Any?>?
-    ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
 
     fun trackWithDeepLinkData(
         stat: AnalyticsTracker.Stat,
