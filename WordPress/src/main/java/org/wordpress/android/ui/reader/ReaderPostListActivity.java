@@ -20,7 +20,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -31,12 +30,13 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -56,6 +56,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ReaderTracker mReaderTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,8 +144,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     /*
-    * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
-    * */
+     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
+     */
     private void disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
@@ -228,7 +229,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
 
             try {
-                AnalyticsTracker.track(Stat.READER_SITE_SHARED);
+                mReaderTracker.track(Stat.READER_SITE_SHARED);
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
                 ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
