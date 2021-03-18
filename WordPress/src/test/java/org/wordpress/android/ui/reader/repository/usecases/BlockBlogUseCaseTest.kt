@@ -8,8 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class BlockBlogUseCaseTest {
@@ -18,12 +18,16 @@ class BlockBlogUseCaseTest {
 
     private lateinit var mBlockBlogUseCase: BlockBlogUseCase
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerBlogActionsWrapper: ReaderBlogActionsWrapper
 
     @Before
     fun setUp() {
-        mBlockBlogUseCase = BlockBlogUseCase(networkUtilsWrapper, analyticsUtilsWrapper, readerBlogActionsWrapper)
+        mBlockBlogUseCase = BlockBlogUseCase(
+                networkUtilsWrapper,
+                readerTracker,
+                readerBlogActionsWrapper
+        )
     }
 
     @Test
