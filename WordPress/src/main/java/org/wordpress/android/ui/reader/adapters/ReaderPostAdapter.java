@@ -334,7 +334,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ToastUtils.showToast(context, errResId);
             } else {
                 if (isAskingToFollow) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
                             new HashMap<String, String>() {
                                 {
                                     put("tag", slugForTracking);
@@ -342,7 +342,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
                             });
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
                             new HashMap<String, String>() {
                                 {
                                     put("tag", slugForTracking);
