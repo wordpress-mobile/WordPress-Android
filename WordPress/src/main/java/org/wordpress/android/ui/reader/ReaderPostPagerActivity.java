@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -55,12 +56,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtilsWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
-import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -135,6 +136,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject UrlUtilsWrapper mUrlUtilsWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -338,12 +340,21 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                         // not stored locally, so request it
                         ReaderPostActions.requestBlogPost(
                             blogIdentifier, postIdentifier,
-                            new ReaderActions.OnRequestListener() {
+                            new ReaderActions.OnRequestListener<String>() {
                                 @Override
-                                public void onSuccess() {
+                                public void onSuccess(String blogUrl) {
                                     mPostSlugsResolutionUnderway = false;
-                                    ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier,
-                                                                                  true);
+
+                                    // the scheme is removed to match the query pattern in ReaderPostTable.getBlogPost
+                                    String primaryBlogIdentifier = mUrlUtilsWrapper.removeScheme(blogUrl);
+
+                                    // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier since
+                                    // the custom and *.wordpress.com domains need to be used interchangeably since
+                                    // they can both be used as the primary domain when identifying the blog_url
+                                    // in the ReaderPostTable query.
+                                    ReaderPost post =
+                                            ReaderPostTable.getBlogPost(primaryBlogIdentifier, postIdentifier,
+                                                    true);
                                     ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
                                             ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId, post.postId)
                                             : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
