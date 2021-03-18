@@ -156,14 +156,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             FetchSiteState.Failed.NoNetwork -> {
                 _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                 )
             }
             FetchSiteState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                    Event(
-                        SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
-                    )
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                 )
             }
         }

@@ -373,7 +373,6 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
-
     @Test
     fun `Error message is shown when follow action fails with RequestFailed error`() = test {
         // Arrange
