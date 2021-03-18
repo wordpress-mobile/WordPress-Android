@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -439,7 +438,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 mPost
         );
         mReaderTracker.trackPost(
-                isAskingToLike ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
+                isAskingToLike ? AnalyticsTracker.Stat.COMMENT_LIKED : AnalyticsTracker.Stat.COMMENT_UNLIKED,
                 mPost,
                 AnalyticsCommentActionSource.READER.toString()
         );
