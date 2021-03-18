@@ -34,11 +34,6 @@ class AnalyticsUtilsWrapper @Inject constructor(
         post: PostImmutableModel?
     ) = AnalyticsUtils.trackEditorCreatedPost(action, intent, site, post)
 
-    fun trackWithSiteId(
-        stat: AnalyticsTracker.Stat,
-        blogId: Long
-    ) = AnalyticsUtils.trackWithSiteId(stat, blogId)
-
     fun trackWithReaderPostDetails(
         stat: AnalyticsTracker.Stat,
         post: ReaderPost?,

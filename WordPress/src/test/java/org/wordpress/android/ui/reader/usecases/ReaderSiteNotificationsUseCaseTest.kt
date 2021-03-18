@@ -27,11 +27,11 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 private const val ERROR = "Error"
 @InternalCoroutinesApi
@@ -42,7 +42,7 @@ class ReaderSiteNotificationsUseCaseTest {
 
     lateinit var useCase: ReaderSiteNotificationsUseCase
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private val event = OnSubscriptionUpdated()
@@ -53,12 +53,12 @@ class ReaderSiteNotificationsUseCaseTest {
     fun setup() {
         useCase = ReaderSiteNotificationsUseCase(
                 dispatcher,
-                analyticsUtilsWrapper,
+                readerTracker,
                 readerBlogTableWrapper,
                 networkUtilsWrapper
         )
 
-        doNothing().whenever(analyticsUtilsWrapper).trackWithSiteId(any(), any())
+        doNothing().whenever(readerTracker).trackBlog(any(), any())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(dispatcher.dispatch(argWhere<Action<Void>> {
             it.type == AccountAction.UPDATE_SUBSCRIPTION_NOTIFICATION_POST

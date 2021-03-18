@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
@@ -19,7 +20,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -30,7 +30,7 @@ import kotlin.coroutines.suspendCoroutine
  */
 class ReaderSiteNotificationsUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerTracker: ReaderTracker,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
@@ -74,7 +74,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
             FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
         }
 
-        analyticsUtilsWrapper.trackWithSiteId(trackingEvent, blogId)
+        readerTracker.trackBlog(trackingEvent, blogId)
     }
 
     fun updateNotificationEnabledForBlogInDb(blogId: Long, isNotificationEnabledForBlog: Boolean) {
