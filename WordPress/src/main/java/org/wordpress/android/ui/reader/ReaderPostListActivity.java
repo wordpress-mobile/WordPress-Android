@@ -48,6 +48,7 @@ import javax.inject.Inject;
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 public class ReaderPostListActivity extends LocaleAwareActivity {
+    private String mSource;
     private ReaderPostListType mPostListType;
     private long mSiteId;
 
@@ -73,6 +74,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mSource = getIntent().getStringExtra(ReaderConstants.ARG_SOURCE);
         if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
             mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
@@ -232,7 +234,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SITE_SHARED,
                         blog.blogId,
-                        blog.isFollowing
+                        blog.isFollowing,
+                        mSource
                 );
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {

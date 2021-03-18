@@ -455,6 +455,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
                     context,
                     this.tag,
+                    ReaderTracker.SOURCE_POST_DETAIL,
                     readerTracker
             )
 

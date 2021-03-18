@@ -137,6 +137,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
                 context,
                 event.tag,
+                ReaderTracker.SOURCE_DISCOVER,
                 readerTracker
         )
         is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)

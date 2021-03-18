@@ -106,6 +106,7 @@ public class ReaderActivityLauncher {
 
         readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId, isFollowed, source);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
 
         if (ReaderUtils.isExternalFeed(siteId, feedId)) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
@@ -151,12 +152,14 @@ public class ReaderActivityLauncher {
      * show a list of posts with a specific tag
      */
     public static void showReaderTagPreview(Context context, ReaderTag tag,
+                                            String source,
                                             ReaderTracker readerTracker) {
         if (tag == null) {
             return;
         }
         readerTracker.trackTag(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, tag.getTagSlug());
         Intent intent = new Intent(context, ReaderPostListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
