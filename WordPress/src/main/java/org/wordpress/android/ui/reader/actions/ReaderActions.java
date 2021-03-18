@@ -44,8 +44,8 @@ public class ReaderActions {
     /*
      * listener when the failure status code is required
      */
-    public interface OnRequestListener {
-        void onSuccess();
+    public interface OnRequestListener<T> {
+        void onSuccess(T result);
 
         void onFailure(int statusCode);
     }
