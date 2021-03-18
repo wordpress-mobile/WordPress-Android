@@ -31,7 +31,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         postId: Long,
         isBookmarkList: Boolean,
         source: String
-    ) = flow<BookmarkPostState> {
+    ) = flow {
         val bookmarked = updatePostInDb(blogId, postId)
         trackEvent(bookmarked, isBookmarkList, source)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
