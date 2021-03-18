@@ -356,14 +356,11 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post,
-                                                  Map<String, Object> properties) {
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat,
+                                                  @Nullable ReaderPost post,
+                                                  @NonNull Map<String, Object> properties) {
         if (post == null) {
             return;
-        }
-
-        if (properties == null) {
-            properties = new HashMap<>();
         }
 
         // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
@@ -667,7 +664,6 @@ public class AnalyticsUtils {
 
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
-
 
     public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
                                                                AnalyticsCommentActionSource actionSource,

@@ -42,7 +42,7 @@ class AnalyticsUtilsWrapper @Inject constructor(
     fun trackWithReaderPostDetails(
         stat: AnalyticsTracker.Stat,
         post: ReaderPost?,
-        properties: Map<String, Any?>?
+        properties: Map<String, Any?>
     ) = AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties)
 
     fun trackFollowCommentsWithReaderPostDetails(
