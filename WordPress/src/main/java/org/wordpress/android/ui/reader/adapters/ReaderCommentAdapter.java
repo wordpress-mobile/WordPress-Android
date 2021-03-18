@@ -434,9 +434,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
-                ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
-                : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+        mReaderTracker.trackPost(isAskingToLike
+                        ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                        : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED,
+                mPost
+        );
         AnalyticsUtils.trackCommentActionWithReaderPostDetails(
                 isAskingToLike ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
                 AnalyticsCommentActionSource.READER, mPost);

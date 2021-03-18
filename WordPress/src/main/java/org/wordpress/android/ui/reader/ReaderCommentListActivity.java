@@ -285,7 +285,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
+        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
@@ -596,8 +596,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                                 && getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
 
-                                AnalyticsUtils.trackWithReaderPostDetails(
-                                        AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
+                                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
                                 AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_LIKED,
                                         AnalyticsCommentActionSource.READER, mPost);
                             } else {
@@ -749,9 +748,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         if (mReplyToCommentId != 0) {
-            AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
+            mReaderTracker.trackPost(Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
         } else {
-            AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_ARTICLE_COMMENTED_ON, mPost);
+            mReaderTracker.trackPost(Stat.READER_ARTICLE_COMMENTED_ON, mPost);
         }
 
         mSubmitReplyBtn.setEnabled(false);

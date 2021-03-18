@@ -356,16 +356,6 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    /**
-     * Bump Analytics for a reader post
-     *
-     * @param stat The Stat to bump
-     * @param post The reader post to track
-     */
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
-        trackWithReaderPostDetails(stat, post, null);
-    }
-
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post,
                                                   Map<String, Object> properties) {
         if (post == null) {
