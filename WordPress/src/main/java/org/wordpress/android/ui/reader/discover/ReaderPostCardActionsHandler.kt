@@ -183,7 +183,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
             LIKE -> handleLikeClicked(post, source)
-            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, source)
+            BOOKMARK -> handleBookmarkClicked(
+                    post.postId,
+                    post.blogId,
+                    isBookmarkList,
+                    post.isFollowedByCurrentUser,
+                    source
+            )
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
             REPORT_POST -> handleReportPostClicked(post)
@@ -421,9 +427,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         postId: Long,
         blogId: Long,
         isBookmarkList: Boolean,
+        isFollowed: Boolean,
         source: String
     ) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList, source).collect {
+        bookmarkUseCase.toggleBookmark(blogId, postId, isFollowed, isBookmarkList, source).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
                 is Success -> {

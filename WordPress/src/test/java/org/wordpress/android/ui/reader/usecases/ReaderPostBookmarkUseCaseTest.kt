@@ -51,7 +51,13 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = false)
         // Act
-        useCase.toggleBookmark(0L, 0L, false, SOURCE).toList(mutableListOf())
+        useCase.toggleBookmark(
+                0L,
+                0L,
+                false,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
@@ -62,7 +68,13 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = true)
         // Act
-        useCase.toggleBookmark(0L, 0L, false, SOURCE).toList(mutableListOf())
+        useCase.toggleBookmark(
+                0L,
+                0L,
+                false,
+                false,
+                SOURCE
+        ).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).removeFromBookmarked(dummyPost)
@@ -77,6 +89,7 @@ class ReaderPostBookmarkUseCaseTest {
         val result = useCase.toggleBookmark(
                 0L,
                 0L,
+                false,
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -95,6 +108,7 @@ class ReaderPostBookmarkUseCaseTest {
                 0L,
                 0L,
                 false,
+                false,
                 SOURCE
         ).toList(mutableListOf())
 
@@ -112,6 +126,7 @@ class ReaderPostBookmarkUseCaseTest {
                 0L,
                 0L,
                 false,
+                false,
                 SOURCE
         ).toList(mutableListOf())
 
@@ -123,12 +138,13 @@ class ReaderPostBookmarkUseCaseTest {
     fun `does not initiate content preload when on bookmarkList(savedTab)`() = test {
         // Arrange
         init()
-        val isBookmarkList = true
+
         // Act
         val result = useCase.toggleBookmark(
                 0L,
                 0L,
-                isBookmarkList,
+                true,
+                false,
                 SOURCE
         ).toList(mutableListOf())
 

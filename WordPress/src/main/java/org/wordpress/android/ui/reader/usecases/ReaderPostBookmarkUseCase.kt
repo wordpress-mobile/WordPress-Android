@@ -25,10 +25,11 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         blogId: Long,
         postId: Long,
         isBookmarkList: Boolean,
+        isFollowed: Boolean,
         source: String
     ) = flow {
         val bookmarked = updatePostInDb(blogId, postId)
-        trackEvent(bookmarked, isBookmarkList, blogId, source)
+        trackEvent(bookmarked, isBookmarkList, blogId, isFollowed, source)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
         emit(Success(bookmarked))
     }
@@ -63,6 +64,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         bookmarked: Boolean,
         isBookmarkList: Boolean,
         blogId: Long,
+        isFollowed: Boolean,
         source: String
     ) {
         val fromPostDetails = source == ReaderTracker.SOURCE_POST_DETAIL
@@ -81,7 +83,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
                 AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
-        readerTracker.trackBlog(trackingEvent, blogId)
+        readerTracker.trackBlog(trackingEvent, blogId, isFollowed)
     }
 }
 
