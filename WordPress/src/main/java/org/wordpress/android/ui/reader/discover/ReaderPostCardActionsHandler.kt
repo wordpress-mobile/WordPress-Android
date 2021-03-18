@@ -219,11 +219,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     suspend fun handleReportPostClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
-            val properties: MutableMap<String, Any> = HashMap()
-            properties["blog_id"] = post.blogId
-            properties["is_jetpack"] = post.isJetpack
-            properties["post_id"] = post.postId
-            readerTracker.track(AnalyticsTracker.Stat.READER_POST_REPORTED, properties)
+            readerTracker.trackBlogPost(
+                    AnalyticsTracker.Stat.READER_POST_REPORTED,
+                    post.blogId,
+                    post.postId,
+                    post.isJetpack
+            )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
     }
