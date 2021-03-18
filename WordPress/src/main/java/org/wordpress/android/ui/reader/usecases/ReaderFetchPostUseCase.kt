@@ -42,7 +42,7 @@ class ReaderFetchPostUseCase @Inject constructor(
 
     private suspend fun fetchPostAndWaitForResult(requestParams: FetchPostRequestParams): Int {
         val listener = object : ReaderActions.OnRequestListener<Unit> {
-            override fun onSuccess(result: Unit) {
+            override fun onSuccess(result: Unit?) {
                 continuations[requestParams]?.resume(HttpURLConnection.HTTP_OK)
                 continuations[requestParams] = null
             }
