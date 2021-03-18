@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.AlreadyRunning
@@ -18,7 +16,6 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
@@ -26,8 +23,7 @@ class PostLikeUseCase @Inject constructor(
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()

@@ -16,7 +16,6 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
@@ -58,8 +57,7 @@ class PostLikeUseCaseTest {
                 readerPostActionsWrapper,
                 readerTracker,
                 accountStore,
-                networkUtilsWrapper,
-                TEST_DISPATCHER
+                networkUtilsWrapper
         )
     }
 
