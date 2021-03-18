@@ -8,9 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_TAG_FOLLOWED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -107,7 +105,7 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
                 is SuccessWithData<*> -> {
-                    readerTracker.track(Stat.SELECT_INTERESTS_SHOWN)
+                    readerTracker.track(AnalyticsTracker.Stat.SELECT_INTERESTS_SHOWN)
 
                     val tags = (result.data as ReaderTagList).filter { checkAndExcludeTag(userTags, it) }
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
@@ -244,12 +242,12 @@ class ReaderInterestsViewModel @Inject constructor(
                 EntryPoint.SETTINGS -> ReaderTracker.SOURCE_SETTINGS
             }
             readerTracker.trackTag(
-                    READER_TAG_FOLLOWED,
+                    AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
                     it.tagSlug,
                     source
             )
         }
-        readerTracker.trackTagQuantity(SELECT_INTERESTS_PICKED, tags.size)
+        readerTracker.trackTagQuantity(AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED, tags.size)
     }
 
     fun onBackButtonClick() {
