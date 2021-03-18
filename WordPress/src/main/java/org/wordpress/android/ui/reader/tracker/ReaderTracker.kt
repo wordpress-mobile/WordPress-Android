@@ -161,13 +161,6 @@ class ReaderTracker @Inject constructor(
 
     /* TAG */
 
-    fun trackTag(stat: AnalyticsTracker.Stat, tag: String) {
-        val properties = mutableMapOf<String, Any>(
-                TAG_KEY to tag
-        )
-        track(stat, properties)
-    }
-
     fun trackTag(stat: AnalyticsTracker.Stat, tag: String, source: String) {
         val properties = mutableMapOf<String, Any>(
                 TAG_KEY to tag,
