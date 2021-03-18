@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -229,7 +229,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             }
 
             try {
-                mReaderTracker.track(Stat.READER_SITE_SHARED);
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_SITE_SHARED);
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
                 ToastUtils.showToast(ReaderPostListActivity.this, R.string.reader_toast_err_share_intent);
