@@ -209,7 +209,10 @@ class WPMainActivityViewModel @Inject constructor(
                 quickStartRepository.activeTask.value == PUBLISH_POST
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
 
-        if (shouldShowStories(site) || hasFullAccessToContent(site)) {
+        val shouldShowStories = shouldShowStories(site)
+        val shouldShowStoriesFirst = shouldShowStoriesFirst()
+
+        if (shouldShowStories || hasFullAccessToContent(site)) {
             // The user has at least two create options available for this site (pages and/or story posts),
             // so we should show a bottom sheet.
             // Creation options added in the future should also be weighed here.
@@ -218,7 +221,12 @@ class WPMainActivityViewModel @Inject constructor(
             // latest info.
             loadMainActions(site)
 
-            analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
+            val properties = mapOf(
+                    "is_showing_stories" to shouldShowStories,
+                    "is_showing_stories_first" to shouldShowStoriesFirst
+            )
+
+            analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN, properties)
             _isBottomSheetShowing.value = Event(true)
         } else {
             // User only has one option - creating a post. Skip the bottom sheet and go straight to that action.
