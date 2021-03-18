@@ -2434,9 +2434,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
-                mReaderTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
+                        post.blogId
+                );
             } else {
-                mReaderTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                        post.blogId
+                );
             }
         }
 

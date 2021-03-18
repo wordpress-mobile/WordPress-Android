@@ -205,7 +205,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
             )
 
             if (post.isBookmarked) {
-                readerTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+                readerTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                        post.blogId
+                )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
