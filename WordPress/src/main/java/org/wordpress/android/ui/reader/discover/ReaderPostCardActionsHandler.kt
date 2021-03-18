@@ -10,13 +10,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
@@ -200,10 +194,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     suspend fun handleOnItemClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
-            appRatingDialogWrapper.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+            appRatingDialogWrapper.incrementInteractions(
+                    AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+            )
 
             if (post.isBookmarked) {
-                readerTracker.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+                readerTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
@@ -227,7 +223,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             properties["blog_id"] = post.blogId
             properties["is_jetpack"] = post.isJetpack
             properties["post_id"] = post.postId
-            readerTracker.track(READER_POST_REPORTED, properties)
+            readerTracker.track(AnalyticsTracker.Stat.READER_POST_REPORTED, properties)
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
     }
@@ -340,7 +336,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleShareClicked(post: ReaderPost) {
-        readerTracker.trackBlog(SHARED_ITEM_READER, post.blogId)
+        readerTracker.trackBlog(AnalyticsTracker.Stat.SHARED_ITEM_READER, post.blogId)
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {
@@ -349,7 +345,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
-        readerTracker.track(READER_ARTICLE_VISITED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
@@ -434,7 +430,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                                 UiStringRes(R.string.reader_bookmark_snack_btn),
                                                 buttonAction = {
                                                     readerTracker.track(
-                                                            READER_SAVED_LIST_SHOWN,
+                                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
                                                             mapOf("source" to "post_list_saved_post_notice")
                                                     )
                                                     _navigationEvents.postValue(Event(ShowBookmarkedTab))
@@ -494,8 +490,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
                                         coroutineScope.launch(bgDispatcher) {
-                                            readerTracker
-                                                    .trackBlog(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
+                                            readerTracker.trackBlog(
+                                                    AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                                    blogId
+                                            )
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
                                             siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
                                         }
