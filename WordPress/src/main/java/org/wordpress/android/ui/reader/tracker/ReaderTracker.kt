@@ -8,7 +8,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
@@ -288,7 +287,7 @@ class ReaderTracker @Inject constructor(
     fun getSource(
         postListType: ReaderPostListType,
         readerTab: ReaderTab? = null
-    ): String = if (postListType == TAG_FOLLOWED) {
+    ): String = if (postListType == ReaderPostListType.TAG_FOLLOWED) {
         readerTab?.source ?: UNKNOWN_VALUE
     } else {
         postListType.source
