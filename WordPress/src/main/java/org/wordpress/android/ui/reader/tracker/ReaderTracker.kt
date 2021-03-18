@@ -260,6 +260,22 @@ class ReaderTracker @Inject constructor(
         )
     }
 
+    fun trackPostComments(
+        stat: Stat,
+        blogId: Long,
+        postId: Long,
+        post: ReaderPost?,
+        properties: MutableMap<String, *>
+    ) {
+        analyticsUtilsWrapper.trackFollowCommentsWithReaderPostDetails(
+                stat,
+                blogId,
+                postId,
+                post,
+                properties
+        )
+    }
+
     /* OTHER */
 
     /**

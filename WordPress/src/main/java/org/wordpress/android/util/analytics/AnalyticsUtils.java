@@ -682,17 +682,13 @@ public class AnalyticsUtils {
             AnalyticsTracker.Stat stat,
             long blogId,
             long postId,
-            ReaderPost post,
-            Map<String, Object> properties
+            @Nullable ReaderPost post,
+            @NonNull Map<String, Object> properties
     ) {
         if (post != null) {
             AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
         } else {
             AppLog.w(AppLog.T.READER, "The passed post obj is null. Tracking analytics without post details info");
-            // let's log basic info
-            if (properties == null) {
-                properties = new HashMap<>();
-            }
 
             properties.put(BLOG_ID_KEY, blogId);
             properties.put(POST_ID_KEY, postId);
