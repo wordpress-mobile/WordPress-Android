@@ -15,6 +15,7 @@ class ReaderBlogActionsWrapper @Inject constructor(
     fun blockBlogFromReaderRemote(blockedBlogResult: BlockedBlogResult, actionListener: ActionListener?): Unit =
             ReaderBlogActions.blockBlogFromReaderRemote(blockedBlogResult, actionListener)
 
+    @Suppress("LongParameterList")
     fun followBlog(
         blogId: Long,
         feedId: Long,
