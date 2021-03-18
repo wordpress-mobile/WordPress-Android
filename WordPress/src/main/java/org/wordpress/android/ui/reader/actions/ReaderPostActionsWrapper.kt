@@ -29,12 +29,12 @@ class ReaderPostActionsWrapper @Inject constructor(private val siteStore: SiteSt
     fun requestFeedPost(
         feedId: Long,
         postId: Long,
-        requestListener: ReaderActions.OnRequestListener
+        requestListener: ReaderActions.OnRequestListener<Unit>
     ) = ReaderPostActions.requestFeedPost(feedId, postId, requestListener)
 
     fun requestBlogPost(
         blogId: Long,
         postId: Long,
-        requestListener: ReaderActions.OnRequestListener
+        requestListener: ReaderActions.OnRequestListener<Unit>
     ) = ReaderPostActions.requestBlogPost(blogId, postId, requestListener)
 }
