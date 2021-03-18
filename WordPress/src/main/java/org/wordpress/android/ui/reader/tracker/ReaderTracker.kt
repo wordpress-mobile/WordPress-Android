@@ -18,6 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 @MainThread
+@Suppress("TooManyFunctions")
 class ReaderTracker @Inject constructor(
     private val dateProvider: DateProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
