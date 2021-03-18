@@ -68,7 +68,6 @@ import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.inject.Inject;
@@ -334,20 +333,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ToastUtils.showToast(context, errResId);
             } else {
                 if (isAskingToFollow) {
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            new HashMap<String, String>() {
-                                {
-                                    put("tag", slugForTracking);
-                                    put("source", "unknown");
-                                }
-                            });
+                    mReaderTracker.trackTag(
+                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                            slugForTracking,
+                            "unknown"
+                    );
                 } else {
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                            new HashMap<String, String>() {
-                                {
-                                    put("tag", slugForTracking);
-                                }
-                            });
+                    mReaderTracker.trackTag(
+                            AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                            slugForTracking
+                    );
                 }
             }
             renderTagHeader(currentTag, tagHolder, true);
