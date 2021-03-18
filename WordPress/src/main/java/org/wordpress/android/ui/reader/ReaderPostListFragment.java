@@ -42,7 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -125,7 +124,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -144,7 +142,6 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
@@ -1048,7 +1045,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void onLoadData(boolean forced) {
                 if (forced) {
-                    mReaderTracker.track(Stat.READER_PULL_TO_REFRESH);
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH);
                 }
                 updatePosts(forced);
             }
@@ -2431,7 +2428,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST);
+        AppRatingDialog.INSTANCE.incrementInteractions(
+                AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+        );
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
@@ -2520,9 +2519,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         AnalyticsTracker.Stat stat;
         if (tag.isTagTopic()) {
-            stat = Stat.READER_TAG_LOADED;
+            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
-            stat = Stat.READER_LIST_LOADED;
+            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         } else {
             return;
         }
@@ -2552,11 +2551,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 );
                 break;
             case SHARE:
-                mReaderTracker.trackBlog(Stat.SHARED_ITEM_READER, post.blogId);
+                mReaderTracker.trackBlog(AnalyticsTracker.Stat.SHARED_ITEM_READER, post.blogId);
                 sharePost(post);
                 break;
             case VISIT_SITE:
-                mReaderTracker.track(Stat.READER_ARTICLE_VISITED);
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
             case LIKE:
@@ -2626,7 +2625,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
                       .setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
-                                      mReaderTracker.trackBlog(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                      mReaderTracker.trackBlog(
+                                              AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                              blogId
+                                      );
                                       AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                               String.valueOf(blogId), SubscriptionAction.NEW);
                                       mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
