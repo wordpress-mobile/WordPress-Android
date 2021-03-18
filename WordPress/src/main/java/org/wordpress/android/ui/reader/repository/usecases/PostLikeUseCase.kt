@@ -4,10 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
@@ -67,9 +64,9 @@ class PostLikeUseCase @Inject constructor(
     ) {
         if (request.isAskingToLike) {
             val likedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
-                READER_ARTICLE_DETAIL_LIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
             } else {
-                READER_ARTICLE_LIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_LIKED
             }
             readerTracker.trackPost(likedStat, post)
             // Consider a like to be enough to push a page view - solves a long-standing question
@@ -77,9 +74,9 @@ class PostLikeUseCase @Inject constructor(
             readerPostActionsWrapper.bumpPageViewForPost(post)
         } else {
             val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
-                READER_ARTICLE_DETAIL_UNLIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
             } else {
-                READER_ARTICLE_UNLIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
             }
             readerTracker.trackPost(unLikedStat, post)
         }
