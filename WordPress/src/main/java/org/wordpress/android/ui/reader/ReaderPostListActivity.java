@@ -231,7 +231,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             try {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SITE_SHARED,
-                        blog.blogId
+                        blog.blogId,
+                        blog.isFollowing
                 );
                 startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
             } catch (ActivityNotFoundException exception) {
