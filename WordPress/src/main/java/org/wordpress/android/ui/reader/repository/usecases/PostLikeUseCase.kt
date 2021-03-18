@@ -32,7 +32,7 @@ class PostLikeUseCase @Inject constructor(
         post: ReaderPost,
         isAskingToLike: Boolean,
         source: String
-    ) = flow<PostLikeState> {
+    ) = flow {
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
