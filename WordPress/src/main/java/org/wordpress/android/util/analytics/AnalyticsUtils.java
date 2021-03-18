@@ -53,6 +53,7 @@ import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_QUICKPRES
 public class AnalyticsUtils {
     private static final String BLOG_ID_KEY = "blog_id";
     private static final String POST_ID_KEY = "post_id";
+    private static final String FOLLOW_KEY = "follow";
     private static final String COMMENT_ID_KEY = "comment_id";
     private static final String FEED_ID_KEY = "feed_id";
     private static final String FEED_ITEM_ID_KEY = "feed_item_id";
@@ -381,6 +382,7 @@ public class AnalyticsUtils {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
         }
+        properties.put(FOLLOW_KEY, post.isFollowedByCurrentUser);
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
