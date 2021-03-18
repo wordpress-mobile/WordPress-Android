@@ -9,13 +9,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.tracker.ReaderTab.A8C
-import org.wordpress.android.ui.reader.tracker.ReaderTab.CUSTOM
-import org.wordpress.android.ui.reader.tracker.ReaderTab.DISCOVER
-import org.wordpress.android.ui.reader.tracker.ReaderTab.FOLLOWING
-import org.wordpress.android.ui.reader.tracker.ReaderTab.LIKED
-import org.wordpress.android.ui.reader.tracker.ReaderTab.P2
-import org.wordpress.android.ui.reader.tracker.ReaderTab.SAVED
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -85,16 +78,16 @@ class ReaderTracker @Inject constructor(
     fun trackReaderTabIfNecessary(readerTab: ReaderTab) {
         if (readerTab != appPrefsWrapper.getReaderActiveTab()) {
             when (readerTab) {
-                FOLLOWING -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_FOLLOWING_SHOWN)
-                DISCOVER -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_SHOWN)
-                LIKED -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_LIKED_SHOWN)
-                SAVED -> analyticsTrackerWrapper.track(
+                ReaderTab.FOLLOWING -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_FOLLOWING_SHOWN)
+                ReaderTab.DISCOVER -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_SHOWN)
+                ReaderTab.LIKED -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_LIKED_SHOWN)
+                ReaderTab.SAVED -> analyticsTrackerWrapper.track(
                         AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
                         mapOf("source" to "reader_filter")
                 )
-                A8C -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_A8C_SHOWN)
-                P2 -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_P2_SHOWN)
-                CUSTOM -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN)
+                ReaderTab.A8C -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_A8C_SHOWN)
+                ReaderTab.P2 -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_P2_SHOWN)
+                ReaderTab.CUSTOM -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN)
             }
             appPrefsWrapper.setReaderActiveTab(readerTab)
         }
