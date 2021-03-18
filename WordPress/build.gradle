@@ -73,7 +73,6 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
-        buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
@@ -250,7 +249,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
