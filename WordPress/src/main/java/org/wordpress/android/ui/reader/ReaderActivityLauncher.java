@@ -104,7 +104,12 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, siteId, isFollowed, source);
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
+                siteId,
+                isFollowed,
+                source
+        );
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_SOURCE, source);
 
