@@ -2,12 +2,7 @@ package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -71,12 +66,18 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     ) {
         val fromPostDetails = source == ReaderTracker.SOURCE_POST_DETAIL
         val trackingEvent = when {
-            !fromPostDetails && bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
-            !fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
-            !fromPostDetails && !bookmarked && isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-            !fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_OTHER_POST_LIST
-            fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_DETAILS
-            fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_DETAILS
+            !fromPostDetails && bookmarked && isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
+            !fromPostDetails && !bookmarked && isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && !bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST
+            fromPostDetails && bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
+            fromPostDetails && !bookmarked && !isBookmarkList ->
+                AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
         readerTracker.track(trackingEvent)
