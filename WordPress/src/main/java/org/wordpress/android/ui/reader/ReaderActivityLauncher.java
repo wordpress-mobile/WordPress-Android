@@ -157,7 +157,11 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
-        readerTracker.trackTag(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, tag.getTagSlug());
+        readerTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
+                tag.getTagSlug(),
+                source
+        );
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_SOURCE, source);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
