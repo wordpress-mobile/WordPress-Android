@@ -59,7 +59,6 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -355,13 +354,11 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 if (succeeded) {
                     showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
-                    mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            new HashMap<String, String>() {
-                                {
-                                    put("tag", mLastAddedTagName);
-                                    put("source", "unknown");
-                                }
-                            });
+                    mReaderTracker.trackTag(
+                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                            mLastAddedTagName,
+                            "unknown"
+                    );
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
@@ -488,12 +485,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
      */
     @Override
     public void onTagDeleted(ReaderTag tag) {
-        mReaderTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                new HashMap<String, String>() {
-                    {
-                        put("tag", tag.getTagSlug());
-                    }
-                });
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                tag.getTagSlug()
+        );
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
