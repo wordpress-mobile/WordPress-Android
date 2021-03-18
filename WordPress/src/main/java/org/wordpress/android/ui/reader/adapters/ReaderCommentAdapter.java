@@ -45,7 +45,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -439,9 +438,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                         : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED,
                 mPost
         );
-        AnalyticsUtils.trackCommentActionWithReaderPostDetails(
+        mReaderTracker.trackPost(
                 isAskingToLike ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
-                AnalyticsCommentActionSource.READER, mPost);
+                mPost,
+                AnalyticsCommentActionSource.READER.toString()
+        );
     }
 
     public boolean refreshComment(long commentId) {

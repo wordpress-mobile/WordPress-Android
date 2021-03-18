@@ -665,15 +665,6 @@ public class AnalyticsUtils {
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 
-    public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
-                                                               AnalyticsCommentActionSource actionSource,
-                                                               ReaderPost post) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
-
-        AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
-    }
-
     public static void trackFollowCommentsWithReaderPostDetails(
             AnalyticsTracker.Stat stat,
             long blogId,

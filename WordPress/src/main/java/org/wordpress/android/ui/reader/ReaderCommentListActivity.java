@@ -71,7 +71,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -597,8 +596,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
 
                                 mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
-                                AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_LIKED,
-                                        AnalyticsCommentActionSource.READER, mPost);
+                                mReaderTracker.trackPost(
+                                        Stat.COMMENT_LIKED,
+                                        mPost,
+                                        AnalyticsCommentActionSource.READER.toString()
+                                );
                             } else {
                                 ToastUtils.showToast(
                                         ReaderCommentListActivity.this,
