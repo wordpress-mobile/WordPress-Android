@@ -27,8 +27,8 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Unchanged
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 private const val POST_AND_BLOG_ID = 1L
 private const val SOURCE = "source"
@@ -43,7 +43,7 @@ class PostLikeUseCaseTest {
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
 
     private lateinit var useCase: PostLikeUseCase
 
@@ -56,7 +56,7 @@ class PostLikeUseCaseTest {
 
         useCase = PostLikeUseCase(
                 readerPostActionsWrapper,
-                analyticsUtilsWrapper,
+                readerTracker,
                 accountStore,
                 networkUtilsWrapper,
                 TEST_DISPATCHER
