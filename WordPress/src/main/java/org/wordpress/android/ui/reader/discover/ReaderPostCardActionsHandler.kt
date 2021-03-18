@@ -337,7 +337,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleShareClicked(post: ReaderPost) {
-        readerTracker.trackBlog(AnalyticsTracker.Stat.SHARED_ITEM_READER, post.blogId)
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                post.blogId,
+                post.isFollowedByCurrentUser
+        )
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {

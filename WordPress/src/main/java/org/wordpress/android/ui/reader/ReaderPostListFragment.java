@@ -2551,7 +2551,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 );
                 break;
             case SHARE:
-                mReaderTracker.trackBlog(AnalyticsTracker.Stat.SHARED_ITEM_READER, post.blogId);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                        post.blogId,
+                        post.isFollowedByCurrentUser
+                );
                 sharePost(post);
                 break;
             case VISIT_SITE:
