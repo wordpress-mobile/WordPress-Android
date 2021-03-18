@@ -6,6 +6,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
@@ -73,7 +74,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             !fromPostDetails && bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
             !fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
             !fromPostDetails && !bookmarked && isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-            !fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
+            !fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_OTHER_POST_LIST
             fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_DETAILS
             fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
