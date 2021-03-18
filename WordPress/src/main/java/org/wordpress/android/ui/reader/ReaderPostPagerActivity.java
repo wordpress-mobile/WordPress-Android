@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -129,6 +130,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderPostTableWrapper mReaderPostTableWrapper;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
@@ -633,7 +635,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         }
 
         // analytics tracking
-        mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, blogId, postId);
+        mReaderTracker.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                mReaderPostTableWrapper.getBlogPost(blogId, postId, true)
+        );
     }
 
     /*

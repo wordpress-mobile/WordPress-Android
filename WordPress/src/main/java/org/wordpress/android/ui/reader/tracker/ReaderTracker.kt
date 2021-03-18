@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.tracker
 import android.net.Uri
 import androidx.annotation.MainThread
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -264,14 +263,6 @@ class ReaderTracker @Inject constructor(
                 FEED_ITEM_ID_KEY to feedItemId
         )
         track(stat, properties)
-    }
-
-    fun trackPost(
-        stat: AnalyticsTracker.Stat,
-        blogId: Long,
-        postId: Long
-    ) {
-        trackPost(stat, ReaderPostTable.getBlogPost(blogId, postId, true))
     }
 
     fun trackPost(

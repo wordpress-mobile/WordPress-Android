@@ -322,7 +322,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         } else {
             AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
         }
-        readerTracker.trackPost(stat, blogId, postId)
+        readerTracker.trackPost(stat, findPost(blogId, postId))
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
