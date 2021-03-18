@@ -241,6 +241,13 @@ class ReaderTracker @Inject constructor(
         trackPost(stat, post, mutableMapOf<String, Any>())
     }
 
+    fun trackPost(stat: Stat, post: ReaderPost?, source: String) {
+        val properties = mutableMapOf<String, Any>(
+                SOURCE_KEY to source
+        )
+        trackPost(stat, post, properties)
+    }
+
     private fun trackPost(
         stat: Stat,
         post: ReaderPost?,

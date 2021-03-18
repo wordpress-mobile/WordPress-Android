@@ -64,7 +64,7 @@ class PostLikeUseCase @Inject constructor(
             } else {
                 AnalyticsTracker.Stat.READER_ARTICLE_LIKED
             }
-            readerTracker.trackPost(likedStat, post)
+            readerTracker.trackPost(likedStat, post, source)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
             readerPostActionsWrapper.bumpPageViewForPost(post)
@@ -74,7 +74,7 @@ class PostLikeUseCase @Inject constructor(
             } else {
                 AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
             }
-            readerTracker.trackPost(unLikedStat, post)
+            readerTracker.trackPost(unLikedStat, post, source)
         }
     }
 
