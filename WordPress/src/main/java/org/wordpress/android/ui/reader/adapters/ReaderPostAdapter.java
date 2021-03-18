@@ -336,12 +336,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mReaderTracker.trackTag(
                             AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
                             slugForTracking,
-                            "unknown"
+                            mSource
                     );
                 } else {
                     mReaderTracker.trackTag(
                             AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                            slugForTracking
+                            slugForTracking,
+                            mSource
                     );
                 }
             }

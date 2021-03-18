@@ -340,7 +340,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 mReaderTracker.trackTag(
                         AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
                         mLastAddedTagName,
-                        "unknown"
+                        ReaderTracker.SOURCE_SETTINGS
                 );
             } else {
                 showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
@@ -466,7 +466,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     public void onTagDeleted(ReaderTag tag) {
         mReaderTracker.trackTag(
                 AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                tag.getTagSlug()
+                tag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
         );
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
