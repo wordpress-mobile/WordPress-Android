@@ -1048,7 +1048,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void onLoadData(boolean forced) {
                 if (forced) {
-                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                    mReaderTracker.track(Stat.READER_PULL_TO_REFRESH);
                 }
                 updatePosts(forced);
             }
@@ -1181,7 +1181,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 populateSearchSuggestions(null);
@@ -1310,7 +1310,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
+            mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
         }
     }
 
@@ -1913,7 +1913,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 // request older posts
                                 updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
 
@@ -1926,7 +1926,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             }
                             if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
 
@@ -1935,7 +1935,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
                             if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentSearch(offset);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
                     }
@@ -2435,9 +2435,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
             }
         }
 
@@ -2530,7 +2530,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         Map<String, String> properties = new HashMap<>();
         properties.put("tag", tag.getTagSlug());
 
-        AnalyticsTracker.track(stat, properties);
+        mReaderTracker.track(stat, properties);
     }
 
     @Override
@@ -2556,7 +2556,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 sharePost(post);
                 break;
             case VISIT_SITE:
-                AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                mReaderTracker.track(Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
             case LIKE:
