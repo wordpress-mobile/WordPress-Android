@@ -18,9 +18,9 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val SOURCE = "source"
 
@@ -31,7 +31,7 @@ class ReaderPostBookmarkUseCaseTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     lateinit var useCase: ReaderPostBookmarkUseCase
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
@@ -39,7 +39,7 @@ class ReaderPostBookmarkUseCaseTest {
     @Before
     fun setup() {
         useCase = ReaderPostBookmarkUseCase(
-                analyticsTrackerWrapper,
+                readerTracker,
                 networkUtilsWrapper,
                 readerPostActionsWrapper,
                 readerPostTableWrapper

@@ -13,7 +13,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 /**
@@ -21,7 +20,7 @@ import javax.inject.Inject
  * It updates the post in the database, tracks events, initiates pre-load content and shows snackbar/dialog.
  */
 class ReaderPostBookmarkUseCase @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper
@@ -79,7 +78,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
-        analyticsTrackerWrapper.track(trackingEvent)
+        readerTracker.track(trackingEvent)
     }
 }
 
