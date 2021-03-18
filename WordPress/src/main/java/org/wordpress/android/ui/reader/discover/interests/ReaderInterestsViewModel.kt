@@ -249,7 +249,7 @@ class ReaderInterestsViewModel @Inject constructor(
                     source
             )
         }
-        readerTracker.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size))
+        readerTracker.trackTagQuantity(SELECT_INTERESTS_PICKED, tags.size)
     }
 
     fun onBackButtonClick() {

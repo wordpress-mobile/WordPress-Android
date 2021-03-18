@@ -183,6 +183,13 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    fun trackTagQuantity(stat: Stat, quantity: Int) {
+        val properties = mutableMapOf<String, Any>(
+                QUANTITY_KEY to quantity
+        )
+        track(stat, properties)
+    }
+
     /* POST */
 
     fun trackBlogPost(stat: Stat, blogId: Long, postId: Long) {
@@ -269,6 +276,7 @@ class ReaderTracker @Inject constructor(
         private const val FEED_ITEM_ID_KEY = "feed_item_id"
         private const val FOLLOW_KEY = "follow"
         private const val TAG_KEY = "tag"
+        private const val QUANTITY_KEY = "quantity"
         private const val INTERCEPTED_URI = "intercepted_uri"
 
         private const val SOURCE_KEY = "source"
