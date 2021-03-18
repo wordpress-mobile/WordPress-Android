@@ -118,6 +118,13 @@ class ReaderTracker @Inject constructor(
         analyticsTrackerWrapper.track(stat)
     }
 
+    fun track(stat: Stat, source: String) {
+        val properties = mutableMapOf<String, Any>(
+                SOURCE_KEY to source
+        )
+        track(stat, properties)
+    }
+
     fun track(stat: Stat, properties: Map<String, *>) {
         analyticsTrackerWrapper.track(stat, properties)
     }
@@ -307,6 +314,8 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_STATS = "stats"
         const val SOURCE_NOTIFICATION = "notification"
         const val SOURCE_ACTIVITY_LOG_DETAIL = "activity_log_detail"
+
+        const val SOURCE_POST_LIST_SAVED_POST_NOTICE = "post_list_saved_post_notice"
 
         private const val UNKNOWN_VALUE = "unknown"
     }

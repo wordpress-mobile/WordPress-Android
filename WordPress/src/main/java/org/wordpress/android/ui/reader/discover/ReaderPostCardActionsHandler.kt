@@ -432,7 +432,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                                 buttonAction = {
                                                     readerTracker.track(
                                                             AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                                                            mapOf("source" to "post_list_saved_post_notice")
+                                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
                                                     )
                                                     _navigationEvents.postValue(Event(ShowBookmarkedTab))
                                                 })
