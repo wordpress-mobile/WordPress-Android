@@ -2552,7 +2552,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 );
                 break;
             case SHARE:
-                AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+                mReaderTracker.trackBlog(Stat.SHARED_ITEM_READER, post.blogId);
                 sharePost(post);
                 break;
             case VISIT_SITE:
@@ -2626,8 +2626,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                       .setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
-                                      AnalyticsUtils
-                                              .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                      mReaderTracker.trackBlog(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
                                       AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                               String.valueOf(blogId), SubscriptionAction.NEW);
                                       mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
