@@ -2,7 +2,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_BLOG_BLOCKED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
@@ -41,7 +41,7 @@ class BlockBlogUseCase @Inject constructor(
 
     private suspend fun FlowCollector<BlockSiteState>.performAction(blogId: Long) {
         // We want to track the action no matter the result
-        readerTracker.trackBlog(READER_BLOG_BLOCKED, blogId)
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, blogId)
         val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId)
         emit(SiteBlockedInLocalDb(blockedBlogData))
 
