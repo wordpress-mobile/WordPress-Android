@@ -21,6 +21,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
@@ -30,7 +31,6 @@ import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -41,7 +41,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var postSeenStatusApiCallsProvider: PostSeenStatusApiCallsProvider
     @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
@@ -57,7 +57,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
                 networkUtilsWrapper,
                 postSeenStatusApiCallsProvider,
                 accountStore,
-                analyticsUtilsWrapper,
+                readerTracker,
                 readerPostTableWrapper,
                 readerBlogTableWrapper
         )
@@ -107,20 +107,20 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         verify(postSeenStatusApiCallsProvider, times(0)).markPostAsSeen(any())
         verify(readerPostTableWrapper, times(0)).setPostSeenStatusInDb(any(), any())
-        verify(analyticsUtilsWrapper, times(0)).trackWithReaderPostDetails(
+        verify(readerTracker, times(0)).trackPost(
                 stat = any(),
                 post = any(),
-                properties = any()
+                source = any()
         )
 
         seenStatusToggleUseCase.markPostAsSeenIfNecessary(unseenPost)
 
         verify(postSeenStatusApiCallsProvider, times(1)).markPostAsSeen(unseenPost)
         verify(readerPostTableWrapper, times(1)).setPostSeenStatusInDb(unseenPost, true)
-        verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN, unseenPost, mapOf(
-                ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_DETAILS.toString()
-        )
+        verify(readerTracker, times(1)).trackPost(
+                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+                unseenPost,
+                READER_POST_DETAILS.toString()
         )
     }
 
@@ -155,10 +155,10 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         verify(readerBlogTableWrapper, times(1)).decrementUnseenCount(unseenPost.blogId)
 
         // analytics check
-        verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN, unseenPost, mapOf(
-                ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_DETAILS.toString()
-        )
+        verify(readerTracker, times(1)).trackPost(
+                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+                unseenPost,
+                READER_POST_DETAILS.toString()
         )
 
         assertThat(markAsUnseenFlow.toList()).isEqualTo(
@@ -175,10 +175,10 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         verify(readerBlogTableWrapper, times(1)).incrementUnseenCount(unseenPost.blogId)
 
         // analytics check
-        verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN, seenPost, mapOf(
-                ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_CARD.toString()
-        )
+        verify(readerTracker, times(1)).trackPost(
+                AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
+                seenPost,
+                READER_POST_CARD.toString()
         )
     }
 
