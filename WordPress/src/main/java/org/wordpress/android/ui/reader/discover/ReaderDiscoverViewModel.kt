@@ -324,11 +324,11 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         launch {
-            val properties = mapOf(
-                    "blog_id" to recommendedBlogUiState.blogId,
-                    "follow" to !recommendedBlogUiState.isFollowed
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW,
+                    recommendedBlogUiState.blogId,
+                    !recommendedBlogUiState.isFollowed
             )
-            readerTracker.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW, properties)
             readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(
                     recommendedBlogUiState,
                     ReaderTracker.SOURCE_DISCOVER
