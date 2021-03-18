@@ -296,7 +296,7 @@ public class ReaderPostActions {
                 ReaderPostTable.addPost(post);
                 handlePostLikes(post, jsonObject);
                 if (requestListener != null) {
-                    requestListener.onSuccess();
+                    requestListener.onSuccess(post.getBlogUrl());
                 }
             }
         };
