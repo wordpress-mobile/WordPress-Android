@@ -2490,7 +2490,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
-                AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
+                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
