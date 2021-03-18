@@ -83,7 +83,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
                 AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
-        readerTracker.trackBlog(trackingEvent, blogId, isFollowed)
+        readerTracker.trackBlog(trackingEvent, blogId, isFollowed, source)
     }
 }
 
