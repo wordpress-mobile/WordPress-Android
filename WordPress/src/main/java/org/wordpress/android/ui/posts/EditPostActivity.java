@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -213,7 +212,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
-import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -272,7 +270,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
-    public static final String EXTRA_IS_PREVIEW = "isPreviewMode";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
@@ -351,7 +348,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private boolean mIsPreview;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
     @Nullable private Boolean mIsXPostsCapable = null;
 
@@ -400,7 +396,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReblogUtils mReblogUtils;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
-    @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject XPostsCapabilityChecker mXpostsCapabilityChecker;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
@@ -482,7 +477,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
                     post, site, isNewPost);
-            mPostEditorAnalyticsSession.setPreview(mIsPreview);
         }
     }
 
@@ -499,8 +493,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
-
-        mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
 
         // FIXME: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
@@ -671,7 +663,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         logTemplateSelection();
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null && !isRestarting && !mIsPreview) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
             AnalyticsUtils.trackEditorCreatedPost(
                     action,
                     getIntent(),
@@ -711,41 +703,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
 
         mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
-        setupPreviewUI();
     }
 
     private void presentNewPageNoticeIfNeeded() {
-        if (mIsPreview
-            || !mIsPage
-            || !mIsNewPost) {
+        if (!mIsPage || !mIsNewPost) {
             return;
         }
         String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
                 : getString(R.string.mlp_notice_page_created);
         mEditorFragment.showNotice(message);
-    }
-
-    private void setupPreviewUI() {
-        if (!mIsPreview) {
-            return;
-        }
-        setTitle(R.string.mlp_preview_title);
-        // Set bottom editor margin
-        View container = findViewById(R.id.pager);
-        container.setPaddingRelative(container.getPaddingStart(), container.getPaddingTop(), container.getPaddingEnd(),
-                getResources().getDimensionPixelSize(R.dimen.mlp_preview_toolbar_offset));
-        // Set button visibility
-        findViewById(R.id.createPageButtonContainer).setVisibility(View.VISIBLE);
-        // Prevent keyboard from showing
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        // Set button action
-        findViewById(R.id.createPageButton).setOnClickListener(view -> {
-            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-            mViewModel.finish(ActivityFinishState.CANCELLED);
-            setResult(RESULT_OK, getIntent());
-            finish();
-        });
     }
 
     private void fetchSiteSettings() {
@@ -890,9 +856,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            if (!mIsPreview) {
-                mViewModel.savePostToDb(mEditPostRepository, mSite);
-            }
+            mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -944,9 +908,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         reattachUploadingMediaForAztec();
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
-        if (!mIsPreview) {
-            PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
-        }
+        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
         mIsConfigChange = false;
     }
 
@@ -965,9 +927,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
-        if (!mIsPreview) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
-        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
     @Override protected void onStop() {
@@ -1206,9 +1166,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mIsPreview) {
-            return false;
-        }
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1217,9 +1174,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mIsPreview) {
-            return false;
-        }
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
@@ -2027,14 +1981,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
-        i.putExtra(EXTRA_IS_PREVIEW, mIsPreview);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
-        setResult(mIsPreview ? RESULT_CANCELED : RESULT_OK, i);
+        setResult(RESULT_OK, i);
     }
 
     private void setupPrepublishingBottomSheetRunnable() {
@@ -2155,15 +2108,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
-        if (mIsPreview) {
-            if (doFinish) {
-                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-                mViewModel.finish(ActivityFinishState.CANCELLED);
-            }
-            return;
-        }
-
         updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
             // check if the opened post had some unsaved local changes
             boolean isFirstTimePublish = isFirstTimePublish(false);
@@ -2278,7 +2222,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 "",
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
-                                mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder,
                                 RequestCodes.EDIT_STORY
                         );
@@ -2370,7 +2313,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
-                mIsPreview,
                 wpcomLocaleSlug,
                 postType,
                 themeBundle
@@ -3337,11 +3279,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (template == null) {
             return;
         }
-        if (mIsPreview) {
-            mPostEditorAnalyticsSession.previewTemplate(template);
-        } else {
-            mPostEditorAnalyticsSession.applyTemplate(template);
-        }
+        mPostEditorAnalyticsSession.applyTemplate(template);
     }
 
     @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
@@ -3349,7 +3287,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onGutenbergEditorSessionTemplatePreviewTracked(String template) {
-        mPostEditorAnalyticsSession.previewTemplate(template);
+        // Preview mode is deprecated. See: https://github.com/wordpress-mobile/gutenberg-mobile/issues/3217
     }
 
     @Override public void showUserSuggestions(Consumer<String> onResult) {

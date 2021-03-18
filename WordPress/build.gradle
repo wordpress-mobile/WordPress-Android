@@ -58,9 +58,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-278"
+            versionName "alpha-283"
         }
-        versionCode 1004
+        versionCode 1015
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -70,14 +70,12 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "TENOR_AVAILABLE", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
         buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
         buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
-        buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
         buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
@@ -107,15 +105,13 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.8-rc-1"
+                versionName "16.9-rc-3"
             }
-            versionCode 1003
+            versionCode 1014
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
-            buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
-            buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
@@ -163,6 +159,7 @@ android {
 
     lintOptions{
         checkDependencies = true
+        checkGeneratedSources = true
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
     }
@@ -189,7 +186,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 }
 
@@ -262,7 +259,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
@@ -341,18 +338,18 @@ dependencies {
     debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:analytics:WordPressAnalytics')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
@@ -515,4 +512,3 @@ assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-

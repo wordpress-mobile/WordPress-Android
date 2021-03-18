@@ -27,6 +27,9 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
 
     fun trackWithSiteId(stat: AnalyticsTracker.Stat, blogId: Long) = AnalyticsUtils.trackWithSiteId(stat, blogId)
 
+    fun trackWithReaderPostDetails(stat: AnalyticsTracker.Stat, blogId: Long, postId: Long) =
+            AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
+
     fun trackWithReaderPostDetails(stat: AnalyticsTracker.Stat, post: ReaderPost) =
             AnalyticsUtils.trackWithReaderPostDetails(stat, post)
 

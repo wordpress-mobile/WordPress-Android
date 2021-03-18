@@ -20,6 +20,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
@@ -27,13 +29,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT;
+
 public class ReaderActivityLauncher {
     /*
      * show a single reader post in the detail view - simply calls showReaderPostPager
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, null, 0, null);
+        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null);
     }
 
     public static void showReaderPostDetail(Context context,
@@ -42,6 +46,7 @@ public class ReaderActivityLauncher {
                                             long postId,
                                             DirectOperation directOperation,
                                             int commentId,
+                                            boolean isRelatedPost,
                                             String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
@@ -50,6 +55,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         context.startActivity(intent);
     }
@@ -210,6 +216,12 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderSubsActivity.class);
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
         context.startActivity(intent);
+    }
+
+    public static void showReaderInterests(Activity activity) {
+        Intent intent = new Intent(activity, ReaderInterestsActivity.class);
+        intent.putExtra(READER_INTEREST_ENTRY_POINT, EntryPoint.SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS);
     }
 
     /*

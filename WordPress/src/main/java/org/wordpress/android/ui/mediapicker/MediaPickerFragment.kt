@@ -22,14 +22,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.media_picker_fragment.*
-import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.MediaPickerFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -74,8 +74,8 @@ import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class MediaPickerFragment : Fragment() {
@@ -184,12 +184,12 @@ class MediaPickerFragment : Fragment() {
 
     private var listener: MediaPickerListener? = null
 
-    @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
+    private var binding: MediaPickerFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,91 +232,92 @@ class MediaPickerFragment : Fragment() {
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
+        with(MediaPickerFragmentBinding.bind(view)) {
+            binding = this
+            recycler.layoutManager = layoutManager
+            recycler.setEmptyView(actionableEmptyView)
+            recycler.setHasFixedSize(true)
 
-        recycler.layoutManager = layoutManager
-        recycler.setEmptyView(actionable_empty_view)
-        recycler.setHasFixedSize(true)
+            val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
+                viewModel.onPullToRefresh()
+            }
 
-        val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
-            viewModel.onPullToRefresh()
-        }
+            var isShowingActionMode = false
+            viewModel.uiState.observe(viewLifecycleOwner, Observer {
+                it?.let { uiState ->
+                    setupPhotoList(uiState.photoListUiModel)
+                    setupSoftAskView(uiState.softAskViewUiModel)
+                    if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                        isShowingActionMode = true
+                        (activity as AppCompatActivity).startSupportActionMode(
+                                MediaPickerActionModeCallback(
+                                        viewModel
+                                )
+                        )
+                    } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                        isShowingActionMode = false
+                    }
+                    setupFab(uiState.fabUiModel)
+                    swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
+                }
+            })
 
-        var isShowingActionMode = false
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            it?.let { uiState ->
-                setupPhotoList(uiState.photoListUiModel)
-                setupSoftAskView(uiState.softAskViewUiModel)
-                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
-                    isShowingActionMode = true
-                    (activity as AppCompatActivity).startSupportActionMode(
-                            MediaPickerActionModeCallback(
-                                    viewModel
+            viewModel.onNavigate.observeEvent(viewLifecycleOwner,
+                    { navigationEvent ->
+                        when (navigationEvent) {
+                            is PreviewUrl -> {
+                                MediaPreviewActivity.showPreview(
+                                        requireContext(),
+                                        null,
+                                        navigationEvent.url
+                                )
+                                AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                                        activity,
+                                        getString(R.string.cancel)
+                                )
+                            }
+                            is PreviewMedia -> MediaPreviewActivity.showPreview(
+                                    requireContext(),
+                                    null,
+                                    navigationEvent.media,
+                                    null
                             )
-                    )
-                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
-                    isShowingActionMode = false
-                }
-                uiState.fabUiModel.let(this::setupFab)
-                swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
-            }
-        })
+                            is EditMedia -> {
+                                val inputData = WPMediaUtils.createListOfEditImageInputData(
+                                        requireContext(),
+                                        navigationEvent.uris.map { wrapper -> wrapper.uri }
+                                )
+                                ActivityLauncher.openImageEditor(activity, inputData)
+                            }
+                            is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+                            is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+                            Exit -> {
+                                val activity = requireActivity()
+                                activity.setResult(Activity.RESULT_CANCELED)
+                                activity.finish()
+                            }
+                        }
+                    })
 
-        viewModel.onNavigate.observe(viewLifecycleOwner, Observer
-        {
-            it.getContentIfNotHandled()?.let { navigationEvent ->
-                when (navigationEvent) {
-                    is PreviewUrl -> {
-                        MediaPreviewActivity.showPreview(
-                                requireContext(),
-                                null,
-                                navigationEvent.url
-                        )
-                        AccessibilityUtils.setActionModeDoneButtonContentDescription(
-                                activity,
-                                getString(R.string.cancel)
-                        )
-                    }
-                    is PreviewMedia -> MediaPreviewActivity.showPreview(
-                            requireContext(),
-                            null,
-                            navigationEvent.media,
-                            null
-                    )
-                    is EditMedia -> {
-                        val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                requireContext(),
-                                navigationEvent.uris.map { wrapper -> wrapper.uri }
-                        )
-                        ActivityLauncher.openImageEditor(activity, inputData)
-                    }
-                    is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
-                    is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
-                    Exit -> {
-                        val activity = requireActivity()
-                        activity.setResult(Activity.RESULT_CANCELED)
-                        activity.finish()
-                    }
-                }
-            }
-        })
-
-        viewModel.onPermissionsRequested.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                when (this) {
+            viewModel.onPermissionsRequested.observeEvent(viewLifecycleOwner, {
+                when (it) {
                     CAMERA -> requestCameraPermission()
                     STORAGE -> requestStoragePermission()
                 }
-            }
-        })
-        viewModel.onSnackbarMessage.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { messageHolder ->
+            })
+            viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
                 showSnackbar(messageHolder)
-            }
-        })
+            })
 
-        setupProgressDialog()
+            setupProgressDialog()
 
-        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
+            viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
+        }
+    }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -422,12 +423,12 @@ class MediaPickerFragment : Fragment() {
         })
     }
 
-    private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
+    private fun MediaPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {
         when (uiModel) {
             is SoftAskViewUiModel.Visible -> {
-                soft_ask_view.title.text = Html.fromHtml(uiModel.label)
-                soft_ask_view.button.setText(uiModel.allowId.stringRes)
-                soft_ask_view.button.setOnClickListener {
+                softAskView.title.text = Html.fromHtml(uiModel.label)
+                softAskView.button.setText(uiModel.allowId.stringRes)
+                softAskView.button.setOnClickListener {
                     if (uiModel.isAlwaysDenied) {
                         WPPermissionUtils.showAppSettings(requireActivity())
                     } else {
@@ -435,19 +436,19 @@ class MediaPickerFragment : Fragment() {
                     }
                 }
 
-                soft_ask_view.visibility = View.VISIBLE
+                softAskView.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
-                if (soft_ask_view.visibility == View.VISIBLE) {
-                    AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                if (softAskView.visibility == View.VISIBLE) {
+                    AniUtils.fadeOut(softAskView, MEDIUM)
                 }
             }
         }
     }
 
-    private fun setupPhotoList(uiModel: PhotoListUiModel) {
-        loading_view.visibility = if (uiModel == PhotoListUiModel.Loading) View.VISIBLE else View.GONE
-        actionable_empty_view.visibility = if (uiModel is PhotoListUiModel.Empty) View.VISIBLE else View.GONE
+    private fun MediaPickerFragmentBinding.setupPhotoList(uiModel: PhotoListUiModel) {
+        loadingView.visibility = if (uiModel == PhotoListUiModel.Loading) View.VISIBLE else View.GONE
+        actionableEmptyView.visibility = if (uiModel is PhotoListUiModel.Empty) View.VISIBLE else View.GONE
         recycler.visibility = if (uiModel is PhotoListUiModel.Data) View.VISIBLE else View.INVISIBLE
         when (uiModel) {
             is PhotoListUiModel.Data -> {
@@ -455,22 +456,22 @@ class MediaPickerFragment : Fragment() {
             }
             is PhotoListUiModel.Empty -> {
                 setupAdapter(listOf())
-                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
-                actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
+                actionableEmptyView.updateLayoutForSearch(uiModel.isSearching, 0)
+                actionableEmptyView.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
 
-                actionable_empty_view.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
-                    actionable_empty_view.subtitle.text = Html.fromHtml(
+                actionableEmptyView.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
+                    actionableEmptyView.subtitle.text = Html.fromHtml(
                             uiHelpers.getTextOfUiString(
                                     requireContext(),
                                     htmlSubtitle
                             ).toString()
                     )
-                    actionable_empty_view.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
+                    actionableEmptyView.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
                 }
-                actionable_empty_view.image.applyOrHide(uiModel.image) { image ->
+                actionableEmptyView.image.applyOrHide(uiModel.image) { image ->
                     this.setImageResource(image)
                 }
-                actionable_empty_view.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
+                actionableEmptyView.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
                     this.setImageResource(bottomImage)
                     if (uiModel.bottomImageDescription != null) {
                         this.contentDescription = uiHelpers.getTextOfUiString(
@@ -479,7 +480,7 @@ class MediaPickerFragment : Fragment() {
                         ).toString()
                     }
                 }
-                actionable_empty_view.button.applyOrHide(uiModel.retryAction) { action ->
+                actionableEmptyView.button.applyOrHide(uiModel.retryAction) { action ->
                     this.setOnClickListener {
                         action()
                     }
@@ -497,11 +498,11 @@ class MediaPickerFragment : Fragment() {
         }
     }
 
-    private fun setupAdapter(items: List<MediaPickerUiItem>) {
+    private fun MediaPickerFragmentBinding.setupAdapter(items: List<MediaPickerUiItem>) {
         if (recycler.adapter == null) {
             recycler.adapter = MediaPickerAdapter(
                     imageManager,
-                    viewModel as CoroutineScope
+                    viewModel.viewModelScope
             )
         }
         val adapter = recycler.adapter as MediaPickerAdapter
@@ -519,14 +520,14 @@ class MediaPickerFragment : Fragment() {
         recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun setupFab(fabUiModel: FabUiModel) {
+    private fun MediaPickerFragmentBinding.setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            fab_take_picture.show()
-            fab_take_picture.setOnClickListener {
+            fabTakePicture.show()
+            fabTakePicture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            fab_take_picture.hide()
+            fabTakePicture.hide()
         }
     }
 
@@ -560,7 +561,7 @@ class MediaPickerFragment : Fragment() {
         })
     }
 
-    private fun showSnackbar(holder: SnackbarMessageHolder) {
+    private fun MediaPickerFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
         snackbarSequencer.enqueue(
                 SnackbarItem(
                         Info(
@@ -586,7 +587,7 @@ class MediaPickerFragment : Fragment() {
         if (selectedIds.isNotEmpty()) {
             outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList<Identifier>(selectedIds))
         }
-        recycler.layoutManager?.let {
+        binding!!.recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
     }

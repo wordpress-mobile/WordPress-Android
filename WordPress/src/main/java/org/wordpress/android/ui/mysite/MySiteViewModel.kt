@@ -7,8 +7,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -172,7 +172,7 @@ class MySiteViewModel
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            this,
+            viewModelScope,
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,
@@ -574,8 +574,8 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart() {
-        quickStartRepository.startQuickStart()
+    fun startQuickStart(newSiteLocalID: Int) {
+        quickStartRepository.startQuickStart(newSiteLocalID)
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {

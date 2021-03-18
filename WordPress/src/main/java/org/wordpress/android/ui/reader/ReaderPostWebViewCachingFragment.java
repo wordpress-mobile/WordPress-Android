@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,7 +33,6 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private long mBlogId;
     private long mPostId;
 
-    @Inject FeaturedImageUtils mFeaturedImageUtils;
     @Inject ReaderCssProvider mReaderCssProvider;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
@@ -74,7 +72,7 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
             });
 
             ReaderPostRenderer rendered =
-                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils, mReaderCssProvider);
+                    new ReaderPostRenderer((ReaderWebView) view, post, mReaderCssProvider);
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available

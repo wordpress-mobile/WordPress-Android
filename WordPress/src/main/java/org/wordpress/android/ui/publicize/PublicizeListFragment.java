@@ -18,10 +18,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
@@ -55,8 +53,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private QuickStartEvent mQuickStartEvent;
 
     @Inject AccountStore mAccountStore;
-    @Inject QuickStartStore mQuickStartStore;
-    @Inject Dispatcher mDispatcher;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
@@ -236,8 +232,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                     if (mMySiteImprovementsFeatureConfig.isEnabled()) {
                         mQuickStartRepository.completeTask(ENABLE_POST_SHARING);
                     } else {
-                        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
-                                mDispatcher, mSite, mQuickStartEvent, getContext());
+                        mQuickStartUtilsWrapper
+                                .completeTaskAndRemindNextOne(ENABLE_POST_SHARING, mSite, mQuickStartEvent,
+                                        getContext());
                     }
                     if (getView() != null) {
                         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());

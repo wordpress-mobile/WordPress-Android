@@ -256,16 +256,22 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): DescriptionState {
         val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
 
-        val descriptionTextResId = if (threatsCount > 1) {
-            R.string.scan_idle_with_threats_description_plural
-        } else R.string.scan_idle_with_threats_description_singular
-        val descriptionText = htmlMessageUtils
-            .getHtmlMessageFromStringFormatResId(
-                descriptionTextResId,
-                "<b>$threatsCount</b>",
-                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
-                clickableText
-            )
+        val descriptionText = if (threatsCount > 1) {
+            htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_idle_threats_description_plural,
+                            "<b>$threatsCount</b>",
+                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                            clickableText
+                    )
+        } else {
+            htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_idle_threats_description_singular,
+                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                            clickableText
+                    )
+        }
 
         val clickableTextStartIndex = descriptionText.indexOf(clickableText)
         val clickableTextEndIndex = clickableTextStartIndex + clickableText.length

@@ -1,0 +1,2 @@
+16.8:
+Ya están aquí las últimas actualizaciones de la aplicación Android para WordPress. Hemos mejorado la funcionalidad de las páginas de inicio publicadas, garantizando que borrarlas o volverlas de nuevo a su forma de borrador no romperá tu sitio. Hemos añadido compatibilidad para establecer el punto focal del bloque de fondo. Además, hemos mejorado la gestión de P2, para que puedas generar, compartir y desactivar los enlaces de invitación para los perfiles de P2.

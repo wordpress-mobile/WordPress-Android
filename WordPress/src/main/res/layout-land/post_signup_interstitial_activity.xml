@@ -6,5 +6,6 @@
     android:fillViewport="true"
     tools:context=".ui.accounts.PostSignupInterstitialActivity">
 
-    <include layout="@layout/post_signup_interstitial_landscape" />
+    <include
+        layout="@layout/post_signup_interstitial_landscape" />
 </ScrollView>

@@ -3,31 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reader_interest_container"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_extra_large">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/divider_size"
-        android:alpha="@dimen/material_emphasis_disabled"
-        android:background="?android:attr/listDivider"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interest"
-        tools:visibility="visible" />
-
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.chip.Chip
         android:id="@+id/interest"
-        style="@style/ReaderTextView.Interests.ListItem.Text"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintHorizontal_bias="0.0"
+        style="@style/ReaderTextView.Interests.ListItem.Chip"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Photography" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:chipStrokeWidth="@dimen/divider_size"
+        app:chipStartPadding="@dimen/margin_large"
+        app:chipEndPadding="@dimen/margin_large"
+        tools:text="Photography"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

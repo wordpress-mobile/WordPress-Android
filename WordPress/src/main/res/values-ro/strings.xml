@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-11 17:38:01+0000
+Translation-Revision-Date: 2021-03-09 14:08:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
+    <string name="reader_title_interests">Urmărește subiecte</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
+    <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
+    <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe situl tău.</string>
+    <string name="threat_fix_all_status_success_message_plural">Amenințările au fost înlăturate cu succes.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
+    <string name="scan_idle_threats_description_plural">Scanarea a găsit %1$s amenințări posibile pe %2$s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
+    <string name="scan_fixing_threats_description_plural">Lucrăm din greu, în fundal, pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
+    <string name="gutenberg_native_edit_focal_point">Editează punctul central</string>
+    <string name="new_site_creation_search_domain_example">exemplu.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Scrie un nume pentru situl tău</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Ai finalizat toate sarcinile&lt;/b>&lt;br/>Vei atrage mai multe persoane. Foarte bine!</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia Jos pentru a edita, înlocui sau șterge imaginea</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia Acțiuni pentru a edita, înlocui sau șterge imaginea</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Ai finalizat toate sarcinile&lt;/b>&lt;br/>Ți-ai personalizat situl. Foarte bine!</string>
+    <string name="quick_start_card_menu_hide">Ascunde deocamdată</string>
+    <string name="magic_link_not_meaning_to_create_account">Nu ai vrut să creezi un cont nou? Mergi înapoi și reintrodu adresa ta de email.</string>
+    <string name="invite_links_disable_dialog_message">După ce această legătură la invitație este dezactivată, nimeni nu o va putea folosi pentru a se alătura echipei. Sigur?</string>
+    <string name="invite_links_generic_get_data_error">Eroare necunoscută la aducerea datelor pentru legăturile la invitații</string>
+    <string name="invite_links_helper_text">Folosește această legătură pentru a mării numărul de membri din echipa ta fără a fi nevoie să-i inviți individual. Oricine vizitează acest URL va putea să se înscrie în organizația ta, chiar dacă a primit o invitație de la altcineva, deci asigură-te că partajezi legătura cu persoane de încredere.</string>
+    <string name="invite_links_disable_dialog_title">Dezactivează legătura la invitație</string>
+    <string name="invite_links_bad_format_response">Am primit un răspuns invalid</string>
+    <string name="invite_links_null_response">Nu am primit niciun răspuns</string>
+    <string name="invite_links_cannot_get_role_data_error">A fost o eroare la preluarea datelor pentru rolul %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">A fost o eroare la preluarea rolurilor</string>
+    <string name="invite_links_expire_date">Expiră %1$s</string>
+    <string name="invite_links_generate">Generează o legătură nouă</string>
+    <string name="invite_links_get_status_retry">Reîmprospătează starea legăturilor</string>
+    <string name="invite_links_section_title">Legătură la invitație</string>
+    <string name="invite_links_disable_invite_link">Dezactivează legătura la invitație</string>
+    <string name="invite_links_share_invite_link">Partajează legătura la invitație</string>
+    <string name="threats_found_singular">Amenințare găsită</string>
+    <string name="threats_found_plural">Amenințări găsite</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Nu am găsit amenințări</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Am găsit o posibilă amenințare</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Am găsit %s posibile amenințări</string>
+    <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
+    <string name="disable">Dezactivează</string>
     <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
     <string name="quick_start_card_menu_unpin">Anulează fixarea</string>
     <string name="quick_start_list_view_site_title">Vizitează-ți situl</string>
@@ -32,8 +71,6 @@ Language: ro
     <string name="backup_item_content_hint">(exclude teme, module și încărcări)</string>
     <string name="backup_item_contents">Directorul wp-content</string>
     <string name="backup_item_roots">Rădăcină WordPress</string>
-    <string name="backup_download_progress_action_button_content_description">Anunță-mă când butonul este gata</string>
-    <string name="backup_download_progress_action_button">Anunță-mă când este gata!</string>
     <string name="backup_download_details_choose_items_header">Elemente incluse în această descărcare</string>
     <string name="gutenberg_native_uploading">Încarc…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blocurile reutilizabile nu pot fi editate pe WordPress pentru iOS</string>
@@ -60,14 +97,14 @@ Language: ro
     <string name="people_learn_more_about_roles">Află mai multe despre roluri</string>
     <string name="threat_status_fixed">Înlăturate</string>
     <string name="threat_found_header">Găsite</string>
-    <string name="scan_idle_with_threats_description">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
     <string name="scan_here_to_help">aici pentru a te ajuta</string>
+    <string name="scan_idle_threats_description_singular">Scanarea a găsit o posibilă amenințare pe %1$s. Te rog examinează amenințarea și acționează sau atinge butonul Înlătură-le pe toate. Suntem %2$s dacă ai nevoie de noi.</string>
     <string name="scan_idle_manual_scan_description">Pentru a analiza situl din nou, Rulează acum o scanare manuală sau așteaptă ca Jetpack să-ți scaneze situl azi, mai târziu.</string>
     <string name="scan_provisioning_description">Bine ai venit la scanarea Jetpack Scan! Îți investigăm situl și ne pregătim să facem o scanare completă. Te vom anunța dacă detectăm probleme care ar putea afecta scanarea, apoi va începe prima scanare completă.</string>
     <string name="scan_scanning_is_initial_description">Bine ai venit la scanarea Jetpack, acum aruncăm o primă privire pe situl tău, vei primi rezultatele în curând.</string>
-    <string name="scan_fixing_threats_description">Lucrăm din greu (în fundal) pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
     <string name="scan_scanning_description">Îți vom trimite o notificare după ce scanarea va fi finalizată. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
-    <string name="scan_fixing_threats_title">Înlătur amenințările</string>
+    <string name="scan_fixing_threats_description_singular">Lucrăm din greu, în fundal, pentru înlăturarea acestei amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
+    <string name="scan_fixing_threats_title_plural">Înlătur amenințările</string>
     <string name="scan_start_request_failed_subtitle">Scanarea Jetpack nu a putut finaliza scanarea sitului tău. Te rog verifică dacă nu ți-a căzut situl - dacă funcționează, încearcă din nou. Dacă situl funcționează și ai în continuare probleme cu scanarea Jetpack, contactează echipa noastră pentru suport.</string>
     <string name="scan_request_failed_title">Ceva nu a mers bine</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Creez o copie de siguranță a sitului</string>
@@ -109,13 +146,12 @@ Language: ro
     <string name="web_preview_tablet">Tabletă</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Nu arăta din nou</string>
-    <string name="quick_start_card_menu_hide">Ascunde</string>
     <string name="quick_start_dialog_review_pages_message">Modifică paginile, adaugă sau înlătură pagini pe sit.</string>
     <string name="quick_start_dialog_review_pages_title">Revizuiește paginile sitului</string>
     <string name="quick_start_dialog_review_pages_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selectează %1$s Prima pagină %2$s pentru a edita prima pagină.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
-    <string name="quick_start_card_menu_pin">Fixează</string>
+    <string name="quick_start_card_menu_pin">Fixează asta</string>
     <string name="quick_start_dialog_edit_homepage_title">Editează prima pagină</string>
     <string name="quick_start_dialog_edit_homepage_message">Modifică conținutul, adaugă sau înlătură conținut, pe prima pagină a sitului tău.</string>
     <string name="reader_marked_post_as_seen">Articolul a fost marcat ca văzut</string>
@@ -126,9 +162,9 @@ Language: ro
     <string name="reader_menu_mark_as_seen">Marchează ca văzut</string>
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
     <string name="threat_fix_all_status_error_message">Eroare la primirea stării pentru înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_status_success_message">Amenințările au fost înlăturate cu succes.</string>
     <string name="threat_fix_all_error_message">Eroare la înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_warning_message">Te rog confirmă că vrei să înlături %s amenințări active.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Te rog confirmă că vrei să înlături o amenințare activă.</string>
+    <string name="threat_fix_all_status_success_message_singular">Amenințarea a fost înlăturată cu succes.</string>
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>
     <string name="threat_ignore_success_message">Amenințarea a fost ignorată.</string>
@@ -164,10 +200,10 @@ Language: ro
     <string name="backup_download_complete_header">Copia ta de siguranță este disponibilă acum pentru descărcare</string>
     <string name="backup_download_complete_page_title">Copia ta de siguranță</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata</string>
     <string name="backup_download_progress_icon_content_description">Icon pentru Creez copii de siguranță care se pot descărca</string>
     <string name="backup_download_progress_description_with_two_parameters">Creăm o copie de siguranță a sitului tău din %1$s %2$s, care se poate descărca.</string>
     <string name="backup_download_progress_header">Acum creăm o copie de siguranță a sitului tău care poate fi descărcată</string>
+    <string name="backup_download_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata.</string>
     <string name="backup_download_progress_page_title">Descarcă copia de siguranță</string>
     <string name="backup_download_another_download_running">Există o altă descărcare care rulează.</string>
     <string name="backup_download_generic_failure">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
@@ -208,15 +244,14 @@ Language: ro
     <string name="threat_item_header_file_malicious_code_pattern">%s: model de cod rău intenționat</string>
     <string name="threat_item_header_database_threat">%s amenințări în baza de date</string>
     <string name="threat_item_sub_header_file_signature">%s amenințări găsite</string>
-    <string name="scan_in_few_seconds">în câteva secunde</string>
-    <string name="scan_in_minutes_ago">acum %s minute</string>
     <string name="scan_in_hours_ago">acum %s ore</string>
     <string name="scan_this_site">acest sit</string>
     <string name="threat_item_header_threat_found">Amenințare găsită</string>
-    <string name="threats_found">Amenințări găsite</string>
     <string name="threat_item_header_infected_core_file">%s: fișier infectat în nucleu</string>
     <string name="scan_idle_last_scan_description">Ultima scanare Jetpack a rulat pe %s și nu a găsit niciun risc. %s</string>
     <string name="threats_fix_all">Înlătură-le pe toate</string>
+    <string name="scan_in_few_seconds">acum câteva secunde</string>
+    <string name="scan_in_minutes_ago">acum %s minute</string>
     <string name="scan_again">Scanează încă o dată</string>
     <string name="scan_now">Scanează acum</string>
     <string name="scan_state_icon">Icon stare scanare</string>
@@ -234,7 +269,6 @@ Language: ro
     <string name="activity_log_activity_type_error_title">Fără conexiune</string>
     <string name="activity_log_active_filter_empty_title">Nu am găsit niciun eveniment care să se potrivească</string>
     <string name="activity_log_active_filter_empty_subtitle">Încearcă ajustarea filtrelor pentru intervalul de timp sau tipul de activitate</string>
-    <string name="rewind">Restaurează</string>
     <string name="backup_item_media_uploads">Încărcări media</string>
     <string name="backup_item_plugins">Module WordPress</string>
     <string name="backup_item_themes">Teme WordPress</string>
@@ -338,12 +372,12 @@ Language: ro
     <string name="login_prologue_fifth_subtitle_two">Știri pe web</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">M-au inspirat foarte mult lucrările fotografului Cameron Karsten. Voi încerca aceste tehnici pe viitor</string>
-    <string name="login_prologue_title_fifth">Urmărește-ți siturile preferate și descoperi lecturi noi.</string>
     <string name="login_prologue_title_fourth">Urmărești cum îți crește audiența cu analitice detaliate.</string>
     <string name="login_prologue_title_third">Vezi comentariile și notificările în timp real.</string>
     <string name="login_prologue_title_second">Cu acest editor puternic poți publica din mers.</string>
     <string name="login_prologue_title_first">Bine ai venit la cel mai popular constructor de situri web din lume.</string>
     <string name="login_prologue_second_subtitle_one">Inspiră-te</string>
+    <string name="login_prologue_title_fifth">Urmărește-ți siturile preferate și descoperi bloguri noi.</string>
     <string name="media_loading_failed">Încărcarea media a eșuat</string>
     <string name="reader_discover_recommended_blogs_header">Situri de urmărit</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Lucrăm continuu pentru a adăuga mai multe blocuri la fiecare lansare.</string>
@@ -361,9 +395,7 @@ Language: ro
     <string name="stories_intro_main_title">Prezentăm Articole narațiune</string>
     <string name="mlp_notice_blank_page_created">A fost creată o pagină goală</string>
     <string name="mlp_notice_page_created">A fost creată o pagină</string>
-    <string name="mlp_preview_title">Previzualizare aranjament</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s și %3$s.</string>
-    <string name="stories_intro_main_subtitle">Acum ai acces la Articole narațiune și ne-ar plăcea să le încerci.</string>
     <string name="media_insert_failed">Inserarea media a eșuat.</string>
     <string name="media_insert_failed_with_reason">Inserarea media a eșuat: %s</string>
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
@@ -495,7 +527,6 @@ Language: ro
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
     <string name="enter_your_site_address">Introdu adresa sitului tău de acum</string>
     <string name="continue_terms_of_service_text">Dacă continui, ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
-    <string name="signup_confirmation_magic_link_message">Îți vom trimite prin email o legătură de înregistrare pentru a-ți crea noul cont WordPress.com.</string>
     <string name="signup_confirmation_message">Vom folosi această adresă de email pentru a-ți crea noul cont WordPress.com.</string>
     <string name="signup_magic_link_message">Ți-am trimis prin email o legătură de înregistrare pentru a-ți crea noul cont WordPress.com. Verifică emailurile primite pe acest dispozitiv și atinge legătura din emailul primit de la WordPress.com.</string>
     <string name="enter_account_info_for_site">Introdu informațiile contului pentru %1$s.</string>
@@ -559,8 +590,6 @@ Language: ro
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Articolele aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestui articol în „ciornă” pentru a-l putea edita?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publicării</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Muți articolul în Ciorne?</string>
-    <string name="reader_label_choose_your_interests">Alege ce te interesează</string>
-    <string name="reader_choose_interests_content_description">Alege ce te interesează</string>
     <string name="reader_btn_done">Gata</string>
     <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
     <string name="post_status_post_published">Publicat</string>
@@ -569,6 +598,8 @@ Language: ro
     <string name="publish_date">Data publicării</string>
     <string name="ccpa_privacy_notice_read">Citește notificarea de confidențialitate CCPA</string>
     <string name="ccpa_privacy_notice_caption">Legea privind confidențialitatea consumatorilor din California (CCPA) ne obligă să oferim rezidenților din California câteva informații suplimentare despre categoriile de informații cu caracter personal pe care le colectăm și le partajăm, de unde și cum obținem aceste informații cu caracter personal și de ce le folosim.</string>
+    <string name="reader_label_choose_your_interests">Alege subiecte</string>
+    <string name="reader_choose_interests_content_description">Alege subiecte</string>
     <string name="ccpa_privacy_notice_header">Notificări de confidențialitate pentru utilizatorii din California</string>
     <string name="status_and_visibility">Stare și vizibilitate</string>
     <string name="update_now">Actualizează acum</string>
@@ -687,8 +718,6 @@ Language: ro
     <string name="quickpress_shortcut_activity_label">Selectează blogul pentru scurtătura QuickPress</string>
     <string name="editor_uploading_page">Pagina ta se încarcă</string>
     <string name="editor_page_saved_locally_failed_media">Pagina a eșuat la încărcările media și a fost salvată local</string>
-    <string name="gutenberg_native_warning_message">Mesaj de avertizare</string>
-    <string name="gutenberg_native_success_message">Mesaj de succes</string>
     <string name="gutenberg_native_show_post_content">Arată conținutul articolului</string>
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
@@ -796,40 +825,31 @@ Language: ro
     <string name="gutenberg_native_unsupported">Neacceptat</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_translate">Tradu</string>
-    <string name="gutenberg_native_title">Titlu:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Atinge pentru a ascunde tastatura</string>
     <string name="gutenberg_native_tap_here_to_show_help">Atinge aici pentru a afișa ajutorul</string>
     <string name="gutenberg_native_take_a_video">Fă un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
     <string name="gutenberg_native_start_writing">Începe să scrii…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Conectare titlu bară laterală</string>
     <string name="gutenberg_native_show_section">Arată secțiunea</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
-    <string name="gutenberg_native_reset_block">Resetează blocul</string>
     <string name="gutenberg_native_cut_block">Șterge blocul</string>
     <string name="gutenberg_native_page_break_block_s">Bloc Sfârșit de pagină. %s</string>
     <string name="gutenberg_native_open_settings">Deschide setările</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nicio aplicație nu poate gestiona această cerere. Te rog instalează un navigator web.</string>
-    <string name="gutenberg_native_remove_annotations">Înlătură adnotările</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
     <string name="gutenberg_native_problem_displaying_block">Problemă la afișarea blocului</string>
     <string name="gutenberg_native_post_title_s">Titlu articol. %s</string>
     <string name="gutenberg_native_post_title_empty">Titlu articol. Gol</string>
     <string name="gutenberg_native_paste_url">Plasează URL-ul</string>
     <string name="gutenberg_native_navigate_up">Navighează în sus</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Panoul meu pentru pre-publicare</string>
-    <string name="gutenberg_native_my_post_status_info">Informații despre starea articolelor mele</string>
-    <string name="gutenberg_native_my_post_publish_panel">Panoul meu pentru publicare articole</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panoul meu pentru setări documente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mută blocul în sus de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mută blocul în jos de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_down">Mută blocul în jos</string>
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ascunde tastatura</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Iată conținutul panoului!</string>
     <string name="gutenberg_native_help_icon">Icon pentru ajutor</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Atinge de două ori pentru a anula ultima modificare</string>
@@ -844,14 +864,10 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_add_a_block">Atinge de două ori pentru a adăuga un bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Atinge de două ori pentru a muta blocul în sus</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
-    <string name="gutenberg_native_content">Conținut…</string>
     <string name="gutenberg_native_choose_from_device">Alege de pe dispozitiv</string>
-    <string name="gutenberg_native_annotations_sidebar">Bară laterală adnotări</string>
     <string name="gutenberg_native_add_image_or_video">ADAUGĂ IMAGINE SAU VIDEO</string>
     <string name="gutenberg_native_add_image">ADAUGĂ IMAGINE</string>
     <string name="gutenberg_native_add_block_here">ADAUGĂ BLOC AICI</string>
-    <string name="gutenberg_native_add_annotation">Adaugă o adnotare</string>
-    <string name="gutenberg_native_add_a_description">Adaugă o descriere</string>
     <string name="gutenberg_native_alt_text">Text alternativ</string>
     <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
@@ -1175,7 +1191,6 @@ Language: ro
     <string name="stats_select_next_period_description">Selectează perioada următoare</string>
     <string name="stats_select_previous_period_description">Selectează perioada anterioară</string>
     <string name="stats_most_popular_percent_views">%1$d%% din vizualizări</string>
-    <string name="new_site_creation_search_domain_input_hint">Caută domenii</string>
     <string name="new_site_creation_domain_header_subtitle">Aici vei fi găsit pe internet.</string>
     <string name="notification_new_site_creation_failed">A fost o problemă</string>
     <string name="notification_new_site_creation_title">Crează un sit</string>
@@ -1344,10 +1359,10 @@ Language: ro
     <string name="quick_start_dialog_need_help_button_positive">Acceptă</string>
     <string name="quick_start_dialog_need_help_button_neutral">Niciodată</string>
     <string name="quick_start_dialog_follow_sites_title">Urmărește alte situri</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Atinge %1$s Caută %2$s pentru a căuta situri cu interese similare</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Atinge %1$s Cititor %2$s pentru a continua</string>
     <string name="quick_start_dialog_need_help_button_negative">Nu, mulțumesc</string>
     <string name="quick_start_dialog_follow_sites_message">Găsește situri care te inspiră și urmărește-le pentru a primi notificări când publică articole noi.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Atinge %1$s Caută %2$s pentru a căuta situri cu subiecte similare</string>
     <string name="my_site_create_new_site_title">Nu ai niciun sit</string>
     <string name="quick_start_button_negative">Nu acum</string>
     <string name="quick_start_button_negative_short">Anulează</string>
@@ -2158,6 +2173,7 @@ Language: ro
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
     <string name="reader_empty_search_description">Nu s-a găsit niciun rezultat pentru %s în limba ta</string>
     <string name="reader_hint_post_search">Caută în WordPress</string>
+    <string name="reader_title_related_post_detail">Articol similar</string>
     <string name="preview_screen_links_disabled">Legăturile sunt dezactivate pe ecranul de previzualizare</string>
     <string name="send">Trimite</string>
     <string name="person_removed">%1$s înlăturat cu succes</string>

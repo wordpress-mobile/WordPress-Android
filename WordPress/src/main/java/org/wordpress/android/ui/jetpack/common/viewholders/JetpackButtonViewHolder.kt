@@ -1,39 +1,50 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
-import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
+import org.wordpress.android.databinding.JetpackListButtonPrimaryItemBinding
+import org.wordpress.android.databinding.JetpackListButtonSecondaryItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.setVisible
-import kotlinx.android.synthetic.main.jetpack_list_button_primary_item.button as primaryButton
-import kotlinx.android.synthetic.main.jetpack_list_button_secondary_item.button as secondaryButton
+import org.wordpress.android.widgets.FlowLayout.LayoutParams
 
-sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) : JetpackViewHolder(layout, parent) {
+sealed class JetpackButtonViewHolder<T : ViewBinding>(
+    parent: ViewGroup,
+    inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T
+) : JetpackViewHolder<T>(parent, inflateBinding) {
     class Primary(
         private val uiHelpers: UiHelpers,
         parent: ViewGroup
-    ) : JetpackButtonViewHolder(R.layout.jetpack_list_button_primary_item, parent) {
+    ) : JetpackButtonViewHolder<JetpackListButtonPrimaryItemBinding>(
+            parent,
+            JetpackListButtonPrimaryItemBinding::inflate
+    ) {
         override fun onBind(itemUiState: JetpackListItemState) {
-            primaryButton.updateState(itemUiState as ActionButtonState, uiHelpers)
+            binding.button.updateState(binding.root, itemUiState as ActionButtonState, uiHelpers)
         }
     }
 
     class Secondary(
         private val uiHelpers: UiHelpers,
         parent: ViewGroup
-    ) : JetpackButtonViewHolder(R.layout.jetpack_list_button_secondary_item, parent) {
+    ) : JetpackButtonViewHolder<JetpackListButtonSecondaryItemBinding>(
+            parent,
+            JetpackListButtonSecondaryItemBinding::inflate
+    ) {
         override fun onBind(itemUiState: JetpackListItemState) {
-            secondaryButton.updateState(itemUiState as ActionButtonState, uiHelpers)
+            binding.button.updateState(binding.root, itemUiState as ActionButtonState, uiHelpers)
         }
     }
 
-    internal fun MaterialButton.updateState(buttonState: ActionButtonState, uiHelpers: UiHelpers) {
-        updateItemViewVisibility(buttonState.isVisible)
+    internal fun MaterialButton.updateState(root: View, buttonState: ActionButtonState, uiHelpers: UiHelpers) {
+        updateItemViewVisibility(root, buttonState.isVisible)
         uiHelpers.setTextOrHide(this, buttonState.text)
         isEnabled = buttonState.isEnabled
         setOnClickListener { buttonState.onClick.invoke() }
@@ -46,8 +57,8 @@ sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) 
         }
     }
 
-    private fun updateItemViewVisibility(isVisible: Boolean) {
-        with(itemView) {
+    private fun updateItemViewVisibility(root: View, isVisible: Boolean) {
+        with(root) {
             setVisible(isVisible)
             layoutParams = if (isVisible) {
                 ConstraintLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)

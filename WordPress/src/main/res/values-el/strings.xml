@@ -41,20 +41,16 @@ Language: el_GR
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
     <string name="reader_filter_tags_title">Θέματα</string>
     <string name="gutenberg_native_translate">Μετάφραση</string>
-    <string name="gutenberg_native_title">Τίτλος:</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
     <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
-    <string name="gutenberg_native_reset_block">Επαναφορά μπλοκ</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
-    <string name="gutenberg_native_content">Περιεχόμενο…</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
-    <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">σύμπτηξη</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
@@ -618,7 +614,6 @@ Language: el_GR
     <string name="signout">Αποσύνδεση</string>
     <string name="sign_in_wpcom">Σύνδεση στο WordPress.com</string>
     <string name="reader_label_global_related_posts">Περισσότερα στο WordPress.com</string>
-    <string name="reader_label_local_related_posts">Περισσότερα σε %s</string>
     <string name="preference_open_device_settings">Άνοιγμα ρυθμίσεων συσκευής</string>
     <string name="invite_invalid_email">%s: Μη έγκυρο email</string>
     <string name="invite_user_blocked_invites">%s: Ο χρήστης δεν δέχεται προσκλήσεις</string>
@@ -674,6 +669,7 @@ Language: el_GR
     <string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
     <string name="reader_empty_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
     <string name="reader_hint_post_search">Αναζήτηση στο WordPress</string>
+    <string name="reader_title_related_post_detail">Σχετικό Άρθρο</string>
     <string name="preview_screen_links_disabled">Οι σύνδεσμοι είναι απενεργοποιημένοι στην οθόνη προεπισκόπησης</string>
     <string name="send">Αποστολή</string>
     <string name="user_remove_confirmation_message">Αν αφαιρέσετε τον %1$s, αυτός ο χρήστης δεν θα μπορεί πλέον να συνδεθεί σε αυτό τον ιστότοπο αλλά ό,τι περιεχόμενο δημιουργήθηκε από τον %1$s θα παραμείνει στον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε το χρήστη;</string>
