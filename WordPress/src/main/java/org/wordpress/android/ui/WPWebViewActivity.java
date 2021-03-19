@@ -129,6 +129,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String ACTION_BAR_TITLE = "action_bar_title";
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
     public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
+    private static final int PREVIEW_INITIAL_SCALE = 90;
+    private static final long PREVIEW_JS_EVALUATION_DELAY = 250L;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -640,7 +642,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         if (mPreviewModeChangeAllowed) {
             mWebView.getSettings().setUseWideViewPort(true);
-            mWebView.setInitialScale(100);
+            mWebView.setInitialScale(PREVIEW_INITIAL_SCALE);
         }
 
         WebViewClient webViewClient = createWebViewClient(allowedURL);
@@ -693,7 +695,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             public void run() {
                 mWebView.evaluateJavascript(script, value -> mViewModel.onUrlLoaded());
             }
-        }, 250);
+        }, PREVIEW_JS_EVALUATION_DELAY);
     }
 
     private void setWebViewWidth(int previewWidth) {
