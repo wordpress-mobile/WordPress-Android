@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-10 15:54:08+0000
+Translation-Revision-Date: 2021-03-17 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
     <string name="reader_title_interests">לעקוב אחר נושאים</string>
     <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">ביטול</string>
     <string name="activity_log_backup_download_notice_download_action">הורדה</string>
     <string name="threat_fix_all_status_success_message_plural">האיומים תוקנו בהצלחה.</string>
+    <string name="scan_idle_threats_description_plural">הסריקה איתרה ⁦%1$s⁩ איומים פוטנציאליים עם ⁦%2$s⁩. עליך לבדוק את הפרטים למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%3$s⁩ אם נדרשת עזרה.</string>
     <string name="scan_fixing_threats_description_plural">אנחנו משקיעים המון מאמצים ברקע כדי לתקן את האיומים האלה. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
     <string name="gutenberg_native_edit_focal_point">לערוך נקודת מוקד</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">יש להקיש פעמיים כדי לפתוח את הגיליון התחתון ולערוך, להחליף או למחוק את התמונה</string>
@@ -37,6 +39,9 @@ Language: he_IL
     <string name="invite_links_section_title">קישור להזמנה</string>
     <string name="threats_found_singular">אותר איום</string>
     <string name="threats_found_plural">נמצאו איומים</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br> %s נמצאו איומים פוטנציאליים</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br> נמצא איום פוטנציאלי אחד</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br> לא נמצאו איומים</string>
     <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
     <string name="disable">להשבית</string>
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
@@ -92,6 +97,7 @@ Language: he_IL
     <string name="threat_status_fixed">תוקן</string>
     <string name="threat_found_header">נמצא</string>
     <string name="scan_here_to_help">אנחנו פה לעזור</string>
+    <string name="scan_idle_threats_description_singular">הסריקה איתרה איום פוטנציאלי אחד עם ⁦%1$s⁩. עליך לבדוק את האיום למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%2$s⁩ אם נדרשת עזרה.</string>
     <string name="scan_idle_manual_scan_description">כדי לבדוק את האתר שלך שוב, יש להפעיל סריקה ידנית או להמתין לסריקה על ידי Jetpack מאוחר יותר היום.</string>
     <string name="scan_provisioning_description">ברוך בואך ל-Jetpack Scan! אנחנו מכינים את האתר לסריקה מלאה. אנחנו נודיע לך אם נמצא בעיות כלשהן שעלולות להפריע לסריקה ולאחר מכן, הסריקה הראשונה שלך תתחיל.</string>
     <string name="scan_scanning_is_initial_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.</string>
@@ -362,6 +368,7 @@ Language: he_IL
     <string name="login_prologue_title_second">העורך העוצמתי הזה מאפשר לפרסם מכל מקום.</string>
     <string name="login_prologue_title_first">ברוך בואך לכלי הפופולרי ביותר בעולם לבניית אתרי אינטרנט.</string>
     <string name="login_prologue_title_third">להציג תגובות והודעות בזמן אמת.</string>
+    <string name="login_prologue_title_fifth">כדאי לעקוב אחר האתרים המועדפים שלך ולגלות בלוגים חדשים לקריאה.</string>
     <string name="media_loading_failed">העלאת מדיה נכשלה</string>
     <string name="reader_discover_recommended_blogs_header">אתרים למעקב</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
@@ -582,6 +589,8 @@ Language: he_IL
     <string name="publish_date">תאריך פרסום</string>
     <string name="ccpa_privacy_notice_read">לעיון בהצהרת הפרטיות של CCPA</string>
     <string name="ccpa_privacy_notice_caption">לפי החוק California Consumer Privacy Act (החוק לפרטיות צרכנים של קליפורניה – CCPA), עלינו לספק לתושבי קליפורניה פרטים נוספים אודות הקטגוריות של המידע האישי שאנחנו אוספים ומשתפים, המקום שממנו אנחנו מקבלים את המידע האישי, האופן שבו אנחנו משתמשים בו והסיבה לשימוש.</string>
+    <string name="reader_label_choose_your_interests">לבחור את הנושאים שמעניינים אותך</string>
+    <string name="reader_choose_interests_content_description">לבחור את הנושאים שמעניינים אותך</string>
     <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
@@ -1344,6 +1353,7 @@ Language: he_IL
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש להקיש על %1$sReader%2$s כדי להמשיך</string>
     <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
     <string name="quick_start_dialog_follow_sites_message">כדאי לחפש אתרים שנותנים לך השראה ולעקוב אחריהם כדי לקבל עדכונים כשהם יפרסמו תוכן חדש.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">להקיש על ⁦%1$s⁩ חיפוש ⁦%2$s⁩ כדי לחפש אתרים בנושאים דומים</string>
     <string name="quick_start_button_positive">מעבר אל</string>
     <string name="quick_start_button_negative_short">ביטול</string>
     <string name="quick_start_button_negative">לא עכשיו</string>
@@ -2096,6 +2106,7 @@ Language: he_IL
     <string name="comment_liked">סימנת לייק לתגובה</string>
     <string name="sign_in_wpcom">התחברות ל-WordPress.com</string>
     <string name="reader_label_global_related_posts">עוד מ-WordPress.com</string>
+    <string name="reader_label_local_related_posts">עוד בנושא %s</string>
     <string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
     <string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
     <string name="invite_invalid_email">%s: אימייל לא תקין</string>
