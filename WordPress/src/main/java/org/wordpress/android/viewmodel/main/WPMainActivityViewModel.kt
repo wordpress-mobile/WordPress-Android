@@ -120,11 +120,10 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
-    private fun loadMainActions(site: SiteModel?) {
+    private fun loadMainActions(site: SiteModel?, shouldShowStoriesFirst: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
 
         val shouldShowStories = shouldShowStories(site)
-        val shouldShowStoriesFirst = shouldShowStoriesFirst()
         val createNewStoryAction = CreateAction(
                 actionType = CREATE_NEW_STORY,
                 iconRes = R.drawable.ic_story_icon_24dp,
@@ -219,7 +218,7 @@ class WPMainActivityViewModel @Inject constructor(
 
             // Reload main actions, since the first time this is initialized the SiteModel may not contain the
             // latest info.
-            loadMainActions(site)
+            loadMainActions(site, shouldShowStoriesFirst)
 
             val properties = mapOf(
                     "is_showing_stories" to shouldShowStories,
