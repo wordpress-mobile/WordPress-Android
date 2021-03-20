@@ -106,7 +106,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "16.9"
             }
-            versionCode 1017
+            versionCode 1018
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -329,18 +329,18 @@ dependencies {
     debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:analytics:WordPressAnalytics')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
