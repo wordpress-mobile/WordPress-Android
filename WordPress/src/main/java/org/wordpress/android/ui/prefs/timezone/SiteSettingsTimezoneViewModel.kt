@@ -20,6 +20,7 @@ import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle.FULL
@@ -157,11 +158,20 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
 
         return if (zoneId != null) {
             val offset = ZonedDateTime.now(zoneId).offset
-            val offsetDisplay = if (offset.id == "Z") "" else "(GMT$offset)"
-            "${zoneId.getDisplayName(FULL, Locale.getDefault())} $offsetDisplay"
+            getZoneDisplayName(zoneId, offset)
         } else {
             ""
         }
+    }
+
+    private fun getZoneDisplayName(zoneId: ZoneId, offset: ZoneOffset): String {
+        val zoneDisplayName = zoneId.getDisplayName(FULL, Locale.getDefault())
+        val zone =  zoneDisplayName.substringBefore("/")
+
+        val zoneDisplay = if (zone.isNotBlank()) zone else zoneDisplayName
+        val offsetDisplay = if (offset.id == "Z") "" else "(GMT$offset)"
+
+        return "$zoneDisplay $offsetDisplay"
     }
 
     private fun getTimeAtZone(zone: String): String {
