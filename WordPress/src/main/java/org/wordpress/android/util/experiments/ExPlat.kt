@@ -24,7 +24,7 @@ class ExPlat
     private val appLog: AppLogWrapper,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
-    private val platform = Platform.WORDPRESS_COM
+    private val platform = Platform.WORDPRESS_ANDROID
     private val activeVariations = mutableMapOf<String, Variation>()
 
     fun refreshIfNeeded() {
