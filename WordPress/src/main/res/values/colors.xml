@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+
+    <color name="colorPrimary">@color/blue_50</color>
+    <color name="colorPrimaryVariant">@color/blue_70</color>
+    <color name="colorSecondary">@color/pink_50</color>
+    <color name="colorSecondaryVariant">@color/pink_70</color>
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
