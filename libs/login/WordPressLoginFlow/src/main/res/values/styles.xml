@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <!-- Note: styles not used by the library directly but which can still be used by screens that
+    are part of the login flow (e.g. Prologue) should be marked with the tools:keep attribute -->
+
     <!-- App Bar -->
     <style name="Widget.LoginFlow.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="elevation">0dp</item>
@@ -68,7 +71,7 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextView.Headline" parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LoginFlow.TextView.Headline" parent="Widget.MaterialComponents.TextView" tools:keep="@style/Widget_LoginFlow_TextView_Headline">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
     </style>
 
@@ -77,7 +80,7 @@
         <item name="android:textColor">@color/login_on_surface_medium_selector</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextView.Footnote" parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LoginFlow.TextView.Footnote" parent="Widget.MaterialComponents.TextView" tools:keep="@style/Widget_LoginFlow_TextView_Footnote">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">@color/login_on_surface_medium_selector</item>
     </style>
@@ -88,16 +91,16 @@
         <item name="android:background">?android:colorBackground</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextView.List.Subheader" parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LoginFlow.TextView.List.Subheader" parent="Widget.MaterialComponents.TextView" tools:keep="@style/Widget_LoginFlow_TextView_List_Subheader">
         <item name="android:textAppearance">?attr/textAppearanceOverline</item>
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextView.List.Line1" parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LoginFlow.TextView.List.Line1" parent="Widget.MaterialComponents.TextView" tools:keep="@style/Widget_LoginFlow_TextView_List_Line1">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextView.List.Line2" parent="Widget.MaterialComponents.TextView">
+    <style name="Widget.LoginFlow.TextView.List.Line2" parent="Widget.MaterialComponents.TextView" tools:keep="@style/Widget_LoginFlow_TextView_List_Line2">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/login_on_surface_medium_selector</item>
     </style>
