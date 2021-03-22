@@ -35,15 +35,10 @@
     <string name="login_get_link_by_email">Get a login link by email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
-    <string name="connect_more">Connect another site</string>
-    <string name="connect_site">Connect a site</string>
     <string name="login_continue">Continue</string>
-    <string name="login_done">Done</string>
-    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
@@ -57,7 +52,6 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
-    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
@@ -77,8 +71,6 @@
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
-    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
-    <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
@@ -93,7 +85,6 @@
     <string name="email_invalid">Enter a valid email address</string>
     <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="logging_in">Logging in</string>
-    <string name="forgot_password">Lost your password?</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="error_generic">An error occurred</string>
     <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
