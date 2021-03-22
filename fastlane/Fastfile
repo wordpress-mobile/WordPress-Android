@@ -46,6 +46,7 @@ ENV["PROJECT_ROOT_FOLDER"]="./"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
 ENV["validate_translations"]="lintVanillaRelease"
+REPOSITORY_NAME="wordpress-android"
 
 ########################################################################
 # Release Lanes
@@ -100,7 +101,8 @@ ENV["validate_translations"]="lintVanillaRelease"
   desc "Creates a new release branch from the current develop"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
-    android_tag_build()
+    new_version = android_get_app_version()
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
 #####################################################################################
@@ -169,7 +171,8 @@ ENV["validate_translations"]="lintVanillaRelease"
     send_strings_for_translation()
     android_update_metadata(options)
     android_bump_version_beta()
-    android_tag_build()
+    new_version = android_get_app_version()
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -202,7 +205,8 @@ ENV["validate_translations"]="lintVanillaRelease"
   # bundle exec fastlane finalize_hotfix_release
   desc "Finalizes a hotfix release by tagging the build"
   lane :finalize_hotfix_release do | options |
-    android_tag_build(tag_alpha: false)
+    new_version = android_get_app_version()
+    trigger_beta_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -224,9 +228,9 @@ ENV["validate_translations"]="lintVanillaRelease"
     hotfix = android_current_branch_is_hotfix
     android_update_metadata(options) unless hotfix
     android_bump_version_final_release() unless hotfix
-    version = android_get_release_version() unless hotfix
+    version = android_get_release_version() 
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
-    android_tag_build(tag_alpha: false)
+    trigger_release_build(branch_to_build: "release/#{version}")
 
     # Wrap up
     removebranchprotection(repository:GHHELPER_REPO, branch: "release/#{version["name"]}")
@@ -386,6 +390,42 @@ ENV["validate_translations"]="lintVanillaRelease"
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
+  end
+
+  #####################################################################################
+   # trigger_beta_build
+   # -----------------------------------------------------------------------------------
+   # This lane triggers a beta build on CI
+   # -----------------------------------------------------------------------------------
+   # Usage:
+   # bundle exec fastlane trigger_beta_build [branch_to_build:<branch_name>]
+   #
+   #####################################################################################
+   lane :trigger_beta_build do | options |
+    circleci_trigger_job(
+      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"], 
+      repository: REPOSITORY_NAME, 
+      branch: options[:branch_to_build],
+      job_params: {"beta_build" => true}
+    )
+  end
+
+  #####################################################################################
+  # trigger_release_build
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a stable release build on CI
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane trigger_release_build [branch_to_build:<branch_name>]
+  #
+  #####################################################################################
+  lane :trigger_release_build do | options |
+    circleci_trigger_job(
+      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"], 
+      repository: REPOSITORY_NAME, 
+      branch: options[:branch_to_build],
+      job_params: {"release_build" => true}
+    )
   end
 
   #####################################################################################
