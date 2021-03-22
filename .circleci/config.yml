@@ -15,6 +15,12 @@ parameters:
   generate_screenshots:
     type: boolean
     default: false
+  beta_build:
+    type: boolean
+    default: false 
+  release_build:
+    type: boolean 
+    default: false
 
 commands:
   copy-gradle-properties:
@@ -591,6 +597,8 @@ workflows:
       or:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
+        - << pipeline.parameters.beta_build >>
+        - << pipeline.parameters.release_build >>
     jobs:
       - gutenberg-bundle-build
       - strings-check
@@ -621,6 +629,8 @@ workflows:
       or:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
+        - << pipeline.parameters.beta_build >>
+        - << pipeline.parameters.release_build >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -646,27 +656,16 @@ workflows:
       - promo-screenshots:
           requires: [raw-screenshots]
   Release Build:
-    unless: << pipeline.parameters.translation_review_build >>
+    when: 
+      or: 
+        - << pipeline.parameters.beta_build >>
+        - << pipeline.parameters.release_build >>
     jobs:
       - gutenberg-bundle-build:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+(\.\d+)*(-rc-\d)?$/
       - lint:
           requires:
             - gutenberg-bundle-build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+(\.\d+)*(-rc-\d)?$/
       - Release Build:
           requires:
             - lint 
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+(\.\d+)*(-rc-\d)?$/
+
