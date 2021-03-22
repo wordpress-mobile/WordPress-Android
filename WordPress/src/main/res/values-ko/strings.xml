@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 09:54:09+0000
+Translation-Revision-Date: 2021-03-17 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
+    <string name="reader_title_interests">토픽 따르기</string>
+    <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
+    <string name="activity_log_backup_download_notice_download_action">다운로드하기</string>
     <string name="threat_fix_all_status_success_message_plural">위협이 해결되었습니다.</string>
+    <string name="scan_idle_threats_description_plural">스캔에서 %2$s에 대한 잠재적 위협 %1$s개를 찾았습니다. 아래 내용을 검토하고 조치를 취하거나 모두 해결 버튼을 누르세요. 도움말이 필요하면 %3$s을(를) 클릭하세요.</string>
     <string name="scan_fixing_threats_description_plural">이러한 위협을 해결하기 위해 백그라운드에서 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행률을 확인하실 수 있습니다.</string>
     <string name="gutenberg_native_edit_focal_point">초점 편집하기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">이미지를 편집, 교체 또는 지울 하단 시트를 두 번 눌러 열기</string>
@@ -33,7 +39,9 @@ Language: ko_KR
     <string name="invite_links_section_title">초대 링크</string>
     <string name="threats_found_singular">위협을 찾았습니다</string>
     <string name="threats_found_plural">위협을 찾았습니다</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>스캔 완료됨&lt;/b> &lt;br>&lt;/br> 찾은 위협 없음</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>스캔 완료됨&lt;/b> &lt;br> %s 잠재적 위협 찾음</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>스캔 완료됨&lt;/b> &lt;br> 잠재적 위협 1개 찾음</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>스캔 완료됨&lt;/b> &lt;br> 찾은 위협 없음</string>
     <string name="scan_fixing_threats_title_singular">위협 해결 중</string>
     <string name="disable">비활성화</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
@@ -89,6 +97,7 @@ Language: ko_KR
     <string name="threat_status_fixed">해결됨</string>
     <string name="threat_found_header">찾음</string>
     <string name="scan_here_to_help">도움말</string>
+    <string name="scan_idle_threats_description_singular">스캔에서 %1$s에 대한 잠재적 위협 1개를 찾았습니다. 아래 위협을 검토하고 조치를 취하거나 모두 해결 버튼을 누르세요. 도움말이 필요하면 %2$s을(를) 클릭하세요.</string>
     <string name="scan_idle_manual_scan_description">사이트를 다시 검토하려면 수동 스캔을 실행하거나 젯팩의 오늘 중 사이트 스캔을 기다리세요.</string>
     <string name="scan_provisioning_description">Jetpack Scan에 오신 것을 환영합니다. 전체 스캔이 수행되도록 설정하여 사이트를 자세히 살펴보는 중입니다. 스캔에 영향을 미칠 만한 문제를 발견하면 먼저 알려드리고 전체 스캔을 시작합니다.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan에 오신 것을 환영합니다. 지금 회원님 사이트를 살펴보고 있으며 결과를 곧 알려드리겠습니다.</string>
@@ -142,6 +151,7 @@ Language: ko_KR
     <string name="reader_marked_post_as_seen">읽음으로 표시됨</string>
     <string name="threat_fix_all_status_error_message">해결 상태를 가져오는 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
     <string name="threat_fix_all_error_message">위협 해결 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_fix_all_confirmation_message_singular">1개의 활성 위협을 해결할지 확인해 주세요.</string>
     <string name="threat_fix_all_warning_title">위협 모두 해결</string>
     <string name="threat_ignore_error_message">위협을 무시하는 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
     <string name="threat_ignore_success_message">위협이 무시되었습니다.</string>
@@ -347,8 +357,8 @@ Language: ko_KR
     <string name="login_prologue_title_second">강력한 편집기로 이동 중에도 글을 쓸 수 있습니다.</string>
     <string name="login_prologue_title_third">댓글과 알림을 실시간으로 보세요.</string>
     <string name="login_prologue_title_fourth">깊이 있는 분석으로 독자가 늘어나는 것을 확인하세요.</string>
-    <string name="login_prologue_title_fifth">좋아하는 사이트를 팔로우하고 새 읽을 거리를 발견하세요.</string>
     <string name="login_prologue_second_subtitle_one">영감받기</string>
+    <string name="login_prologue_title_fifth">좋아하는 사이트를 팔로우하고 새 블로그를 검색하세요.</string>
     <string name="reader_discover_recommended_blogs_header">팔로우한 사이트</string>
     <string name="media_loading_failed">미디어 로딩을 실패했습니다</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">매 릴리즈마다 더 많은 블록을 추가하려고 열심히 일하고 있습니다.</string>
@@ -361,7 +371,6 @@ Language: ko_KR
     <string name="stories_intro_description_first">사진, 비디오, 그리고 문제를 혼합하여 방문자가 좋아하여 매력적이고 탭할 수 이는 이야기 글을 만드세요.</string>
     <string name="stories_intro_title_second">스토리 글이 보이지 않습니다</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s의 사진 접근이 거부되었습니다. 이를 고치려면, 권한을 고치고 %2$s와(과) %3$s을(를) 켜세요.</string>
-    <string name="mlp_preview_title">레이아웃 미리보기</string>
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="stories_intro_main_title">이야기 글 소개</string>
@@ -569,9 +578,9 @@ Language: ko_KR
     <string name="post_status_post_published">발행됨</string>
     <string name="reader_btn_select_few_interests">계속하기 위해 몇 가지 더 선택하기</string>
     <string name="reader_btn_done">완료</string>
-    <string name="reader_choose_interests_content_description">관심사항 고르기</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">글을 초안으로 옮깁니까?</string>
-    <string name="reader_label_choose_your_interests">관심 항목을 고르세요</string>
+    <string name="reader_choose_interests_content_description">주제 선택</string>
+    <string name="reader_label_choose_your_interests">주제 선택</string>
     <string name="update_now">지금 업데이트하기</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
@@ -690,8 +699,6 @@ Language: ko_KR
     <string name="app_theme_light">밝음</string>
     <string name="app_theme">외관</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">최근 이 페이지를 변경했지만 저장하지 않았습니다. 불러올 버전을 선택하세요:\n</string>
-    <string name="gutenberg_native_warning_message">경고 메시지</string>
-    <string name="gutenberg_native_success_message">성공 메시지</string>
     <string name="gutenberg_native_show_post_content">글 콘텐츠 보기</string>
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
     <string name="gutenberg_native_link_to">링크</string>
@@ -798,7 +805,6 @@ Language: ko_KR
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
     <string name="gutenberg_native_translate">번역</string>
-    <string name="gutenberg_native_title">제목:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">키보드를 숨기려면 탭</string>
     <string name="gutenberg_native_tap_here_to_show_help">도움말을 보려면 여기를 탭</string>
     <string name="gutenberg_native_take_a_video">비디오 촬영</string>
@@ -806,13 +812,10 @@ Language: ko_KR
     <string name="gutenberg_native_take_a_photo">사진 촬영</string>
     <string name="gutenberg_native_start_writing">글쓰기 시작…</string>
     <string name="gutenberg_native_unsupported">지원되지 않음</string>
-    <string name="gutenberg_native_sidebar_title_plugin">사이드바 제목 플러그인</string>
     <string name="gutenberg_native_show_section">섹션 표시</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
     <string name="gutenberg_native_s_block_empty">%s 블록. 비어 있음</string>
-    <string name="gutenberg_native_reset_block">블록 리셋</string>
     <string name="gutenberg_native_cut_block">블록 잘라내기</string>
-    <string name="gutenberg_native_remove_annotations">주석 제거</string>
     <string name="gutenberg_native_problem_opening_the_video">비디오 열기 문제</string>
     <string name="gutenberg_native_problem_displaying_block">블록 표시 문제</string>
     <string name="gutenberg_native_post_title_s">글 제목. %s</string>
@@ -822,17 +825,12 @@ Language: ko_KR
     <string name="gutenberg_native_open_settings">설정 열기</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">이 요청을 처리할 수 있는 애플리케이션이 없습니다. 웹 브라우저를 설치하세요.</string>
     <string name="gutenberg_native_navigate_up">위로 탐색</string>
-    <string name="gutenberg_native_my_pre_publish_panel">내 사전 발행 패널</string>
-    <string name="gutenberg_native_my_post_status_info">내 글 상태 정보</string>
-    <string name="gutenberg_native_my_post_publish_panel">내 글 발행 패널</string>
-    <string name="gutenberg_native_my_document_setting_panel">내 문서 설정 패널</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">블록을 위로(%1$s 행에서 %2$s 행으로) 이동</string>
     <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
     <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
     <string name="gutenberg_native_hide_keyboard">키보드 숨기기</string>
-    <string name="gutenberg_native_here_is_the_panel_content">패널 콘텐츠입니다!</string>
     <string name="gutenberg_native_help_icon">도움말 아이콘</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">마지막 변경을 취소하려면 두 번 탭하세요.</string>
@@ -847,9 +845,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">슬라이더를 사용하여 값을 변경하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">블록을 추가하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_current_value_is_s">현재 값은 %s입니다.</string>
-    <string name="gutenberg_native_content">콘텐츠…</string>
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
-    <string name="gutenberg_native_annotations_sidebar">주석 사이드바</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
     <string name="gutenberg_native_alt_text">대체 텍스트</string>
     <string name="gutenberg_native_add_video">비디오 추가</string>
@@ -857,8 +853,6 @@ Language: ko_KR
     <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
     <string name="gutenberg_native_add_image">이미지 추가</string>
     <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
-    <string name="gutenberg_native_add_annotation">주석 추가</string>
-    <string name="gutenberg_native_add_a_description">설명 추가</string>
     <string name="reader_empty_saved_posts_content_description">“글을 목록에 저장하려면 글 저장 버튼을 탭합니다.”</string>
     <string name="reader_acessibility_list_loaded">\"목록에 %1$d개 항목이 로드되었습니다. \"</string>
     <string name="notifications_tab_dialog_switch_desc">알림</string>
@@ -1149,6 +1143,8 @@ Language: ko_KR
     <string name="quick_start_dialog_upload_icon_title">사이트 아이콘 업로드</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
     <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
+    <string name="quick_start_sites_type_grow">방문자 늘리기</string>
+    <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
     <string name="quick_start_dialog_check_stats_message_short">사이트 성능을 확인하려면 %1$s통계%2$s를 탭합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 첫 번째 글을 게시하세요.</string>
@@ -1344,10 +1340,10 @@ Language: ko_KR
     <string name="quick_start_dialog_need_help_button_positive">수용</string>
     <string name="quick_start_dialog_need_help_button_neutral">절대</string>
     <string name="quick_start_dialog_follow_sites_title">다른 사이트 팔로우</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">%1$s 검색 %2$s을 탭하여 관심사가 비슷한 사이트 찾기</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$s 리더 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_follow_sites_message">도움을 받은 사이트를 찾은 다음 업데이트가 게시될 때 받을 수 있도록 팔로우하세요.</string>
     <string name="quick_start_dialog_need_help_button_negative">아니오</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">%1$s 검색 %2$s을(를) 탭하여 주제가 비슷한 사이트 찾기</string>
     <string name="quick_start_button_positive">이동</string>
     <string name="quick_start_button_negative_short">취소</string>
     <string name="quick_start_button_negative">지금 안 함</string>
@@ -2100,7 +2096,7 @@ Language: ko_KR
     <string name="sign_in_wpcom">WordPress.com에 로그인</string>
     <string name="comment_liked">댓글에 좋아요 표시를 함</string>
     <string name="reader_label_global_related_posts">워드프레스닷컴 상세 정보</string>
-    <string name="reader_label_local_related_posts">%s의 추가 정보</string>
+    <string name="reader_label_local_related_posts">더 보기: %s</string>
     <string name="preference_open_device_settings">기기 설정 열기</string>
     <string name="invite_invalid_email">%s: 잘못된 이메일주소</string>
     <string name="invite_user_blocked_invites">%s : 사용자가 초대를 막았음</string>
@@ -2156,6 +2152,7 @@ Language: ko_KR
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
     <string name="reader_hint_post_search">워드프레스닷컴 검색</string>
+    <string name="reader_title_related_post_detail">관련 글</string>
     <string name="preview_screen_links_disabled">미리보기 화면에서 링크가 비활성화되어 있습니다.</string>
     <string name="send">보내기</string>
     <string name="user_remove_confirmation_message">%1$s을(를) 제거하면 해당 사용자는 이 사이트에 더 이상 액세스할 수 없지만 %1$s 님이 작성한 콘텐츠는 사이트에 남습니다.\n\n그래도 이 사용자를 제거하시겠습니까?</string>

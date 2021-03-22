@@ -486,7 +486,6 @@ Language: en_AU
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="quick_start_button_positive">Go</string>
@@ -1225,7 +1224,6 @@ Language: en_AU
     <string name="signout">Log out</string>
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
-    <string name="reader_label_local_related_posts">More in %s</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
@@ -1281,6 +1279,7 @@ Language: en_AU
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_hint_post_search">Search WordPress</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
     <string name="send">Send</string>
     <string name="person_removed">Successfully removed %1$s</string>

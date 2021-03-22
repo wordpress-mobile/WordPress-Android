@@ -109,7 +109,6 @@ Language: gl_ES
     <string name="stories_intro_main_title">Presentación das entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Páxina en branco creada</string>
     <string name="mlp_notice_page_created">Páxina creada</string>
-    <string name="mlp_preview_title">Vista previa do deseño</string>
     <string name="media_insert_failed">Inserción do medio fallida.</string>
     <string name="media_insert_failed_with_reason">Fallou a inserción do medio: %s</string>
     <string name="photo_picker_wordpress_media_library">Elixe desde a biblioteca de medios de WordPress</string>
@@ -280,8 +279,6 @@ Language: gl_ES
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover entrada a borrador?</string>
-    <string name="reader_label_choose_your_interests">Elixe os teus intereses</string>
-    <string name="reader_choose_interests_content_description">Elixe os teus intereses</string>
     <string name="reader_btn_done">Feito</string>
     <string name="reader_btn_select_few_interests">Selecciona algúns para continuar</string>
     <string name="post_status_post_published">Publicado</string>
@@ -407,8 +404,6 @@ Language: gl_ES
     <string name="app_theme_light">Claro</string>
     <string name="app_theme">Apariencia</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recentemente fixeches cambios nesta páxina, pero non os gardaches. Elixe unha versión para cargar:\n\n</string>
-    <string name="gutenberg_native_warning_message">Mensaxe de advertencia</string>
-    <string name="gutenberg_native_success_message">Mensaxe de éxito</string>
     <string name="gutenberg_native_show_post_content">Amosar o contido da entrada</string>
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
@@ -515,20 +510,16 @@ Language: gl_ES
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
-    <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar o teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para amosar a axuda</string>
     <string name="gutenberg_native_take_a_video">Fai un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fai unha foto ou un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Fai unha foto</string>
     <string name="gutenberg_native_start_writing">Empeza a escribir…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Título do plugin na barra lateral</string>
     <string name="gutenberg_native_show_section">Amosar a sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque ten contido non válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Baleiro</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
-    <string name="gutenberg_native_reset_block">Restablecer o bloque</string>
-    <string name="gutenberg_native_remove_annotations">Eliminar as notas</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema ao abrir o vídeo</string>
     <string name="gutenberg_native_problem_displaying_block">Problema ao amosar o bloque</string>
     <string name="gutenberg_native_post_title_s">Título da entrada. %s</string>
@@ -538,17 +529,12 @@ Language: gl_ES
     <string name="gutenberg_native_open_settings">Abrir os axustes</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ningunha aplicación pode manexar esta petición. Por favor, instala un navegador web.</string>
     <string name="gutenberg_native_navigate_up">Navegar arriba</string>
-    <string name="gutenberg_native_my_pre_publish_panel">O meu panel de prepublicación</string>
-    <string name="gutenberg_native_my_post_status_info">Información do estado da miña entrada</string>
-    <string name="gutenberg_native_my_post_publish_panel">O meu panel de publicación de entradas</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panel de axustes dos meus documentos</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloque cara arriba, da fila %1$s á fila %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover o bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloque cara abaixo, da fila %1$s á fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloque abaixo</string>
     <string name="gutenberg_native_image_caption_s">Lenda da imaxe. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar o teclado</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Aquí está o panel de contido!</string>
     <string name="gutenberg_native_help_icon">Icona de axuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Erro ao inserir os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dúas veces para desfacer o último cambio</string>
@@ -563,9 +549,7 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toca dúas veces para cambiar o valor usando o control deslizante</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dúas veces para engadir un bloque</string>
     <string name="gutenberg_native_current_value_is_s">O valor actual é %s</string>
-    <string name="gutenberg_native_content">Contido…</string>
     <string name="gutenberg_native_choose_from_device">Elixir desde o dispositivo</string>
-    <string name="gutenberg_native_annotations_sidebar">Barra lateral de notas</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu un erro descoñecido. Por favor, inténtao de novo.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">ENGADIR UN VÍDEO</string>
@@ -573,8 +557,6 @@ Language: gl_ES
     <string name="gutenberg_native_add_image_or_video">ENGADIR UNHA IMAXE OU UN VÍDEO</string>
     <string name="gutenberg_native_add_image">ENGADIR UNHA IMAXE</string>
     <string name="gutenberg_native_add_block_here">ENGADIR O BLOQUE AQUÍ</string>
-    <string name="gutenberg_native_add_annotation">Engadir unha nota</string>
-    <string name="gutenberg_native_add_a_description">Engadir unha descrición</string>
     <string name="reader_empty_saved_posts_content_description">Toca o botón «Engadir ás entradas gardadas» para gardar unha entrada na túa lista.</string>
     <string name="reader_acessibility_list_loaded">A lista cargouse con %1$d elementos.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificacións</string>
@@ -1061,7 +1043,6 @@ Language: gl_ES
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_need_help_button_negative">Non, grazas</string>
     <string name="quick_start_dialog_follow_sites_title">Segue outros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con intereses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, e sígueos para obter actualizacións cando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
@@ -1816,7 +1797,6 @@ Language: gl_ES
     <string name="signout">Pechar sesión</string>
     <string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
     <string name="reader_label_global_related_posts">Máis en WordPress.com</string>
-    <string name="reader_label_local_related_posts">Máis en %s</string>
     <string name="preference_open_device_settings">Abrir axustes do dispositivo</string>
     <string name="invite_invalid_email">%s: Correo electrónico non válido</string>
     <string name="invite_user_blocked_invites">%s: Invitacións bloqueadas polo usuario</string>
@@ -1874,6 +1854,7 @@ Language: gl_ES
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
     <string name="reader_empty_search_description">Non se atoparon artigos para %s na túa lingua</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
+    <string name="reader_title_related_post_detail">Artigos relacionados</string>
     <string name="preview_screen_links_disabled">Os enlaces están inhabilitados na vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">%1$s foi eliminado</string>

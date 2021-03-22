@@ -1,3 +1,4 @@
+16.9:
 What’s new?
 
 The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.

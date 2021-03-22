@@ -1,0 +1,8 @@
+16.9:
+Cosa c'è di nuovo?
+
+L'editor classico presto non sarà più disponibile per la creazione di nuovi articoli. Potrai ancora modificare gli articoli e le pagine esistenti nell'editor classico, ma ti consigliamo di passare ora all'editor a blocchi. 
+ 
+ Il nostro strumento per la sessione di orientamento è stato riprogettato. Questa guida verrà visualizzata quando crei un nuovo sito. 
+ 
+ Abbiamo anche apportato miglioramenti all'esperienza di progettazione del sito. 
