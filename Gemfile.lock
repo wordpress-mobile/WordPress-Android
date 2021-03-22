@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 8401cc75c5cd2d02235cfebafb5ce2a0519754bc
-  ref: 8401cc75c5cd2d02235cfebafb5ce2a0519754bc
+  revision: aefec479766afe93ef30696c1c0ca82e91574ecf
+  ref: aefec479766afe93ef30696c1c0ca82e91574ecf
   specs:
     fastlane-plugin-wpmreleasetoolkit (0.15.0)
       activesupport (~> 5)
@@ -257,7 +257,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  fastlane (~> 2.178)
+  fastlane (~> 2)
   fastlane-plugin-wpmreleasetoolkit!
   nokogiri
   rmagick (~> 4.1)
