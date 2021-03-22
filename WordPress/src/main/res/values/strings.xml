@@ -2068,7 +2068,6 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
-    <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2649,7 +2648,6 @@
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help" tools:ignore="UnusedResources">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
