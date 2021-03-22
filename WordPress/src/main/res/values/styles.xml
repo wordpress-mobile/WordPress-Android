@@ -3,10 +3,10 @@
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Material theme -->
-        <item name="colorPrimary">@color/blue_50</item>
-        <item name="colorPrimaryVariant">@color/blue_70</item>
-        <item name="colorSecondary">@color/pink_50</item>
-        <item name="colorSecondaryVariant">@color/pink_70</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="colorSurface">@android:color/white</item>
         <item name="colorError">@color/red_50</item>
