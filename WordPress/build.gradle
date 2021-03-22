@@ -92,9 +92,19 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "buildType"
+    flavorDimensions "app", "buildType"
 
     productFlavors {
+        wordpress {
+            dimension "app"
+            applicationId "org.wordpress.android"
+        }
+
+        jetpack {
+            dimension "app"
+            applicationId "com.jetpack.android"
+        }
+
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
