@@ -4,19 +4,15 @@ import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
-import org.wordpress.android.databinding.LoginPrologueBottomButtonsContainerUnifiedBinding
 import org.wordpress.android.databinding.LoginSignupScreenBinding
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
@@ -57,33 +53,15 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         }
         val binding = LoginSignupScreenBinding.bind(view)
 
-        val firstButton: MaterialButton
-        val secondButton: MaterialButton
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            binding.bottomButtons.removeAllViews()
-            val bottomButtonsBinding = LoginPrologueBottomButtonsContainerUnifiedBinding.inflate(
-                    LayoutInflater.from(context),
-                    binding.bottomButtons,
-                    true
-            )
-            firstButton = bottomButtonsBinding.firstButton
-            secondButton = bottomButtonsBinding.secondButton
-        } else {
-            firstButton = binding.loginPrologueBottomButtonsContainer.firstButton
-            secondButton = binding.loginPrologueBottomButtonsContainer.secondButton
-        }
+        with(binding.bottomButtonsContainer) {
+            continueWithWpcomButton.setOnClickListener {
+                unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
+                loginPrologueListener.showEmailLoginScreen()
+            }
 
-        firstButton.setOnClickListener {
-            unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
-            loginPrologueListener.showEmailLoginScreen()
-        }
-
-        secondButton.setOnClickListener {
-            if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            enterYourSiteAddressButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
                 loginPrologueListener.loginViaSiteAddress()
-            } else {
-                loginPrologueListener.doStartSignup()
             }
         }
 
