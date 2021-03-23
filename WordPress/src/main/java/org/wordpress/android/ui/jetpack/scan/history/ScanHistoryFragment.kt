@@ -51,6 +51,11 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         }
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }

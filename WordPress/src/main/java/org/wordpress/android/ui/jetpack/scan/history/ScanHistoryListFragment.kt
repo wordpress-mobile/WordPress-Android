@@ -39,6 +39,11 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         }
     }
 
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
