@@ -3,17 +3,17 @@ package org.wordpress.android.ui.jetpack.backup.download
 import android.R.id
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.backup_download_activity.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.BackupDownloadActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class BackupDownloadActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(BackupDownloadActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
 
-        setContentView(R.layout.backup_download_activity)
-
-        setSupportActionBar(toolbar_main)
+            setSupportActionBar(toolbarMain)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

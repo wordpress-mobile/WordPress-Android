@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.JetpackBackupRestoreFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
@@ -44,11 +44,12 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initDagger()
-        initBackPressHandler()
-        initAdapter()
-        initViewModel(savedInstanceState)
+        with(JetpackBackupRestoreFragmentBinding.bind(view)) {
+            initDagger()
+            initBackPressHandler()
+            initAdapter()
+            initViewModel(savedInstanceState)
+        }
     }
 
     private fun initDagger() {
@@ -71,16 +72,19 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel.onBackPressed()
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
-        recycler_view.itemAnimator = null
-        recycler_view.addItemDecoration(
+    private fun JetpackBackupRestoreFragmentBinding.initAdapter() {
+        recyclerView.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
+        recyclerView.itemAnimator = null
+        recyclerView.addItemDecoration(
                 HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
     }
 
-    private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(BackupDownloadViewModel::class.java)
+    private fun JetpackBackupRestoreFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(
+                this@BackupDownloadFragment,
+                viewModelFactory
+        ).get(BackupDownloadViewModel::class.java)
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
@@ -101,7 +105,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel.start(site, activityId, savedInstanceState)
     }
 
-    private fun initObservers() {
+    private fun JetpackBackupRestoreFragmentBinding.initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, {
             updateToolbar(it.toolbarState)
             showView(it)
@@ -151,8 +155,8 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         })
     }
 
-    private fun showView(state: BackupDownloadUiState) {
-        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(state.items)
+    private fun JetpackBackupRestoreFragmentBinding.showView(state: BackupDownloadUiState) {
+        ((recyclerView.adapter) as JetpackBackupRestoreAdapter).update(state.items)
     }
 
     private fun updateToolbar(toolbarState: ToolbarState) {
