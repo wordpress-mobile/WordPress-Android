@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-07 22:14:51+0000
+Translation-Revision-Date: 2021-03-17 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
     <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
     <string name="activity_log_backup_download_notice_download_action">İndir</string>
     <string name="threat_fix_all_status_success_message_plural">Tehditler başarıyla düzeltildi.</string>
     <string name="threat_fix_all_confirmation_message_plural">Lütfen tüm %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
+    <string name="scan_idle_threats_description_plural">Tarama işlemi %2$s üzerinde %1$s olası tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %3$s.</string>
     <string name="scan_fixing_threats_description_plural">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal bir şekilde kullanmaya devam edebilirsiniz, ilerlemeyi istediğiniz zaman kontrol edebilirsiniz.</string>
     <string name="gutenberg_native_edit_focal_point">Odak noktasını düzenle</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Görseli düzenlemek, değiştirmek veya temizlemek üzere alt sayfayı açmak için iki kez dokunun</string>
@@ -38,6 +40,9 @@ Language: tr
     <string name="invite_links_section_title">Davet bağlantısı</string>
     <string name="threats_found_singular">Tehdit bulundu</string>
     <string name="threats_found_plural">Tehditler bulundu</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Tarama tamamlandı&lt;/b> &lt;br> %s Olası tehditler bulundu</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Tarama tamamlandı&lt;/b> &lt;br> Bir olası tehdit bulundu</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Tarama Bitti&lt;/b> &lt;br> Tehdit bulunmadı</string>
     <string name="scan_fixing_threats_title_singular">Tehditler düzeltiliyor</string>
     <string name="disable">Etkisizleştir</string>
     <string name="quick_start_card_menu_unpin">Sabitlemeyi kaldır</string>
@@ -93,6 +98,7 @@ Language: tr
     <string name="threat_status_fixed">Sabit</string>
     <string name="threat_found_header">Bulundu</string>
     <string name="scan_here_to_help">yardım etmek için buradayım</string>
+    <string name="scan_idle_threats_description_singular">Tarama işlemi %1$s üzerinde bir olası tehdit buldu. Lütfen aşağıdan tehdidi inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %2$s.</string>
     <string name="scan_idle_manual_scan_description">Sitenizi yeniden gözden geçirmek için manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
     <string name="scan_provisioning_description">Jetpack Scan\'e hoş geldiniz! Sitenize göz atıyor ve tam bir tarama yapacak şekilde ayarlıyoruz. Taramayı etkileyebilecek herhangi bir sorun tespit edersek size haber vereceğiz, ardından ilk tam taramanız başlayacaktır.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.</string>
@@ -367,6 +373,7 @@ Language: tr
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Fotoğrafçı Cameron Karsten\'in çalışmalarından çok ilham alıyorum. Bu teknikleri bir sonraki adımda deneyeceğim</string>
     <string name="login_prologue_second_subtitle_one">İlham Alma</string>
+    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni bloglar keşfedin.</string>
     <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
     <string name="login_prologue_title_third">Yorumları ve bildirimleri gerçek zamanlı olarak görün.</string>
     <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
@@ -583,6 +590,8 @@ Language: tr
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Çöpe atılan yazılar düzenlenemez. Üzerinde çalışabilmek için bu yazının durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
+    <string name="reader_label_choose_your_interests"> Konularınızı seçin</string>
+    <string name="reader_choose_interests_content_description">Konularınızı seçin</string>
     <string name="reader_btn_done">Tamamlandı</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
     <string name="post_status_post_published">Yayımlandı</string>
@@ -1351,6 +1360,7 @@ Language: tr
     <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_need_help_button_negative">Hayır</string>
     <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Benzer konulara sahip siteleri aramak için %1$sAra%2$s\'ya dokunun</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Devam etmek için %1$s Okuyucu %2$s seçeneğine dokunun.</string>
     <string name="quick_start_dialog_follow_sites_message">Size hitab eden siteleri bulun ve yayınladıkları zaman güncellemeleri almak için bunları takip edin.</string>
     <string name="quick_start_button_positive">Git</string>
@@ -2105,6 +2115,7 @@ Language: tr
     <string name="signout">Çıkış yap</string>
     <string name="sign_in_wpcom">WordPress.com hesabına giriş yap</string>
     <string name="reader_label_global_related_posts">WordPress.com üzerinden daha fazlası</string>
+    <string name="reader_label_local_related_posts">Daha fazlası: %s</string>
     <string name="preference_open_device_settings">Cihaz ayarlarını aç</string>
     <string name="invite_invalid_email">%s: Geçersiz e-posta</string>
     <string name="invite_user_blocked_invites">%s: Kullanıcı bloklu davetler</string>

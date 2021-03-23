@@ -2,10 +2,10 @@ package org.wordpress.android.util.experiments
 
 import javax.inject.Inject
 
-class BiasAAExperiment
+class CreateMenuStoryFirstABExperiment
 @Inject constructor(
     exPlat: ExPlat
 ) : Experiment(
-        name = "explat_test_aa_weekly_wpandroid_2021_week_06",
+        name = "wpandroid_create_menu_story_first",
         exPlat
 )

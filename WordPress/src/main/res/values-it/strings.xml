@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-08 22:22:41+0000
+Translation-Revision-Date: 2021-03-17 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>
     <string name="reader_title_interests">Argomenti seguiti</string>
     <string name="activity_log_backup_download_notice_download_action">Scarica</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignora</string>
     <string name="stories_intro_main_subtitle">Un nuovo modo per creare e pubblicare contenuti coinvolgenti nel tuo sito.</string>
     <string name="threat_fix_all_status_success_message_plural">Le minacce sono state risolte.</string>
     <string name="threat_fix_all_confirmation_message_plural">Conferma di voler correggere tutte le %s minacce attive.</string>
+    <string name="scan_idle_threats_description_plural">La scansione ha trovato %1$s potenziali minacce con %2$s. Esamina questi elementi di seguito oppure tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
     <string name="scan_fixing_threats_description_plural">Stiamo facendo il possibile per risolvere queste minacce in background. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
     <string name="gutenberg_native_edit_focal_point">Modifica il punto focale</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio nella parte inferiore per modificare, sostituire o cancellare l\'immagine</string>
@@ -38,6 +40,9 @@ Language: it
     <string name="invite_links_section_title">Link di invito</string>
     <string name="threats_found_singular">Trovata minaccia</string>
     <string name="threats_found_plural">Minacce rivelate</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scansione terminata&lt;/b> &lt;br> %s potenziali minacce trovate</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scansione terminata&lt;/b> &lt;br> Nessuna minaccia trovata</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scansione terminata&lt;/b> &lt;br> Una potenziale minaccia trovata</string>
     <string name="scan_fixing_threats_title_singular">Risoluzione della minaccia</string>
     <string name="disable">Disabilita</string>
     <string name="quick_start_list_review_pages_subtitle">Controlla le pagine e apporta modifiche oppure aggiungi o rimuovi le pagine.</string>
@@ -93,6 +98,7 @@ Language: it
     <string name="threat_status_fixed">Corretto</string>
     <string name="threat_found_header">Trovato</string>
     <string name="scan_here_to_help">qui per aiutare</string>
+    <string name="scan_idle_threats_description_singular">La scansione ha trovato una potenziale minaccia con %1$s. Esamina la minaccia di seguito e tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %2$s.</string>
     <string name="scan_idle_manual_scan_description">Per esaminare il sito nuovamente, esegui una scansione manuale o attendi che Jetpack scansioni il sito più tardi in giornata.</string>
     <string name="scan_provisioning_description">Jetpack Scan ti dà il benvenuto! Stiamo esaminando l\'ambito del tuo sito, impostando l\'esecuzione di una scansione completa. Ti avviseremo se riscontreremo problemi che possono influire su una scansione, quindi verrà avviata la tua prima scansione completa.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan ti dà il benvenuto. Stiamo analizzando il tuo sito per la prima volta e presto riceverai i risultati.</string>
@@ -371,6 +377,7 @@ Language: it
     <string name="login_prologue_title_second">Con l\'editor potente puoi pubblicare anche durante i tuoi spostamenti.</string>
     <string name="login_prologue_title_first">Benvenuto nel costruttore di siti web più popolare del mondo.</string>
     <string name="login_prologue_title_third">Visualizza i commenti e le notifiche in tempo reale.</string>
+    <string name="login_prologue_title_fifth">Segui i tuoi siti preferiti e scopri nuovi blog.</string>
     <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
     <string name="reader_discover_recommended_blogs_header">Siti da seguire</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione.</string>
@@ -591,6 +598,8 @@ Language: it
     <string name="publish_date">Data di pubblicazione</string>
     <string name="ccpa_privacy_notice_read">Leggi la nota sulla privacy del CCPA</string>
     <string name="ccpa_privacy_notice_caption">Il California Consumer Privacy Act (\"CCPA\") ci impone di fornire ai residenti in California alcune informazioni aggiuntive sulle categorie di informazioni personali che raccogliamo e condividiamo, dove otteniamo tali informazioni personali e come e perché le usiamo.</string>
+    <string name="reader_label_choose_your_interests">Scegli gli argomenti</string>
+    <string name="reader_choose_interests_content_description">Scegli gli argomenti</string>
     <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
@@ -1353,6 +1362,7 @@ Language: it
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
     <string name="quick_start_dialog_need_help_button_negative">No grazie</string>
     <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti interessano e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tocca %1$s Cerca %2$s per guardare altri siti con argomenti simili</string>
     <string name="quick_start_button_positive">Vai</string>
     <string name="quick_start_button_negative_short">Annulla</string>
     <string name="quick_start_button_negative">Non ora</string>
@@ -2105,6 +2115,7 @@ Language: it
     <string name="signout">Uscire</string>
     <string name="comment_liked">Like assegnato al commento</string>
     <string name="reader_label_global_related_posts">saperne di più su WordPress.com</string>
+    <string name="reader_label_local_related_posts">Ulteriori informazioni da %s</string>
     <string name="preference_open_device_settings">Accedere alle impostazioni del device</string>
     <string name="invite_invalid_email">%s: email non valida</string>
     <string name="invite_user_blocked_invites">%s: email non valida</string>

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-10 09:54:09+0000
+Translation-Revision-Date: 2021-03-16 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
     <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下載</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
+    <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
@@ -37,6 +39,9 @@ Language: zh_TW
     <string name="invite_links_section_title">邀請連結</string>
     <string name="threats_found_singular">發現威脅</string>
     <string name="threats_found_plural">發現數個威脅</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>掃描完成&lt;/b> &lt;br> %s 發現潛在威脅</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>掃描完成&lt;/b> &lt;br> 發現一個潛在威脅</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>掃描完成&lt;/b> &lt;br> 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
     <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
@@ -92,6 +97,7 @@ Language: zh_TW
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">隨時為你提供協助</string>
+    <string name="scan_idle_threats_description_singular">掃描作業發現 %1$s 有一個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %2$s。</string>
     <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
@@ -355,6 +361,7 @@ Language: zh_TW
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">攝影師 Cameron Karsten 的作品讓我深受啟發。 我下次會嘗試這些技巧</string>
     <string name="login_prologue_second_subtitle_one">激發靈感</string>
+    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新網誌。</string>
     <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
     <string name="login_prologue_title_third">即時查看留言和通知。</string>
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
@@ -569,6 +576,8 @@ Language: zh_TW
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">移至草稿</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
+    <string name="reader_label_choose_your_interests">選擇你的主題</string>
+    <string name="reader_choose_interests_content_description">選擇你的主題</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
     <string name="post_status_post_published">已發表</string>
@@ -1329,6 +1338,7 @@ Language: zh_TW
     <string name="quick_start_dialog_need_help_button_neutral">從未</string>
     <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s搜尋%2$s以尋找具有相似主題的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>
     <string name="quick_start_button_positive">執行</string>
@@ -2073,6 +2083,7 @@ Language: zh_TW
     <string name="signout">登出</string>
     <string name="sign_in_wpcom">登入 WordPress.com</string>
     <string name="reader_label_global_related_posts">想瞭解更多資訊，請上 WordPress.com</string>
+    <string name="reader_label_local_related_posts">更多來自 %s 的項目</string>
     <string name="preference_open_device_settings">開啟裝置設定</string>
     <string name="invite_invalid_email">%s：電子郵件無效</string>
     <string name="invite_user_blocked_invites">%s：使用者已封鎖邀請</string>

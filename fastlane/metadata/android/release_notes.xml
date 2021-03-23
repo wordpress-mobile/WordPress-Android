@@ -1,69 +1,159 @@
 <ar>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+16.9:
+ما الجديد؟
+
+لن يتوفر المحرر التقليدي Classic Editor قريبًا لإنشاء مقالات جديدة. ستظل قادرًا على تحرير مقالاتك وصفحاتك الحالية في المحرر التقليدي. ولكننا نوصي بالتبديل إلى محرر المكوّنات الآن.
+
+تم إعادة تصميم أداة البدء السريع الخاصة بنا! يظهر هذا الدليل عند إنشاء موقع جديد.
+
+لقد أجرينا أيضًا تحسينات على تجربة تصميم الموقع.
 </ar>
 <de-DE>
-16.8:
-Die neuesten Updates für die WordPress Android-App sind da. Wir haben die Funktionalität veröffentlichter Startseiten verbessert und sichergestellt, dass Löschen oder ein Zurücksetzen in Entwurfsform nicht zum Absturz deiner Website führen. Im Cover-Block wird nun das Setzen eines Fokuspunkts unterstützt. Außerdem haben wir die P2-Verwaltung erweitert, sodass du jetzt Einladungs-Links für P2-Rollen generieren, teilen und deaktivieren kannst.
+16.9:
+Was gibt's Neues?
+
+Der klassische Editor wird schon bald nicht mehr zum Erstellen neuer Beiträge verfügbar sein. Du kannst deine bestehenden Beiträge und Seiten weiterhin im klassischen Editor bearbeiten, doch wir würden dir empfehlen, jetzt zum neuen Block-Editor zu wechseln. 
+ 
+ Unser Schnellstart-Tool hat ein neues Design bekommen! Dieser Leitfaden wird angezeigt, wenn du eine neue Website erstellst. 
+ 
+ Außerdem haben wir Verbesserungen am Website-Design-Erlebnis vorgenommen. 
 </de-DE>
 <en-US>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+16.9:
+What’s new?
+
+The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.
 </en-US>
 <es-ES>
-16.8:
-Ya están aquí las últimas actualizaciones de la aplicación Android para WordPress. Hemos mejorado la funcionalidad de las páginas de inicio publicadas, garantizando que borrarlas o volverlas de nuevo a su forma de borrador no romperá tu sitio. Hemos añadido compatibilidad para establecer el punto focal del bloque de fondo. Además, hemos mejorado la gestión de P2, para que puedas generar, compartir y desactivar los enlaces de invitación para los perfiles de P2.
+16.9:
+¿Qué hay de nuevo?
+
+El editor clásico pronto no estará disponible para crear nuevas entradas. Continuarás pudiendo editar tus entradas y páginas existentes en el editor clásico, pero te recomendamos que cambies ahora al editor de bloques.
+
+¡Nuestra herramienta de inicio rápido ha sido rediseñada! Esta guía aparece cuando creas un nuevo sitio.
+
+También hemos hecho mejoras en el diseño de la experiencia del sitio.
 </es-ES>
 <fr-CA>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+16.9 :
+Nouveautés
+
+L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
+ 
+ Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
+ 
+ Nous avons également amélioré l’expérience de design du site. 
 </fr-CA>
 <fr-FR>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+16.9 :
+Nouveautés
+
+L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
+ 
+ Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
+ 
+ Nous avons également amélioré l’expérience de design du site. 
 </fr-FR>
 <iw-IL>
-16.8:
-העדכונים האחרונים לאפליקציה של WordPress ב-Android כבר כאן. שיפרנו את הפונקציונליות של עמודי בית שפורסמו כדי לוודא שמחיקה שלהם או שחזור שלהם למצב טיוטה לא יהרסו את האתר. הוספנו תמיכה בהגדרה של נקודת מוקד בבלוק הכיסוי. בנוסף, שיפרנו את יכולת הניהול של P2 כדי שתהיה לך אפשרות ליצור, לשתף ולהשבית קישורי הזמנה לתפקידים של P2.
+16.9:
+מה חדש?
+
+בקרוב, העורך הקלאסי לא יהיה זמין ליצירה של פוסטים חדשים. עדיין תהיה לך אפשרות לערוך פוסטים ועמודים קיימים בעורך הקלאסי אבל אנחנו ממליצים לעבור לעורך הבלוקים כעת. 
+ 
+ עיצבנו מחדש את הכלי להתחלה מהירה! המדריך מופיע כאשר יוצרים אתר חדש. 
+ 
+ בנוסף, שיפרנו את חוויית העיצוב של האתר. 
 </iw-IL>
 <id>
-16.8:
-Ini adalah pembaruan paling mutakhir untuk aplikasi Android WordPress. Kami meningkatkan fungsi halaman situs yang diposkan sehingga menjamin bahwa menghapus atau mengembalikannya ke formulir konsep tidak akan merusak situs Anda.  Kami menambahkan dukungan untuk mengatur titik fokus blok Sampul. Selain itu, kami meningkatkan pengelolaan P2 sehingga Anda dapat membuat, membagikan, dan menonaktifkan tautan undangan untuk peran P2.
+16.9:
+Apa yang baru?
+
+Dalam waktu dekat editor klasik tidak akan tersedia lagi untuk pembuatan pos baru. Anda tetap dapat menggunakan editor klasik untuk menyunting pos dan halaman yang sudah ada tetapi kami menyarankan agar Anda segera beralih ke editor blok. 
+ 
+ Alat Mulai Cepat kami punya desain baru! Panduan ini akan muncul saat Anda membuat situs baru. 
+ 
+ Kami juga telah melakukan peningkatan untuk pengalaman mendesain situs. 
 </id>
 <it-IT>
-16.8:
-Ecco gli ultimi aggiornamenti all'app per Android di WordPress. Abbiamo migliorato la funzionalità delle homepage pubblicate, assicurando che l'eliminazione o il recupero nel modulo delle bozze non comprometta il tuo sito. Abbiamo aggiunto il supporto per le impostazioni del punto focale del blocco Copertina. Inoltre, abbiamo migliorato la gestione di P2, in modo da poter generare, condividere e disabilitare i link di invito per i ruoli P2.
+16.9:
+Cosa c'è di nuovo?
+
+L'editor classico presto non sarà più disponibile per la creazione di nuovi articoli. Potrai ancora modificare gli articoli e le pagine esistenti nell'editor classico, ma ti consigliamo di passare ora all'editor a blocchi. 
+ 
+ Il nostro strumento per la sessione di orientamento è stato riprogettato. Questa guida verrà visualizzata quando crei un nuovo sito. 
+ 
+ Abbiamo anche apportato miglioramenti all'esperienza di progettazione del sito. 
 </it-IT>
 <ja-JP>
-16.8:
-WordPress Android アプリの最新の更新プログラムはこちらです。 公開ホームページの機能を改善し、削除したり下書きフォームに戻したりしてもサイトが壊れないようにしました。 カバーブロックの焦点を設定するサポートを追加しました。 また、P2権限グループに対する招待リンクを生成、共有、無効化できるように、P2管理を強化しました。
+16.9:
+新着情報
+
+間もなく旧エディターでは新規の投稿を作成できなくなります。 既存の投稿やページは引き続き旧エディターでも編集できますが、これを機にブロックエディターに移行することを推奨をしました。 
+ 
+ クイックスタートツールのデザインを変更しました。 このガイドは新しいサイトを作成するとき表示されます。 
+ 
+ サイトデザインの使用環境も改善しました。 
 </ja-JP>
 <ko-KR>
-16.8:
-최근에 WordPress Android 앱을 업데이트했습니다. 발행된 홈페이지를 삭제하거나 임시글 양식으로 되돌려도 사이트가 중단되지 않도록 기능을 개선했습니다. 커버 블록 초점 설정에 대한 지원을 추가했습니다. 또한, P2 역할에 대한 초대 링크를 생성하고, 공유하고, 비활성화할 수 있도록 P2 관리를 개선했습니다.
+16.9:
+새로운 기능
+
+구 버전 편집기는 곧 새 글 작성에 사용할 수 없게 됩니다. 구 버전 편집기에서 기존 글과 페이지는 계속 편집할 수 있지만, 지금 블록 편집기로 전환하는 것이 좋습니다. 
+ 
+ 퀵 스타트 도구를 새롭게 디자인했습니다! 이 가이드는 새 사이트를 만들 때 표시됩니다. 
+ 
+ 사이트 디자인 환경에도 개선 사항을 적용했습니다. 
 </ko-KR>
-<nl-NL>
-16.8:
-De nieuwste updates voor de WordPress Android app zijn hier. We hebben de functionaliteit van gepubliceerde homepages verbeterd, zodat het verwijderen of terugzetten naar conceptvorm je site niet zal vernielen. We hebben ondersteuning toegevoegd voor het instellen van het Cover blok focus punt. Bovendien hebben we het P2 beheer verbeterd, zodat je uitnodigingslinks voor P2 rollen kunt aanmaken, delen en uitschakelen.
-</nl-NL>
 <ru-RU>
-16.8:
-Последние обновления приложения WordPress для Android --
-Мы улучшили функциональность опубликованных домашних страниц, гарантируя, что их удаление или возврат к черновику не нарушит работу вашего сайта. Мы добавили поддержку настройки фокуса блока обложки. Кроме того, мы улучшили управление P2, так что вы можете создавать, публиковать и отключать пригласительные ссылки для ролей P2.
+16.9:
+
+Классический редактор скоро станет недоступен для создания новых записей, но это не повлияет на редактирование ваших существующих сообщений и страниц. Мы рекомендуем вам переключиться на редактор блоков, если вы еще этого не сделали.
+
+Наш инструмент быстрого старта был переработан! Он используется при создании нового сайта.
+
+Мы также улучшили процесс оформления сайта.
 </ru-RU>
 <sv-SE>
-16.8:
-De senaste uppdateringarna av Android-appen WordPress är här. Vi har förbättrat funktionen för publicerade hemsidor, så att din webbplats inte bryts om du tar bort dem eller återställer dem till utkast. Vi har lagt till stöd för att ställa in fokalpunkt för omslagsblocket. Dessutom förbättrade vi P2-hanteringen så att du kan skapa, dela och inaktivera inbjudningslänkar för P2-roller.
+16.9:
+Nytt
+
+Snart går det inte att använda den klassiska redigeraren för nya inlägg. Du kommer fortfarande att kunna redigera befintliga inlägg och sidor i den, men vi rekommenderar att du växlar över till blockredigeraren nu.
+
+Vårt snabbstartsverktyg har fått ny design! Den guiden visas när du skapar en ny webbplats.
+
+Vi har även förbättrat tillvägagångssättet för design av webbplatsen.
 </sv-SE>
 <tr-TR>
-16.8:
-WordPress Android uygulamasının en son güncellemeleri burada. Yayınlanan ana sayfaların işlevselliğini geliştirerek bunları silmenin veya taslak forma geri döndürmenin sitenizi bozmamasını sağladık. Manşet bloğu odak noktasını ayarlamak için destek ekledik. Ayrıca P2 yönetimini geliştirdik, böylece P2 rolleri için davet bağlantıları oluşturabilir, paylaşabilir ve devre dışı bırakabilirsiniz.
+16.9:
+Yenilikler
+
+Yakında, yeni yayınlar oluşturmak için artık klasik düzenleyici kullanamayacaksınız. Klasik düzenleyicide mevcut yayınlarınızı ve sayfalarınızı yine de düzenleyebilirsiniz, ancak blok düzenleyiciye geçmenizi öneririz. 
+ 
+ Hızlı Başlangıç aracımız yeniden tasarlandı. Bu kılavuz, yeni bir site oluşturduğunuzda görünür. 
+ 
+ Ayrıca site tasarımı deneyiminde de iyileştirmeler yaptık. 
 </tr-TR>
 <zh-CN>
-16.8：
-这是 WordPress Android 应用程序的最新更新。 我们改进了已发布主页的功能，确保将其删除或还原为草稿形式不会破坏您的站点。 我们增加了对设置“封面区块”焦点的支持。 此外，我们还增强了 P2 管理，以便您可以对 P2 角色的邀请链接执行生成、共享和禁用等操作。
+16.9：
+最新功能
+
+经典编辑器很快将无法用于撰写新文章，但这不会影响编辑现有的文章和页面。如果尚未切换到区块编辑器，建议您切换到区块编辑器。
+
+我们已重新设计快速启动工具！创建新网站时会显示本指南。
+
+我们还改进了网站设计体验。
 </zh-CN>
 <zh-TW>
-16.8:
-以下是 WordPress Android 應用程式的最新更新。 我們改善了已發表首頁的功能，現在刪除已發表首頁或將其還原到草稿形式不會破壞整個網站。 我們為設定封面區塊焦點新增了支援。 另外，我們增強了 P2 管理，現在你可以產生、分享和停用 P2 角色的邀請連結。
+16.9：
+有哪些最新內容？
+
+近期內即可使用傳統編輯器建立新文章。 屆時你仍可在傳統編輯器中編輯現有的文章和頁面，但我們建議你現在切換至區塊編輯器。 
+ 
+ 我們的快速入門工具經過重新改版！ 此指南會在你建立新網站時顯示。 
+ 
+ 我們也改善了網站設計體驗。 
 </zh-TW>
