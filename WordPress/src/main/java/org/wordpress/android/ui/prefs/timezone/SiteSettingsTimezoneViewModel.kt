@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.prefs.timezone
 
-import android.app.Activity
+import android.content.Context
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
@@ -14,11 +16,14 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.Constants
+import org.wordpress.android.R
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
+import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -28,32 +33,53 @@ import java.time.zone.ZoneRulesException
 import java.util.Locale
 import javax.inject.Inject
 
-class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
+class SiteSettingsTimezoneViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider
+) : ViewModel() {
     private val timezonesList = mutableListOf<TimezonesList>()
 
-    private val _showEmpty = MutableLiveData<Boolean>()
-    val showEmptyView: LiveData<Boolean> = _showEmpty
+    private val _showEmptyView = SingleLiveEvent<Boolean>()
+    val showEmptyView: LiveData<Boolean> = _showEmptyView
 
-    private val _showProgress = MutableLiveData<Boolean>()
-    val showProgressView: LiveData<Boolean> = _showProgress
+    private val _showProgressView = SingleLiveEvent<Boolean>()
+    val showProgressView: LiveData<Boolean> = _showProgressView
 
-    private val _dismiss = MutableLiveData<Unit>()
-    val dismissWithError: LiveData<Unit> = _dismiss
+    private val _dismissWithError = SingleLiveEvent<Unit>()
+    val dismissWithError: LiveData<Unit> = _dismissWithError
 
-    private val searchInput = MutableLiveData<String>()
-    val timezoneSearch: LiveData<List<TimezonesList>> = Transformations.switchMap(searchInput) { term ->
-        filterTimezones(term)
-    }
+    private val _dismissBottomSheet = SingleLiveEvent<Unit>()
+    val dismissBottomSheet: LiveData<Unit> = _dismissBottomSheet
 
     private val _suggestedTimezone = MutableLiveData<String>()
     val suggestedTimezone = _suggestedTimezone
 
+    private val _selectedTimezone = SingleLiveEvent<String>()
+    val selectedTimezone = _selectedTimezone
+
     private val _timezones = MutableLiveData<List<TimezonesList>>()
-    val timezones = _timezones
+
+    private val searchInput = MutableLiveData<String>()
+    private val timezoneSearch: LiveData<List<TimezonesList>> = Transformations.switchMap(searchInput) { term ->
+        filterTimezones(term)
+    }
+
+    val timezones = MediatorLiveData<List<TimezonesList>>().apply {
+        addSource(_timezones) {
+            value = it
+        }
+        addSource(timezoneSearch) {
+            value = it
+        }
+    }.distinctUntilChanged()
 
 
-    fun searchTimezones(query: CharSequence?) {
+    fun searchTimezones(query: CharSequence) {
         searchInput.value = query.toString()
+    }
+
+    fun onTimezoneSelected(timezone: String) {
+        _selectedTimezone.value = timezone
+        _dismissBottomSheet.value = Unit
     }
 
     private fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
@@ -77,29 +103,29 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         _timezones.postValue(timezonesList)
     }
 
-    fun getTimezones(context: Activity) {
+    fun getTimezones(context: Context) {
         _suggestedTimezone.postValue(ZoneId.systemDefault().id)
 
         requestTimezones(context)
     }
 
-    private fun requestTimezones(context: Activity) {
+    private fun requestTimezones(context: Context) {
         val listener = Response.Listener { response: String? ->
             AppLog.d(SETTINGS, "timezones requested")
-            _showProgress.postValue(false)
+            _showProgressView.postValue(false)
 
             if (!TextUtils.isEmpty(response)) {
                 timezonesList.clear()
                 loadTimezones(response)
             } else {
                 AppLog.w(SETTINGS, "empty response requesting timezones")
-                _dismiss.postValue(Unit)
+                _dismissWithError.postValue(Unit)
             }
         }
 
         val errorListener = Response.ErrorListener { error: VolleyError? ->
             AppLog.e(SETTINGS, "Error requesting timezones", error)
-            _dismiss.postValue(Unit)
+            _dismissWithError.postValue(Unit)
         }
 
         val request: StringRequest = object : StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
@@ -108,7 +134,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
             }
         }
 
-        _showProgress.postValue(true)
+        _showProgressView.postValue(true)
         val queue = Volley.newRequestQueue(context)
         queue.add(request)
     }
@@ -119,19 +145,23 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
             val jsonTimezonesByContinent = jsonResponse.getJSONObject("timezones_by_continent")
             val jsonTimezonesManualOffsets = jsonResponse.getJSONArray("manual_utc_offsets")
 
-            Continents.values().map {
-                timezonesList.add(TimezoneHeader(it.s))
-                addTimezoneItems(jsonTimezonesByContinent.getJSONArray(it.s))
+            val continents: Array<String> = resourceProvider.getStringArray(R.array.site_settings_timezones_continents)
+
+            continents.map {
+                timezonesList.add(TimezoneHeader(it))
+                addTimezoneItems(jsonTimezonesByContinent.getJSONArray(it))
             }
 
-            timezonesList.add(TimezoneHeader("Manual Offsets"))
+            timezonesList.add(TimezoneHeader(
+                    resourceProvider.getString(R.string.site_settings_timezones_manual_offsets)
+            ))
             addManualTimezoneItems(jsonTimezonesManualOffsets)
 
             AppLog.d(SETTINGS, timezonesList.toString())
             _timezones.postValue(timezonesList)
         } catch (e: JSONException) {
             AppLog.e(SETTINGS, "Error parsing timezones", e)
-            _dismiss.postValue(Unit)
+            _dismissWithError.postValue(Unit)
         }
     }
 
@@ -193,19 +223,6 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
             AppLog.e(SETTINGS, "Error parsing zoneId", e)
             null
         }
-    }
-
-    enum class Continents(val s: String) {
-        AFRICA("Africa"),
-        AMERICA("America"),
-        ANTARCTICA("Antarctica"),
-        ARCTIC("Arctic"),
-        ASIA("Asia"),
-        ATLANTIC("Atlantic"),
-        AUSTRALIA("Australia"),
-        EUROPE("Europe"),
-        INDIAN("Indian"),
-        PACIFIC("Pacific"),
     }
 }
 

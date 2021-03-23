@@ -1137,9 +1137,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showTimezoneBottomSheet() {
-        SiteSettingsTimezoneBottomSheet bottomSheet =
-                SiteSettingsTimezoneBottomSheet.newInstance(mSiteSettings.getTimezone());
-        bottomSheet.setTimezoneSettingCallback(this);
+        SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance(this);
         bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "timezone-dialog-tag");
     }
 

@@ -11,5 +11,3 @@
     android:paddingTop="@dimen/margin_extra_medium_large"
     android:textAppearance="?attr/textAppearanceHeadline6"
     tools:text="Africa" />
-
-

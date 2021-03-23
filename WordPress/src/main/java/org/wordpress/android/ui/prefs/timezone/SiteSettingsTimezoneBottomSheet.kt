@@ -10,19 +10,15 @@ import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListBinding
-import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
@@ -32,16 +28,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     private lateinit var timezoneViewModel: SiteSettingsTimezoneViewModel
 
     private val timezoneAdapter = TimezoneAdapter { timezone ->
-        setSelectedTimezone(timezone)
-    }
-
-    private var searchJob: Job? = null
-
-    private fun search(query: CharSequence?) {
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            timezoneViewModel.searchTimezones(query)
-        }
+        timezoneViewModel.onTimezoneSelected(timezone.value)
     }
 
     private var _binding: SiteSettingsTimezoneBottomSheetListBinding? = null
@@ -50,10 +37,6 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     private var bottomSheet: FrameLayout? = null
 
     private var callback: TimezoneSelectionCallback? = null
-
-    fun setTimezoneSettingCallback(callback: TimezoneSelectionCallback) {
-        this.callback = callback
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +56,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
         setupLiveData()
-        timezoneViewModel.getTimezones(requireActivity())
+        timezoneViewModel.getTimezones(requireContext())
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -110,8 +93,8 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 })
             }
 
-            searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
-                search(inputText)
+            searchInputLayout.editText?.doOnTextChanged { _, _, _, _ ->
+                searchTimezones()
             }
 
             searchInputLayout.editText?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -120,7 +103,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
             searchInputLayout.editText?.setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    updateTimezonesFromInput()
+                    searchTimezones()
                     true
                 } else {
                     false
@@ -129,7 +112,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
             searchInputLayout.editText?.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_GO) {
-                    updateTimezonesFromInput()
+                    searchTimezones()
                     true
                 } else {
                     false
@@ -144,19 +127,18 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             }
 
             btnTimezoneSuggestion.setOnClickListener { it as MaterialButton
-                callback?.onSelectTimezone(it.text.toString())
-                dismiss()
+                timezoneViewModel.onTimezoneSelected(it.text.toString())
             }
         }
     }
 
     private fun setupLiveData() {
         timezoneViewModel.showEmptyView.observe(viewLifecycleOwner, {
-            showEmptyView(it)
+            toggleEmptyView(it)
         })
 
         timezoneViewModel.showProgressView.observe(viewLifecycleOwner, {
-            showProgressView(it)
+            toggleProgressView(it)
         })
 
         timezoneViewModel.timezones.observe(viewLifecycleOwner, {
@@ -167,12 +149,16 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             binding?.btnTimezoneSuggestion?.text = it
         })
 
-        timezoneViewModel.timezoneSearch.observe(viewLifecycleOwner, {
-            timezoneAdapter.submitList(it)
-        })
-
         timezoneViewModel.dismissWithError.observe(viewLifecycleOwner, {
             dismissWithError()
+        })
+
+        timezoneViewModel.selectedTimezone.observe(viewLifecycleOwner, {
+            callback?.onSelectTimezone(it)
+        })
+
+        timezoneViewModel.dismissBottomSheet.observe(viewLifecycleOwner, {
+            dismiss()
         })
     }
 
@@ -183,28 +169,21 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun updateTimezonesFromInput() {
+    private fun searchTimezones() {
         binding?.searchInputLayout?.editText?.text?.trim().let {
             if (it?.isNotEmpty() == true) {
-                search(it)
+                timezoneViewModel.searchTimezones(it)
             }
         }
     }
 
-    private fun setSelectedTimezone(timezone: TimezoneItem?) {
-        timezone?.let {
-            callback?.onSelectTimezone(it.value)
-            dismiss()
-        }
-    }
-
-    private fun showEmptyView(show: Boolean) {
+    private fun toggleEmptyView(show: Boolean) {
         if (isAdded) {
             binding?.emptyView?.visibility = if (show) View.VISIBLE else View.GONE
         }
     }
 
-    private fun showProgressView(show: Boolean) {
+    private fun toggleProgressView(show: Boolean) {
         if (isAdded) {
             binding?.progressView?.visibility = if (show) View.VISIBLE else View.GONE
         }
@@ -222,15 +201,9 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val KEY_TIMEZONE = "timezone"
-
         @JvmStatic
-        fun newInstance(timezone: String): SiteSettingsTimezoneBottomSheet =
-                SiteSettingsTimezoneBottomSheet().apply {
-                    arguments = Bundle().apply {
-                        putString(KEY_TIMEZONE, timezone)
-                    }
-                }
+        fun newInstance(callback: TimezoneSelectionCallback): SiteSettingsTimezoneBottomSheet =
+                SiteSettingsTimezoneBottomSheet().apply { this.callback = callback }
     }
 
     interface TimezoneSelectionCallback {
