@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_extra_large">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progress_view"
@@ -35,15 +34,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        android:minHeight="480dp"
+        android:minHeight="512dp"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
-        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,8 +54,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_margin="@dimen/margin_extra_large"
         android:hint="@string/search"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,8 +77,7 @@
         android:id="@+id/text_timezone_suggestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_margin="@dimen/margin_extra_large"
         android:text="@string/suggestion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_input_layout"
@@ -91,6 +85,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_timezone_suggestion"
         style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_marginTop="@dimen/margin_small_medium"
+        android:gravity="start"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
