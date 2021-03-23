@@ -23,7 +23,6 @@ import org.wordpress.android.viewmodel.Event
 @InternalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
-    @Mock lateinit var followUnfollowCommentsFeatureConfig: FollowUnfollowCommentsFeatureConfig
 
     private lateinit var viewModel: ReaderCommentListViewModel
     private val blogId = 100L
@@ -36,13 +35,11 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(followCommentsHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(followCommentsHandler.followStatusUpdate).thenReturn(followStatusUpdate)
-        whenever(followUnfollowCommentsFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel = ReaderCommentListViewModel(
                 followCommentsHandler,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER,
-                followUnfollowCommentsFeatureConfig
+                TEST_DISPATCHER
         )
     }
 
