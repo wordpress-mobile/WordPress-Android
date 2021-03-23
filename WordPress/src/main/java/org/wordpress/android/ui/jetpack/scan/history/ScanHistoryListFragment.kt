@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import kotlinx.android.synthetic.main.actionable_empty_view.*
-import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ScanHistoryListFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
@@ -29,28 +28,28 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     private lateinit var viewModel: ScanHistoryListViewModel
     private lateinit var parentViewModel: ScanHistoryViewModel
 
+    private var binding: ScanHistoryListFragmentBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
-        initRecyclerView()
-        initViewModel(getSite(savedInstanceState), getTabType())
+        binding = ScanHistoryListFragmentBinding.bind(view).apply {
+            initDagger()
+            initRecyclerView()
+            initViewModel(getSite(savedInstanceState), getTabType())
+        }
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun initRecyclerView() {
-        initAdapter()
+    private fun ScanHistoryListFragmentBinding.initRecyclerView() {
+        recyclerView.adapter = ScanAdapter(imageManager, uiHelpers)
+        recyclerView.itemAnimator = null
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
-        recycler_view.itemAnimator = null
-    }
-
-    private fun initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
+    private fun ScanHistoryListFragmentBinding.initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
+        viewModel = ViewModelProvider(this@ScanHistoryListFragment, viewModelFactory).get(ScanHistoryListViewModel::class.java)
         parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
                 ScanHistoryViewModel::class.java
         )
@@ -58,11 +57,11 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         setupObservers()
     }
 
-    private fun setupObservers() {
+    private fun ScanHistoryListFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, {
-            uiHelpers.updateVisibility(actionable_empty_view, it.emptyVisibility)
-            uiHelpers.updateVisibility(recycler_view, it.contentVisibility)
-            uiHelpers.updateVisibility(button, false)
+            uiHelpers.updateVisibility(actionableEmptyView, it.emptyVisibility)
+            uiHelpers.updateVisibility(recyclerView, it.contentVisibility)
+            uiHelpers.updateVisibility(actionableEmptyView.button, false)
             when (it) {
                 EmptyHistory -> { // no-op
                 }
@@ -74,8 +73,8 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         })
     }
 
-    private fun refreshContentScreen(items: List<ScanListItemState>) {
-        ((recycler_view.adapter) as ScanAdapter).update(items)
+    private fun ScanHistoryListFragmentBinding.refreshContentScreen(items: List<ScanListItemState>) {
+        ((recyclerView.adapter) as ScanAdapter).update(items)
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
@@ -88,7 +87,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
 
     private fun getTabType(): ScanHistoryTabType = requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
 
-    override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
+    override fun getScrollableViewForUniqueIdProvision(): View? = binding?.recyclerView
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)

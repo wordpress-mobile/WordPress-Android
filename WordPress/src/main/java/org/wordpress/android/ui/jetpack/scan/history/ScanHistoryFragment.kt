@@ -10,10 +10,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
-import kotlinx.android.synthetic.main.scan_history_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
+import org.wordpress.android.databinding.ScanHistoryFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiState
@@ -28,6 +28,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: ScanHistoryViewModel
+    private var binding: ScanHistoryFragmentBinding? = null
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabReselected(tab: Tab) {
@@ -43,63 +44,61 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
-        initViewModel(getSite(savedInstanceState))
+        binding = ScanHistoryFragmentBinding.bind(view).apply {
+            initDagger()
+            initViewModel(getSite(savedInstanceState))
+            initToolbar()
+        }
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryViewModel::class.java)
+    private fun ScanHistoryFragmentBinding.initViewModel(site: SiteModel) {
+        viewModel = ViewModelProvider(this@ScanHistoryFragment, viewModelFactory).get(ScanHistoryViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }
 
-    private fun setupObservers() {
+    private fun ScanHistoryFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-            uiHelpers.updateVisibility(tab_layout, uiState.contentVisible)
-            uiHelpers.updateVisibility(view_pager, uiState.contentVisible)
-            uiHelpers.updateVisibility(error_layout, uiState.errorVisible)
+            uiHelpers.updateVisibility(tabLayout, uiState.contentVisible)
+            uiHelpers.updateVisibility(viewPager, uiState.contentVisible)
+            uiHelpers.updateVisibility(fullscreenErrorWithRetry.errorLayout, uiState.errorVisible)
             when (uiState) {
                 is ContentUiState -> {
                     updateTabs(uiState.tabs)
                 }
-                is ErrorUiState -> updateErrorLayout(uiState)
+                is ErrorUiState -> fullscreenErrorWithRetry.updateErrorLayout(uiState)
             }
         })
     }
 
-    private fun updateErrorLayout(uiState: ErrorUiState) {
-        uiHelpers.setTextOrHide(error_title, uiState.title)
-        uiHelpers.updateVisibility(error_image, true)
-        error_image.setImageResource(uiState.img)
-        error_retry.setOnClickListener { uiState.retry.invoke() }
+    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(uiState: ErrorUiState) {
+        uiHelpers.setTextOrHide(errorTitle, uiState.title)
+        uiHelpers.updateVisibility(errorImage, true)
+        errorImage.setImageResource(uiState.img)
+        errorRetry.setOnClickListener { uiState.retry.invoke() }
     }
 
-    private fun updateTabs(list: List<TabUiState>) {
-        val adapter = ScanHistoryTabAdapter(list, this)
-        view_pager.adapter = adapter
+    private fun ScanHistoryFragmentBinding.updateTabs(list: List<TabUiState>) {
+        val adapter = ScanHistoryTabAdapter(list, this@ScanHistoryFragment)
+        viewPager.adapter = adapter
 
-        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), list[position].label)
                     .toString()
                     .toUpperCase(localeManagerWrapper.getLocale())
         }.attach()
-        tab_layout.addOnTabSelectedListener(onTabSelectedListener)
+        tabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initToolbar()
-    }
-
-    private fun initToolbar() {
+    private fun ScanHistoryFragmentBinding.initToolbar() {
         setHasOptionsMenu(true)
         val activity = (requireActivity() as AppCompatActivity)
-        toolbar_main.title = getString(R.string.scan_history)
-        activity.setSupportActionBar(toolbar_main)
+        toolbarMain.title = getString(R.string.scan_history)
+        activity.setSupportActionBar(toolbarMain)
         activity.supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
@@ -137,6 +136,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     override fun onScrollableViewInitialized(viewId: Int) {
-        appbar_main.liftOnScrollTargetViewId = viewId
+        binding?.appbarMain?.liftOnScrollTargetViewId = viewId
     }
 }
