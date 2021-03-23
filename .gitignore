@@ -84,10 +84,17 @@ google-upload-credentials.json
 /vendor
 /fastlane/promo_screenshots
 /fastlane/metadata/tmp
-sentry.properties
 
-WordPress/release.jks
-WordPress/debug.keystore
-WordPress/*.jks
+# Configuration Secrets
+.configure-files/*
+!.configure-files/*.enc
+
+# Secrets that live inside the project
+*.properties.bak
+debug_a8c.keystore
+sentry.properties
+release.jks
+debug.keystore
+*.jks
 
 local-builds.gradle

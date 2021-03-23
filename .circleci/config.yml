@@ -198,9 +198,10 @@ jobs:
       - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build-v4
+      - copy-gradle-properties
       - run:
-          name: Copy Secrets
-          command: bundle exec fastlane run configure_apply
+          name: Decrypt Secrets
+          command: ./gradlew applyConfiguration
       - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
@@ -250,9 +251,10 @@ jobs:
       - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: release-build-v2
+      - copy-gradle-properties
       - run:
-          name: Copy Secrets
-          command: bundle exec fastlane run configure_apply
+          name: Decrypt Secrets
+          command: ./gradlew applyConfiguration
       - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
@@ -324,6 +326,9 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - run:
+          name: Decrypt Secrets
+          command: ./gradlew applyConfiguration
       - update-gradle-memory:
           jvmargs: "Xmx1024m"
       - restore-gutenberg-bundle-cache
@@ -342,11 +347,8 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
       - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
+          key-file: .configure-files/firebase-secrets.json
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
@@ -378,6 +380,9 @@ jobs:
           cache_key_prefix: raw-screenshots-v2
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - run:
+          name: Decrypt Secrets
+          command: ./gradlew applyConfiguration
       - update-gradle-memory:
           jvmargs: "Xmx1024m"
       - restore-gutenberg-bundle-cache
@@ -402,11 +407,8 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
       - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
+          key-file: .configure-files/firebase-secrets.json
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
@@ -497,6 +499,9 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - run:
+          name: Decrypt Secrets
+          command: ./gradlew applyConfiguration
       - update-gradle-memory
       - restore-gutenberg-bundle-cache
       - run:
@@ -509,11 +514,8 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
       - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
+          key-file: .configure-files/firebase-secrets.json
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: libs/utils/WordPressUtils/build/outputs/apk/androidTest/debug/WordPressUtils-debug-androidTest.apk
@@ -549,9 +551,10 @@ jobs:
       - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: translation-review-build-v2
+      - copy-gradle-properties
       - run:
           name: Copy Secrets
-          command: bundle exec fastlane run configure_apply
+          command: ./gradlew applyConfiguration
       - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
