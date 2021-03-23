@@ -2550,6 +2550,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).sendFeaturedImageId((int) mediaId);
+            }
         }
     }
 
