@@ -7,9 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ThreatDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
@@ -35,27 +35,32 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
-        initAdapter()
-        initViewModel()
+        with(ThreatDetailsFragmentBinding.bind(view)) {
+            initDagger()
+            initAdapter()
+            initViewModel()
+        }
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = ThreatDetailsAdapter(imageManager, uiHelpers)
+    private fun ThreatDetailsFragmentBinding.initAdapter() {
+        recyclerView.adapter = ThreatDetailsAdapter(imageManager, uiHelpers)
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ThreatDetailsViewModel::class.java)
+    private fun ThreatDetailsFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(
+                this@ThreatDetailsFragment,
+                viewModelFactory
+        ).get(ThreatDetailsViewModel::class.java)
         setupObservers()
         val threatId = requireActivity().intent.getLongExtra(ARG_THREAT_ID, 0)
         viewModel.start(threatId)
     }
 
-    private fun setupObservers() {
+    private fun ThreatDetailsFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
                 viewLifecycleOwner,
                 { uiState ->
@@ -91,8 +96,8 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         )
     }
 
-    private fun refreshContentScreen(content: Content) {
-        ((recycler_view.adapter) as ThreatDetailsAdapter).update(content.items)
+    private fun ThreatDetailsFragmentBinding.refreshContentScreen(content: Content) {
+        ((recyclerView.adapter) as ThreatDetailsAdapter).update(content.items)
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
