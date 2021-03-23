@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 140
+        return 141
     }
 
     override fun getDbName(): String {
@@ -1531,6 +1531,73 @@ open class WellSqlConfig : DefaultWellConfig {
                             " NOT NULL,SHIPPING_FIRST_NAME TEXT NOT NULL,SHIPPING_LAST_NAME TEXT NOT NULL," +
                             "SHIPPING_POSTCODE TEXT NOT NULL,SHIPPING_STATE TEXT NOT NULL,_id INTEGER" +
                             " PRIMARY KEY AUTOINCREMENT)")
+                }
+                140 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductModel")
+                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "NAME TEXT NOT NULL," +
+                            "SLUG TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "TYPE TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "FEATURED INTEGER," +
+                            "CATALOG_VISIBILITY TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "SHORT_DESCRIPTION TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "ON_SALE INTEGER," +
+                            "TOTAL_SALES INTEGER," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "VIRTUAL INTEGER," +
+                            "DOWNLOADABLE INTEGER," +
+                            "DOWNLOAD_LIMIT INTEGER," +
+                            "DOWNLOAD_EXPIRY INTEGER," +
+                            "SOLD_INDIVIDUALLY INTEGER," +
+                            "EXTERNAL_URL TEXT NOT NULL," +
+                            "BUTTON_TEXT TEXT NOT NULL," +
+                            "TAX_STATUS TEXT NOT NULL," +
+                            "TAX_CLASS TEXT NOT NULL," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY REAL," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "BACKORDERS TEXT NOT NULL," +
+                            "BACKORDERS_ALLOWED INTEGER," +
+                            "BACKORDERED INTEGER," +
+                            "SHIPPING_REQUIRED INTEGER," +
+                            "SHIPPING_TAXABLE INTEGER," +
+                            "SHIPPING_CLASS TEXT NOT NULL," +
+                            "SHIPPING_CLASS_ID INTEGER," +
+                            "REVIEWS_ALLOWED INTEGER," +
+                            "AVERAGE_RATING TEXT NOT NULL," +
+                            "RATING_COUNT INTEGER," +
+                            "PARENT_ID INTEGER," +
+                            "PURCHASE_NOTE TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "CATEGORIES TEXT NOT NULL," +
+                            "TAGS TEXT NOT NULL," +
+                            "IMAGES TEXT NOT NULL," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "VARIATIONS TEXT NOT NULL," +
+                            "DOWNLOADS TEXT NOT NULL," +
+                            "RELATED_IDS TEXT NOT NULL," +
+                            "CROSS_SELL_IDS TEXT NOT NULL," +
+                            "UPSELL_IDS TEXT NOT NULL," +
+                            "GROUPED_PRODUCT_IDS TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL)"
+                    )
                 }
             }
         }
