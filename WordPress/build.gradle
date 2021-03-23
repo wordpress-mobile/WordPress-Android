@@ -190,23 +190,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-    sourceSets {
-        jetpack {
-            res {
-                srcDirs 'src/jetpack/res'
-            }
-        }
-        jetpackJalapeno {
-            res {
-                srcDirs 'src/jetpackJalapeno/res'
-            }
-        }
-        jetpackWasabi {
-            res {
-                srcDirs 'src/jetpackWasabi/res'
-            }
-        }
-    }
 }
 
 // allows us to use cool things like @Parcelize annotations
