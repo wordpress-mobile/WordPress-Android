@@ -385,7 +385,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener<Void>() {
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(@Nullable Void result) {
                 if (!isFinishing()) {
                     followBlogUrl(blogUrl);
                 }

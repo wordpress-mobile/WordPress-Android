@@ -394,7 +394,7 @@ public class ReaderBlogActions {
      * account for 404 replacement pages used by ISPs such as Charter
      */
     public static void checkUrlReachable(final String blogUrl,
-                                         final ReaderActions.OnRequestListener requestListener) {
+                                         final ReaderActions.OnRequestListener<Void> requestListener) {
         // listener is required
         if (requestListener == null) {
             return;

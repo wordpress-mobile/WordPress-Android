@@ -830,9 +830,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
                 ReaderPostActions
-                        .requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener<Void>() {
+                        .requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener<String>() {
                     @Override
-                    public void onSuccess(Void result) {
+                    public void onSuccess(String blogUrl) {
                         if (!isAdded()) {
                             return;
                         }
