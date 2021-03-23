@@ -3,8 +3,7 @@ package org.wordpress.android.viewmodel.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.MainActionListItem
@@ -59,15 +58,15 @@ class PostListCreateMenuViewModel @Inject constructor(
                 CreateAction(
                         actionType = NO_ACTION,
                         iconRes = 0,
-                        labelRes = string.my_site_bottom_sheet_title,
+                        labelRes = R.string.my_site_bottom_sheet_title,
                         onClickAction = null
                 )
         )
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_POST,
-                        iconRes = drawable.ic_posts_white_24dp,
-                        labelRes = string.my_site_bottom_sheet_add_post,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
                         onClickAction = ::onCreateActionClicked
                 )
         )
@@ -75,8 +74,8 @@ class PostListCreateMenuViewModel @Inject constructor(
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_STORY,
-                        iconRes = drawable.ic_story_icon_24dp,
-                        labelRes = string.my_site_bottom_sheet_add_story,
+                        iconRes = R.drawable.ic_story_icon_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_story,
                         onClickAction = ::onCreateActionClicked
 
                 )
@@ -143,9 +142,9 @@ class PostListCreateMenuViewModel @Inject constructor(
 
     private fun getCreateContentMessageId(): Int {
         return if (SiteUtils.supportsStoriesFeature(site)) {
-            string.create_post_story_fab_tooltip
+            R.string.create_post_story_fab_tooltip
         } else {
-            string.create_post_fab_tooltip
+            R.string.create_post_fab_tooltip
         }
     }
 }

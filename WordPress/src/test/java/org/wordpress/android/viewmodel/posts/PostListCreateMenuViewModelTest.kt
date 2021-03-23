@@ -57,6 +57,8 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onFabClicked then bottom sheet showing is true`() {
+        viewModel.start(site)
+
         viewModel.onFabClicked()
 
         Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
@@ -64,6 +66,8 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`() {
+        viewModel.start(site)
+
         viewModel.onFabClicked()
 
         verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
