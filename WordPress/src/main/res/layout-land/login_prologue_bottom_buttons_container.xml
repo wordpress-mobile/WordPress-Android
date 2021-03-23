@@ -3,25 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_large"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_medium_large"
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingTop="@dimen/margin_medium_large">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/first_button"
+        android:id="@+id/continue_with_wpcom_button"
         style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_weight="1"
         android:text="@string/continue_with_wpcom" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/second_button"
+        android:id="@+id/enter_your_site_address_button"
         style="@style/Widget.LoginFlow.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_weight="1"
         android:text="@string/enter_your_site_address" />
 </LinearLayout>

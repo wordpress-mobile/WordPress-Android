@@ -1,0 +1,8 @@
+16.9:
+Yenilikler
+
+Yakında, yeni yayınlar oluşturmak için artık klasik düzenleyici kullanamayacaksınız. Klasik düzenleyicide mevcut yayınlarınızı ve sayfalarınızı yine de düzenleyebilirsiniz, ancak blok düzenleyiciye geçmenizi öneririz. 
+ 
+ Hızlı Başlangıç aracımız yeniden tasarlandı. Bu kılavuz, yeni bir site oluşturduğunuzda görünür. 
+ 
+ Ayrıca site tasarımı deneyiminde de iyileştirmeler yaptık. 

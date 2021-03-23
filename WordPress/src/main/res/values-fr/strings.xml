@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-10 16:54:07+0000
+Translation-Revision-Date: 2021-03-17 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>
     <string name="reader_title_interests">Suivre des sujets</string>
     <string name="stories_intro_main_subtitle">Une nouvelle façon de publier du contenu attrayant sur votre site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignorer</string>
     <string name="activity_log_backup_download_notice_download_action">Téléchargement</string>
     <string name="threat_fix_all_status_success_message_plural">Les menaces ont bien été corrigées.</string>
+    <string name="scan_idle_threats_description_plural">L’analyse a trouvé %1$s menaces potentielles avec %2$s. Veuillez passer en revue les éléments ci-dessous et corriger ou appuyer sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
     <string name="scan_fixing_threats_description_plural">Nous rencontrons des difficultés à résoudre ces menaces en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
     <string name="invite_links_cannot_get_roles_error">Une erreur s’est produite lors de la récupération des rôles</string>
     <string name="invite_links_helper_text">Utilisez ce lien pour ajouter les membres de votre équipe sans avoir à les inviter individuellement. Toute personne ayant accès à ce lien sera en mesure de rejoindre votre organisation, même si le lien a été envoyé par quelqu’un d’autre que vous. Veillez à le partager uniquement avec des personnes de confiance.</string>
     <string name="invite_links_expire_date">Expiration %1$s</string>
     <string name="threats_found_singular">Menace détectée</string>
     <string name="threats_found_plural">Menaces détectées</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Analyse terminée&lt;/b> &lt;br> %s menaces potentielles détectées</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Analyse terminée&lt;/b> &lt;br> Une menace potentielle détectée</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Analyse terminée&lt;/b> &lt;br> Aucune menace détectée</string>
     <string name="scan_fixing_threats_title_singular">Menace en cours de correction…</string>
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
     <string name="quick_start_list_view_site_title">Voir votre site</string>
@@ -70,6 +75,7 @@ Language: fr
     <string name="threat_status_fixed">Exact</string>
     <string name="threat_found_header">Trouvé</string>
     <string name="scan_here_to_help">Aide ici</string>
+    <string name="scan_idle_threats_description_singular">L’analyse a détecté une menace potentielle avec %1$s. Veuillez passer en revue la menace ci-dessous et corriger ou appuyer sur le bouton Tout corriger. Nous sommes %2$s au besoin.</string>
     <string name="scan_idle_manual_scan_description">Pour contrôler votre site à nouveau, exécutez une analyse manuelle ou attendez la prochaine analyse Jetpack plus tard dans la journée.</string>
     <string name="scan_provisioning_description">Bienvenue dans Jetpack Scan ! Nous étudions votre site en vue de préparer une analyse complète. Nous vous ferons savoir si nous rencontrons un problème susceptible de compromettre l’analyse, puis nous démarrerons votre première analyse complète.</string>
     <string name="scan_scanning_is_initial_description">Bienvenue sur Jetpack Scan. Nous réalisons actuellement un état des lieux de votre site et les résultats devraient bientôt vous parvenir.</string>
@@ -314,6 +320,7 @@ Language: fr
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">J’apprécie le travail du photographe Cameron Karsten. J’essaierai ses techniques sur mes prochaines photos.</string>
     <string name="login_prologue_second_subtitle_one">Inspiration</string>
+    <string name="login_prologue_title_fifth">Suivez vos sites préférés et découvrez de nouveaux blogs.</string>
     <string name="login_prologue_title_fourth">Regardez votre audience grossir avec les statistiques approfondies.</string>
     <string name="login_prologue_title_third">Voir les commentaires et notifications en temps réel.</string>
     <string name="login_prologue_title_second">Avec cet éditeur puissant, vous pouvez publier de n’importe où.</string>
@@ -530,6 +537,8 @@ Language: fr
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Passer en brouillon</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Les articles dans la corbeille ne peuvent pas être modifier. Voulez-vous changer le statut de cet article vers « brouillon » pour pouvoir travailler dessus ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Déplacer l’article vers Brouillons ?</string>
+    <string name="reader_label_choose_your_interests">Choisir vos thèmes</string>
+    <string name="reader_choose_interests_content_description">Choisir vos thèmes</string>
     <string name="reader_btn_done">Terminé</string>
     <string name="reader_btn_select_few_interests">Sélectionnez-en quelques-uns pour continuer.</string>
     <string name="post_status_post_published">Publié</string>
@@ -1298,6 +1307,7 @@ Language: fr
     <string name="quick_start_dialog_need_help_button_neutral">Jamais</string>
     <string name="quick_start_dialog_need_help_button_negative">Non, merci</string>
     <string name="quick_start_dialog_follow_sites_title">S\'abonner à d\'autres sites</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Appuyez sur %1$s Rechercher %2$s pour rechercher des sites avec des thèmes similaires</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Appuyez sur %1$s Lecteur %2$s pour continuer</string>
     <string name="quick_start_dialog_follow_sites_message">Trouvez des sites qui vous inspirent, et suivez-les pour recevoir une notification quand ils publient.</string>
     <string name="quick_start_button_positive">C\'est parti !</string>
@@ -2052,6 +2062,7 @@ Language: fr
     <string name="signout">Se déconnecter</string>
     <string name="sign_in_wpcom">Se connecter à WordPress.com</string>
     <string name="reader_label_global_related_posts">Articles connexes sur WordPress.com</string>
+    <string name="reader_label_local_related_posts">Plus de %s</string>
     <string name="preference_open_device_settings">Accéder aux paramètres système</string>
     <string name="invite_invalid_email">%s : Email invalide</string>
     <string name="invite_user_blocked_invites">%s: L\'utilisateur a bloqué les invitations</string>

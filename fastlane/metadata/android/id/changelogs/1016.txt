@@ -1,0 +1,8 @@
+16.9:
+Apa yang baru?
+
+Dalam waktu dekat editor klasik tidak akan tersedia lagi untuk pembuatan pos baru. Anda tetap dapat menggunakan editor klasik untuk menyunting pos dan halaman yang sudah ada tetapi kami menyarankan agar Anda segera beralih ke editor blok. 
+ 
+ Alat Mulai Cepat kami punya desain baru! Panduan ini akan muncul saat Anda membuat situs baru. 
+ 
+ Kami juga telah melakukan peningkatan untuk pengalaman mendesain situs. 
