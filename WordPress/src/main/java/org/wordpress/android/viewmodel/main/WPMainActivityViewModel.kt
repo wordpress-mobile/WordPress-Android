@@ -29,7 +29,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.experiments.CreateMenuStoryFirstABExperiment
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
@@ -48,7 +47,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
     private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
     private val quickStartRepository: QuickStartRepository,
     private val createMenuStoryFirstABExperiment: CreateMenuStoryFirstABExperiment,
@@ -321,7 +319,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun shouldShowStories(site: SiteModel?): Boolean {
-        return wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)
+        return SiteUtils.supportsStoriesFeature(site)
     }
 
     private fun shouldShowStoriesFirst(): Boolean {

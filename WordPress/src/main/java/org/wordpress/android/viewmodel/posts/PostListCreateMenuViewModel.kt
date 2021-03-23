@@ -17,7 +17,6 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Locale
@@ -25,8 +24,7 @@ import javax.inject.Inject
 
 class PostListCreateMenuViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -144,7 +142,7 @@ class PostListCreateMenuViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(): Int {
-        return if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+        return if (SiteUtils.supportsStoriesFeature(site)) {
             string.create_post_story_fab_tooltip
         } else {
             string.create_post_fab_tooltip
