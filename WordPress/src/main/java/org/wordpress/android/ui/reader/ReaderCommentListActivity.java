@@ -41,9 +41,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.UserSuggestion;
@@ -79,7 +77,6 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -124,10 +121,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
-    private SiteModel mSite;
 
-    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
-    @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
@@ -173,24 +167,22 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             }
         });
 
-        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-            mViewModel.getSnackbarEvents().observe(this, event ->
-                    event.applyIfNotHandled(holder -> {
-                        WPSnackbar.make(mRecyclerView,
-                                mUiHelpers.getTextOfUiString(this, holder.getMessage()),
-                                Snackbar.LENGTH_LONG)
-                                  .show();
-                        return Unit.INSTANCE;
-                    })
-            );
+        mViewModel.getSnackbarEvents().observe(this, event ->
+                event.applyIfNotHandled(holder -> {
+                    WPSnackbar.make(mRecyclerView,
+                            mUiHelpers.getTextOfUiString(this, holder.getMessage()),
+                            Snackbar.LENGTH_LONG)
+                              .show();
+                    return Unit.INSTANCE;
+                })
+        );
 
-            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                        if (mCommentAdapter != null) {
-                            mCommentAdapter.updateFollowingState(uiState);
-                        }
+        mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                    if (mCommentAdapter != null) {
+                        mCommentAdapter.updateFollowingState(uiState);
                     }
-            );
-        }
+                }
+        );
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -215,16 +207,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
         }
-        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-            mViewModel.start(mBlogId, mPostId);
-        }
+        mViewModel.start(mBlogId, mPostId);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 findViewById(R.id.swipe_to_refresh),
                 () -> {
-                    if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-                        mViewModel.onSwipeToRefresh();
-                    }
+                    mViewModel.onSwipeToRefresh();
                     updatePostAndComments();
                 }
         );
@@ -290,8 +278,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
-
-        mSite = mSiteStore.getSiteBySiteId(mBlogId);
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(

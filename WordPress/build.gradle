@@ -79,7 +79,6 @@ android {
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
-        buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
     }
