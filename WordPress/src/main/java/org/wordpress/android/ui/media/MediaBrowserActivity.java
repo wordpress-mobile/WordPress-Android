@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -87,7 +86,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.ArrayList;
@@ -120,7 +118,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
     private SiteModel mSite;
 
@@ -472,23 +469,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.FILE_LIBRARY:
             case RequestCodes.AUDIO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
-                        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                            List<Uri> uris = convertStringArrayIntoUrisList(
-                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
-                            for (Uri uri : uris) {
-                                getMediaFromDeviceAndTrack(uri, requestCode);
-                            }
-                        }
-                    } else {
-                        ClipData clipData = data.getClipData();
-                        if (clipData != null) {
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                ClipData.Item item = clipData.getItemAt(i);
-                                getMediaFromDeviceAndTrack(item.getUri(), requestCode);
-                            }
-                        } else {
-                            getMediaFromDeviceAndTrack(data.getData(), requestCode);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                        for (Uri uri : uris) {
+                            getMediaFromDeviceAndTrack(uri, requestCode);
                         }
                     }
                 }
