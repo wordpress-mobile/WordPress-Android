@@ -839,6 +839,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private void featuredImageSet(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, true);
         setFeaturedImageId(mediaId);
+        // TODO: Toast isn't part of the final design. It'll need to be updated according to design/mockup.
         ToastUtils.showToast(getActivity(), R.string.featured_image_confirmation).show();
         getGutenbergContainerFragment().onRequestFeaturedImageId(mediaId);
     }
