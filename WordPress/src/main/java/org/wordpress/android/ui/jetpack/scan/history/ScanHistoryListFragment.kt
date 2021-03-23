@@ -54,7 +54,10 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun ScanHistoryListFragmentBinding.initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
-        viewModel = ViewModelProvider(this@ScanHistoryListFragment, viewModelFactory).get(ScanHistoryListViewModel::class.java)
+        viewModel = ViewModelProvider(
+                this@ScanHistoryListFragment,
+                viewModelFactory
+        ).get(ScanHistoryListViewModel::class.java)
         parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
                 ScanHistoryViewModel::class.java
         )
