@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ScanFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
@@ -38,41 +38,43 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDagger()
-        initRecyclerView()
-        initViewModel(getSite(savedInstanceState))
+        with(ScanFragmentBinding.bind(view)) {
+            initDagger()
+            initRecyclerView()
+            initViewModel(getSite(savedInstanceState))
+        }
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun initRecyclerView() {
-        recycler_view.itemAnimator = null
-        recycler_view.addItemDecoration(
+    private fun ScanFragmentBinding.initRecyclerView() {
+        recyclerView.itemAnimator = null
+        recyclerView.addItemDecoration(
                 HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
-        recycler_view.setEmptyView(actionable_empty_view)
+        recyclerView.setEmptyView(actionableEmptyView)
         initAdapter()
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
+    private fun ScanFragmentBinding.initAdapter() {
+        recyclerView.adapter = ScanAdapter(imageManager, uiHelpers)
     }
 
-    private fun initViewModel(site: SiteModel) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ScanViewModel::class.java)
+    private fun ScanFragmentBinding.initViewModel(site: SiteModel) {
+        viewModel = ViewModelProvider(this@ScanFragment, viewModelFactory).get(ScanViewModel::class.java)
         setupObservers()
         viewModel.start(site)
     }
 
-    private fun setupObservers() {
+    private fun ScanFragmentBinding.setupObservers() {
         viewModel.uiState.observe(
                 viewLifecycleOwner,
                 { uiState ->
-                    uiHelpers.updateVisibility(progress_bar, uiState.loadingVisible)
-                    uiHelpers.updateVisibility(recycler_view, uiState.contentVisible)
-                    uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisible)
+                    uiHelpers.updateVisibility(progressBar, uiState.loadingVisible)
+                    uiHelpers.updateVisibility(recyclerView, uiState.contentVisible)
+                    uiHelpers.updateVisibility(actionableEmptyView, uiState.errorVisible)
 
                     when (uiState) {
                         is ContentUiState -> updateContentLayout(uiState)
@@ -108,16 +110,16 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         )
     }
 
-    private fun updateContentLayout(state: ContentUiState) {
-        ((recycler_view.adapter) as ScanAdapter).update(state.items)
+    private fun ScanFragmentBinding.updateContentLayout(state: ContentUiState) {
+        ((recyclerView.adapter) as ScanAdapter).update(state.items)
     }
 
-    private fun updateErrorLayout(state: ErrorUiState) {
-        uiHelpers.setTextOrHide(actionable_empty_view.title, state.title)
-        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, state.subtitle)
-        uiHelpers.setTextOrHide(actionable_empty_view.button, state.buttonText)
-        actionable_empty_view.image.setImageResource(state.image)
-        actionable_empty_view.button.setOnClickListener { state.action.invoke() }
+    private fun ScanFragmentBinding.updateErrorLayout(state: ErrorUiState) {
+        uiHelpers.setTextOrHide(actionableEmptyView.title, state.title)
+        uiHelpers.setTextOrHide(actionableEmptyView.subtitle, state.subtitle)
+        uiHelpers.setTextOrHide(actionableEmptyView.button, state.buttonText)
+        actionableEmptyView.image.setImageResource(state.image)
+        actionableEmptyView.button.setOnClickListener { state.action.invoke() }
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
