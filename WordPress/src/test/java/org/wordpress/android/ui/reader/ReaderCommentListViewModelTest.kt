@@ -18,7 +18,6 @@ import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_ST
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
