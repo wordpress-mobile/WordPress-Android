@@ -29,6 +29,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploa
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
 import java.util.ArrayList;
@@ -56,8 +57,8 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachMediaUploadQueryListener onReattachQueryListener,
-                                  // OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
+                                  OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
@@ -79,7 +80,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
                     onStorySavingReattachQueryListener,
-                    // onSetFeaturedImageListener,
+                    onSetFeaturedImageListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
                     onAuthHeaderRequestedListener,
@@ -263,7 +264,7 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
     }
 
-    public void featuredImageIdNotifier(int mediaId) {
-        mWPAndroidGlueCode.featuredImageIdNotifier(mediaId);
+    public void onRequestFeaturedImageId(int mediaId) {
+        mWPAndroidGlueCode.onRequestFeaturedImageId(mediaId);
     }
 }

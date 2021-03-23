@@ -68,6 +68,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendBu
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
@@ -286,18 +287,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public void onSetFeaturedImageButtonClicked(int mediaId) {
-                        showFeaturedImageConfirmationDialog(mediaId);
-                    }
-
-                    @Override
-                    public void onGetFeaturedImageId(int mediaId) {
-                        if (mFeaturedImageId == mediaId) {
-                            getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
-                        }
-                    }
-
-                    @Override
                     public ArrayList<MediaOption> onGetOtherMediaImageOptions() {
                         ArrayList<MediaOption> otherMediaImageOptions = initOtherMediaImageOptions();
                         return otherMediaImageOptions;
@@ -347,6 +336,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
                         updateMediaProgress();
+                    }
+                },
+                new OnSetFeaturedImageListener() {
+                    @Override
+                    public void onSetFeaturedImageButtonClicked(int mediaId) {
+                        showFeaturedImageConfirmationDialog(mediaId);
+                    }
+
+                    @Override
+                    public void onGetFeaturedImageId(int mediaId) {
+                        if (mFeaturedImageId == mediaId) {
+                            getGutenbergContainerFragment().onRequestFeaturedImageId(mediaId);
+                        }
                     }
                 },
                 new OnEditorMountListener() {
@@ -838,7 +840,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, true);
         setFeaturedImageId(mediaId);
         ToastUtils.showToast(getActivity(), R.string.featured_image_confirmation).show();
-        getGutenbergContainerFragment().featuredImageIdNotifier(mediaId);
+        getGutenbergContainerFragment().onRequestFeaturedImageId(mediaId);
     }
 
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {

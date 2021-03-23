@@ -2976,7 +2976,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void updateFeaturedImage(final long mediaId, final boolean imagePicked) {
-        mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+        setFeaturedImageId(mediaId, imagePicked);
     }
 
     @Override
