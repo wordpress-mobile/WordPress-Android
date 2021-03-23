@@ -362,10 +362,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
                         switch (event) {
-                            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
                             case EDITOR_SESSION_TEMPLATE_APPLY:
                                 mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked((String)
                                         properties.get(USER_EVENT_KEY_TEMPLATE));
