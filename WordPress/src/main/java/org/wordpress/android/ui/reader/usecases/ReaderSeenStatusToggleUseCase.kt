@@ -53,20 +53,22 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private suspend fun markPostAsSeen(
         post: ReaderPost,
         actionSource: ReaderPostSeenToggleSource,
         doNotTrack: Boolean = false
     ): PostSeenState {
+        val resultState: PostSeenState
         if (!accountStore.hasAccessToken()) {
-            return UserNotAuthenticated
+            resultState = UserNotAuthenticated
         } else if (!post.isSeenSupported) {
-            return Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
+            resultState = Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
-            return if (!networkUtilsWrapper.isNetworkAvailable()) {
-                Error(UiStringRes(string.error_network_connection))
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                resultState = Error(UiStringRes(string.error_network_connection))
             } else {
-                when (val status = apiCallsProvider.markPostAsSeen(post)) {
+                resultState = when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
                         readerPostTableWrapper.setPostSeenStatusInDb(post, true)
                         readerBlogTableWrapper.decrementUnseenCount(post.blogId)
@@ -85,18 +87,21 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 }
             }
         }
+        return resultState
     }
 
+    @Suppress("NestedBlockDepth")
     private suspend fun markPostAsUnseen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState {
+        val resultState: PostSeenState
         if (!accountStore.hasAccessToken()) {
-            return UserNotAuthenticated
+            resultState = UserNotAuthenticated
         } else if (!post.isSeenSupported) {
-            return Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
+            resultState = Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
-            return if (!networkUtilsWrapper.isNetworkAvailable()) {
-                Error(UiStringRes(string.error_network_connection))
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                resultState = Error(UiStringRes(string.error_network_connection))
             } else {
-                when (val status = apiCallsProvider.markPostAsUnseen(post)) {
+                resultState = when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
                         readerPostTableWrapper.setPostSeenStatusInDb(post, false)
                         readerBlogTableWrapper.incrementUnseenCount(post.blogId)
@@ -113,6 +118,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 }
             }
         }
+        return resultState
     }
 
     sealed class PostSeenState {
