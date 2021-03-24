@@ -352,27 +352,30 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     } else {
                         // not stored locally, so request it
                         ReaderPostActions.requestBlogPost(
-                            blogIdentifier, postIdentifier,
-                            new ReaderActions.OnRequestListener<String>() {
-                                @Override
-                                public void onSuccess(String blogUrl) {
-                                    mPostSlugsResolutionUnderway = false;
+                                blogIdentifier, postIdentifier,
+                                new ReaderActions.OnRequestListener<String>() {
+                                    @Override
+                                    public void onSuccess(String blogUrl) {
+                                        mPostSlugsResolutionUnderway = false;
 
-                                    // the scheme is removed to match the query pattern in ReaderPostTable.getBlogPost
-                                    String primaryBlogIdentifier = mUrlUtilsWrapper.removeScheme(blogUrl);
+                                        // the scheme is removed to match the query pattern in ReaderPostTable
+                                        // .getBlogPost
+                                        String primaryBlogIdentifier = mUrlUtilsWrapper.removeScheme(blogUrl);
 
-                                    // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier since
-                                    // the custom and *.wordpress.com domains need to be used interchangeably since
-                                    // they can both be used as the primary domain when identifying the blog_url
-                                    // in the ReaderPostTable query.
-                                    ReaderPost post =
-                                            ReaderPostTable.getBlogPost(primaryBlogIdentifier, postIdentifier,
-                                                    true);
-                                    ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
-                                            ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId, post.postId)
-                                            : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault().post(slugsResolved);
+                                        // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier
+                                        // since
+                                        // the custom and *.wordpress.com domains need to be used interchangeably since
+                                        // they can both be used as the primary domain when identifying the blog_url
+                                        // in the ReaderPostTable query.
+                                        ReaderPost post =
+                                                ReaderPostTable.getBlogPost(primaryBlogIdentifier, postIdentifier,
+                                                        true);
+                                        ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
+                                                ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId,
+                                                post.postId)
+                                                : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault().post(slugsResolved);
 
                                         // post wasn't available locally earlier so, track it now
                                         if (post != null) {
