@@ -330,6 +330,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW,
                     recommendedBlogUiState.blogId,
+                    recommendedBlogUiState.feedId,
                     !recommendedBlogUiState.isFollowed
             )
             readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(

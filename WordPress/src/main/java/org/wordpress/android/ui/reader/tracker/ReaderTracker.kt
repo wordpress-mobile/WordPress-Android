@@ -138,10 +138,12 @@ class ReaderTracker @Inject constructor(
     fun trackBlog(
         stat: AnalyticsTracker.Stat,
         blogId: Long,
+        feedId: Long,
         isFollowed: Boolean?
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
+                BLOG_ID_KEY to blogId(blogId, feedId),
+                FEED_ID_KEY to feedId,
                 FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE)
         )
         track(stat, properties)
