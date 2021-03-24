@@ -65,7 +65,6 @@ ENV["validate_translations"]="lintVanillaRelease"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    gutenberg_dep_check()
     old_version = android_codefreeze_prechecks(options)
 
     android_bump_version_release()
@@ -592,40 +591,6 @@ ENV["validate_translations"]="lintVanillaRelease"
       extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")
     end
     "#{build_dir}#{name}"
-  end
-
-  #####################################################################################
-  # gutenberg_dep_check
-  # -----------------------------------------------------------------------------------
-  # Verifies that Gutenberg is on the last released version
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane gutenberg_dep_check
-  #####################################################################################
-  desc "Verifies that Gutenberg is on the last released version"
-  lane :gutenberg_dep_check do | options |
-    # Pull the latest develop
-    sh("git checkout develop")
-    sh("git pull")
-    sh("git submodule init")
-    sh("git submodule update")
-
-    Dir.chdir("../libs/gutenberg-mobile") do
-      sh("git fetch --tags")
-      last_tag_hash = sh("git rev-list --tags --max-count\=1")
-      submodule_hash = sh("git rev-parse HEAD")
-
-      if (last_tag_hash != submodule_hash)
-        error_message = "Gutenberg submodule hash is not on the last tag!\nSubmodule hash: #{submodule_hash}\nLast tag hash: #{last_tag_hash}"
-        UI.user_error!(error_message) unless UI.interactive?
-
-        if (!UI.confirm("#{error_message}\nDo you want to continue anyway?"))
-          UI.user_error!("Aborted by user request. Please fix Gutenberg reference and try again.")
-        end
-      else
-        UI.message("Gutenberg is on the last tag: #{last_tag_hash}.")
-      end
-    end
   end
 
   #####################################################################################
