@@ -121,7 +121,7 @@ class WPMainActivityViewModel @Inject constructor(
     private fun loadMainActions(site: SiteModel?, shouldShowStoriesFirst: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
 
-        val shouldShowStories = shouldShowStories(site)
+        val shouldShowStories = SiteUtils.supportsStoriesFeature(site)
         val createNewStoryAction = CreateAction(
                 actionType = CREATE_NEW_STORY,
                 iconRes = R.drawable.ic_story_icon_24dp,
@@ -206,7 +206,7 @@ class WPMainActivityViewModel @Inject constructor(
                 quickStartRepository.activeTask.value == PUBLISH_POST
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
 
-        val shouldShowStories = shouldShowStories(site)
+        val shouldShowStories = SiteUtils.supportsStoriesFeature(site)
         val shouldShowStoriesFirst = shouldShowStoriesFirst()
 
         if (shouldShowStories || hasFullAccessToContent(site)) {
@@ -280,7 +280,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (shouldShowStories(site)) {
+        return if (SiteUtils.supportsStoriesFeature(site)) {
             getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
         } else {
             getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
@@ -316,10 +316,6 @@ class WPMainActivityViewModel @Inject constructor(
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
-    }
-
-    private fun shouldShowStories(site: SiteModel?): Boolean {
-        return SiteUtils.supportsStoriesFeature(site)
     }
 
     private fun shouldShowStoriesFirst(): Boolean {
