@@ -334,7 +334,7 @@ class ReaderTracker @Inject constructor(
         interceptedUri: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                INTERCEPTED_URI to interceptedUri
+                INTERCEPTED_URI_KEY to interceptedUri
         )
         track(stat, properties)
     }
@@ -386,7 +386,7 @@ class ReaderTracker @Inject constructor(
         private const val FOLLOW_KEY = "follow"
         private const val TAG_KEY = "tag"
         private const val QUANTITY_KEY = "quantity"
-        private const val INTERCEPTED_URI = "intercepted_uri"
+        private const val INTERCEPTED_URI_KEY = "intercepted_uri"
         private const val QUERY_KEY = "query"
 
         private const val SOURCE_KEY = "source"
