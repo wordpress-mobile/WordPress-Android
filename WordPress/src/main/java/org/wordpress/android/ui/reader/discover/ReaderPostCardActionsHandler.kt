@@ -184,6 +184,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             BOOKMARK -> handleBookmarkClicked(
                     post.postId,
                     post.blogId,
+                    post.feedId,
                     isBookmarkList,
                     post.isFollowedByCurrentUser,
                     source
@@ -209,6 +210,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 readerTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
                         post.blogId,
+                        post.feedId,
                         post.isFollowedByCurrentUser,
                         source
                 )
@@ -355,6 +357,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         readerTracker.trackBlog(
                 AnalyticsTracker.Stat.SHARED_ITEM_READER,
                 post.blogId,
+                post.feedId,
                 post.isFollowedByCurrentUser,
                 source
         )
@@ -432,11 +435,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private suspend fun handleBookmarkClicked(
         postId: Long,
         blogId: Long,
+        feedId: Long,
         isBookmarkList: Boolean,
         isFollowed: Boolean,
         source: String
     ) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isFollowed, isBookmarkList, source).collect {
+        bookmarkUseCase.toggleBookmark(blogId, feedId, postId, isFollowed, isBookmarkList, source).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
                 is Success -> {

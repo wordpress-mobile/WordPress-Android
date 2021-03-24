@@ -235,6 +235,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 mReaderTracker.trackBlog(
                         AnalyticsTracker.Stat.READER_SITE_SHARED,
                         blog.blogId,
+                        blog.feedId,
                         blog.isFollowing,
                         mSource
                 );

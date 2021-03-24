@@ -54,6 +54,7 @@ class ReaderPostBookmarkUseCaseTest {
         useCase.toggleBookmark(
                 0L,
                 0L,
+                0L,
                 false,
                 false,
                 SOURCE
@@ -69,6 +70,7 @@ class ReaderPostBookmarkUseCaseTest {
         val dummyPost = init(isBookmarked = true)
         // Act
         useCase.toggleBookmark(
+                0L,
                 0L,
                 0L,
                 false,
@@ -89,6 +91,7 @@ class ReaderPostBookmarkUseCaseTest {
         val result = useCase.toggleBookmark(
                 0L,
                 0L,
+                0L,
                 false,
                 false,
                 SOURCE
@@ -105,6 +108,7 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
+                0L,
                 0L,
                 0L,
                 false,
@@ -125,6 +129,7 @@ class ReaderPostBookmarkUseCaseTest {
         val result = useCase.toggleBookmark(
                 0L,
                 0L,
+                0L,
                 false,
                 false,
                 SOURCE
@@ -141,6 +146,7 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
+                0L,
                 0L,
                 0L,
                 true,

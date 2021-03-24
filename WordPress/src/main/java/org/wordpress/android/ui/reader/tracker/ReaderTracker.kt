@@ -159,14 +159,26 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    /**
+     * The [org.wordpress.android.models.ReaderBlog.fromJson] method within this model class has a logic where it
+     * checks whether the blogs 'blogId' is 0, if it is, then it checks whether the 'feedId' is not 0. If both
+     * conditions are met then it assigns the 'feedId' to 'blogId'. It does that in order to keep consistency with the
+     * '/read/' endpoints.
+     *
+     * This tracking function captures that and does the opposite in order to make sure that the tracking is done to the
+     * absolute. As such, it check whether the 'feedId' is equal to the 'blogId' and if so it assigns 0 to the 'blog_id'
+     * tracking property. Else, as should, it assigns the actual 'blogId' to the 'blog_id' tracking property.
+     */
     fun trackBlog(
         stat: AnalyticsTracker.Stat,
         blogId: Long,
+        feedId: Long,
         isFollowed: Boolean?,
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
+                BLOG_ID_KEY to if (feedId == blogId) 0 else blogId,
+                FEED_ID_KEY to feedId,
                 FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE),
                 SOURCE_KEY to source
         )

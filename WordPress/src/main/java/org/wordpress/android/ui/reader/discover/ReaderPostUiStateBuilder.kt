@@ -134,6 +134,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 source = source,
                 postId = post.postId,
                 blogId = post.blogId,
+                feedId = post.feedId,
                 isFollowed = post.isFollowedByCurrentUser,
                 blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isP2orA8C),
                 excerpt = buildExcerpt(post),

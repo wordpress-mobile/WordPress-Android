@@ -107,6 +107,7 @@ public class ReaderActivityLauncher {
         readerTracker.trackBlog(
                 AnalyticsTracker.Stat.READER_BLOG_PREVIEWED,
                 siteId,
+                feedId,
                 isFollowed,
                 source
         );

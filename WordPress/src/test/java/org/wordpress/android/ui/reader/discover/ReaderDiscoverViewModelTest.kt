@@ -676,6 +676,7 @@ class ReaderDiscoverViewModelTest {
                 source = "source",
                 postId = post.postId,
                 blogId = post.blogId,
+                feedId = post.feedId,
                 isFollowed = post.isFollowedByCurrentUser,
                 blogSection = ReaderBlogSectionUiState(
                         post.postId,

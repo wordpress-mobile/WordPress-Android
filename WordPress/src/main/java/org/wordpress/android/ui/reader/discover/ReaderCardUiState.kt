@@ -23,6 +23,7 @@ sealed class ReaderCardUiState {
         val source: String,
         val postId: Long,
         val blogId: Long,
+        val feedId: Long,
         val isFollowed: Boolean,
         val blogSection: ReaderBlogSectionUiState,
         val title: UiString?,
