@@ -136,16 +136,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `shows dialog when bookmark action is successful and shouldShowDialog returns true`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
                 .thenReturn(true)
@@ -166,16 +157,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `doesn't shows when dialog bookmark action is successful and shouldShowDialog returns false`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog())
                 .thenReturn(false)
@@ -196,16 +178,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `shows snackbar on successful bookmark action`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
@@ -224,16 +197,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Doesn't show snackbar on successful bookmark action when on bookmark(saved) tab`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()
@@ -253,16 +217,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Doesn't show snackbar on successful UNbookmark action`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(false)))
 
         val observedValues = startObserving()
@@ -282,16 +237,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `navigates to bookmark tab on bookmark snackbar action clicked`() = test {
         // Arrange
-        whenever(
-                bookmarkUseCase.toggleBookmark(
-                        anyLong(),
-                        anyLong(),
-                        anyLong(),
-                        anyBoolean(),
-                        anyBoolean(),
-                        anyString()
-                )
-        )
+        whenever(bookmarkUseCase.toggleBookmark(any(), anyBoolean(), anyString()))
                 .thenReturn(flowOf(Success(true)))
 
         val observedValues = startObserving()

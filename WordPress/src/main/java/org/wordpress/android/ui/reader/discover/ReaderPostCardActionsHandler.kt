@@ -181,14 +181,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
             LIKE -> handleLikeClicked(post, source)
-            BOOKMARK -> handleBookmarkClicked(
-                    post.postId,
-                    post.blogId,
-                    post.feedId,
-                    isBookmarkList,
-                    post.isFollowedByCurrentUser,
-                    source
-            )
+            BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
             REPORT_POST -> handleReportPostClicked(post)
@@ -433,16 +426,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleBookmarkClicked(
-        postId: Long,
-        blogId: Long,
-        feedId: Long,
+        post: ReaderPost,
         isBookmarkList: Boolean,
-        isFollowed: Boolean,
         source: String
     ) {
-        bookmarkUseCase.toggleBookmark(blogId, feedId, postId, isFollowed, isBookmarkList, source).collect {
+        bookmarkUseCase.toggleBookmark(post, isBookmarkList, source).collect {
             when (it) {
-                is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
+                is PreLoadPostContent -> _preloadPostEvents.postValue(
+                        Event(PreLoadPostContent(post.blogId, post.postId))
+                )
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment

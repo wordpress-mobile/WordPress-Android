@@ -52,10 +52,7 @@ class ReaderPostBookmarkUseCaseTest {
         val dummyPost = init(isBookmarked = false)
         // Act
         useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
-                false,
+                post(),
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -70,10 +67,7 @@ class ReaderPostBookmarkUseCaseTest {
         val dummyPost = init(isBookmarked = true)
         // Act
         useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
-                false,
+                post(),
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -89,10 +83,7 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
-                false,
+                post(),
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -108,10 +99,7 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
-                false,
+                post(),
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -127,10 +115,7 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
-                false,
+                post(),
                 false,
                 SOURCE
         ).toList(mutableListOf())
@@ -146,11 +131,8 @@ class ReaderPostBookmarkUseCaseTest {
 
         // Act
         val result = useCase.toggleBookmark(
-                0L,
-                0L,
-                0L,
+                post(),
                 true,
-                false,
                 SOURCE
         ).toList(mutableListOf())
 
@@ -163,6 +145,15 @@ class ReaderPostBookmarkUseCaseTest {
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean()))
                 .thenReturn(post)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(networkAvailable)
+        return post
+    }
+
+    private fun post(): ReaderPost {
+        val post = ReaderPost()
+        post.postId = 0L
+        post.feedId = 0L
+        post.postId = 0L
+        post.isFollowedByCurrentUser = false
         return post
     }
 }
