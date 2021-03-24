@@ -215,8 +215,6 @@ Language: el_GR
     <string name="alternatively">Εναλλακτικά:</string>
     <string name="magic_link_sent_login_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
     <string name="reader_bookmark_snack_btn">Προβολή όλων</string>
-    <string name="reader_btn_bookmark">Αποθήκευση</string>
-    <string name="reader_btn_bookmarked">Αποθηκεύτηκε</string>
     <string name="removed">Αφαιρέθηκε</string>
     <string name="reader_save_for_later_title">Αποθηκευμένα άρθρα</string>
     <string name="my_site_icon_dialog_cancel_button">Άκυρο</string>
@@ -439,9 +437,6 @@ Language: el_GR
     <string name="notification_settings_category_other">Άλλο</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Όλοι οι ιστότοποι μου</string>
     <string name="notification_settings_category_your_sites">Οι ιστότοποί σας</string>
-    <string name="notification_settings_master_hint_off">Ενεργοποίηση ενημερώσεων</string>
-    <string name="notification_settings_master_hint_on">Απενεργοποίηση ενημερώσεων</string>
-    <string name="notification_settings_master_status_off">Κλείσιμο</string>
     <string name="max_video_resolution">Μέγιστο μέγεθος βίντεο</string>
     <string name="max_thumbnail_px_size">Μέγιστο μέγεθος εικόνας</string>
     <string name="add_media_progress">Προσθήκη πολυμέσων</string>
@@ -809,7 +804,6 @@ Language: el_GR
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>
     <string name="site_settings_paging_dialog_header">Σχόλια ανά σελίδα</string>
     <string name="site_settings_close_after_dialog_title">Κλείσιμο σχολιασμού</string>
-    <string name="site_settings_blacklist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα παραμένει στην αναμονή προς έγκριση. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\" </string>
     <string name="site_settings_list_editor_input_hint">Εισάγετε μια λέξη ή φράση</string>
     <string name="site_settings_list_editor_no_items_text">Δεν υπάρχουν αντικείμενα</string>
@@ -824,10 +818,8 @@ Language: el_GR
     <string name="site_settings_rp_show_header_title">Προβολή Κεφαλίδας</string>
     <string name="site_settings_rp_switch_summary">Στα Σχετικά Άρθρα εμφανίζεται σχετικό περιεχόμενο από τον ιστότοπό σας κάτω από τα άρθρα σας.</string>
     <string name="site_settings_rp_switch_title">Εμφάνιση Σχετικών Άρθρων</string>
-    <string name="site_settings_blacklist_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο σημειώνονται ως ανεπιθύμητα</string>
     <string name="site_settings_moderation_hold_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο τοποθετούνται στην αναμονή προς έγκριση</string>
     <string name="site_settings_multiple_links_hint">Αγνόηση του ορίου συνδέσμου για γνωστούς χρήστες</string>
-    <string name="site_settings_whitelist_hint">Ο συντάκτης του σχολίου πρέπει να έχει προηγουμένως εγκεκριμένο σχόλιο</string>
     <string name="site_settings_user_account_required_hint">Οι χρήστες πρέπει να είναι εγγεγραμμένοι και συνδεδεμένοι για να σχολιάσουν</string>
     <string name="site_settings_identity_required_hint">Ο συντάκτης του σχολίου θα πρέπει να συμπληρώσει όνομα και e-mail</string>
     <string name="site_settings_paging_hint">Εμφάνιση σχολίων σε ομάδες καθορισμένου μεγέθους</string>
@@ -850,17 +842,13 @@ Language: el_GR
     <string name="site_settings_address_hint">Η αλλαγή της διεύθυνσής σας δεν υποστηρίζεται προς το παρόν</string>
     <string name="site_settings_tagline_hint">Μια μικρή περιγραφή ή μια πιασάρικη φράση που περιγράφει το ιστολόγιό σας</string>
     <string name="site_settings_title_hint">Με λίγες λέξεις, εξηγήστε τι αφορά αυτός ο ιστότοπος</string>
-    <string name="site_settings_whitelist_known_summary">Σχόλια από γνωστούς χρήστες</string>
-    <string name="site_settings_whitelist_all_summary">Σχόλια από όλους τους χρήστες</string>
     <string name="site_settings_threading_summary">%d επίπεδα</string>
     <string name="site_settings_privacy_private_summary">Ιδιωτικό</string>
     <string name="site_settings_privacy_hidden_summary">Κρυμμένο</string>
     <string name="site_settings_delete_site_title">Διαγραφή ιστοτόπου</string>
     <string name="site_settings_privacy_public_summary">Δημόσιο</string>
-    <string name="site_settings_blacklist_title">Μαύρη λίστα</string>
     <string name="site_settings_moderation_hold_title">Αναμονή για έλεγχο</string>
     <string name="site_settings_multiple_links_title">Σύνδεσμοι στα σχόλια</string>
-    <string name="site_settings_whitelist_title">Αυτόματη έγκριση</string>
     <string name="site_settings_paging_title">Σελιδοποίηση</string>
     <string name="site_settings_threading_title">Νήματα</string>
     <string name="site_settings_sort_by_title">Ταξινόμηση κατά</string>
