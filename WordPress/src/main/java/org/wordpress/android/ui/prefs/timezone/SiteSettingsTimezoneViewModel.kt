@@ -79,11 +79,13 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
 
     fun onTimezoneSelected(timezone: String) {
         _selectedTimezone.value = timezone
-        _dismissBottomSheet.value = Unit
+        _dismissBottomSheet.asyncCall()
     }
 
     private fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
         val filteredTimezones = MutableLiveData<List<TimezonesList>>()
+
+        _showEmptyView.value = true
 
         timezonesList.filter { timezone ->
             when (timezone) {
@@ -119,13 +121,13 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
                 loadTimezones(response)
             } else {
                 AppLog.w(SETTINGS, "empty response requesting timezones")
-                _dismissWithError.postValue(Unit)
+                _dismissWithError.call()
             }
         }
 
         val errorListener = Response.ErrorListener { error: VolleyError? ->
             AppLog.e(SETTINGS, "Error requesting timezones", error)
-            _dismissWithError.postValue(Unit)
+            _dismissWithError.call()
         }
 
         val request: StringRequest = object : StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
@@ -161,7 +163,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
             _timezones.postValue(timezonesList)
         } catch (e: JSONException) {
             AppLog.e(SETTINGS, "Error parsing timezones", e)
-            _dismissWithError.postValue(Unit)
+            _dismissWithError.call()
         }
     }
 

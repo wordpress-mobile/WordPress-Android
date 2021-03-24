@@ -79,6 +79,8 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 bottomSheet = sheetDialog?.findViewById<View>(
                         com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
+
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) expandBottomSheet()
             }
 
             list.adapter = timezoneAdapter
