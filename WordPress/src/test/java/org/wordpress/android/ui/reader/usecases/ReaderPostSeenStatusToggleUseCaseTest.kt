@@ -70,7 +70,8 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         val dummyPost = createDummyReaderPost()
         val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
-        assertThat(flow.toList()).isEqualTo(listOf(UserNotAuthenticated))
+        val result = flow.toList()
+        assertThat(result).isEqualTo(listOf(UserNotAuthenticated))
     }
 
     @Test
@@ -80,7 +81,8 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         val dummyPost = createDummyReaderPost()
         val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
-        assertThat(flow.toList()).isEqualTo(
+        val result = flow.toList()
+        assertThat(result).isEqualTo(
                 listOf(Error(UiStringRes(string.error_network_connection)))
         )
     }
@@ -90,7 +92,8 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         val dummyPost = createDummyReaderPost(isSeen = true, isSeenSupported = false)
         val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
-        assertThat(flow.toList()).isEqualTo(
+        val result = flow.toList()
+        assertThat(result).isEqualTo(
                 listOf(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
         )
     }

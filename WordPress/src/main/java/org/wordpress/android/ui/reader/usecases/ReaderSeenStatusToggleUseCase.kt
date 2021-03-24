@@ -39,14 +39,17 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     suspend fun toggleSeenStatus(post: ReaderPost, actionSource: ReaderPostSeenToggleSource) = flow {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(Error(UiStringRes(string.error_network_connection)))
+            return@flow
         }
 
         if (!accountStore.hasAccessToken()) {
             emit(UserNotAuthenticated)
+            return@flow
         }
 
         if (!post.isSeenSupported) {
             emit(Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post)))
+            return@flow
         }
 
         val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
