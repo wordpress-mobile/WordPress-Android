@@ -298,7 +298,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
                 .thenReturn(
-                        flowOf(FollowStatusChanged(-1, following = true, showEnableNotification = true))
+                        flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true))
                 )
         val observedValues = startObserving()
         // Act
@@ -317,7 +317,16 @@ class ReaderPostCardActionsHandlerTest {
     fun `Post notifications are disabled when user unfollows a post`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowStatusChanged(-1, following = false, deleteNotificationSubscription = true)))
+                .thenReturn(
+                        flowOf(
+                                FollowStatusChanged(
+                                        -1,
+                                        -1,
+                                        following = false,
+                                        deleteNotificationSubscription = true
+                                )
+                        )
+                )
 
         // Act
         actionHandler.onAction(
@@ -336,7 +345,7 @@ class ReaderPostCardActionsHandlerTest {
     fun `Post notifications are enabled when user clicks on enable notifications snackbar action`() = test {
         // Arrange
         whenever(followUseCase.toggleFollow(anyOrNull(), anyString()))
-                .thenReturn(flowOf(FollowStatusChanged(-1, following = true, showEnableNotification = true)))
+                .thenReturn(flowOf(FollowStatusChanged(-1, -1, following = true, showEnableNotification = true)))
         val observedValues = startObserving()
 
         actionHandler.onAction(
@@ -480,7 +489,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `ToggleNotifications when user clicks on Notifcations button`() = test {
         // Arrange
-        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                 .thenReturn(SiteNotificationState.Success)
         // Act
         actionHandler.onAction(
@@ -491,13 +500,13 @@ class ReaderPostCardActionsHandlerTest {
         )
 
         // Assert
-        verify(siteNotificationsUseCase).toggleNotification(anyLong())
+        verify(siteNotificationsUseCase).toggleNotification(anyLong(), anyLong())
     }
 
     @Test
     fun `Show snackbar message when toggleNotification return network error`() = test {
         // Arrange
-        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                 .thenReturn(SiteNotificationState.Failed.NoNetwork)
         val observedValues = startObserving()
 
@@ -516,7 +525,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Show snackbar message when toggleNotification returns request error`() = test {
         // Arrange
-        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                 .thenReturn(SiteNotificationState.Failed.RequestFailed)
         val observedValues = startObserving()
 
@@ -535,7 +544,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Do not Show snackbar message when toggleNotification returns alreadyRunning error`() = test {
         // Arrange
-        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                 .thenReturn(SiteNotificationState.Failed.AlreadyRunning)
         val observedValues = startObserving()
 
@@ -555,7 +564,7 @@ class ReaderPostCardActionsHandlerTest {
     fun `given site present in db, when site notifications action is requested, toggle notifications is triggered`() =
             test {
                 // Arrange
-                whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+                whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                         .thenReturn(SiteNotificationState.Success)
 
                 // Act
@@ -567,7 +576,7 @@ class ReaderPostCardActionsHandlerTest {
                 )
 
                 // Assert
-                verify(siteNotificationsUseCase, times(1)).toggleNotification(any())
+                verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
             }
 
     @Test
@@ -577,7 +586,7 @@ class ReaderPostCardActionsHandlerTest {
                 .thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
                 .thenReturn(FetchSiteState.Success)
-        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                 .thenReturn(SiteNotificationState.Success)
 
         // Act
@@ -622,7 +631,7 @@ class ReaderPostCardActionsHandlerTest {
                         .thenReturn(null)
                 whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
                         .thenReturn(FetchSiteState.Success)
-                whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+                whenever(siteNotificationsUseCase.toggleNotification(anyLong(), anyLong()))
                         .thenReturn(SiteNotificationState.Success)
 
                 // Act
@@ -634,7 +643,7 @@ class ReaderPostCardActionsHandlerTest {
                 )
 
                 // Assert
-                verify(siteNotificationsUseCase, times(1)).toggleNotification(any())
+                verify(siteNotificationsUseCase, times(1)).toggleNotification(any(), any())
             }
     /** SITE NOTIFICATIONS ACTION end **/
 

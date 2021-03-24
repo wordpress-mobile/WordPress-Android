@@ -210,7 +210,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 mFollowListener.onFollowTapped(
                         followButton,
                         mBlogInfo.getName(),
-                        mIsFeed ? 0 : mBlogInfo.blogId);
+                        mIsFeed ? 0 : mBlogInfo.blogId,
+                        mBlogInfo.feedId);
             } else {
                 mFollowListener.onFollowingTapped();
             }

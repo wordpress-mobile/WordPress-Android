@@ -176,7 +176,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     ) {
         when (type) {
             FOLLOW -> handleFollowClicked(post, source)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
@@ -315,7 +315,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     siteNotificationsUseCase.fetchSubscriptions()
 
                     if (it.showEnableNotification) {
-                        val action = prepareEnableNotificationSnackbarAction(followSiteParam.blogName, it.blogId)
+                        val action = prepareEnableNotificationSnackbarAction(
+                                followSiteParam.blogName,
+                                it.blogId,
+                                it.feedId
+                        )
                         action.invoke()
                     } else if (it.deleteNotificationSubscription) {
                         siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
@@ -326,8 +330,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleSiteNotificationsClicked(blogId: Long) {
-        when (siteNotificationsUseCase.toggleNotification(blogId)) {
+    private suspend fun handleSiteNotificationsClicked(blogId: Long, feedId: Long) {
+        when (siteNotificationsUseCase.toggleNotification(blogId, feedId)) {
             is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
             }
             is SiteNotificationState.Failed.NoNetwork -> {
@@ -491,7 +495,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
     }
 
-    private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
+    private fun prepareEnableNotificationSnackbarAction(
+        blogName: String?,
+        blogId: Long,
+        feedId: Long
+    ): () -> Unit {
         return {
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
             val blog = if (blogName?.isEmpty() == true) thisSite else blogName
@@ -511,7 +519,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                         coroutineScope.launch(bgDispatcher) {
                                             readerTracker.trackBlog(
                                                     AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                                    blogId
+                                                    blogId,
+                                                    feedId
                                             )
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
                                             siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)

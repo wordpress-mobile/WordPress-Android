@@ -2623,7 +2623,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    public void onFollowTapped(View view, String blogName, final long blogId) {
+    public void onFollowTapped(View view, String blogName, final long blogId, final long feedId) {
         mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
 
         String blog = TextUtils.isEmpty(blogName)
@@ -2638,7 +2638,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                   @Override public void onClick(View view) {
                                       mReaderTracker.trackBlog(
                                               AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                              blogId
+                                              blogId,
+                                              feedId
                                       );
                                       AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                               String.valueOf(blogId), SubscriptionAction.NEW);

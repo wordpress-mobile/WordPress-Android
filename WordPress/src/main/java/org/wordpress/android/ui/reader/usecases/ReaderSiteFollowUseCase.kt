@@ -46,7 +46,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
             val isAskingToFollow = !readerBlogTableWrapper.isSiteFollowed(blogId, feedId)
             val showEnableNotification = !readerUtilsWrapper.isExternalFeed(blogId, feedId) && isAskingToFollow
 
-            emit(FollowStatusChanged(blogId, isAskingToFollow, showEnableNotification))
+            emit(FollowStatusChanged(blogId, feedId, isAskingToFollow, showEnableNotification))
             performAction(param, isAskingToFollow, source)
         }
     }
@@ -58,7 +58,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
     ) {
         val succeeded = followSiteAndWaitForResult(param, isAskingToFollow, source)
         if (!succeeded) {
-            emit(FollowStatusChanged(param.blogId, !isAskingToFollow))
+            emit(FollowStatusChanged(param.blogId, param.feedId, !isAskingToFollow))
             emit(RequestFailed)
         } else {
             val deleteNotificationSubscription = !readerUtilsWrapper.isExternalFeed(param.blogId, param.feedId) &&
@@ -66,6 +66,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
             emit(
                     FollowStatusChanged(
                             param.blogId,
+                            param.feedId,
                             isAskingToFollow,
                             deleteNotificationSubscription = deleteNotificationSubscription
                     )
@@ -100,6 +101,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
     sealed class FollowSiteState {
         data class FollowStatusChanged(
             val blogId: Long,
+            val feedId: Long,
             val following: Boolean,
             val showEnableNotification: Boolean = false,
             val deleteNotificationSubscription: Boolean = false

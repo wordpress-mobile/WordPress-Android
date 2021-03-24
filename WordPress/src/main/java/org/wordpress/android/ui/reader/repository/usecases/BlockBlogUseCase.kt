@@ -47,7 +47,11 @@ class BlockBlogUseCase @Inject constructor(
         feedId: Long
     ) {
         // We want to track the action no matter the result
-        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, blogId)
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
+                blogId,
+                feedId
+        )
         val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId, feedId)
         emit(SiteBlockedInLocalDb(blockedBlogData))
 

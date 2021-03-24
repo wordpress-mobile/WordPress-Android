@@ -35,7 +35,10 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<Boolean>? = null
 
-    suspend fun toggleNotification(blogId: Long): SiteNotificationState {
+    suspend fun toggleNotification(
+        blogId: Long,
+        feedId: Long
+    ): SiteNotificationState {
         if (continuation != null) {
             return AlreadyRunning
         }
@@ -44,7 +47,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         }
 
         // We want to track the action no matter the result
-        trackEvent(blogId)
+        trackEvent(blogId, feedId)
 
         val succeeded = suspendCoroutine<Boolean> { cont ->
             continuation = cont
@@ -66,14 +69,14 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         }
     }
 
-    private fun trackEvent(blogId: Long) {
+    private fun trackEvent(blogId: Long, feedId: Long) {
         val trackingEvent = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
             AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
         } else {
             AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
         }
 
-        readerTracker.trackBlog(trackingEvent, blogId)
+        readerTracker.trackBlog(trackingEvent, blogId, feedId)
     }
 
     fun updateNotificationEnabledForBlogInDb(blogId: Long, isNotificationEnabledForBlog: Boolean) {

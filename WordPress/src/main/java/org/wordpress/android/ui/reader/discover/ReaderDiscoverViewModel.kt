@@ -321,7 +321,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long, isFollowed: Boolean) {
-        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED, blogId)
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED,
+                blogId,
+                feedId
+        )
         _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId, isFollowed)))
     }
 
