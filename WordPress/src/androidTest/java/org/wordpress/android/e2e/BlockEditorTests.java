@@ -58,12 +58,7 @@ public class BlockEditorTests extends BaseTest {
 
         blockEditorPage.enterTitle(title);
 
-        blockEditorPage.switchToClassic();
-
-        EditorPage editorPage = new EditorPage();
-        editorPage.hasTitle(title);
-
-        editorPage.previewPost();
+        blockEditorPage.previewPost();
         sleep();
 
         new PostPreviewPage();
