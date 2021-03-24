@@ -2536,10 +2536,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
-
-        mReaderTracker.track(stat, properties);
+        mReaderTracker.trackTag(stat, tag.getTagSlug());
     }
 
     @Override
