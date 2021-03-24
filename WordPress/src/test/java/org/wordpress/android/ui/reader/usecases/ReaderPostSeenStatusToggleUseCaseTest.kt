@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -117,7 +118,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         verify(postSeenStatusApiCallsProvider, times(1)).markPostAsSeen(unseenPost)
         verify(readerPostTableWrapper, times(1)).setPostSeenStatusInDb(unseenPost, true)
-        verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
+        verify(analyticsUtilsWrapper, never()).trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN, unseenPost, mapOf(
                 ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_DETAILS.toString()
         )
