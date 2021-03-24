@@ -209,7 +209,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -400,7 +399,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
-    @Inject WPStoriesFeatureConfig mWPStoriesFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -1317,16 +1315,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
-        if (mWPStoriesFeatureConfig.isEnabled()) {
-            if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
-                callback.doWhenNoStoriesBeingSaved();
-            } else {
-                // Oops! A story is still being saved, let's wait
-                ToastUtils.showToast(EditPostActivity.this,
-                        getString(R.string.toast_edit_story_update_in_progress_title));
-            }
-        } else {
+        if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
             callback.doWhenNoStoriesBeingSaved();
+        } else {
+            // Oops! A story is still being saved, let's wait
+            ToastUtils.showToast(EditPostActivity.this,
+                    getString(R.string.toast_edit_story_update_in_progress_title));
         }
     }
 
@@ -2299,7 +2293,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
+                SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,

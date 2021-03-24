@@ -16,18 +16,16 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
     @Mock lateinit var site: SiteModel
 
     @Before
     fun setUp() {
-        viewModel = PostListCreateMenuViewModel(appPrefsWrapper, analyticsTrackerWrapper, wpStoriesFeatureConfig)
+        viewModel = PostListCreateMenuViewModel(appPrefsWrapper, analyticsTrackerWrapper)
     }
 
     @Test
@@ -59,6 +57,8 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onFabClicked then bottom sheet showing is true`() {
+        viewModel.start(site)
+
         viewModel.onFabClicked()
 
         Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
@@ -66,6 +66,8 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`() {
+        viewModel.start(site)
+
         viewModel.onFabClicked()
 
         verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
@@ -103,17 +105,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `start set expected content message if stories not enabled`() {
-        setupWPStoriesFeatureConfigEnabled(false)
-
-        viewModel.start(site)
-        Assertions.assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_fab_tooltip)
-    }
-
-    @Test
-    fun `start set expected content message if stories enabled`() {
-        setupWPStoriesFeatureConfigEnabled(true)
+    fun `start set expected content message`() {
         whenever(site.isWPCom).thenReturn(true)
 
         viewModel.start(site)
@@ -123,8 +115,4 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
 
     private fun getCreateAction(actionType: ActionType) =
             viewModel.mainActions.value?.first { it.actionType == actionType } as CreateAction
-
-    private fun setupWPStoriesFeatureConfigEnabled(buildConfigValue: Boolean) {
-        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(buildConfigValue)
-    }
 }
