@@ -116,9 +116,9 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
-    fun track(
+    private fun track(
         stat: AnalyticsTracker.Stat,
-        properties: Map<String, *>
+        properties: MutableMap<String, *>
     ) {
         analyticsTrackerWrapper.track(stat, properties)
     }
@@ -339,6 +339,16 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
+    fun trackQuery(
+        stat: AnalyticsTracker.Stat,
+        query: String
+    ) {
+        val properties = mutableMapOf<String, Any>(
+                QUERY_KEY to query
+        )
+        track(stat, properties)
+    }
+
     fun trackDeepLink(
         stat: AnalyticsTracker.Stat,
         action: String,
@@ -377,6 +387,7 @@ class ReaderTracker @Inject constructor(
         private const val TAG_KEY = "tag"
         private const val QUANTITY_KEY = "quantity"
         private const val INTERCEPTED_URI = "intercepted_uri"
+        private const val QUERY_KEY = "query"
 
         private const val SOURCE_KEY = "source"
         const val SOURCE_FOLLOWING = "following"

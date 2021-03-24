@@ -135,9 +135,7 @@ import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
@@ -1305,9 +1303,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("query", trimQuery);
-            mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
+            mReaderTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery);
         }
     }
 
