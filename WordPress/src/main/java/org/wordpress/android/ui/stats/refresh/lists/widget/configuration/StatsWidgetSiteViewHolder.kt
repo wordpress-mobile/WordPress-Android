@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
