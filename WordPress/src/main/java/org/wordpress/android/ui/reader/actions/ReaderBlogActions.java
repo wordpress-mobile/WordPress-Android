@@ -34,6 +34,7 @@ import java.util.Map;
 public class ReaderBlogActions {
     public static class BlockedBlogResult {
         public long blogId;
+        public long feedId;
         // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
         public Map<Pair<String, ReaderTagType>, ReaderPostList> deletedRows;
         public boolean wasFollowing;
@@ -44,6 +45,7 @@ public class ReaderBlogActions {
     }
 
     public static boolean followBlogById(final long blogId,
+                                         final long feedId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener,
                                          final String source,
@@ -57,9 +59,19 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId, source);
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_BLOG_FOLLOWED,
+                    blogId,
+                    feedId,
+                    source
+            );
         } else {
-            readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId, source);
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED,
+                    blogId,
+                    feedId,
+                    source
+            );
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -127,7 +139,8 @@ public class ReaderBlogActions {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    public static boolean followFeedById(final long feedId,
+    public static boolean followFeedById(@SuppressWarnings("unused") final long blogId,
+                                         final long feedId,
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener,
                                          final String source,
@@ -135,6 +148,7 @@ public class ReaderBlogActions {
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(feedId);
         if (blogInfo != null) {
             return internalFollowFeed(
+                    blogInfo.blogId,
                     blogInfo.feedId,
                     blogInfo.getFeedUrl(),
                     isAskingToFollow,
@@ -149,6 +163,7 @@ public class ReaderBlogActions {
             public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null) {
                     internalFollowFeed(
+                            blogInfo.blogId,
                             blogInfo.feedId,
                             blogInfo.getFeedUrl(),
                             isAskingToFollow,
@@ -178,6 +193,7 @@ public class ReaderBlogActions {
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
             internalFollowFeed(
+                    blogInfo.blogId,
                     blogInfo.feedId,
                     blogInfo.getFeedUrl(),
                     true,
@@ -194,9 +210,11 @@ public class ReaderBlogActions {
             public void onResult(ReaderBlog blogInfo) {
                 // note we attempt to follow even when the look up fails (blogInfo = null) because that
                 // endpoint doesn't perform feed discovery, whereas the endpoint to follow a feed does
+                long blogIdToFollow = blogInfo != null ? blogInfo.blogId : 0;
                 long feedIdToFollow = blogInfo != null ? blogInfo.feedId : 0;
                 String feedUrlToFollow = (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
                 internalFollowFeed(
+                        blogIdToFollow,
                         feedIdToFollow,
                         feedUrlToFollow,
                         true,
@@ -209,6 +227,7 @@ public class ReaderBlogActions {
     }
 
     private static boolean internalFollowFeed(
+            final long blogId,
             final long feedId,
             final String feedUrl,
             final boolean isAskingToFollow,
@@ -228,9 +247,19 @@ public class ReaderBlogActions {
         }
 
         if (isAskingToFollow) {
-            readerTracker.trackFeed(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, feedId, source);
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_BLOG_FOLLOWED,
+                    blogId,
+                    feedId,
+                    source
+            );
         } else {
-            readerTracker.trackFeed(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, feedId, source);
+            readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED,
+                    blogId,
+                    feedId,
+                    source
+            );
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -275,9 +304,9 @@ public class ReaderBlogActions {
                                      final String source,
                                      ReaderTracker readerTracker) {
         if (ReaderUtils.isExternalFeed(blogId, feedId)) {
-            return followFeedById(feedId, isAskingToFollow, actionListener, source, readerTracker);
+            return followFeedById(blogId, feedId, isAskingToFollow, actionListener, source, readerTracker);
         } else {
-            return followBlogById(blogId, isAskingToFollow, actionListener, source, readerTracker);
+            return followBlogById(blogId, feedId, isAskingToFollow, actionListener, source, readerTracker);
         }
     }
 
@@ -469,9 +498,10 @@ public class ReaderBlogActions {
         WordPress.sRequestQueue.add(request);
     }
 
-    public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId) {
+    public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId, final long feedId) {
         final BlockedBlogResult blockResult = new BlockedBlogResult();
         blockResult.blogId = blogId;
+        blockResult.feedId = feedId;
         blockResult.deletedRows = ReaderPostTable.getTagPostMap(blogId);
         blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
@@ -524,6 +554,7 @@ public class ReaderBlogActions {
                 if (success && blockResult.wasFollowing) {
                     followBlogById(
                             blockResult.blogId,
+                            blockResult.feedId,
                             true,
                             null,
                             source,

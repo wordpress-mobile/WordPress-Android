@@ -26,23 +26,29 @@ class BlockBlogUseCase @Inject constructor(
     private var continuation: Continuation<Boolean>? = null
 
     // TODO use .flowOn(ioDispatcher) when the experimental flag is removed
-    suspend fun blockBlog(blogId: Long) = flow {
+    suspend fun blockBlog(
+        blogId: Long,
+        feedId: Long
+    ) = flow {
         // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
         if (continuation == null) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NoNetwork)
             } else {
-                performAction(blogId)
+                performAction(blogId, feedId)
             }
         } else {
             emit(AlreadyRunning)
         }
     }
 
-    private suspend fun FlowCollector<BlockSiteState>.performAction(blogId: Long) {
+    private suspend fun FlowCollector<BlockSiteState>.performAction(
+        blogId: Long,
+        feedId: Long
+    ) {
         // We want to track the action no matter the result
         readerTracker.trackBlog(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, blogId)
-        val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId)
+        val blockedBlogData = readerBlogActionsWrapper.blockBlogFromReaderLocal(blogId, feedId)
         emit(SiteBlockedInLocalDb(blockedBlogData))
 
         val succeeded = blockBlogAndWaitForResult(blockedBlogData)

@@ -179,7 +179,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, source)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
@@ -368,9 +368,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
+        feedId: Long,
         source: String
     ) {
-        blockBlogUseCase.blockBlog(blogId).collect {
+        blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))

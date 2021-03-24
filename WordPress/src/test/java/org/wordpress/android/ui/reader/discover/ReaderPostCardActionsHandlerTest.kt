@@ -678,7 +678,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Posts are refreshed when site blocked in local db`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
@@ -696,7 +696,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Snackbar shown when site blocked in local db`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         // Act
@@ -714,7 +714,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Snackbar shown when request to block site failes with no network error`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(Failed.NoNetwork))
         val observedValues = startObserving()
         // Act
@@ -732,7 +732,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Posts are refreshed when request to block site failes with request failed error`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
@@ -750,7 +750,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Snackbar shown when request to block site failes with request failed error`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(Failed.RequestFailed))
         val observedValues = startObserving()
         // Act
@@ -768,7 +768,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Undo action is invoked when user clicks on undo action in snackbar`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(
@@ -786,7 +786,7 @@ class ReaderPostCardActionsHandlerTest {
     @Test
     fun `Post refreshed when user clicks on undo action in snackbar`() = test {
         // Arrange
-        whenever(blockBlogUseCase.blockBlog(anyLong()))
+        whenever(blockBlogUseCase.blockBlog(anyLong(), anyLong()))
                 .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
         val observedValues = startObserving()
         actionHandler.onAction(

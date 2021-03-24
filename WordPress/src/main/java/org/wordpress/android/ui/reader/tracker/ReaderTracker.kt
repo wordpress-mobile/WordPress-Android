@@ -150,10 +150,28 @@ class ReaderTracker @Inject constructor(
     fun trackBlog(
         stat: AnalyticsTracker.Stat,
         blogId: Long,
+        feedId: Long,
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to blogId,
+                BLOG_ID_KEY to blogId(blogId, feedId),
+                FEED_ID_KEY to feedId,
+                SOURCE_KEY to source
+        )
+        track(stat, properties)
+    }
+
+    fun trackBlog(
+        stat: AnalyticsTracker.Stat,
+        blogId: Long,
+        feedId: Long,
+        isFollowed: Boolean?,
+        source: String
+    ) {
+        val properties = mutableMapOf<String, Any>(
+                BLOG_ID_KEY to blogId(blogId, feedId),
+                FEED_ID_KEY to feedId,
+                FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE),
                 SOURCE_KEY to source
         )
         track(stat, properties)
@@ -169,35 +187,7 @@ class ReaderTracker @Inject constructor(
      * absolute. As such, it check whether the 'feedId' is equal to the 'blogId' and if so it assigns 0 to the 'blog_id'
      * tracking property. Else, as should, it assigns the actual 'blogId' to the 'blog_id' tracking property.
      */
-    fun trackBlog(
-        stat: AnalyticsTracker.Stat,
-        blogId: Long,
-        feedId: Long,
-        isFollowed: Boolean?,
-        source: String
-    ) {
-        val properties = mutableMapOf<String, Any>(
-                BLOG_ID_KEY to if (feedId == blogId) 0 else blogId,
-                FEED_ID_KEY to feedId,
-                FOLLOW_KEY to (isFollowed ?: UNKNOWN_VALUE),
-                SOURCE_KEY to source
-        )
-        track(stat, properties)
-    }
-
-    /* FEED */
-
-    fun trackFeed(
-        stat: AnalyticsTracker.Stat,
-        feedId: Long,
-        source: String
-    ) {
-        val properties = mutableMapOf<String, Any>(
-                FEED_ID_KEY to feedId,
-                SOURCE_KEY to source
-        )
-        track(stat, properties)
-    }
+    private fun blogId(blogId: Long, feedId: Long) = if (feedId == blogId) 0 else blogId
 
     /* TAG */
 

@@ -10,7 +10,13 @@ import javax.inject.Inject
 class ReaderBlogActionsWrapper @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
-    fun blockBlogFromReaderLocal(blogId: Long): BlockedBlogResult = ReaderBlogActions.blockBlogFromReaderLocal(blogId)
+    fun blockBlogFromReaderLocal(
+        blogId: Long,
+        feedId: Long
+    ): BlockedBlogResult = ReaderBlogActions.blockBlogFromReaderLocal(
+            blogId,
+            feedId
+    )
 
     fun blockBlogFromReaderRemote(blockedBlogResult: BlockedBlogResult, actionListener: ActionListener?): Unit =
             ReaderBlogActions.blockBlogFromReaderRemote(blockedBlogResult, actionListener)

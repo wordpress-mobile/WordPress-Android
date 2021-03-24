@@ -238,6 +238,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         boolean result;
         if (mIsFeed) {
             result = ReaderBlogActions.followFeedById(
+                    mBlogId,
                     mFeedId,
                     isAskingToFollow,
                     listener,
@@ -247,6 +248,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         } else {
             result = ReaderBlogActions.followBlogById(
                     mBlogId,
+                    mFeedId,
                     isAskingToFollow,
                     listener,
                     source,

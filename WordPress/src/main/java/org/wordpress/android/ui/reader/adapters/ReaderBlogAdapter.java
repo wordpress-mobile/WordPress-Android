@@ -238,6 +238,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (blog.feedId != 0) {
             result = ReaderBlogActions.followFeedById(
+                    blog.blogId,
                     blog.feedId,
                     isAskingToFollow,
                     listener,
@@ -247,6 +248,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             result = ReaderBlogActions.followBlogById(
                     blog.blogId,
+                    blog.feedId,
                     isAskingToFollow,
                     listener,
                     mSource,

@@ -112,6 +112,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
         mFollowButton.setEnabled(false);
 
         boolean result = ReaderBlogActions.followFeedById(
+                mSite.getSiteId(),
                 mSite.getFeedId(),
                 isAskingToFollow,
                 listener,
