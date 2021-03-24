@@ -53,7 +53,11 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         }
     }
 
-    private suspend fun markPostAsSeen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource, doNotTrack: Boolean = false): PostSeenState {
+    private suspend fun markPostAsSeen(
+        post: ReaderPost,
+        actionSource: ReaderPostSeenToggleSource,
+        doNotTrack: Boolean = false
+    ): PostSeenState {
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
         } else if (!post.isSeenSupported) {
@@ -66,7 +70,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                     is Success -> {
                         readerPostTableWrapper.setPostSeenStatusInDb(post, true)
                         readerBlogTableWrapper.decrementUnseenCount(post.blogId)
-                        if(!doNotTrack){
+                        if (!doNotTrack) {
                             analyticsUtilsWrapper.trackWithReaderPostDetails(
                                     AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
                                     post,
