@@ -3219,10 +3219,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.applyTemplate(template);
     }
 
-    @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
-        mPostEditorAnalyticsSession.applyTemplate(template);
-    }
-
     @Override public void showUserSuggestions(Consumer<String> onResult) {
         showSuggestions(SuggestionType.Users, onResult);
     }
