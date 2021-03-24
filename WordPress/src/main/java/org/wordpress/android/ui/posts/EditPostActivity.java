@@ -1219,15 +1219,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // an odd behaviour recorded with Android 8.0.0
         // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
         if (switchToGutenbergMenuItem != null) {
-            if (mShowGutenbergEditor) {
-                // we're showing Gutenberg so, just offer the Aztec switch
-                switchToGutenbergMenuItem.setVisible(false);
-            } else {
-                // we're showing Aztec so, hide the "Switch to Aztec" menu
-                switchToGutenbergMenuItem.setVisible(
-                        shouldSwitchToGutenbergBeVisible(mEditorFragment, mSite)
-                );
-            }
+            boolean switchToGutenbergVisibility = mShowGutenbergEditor ? false
+                    : shouldSwitchToGutenbergBeVisible(mEditorFragment, mSite);
+            switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility);
         }
 
         MenuItem contentInfo = menu.findItem(R.id.menu_content_info);
