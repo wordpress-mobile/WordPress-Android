@@ -2,10 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
-        <item name="colorPrimary">@color/blue_30</item>
-        <item name="colorPrimaryVariant">@color/blue_50</item>
-        <item name="colorSecondary">@color/pink_30</item>
-        <item name="colorSecondaryVariant">@color/pink_50</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="android:colorBackground">@color/background_dark</item>
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>

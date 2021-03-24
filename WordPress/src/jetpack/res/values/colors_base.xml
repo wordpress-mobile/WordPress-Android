@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-
     <color name="colorPrimary">@color/green_50</color>
     <color name="colorPrimaryVariant">@color/green_70</color>
     <color name="colorSecondary">@color/green_50</color>
@@ -23,5 +21,4 @@
     <color name="primary_100">@color/jetpack_green_100</color>
     <color name="primary_dark">@color/jetpack_green_80</color>
     <color name="primary_light">@color/jetpack_green_30</color>
-
 </resources>

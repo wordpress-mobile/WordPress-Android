@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/blue_30</color>
+    <color name="colorPrimaryVariant">@color/blue_50</color>
+    <color name="colorSecondary">@color/pink_30</color>
+    <color name="colorSecondaryVariant">@color/pink_50</color>
+</resources>
