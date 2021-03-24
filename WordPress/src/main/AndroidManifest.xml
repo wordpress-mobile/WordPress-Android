@@ -816,7 +816,8 @@
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
-            android:label="@string/stats_widget_weekly_views_name">
+            android:label="@string/stats_widget_weekly_views_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -827,7 +828,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
-            android:label="@string/stats_widget_all_time_insights_name">
+            android:label="@string/stats_widget_all_time_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -838,7 +840,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
-            android:label="@string/stats_widget_today_insights_name">
+            android:label="@string/stats_widget_today_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -849,7 +852,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
-            android:label="@string/stats_widget_minified_name">
+            android:label="@string/stats_widget_minified_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
