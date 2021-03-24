@@ -215,7 +215,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
-            drawDateSelector(dateSelectorUiModel)
+            statsListFragment.drawDateSelector(dateSelectorUiModel)
         })
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
