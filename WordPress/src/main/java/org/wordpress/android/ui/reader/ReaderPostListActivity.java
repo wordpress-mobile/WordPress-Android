@@ -42,6 +42,7 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ToastUtils;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /*
@@ -249,7 +250,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final ReaderTag tag, ReaderPostListType listType) {
+    private void showListFragmentForTag(@Nonnull final ReaderTag tag, ReaderPostListType listType) {
         if (isFinishing()) {
             return;
         }

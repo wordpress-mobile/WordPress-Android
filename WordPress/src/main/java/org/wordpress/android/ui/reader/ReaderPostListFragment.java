@@ -261,12 +261,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
     /*
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
-    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType) {
+    static ReaderPostListFragment newInstanceForTag(@NonNull ReaderTag tag, ReaderPostListType listType) {
         return newInstanceForTag(tag, listType, false);
     }
 
     static ReaderPostListFragment newInstanceForTag(
-            ReaderTag tag,
+            @NonNull ReaderTag tag,
             ReaderPostListType listType,
             boolean isTopLevel
     ) {
@@ -2508,7 +2508,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     /*
      * called when user selects a tag from the tag toolbar
      */
-    private void onTagChanged(ReaderTag tag) {
+    private void onTagChanged(@NonNull ReaderTag tag) {
         if (!isAdded() || isCurrentTag(tag)) {
             return;
         }
@@ -2522,7 +2522,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         setCurrentTag(tag);
     }
 
-    private void trackTagLoaded(ReaderTag tag) {
+    private void trackTagLoaded(@Nullable ReaderTag tag) {
         if (tag == null) {
             return;
         }

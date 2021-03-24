@@ -156,12 +156,9 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts with a specific tag
      */
-    public static void showReaderTagPreview(Context context, ReaderTag tag,
+    public static void showReaderTagPreview(Context context, @NonNull ReaderTag tag,
                                             String source,
                                             ReaderTracker readerTracker) {
-        if (tag == null) {
-            return;
-        }
         readerTracker.trackTag(
                 AnalyticsTracker.Stat.READER_TAG_PREVIEWED,
                 tag.getTagSlug(),
