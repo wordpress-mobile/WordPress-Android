@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.timezone
 
 import android.content.Context
 import android.text.TextUtils
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -82,7 +83,8 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
         _dismissBottomSheet.asyncCall()
     }
 
-    private fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
+    @VisibleForTesting
+    fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
         val filteredTimezones = MutableLiveData<List<TimezonesList>>()
 
         _showEmptyView.value = true
