@@ -1,0 +1,8 @@
+16.9:
+¿Qué hay de nuevo?
+
+El editor clásico pronto no estará disponible para crear nuevas entradas. Continuarás pudiendo editar tus entradas y páginas existentes en el editor clásico, pero te recomendamos que cambies ahora al editor de bloques.
+
+¡Nuestra herramienta de inicio rápido ha sido rediseñada! Esta guía aparece cuando creas un nuevo sitio.
+
+También hemos hecho mejoras en el diseño de la experiencia del sitio.

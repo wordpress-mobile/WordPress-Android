@@ -101,7 +101,7 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.first_button) || isElementDisplayed(R.id.login_open_email_client)) {
+        if (isElementDisplayed(R.id.continue_with_wpcom_button) || isElementDisplayed(R.id.login_open_email_client)) {
             return;
         }
 

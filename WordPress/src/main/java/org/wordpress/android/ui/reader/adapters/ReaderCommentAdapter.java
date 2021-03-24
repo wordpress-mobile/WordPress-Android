@@ -45,7 +45,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -82,7 +81,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
-    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
     @Inject ReaderTracker mReaderTracker;
 
     public interface RequestReplyListener {
@@ -183,7 +181,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void updateFollowingState(FollowCommentsUiState followButtonState) {
-        if (!mFollowUnfollowCommentsFeatureConfig.isEnabled()) return;
         mFollowButtonState = followButtonState;
         if (mHeaderHolder != null && mHeaderHolder.mHeaderView != null) {
             mHeaderHolder.mHeaderView.setFollowButtonState(followButtonState);

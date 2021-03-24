@@ -71,7 +71,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -117,7 +116,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     private int mRestorePosition;
     private String mInterceptedUri;
 
-    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
     @Inject AccountStore mAccountStore;
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
@@ -165,24 +163,22 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             }
         });
 
-        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-            mViewModel.getSnackbarEvents().observe(this, event ->
-                    event.applyIfNotHandled(holder -> {
-                        WPSnackbar.make(mRecyclerView,
-                                mUiHelpers.getTextOfUiString(this, holder.getMessage()),
-                                Snackbar.LENGTH_LONG)
-                                  .show();
-                        return Unit.INSTANCE;
-                    })
-            );
+        mViewModel.getSnackbarEvents().observe(this, event ->
+                event.applyIfNotHandled(holder -> {
+                    WPSnackbar.make(mRecyclerView,
+                            mUiHelpers.getTextOfUiString(this, holder.getMessage()),
+                            Snackbar.LENGTH_LONG)
+                              .show();
+                    return Unit.INSTANCE;
+                })
+        );
 
-            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                        if (mCommentAdapter != null) {
-                            mCommentAdapter.updateFollowingState(uiState);
-                        }
+        mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                    if (mCommentAdapter != null) {
+                        mCommentAdapter.updateFollowingState(uiState);
                     }
-            );
-        }
+                }
+        );
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -207,16 +203,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
         }
-        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-            mViewModel.start(mBlogId, mPostId);
-        }
+        mViewModel.start(mBlogId, mPostId);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 findViewById(R.id.swipe_to_refresh),
                 () -> {
-                    if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-                        mViewModel.onSwipeToRefresh();
-                    }
+                    mViewModel.onSwipeToRefresh();
                     updatePostAndComments();
                 }
         );
