@@ -5,7 +5,8 @@
     <shortcut
         android:icon="@drawable/ic_shortcut_stats"
         android:shortcutId="stats"
-        android:shortcutShortLabel="@string/stats">
+        android:shortcutShortLabel="@string/stats"
+        android:enabled="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
@@ -18,7 +19,8 @@
     <shortcut
         android:icon="@drawable/ic_shortcut_notifications"
         android:shortcutId="notifications"
-        android:shortcutShortLabel="@string/notifications_screen_title">
+        android:shortcutShortLabel="@string/notifications_screen_title"
+        android:enabled="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
@@ -31,7 +33,8 @@
     <shortcut
         android:icon="@drawable/ic_shortcut_create_post"
         android:shortcutId="new_post"
-        android:shortcutShortLabel="@string/new_post">
+        android:shortcutShortLabel="@string/new_post"
+        android:enabled="false">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"

@@ -580,7 +580,8 @@
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:enabled="@string/shortcuts_enabled">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
