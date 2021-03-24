@@ -48,8 +48,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given feed, when reader post is fetched, then feed post is requested`() = test {
         whenever(readerPostActionsWrapper.requestFeedPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onSuccess()
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
+                    .onSuccess(null)
         }
 
         useCase.fetchPost(postId = postId, blogId = blogId, isFeed = true)
@@ -61,8 +61,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given blog, when reader post is fetched, then blog post is requested`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onSuccess()
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
+                    .onSuccess(null)
         }
 
         useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -74,8 +74,8 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given success response, when reader post is fetched, then success is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
-                    .onSuccess()
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
+                    .onSuccess(null)
         }
 
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
@@ -86,7 +86,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given http not found status code, when reader post is fetched, then post not found is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
                     .onFailure(HttpURLConnection.HTTP_NOT_FOUND)
         }
 
@@ -98,7 +98,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given http unauthorised status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
                     .onFailure(HttpURLConnection.HTTP_UNAUTHORIZED)
         }
 
@@ -110,7 +110,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given http forbidden status code, when reader post is fetched, then not authorised is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
                     .onFailure(HttpURLConnection.HTTP_FORBIDDEN)
         }
 
@@ -122,7 +122,7 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `given unknown status code, when reader post is fetched, then request failed is returned`() = test {
         whenever(readerPostActionsWrapper.requestBlogPost(anyLong(), anyLong(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener)
+            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
                     .onFailure(500)
         }
 
