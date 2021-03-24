@@ -92,9 +92,19 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "buildType"
+    flavorDimensions "app", "buildType"
 
     productFlavors {
+        wordpress {
+            dimension "app"
+            applicationId "org.wordpress.android"
+        }
+
+        jetpack {
+            dimension "app"
+            applicationId "com.jetpack.android"
+        }
+
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
@@ -109,21 +119,20 @@ android {
         }
 
         zalpha { // alpha version - enable experimental features
-            applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            applicationId "org.wordpress.android.beta"
+            applicationIdSuffix ".beta"
             dimension "buildType"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
-            applicationId "org.wordpress.android.prealpha"
+            applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
     }
