@@ -210,6 +210,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
 
+    private SiteSettingsTimezoneBottomSheet mTimezoneBottomSheet;
+
     // Media settings
     private EditTextPreference mSiteQuotaSpacePref;
 
@@ -475,6 +477,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    @Override public void onStop() {
+        if (mTimezoneBottomSheet != null) {
+            mTimezoneBottomSheet.setTimezoneSettingCallback(null);
+            mTimezoneBottomSheet.dismiss();
+        }
+        super.onStop();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeJetpackSecurityScreenToolbar();
@@ -490,6 +500,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (savedInstanceState != null) {
             setupMorePreferenceScreen();
             setupJetpackSecurityScreen();
+            setupTimezoneBottomSheet();
         }
     }
 
@@ -537,7 +548,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
-            showTimezoneBottomSheet();
+            setupTimezoneBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -1136,9 +1147,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         dialog.show(getFragmentManager(), "format-dialog-tag");
     }
 
-    private void showTimezoneBottomSheet() {
-        SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance(this);
-        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "timezone-dialog-tag");
+    private void setupTimezoneBottomSheet() {
+        if (mTimezonePref == null || !isAdded()) {
+            return;
+        }
+
+        mTimezoneBottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
+        mTimezoneBottomSheet.setTimezoneSettingCallback(this);
+        mTimezoneBottomSheet.show(
+                ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                "timezone-dialog-tag");
     }
 
     private void showHomepageSettings() {

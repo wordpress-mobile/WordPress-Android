@@ -38,6 +38,10 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
     private var callback: TimezoneSelectionCallback? = null
 
+    fun setTimezoneSettingCallback(callback: TimezoneSelectionCallback?) {
+        this.callback = callback
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
@@ -204,8 +208,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(callback: TimezoneSelectionCallback): SiteSettingsTimezoneBottomSheet =
-                SiteSettingsTimezoneBottomSheet().apply { this.callback = callback }
+        fun newInstance(): SiteSettingsTimezoneBottomSheet = SiteSettingsTimezoneBottomSheet()
     }
 
     interface TimezoneSelectionCallback {
