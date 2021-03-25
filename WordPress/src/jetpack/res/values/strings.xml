@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Jetpack</string>
+    <string name="widgets_enabled" translatable="false">false</string>
+    <string name="shortcuts_enabled" translatable="false">false</string>
 </resources>
