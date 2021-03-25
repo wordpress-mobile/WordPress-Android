@@ -166,10 +166,14 @@ class StoriesEventListener @Inject constructor(
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveCompleted(event: FrameSaveCompleted) {
         eventBusWrapper.removeStickyEvent(event)
+        // in onStoryFrameSaveCompleted we should always get a frameId that has the TEMPORARY_ID_PREFIX prefix
+        // for Stories being edited only
+        // otherwise we can exit
+        if (event.frameId == null) return
+
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
-        // in onStoryFrameSaveCompleted we should always get a frameId that has the TEMPORARY_ID_PREFIX prefix
         val localMediaId = requireNotNull(event.frameId)
 
         val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
