@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.LikeModel;
+import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -33,6 +35,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikeWPComRestResponse.LikesWPComRestResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesResponseUtilsProvider;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMetaData;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
@@ -47,6 +51,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchedPostLikesResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
@@ -67,9 +72,12 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostRestClient extends BaseWPComRestClient {
+    LikesResponseUtilsProvider mLikesResponseUtilsProvider;
+
     public PostRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                          UserAgent userAgent) {
+                          UserAgent userAgent, LikesResponseUtilsProvider likesResponseUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
+        mLikesResponseUtilsProvider = likesResponseUtilsProvider;
     }
 
     public void fetchPost(final PostModel post, final SiteModel site) {
@@ -102,6 +110,36 @@ public class PostRestClient extends BaseWPComRestClient {
                         FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
                         payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchPostLikes(final long siteId, final long remotePostId) {
+        String url = WPCOMREST.sites.site(siteId).posts.post(remotePostId).likes.getUrlV1_2();
+
+        final WPComGsonRequest<LikesWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
+                url, null, LikesWPComRestResponse.class,
+                new Listener<LikesWPComRestResponse>() {
+                    @Override
+                    public void onResponse(LikesWPComRestResponse response) {
+                        List<LikeModel> likes = mLikesResponseUtilsProvider.likesResponseToLikeList(response, siteId, remotePostId, LikeType.POST_LIKE);
+
+                        FetchedPostLikesResponsePayload
+                                payload = new FetchedPostLikesResponsePayload(likes, siteId, remotePostId);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
+                    }
+                },
+
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchedPostLikesResponsePayload
+                                payload = new FetchedPostLikesResponsePayload(siteId, remotePostId);
+                        payload.error = new PostError(error.apiError, error.message);
+
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
                     }
                 }
         );
