@@ -200,7 +200,7 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
-        mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId);
+        mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
     }
 
     public void clearMediaFileURL(final int mediaId) {
