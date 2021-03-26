@@ -38,6 +38,8 @@ fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateL
             AppCompatResources.getColorStateList(this, it)
         }
 
+fun Context.isJetpackApp() = this.applicationContext.packageName.startsWith("com.jetpack.android")
+
 // https://developer.android.com/reference/android/content/res/Configuration.html#locale
 val Context.currentLocale: Locale
     get() = ConfigurationCompat.getLocales(resources.configuration)[0]
