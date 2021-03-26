@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -140,6 +141,28 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class FetchCommentLikesPayload extends Payload<BaseNetworkError> {
+        public final long siteId;
+        public final long remoteCommentId;
+
+        public FetchCommentLikesPayload(long siteId, long remoteCommentId) {
+            this.siteId = siteId;
+            this.remoteCommentId = remoteCommentId;
+        }
+    }
+
+    public static class FetchedCommentLikesResponsePayload extends Payload<CommentError> {
+        @NonNull public final List<LikeModel> likes;
+        public final long siteId;
+        public final long commentRemoteId;
+
+        public FetchedCommentLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long commentRemoteId) {
+            this.likes = likes;
+            this.siteId = siteId;
+            this.commentRemoteId = commentRemoteId;
+        }
+    }
+
     // Errors
 
     public enum CommentErrorType {
@@ -171,6 +194,17 @@ public class CommentStore extends Store {
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
+        }
+    }
+
+    public static class OnCommentLikesChanged extends OnChanged<CommentError> {
+        public CommentAction causeOfChange;
+        public final long siteId;
+        public final long commentId;
+        public List<LikeModel> commentLikes = new ArrayList<>();
+        public OnCommentLikesChanged(long siteId, long commentId) {
+            this.siteId = siteId;
+            this.commentId = commentId;
         }
     }
 
@@ -272,6 +306,12 @@ public class CommentStore extends Store {
                 break;
             case LIKED_COMMENT:
                 handleLikedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
+                break;
+            case FETCH_COMMENT_LIKES:
+                fetchCommentLikes((FetchCommentLikesPayload) action.getPayload());
+                break;
+            case FETCHED_COMMENT_LIKES:
+                handleFetchedCommentLikes((FetchedCommentLikesResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -516,6 +556,28 @@ public class CommentStore extends Store {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
         event.causeOfChange = CommentAction.LIKE_COMMENT;
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void fetchCommentLikes(FetchCommentLikesPayload payload) {
+        mCommentRestClient.fetchCommentLikes(payload.siteId, payload.remoteCommentId);
+    }
+
+    private void handleFetchedCommentLikes(FetchedCommentLikesResponsePayload payload) {
+        OnCommentLikesChanged event = new OnCommentLikesChanged(payload.siteId, payload.commentRemoteId);
+        if (!payload.isError()) {
+            if (payload.likes != null) {
+                CommentSqlUtils.deleteCommentLikes(payload.siteId, payload.commentRemoteId);
+
+                for (LikeModel like: payload.likes) {
+                    CommentSqlUtils.insertOrUpdateCommentLikes(payload.siteId, payload.commentRemoteId, like);
+                }
+                event.commentLikes.addAll(payload.likes);
+            }
+
+        }
+        event.causeOfChange = CommentAction.FETCHED_COMMENT_LIKES;
         event.error = payload.error;
         emitChange(event);
     }

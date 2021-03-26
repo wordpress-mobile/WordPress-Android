@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.CommentModelTable;
+import com.wellsql.generated.LikeModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
@@ -8,6 +9,8 @@ import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.LikeModel;
+import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.ArrayList;
@@ -219,5 +222,45 @@ public class CommentSqlUtils {
         }
 
         return (int) getCommentsQueryForSite(site, statuses).count();
+    }
+
+    public static int deleteCommentLikes(long siteId, long remoteCommentId) {
+        return WellSql.delete(LikeModel.class)
+            .where()
+            .beginGroup()
+            .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+            .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+            .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+            .endGroup()
+            .endWhere()
+            .execute();
+    }
+
+    public static int insertOrUpdateCommentLikes(long siteId, long remoteCommentId, LikeModel like) {
+        if (null == like) {
+            return 0;
+        }
+
+        List<LikeModel> likeResult;
+
+        // If the like already exists and has an id, we want to update it.
+        likeResult = WellSql.select(LikeModel.class).where()
+                        .beginGroup()
+                        .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                        .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                        .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                        .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                        .endGroup().endWhere().getAsModel();
+
+        if (likeResult.isEmpty()) {
+            // insert
+            WellSql.insert(like).asSingleTransaction(true).execute();
+            return 1;
+        } else {
+            // update
+            int oldId = likeResult.get(0).getId();
+            return WellSql.update(LikeModel.class).whereId(oldId)
+                          .put(like, new UpdateAllExceptId<>(LikeModel.class)).execute();
+        }
     }
 }
