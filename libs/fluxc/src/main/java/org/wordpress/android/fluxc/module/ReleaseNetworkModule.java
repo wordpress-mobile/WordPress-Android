@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesResponseUtilsProvider;
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
@@ -187,8 +188,9 @@ public class ReleaseNetworkModule {
     @Provides
     public PostRestClient providePostRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
-                                                AccessToken token, UserAgent userAgent) {
-        return new PostRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+                                                AccessToken token, UserAgent userAgent,
+                                                LikesResponseUtilsProvider likesResponseUtilsProvider) {
+        return new PostRestClient(appContext, dispatcher, requestQueue, token, userAgent, likesResponseUtilsProvider);
     }
 
     @Singleton
@@ -203,8 +205,9 @@ public class ReleaseNetworkModule {
     @Provides
     public CommentRestClient provideCommentRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
-                                                      AccessToken token, UserAgent userAgent) {
-        return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+                                                      AccessToken token, UserAgent userAgent,
+                                                      LikesResponseUtilsProvider likesResponseUtilsProvider) {
+        return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent, likesResponseUtilsProvider);
     }
 
     @Singleton
