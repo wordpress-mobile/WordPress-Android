@@ -1598,6 +1598,7 @@ open class WellSqlConfig : DefaultWellConfig {
                             "WIDTH TEXT NOT NULL," +
                             "HEIGHT TEXT NOT NULL)"
                     )
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
                     db.execSQL("CREATE TABLE WCProductVariationModel (" +
                             "LOCAL_SITE_ID INTEGER," +
                             "REMOTE_PRODUCT_ID INTEGER," +
