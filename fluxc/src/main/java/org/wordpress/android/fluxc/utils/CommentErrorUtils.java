@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -11,6 +12,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.FetchedCommentLikesResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 
 import java.util.ArrayList;
@@ -27,6 +29,20 @@ public class CommentErrorUtils {
                                                                                   SiteModel site) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>(), site,
                 0, 0, null);
+        payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
+        return payload;
+    }
+
+    public static FetchedCommentLikesResponsePayload commentErrorToFetchedCommentLikesPayload(
+            BaseNetworkError error,
+            long siteId,
+            long commentId
+    ) {
+        FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
+                new ArrayList<LikeModel>(),
+                siteId,
+                commentId
+        );
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
