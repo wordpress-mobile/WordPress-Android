@@ -23,8 +23,10 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPostLikes;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
+import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -173,6 +175,34 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchPostLikesPayload extends Payload<BaseNetworkError> {
+        public final long siteId;
+        public final long remotePostId;
+
+        public FetchPostLikesPayload(long siteId, long remotePostId) {
+            this.siteId = siteId;
+            this.remotePostId = remotePostId;
+        }
+    }
+
+    public static class FetchedPostLikesResponsePayload extends Payload<PostError> {
+        @NonNull public final List<LikeModel> likes;
+        public final long siteId;
+        public final long remotePostId;
+
+        public FetchedPostLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long remotePostId) {
+            this.likes = likes;
+            this.siteId = siteId;
+            this.remotePostId = remotePostId;
+        }
+
+        public FetchedPostLikesResponsePayload(long siteId, long remotePostId) {
+            this.likes = new ArrayList<>();
+            this.siteId = siteId;
+            this.remotePostId = remotePostId;
+        }
+    }
+
     @SuppressWarnings("WeakerAccess")
     public static class DeletedPostPayload extends Payload<PostError> {
         @NonNull public PostModel postToBeDeleted;
@@ -305,6 +335,19 @@ public class PostStore extends Store {
             this.causeOfChange = causeOfChange;
             this.rowsAffected = rowsAffected;
             this.canLoadMore = canLoadMore;
+        }
+    }
+
+    public static class OnPostLikesChanged extends OnChanged<PostError> {
+        public final CauseOfOnPostChanged causeOfChange;
+        public final long siteId;
+        public final long postId;
+        public List<LikeModel> postLikes = new ArrayList<>();
+
+        public OnPostLikesChanged(CauseOfOnPostChanged causeOfChange, long siteId, long postId) {
+            this.causeOfChange = causeOfChange;
+            this.siteId = siteId;
+            this.postId = postId;
         }
     }
 
@@ -688,7 +731,38 @@ public class PostStore extends Store {
             case FETCHED_REVISIONS:
                 handleFetchedRevisions((FetchRevisionsResponsePayload) action.getPayload());
                 break;
+            case FETCH_POST_LIKES:
+                fetchPostLikes((FetchPostLikesPayload) action.getPayload());
+                break;
+            case FETCHED_POST_LIKES:
+                handleFetchedPostLikes((FetchedPostLikesResponsePayload) action.getPayload());
+                break;
         }
+    }
+
+    private void fetchPostLikes(FetchPostLikesPayload payload) {
+        mPostRestClient.fetchPostLikes(payload.siteId, payload.remotePostId);
+    }
+
+    private void handleFetchedPostLikes(FetchedPostLikesResponsePayload payload) {
+        OnPostLikesChanged event = new OnPostLikesChanged(
+                FetchPostLikes.INSTANCE,
+                payload.siteId,
+                payload.remotePostId
+        );
+        if (!payload.isError()) {
+            if (payload.likes != null) {
+                mPostSqlUtils.deletePostLikes(payload.siteId, payload.remotePostId);
+
+                for (LikeModel like: payload.likes) {
+                    mPostSqlUtils.insertOrUpdatePostLikes(payload.siteId, payload.remotePostId, like);
+                }
+                event.postLikes.addAll(payload.likes);
+            }
+
+        }
+        event.error = payload.error;
+        emitChange(event);
     }
 
     private void deletePost(RemotePostPayload payload) {

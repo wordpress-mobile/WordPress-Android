@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.wellsql.generated.LikeModelTable;
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
 import com.wellsql.generated.PostModelTable;
@@ -15,6 +16,8 @@ import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
+import org.wordpress.android.fluxc.model.LikeModel;
+import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
@@ -399,5 +402,45 @@ public class PostSqlUtils {
             localPostIds.add(new LocalId(post.getId()));
         }
         return localPostIds;
+    }
+
+    public int deletePostLikes(long siteId, long remotePostId) {
+        return WellSql.delete(LikeModel.class)
+                      .where()
+                      .beginGroup()
+                      .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                      .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                      .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
+                      .endGroup()
+                      .endWhere()
+                      .execute();
+    }
+
+    public int insertOrUpdatePostLikes(long siteId, long remotePostId, LikeModel like) {
+        if (null == like) {
+            return 0;
+        }
+
+        List<LikeModel> likeResult;
+
+        // If the like already exist and has an id, we want to update it.
+        likeResult = WellSql.select(LikeModel.class).where()
+                            .beginGroup()
+                            .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                            .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                            .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
+                            .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                            .endGroup().endWhere().getAsModel();
+
+        if (likeResult.isEmpty()) {
+            // insert
+            WellSql.insert(like).asSingleTransaction(true).execute();
+            return 1;
+        } else {
+            // update
+            int oldId = likeResult.get(0).getId();
+            return WellSql.update(LikeModel.class).whereId(oldId)
+                          .put(like, new UpdateAllExceptId<>(LikeModel.class)).execute();
+        }
     }
 }
