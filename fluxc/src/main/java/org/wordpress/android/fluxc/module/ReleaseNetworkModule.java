@@ -207,7 +207,14 @@ public class ReleaseNetworkModule {
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AccessToken token, UserAgent userAgent,
                                                       LikesResponseUtilsProvider likesResponseUtilsProvider) {
-        return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent, likesResponseUtilsProvider);
+        return new CommentRestClient(
+                appContext,
+                dispatcher,
+                requestQueue,
+                token,
+                userAgent,
+                likesResponseUtilsProvider
+        );
     }
 
     @Singleton
