@@ -570,12 +570,11 @@ public class CommentStore extends Store {
             if (payload.likes != null) {
                 CommentSqlUtils.deleteCommentLikes(payload.siteId, payload.commentRemoteId);
 
-                for (LikeModel like: payload.likes) {
+                for (LikeModel like : payload.likes) {
                     CommentSqlUtils.insertOrUpdateCommentLikes(payload.siteId, payload.commentRemoteId, like);
                 }
                 event.commentLikes.addAll(payload.likes);
             }
-
         }
         event.causeOfChange = CommentAction.FETCHED_COMMENT_LIKES;
         event.error = payload.error;

@@ -124,7 +124,12 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<LikesWPComRestResponse>() {
                     @Override
                     public void onResponse(LikesWPComRestResponse response) {
-                        List<LikeModel> likes = mLikesResponseUtilsProvider.likesResponseToLikeList(response, siteId, remotePostId, LikeType.POST_LIKE);
+                        List<LikeModel> likes = mLikesResponseUtilsProvider.likesResponseToLikeList(
+                                response,
+                                siteId,
+                                remotePostId,
+                                LikeType.POST_LIKE
+                        );
 
                         FetchedPostLikesResponsePayload
                                 payload = new FetchedPostLikesResponsePayload(likes, siteId, remotePostId);

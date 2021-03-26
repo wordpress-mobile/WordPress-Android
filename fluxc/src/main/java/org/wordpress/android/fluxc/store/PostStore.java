@@ -754,12 +754,11 @@ public class PostStore extends Store {
             if (payload.likes != null) {
                 mPostSqlUtils.deletePostLikes(payload.siteId, payload.remotePostId);
 
-                for (LikeModel like: payload.likes) {
+                for (LikeModel like : payload.likes) {
                     mPostSqlUtils.insertOrUpdatePostLikes(payload.siteId, payload.remotePostId, like);
                 }
                 event.postLikes.addAll(payload.likes);
             }
-
         }
         event.error = payload.error;
         emitChange(event);
