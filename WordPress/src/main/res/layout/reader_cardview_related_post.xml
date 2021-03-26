@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/transparent"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_extra_large">
+
+        <ImageView
+            android:id="@+id/image_featured"
+            android:layout_width="@dimen/reader_related_post_image_width"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
+            android:contentDescription="@null"
+            android:cropToPadding="true"
+            android:padding="@dimen/reader_image_featured_border_width"
+            app:layout_constraintBottom_toTopOf="@id/text_title"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toStartOf="@id/text_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.RelatedPost.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_featured"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="text title" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_excerpt"
+            style="@style/ReaderTextView.RelatedPost.Excerpt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_title"
+            app:layout_constraintTop_toBottomOf="@id/text_title"
+            tools:text="text excerpt" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

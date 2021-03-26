@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-15 04:04:36+0000
+Translation-Revision-Date: 2021-02-24 19:40:17+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
 -->
 <resources>
+    <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
     <string name="quick_start_list_upload_icon_subtitle">Додајте иконицу веб места за исполиран професионални изглед.</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
@@ -34,7 +35,6 @@ Language: sr_RS
     <string name="backup_download_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="backup_download_complete_failed_action_button">Урађено</string>
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
-    <string name="rewind">Поврати</string>
     <string name="backup_item_sqls">База података веб места</string>
     <string name="backup_item_roots_hint">(садржи wp-config.php и све не-Вордпресове датотеке)</string>
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
@@ -94,7 +94,6 @@ Language: sr_RS
     <string name="login_prologue_title_third">Видите коментаре и обавештења у реалном времену.</string>
     <string name="login_prologue_title_first">Добродошли у најпопуларнији градитељ веб страница на свету.</string>
     <string name="login_prologue_title_fourth">Гледајте раст ваше публике помоћу дубинске аналитике.</string>
-    <string name="login_prologue_title_fifth">Пратите своје омиљене локације и откривајте нове ствари за читање.</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
     <string name="reader_discover_recommended_blogs_header">Веб места за праћење</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' није у потпуности подржан</string>
@@ -110,7 +109,6 @@ Language: sr_RS
     <string name="stories_intro_main_title">Представљамо чланке приче</string>
     <string name="mlp_notice_blank_page_created">Празна страница је направљена</string>
     <string name="mlp_notice_page_created">Страница направљена</string>
-    <string name="mlp_preview_title">Претпреглед распореда</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_post_details_header_by_author_name">Од</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Означи као непожељно</string>
@@ -252,8 +250,6 @@ Language: sr_RS
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Откажи</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Пребаци у Нацрте</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Пребаци чланак у Нацрте?</string>
-    <string name="reader_label_choose_your_interests">Одаберите своја интересовања</string>
-    <string name="reader_choose_interests_content_description">Одаберите своја интересовања</string>
     <string name="reader_btn_done">Готово</string>
     <string name="reader_btn_select_few_interests">Одаберите неколико за наставак</string>
     <string name="post_status_post_published">Објављено</string>
@@ -318,8 +314,6 @@ Language: sr_RS
     <string name="app_theme_dark">Тамна</string>
     <string name="app_theme_light">Светла</string>
     <string name="app_theme">Изглед</string>
-    <string name="gutenberg_native_warning_message">Порука упозорења</string>
-    <string name="gutenberg_native_success_message">Порука успеха</string>
     <string name="gutenberg_native_show_post_content">Прикажи садржај чланка</string>
     <string name="gutenberg_native_only_show_excerpt">Прикажи само одломак </string>
     <string name="gutenberg_native_link_to">Повежи са</string>
@@ -391,7 +385,6 @@ Language: sr_RS
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_ungroup">Разгрупиши</string>
     <string name="gutenberg_native_translate">Преведи</string>
-    <string name="gutenberg_native_title">Наслов:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Додирни да сакријеш тастатуру</string>
     <string name="gutenberg_native_tap_here_to_show_help">Додирни овде да се прикаже помоћ</string>
     <string name="gutenberg_native_start_writing">Почни да пишеш…</string>
@@ -399,7 +392,6 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
     <string name="gutenberg_native_cut_block">Исеци блок</string>
-    <string name="gutenberg_native_reset_block">Ресетуј блок</string>
     <string name="gutenberg_native_show_section">Прикажи одељак</string>
     <string name="gutenberg_native_s_block_empty">%s блок. Празно</string>
     <string name="gutenberg_native_post_title_s">Наслов чланка. %s</string>
@@ -412,7 +404,6 @@ Language: sr_RS
     <string name="gutenberg_native_help_icon">Иконица помоћи</string>
     <string name="gutenberg_native_hide_keyboard">Сакриј тастатуру</string>
     <string name="gutenberg_native_move_block_down">Помери блок доле</string>
-    <string name="gutenberg_native_content">Садржај…</string>
     <string name="gutenberg_native_current_value_is_s">Тренутна вредност је %s</string>
     <string name="gutenberg_native_choose_from_device">Одабери свој уређај</string>
     <string name="gutenberg_native_alt_text">Алтернативни текст</string>
@@ -421,13 +412,8 @@ Language: sr_RS
     <string name="gutenberg_native_add_image_or_video">ДОДАЈ СЛИКУ ИЛИ ВИДЕО ЗАПИС</string>
     <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
-    <string name="gutenberg_native_add_a_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
-    <string name="master_switch_default_title_off">Искључи</string>
-    <string name="master_switch_default_title_on">Укључи</string>
-    <string name="notifications_tab_dialog_master_status_off">Обавештења за ову веб локацију</string>
-    <string name="notifications_tab_dialog_master_status_on">Обавештења за ову веб локацију</string>
     <string name="pick_media">Додај слику или видео запис</string>
     <string name="error_post_not_scheduled_retrying">Нисмо успели да закажемо чланак, али ћемо покушати поново касније.</string>
     <string name="error_media_recover_post">Нисмо могли да отпремимо овај садржај.</string>
@@ -609,8 +595,6 @@ Language: sr_RS
     <string name="menu_switch_to_aztec_editor">Пребаци на класични уређивач</string>
     <string name="stats_loading_error">Подаци нису учитани</string>
     <string name="exit">излаз</string>
-    <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
-    <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
@@ -637,7 +621,6 @@ Language: sr_RS
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
     <string name="new_site_creation_create_site_button">Креирај сајт</string>
-    <string name="new_site_creation_search_domain_input_hint">Претражи домене</string>
     <string name="site_creation_error_generic_title">Дошло је до проблема</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Дошло је до проблема</string>
     <string name="new_site_creation_preview_title">Ваша страница је креирана!</string>
@@ -858,8 +841,6 @@ Language: sr_RS
     <string name="reader_add_bookmark">Додато у сачуване чланке</string>
     <string name="reader_remove_bookmark">Уклоњено из сачуваних чланака</string>
     <string name="reader_bookmark_snack_btn">Види све</string>
-    <string name="reader_btn_bookmarked">Сачувано</string>
-    <string name="reader_btn_bookmark">Сачувај</string>
     <string name="reader_bookmark_snack_title">Чланак сачуван</string>
     <string name="reader_empty_saved_posts_title">Нема сачуваних чланака - још увек!</string>
     <string name="reader_followed_blog_notifications_action">Омогући</string>
@@ -1205,10 +1186,6 @@ Language: sr_RS
     <string name="notification_settings_category_other">Остало</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Сви моји сајтови</string>
     <string name="notification_settings_category_your_sites">Ваши сајтови</string>
-    <string name="notification_settings_master_hint_off">Омогући обавештења</string>
-    <string name="notification_settings_master_hint_on">Онемогући обавештења</string>
-    <string name="notification_settings_master_status_off">Искључено</string>
-    <string name="notification_settings_master_status_on">Укључено</string>
     <string name="max_video_resolution">Највећа величина видео записа</string>
     <string name="max_thumbnail_px_size">Највећа величина слике</string>
     <string name="reader_excerpt_link">Посети %s за више</string>
@@ -1385,7 +1362,6 @@ Language: sr_RS
     <string name="signout">Одјави се</string>
     <string name="sign_in_wpcom">Пријави се у WordPress.com</string>
     <string name="reader_label_global_related_posts">Више на WordPress.com</string>
-    <string name="reader_label_local_related_posts">Више у %s</string>
     <string name="preference_open_device_settings">Отвори подешавања телефона</string>
     <string name="invite_invalid_email">%s: Неисправан емаил</string>
     <string name="invite_user_blocked_invites">%s: Корисник је блокирао позивнице</string>
@@ -1573,7 +1549,6 @@ Language: sr_RS
     <string name="site_settings_rp_show_images_title">Прикажи слике</string>
     <string name="site_settings_rp_show_header_title">Прикажи заглавље</string>
     <string name="site_settings_rp_switch_title">Прикажи везане чланке</string>
-    <string name="site_settings_whitelist_hint">Аутор коментара мора имати претходно одобрени коментар</string>
     <string name="site_settings_user_account_required_hint">Корисници морају бити регистровани и пријављени да би могли коментарисати</string>
     <string name="site_settings_identity_required_hint">Аутор коментара мора попунити име и адресу е-поште</string>
     <string name="site_settings_paging_hint">Прикажите коментаре у комадима одређене величине</string>
@@ -1590,17 +1565,13 @@ Language: sr_RS
     <string name="site_settings_language_hint">Језик у ком је овај блог првенствено написан</string>
     <string name="site_settings_privacy_hint">Контролише ко може да види Ваш сајт</string>
     <string name="site_settings_address_hint">Промена адресе тренутно није подржана</string>
-    <string name="site_settings_whitelist_known_summary">Коментари познатих корисника</string>
-    <string name="site_settings_whitelist_all_summary">Коментари свих корисника</string>
     <string name="site_settings_threading_summary">Нивои %d</string>
     <string name="site_settings_privacy_private_summary">Приватно</string>
     <string name="site_settings_privacy_hidden_summary">Сакривено</string>
     <string name="site_settings_privacy_public_summary">Јавно</string>
     <string name="site_settings_delete_site_title">Обриши сајт</string>
-    <string name="site_settings_blacklist_title">Црна листа</string>
     <string name="site_settings_moderation_hold_title">Задржи за модеризацију</string>
     <string name="site_settings_multiple_links_title">Везе у коментарима</string>
-    <string name="site_settings_whitelist_title">Аутоматски одобри</string>
     <string name="site_settings_sort_by_title">Сортирај по</string>
     <string name="site_settings_account_required_title">Корисници морају бити улоговани</string>
     <string name="site_settings_identity_required_title">Мора да садржи име и е-пошту</string>

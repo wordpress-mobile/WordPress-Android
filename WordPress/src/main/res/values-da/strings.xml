@@ -27,7 +27,6 @@ Language: da_DK
     <string name="comment_q_action_done_generic">Det er udført!</string>
     <string name="signout">Log ud</string>
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
-    <string name="reader_label_local_related_posts">Se mere i %s</string>
     <string name="invite_invalid_email">%s: ugyldig e-mail</string>
     <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>

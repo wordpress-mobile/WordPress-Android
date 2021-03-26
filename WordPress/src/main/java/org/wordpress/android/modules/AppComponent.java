@@ -69,7 +69,8 @@ import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
-import org.wordpress.android.ui.mlp.LayoutsAdapter;
+import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
@@ -171,13 +172,13 @@ import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
-import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
@@ -270,8 +271,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostSignupInterstitialActivity object);
 
     void inject(SiteCreationActivity object);
-
-    void inject(SiteCreationSegmentsFragment object);
 
     void inject(SiteCreationDomainsFragment object);
 
@@ -405,7 +404,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(NotificationsPendingDraftsReceiver object);
 
-    void inject(NotificationsDetailListFragment notificationsDetailListFragment);
+    void inject(NotificationsDetailListFragment object);
 
     void inject(ReaderCommentListActivity object);
 
@@ -436,6 +435,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderLikingUsersView object);
 
     void inject(ReaderWebView object);
+
+    void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
 
@@ -566,6 +567,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(HomePagePickerFragment object);
 
     void inject(DesignPreviewFragment object);
+
+    void inject(BlockLayoutPreviewFragment object);
 
     void inject(SubfilterBottomSheetFragment object);
 

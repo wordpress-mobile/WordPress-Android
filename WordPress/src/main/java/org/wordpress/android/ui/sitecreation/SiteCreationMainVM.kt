@@ -95,11 +95,6 @@ class SiteCreationMainVM @Inject constructor(
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
-    fun onSegmentSelected(segmentId: Long) {
-        siteCreationState = siteCreationState.copy(segmentId = segmentId)
-        wizardManager.showNextStep()
-    }
-
     fun onSiteDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
@@ -126,10 +121,10 @@ class SiteCreationMainVM @Inject constructor(
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SEGMENTS -> siteCreationState.segmentId?.let {
-                siteCreationState = siteCreationState.copy(segmentId = null) }
+            SEGMENTS -> { }
             DOMAINS -> siteCreationState.domain?.let {
-                siteCreationState = siteCreationState.copy(domain = null) }
+                siteCreationState = siteCreationState.copy(domain = null)
+            }
             SITE_PREVIEW -> {} // intentionally left empty
         }
     }

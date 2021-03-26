@@ -2,21 +2,19 @@ package org.wordpress.android.ui.pages
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PagesListFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -31,7 +29,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
-class PageListFragment : ViewPagerFragment() {
+class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var uiHelper: UiHelpers
@@ -40,6 +38,7 @@ class PageListFragment : ViewPagerFragment() {
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
     private var snackbar: WPDialogSnackbar? = null
+    private var binding: PagesListFragmentBinding? = null
 
     private val listStateKey = "list_state"
 
@@ -55,12 +54,8 @@ class PageListFragment : ViewPagerFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.pages_list_fragment, container, false)
-    }
-
     override fun getScrollableViewForUniqueIdProvision(): View? {
-        return recyclerView
+        return binding?.recyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,9 +63,15 @@ class PageListFragment : ViewPagerFragment() {
 
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+        with(PagesListFragmentBinding.bind(view)) {
+            initializeViews(savedInstanceState)
+            initializeViewModels(nonNullActivity)
+        }
+    }
 
-        initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity)
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -80,11 +81,11 @@ class PageListFragment : ViewPagerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun PagesListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
         val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         val listType = arguments?.getSerializable(typeKey) as PageListType
-        viewModel = ViewModelProvider(this, viewModelFactory)
+        viewModel = ViewModelProvider(this@PageListFragment, viewModelFactory)
                 .get(listType.name, PageListViewModel::class.java)
 
         viewModel.start(listType, pagesViewModel)
@@ -92,7 +93,7 @@ class PageListFragment : ViewPagerFragment() {
         setupObservers()
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun PagesListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -103,7 +104,7 @@ class PageListFragment : ViewPagerFragment() {
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
-    private fun setupObservers() {
+    private fun PagesListFragmentBinding.setupObservers() {
         viewModel.pages.observe(viewLifecycleOwner, Observer { data ->
             data?.let { setPages(data.first, data.second, data.third) }
         })
@@ -129,7 +130,11 @@ class PageListFragment : ViewPagerFragment() {
         })
     }
 
-    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean, isSitePrivateAt: Boolean) {
+    private fun PagesListFragmentBinding.setPages(
+        pages: List<PageItem>,
+        isSitePhotonCapable: Boolean,
+        isSitePrivateAt: Boolean
+    ) {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
@@ -174,18 +179,18 @@ class PageListFragment : ViewPagerFragment() {
     }
 
     fun showSnackbar() {
-            view?.post {
-                val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
-                        requireContext(),
-                        R.string.quick_start_dialog_edit_homepage_message_pages_short,
-                        R.drawable.ic_homepage_16dp
-                )
+        view?.post {
+            val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
+                    requireContext(),
+                    R.string.quick_start_dialog_edit_homepage_message_pages_short,
+                    R.drawable.ic_homepage_16dp
+            )
 
-                snackbar = WPDialogSnackbar.make(
-                        requireView().findViewById(R.id.page_list_layout), title,
-                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                )
-                snackbar?.show()
-            }
+            snackbar = WPDialogSnackbar.make(
+                    requireView().findViewById(R.id.page_list_layout), title,
+                    resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
+            )
+            snackbar?.show()
+        }
     }
 }

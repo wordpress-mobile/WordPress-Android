@@ -52,7 +52,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -84,7 +83,6 @@ class PostListMainViewModel @Inject constructor(
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val savePostToDbUseCase: SavePostToDbUseCase,
-    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -379,7 +377,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+        if (SiteUtils.supportsStoriesFeature(site)) {
             _onFabClicked.postValue(Event(Unit))
         } else {
             newPost()
@@ -620,7 +618,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+        if (SiteUtils.supportsStoriesFeature(site)) {
             _onFabLongPressedForCreateMenu.postValue(Event(Unit))
         } else {
             _onFabLongPressedForPostList.postValue(Event(Unit))

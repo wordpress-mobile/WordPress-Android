@@ -120,6 +120,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -145,7 +146,6 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
-import static org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -215,6 +215,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -451,10 +452,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_POST:
                     // complete quick start task outside of QS process
                     if (getSelectedSite() != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
-                        QuickStartUtils.completeTaskAndRemindNextOne(
-                                mQuickStartStore,
+                        mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                                 QuickStartTask.PUBLISH_POST,
-                                mDispatcher,
                                 getSelectedSite(),
                                 null,
                                 this
@@ -479,10 +478,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
             // complete quick start task during QS process and remind of a next one
             if (getSelectedSite() != null) {
-                QuickStartUtils.completeTaskAndRemindNextOne(
-                        mQuickStartStore,
+                mQuickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         QuickStartTask.PUBLISH_POST,
-                        mDispatcher,
                         getSelectedSite(),
                         new QuickStartEvent(QuickStartTask.PUBLISH_POST),
                         this
@@ -1060,7 +1057,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.CREATE_SITE:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
                 AppPrefs.setLastSkippedQuickStartTask(null);
@@ -1096,7 +1092,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
                                                  && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs
@@ -1106,7 +1101,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
                         AppPrefs.setLastSkippedQuickStartTask(null);
-                        AppPrefs.setCommentsStatusFilter(ALL); // reset comments status filter
                         mPrivateAtomicCookie.clearCookie();
                     }
                 }

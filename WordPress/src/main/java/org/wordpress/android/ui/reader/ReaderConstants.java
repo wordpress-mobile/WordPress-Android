@@ -34,11 +34,11 @@ public class ReaderConstants {
     // intent arguments / keys
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
-    static final String ARG_IS_FEED = "is_feed";
+    public static final String ARG_IS_FEED = "is_feed";
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";
     static final String ARG_POST_ID = "post_id";
-    static final String ARG_INTERCEPTED_URI = "intercepted_uri";
+    public static final String ARG_INTERCEPTED_URI = "intercepted_uri";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_DIRECT_OPERATION = "direct_operation";
     static final String ARG_IMAGE_URL = "image_url";
@@ -47,6 +47,7 @@ public class ReaderConstants {
     static final String ARG_POST_LIST_TYPE = "post_list_type";
     static final String ARG_CONTENT = "content";
     static final String ARG_IS_SINGLE_POST = "is_single_post";
+    static final String ARG_IS_RELATED_POST = "is_related_post";
     static final String ARG_SEARCH_QUERY = "search_query";
     static final String ARG_VIDEO_URL = "video_url";
     static final String ARG_IS_TOP_LEVEL = "is_top_level";
@@ -54,7 +55,6 @@ public class ReaderConstants {
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
-    static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION = "restore_position";
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";

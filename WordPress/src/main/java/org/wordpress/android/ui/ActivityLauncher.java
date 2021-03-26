@@ -44,7 +44,6 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -207,19 +206,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
-
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
-     */
-    @Deprecated
-    public static void showPhotoPickerForResult(Fragment fragment,
-                                                @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site,
-                                                @Nullable Integer localPostId) {
-        Intent intent = createShowPhotoPickerIntent(fragment.getContext(), browserType, site, localPostId);
-        fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
-    }
-
     private static Intent createShowPhotoPickerIntent(Context context,
                                                       @NonNull MediaBrowserType browserType,
                                                       @Nullable SiteModel site,
@@ -250,20 +236,6 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
 
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showGifPickerForResult}  instead
-     */
-    public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("from", activity.getClass().getSimpleName());
-        AnalyticsTracker.track(Stat.GIF_PICKER_ACCESSED, properties);
-
-        Intent intent = new Intent(activity, GifPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(GifPickerActivity.KEY_REQUEST_CODE, requestCode);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -953,7 +925,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
@@ -972,28 +943,12 @@ public class ActivityLauncher {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
-    }
-
-    public static void previewPageForResult(
-            @NonNull Fragment fragment,
-            @NonNull SiteModel site,
-            @NonNull String content,
-            @Nullable String template) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
-        fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {

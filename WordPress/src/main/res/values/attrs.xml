@@ -219,17 +219,17 @@
     </declare-styleable>
 
     <!--
-        Master Switch Toolbar View
+        Main Switch Toolbar View
     -->
-    <declare-styleable name="PrefMasterSwitchToolbarView">
-        <attr name="masterTitleOn" format="reference" />
-        <attr name="masterTitleOff" format="reference" />
-        <attr name="masterContentDescription" format="reference" />
-        <attr name="masterHintOn" format="reference" />
-        <attr name="masterHintOff" format="reference" />
-        <attr name="masterContentInsetStart" format="dimension" />
-        <attr name="masterOffsetEnd" format="dimension" />
-        <attr name="masterViewStyle" format="enum">
+    <declare-styleable name="PrefMainSwitchToolbarView">
+        <attr name="mainTitleOn" format="reference" />
+        <attr name="mainTitleOff" format="reference" />
+        <attr name="mainContentDescription" format="reference" />
+        <attr name="mainHintOn" format="reference" />
+        <attr name="mainHintOff" format="reference" />
+        <attr name="mainContentInsetStart" format="dimension" />
+        <attr name="mainOffsetEnd" format="dimension" />
+        <attr name="mainViewStyle" format="enum">
             <enum name="highlighted" value="0" />
             <enum name="normal" value="1" />
         </attr>

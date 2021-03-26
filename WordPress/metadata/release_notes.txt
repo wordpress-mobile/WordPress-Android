@@ -1,6 +1,1 @@
-* [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
-* [**] Block Editor: Add support for setting Cover block focal point. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3028]
-* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
-* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
-* [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
-
+We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.

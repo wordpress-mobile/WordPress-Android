@@ -18,13 +18,11 @@ import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_ST
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
 class ReaderCommentListViewModelTest : BaseUnitTest() {
     @Mock lateinit var followCommentsHandler: ReaderFollowCommentsHandler
-    @Mock lateinit var followUnfollowCommentsFeatureConfig: FollowUnfollowCommentsFeatureConfig
 
     private lateinit var viewModel: ReaderCommentListViewModel
     private val blogId = 100L
@@ -37,13 +35,11 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(followCommentsHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(followCommentsHandler.followStatusUpdate).thenReturn(followStatusUpdate)
-        whenever(followUnfollowCommentsFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel = ReaderCommentListViewModel(
                 followCommentsHandler,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER,
-                followUnfollowCommentsFeatureConfig
+                TEST_DISPATCHER
         )
     }
 

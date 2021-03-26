@@ -26,6 +26,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Calendar
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -110,6 +111,42 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
         assertThat(result).contains(completeStatus)
+    }
+
+    @Test
+    fun `given success with null url, when backup status triggers, then isValid is false`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(noUrlStatusModel)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat((result.first() as? Complete)?.isValid).isEqualTo(false)
+    }
+
+    @Test
+    fun `given success with null validUntil date, when backup status triggers, then isValid is false`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(noValidUntilDateStatusModel)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat((result.first() as? Complete)?.isValid).isEqualTo(false)
+    }
+
+    @Test
+    fun `given success with null invalid date, when backup status triggers, then isValid is false`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(oldValidUntilDateStatusModel)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat((result.first() as? Complete)?.isValid).isEqualTo(false)
+    }
+
+    @Test
+    fun `given success with valid status, when backup status triggers, then isValid is true`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat((result.first() as? Complete)?.isValid).isEqualTo(true)
     }
 
     @Test
@@ -230,6 +267,8 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val downloadId = 100L
     private val progress = 50
     private val published = Date()
+    private val validDate = Calendar.getInstance().apply { time = Date() }.apply { add(Calendar.DATE, 3) }.time
+    private val invalidDate = Calendar.getInstance().apply { time = Date() }.time
 
     private val statusModel = BackupDownloadStatusModel(
             downloadId = downloadId,
@@ -238,7 +277,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             startedAt = Date(1609690147756),
             progress = null,
             downloadCount = 0,
-            validUntil = Date(1609690147756),
+            validUntil = validDate,
             url = url
     )
 
@@ -249,8 +288,8 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             startedAt = Date(1609690147756),
             progress = progress,
             downloadCount = 0,
-            validUntil = Date(1609690147756),
-            url = url
+            url = null,
+            validUntil = null
     )
 
     private val activityLogModel = ActivityLogModel(
@@ -267,6 +306,39 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             actor = null
     )
 
-    private val completeStatus = Complete(rewindId, downloadId, url, published)
+    private val noUrlStatusModel = BackupDownloadStatusModel(
+            downloadId = downloadId,
+            rewindId = rewindId,
+            backupPoint = Date(1609690147756),
+            startedAt = Date(1609690147756),
+            progress = null,
+            downloadCount = 0,
+            validUntil = validDate,
+            url = null
+    )
+
+    private val noValidUntilDateStatusModel = BackupDownloadStatusModel(
+            downloadId = downloadId,
+            rewindId = rewindId,
+            backupPoint = Date(1609690147756),
+            startedAt = Date(1609690147756),
+            progress = null,
+            downloadCount = 0,
+            validUntil = null,
+            url = url
+    )
+
+    private val oldValidUntilDateStatusModel = BackupDownloadStatusModel(
+            downloadId = downloadId,
+            rewindId = rewindId,
+            backupPoint = Date(1609690147756),
+            startedAt = Date(1609690147756),
+            progress = null,
+            downloadCount = 0,
+            validUntil = invalidDate,
+            url = url
+    )
+
+    private val completeStatus = Complete(rewindId, downloadId, url, published, validDate, true)
     private val progressStatus = Progress(rewindId, progress, published)
 }

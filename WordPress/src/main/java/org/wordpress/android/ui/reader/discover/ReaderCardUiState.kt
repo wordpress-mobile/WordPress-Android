@@ -2,11 +2,12 @@ package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
@@ -40,7 +41,7 @@ sealed class ReaderCardUiState {
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
-        val moreMenuItems: List<SecondaryAction>? = null,
+        val moreMenuItems: List<ReaderPostCardAction>? = null,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
@@ -64,9 +65,43 @@ sealed class ReaderCardUiState {
     data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
-            val isDividerVisible: Boolean,
-            val onClicked: ((String) -> Unit)
+            val onClicked: ((String) -> Unit),
+            val chipStyle: ChipStyle
         )
+
+        sealed class ChipStyle(
+            @ColorRes val chipStrokeColorResId: Int,
+            @ColorRes val chipFontColorResId: Int,
+            @ColorRes val chipFillColorResId: Int
+        ) {
+            object ChipStyleGreen : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_green_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_green_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_green_fill
+            )
+            object ChipStylePurple : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_purple_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_purple_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_purple_fill
+            )
+            object ChipStyleYellow : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_yellow_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_yellow_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_yellow_fill
+            )
+            object ChipStyleOrange : ChipStyle(
+                    chipStrokeColorResId = R.color.reader_topics_you_might_like_chip_orange_stroke,
+                    chipFontColorResId = R.color.reader_topics_you_might_like_chip_orange_font,
+                    chipFillColorResId = R.color.reader_topics_you_might_like_chip_orange_fill
+            )
+        }
+    }
+
+    enum class ReaderInterestChipStyleColor(val id: Int) {
+        GREEN(0),
+        PURPLE(1),
+        YELLOW(2),
+        ORANGE(3)
     }
 
     data class ReaderRecommendedBlogsCardUiState(
@@ -123,6 +158,12 @@ sealed class ReaderPostCardAction {
         override val type: ReaderPostCardActionType,
         override val onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) : ReaderPostCardAction()
+
+    data class SpacerNoAction(
+        override val isSelected: Boolean = false,
+        override val type: ReaderPostCardActionType = SPACER_NO_ACTION,
+        override val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
+    ) : ReaderPostCardAction()
 }
 
 enum class ReaderPostCardActionType {
@@ -136,5 +177,6 @@ enum class ReaderPostCardActionType {
     REBLOG,
     COMMENTS,
     REPORT_POST,
-    TOGGLE_SEEN_STATUS
+    TOGGLE_SEEN_STATUS,
+    SPACER_NO_ACTION
 }

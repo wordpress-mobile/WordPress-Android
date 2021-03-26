@@ -37,7 +37,7 @@ class GetCategoriesUseCase @Inject constructor(
         return formatCategories(categories)
     }
 
-    fun getPostCategories(editPostRepository: EditPostRepository, siteModel: SiteModel) =
+    fun getPostCategories(editPostRepository: EditPostRepository) =
             editPostRepository.getPost()?.categoryIdList ?: listOf()
 
     fun getSiteCategories(siteModel: SiteModel): ArrayList<CategoryNode> {
@@ -48,7 +48,7 @@ class GetCategoriesUseCase @Inject constructor(
     }
 
     fun fetchSiteCategories(siteModel: SiteModel) {
-            dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
+        dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
     }
 
     private fun formatCategories(categoryList: List<TermModel>): String {

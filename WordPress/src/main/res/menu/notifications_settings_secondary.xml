@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/master_switch"
+        android:id="@+id/main_switch"
         android:checkable="true"
         android:enabled="true"
         android:title=""

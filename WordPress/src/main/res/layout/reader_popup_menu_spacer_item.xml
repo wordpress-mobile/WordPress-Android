@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reader_popup_menu_item_spacer_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal">
+    <android.widget.Space
+        android:id="@+id/reader_popup_menu_item_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_more_menu_spacer_height"/>
+</LinearLayout>

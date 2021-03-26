@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -52,11 +53,11 @@ class StoryComposerViewModel @Inject constructor(
     private val _mediaFilesUris = MutableLiveData<List<Uri>>()
     val mediaFilesUris: LiveData<List<Uri>> = _mediaFilesUris
 
-    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
-    val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
+    private val _openPrepublishingBottomSheet = SingleLiveEvent<Event<Unit>>()
+    val openPrepublishingBottomSheet = _openPrepublishingBottomSheet
 
-    private val _submitButtonClicked = MutableLiveData<Event<Unit>>()
-    val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
+    private val _submitButtonClicked = SingleLiveEvent<Event<Unit>>()
+    val submitButtonClicked = _submitButtonClicked
 
     init {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
