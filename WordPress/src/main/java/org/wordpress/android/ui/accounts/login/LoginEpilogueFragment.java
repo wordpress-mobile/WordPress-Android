@@ -28,6 +28,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -236,7 +237,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-        holder.itemView.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        boolean showFooter = mShowAndReturn || ContextExtensionsKt.isJetpackApp(getContext());
+        holder.itemView.setVisibility(showFooter ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
                 mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);
