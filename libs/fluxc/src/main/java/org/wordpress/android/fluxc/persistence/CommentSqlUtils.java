@@ -263,4 +263,16 @@ public class CommentSqlUtils {
                           .put(like, new UpdateAllExceptId<>(LikeModel.class)).execute();
         }
     }
+
+    public static List<LikeModel> getCommentLikesByCommentId(long siteId, long remoteCommentId) {
+        return WellSql.select(LikeModel.class)
+                      .where()
+                      .beginGroup()
+                      .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                      .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                      .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                      .endGroup()
+                      .endWhere()
+                      .getAsModel();
+    }
 }
