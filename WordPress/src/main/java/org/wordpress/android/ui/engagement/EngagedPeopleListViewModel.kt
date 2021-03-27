@@ -1,0 +1,188 @@
+package org.wordpress.android.ui.engagement
+
+import androidx.annotation.DrawableRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.model.LikeModel
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.engagement.EngageItem.LikedItem
+import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPost
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
+import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.map
+import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
+import javax.inject.Inject
+import javax.inject.Named
+
+class EngagedPeopleListViewModel  @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val getLikesHandler: GetLikesHandler
+) : ScopedViewModel(mainDispatcher) {
+    private var isStarted = false
+    private var getLikesJob: Job? = null
+
+    private var listScenario: ListScenario? = null
+
+    private val _onSnackbarMessage = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    private val _updateLikesState = MediatorLiveData<GetLikesState>()
+    private val _onNavigationEvent = MutableLiveData<Event<EngagedListNavigationEvent>>()
+
+    val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
+    val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
+        state -> buildUiState(state, listScenario)
+    }
+    val onNavigationEvent: LiveData<Event<EngagedListNavigationEvent>> = _onNavigationEvent
+
+    data class EngagedPeopleListUiState(
+        val showLoading: Boolean,
+        val engageItemsList: List<EngageItem>,
+        val showEmptyState: Boolean,
+        @DrawableRes val emptyStateImage: Int?,
+        val emptyStateTitle: UiString?,
+        val emptyStateAction: (() -> Unit)?,
+        val emptyStateButtonText: UiString?
+    )
+
+    fun start(listScenario: ListScenario) {
+        if (isStarted) return
+        isStarted = true
+
+        this.listScenario = listScenario
+
+        _onSnackbarMessage.addSource(getLikesHandler.snackbarEvents) { event ->
+            _onSnackbarMessage.value = event
+        }
+
+        _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
+            _updateLikesState.value = state
+        }
+
+        onRefreshData()
+    }
+
+    private fun onRefreshData() {
+        listScenario?.let {
+            onLoadRequest(it.type, it.siteId, it.itemId)
+        }
+    }
+
+    private fun onLoadRequest(
+        loadRequestType: ListScenarioType,
+        siteId: Long,
+        entityId: Long
+    ) {
+        getLikesJob?.cancel()
+        getLikesJob = launch(bgDispatcher) {
+            // TODO: currently API is not sorting the likes as the list in notifications does,
+            // use case logic has code to sort based on a list of ids (ideally the available likers ids taken
+            // from the notification).
+            // Keeping the logic for now, but remove empty listOf and relevant logic when API will sort likes
+            when (loadRequestType) {
+                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId, listOf())
+                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId, listOf())
+            }
+        }
+    }
+
+    private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
+        val likedItem = listScenario?.headerData?.let {
+            listOf(
+                    LikedItem(
+                          author = it.name,
+                          itemText = it.snippet,
+                          userAvatarUrl = it.avatarUrl,
+                          userSiteId = it.userSiteId,
+                          likedItemSiteId = listScenario.siteId,
+                          likedItemId = listScenario.itemId,
+                          userId = it.userId,
+                          siteUrl = it.siteUrl,
+                          onGravatarClick = ::onSiteLinkHolderClicked,
+                          onHeaderClicked = ::onHeaderClicked
+                    )
+            )
+        } ?: listOf()
+
+        val likers = when (updateLikesState) {
+            is LikesData -> {
+                likesToEngagedPeople(updateLikesState.likes)
+            }
+            is Failure -> {
+                likesToEngagedPeople(updateLikesState.cachedLikes)
+            }
+            InitialLoading, null -> listOf()
+        }
+
+        var showEmptyState = false
+        var emptyStateImage: Int? = null
+        var emptyStateTitle: UiString? = null
+        var emptyStateAction: (() -> Unit)? = null
+
+        if (updateLikesState is Failure) {
+            updateLikesState.emptyStateData?.let {
+                showEmptyState = it.showEmptyState
+                emptyStateImage = it.imageResId
+                emptyStateTitle = it.title
+                emptyStateAction = ::onRefreshData
+            }
+        }
+
+        return EngagedPeopleListUiState(
+                showLoading = updateLikesState is InitialLoading,
+                engageItemsList = likedItem + likers,
+                showEmptyState = showEmptyState,
+                emptyStateImage = emptyStateImage,
+                emptyStateTitle = emptyStateTitle,
+                emptyStateAction = emptyStateAction,
+                emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
+        )
+    }
+
+    private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
+        return likes.map { likeData ->
+            Liker(
+                    name = likeData.likerName!!,
+                    login = likeData.likerLogin!!,
+                    userSiteId = likeData.likerSiteId,
+                    userSiteUrl = likeData.likerSiteUrl!!,
+                    userAvatarUrl = likeData.likerAvatarUrl!!,
+                    remoteId = likeData.remoteLikeId,
+                    onClick = ::onSiteLinkHolderClicked
+            )
+        }
+    }
+
+    private fun onSiteLinkHolderClicked(siteId: Long, siteUrl: String) {
+        if (siteId == 0L && siteUrl.isNotEmpty()) {
+            _onNavigationEvent.value = Event(PreviewSiteByUrl(siteUrl))
+        } else if (siteId != 0L) {
+            _onNavigationEvent.value = Event(PreviewSiteById(siteId))
+        }
+    }
+
+    private fun onHeaderClicked(siteId: Long, postId: Long) {
+        _onNavigationEvent.value = Event(PreviewPost(siteId, postId))
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        getLikesJob?.cancel()
+        getLikesHandler.clear()
+    }
+}
