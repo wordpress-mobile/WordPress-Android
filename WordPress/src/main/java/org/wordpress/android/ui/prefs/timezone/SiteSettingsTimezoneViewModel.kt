@@ -25,13 +25,10 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle.FULL
-import java.time.zone.ZoneRulesException
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 class SiteSettingsTimezoneViewModel @Inject constructor(
@@ -95,7 +92,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
                 else -> false
             }
         }.also {
-            if (it.isEmpty()) _showEmptyView.value = true
+            _showEmptyView.value = it.isEmpty()
             filteredTimezones.value = it
         }
 
@@ -103,11 +100,12 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
     }
 
     fun onSearchCancelled() {
+        _showEmptyView.value = false
         _timezones.postValue(timezonesList)
     }
 
     fun getTimezones(context: Context) {
-        _suggestedTimezone.postValue(ZoneId.systemDefault().id)
+        _suggestedTimezone.postValue(TimeZone.getDefault().id)
 
         requestTimezones(context)
     }
@@ -187,45 +185,24 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
     }
 
     private fun getZoneOffset(zone: String): String {
-        val zoneId = getZoneId(zone)
+        val timezone = TimeZone.getTimeZone(zone)
 
-        return if (zoneId != null) {
-            val offset = ZonedDateTime.now(zoneId).offset
-            getZoneDisplayName(zoneId, offset)
-        } else {
-            ""
-        }
-    }
+        val cal = Calendar.getInstance(timezone)
+        val sdf = SimpleDateFormat("z", Locale.getDefault())
+        sdf.timeZone = timezone
+        val offset = sdf.format(cal.time)
 
-    private fun getZoneDisplayName(zoneId: ZoneId, offset: ZoneOffset): String {
-        val zoneDisplayName = zoneId.getDisplayName(FULL, Locale.getDefault())
-        val zone =  zoneDisplayName.substringBefore("/")
-
-        val zoneDisplay = if (zone.isNotBlank()) zone else zoneDisplayName
-        val offsetDisplay = if (offset.id == "Z") "" else "(GMT$offset)"
-
-        return "$zoneDisplay $offsetDisplay"
+        return "${timezone.displayName} ($offset)"
     }
 
     private fun getTimeAtZone(zone: String): String {
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
-        val zoneId = getZoneId(zone)
+        val timezone = TimeZone.getTimeZone(zone)
 
-        return if (zoneId != null) {
-            val zoneDateTime = ZonedDateTime.now(zoneId)
-            zoneDateTime.format(dateTimeFormatter)
-        } else  {
-            ""
-        }
-    }
+        val cal = Calendar.getInstance(timezone)
+        val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
+        sdf.timeZone = timezone
 
-    private fun getZoneId(zone: String): ZoneId? {
-        return try {
-            ZoneId.of(zone)
-        } catch (e: ZoneRulesException) {
-            AppLog.e(SETTINGS, "Error parsing zoneId", e)
-            null
-        }
+        return sdf.format(cal.time)
     }
 }
 
