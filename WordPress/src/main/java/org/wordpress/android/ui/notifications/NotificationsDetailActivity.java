@@ -43,6 +43,8 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
+import org.wordpress.android.ui.engagement.ListScenarioUtils;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -59,6 +61,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -84,6 +87,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
+    @Inject ListScenarioUtils mListScenarioUtils;
 
     private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -407,7 +412,13 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                     note.getPostId()
             );
         } else {
-            fragment = NotificationsDetailListFragment.newInstance(note.getId());
+            if (mLikesEnhancementsFeatureConfig.isEnabled() && note.isLikeType()) {
+                fragment = EngagedPeopleListFragment.newInstance(
+                        mListScenarioUtils.mapLikeNoteToListScenario(note, this)
+                );
+            } else {
+                fragment = NotificationsDetailListFragment.newInstance(note.getId());
+            }
         }
 
         return fragment;
