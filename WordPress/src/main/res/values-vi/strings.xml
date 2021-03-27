@@ -235,7 +235,6 @@ Language: vi_VN
     <string name="site_settings_paging_dialog_description">Ngắt chuỗi bình luận thành nhiều trang.</string>
     <string name="site_settings_paging_dialog_header">Bình luận trên mỗi trang</string>
     <string name="site_settings_close_after_dialog_title">Đóng bình luận</string>
-    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Nhập một từ hoặc cụm từ</string>
     <string name="site_settings_list_editor_no_items_text">Không có mục</string>
@@ -250,10 +249,8 @@ Language: vi_VN
     <string name="site_settings_rp_show_header_title">Hiện đầu trang</string>
     <string name="site_settings_rp_switch_summary">Bài viết liên quan hiển thị nội dung có liên quan từ trang web của bạn bên dưới bài viết của bạn.</string>
     <string name="site_settings_rp_switch_title">Hiện các bài viết liên quan</string>
-    <string name="site_settings_blacklist_hint">Các bình luận khớp với bộ lọc được đánh dấu là rác</string>
     <string name="site_settings_moderation_hold_hint">Nhận xét phù hợp với một bộ lọc được đặt trong hàng đợi kiểm duyệt</string>
     <string name="site_settings_multiple_links_hint">Bỏ qua giới hạn liên kết từ những người dùng đã biết</string>
-    <string name="site_settings_whitelist_hint">Tác giả bình luận phải có 1 bình luận được phê duyệt trước đó</string>
     <string name="site_settings_user_account_required_hint">Người dùng phải được đăng kí và đăng nhập để bình luận</string>
     <string name="site_settings_identity_required_hint">Tác giả bình luận phải điền đủ tên và email</string>
     <string name="site_settings_paging_hint">Hiển thị bình luận trong khối có kích thước quy định</string>
@@ -276,17 +273,13 @@ Language: vi_VN
     <string name="site_settings_address_hint">Thay đổi địa chỉ của bạn hiện thời không được hỗ trợ</string>
     <string name="site_settings_tagline_hint">Một mô tả ngắn hoặc cụm từ dễ nhớ để miêu tả về blog của bạn</string>
     <string name="site_settings_title_hint">Trong một vài từ, giải thích site này nói về điều gì</string>
-    <string name="site_settings_whitelist_known_summary">Bình luận từ người dùng đã biết</string>
-    <string name="site_settings_whitelist_all_summary">Bình luận từ tất cả người dùng</string>
     <string name="site_settings_threading_summary">%d mức</string>
     <string name="site_settings_privacy_private_summary">Riêng tư</string>
     <string name="site_settings_privacy_hidden_summary">Ẩn đi</string>
     <string name="site_settings_privacy_public_summary">Công khai</string>
     <string name="site_settings_delete_site_title">Xóa Site</string>
-    <string name="site_settings_blacklist_title">Danh sách đen</string>
     <string name="site_settings_moderation_hold_title">Giữ cho Kiểm duyệt</string>
     <string name="site_settings_multiple_links_title">Liên kết trong bình luận</string>
-    <string name="site_settings_whitelist_title">Tự động phê duyệt</string>
     <string name="site_settings_threading_title">Luồng</string>
     <string name="site_settings_paging_title">Trang</string>
     <string name="site_settings_sort_by_title">Xếp theo</string>

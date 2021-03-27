@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.plans
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.toolbar_main.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.PlansActivityBinding
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -12,9 +11,11 @@ import org.wordpress.android.util.StringUtils
 class PlansActivity : LocaleAwareActivity(), PlansListInterface {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.plans_activity)
+        with(PlansActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
 
-        setSupportActionBar(toolbar_main)
+            setSupportActionBar(toolbarMain)
+        }
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 

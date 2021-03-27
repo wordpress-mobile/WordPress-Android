@@ -414,10 +414,6 @@ Language: sr_RS
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
-    <string name="master_switch_default_title_off">Искључи</string>
-    <string name="master_switch_default_title_on">Укључи</string>
-    <string name="notifications_tab_dialog_master_status_off">Обавештења за ову веб локацију</string>
-    <string name="notifications_tab_dialog_master_status_on">Обавештења за ову веб локацију</string>
     <string name="pick_media">Додај слику или видео запис</string>
     <string name="error_post_not_scheduled_retrying">Нисмо успели да закажемо чланак, али ћемо покушати поново касније.</string>
     <string name="error_media_recover_post">Нисмо могли да отпремимо овај садржај.</string>
@@ -845,8 +841,6 @@ Language: sr_RS
     <string name="reader_add_bookmark">Додато у сачуване чланке</string>
     <string name="reader_remove_bookmark">Уклоњено из сачуваних чланака</string>
     <string name="reader_bookmark_snack_btn">Види све</string>
-    <string name="reader_btn_bookmarked">Сачувано</string>
-    <string name="reader_btn_bookmark">Сачувај</string>
     <string name="reader_bookmark_snack_title">Чланак сачуван</string>
     <string name="reader_empty_saved_posts_title">Нема сачуваних чланака - још увек!</string>
     <string name="reader_followed_blog_notifications_action">Омогући</string>
@@ -1192,10 +1186,6 @@ Language: sr_RS
     <string name="notification_settings_category_other">Остало</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Сви моји сајтови</string>
     <string name="notification_settings_category_your_sites">Ваши сајтови</string>
-    <string name="notification_settings_master_hint_off">Омогући обавештења</string>
-    <string name="notification_settings_master_hint_on">Онемогући обавештења</string>
-    <string name="notification_settings_master_status_off">Искључено</string>
-    <string name="notification_settings_master_status_on">Укључено</string>
     <string name="max_video_resolution">Највећа величина видео записа</string>
     <string name="max_thumbnail_px_size">Највећа величина слике</string>
     <string name="reader_excerpt_link">Посети %s за више</string>
@@ -1559,7 +1549,6 @@ Language: sr_RS
     <string name="site_settings_rp_show_images_title">Прикажи слике</string>
     <string name="site_settings_rp_show_header_title">Прикажи заглавље</string>
     <string name="site_settings_rp_switch_title">Прикажи везане чланке</string>
-    <string name="site_settings_whitelist_hint">Аутор коментара мора имати претходно одобрени коментар</string>
     <string name="site_settings_user_account_required_hint">Корисници морају бити регистровани и пријављени да би могли коментарисати</string>
     <string name="site_settings_identity_required_hint">Аутор коментара мора попунити име и адресу е-поште</string>
     <string name="site_settings_paging_hint">Прикажите коментаре у комадима одређене величине</string>
@@ -1576,17 +1565,13 @@ Language: sr_RS
     <string name="site_settings_language_hint">Језик у ком је овај блог првенствено написан</string>
     <string name="site_settings_privacy_hint">Контролише ко може да види Ваш сајт</string>
     <string name="site_settings_address_hint">Промена адресе тренутно није подржана</string>
-    <string name="site_settings_whitelist_known_summary">Коментари познатих корисника</string>
-    <string name="site_settings_whitelist_all_summary">Коментари свих корисника</string>
     <string name="site_settings_threading_summary">Нивои %d</string>
     <string name="site_settings_privacy_private_summary">Приватно</string>
     <string name="site_settings_privacy_hidden_summary">Сакривено</string>
     <string name="site_settings_privacy_public_summary">Јавно</string>
     <string name="site_settings_delete_site_title">Обриши сајт</string>
-    <string name="site_settings_blacklist_title">Црна листа</string>
     <string name="site_settings_moderation_hold_title">Задржи за модеризацију</string>
     <string name="site_settings_multiple_links_title">Везе у коментарима</string>
-    <string name="site_settings_whitelist_title">Аутоматски одобри</string>
     <string name="site_settings_sort_by_title">Сортирај по</string>
     <string name="site_settings_account_required_title">Корисници морају бити улоговани</string>
     <string name="site_settings_identity_required_title">Мора да садржи име и е-пошту</string>

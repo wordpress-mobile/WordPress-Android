@@ -182,6 +182,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         notification?.let {
             outState.putString(KEY_NOTE_ID, it.id)
             outState.putInt(KEY_LIST_POSITION, listView.firstVisiblePosition)
+        } ?: run {
+            // This is done so the fragments pre-loaded by the view pager can store the already rescued restoredNoteId
+            if (!TextUtils.isEmpty(restoredNoteId)) {
+                outState.putString(KEY_NOTE_ID, restoredNoteId)
+            }
         }
 
         super.onSaveInstanceState(outState)
