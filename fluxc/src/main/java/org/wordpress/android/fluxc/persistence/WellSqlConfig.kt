@@ -1533,9 +1533,10 @@ open class WellSqlConfig : DefaultWellConfig {
                             " PRIMARY KEY AUTOINCREMENT)")
                 }
                 140 -> migrate(version) {
-                    db.execSQL("CREATE TABLE LikeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,TYPE TEXT NOT NULL," +
-                            "REMOTE_SITE_ID INTEGER,REMOTE_ITEM_ID INTEGER,REMOTE_LIKE_ID INTEGER,LIKER_NAME TEXT," +
-                            "LIKER_LOGIN TEXT,LIKER_AVATAR_URL TEXT,LIKER_SITE_URL TEXT)")
+                    db.execSQL("CREATE TABLE LikeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "TYPE TEXT NOT NULL,REMOTE_SITE_ID INTEGER,REMOTE_ITEM_ID INTEGER,REMOTE_LIKE_ID INTEGER," +
+                            "LIKER_NAME TEXT,LIKER_LOGIN TEXT,LIKER_AVATAR_URL TEXT,LIKER_SITE_ID INTEGER," +
+                            "LIKER_SITE_URL TEXT)")
                 }
             }
         }

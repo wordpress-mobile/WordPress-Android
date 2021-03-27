@@ -9,5 +9,6 @@ class LikeWPComRestResponse {
     var login: String? = null
     var name: String? = null
     var avatar_URL: String? = null
+    var site_ID: Long = 0
     var primary_blog: String? = null
 }

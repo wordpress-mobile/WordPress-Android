@@ -32,6 +32,7 @@ class LikeModel : Identifiable {
         get() = StringUtils.notNullStr(field)
     @Column var likerAvatarUrl: String? = null
         get() = StringUtils.notNullStr(field)
+    @Column var likerSiteId: Long = 0
     @Column var likerSiteUrl: String? = null
         get() = StringUtils.notNullStr(field)
 
