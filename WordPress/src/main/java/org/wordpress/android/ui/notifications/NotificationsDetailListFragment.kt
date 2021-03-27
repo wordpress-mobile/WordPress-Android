@@ -39,6 +39,7 @@ import org.wordpress.android.models.Note
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
+import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock
@@ -85,10 +86,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var confettiShown = false
 
     @Inject lateinit var imageManager: ImageManager
-
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-
     @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
+    @Inject lateinit var listScenarioUtils: ListScenarioUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -328,7 +328,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             val imageType = if (note.isFollowType) BLAVATAR else AVATAR_WITH_BACKGROUND
             val headerNoteBlock = HeaderNoteBlock(
                     activity,
-                    transformToFormattableContentList(note.header),
+                    listScenarioUtils.transformToFormattableContentList(note.header),
                     imageType,
                     mOnNoteBlockTextClickListener,
                     mOnGravatarClickedListener,
@@ -482,24 +482,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 }
                 return noteList
             }
-        }
-
-        private fun transformToFormattableContentList(headerArray: JSONArray?): List<FormattableContent> {
-            val headersList: MutableList<FormattableContent> = ArrayList()
-            if (headerArray != null) {
-                for (i in 0 until headerArray.length()) {
-                    try {
-                        headersList.add(
-                                notificationsUtilsWrapper.mapJsonToFormattableContent(
-                                        headerArray.getJSONObject(i)
-                                )
-                        )
-                    } catch (e: JSONException) {
-                        AppLog.e(NOTIFS, "Header array has invalid format.")
-                    }
-                }
-            }
-            return headersList
         }
 
         private fun isPingback(note: Note): Boolean {
