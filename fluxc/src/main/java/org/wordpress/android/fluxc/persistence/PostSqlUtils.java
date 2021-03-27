@@ -443,4 +443,16 @@ public class PostSqlUtils {
                           .put(like, new UpdateAllExceptId<>(LikeModel.class)).execute();
         }
     }
+
+    public List<LikeModel> getPostLikesByPostId(long siteId, long remotePostId) {
+        return WellSql.select(LikeModel.class)
+                .where()
+                .beginGroup()
+                .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
+                .endGroup()
+                .endWhere()
+                .getAsModel();
+    }
 }

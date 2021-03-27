@@ -759,6 +759,9 @@ public class PostStore extends Store {
                 }
                 event.postLikes.addAll(payload.likes);
             }
+        } else {
+            List<LikeModel> cachedLikes = mPostSqlUtils.getPostLikesByPostId(payload.siteId, payload.remotePostId);
+            event.postLikes.addAll(cachedLikes);
         }
         event.error = payload.error;
         emitChange(event);
