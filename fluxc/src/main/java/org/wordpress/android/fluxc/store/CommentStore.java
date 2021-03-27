@@ -576,7 +576,10 @@ public class CommentStore extends Store {
                 event.commentLikes.addAll(payload.likes);
             }
         } else {
-            List<LikeModel> cachedLikes = CommentSqlUtils.getCommentLikesByCommentId(payload.siteId, payload.commentRemoteId);
+            List<LikeModel> cachedLikes = CommentSqlUtils.getCommentLikesByCommentId(
+                    payload.siteId,
+                    payload.commentRemoteId
+            );
             event.commentLikes.addAll(cachedLikes);
         }
 
