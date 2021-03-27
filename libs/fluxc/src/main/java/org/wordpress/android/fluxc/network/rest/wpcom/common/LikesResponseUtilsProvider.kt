@@ -36,6 +36,7 @@ class LikesResponseUtilsProvider @Inject constructor() {
             likerLogin = response.login
             likerName = response.name
             likerAvatarUrl = response.avatar_URL
+            likerSiteId = response.site_ID
             likerSiteUrl = response.primary_blog
         }
     }
