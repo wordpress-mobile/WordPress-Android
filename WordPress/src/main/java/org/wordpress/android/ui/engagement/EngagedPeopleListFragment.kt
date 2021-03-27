@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.engagement
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -16,7 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPost
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -52,7 +54,7 @@ class EngagedPeopleListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return  inflater.inflate(R.layout.engaged_people_list_fragment, container, false)
+        return inflater.inflate(R.layout.engaged_people_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,13 +106,17 @@ class EngagedPeopleListFragment : Fragment() {
                 }
                 is PreviewSiteByUrl -> {
                     val url = event.siteUrl
-                    if (WPUrlUtils.isWordPressCom(url)) {
-                        WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(activity, url)
-                    } else {
-                        WPWebViewActivity.openURL(activity, url)
-                    }
+                    openUrl(activity, url)
                 }
-                is PreviewPost -> {
+                is PreviewCommentInReader -> {
+                    ReaderActivityLauncher.showReaderComments(
+                            activity,
+                            event.siteId,
+                            event.commentPostId,
+                            event.postOrCommentId
+                    )
+                }
+                is PreviewPostInReader -> {
                     ReaderActivityLauncher.showReaderPostDetail(activity, event.siteId, event.postId)
                 }
             }
@@ -123,6 +129,14 @@ class EngagedPeopleListFragment : Fragment() {
         })
 
         viewModel.start(listScenario!!)
+    }
+
+    private fun openUrl(context: Context, url: String) {
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+        } else {
+            WPWebViewActivity.openURL(context, url)
+        }
     }
 
     private fun setupAdapter(items: List<EngageItem>) {

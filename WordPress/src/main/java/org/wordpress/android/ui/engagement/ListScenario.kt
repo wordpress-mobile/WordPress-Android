@@ -7,7 +7,9 @@ import kotlinx.android.parcel.Parcelize
 data class ListScenario(
     val type: ListScenarioType,
     val siteId: Long,
-    val itemId: Long,
+    val postOrCommentId: Long,
+    val commentPostId: Long = 0,
+    val commentSiteUrl: String,
     val headerData: HeaderData?
 ) : Parcelable
 
@@ -18,17 +20,17 @@ enum class ListScenarioType {
 
 @Parcelize
 data class HeaderData constructor(
-    val name: UserName,
-    val snippet: String,
-    val avatarUrl: String,
-    val userId: Long,
-    val userSiteId: Long,
-    val siteUrl: String
+    val authorName: AuthorName,
+    val snippetText: String,
+    val authorAvatarUrl: String,
+    val authorUserId: Long,
+    val authorPreferredSiteId: Long,
+    val authorPreferredSiteUrl: String
 ) : Parcelable
 
-sealed class UserName : Parcelable {
+sealed class AuthorName : Parcelable {
     @Parcelize
-    data class UserNameString(val nameString: String?) : UserName()
+    data class AuthorNameString(val nameString: String?) : AuthorName()
     @Parcelize
-    data class UserNameCharSequence(val nameCharSequence: CharSequence?) : UserName()
+    data class AuthorNameCharSequence(val nameCharSequence: CharSequence?) : AuthorName()
 }

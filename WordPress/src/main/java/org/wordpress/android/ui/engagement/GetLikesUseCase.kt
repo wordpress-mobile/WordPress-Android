@@ -103,11 +103,10 @@ class GetLikesUseCase @Inject constructor(
             }
         }
 
-        if (
-                (category == POST_LIKE && event is OnPostLikesChanged)
-                ||
-                (category == COMMENT_LIKE && event is OnCommentLikesChanged)
-        ) {
+        val isPostLikeEvent = category == POST_LIKE && event is OnPostLikesChanged
+        val isCommentLikeEvent = category == COMMENT_LIKE && event is OnCommentLikesChanged
+
+        if (isPostLikeEvent || isCommentLikeEvent) {
             var likes = listOf<LikeModel>()
             var errorMessage: String? = null
 
@@ -129,36 +128,44 @@ class GetLikesUseCase @Inject constructor(
 
             flow.emit(
                     if (event.isError) {
-                        if (noNetworkDetected) {
-                            Failure(
-                                    NO_NETWORK,
-                                    UiStringRes(R.string.no_network_title),
-                                    orderedLikes,
-                                    EmptyStateData(
-                                            orderedLikes.isEmpty(),
-                                            R.drawable.img_illustration_cloud_off_152dp,
-                                            UiStringRes(R.string.no_network_title)
-                                    )
-                            )
-                        } else {
-                            Failure(
-                                    GENERIC,
-                                    if (errorMessage.isNullOrEmpty()) {
-                                        UiStringRes(R.string.get_likes_unknown_error)
-                                    } else {
-                                        UiStringText(errorMessage)
-                                    },
-                                    orderedLikes,
-                                    EmptyStateData(
-                                            orderedLikes.isEmpty(),
-                                            R.drawable.img_illustration_empty_results_216dp,
-                                            UiStringRes(R.string.get_likes_empty_state_title)
-                                    )
-                            )
-                        }
+                        getFailureState(noNetworkDetected, orderedLikes, errorMessage)
                     } else {
                         LikesData(orderedLikes)
                     }
+            )
+        }
+    }
+
+    private fun getFailureState(
+        noNetworkDetected: Boolean,
+        orderedLikes: List<LikeModel>,
+        errorMessage: String?
+    ): Failure {
+        return if (noNetworkDetected) {
+            Failure(
+                    NO_NETWORK,
+                    UiStringRes(R.string.no_network_title),
+                    orderedLikes,
+                    EmptyStateData(
+                            orderedLikes.isEmpty(),
+                            R.drawable.img_illustration_cloud_off_152dp,
+                            UiStringRes(R.string.no_network_title)
+                    )
+            )
+        } else {
+            Failure(
+                    GENERIC,
+                    if (errorMessage.isNullOrEmpty()) {
+                        UiStringRes(R.string.get_likes_unknown_error)
+                    } else {
+                        UiStringText(errorMessage)
+                    },
+                    orderedLikes,
+                    EmptyStateData(
+                            orderedLikes.isEmpty(),
+                            R.drawable.img_illustration_empty_results_216dp,
+                            UiStringRes(R.string.get_likes_empty_state_title)
+                    )
             )
         }
     }
@@ -194,16 +201,16 @@ class GetLikesUseCase @Inject constructor(
     }
 
     sealed class GetLikesState {
-        object InitialLoading: GetLikesState()
+        object InitialLoading : GetLikesState()
 
-        data class LikesData(val likes: List<LikeModel>): GetLikesState()
+        data class LikesData(val likes: List<LikeModel>) : GetLikesState()
 
         data class Failure(
             val failureType: FailureType,
             val error: UiString,
             val cachedLikes: List<LikeModel>,
             val emptyStateData: EmptyStateData? = null
-        ): GetLikesState() {
+        ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
                 @DrawableRes val imageResId: Int,

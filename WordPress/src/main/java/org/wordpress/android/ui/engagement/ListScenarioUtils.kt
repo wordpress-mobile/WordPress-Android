@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
-import org.wordpress.android.ui.engagement.UserName.UserNameCharSequence
+import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -31,7 +31,9 @@ class ListScenarioUtils @Inject constructor(
     val notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) {
     fun mapLikeNoteToListScenario(note: Note, activity: Activity): ListScenario {
-        if (!note.isLikeType) throw IllegalArgumentException("mapLikeNoteToListScenario > unexpected note type ${note.type}")
+        if (!note.isLikeType) throw IllegalArgumentException(
+                "mapLikeNoteToListScenario > unexpected note type ${note.type}"
+        )
 
         val imageType = AVATAR_WITH_BACKGROUND
         val headerNoteBlock = HeaderNoteBlock(
@@ -57,14 +59,16 @@ class ListScenarioUtils @Inject constructor(
         return ListScenario(
                 type = if (note.isPostLikeType) LOAD_POST_LIKES else LOAD_COMMENT_LIKES,
                 siteId = note.siteId.toLong(),
-                itemId = if (note.isPostLikeType) note.postId.toLong() else note.commentId,
+                postOrCommentId = if (note.isPostLikeType) note.postId.toLong() else note.commentId,
+                commentPostId = if (note.isCommentLikeType) note.postId.toLong() else 0L,
+                commentSiteUrl = if (note.isCommentLikeType) note.url else "",
                 headerData = HeaderData(
-                        name = UserNameCharSequence(spannable),
-                        snippet = headerNoteBlock.getHeader(1).getTextOrEmpty(),
-                        avatarUrl = headerNoteBlock.getHeader(0).getMediaUrlOrEmpty(0),
-                        userId = headerNoteBlock.getHeader(0).getRangeIdOrZero(0),
-                        userSiteId = headerNoteBlock.getHeader(0).getRangeSiteIdOrZero(0),
-                        siteUrl = headerNoteBlock.getHeader(0).getRangeUrlOrEmpty(0)
+                        authorName = AuthorNameCharSequence(spannable),
+                        snippetText = headerNoteBlock.getHeader(1).getTextOrEmpty(),
+                        authorAvatarUrl = headerNoteBlock.getHeader(0).getMediaUrlOrEmpty(0),
+                        authorUserId = headerNoteBlock.getHeader(0).getRangeIdOrZero(0),
+                        authorPreferredSiteId = headerNoteBlock.getHeader(0).getRangeSiteIdOrZero(0),
+                        authorPreferredSiteUrl = headerNoteBlock.getHeader(0).getRangeUrlOrEmpty(0)
                 )
         )
     }

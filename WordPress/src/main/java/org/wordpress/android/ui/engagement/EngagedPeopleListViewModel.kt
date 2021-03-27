@@ -12,7 +12,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
-import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPost
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesDa
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.map
@@ -30,10 +32,11 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class EngagedPeopleListViewModel  @Inject constructor(
+class EngagedPeopleListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val getLikesHandler: GetLikesHandler
+    private val getLikesHandler: GetLikesHandler,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var getLikesJob: Job? = null
@@ -79,7 +82,7 @@ class EngagedPeopleListViewModel  @Inject constructor(
 
     private fun onRefreshData() {
         listScenario?.let {
-            onLoadRequest(it.type, it.siteId, it.itemId)
+            onLoadRequest(it.type, it.siteId, it.postOrCommentId)
         }
     }
 
@@ -105,16 +108,18 @@ class EngagedPeopleListViewModel  @Inject constructor(
         val likedItem = listScenario?.headerData?.let {
             listOf(
                     LikedItem(
-                          author = it.name,
-                          itemText = it.snippet,
-                          userAvatarUrl = it.avatarUrl,
-                          userSiteId = it.userSiteId,
-                          likedItemSiteId = listScenario.siteId,
-                          likedItemId = listScenario.itemId,
-                          userId = it.userId,
-                          siteUrl = it.siteUrl,
-                          onGravatarClick = ::onSiteLinkHolderClicked,
-                          onHeaderClicked = ::onHeaderClicked
+                            author = it.authorName,
+                            postOrCommentText = it.snippetText,
+                            authorAvatarUrl = it.authorAvatarUrl,
+                            likedItemId = listScenario.postOrCommentId,
+                            likedItemSiteId = listScenario.siteId,
+                            likedItemSiteUrl = listScenario.commentSiteUrl,
+                            likedItemPostId = listScenario.commentPostId,
+                            authorUserId = it.authorUserId,
+                            authorPreferredSiteId = it.authorPreferredSiteId,
+                            authorPreferredSiteUrl = it.authorPreferredSiteUrl,
+                            onGravatarClick = ::onSiteLinkHolderClicked,
+                            onHeaderClicked = ::onHeaderClicked
                     )
             )
         } ?: listOf()
@@ -176,8 +181,18 @@ class EngagedPeopleListViewModel  @Inject constructor(
         }
     }
 
-    private fun onHeaderClicked(siteId: Long, postId: Long) {
-        _onNavigationEvent.value = Event(PreviewPost(siteId, postId))
+    private fun onHeaderClicked(siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) {
+        _onNavigationEvent.value = Event(
+                if (commentPostId > 0) {
+                    if (readerUtilsWrapper.postAndCommentExists(siteId, commentPostId, postOrCommentId)) {
+                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId)
+                    } else {
+                        PreviewSiteByUrl(siteUrl)
+                    }
+                } else {
+                    PreviewPostInReader(siteId, postOrCommentId)
+                }
+        )
     }
 
     override fun onCleared() {
