@@ -1465,6 +1465,10 @@
         <item>@string/notif_events</item>
     </string-array>
 
+    <!-- likes -->
+    <string name="get_likes_unknown_error">An unknown error occurred getting likes</string>
+    <string name="get_likes_empty_state_title">Error occurred getting likes</string>
+
     <!-- reader -->
     <string name="reader">Reader</string>
     <string name="reader_filter_cta">Filter</string>
