@@ -146,6 +146,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
 
+    private static final String TIMEZONE_BOTTOM_SHEET_TAG = "timezone-dialog-tag";
+
     /**
      * Request code used when creating the {@link RelatedPostsDialog}.
      */
@@ -158,7 +160,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int DATE_FORMAT_REQUEST_CODE = 7;
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
-    private static final int TIMEZONE_REQUEST_CODE = 10;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
@@ -209,8 +210,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mTimezonePref;
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
-
-    private SiteSettingsTimezoneBottomSheet mTimezoneBottomSheet;
 
     // Media settings
     private EditTextPreference mSiteQuotaSpacePref;
@@ -477,14 +476,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
-    @Override public void onStop() {
-        if (mTimezoneBottomSheet != null) {
-            mTimezoneBottomSheet.setTimezoneSettingCallback(null);
-            mTimezoneBottomSheet.dismiss();
-        }
-        super.onStop();
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         removeJetpackSecurityScreenToolbar();
@@ -500,7 +491,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (savedInstanceState != null) {
             setupMorePreferenceScreen();
             setupJetpackSecurityScreen();
-            setupTimezoneBottomSheet();
+
+            SiteSettingsTimezoneBottomSheet bottomSheet =
+                    (SiteSettingsTimezoneBottomSheet) ((AppCompatActivity) getActivity())
+                            .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setTimezoneSettingCallback(this);
+            }
         }
     }
 
@@ -1152,11 +1149,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        mTimezoneBottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
-        mTimezoneBottomSheet.setTimezoneSettingCallback(this);
-        mTimezoneBottomSheet.show(
-                ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                "timezone-dialog-tag");
+        SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
+        bottomSheet.setTimezoneSettingCallback(this);
+        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
     }
 
     private void showHomepageSettings() {

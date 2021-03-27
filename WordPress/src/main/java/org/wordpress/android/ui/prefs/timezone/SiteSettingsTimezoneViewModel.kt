@@ -87,8 +87,6 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
     fun filterTimezones(query: String): LiveData<List<TimezonesList>> {
         val filteredTimezones = MutableLiveData<List<TimezonesList>>()
 
-        _showEmptyView.value = true
-
         timezonesList.filter { timezone ->
             when (timezone) {
                 is TimezoneItem -> {
@@ -97,6 +95,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
                 else -> false
             }
         }.also {
+            if (it.isEmpty()) _showEmptyView.value = true
             filteredTimezones.value = it
         }
 
