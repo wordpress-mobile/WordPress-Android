@@ -7,6 +7,6 @@ sealed class EngagedListNavigationEvent {
         val siteId: Long,
         val commentPostId: Long,
         val postOrCommentId: Long
-        ) : EngagedListNavigationEvent()
+    ) : EngagedListNavigationEvent()
     data class PreviewPostInReader(val siteId: Long, val postId: Long) : EngagedListNavigationEvent()
 }
