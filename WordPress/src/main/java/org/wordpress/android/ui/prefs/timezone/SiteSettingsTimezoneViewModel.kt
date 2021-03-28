@@ -146,9 +146,7 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
             val jsonTimezonesByContinent = jsonResponse.getJSONObject("timezones_by_continent")
             val jsonTimezonesManualOffsets = jsonResponse.getJSONArray("manual_utc_offsets")
 
-            val continents: Array<String> = resourceProvider.getStringArray(R.array.site_settings_timezones_continents)
-
-            continents.map {
+            jsonTimezonesByContinent.keys().forEach {
                 timezonesList.add(TimezoneHeader(it))
                 addTimezoneItems(jsonTimezonesByContinent.getJSONArray(it))
             }
