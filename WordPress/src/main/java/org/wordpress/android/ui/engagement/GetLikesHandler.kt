@@ -19,7 +19,6 @@ class GetLikesHandler @Inject constructor(
     private val getLikesUseCase: GetLikesUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
