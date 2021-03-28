@@ -56,10 +56,10 @@ class LikedItemViewHolder(
             }
         } else {
             with(this.avatar) {
-               importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-               contentDescription = null
-               setOnClickListener(null)
-               setBackgroundResource(0)
+                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                contentDescription = null
+                setOnClickListener(null)
+                setBackgroundResource(0)
             }
         }
 
@@ -68,7 +68,7 @@ class LikedItemViewHolder(
                     likedItem.likedItemSiteId,
                     likedItem.likedItemSiteUrl,
                     likedItem.likedItemId,
-                    likedItem.likedItemPostId,
+                    likedItem.likedItemPostId
             )
         }
     }
