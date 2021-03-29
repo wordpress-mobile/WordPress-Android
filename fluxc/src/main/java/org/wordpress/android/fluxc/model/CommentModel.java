@@ -37,6 +37,29 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mContent;
     @Column private String mUrl;
 
+    // not stored in db - denotes the hierarchical level of this comment
+    public transient int level = 0;
+
+    public boolean getHasParent() {
+        return mHasParent;
+    }
+
+    public void setHasParent(boolean hasParent) {
+        mHasParent = hasParent;
+    }
+
+    public long getParentId() {
+        return mParentId;
+    }
+
+    public void setParentId(long parentId) {
+        mParentId = parentId;
+    }
+
+    // Parent Comment Data
+    @Column private boolean mHasParent;
+    @Column private long mParentId;
+
     // WPCOM only
     @Column private boolean mILike; // current user likes this comment
 
