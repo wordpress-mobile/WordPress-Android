@@ -2977,6 +2977,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
      * EditorFragmentListener methods
      */
 
+    @Override public void clearFeaturedImage() {
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendFeaturedImageId(0);
+        }
+    }
+
     @Override
     public void updateFeaturedImage(final long mediaId, final boolean imagePicked) {
         setFeaturedImageId(mediaId, imagePicked);

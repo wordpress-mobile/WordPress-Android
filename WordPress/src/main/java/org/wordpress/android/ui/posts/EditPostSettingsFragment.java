@@ -1023,6 +1023,10 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void clearFeaturedImage() {
         updateFeaturedImage(0, false);
+
+        if (getActivity() instanceof EditPostSettingsCallback) {
+            ((EditPostSettingsCallback) getActivity()).clearFeaturedImage();
+        }
     }
 
     private void updateFeaturedImageView(PostImmutableModel postModel) {
@@ -1130,5 +1134,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     interface EditPostSettingsCallback {
         void onEditPostPublishedSettingsClick();
+        void clearFeaturedImage();
     }
 }

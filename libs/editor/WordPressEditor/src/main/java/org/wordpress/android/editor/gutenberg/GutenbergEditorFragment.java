@@ -346,10 +346,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public void onGetFeaturedImageId(int mediaId) {
-                        if (mFeaturedImageId == mediaId) {
-                            getGutenbergContainerFragment().onRequestFeaturedImageId(mediaId);
-                        }
+                    public void checkIfFeaturedImage(int mediaId) {
+                            sendFeaturedImageId((int) mFeaturedImageId);
                     }
                 },
                 new OnEditorMountListener() {
@@ -812,7 +810,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
-        if (mFeaturedImageId == 0) {
+        if (mediaId == 0) {
+            removeFeaturedImage(mediaId);
+        } else if (mFeaturedImageId == 0) {
             setFeaturedImage(mediaId);
         } else if (mFeaturedImageId != mediaId) {
             Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -847,8 +847,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         snackbar.show();
     }
 
+    private void removeFeaturedImage(int mediaId) {
+        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
+        setFeaturedImageId(mediaId);
+        sendFeaturedImageId(mediaId);
+
+        Snackbar snackbar = Snackbar
+                .make(getActivity().findViewById(R.id.gutenberg_container), R.string.featured_image_removed, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
     public void sendFeaturedImageId(int mediaId) {
-        getGutenbergContainerFragment().onRequestFeaturedImageId(mediaId);
+        getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
     }
 
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
