@@ -48,7 +48,7 @@
 /connect/label/print
 /connect/label/<order_id>/
 /connect/label/<order_id>/rates
-/connect/label/<order_id>/<shippingLabelId>/
+/connect/label/<order_id>/<shippingLabels>#String
 /connect/label/<order_id>/<shippingLabelId>/refund
 
 /connect/normalize-address
