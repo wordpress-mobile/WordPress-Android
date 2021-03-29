@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Note: styles not used by the library directly but which can still be used by screens that
+    are part of the login flow (e.g. Prologue) should be marked with the tools:keep attribute -->
 
     <!-- Base parent theme that can be overridden by the client -->
     <style name="Base.Theme.LoginFlow.Parent" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
@@ -22,12 +24,17 @@
         <item name="textAppearanceOverline">@style/TextAppearance.LoginFlow.Overline</item>
 
         <!-- Shape attributes -->
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.LoginFlow.SmallComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.LoginFlow.MediumComponent</item>
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.LoginFlow.LargeComponent</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.LoginFlow.SmallComponent
+        </item>
+        <item name="shapeAppearanceMediumComponent">
+            @style/ShapeAppearance.LoginFlow.MediumComponent
+        </item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.LoginFlow.LargeComponent
+        </item>
 
         <!-- Component styles -->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert
+        </item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.LoginFlow.BottomSheetDialog</item>
         <item name="appBarLayoutStyle">@style/Widget.LoginFlow.AppBarLayout</item>
         <item name="toolbarStyle">@style/Widget.LoginFlow.Toolbar</item>
@@ -56,9 +63,9 @@
 
     <!-- Top-level theme containing attributes that are overridden by API version variants -->
     <!-- This is the theme that will be used and possibly extended by the client -->
-    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow">
+    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow" tools:keep="@style/Theme_LoginFlow">
         <item name="android:statusBarColor">@android:color/black</item>
     </style>
 
-    <style name="Theme.LoginFlow.TransparentStatusBar" parent="Theme.LoginFlow" />
+    <style name="Theme.LoginFlow.TransparentStatusBar" parent="Theme.LoginFlow" tools:keep="@style/Theme_LoginFlow_TransparentStatusBar" />
 </resources>

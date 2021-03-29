@@ -1,2 +1,0 @@
-16.8:
-WordPress Android uygulamasının en son güncellemeleri burada. Yayınlanan ana sayfaların işlevselliğini geliştirerek bunları silmenin veya taslak forma geri döndürmenin sitenizi bozmamasını sağladık. Manşet bloğu odak noktasını ayarlamak için destek ekledik. Ayrıca P2 yönetimini geliştirdik, böylece P2 rolleri için davet bağlantıları oluşturabilir, paylaşabilir ve devre dışı bırakabilirsiniz.

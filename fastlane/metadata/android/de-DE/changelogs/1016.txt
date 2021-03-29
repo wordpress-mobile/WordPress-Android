@@ -1,0 +1,8 @@
+16.9:
+Was gibt's Neues?
+
+Der klassische Editor wird schon bald nicht mehr zum Erstellen neuer Beiträge verfügbar sein. Du kannst deine bestehenden Beiträge und Seiten weiterhin im klassischen Editor bearbeiten, doch wir würden dir empfehlen, jetzt zum neuen Block-Editor zu wechseln. 
+ 
+ Unser Schnellstart-Tool hat ein neues Design bekommen! Dieser Leitfaden wird angezeigt, wenn du eine neue Website erstellst. 
+ 
+ Außerdem haben wir Verbesserungen am Website-Design-Erlebnis vorgenommen. 

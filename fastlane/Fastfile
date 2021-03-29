@@ -42,7 +42,7 @@ import "./ScreenshotFastfile"
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
-ENV["PROJECT_ROOT_FOLDER"]="./"
+ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
 ENV["validate_translations"]="lintVanillaRelease"
@@ -66,20 +66,19 @@ REPOSITORY_NAME="wordpress-android"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    gutenberg_dep_check()
     old_version = android_codefreeze_prechecks(options)
 
     android_bump_version_release()
     new_version = android_get_app_version()
-    extract_release_notes_for_version(version: new_version, 
-      release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt", 
+    extract_release_notes_for_version(version: new_version,
+      release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path:release_notes_path)
     cleanup_release_files(files: [release_note_short_path])
     android_update_release_notes(new_version: new_version)
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
 
-    localize_gutenberg(skip_module_update: true)
+    localize_binary_deps()
     localize_libs()
     send_strings_for_translation()
     ensure_git_status_clean()
@@ -196,7 +195,7 @@ REPOSITORY_NAME="wordpress-android"
   #####################################################################################
   # finalize_hotfix_release
   # -----------------------------------------------------------------------------------
-  # This lane finalizes the hotfix branch. 
+  # This lane finalizes the hotfix branch.
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane finalize_hotfix_release
@@ -251,7 +250,7 @@ REPOSITORY_NAME="wordpress-android"
   # bundle exec fastlane build_and_upload_release
   # bundle exec fastlane build_and_upload_release skip_confirm:true
   # bundle exec fastlane build_and_upload_release skip_prechecks:true
-  # bundle exec fastlane build_and_upload_release create_release:true 
+  # bundle exec fastlane build_and_upload_release create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do | options |
@@ -283,7 +282,7 @@ REPOSITORY_NAME="wordpress-android"
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
   # bundle exec fastlane build_and_upload_pre_releases skip_confirm:true
-  # bundle exec fastlane build_and_upload_beta create_release:true 
+  # bundle exec fastlane build_and_upload_beta create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do | options |
@@ -500,6 +499,16 @@ REPOSITORY_NAME="wordpress-android"
     {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
+  BINARY_IMPORTED_LIBRARIES = [
+    {
+      name: "Gutenberg Native",
+      import_key: "gutenbergMobileVersion",
+      repository: "wordpress-mobile/gutenberg-mobile",
+      strings_file_path: "bundle/android/strings.xml",
+      github_release_prefix: "v"
+    },
+  ]
+
   private_lane :send_strings_for_translation do | options |
     sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
     sh("git diff-index --quiet HEAD || git commit -m \"Send strings to translation.\"")
@@ -525,14 +534,28 @@ REPOSITORY_NAME="wordpress-android"
     end
   end
 
-  desc "Import Gutenberg strings"
-  lane :localize_gutenberg do | options |
-    unless options[:skip_module_update] then
-      sh("git submodule init")
-      sh("git submodule update")
-    end
+  desc "Import strings from binary dependencies"
+  lane :localize_binary_deps do | options |
+    merge_strings_tool_file_path = File.join(ENV["PROJECT_ROOT_FOLDER"], 'tools', 'merge_strings_xml.py')
+    binary_imported_libraries.each do  | lib |
+      download_path = android_download_file_by_version(
+        library_name: lib[:name],
+        import_key: lib[:import_key],
+        repository: lib[:repository],
+        file_path: lib[:strings_file_path],
+        github_release_prefix: lib[:github_release_prefix])
 
-    sh("cd .. && python ./tools/merge_strings_xml.py")
+      if download_path.nil?
+        error_message = "Can't download strings file for #{lib[:name]}.\r\n"
+        error_message += "Strings for this library won't get translated.\r\n"
+        error_message += "Do you want to continue anyway?"
+        UI.user_error! "Abort." unless UI.confirm(error_message)
+      else
+        UI.message("Strings.xml file for #{lib[:name]} downloaded to #{download_path}.")
+        sh(merge_strings_tool_file_path, lib[:name], download_path)
+        File.delete(download_path) if File.exist?(download_path)
+      end
+    end
 
     is_repo_clean = ("git status --porcelain").empty?
     unless is_repo_clean then
@@ -585,13 +608,11 @@ REPOSITORY_NAME="wordpress-android"
     # Build
     Dir.chdir("..") do
       sh("mkdir -p #{build_dir}")
-      unless is_ci
-        # We pre-build the Gutenberg RN bundle on a different job on CI,  
-        # so cleaning here breaks the build 
-        UI.message("Cleaning branch...")
-        sh("echo \"Cleaning branch\" >> #{logfile_path}")
-        sh("./gradlew clean >> #{logfile_path} 2>&1")
-      end 
+
+      UI.message("Cleaning branch...")
+      sh("echo \"Cleaning branch\" >> #{logfile_path}")
+      sh("./gradlew clean >> #{logfile_path} 2>&1")
+      
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
@@ -611,40 +632,6 @@ REPOSITORY_NAME="wordpress-android"
   end
 
   #####################################################################################
-  # gutenberg_dep_check
-  # -----------------------------------------------------------------------------------
-  # Verifies that Gutenberg is on the last released version
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane gutenberg_dep_check
-  #####################################################################################
-  desc "Verifies that Gutenberg is on the last released version"
-  lane :gutenberg_dep_check do | options |
-    # Pull the latest develop
-    sh("git checkout develop")
-    sh("git pull")
-    sh("git submodule init")
-    sh("git submodule update")
-
-    Dir.chdir("../libs/gutenberg-mobile") do
-      sh("git fetch --tags")
-      last_tag_hash = sh("git rev-list --tags --max-count\=1")
-      submodule_hash = sh("git rev-parse HEAD")
-
-      if (last_tag_hash != submodule_hash)
-        error_message = "Gutenberg submodule hash is not on the last tag!\nSubmodule hash: #{submodule_hash}\nLast tag hash: #{last_tag_hash}"
-        UI.user_error!(error_message) unless UI.interactive?
-
-        if (!UI.confirm("#{error_message}\nDo you want to continue anyway?"))
-          UI.user_error!("Aborted by user request. Please fix Gutenberg reference and try again.")
-        end
-      else
-        UI.message("Gutenberg is on the last tag: #{last_tag_hash}.")
-      end
-    end
-  end
-
-  #####################################################################################
   # build_for_translation_review
   # -----------------------------------------------------------------------------------
   # This lane builds an app bundle with pending translations
@@ -656,7 +643,7 @@ REPOSITORY_NAME="wordpress-android"
   lane :build_for_translation_review do | options |
     cmd_params = ""
     unless options[:custom_version].nil?
-      UI.message("Building custom version: #{options[:custom_version]}") 
+      UI.message("Building custom version: #{options[:custom_version]}")
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
@@ -666,7 +653,7 @@ REPOSITORY_NAME="wordpress-android"
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
-  end 
+  end
 
   #####################################################################################
   # trigger_ci
@@ -728,7 +715,7 @@ REPOSITORY_NAME="wordpress-android"
     temp_dir = Dir.mktmpdir()
 
     command = ""
-    if is_ci 
+    if is_ci
       command << "bundletool build-apks --bundle=\"#{bundle_path}\" \\
       --output=\"#{temp_dir}/universal.apks\" \\
       --mode=universal"
@@ -757,8 +744,8 @@ REPOSITORY_NAME="wordpress-android"
     # APKs built on CI are unsigned, so don't upload them until we have a fix
     release_assets = [aab_file_path]
     release_assets.append(apk_file_path) unless is_ci
-    create_release(repository:GHHELPER_REPO, 
-      version: version["name"], 
+    create_release(repository:GHHELPER_REPO,
+      version: version["name"],
       release_notes_file_path:release_notes_path,
       prerelease: set_prerelease_flag,
       release_assets: release_assets.join(',')
@@ -767,7 +754,7 @@ REPOSITORY_NAME="wordpress-android"
 
   private_lane :cleanup_release_files do | options |
     files = options[:files]
-    
+
     files.each do | f |
       File.open(f, "w") {}
       sh("git add #{f}")
@@ -786,7 +773,7 @@ REPOSITORY_NAME="wordpress-android"
   def release_note_short_path
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
     File.join(project_root, "WordPress", "metadata/release_notes_short.txt")
-  end 
+  end
 
   def universal_apk_name(version)
     "wpandroid-#{version["name"]}-universal.apk"

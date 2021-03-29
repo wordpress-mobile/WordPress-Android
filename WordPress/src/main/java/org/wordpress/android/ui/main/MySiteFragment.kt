@@ -160,7 +160,6 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
@@ -208,7 +207,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
-    @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository

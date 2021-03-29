@@ -40,10 +40,7 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.login.SignupBottomSheetDialogFragment;
-import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.SignupConfirmationFragment;
-import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.support.ZendeskExtraTags;
@@ -68,7 +65,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -88,7 +84,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
+        Callback, LoginListener, GoogleListener, LoginPrologueListener,
         HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
@@ -402,15 +398,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, true, true), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
             }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
-                    !mIsSiteLoginAvailableFromPrologue, true), true, LoginEmailFragment.TAG);
+            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), true, LoginEmailFragment.TAG);
         }
     }
 
@@ -422,57 +417,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void doStartSignup() {
-        // This stat is part of a funnel that provides critical information.  Before
-        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        SignupBottomSheetDialogFragment signupFragment = SignupBottomSheetDialogFragment.newInstance();
-        signupFragment.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
-    }
-
-    @Override
-    public void onSignupSheetCanceled() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
-    }
-
-    @Override
-    public void onSignupSheetEmailClicked() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
-        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_EMAIL);
-        dismissSignupSheet();
-        slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
-    }
-
-    @Override
-    public void onSignupSheetGoogleClicked() {
-        dismissSignupSheet();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
-        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_GOOGLE);
-
-        if (NetworkUtils.checkConnection(this)) {
-            addGoogleFragment(new SignupGoogleFragment(), SignupGoogleFragment.TAG);
-        }
-    }
-
-    @Override
-    public void onSignupSheetTermsOfServiceClicked() {
+    public void onTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
         mUnifiedLoginTracker.trackClick(Click.TERMS_OF_SERVICE_CLICKED);
         ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
-    }
-
-    @Override
-    public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds, false);
-    }
-
-    @Override
-    public void newUserCreatedButErrored(String email, String password) {
-        LoginEmailPasswordFragment loginEmailPasswordFragment =
-                LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
-        slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
     // LoginListener implementation methods
@@ -535,7 +483,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
-        dismissSignupSheet();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
@@ -618,7 +565,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
-        dismissSignupSheet();
         mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup,
@@ -647,7 +593,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotWpcomSiteInfo(String siteAddress) {
-        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true, siteAddress);
+        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(siteAddress);
         slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
     }
 
@@ -905,16 +851,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             case GOOGLE_ERROR_DIALOG_TAG:
                 // just dismiss the dialog
                 break;
-        }
-    }
-
-    private void dismissSignupSheet() {
-        SignupBottomSheetDialogFragment signupFragment =
-                (SignupBottomSheetDialogFragment) getSupportFragmentManager()
-                        .findFragmentByTag(SignupBottomSheetDialogFragment.TAG);
-
-        if (signupFragment != null) {
-            signupFragment.dismiss();
         }
     }
 

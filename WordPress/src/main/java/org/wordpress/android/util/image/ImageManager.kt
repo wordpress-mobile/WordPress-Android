@@ -130,6 +130,7 @@ class ImageManager @Inject constructor(
         videoLoader?.runIfMediaNotTooBig(scope,
                 videoUrl,
                 loadAction = {
+                    if (!context.isAvailable()) return@runIfMediaNotTooBig
                     GlideApp.with(context)
                             .load(videoUrl)
                             .addFallback(imageType)
@@ -141,6 +142,7 @@ class ImageManager @Inject constructor(
                             .clearOnDetach()
                 },
                 fallbackAction = {
+                    if (!context.isAvailable()) return@runIfMediaNotTooBig
                     GlideApp.with(context)
                             .load(placeholderManager.getErrorResource(imageType))
                             .addPlaceholder(imageType)
