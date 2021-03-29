@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
@@ -295,16 +296,16 @@ public class CommentsListFragment extends ViewPagerFragment {
                     if (mActionMode == null) {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
-
-                            CommentStatus filterCriteria;
+                            CommentStatus commentStatus;
+                            // for purposes of opening comment details UNREPLIED should be treated as ALL
                             if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
-                                filterCriteria = CommentStatusCriteria.ALL.toCommentStatus();
+                                commentStatus = CommentStatusCriteria.ALL.toCommentStatus();
                             } else {
-                                filterCriteria = mCommentStatusFilter.toCommentStatus();
+                                commentStatus = mCommentStatusFilter.toCommentStatus();
                             }
 
                             ((OnCommentSelectedListener) getActivity())
-                                    .onCommentSelected(comment.getRemoteCommentId(), filterCriteria);
+                                    .onCommentSelected(comment.getRemoteCommentId(), commentStatus);
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
@@ -643,7 +644,7 @@ public class CommentsListFragment extends ViewPagerFragment {
             return true;
         }
 
-        if (mCommentStatusFilter.toCommentStatus().equals(CommentStatus.UNREPLIED) && event.requestedStatus
+        if (mCommentStatusFilter.toCommentStatus() == CommentStatus.UNREPLIED && event.requestedStatus
                 .equals(CommentStatus.ALL)) {
             return true;
         }
@@ -667,6 +668,20 @@ public class CommentsListFragment extends ViewPagerFragment {
                     getAdapter().loadMoreComments(mCommentStatusFilter.toCommentStatus(), event.offset);
                 } else {
                     getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
+                    // after creating comment on self hosted site, we want to fetch it from the endpoint
+                    // if UNREPLIED fitler is active
+                    if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT && !mSite.isUsingWpComRestApi()
+                        && mCommentStatusFilter.toCommentStatus() == CommentStatus.UNREPLIED
+                        && !event.changedCommentsLocalIds.isEmpty()) {
+                        CommentModel createdComment =
+                                mCommentStore.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
+
+                        if (createdComment != null) {
+                            mDispatcher.dispatch(CommentActionBuilder
+                                    .newFetchCommentAction(
+                                            new RemoteCommentPayload(mSite, createdComment.getRemoteCommentId())));
+                        }
+                    }
                 }
             }
             return;
