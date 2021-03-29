@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/blue_50</color>
+    <color name="colorPrimaryVariant">@color/blue_70</color>
+    <color name="colorSecondary">@color/pink_50</color>
+    <color name="colorSecondaryVariant">@color/pink_70</color>
+
+    <!-- SEMANTICS -->
+    <color name="primary">@color/wordpress_blue_50</color>
+    <color name="primary_0">@color/wordpress_blue_0</color>
+    <color name="primary_5">@color/wordpress_blue_5</color>
+    <color name="primary_10">@color/wordpress_blue_10</color>
+    <color name="primary_20">@color/wordpress_blue_20</color>
+    <color name="primary_30">@color/wordpress_blue_30</color>
+    <color name="primary_40">@color/wordpress_blue_40</color>
+    <color name="primary_50">@color/wordpress_blue_50</color>
+    <color name="primary_60">@color/wordpress_blue_60</color>
+    <color name="primary_70">@color/wordpress_blue_70</color>
+    <color name="primary_80">@color/wordpress_blue_80</color>
+    <color name="primary_90">@color/wordpress_blue_90</color>
+    <color name="primary_100">@color/wordpress_blue_100</color>
+    <color name="primary_dark">@color/wordpress_blue_80</color>
+    <color name="primary_light">@color/wordpress_blue_30</color>
+</resources>
