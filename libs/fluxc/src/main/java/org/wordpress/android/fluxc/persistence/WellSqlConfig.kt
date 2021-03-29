@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 140
+        return 141
     }
 
     override fun getDbName(): String {
@@ -1531,6 +1531,10 @@ open class WellSqlConfig : DefaultWellConfig {
                             " NOT NULL,SHIPPING_FIRST_NAME TEXT NOT NULL,SHIPPING_LAST_NAME TEXT NOT NULL," +
                             "SHIPPING_POSTCODE TEXT NOT NULL,SHIPPING_STATE TEXT NOT NULL,_id INTEGER" +
                             " PRIMARY KEY AUTOINCREMENT)")
+                }
+                140 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD HAS_PARENT BOOLEAN")
+                    db.execSQL("ALTER TABLE CommentModel ADD PARENT_ID INTEGER")
                 }
             }
         }
