@@ -347,7 +347,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void checkIfFeaturedImage(int mediaId) {
-                            sendFeaturedImageId((int) mFeaturedImageId);
+                        if (mFeaturedImageId == mediaId) {
+                            getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
+                        }
                     }
                 },
                 new OnEditorMountListener() {
@@ -811,7 +813,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
         if (mediaId == 0) {
-            removeFeaturedImage(mediaId);
+            removeFeaturedImage(0);
         } else if (mFeaturedImageId == 0) {
             setFeaturedImage(mediaId);
         } else if (mFeaturedImageId != mediaId) {

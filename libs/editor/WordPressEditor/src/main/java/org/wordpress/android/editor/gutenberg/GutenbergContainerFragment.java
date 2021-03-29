@@ -265,6 +265,6 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void sendToJSFeaturedImageId(int mediaId) {
-        mWPAndroidGlueCode.onRequestFeaturedImageId(mediaId);
+        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
     }
 }
