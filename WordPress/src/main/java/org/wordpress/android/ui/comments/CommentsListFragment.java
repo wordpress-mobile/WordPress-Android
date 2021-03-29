@@ -72,6 +72,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         ALL(R.string.comment_status_all),
         UNAPPROVED(R.string.comment_status_unapproved),
         APPROVED(R.string.comment_status_approved),
+        UNREPLIED(R.string.comment_status_unreplied),
         TRASH(R.string.comment_status_trash),
         SPAM(R.string.comment_status_spam),
         DELETE(R.string.comment_status_trash);
@@ -295,8 +296,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
                             ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(),
-                                    mCommentStatusFilter
-                                            .toCommentStatus());
+                                    mCommentStatusFilter.toCommentStatus());
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
@@ -493,9 +493,14 @@ public class CommentsListFragment extends ViewPagerFragment {
             mLoadMoreProgress.setVisibility(View.VISIBLE);
         }
         mIsUpdatingComments = true;
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
-                        offset)));
+        if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, CommentStatus.ALL, 100, 0)));
+        } else {
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
+                            offset)));
+        }
     }
 
     @Override
@@ -627,6 +632,11 @@ public class CommentsListFragment extends ViewPagerFragment {
         }
 
         if (event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
+            return true;
+        }
+
+        if (mCommentStatusFilter.toCommentStatus().equals(CommentStatus.UNREPLIED) && event.requestedStatus
+                .equals(CommentStatus.ALL)) {
             return true;
         }
 

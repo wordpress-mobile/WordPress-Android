@@ -396,6 +396,7 @@
     <string name="on">on</string>
     <string name="comment_status_approved">Approved</string>
     <string name="comment_status_unapproved">Pending</string>
+    <string name="comment_status_unreplied">Unreplied</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
     <string name="comment_status_all">All</string>
