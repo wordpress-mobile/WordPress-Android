@@ -37,25 +37,6 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mContent;
     @Column private String mUrl;
 
-    // not stored in db - denotes the hierarchical level of this comment
-    public transient int level = 0;
-
-    public boolean getHasParent() {
-        return mHasParent;
-    }
-
-    public void setHasParent(boolean hasParent) {
-        mHasParent = hasParent;
-    }
-
-    public long getParentId() {
-        return mParentId;
-    }
-
-    public void setParentId(long parentId) {
-        mParentId = parentId;
-    }
-
     // Parent Comment Data
     @Column private boolean mHasParent;
     @Column private long mParentId;
@@ -72,6 +53,9 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     public void setId(int id) {
         mId = id;
     }
+
+    // not stored in db - denotes the hierarchical level of this comment
+    public transient int level = 0;
 
     public long getRemoteCommentId() {
         return mRemoteCommentId;
@@ -200,4 +184,21 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     public void setPublishedTimestamp(long publishedTimestamp) {
         mPublishedTimestamp = publishedTimestamp;
     }
+
+    public boolean getHasParent() {
+        return mHasParent;
+    }
+
+    public void setHasParent(boolean hasParent) {
+        mHasParent = hasParent;
+    }
+
+    public long getParentId() {
+        return mParentId;
+    }
+
+    public void setParentId(long parentId) {
+        mParentId = parentId;
+    }
+
 }
