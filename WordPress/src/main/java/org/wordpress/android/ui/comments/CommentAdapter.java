@@ -12,15 +12,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
@@ -34,6 +37,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -86,6 +90,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Inject CommentStore mCommentStore;
     @Inject ImageManager mImageManager;
+    @Inject AccountStore mAccountStore;
 
     class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTxtTitle;
@@ -276,7 +281,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+        if (commentStatus != CommentStatus.UNREPLIED && mOnLoadMoreListener != null && position >= getItemCount() - 1
             && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
@@ -445,7 +450,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
             LoadCommentsTaskParameters parameters = params[0];
             int numOfCommentsToFetch;
-            if (parameters.mIsLoadingCache) {
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                numOfCommentsToFetch = 100;
+            } else if (parameters.mIsLoadingCache) {
                 numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
             } else if (parameters.mIsReloadingContent) {
                 // round up to nearest page size (eg. 30, 60, 90, etc.)
@@ -457,7 +464,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             List<CommentModel> comments;
-            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
+            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL
+                || mStatusFilter == CommentStatus.UNREPLIED) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
                 comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch, CommentStatus.APPROVED,
                         CommentStatus.UNAPPROVED);
@@ -466,10 +474,50 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         mStatusFilter);
             }
 
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                comments = getUnrepliedComments(comments);
+            }
+
             mTmpComments = new CommentList();
             mTmpComments.addAll(comments);
 
             return !mComments.isSameList(mTmpComments);
+        }
+
+        private ArrayList<CommentModel> getUnrepliedComments(List<CommentModel> comments) {
+            AccountModel account = mAccountStore.getAccount();
+            String myEmail = account.getEmail();
+
+            CommentList commentList = new CommentList();
+            commentList.addAll(comments);
+
+            ReaderCommentLeveler leveler = new ReaderCommentLeveler(commentList);
+            CommentList leveledComments = leveler.createLevelList();
+
+            // get all the comments without children
+            ArrayList<CommentModel> topLevelComments = new ArrayList<>();
+            for (CommentModel comment : leveledComments) {
+                if (comment.level == 0) {
+                    ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
+
+                    if (childrenComments.isEmpty() && !comment.getAuthorEmail().equals(myEmail)) {
+                        topLevelComments.add(comment);
+                    } else if (!comment.getAuthorEmail().equals(myEmail)) {
+                        boolean hasMyReplies = false;
+                        for (CommentModel childrenComment : childrenComments) {
+                            if (childrenComment.getAuthorEmail().equals(myEmail)) {
+                                hasMyReplies = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasMyReplies) {
+                            topLevelComments.add(comment);
+                        }
+                    }
+                }
+            }
+            return topLevelComments;
         }
 
         @Override
@@ -506,6 +554,91 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mOffset = offset;
             mIsLoadingCache = isLoadingCache;
             mIsReloadingContent = isReloadingContent;
+        }
+    }
+
+
+    public class ReaderCommentLeveler {
+        private final CommentList mComments;
+
+        public ReaderCommentLeveler(@NonNull CommentList comments) {
+            mComments = comments;
+        }
+
+        public CommentList createLevelList() {
+            CommentList result = new CommentList();
+
+            // reset all levels, and add root comments to result
+            for (CommentModel comment : mComments) {
+                comment.level = 0;
+                if (comment.getParentId() == 0) {
+                    result.add(comment);
+                }
+            }
+
+            // add children at each level
+            int level = 0;
+            while (walkCommentsAtLevel(result, level)) {
+                level++;
+            }
+
+            // check for orphans (child comments whose parents weren't found above) and give them
+            // a non-zero level so they're indented by ReaderCommentAdapter
+            for (CommentModel comment : result) {
+                if (comment.level == 0 && comment.getParentId() != 0) {
+                    comment.level = 1;
+                    result.add(comment);
+                    AppLog.d(AppLog.T.READER, "Orphan comment encountered");
+                }
+            }
+
+            return result;
+        }
+
+        /*
+         * walk comments in the passed list that have the passed level and add their children
+         * beneath them
+         */
+        private boolean walkCommentsAtLevel(@NonNull CommentList comments, int level) {
+            boolean hasChanges = false;
+            for (int index = 0; index < comments.size(); index++) {
+                CommentModel parent = comments.get(index);
+                if (parent.level == level && hasChildren(parent.getRemoteCommentId())) {
+                    // get children for this comment, set their level, then add them below the parent
+                    CommentList children = getChildren(parent.getRemoteCommentId());
+                    setLevel(children, level + 1);
+                    comments.addAll(index + 1, children);
+                    hasChanges = true;
+                    // skip past the children we just added
+                    index += children.size();
+                }
+            }
+            return hasChanges;
+        }
+
+        private boolean hasChildren(long commentId) {
+            for (CommentModel comment : mComments) {
+                if (comment.getParentId() == commentId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private CommentList getChildren(long commentId) {
+            CommentList children = new CommentList();
+            for (CommentModel comment : mComments) {
+                if (comment.getParentId() == commentId) {
+                    children.add(comment);
+                }
+            }
+            return children;
+        }
+
+        private void setLevel(@NonNull CommentList comments, int level) {
+            for (CommentModel comment : comments) {
+                comment.level = level;
+            }
         }
     }
 }
