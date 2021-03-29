@@ -307,6 +307,8 @@ public class CommentRestClient extends BaseWPComRestClient {
         if (response.parent != null) {
             comment.setHasParent(true);
             comment.setParentId(response.parent.ID);
+        } else {
+            comment.setHasParent(false);
         }
 
         return comment;
