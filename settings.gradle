@@ -23,7 +23,7 @@ project(':WordPressMocks').projectDir = new File(rootProject.projectDir, propert
 
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
-gradle.ext.gutenbergMobileBinaryPath = "com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
 
 def localBuilds = new File('local-builds.gradle')
@@ -32,7 +32,7 @@ if (localBuilds.exists()) {
 
     /*
     In order to add a new included build:
-    1. Define a property for its path in the `local-builds.gradle-example` file. 
+    1. Define a property for its path in the `local-builds.gradle-example` file.
     2. Check if that property exists in `ext` since it may be commented out.
     3. Include the build using the property.
     4. Add dependencySubstitution block and substitute the binary module with the project.
