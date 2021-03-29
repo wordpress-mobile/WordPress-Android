@@ -5,8 +5,6 @@
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
-    </style>
-    <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimarySurface">@color/colorPrimaryVariant</item>
     </style>
 </resources>
