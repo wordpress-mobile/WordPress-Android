@@ -229,6 +229,8 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_ALIGN_RIGHT,
         EDITOR_TAPPED_REDO,
         EDITOR_TAPPED_UNDO,
+        EDITOR_TAPPED_REMOVE_FEATURED,
+        EDITOR_TAPPED_SET_FEATURED,
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only

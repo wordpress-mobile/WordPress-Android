@@ -74,7 +74,10 @@ class EditorTrackerTest {
                 TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED to Stat.EDITOR_TAPPED_STRIKETHROUGH,
                 TrackableEvent.UNDERLINE_BUTTON_TAPPED to Stat.EDITOR_TAPPED_UNDERLINE,
                 TrackableEvent.REDO_TAPPED to Stat.EDITOR_TAPPED_REDO,
-                TrackableEvent.UNDO_TAPPED to Stat.EDITOR_TAPPED_UNDO
+                TrackableEvent.UNDO_TAPPED to Stat.EDITOR_TAPPED_UNDO,
+                TrackableEvent.REMOVE_AS_FEATURED_BUTTON_TAPPED to Stat.EDITOR_TAPPED_REMOVE_FEATURED,
+                TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED to Stat.EDITOR_TAPPED_SET_FEATURED
+
         )
 
         fun createEditorTracker(analyticsTrackerWrapper: AnalyticsTrackerWrapper = mock()) =

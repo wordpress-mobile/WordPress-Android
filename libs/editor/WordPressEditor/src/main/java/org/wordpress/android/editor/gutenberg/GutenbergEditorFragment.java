@@ -847,12 +847,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Snackbar snackbar = Snackbar
                 .make(getActivity().findViewById(R.id.gutenberg_container), R.string.featured_image_confirmation, Snackbar.LENGTH_LONG);
         snackbar.show();
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED);
     }
 
     private void removeFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
         sendFeaturedImageId(mediaId);
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.REMOVE_AS_FEATURED_BUTTON_TAPPED);
     }
 
     public void sendFeaturedImageId(int mediaId) {
