@@ -1,4 +1,4 @@
-package org.wordpress.android.login.widgets;
+package org.wordpress.android.ui;
 
 import android.app.Dialog;
 import android.content.res.Resources;
@@ -13,7 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.wordpress.android.login.R;
+import org.wordpress.android.R;
 
 public class WPBottomSheetDialogFragment extends BottomSheetDialogFragment {
     @NonNull

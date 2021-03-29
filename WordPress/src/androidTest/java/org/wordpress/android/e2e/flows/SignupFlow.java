@@ -72,7 +72,7 @@ public class SignupFlow {
         populateTextField(passwordField, password);
 
         // Click continue
-        clickOn(onView(withId(R.id.primary_button)));
+        clickOn(onView(withId(R.id.bottom_button)));
 
         return this;
     }

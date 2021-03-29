@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-11 04:21:56+0000
+Translation-Revision-Date: 2021-03-23 23:29:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">标签链接</string>
+    <string name="gutenberg_native_table_of_contents">目录</string>
+    <string name="gutenberg_native_summary">总结</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">用一个标题列表来总结您的文章。在标题区块中添加HTML锚点，将其链接到这里。</string>
+    <string name="gutenberg_native_search_settings">搜索设置</string>
+    <string name="gutenberg_native_post_link">文章链接</string>
+    <string name="gutenberg_native_document_outline">文档大纲</string>
+    <string name="gutenberg_native_category_link">分类链接</string>
+    <string name="gutenberg_native_buttongroup">按钮分组</string>
+    <string name="gutenberg_native_a_link_to_a_url">目标网址的链接。</string>
+    <string name="gutenberg_native_a_link_to_a_tag">目标标签的链接。</string>
+    <string name="gutenberg_native_a_link_to_a_post">目标链接的文章。</string>
+    <string name="gutenberg_native_a_link_to_a_page">目标页面的链接。</string>
+    <string name="gutenberg_native_a_link_to_a_category">目标分类的链接。</string>
+    <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
+    <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="gutenberg_native_add_button_text">添加按钮文本</string>
     <string name="reader_title_interests">关注话题</string>
     <string name="stories_intro_main_subtitle">在您的网站上创建、发布吸引人内容的新方法。</string>
@@ -412,6 +428,7 @@ Language: zh_CN
     <string name="media_uploading_default">正在上传媒体</string>
     <string name="gutenberg_native_select_item">选择项目</string>
     <string name="gutenberg_native_search_or_type_url">搜索或键入 URL</string>
+    <string name="gutenberg_native_page_link">页面链接</string>
     <string name="gutenberg_native_add_this_telephone_link">添加此电话链接</string>
     <string name="gutenberg_native_add_this_link">添加此链接</string>
     <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
@@ -875,14 +892,14 @@ Language: zh_CN
     <string name="reader_empty_saved_posts_content_description">轻按“添加以保存文章”按钮，将文章保存到您的列表中。</string>
     <string name="reader_acessibility_list_loaded">“列表已加载 %1$d 项。”</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
-    <string name="master_switch_default_title_off">关</string>
-    <string name="master_switch_default_title_on">开</string>
-    <string name="notifications_tab_dialog_master_off_message">关闭此站点的“通知”功能后，此站点的“通知”选项卡中将不再显示通知。您可以在打开此站点的“通知”功能后，调整您要查看的通知类型。</string>
-    <string name="notifications_tab_dialog_master_off_title">要在此站点的“通知”选项卡中查看通知，请为此站点打开“通知”功能。</string>
-    <string name="notifications_tab_dialog_master_hint_off">为此站点启用在“通知”选项卡上显示通知</string>
-    <string name="notifications_tab_dialog_master_hint_on">为此站点禁用在“通知”选项卡上显示通知</string>
-    <string name="notifications_tab_dialog_master_status_off">此站点的通知</string>
-    <string name="notifications_tab_dialog_master_status_on">此站点的通知</string>
+    <string name="main_switch_default_title_off">关闭</string>
+    <string name="main_switch_default_title_on">开启</string>
+    <string name="notifications_tab_dialog_main_off_message">如果关闭此站点的通知功能，则此站点的通知选项卡上将不会显示通知。开启此站点的通知功能后，您可以调整您看到的通知类型。</string>
+    <string name="notifications_tab_dialog_main_off_title">要在此站点的“通知”选项卡中查看通知，请为此站点打开“通知”功能。</string>
+    <string name="notifications_tab_dialog_main_hint_off">为此站点启用在“通知”选项卡上显示通知</string>
+    <string name="notifications_tab_dialog_main_hint_on">为此站点禁用在“通知”选项卡上显示通知</string>
+    <string name="notifications_tab_dialog_main_status_off">此站点的通知</string>
+    <string name="notifications_tab_dialog_main_status_on">此站点的通知</string>
     <string name="pick_media">添加图片或视频</string>
     <string name="error_post_not_submitted_retrying">我们无法提交这篇文章以进行审核，但我们会稍后重试。</string>
     <string name="error_post_not_scheduled_retrying">我们无法安排此文章的发布时间，但我们会稍后重试。</string>
@@ -1134,7 +1151,7 @@ Language: zh_CN
     <string name="app_rating_rate_never">不用了，谢谢</string>
     <string name="app_rating_rate_later">以后再说</string>
     <string name="app_rating_rate_now">立即评分</string>
-    <string name="app_rating_message">欢迎您再次到来！如果您喜欢这款应用，我们希望能够在 Google Play 商店中获得您的评分。</string>
+    <string name="app_rating_message">欢迎您再次到来！如果您喜欢此应用，我们希望您能在Google Play Store上给我们一个评价。</string>
     <string name="app_rating_title">喜欢 WordPress 吗?</string>
     <string name="editor_post_converted_back_to_draft">文章已转换回草稿</string>
     <string name="stats_insights_posting_activity">文章发布活动</string>
@@ -1204,8 +1221,6 @@ Language: zh_CN
     <string name="site_creation_error_generic_subtitle">与服务器通信时出错，请重试</string>
     <string name="site_creation_error_generic_title">出现问题</string>
     <string name="site_creation_fetch_suggestions_error_unknown">出现问题</string>
-    <string name="site_creation_segments_subtitle">这帮助我们提出建议。但您永远不会被锁定 – 所有站点都在不断发展！</string>
-    <string name="site_creation_segments_title">告诉我们您想创建何种站点</string>
     <string name="new_site_creation_preview_title">您的站点已创建！</string>
     <string name="new_site_creation_screen_title_step_count">%1$d/%2$d</string>
     <string name="new_site_creation_screen_title_general">创建站点</string>
@@ -1455,8 +1470,6 @@ Language: zh_CN
     <string name="reader_empty_saved_posts_title">尚未保存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已保存</string>
     <string name="reader_bookmark_snack_btn">查看所有</string>
-    <string name="reader_btn_bookmarked">已保存</string>
-    <string name="reader_btn_bookmark">保存</string>
     <string name="reader_remove_bookmark">从已保存的文章中删除</string>
     <string name="reader_add_bookmark">添加到已保存的文章</string>
     <string name="reader_save_for_later_title">已保存的文章</string>
@@ -1809,12 +1822,11 @@ Language: zh_CN
     <string name="jetpack_disconnect_confirm">断开连接</string>
     <string name="jetpack_disconnect_confirmation_message">是否确定要断开 Jetpack 与该站点的连接？</string>
     <string name="jetpack_disconnect_pref_title">「断开与 WordPress.com 的连接」</string>
-    <string name="site_settings_jetpack_whitelist_description">您可以将一个或多个 IP 地址加入白名单，以避免 Jetpack 将其屏蔽。IPv4 和 IPv6 都支持。如要按范围指定地址，请输入最小值和最大值，并用破折号隔开。示例：12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">您可以将一个或多个 IP 地址加入白名单，以避免 Jetpack 将其屏蔽。IPv4 和 IPv6 都支持。如要按范围指定地址，请输入最小值和最大值，并用破折号隔开。示例：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要两步验证</string>
     <string name="jetpack_match_wpcom_via_email_title">使用邮箱地址匹配帐户</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允许通过 WordPress.com 登录</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com 登录</string>
-    <string name="jetpack_brute_force_whitelist_title">已加入白名单的 IP 地址</string>
     <string name="jetpack_prevent_brute_force_title">阻止恶意登录尝试</string>
     <string name="jetpack_prevent_brute_force_category_title">防范暴力破解攻击</string>
     <string name="jetpack_send_wp_notifications_title">发送推送通知</string>
@@ -1855,12 +1867,8 @@ Language: zh_CN
     <string name="notification_settings_category_other">其他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">我的所有站点</string>
     <string name="notification_settings_category_your_sites">您的站点</string>
-    <string name="notification_settings_master_off_message">关闭「通知设置」将停止接收来自此应用程序的所有通知，无论何种类型。您可以在打开「通知设置」后，对您想接收的通知类型进行精细调整。</string>
-    <string name="notification_settings_master_off_title">要在此设备上接收通知，请打开「通知设置」。</string>
-    <string name="notification_settings_master_hint_off">启用通知</string>
-    <string name="notification_settings_master_hint_on">禁用通知</string>
-    <string name="notification_settings_master_status_off">关闭</string>
-    <string name="notification_settings_master_status_on">打开</string>
+    <string name="notification_settings_main_off_message">关闭「通知设置」将停止接收来自此应用程序的所有通知，无论何种类型。您可以在打开「通知设置」后，对您想接收的通知类型进行精细调整。</string>
+    <string name="notification_settings_main_off_title">要在此设备上接收通知，请打开「通知设置」。</string>
     <string name="max_video_resolution">视频大小上限</string>
     <string name="max_thumbnail_px_size">图片大小上限</string>
     <string name="error_upload_post_media_param">上传这篇文章中的媒体时出错：%s。</string>
@@ -2313,7 +2321,6 @@ Language: zh_CN
     <string name="site_settings_paging_dialog_description">将评论线程划分到多个页面。</string>
     <string name="site_settings_paging_dialog_header">每个页面上的评论</string>
     <string name="site_settings_close_after_dialog_title">关闭评论</string>
-    <string name="site_settings_blacklist_description">如果评论的内容、名称、URL、电子邮件或 IP 中包含其中任意字词，则评论会被标记为垃圾内容。您可输入部分字词，这样，输入「press」将匹配出「WordPress」。</string>
     <string name="site_settings_hold_for_moderation_description">如果评论的内容、名称、URL、电子邮件或 IP 中包含其中任意字词，则评论会保留在审核队列中。您可输入部分字词，这样，输入「press」将匹配出「WordPress」。</string>
     <string name="site_settings_list_editor_input_hint">输入一个单词或短语</string>
     <string name="site_settings_list_editor_no_items_text">无菜单项</string>
@@ -2328,10 +2335,8 @@ Language: zh_CN
     <string name="site_settings_rp_show_header_title">显示标题</string>
     <string name="site_settings_rp_switch_summary">「相关文章」在您的文章下方显示您站点中的相关内容。</string>
     <string name="site_settings_rp_switch_title">显示相关文章</string>
-    <string name="site_settings_blacklist_hint">将与过滤器匹配的评论标记为垃圾内容</string>
     <string name="site_settings_moderation_hold_hint">将与过滤器匹配的评论置于审核队列</string>
     <string name="site_settings_multiple_links_hint">忽略来自已知用户的链接限制</string>
-    <string name="site_settings_whitelist_hint">评论作者必须已有审核通过的评论</string>
     <string name="site_settings_user_account_required_hint">用户必须已注册并登录才能评论</string>
     <string name="site_settings_identity_required_hint">评论作者必须填写名称和电子邮件</string>
     <string name="site_settings_paging_hint">以指定大小的数据块显示评论</string>
@@ -2354,17 +2359,13 @@ Language: zh_CN
     <string name="site_settings_address_hint">目前不支持更改地址</string>
     <string name="site_settings_tagline_hint">介绍您的博客的简短说明或夺人眼球的短语</string>
     <string name="site_settings_title_hint">以简洁的话语介绍此站点的内容</string>
-    <string name="site_settings_whitelist_known_summary">来自已知用户的评论</string>
-    <string name="site_settings_whitelist_all_summary">来自所有用户的评论</string>
     <string name="site_settings_threading_summary">%d个级别</string>
     <string name="site_settings_privacy_private_summary">私密</string>
     <string name="site_settings_privacy_hidden_summary">已隐藏</string>
     <string name="site_settings_privacy_public_summary">公开</string>
     <string name="site_settings_delete_site_title">删除站点</string>
-    <string name="site_settings_blacklist_title">黑名单</string>
     <string name="site_settings_moderation_hold_title">保持审核状态</string>
     <string name="site_settings_multiple_links_title">评论中的链接</string>
-    <string name="site_settings_whitelist_title">自动审核</string>
     <string name="site_settings_paging_title">分页</string>
     <string name="site_settings_threading_title">线程</string>
     <string name="site_settings_sort_by_title">排序方式</string>
@@ -2485,7 +2486,7 @@ Language: zh_CN
     <string name="site_picker_title">选择站点</string>
     <string name="my_site_btn_view_site">查看站点</string>
     <string name="my_site_btn_view_admin">查看管理员</string>
-    <string name="my_site_btn_switch_site">转换站点</string>
+    <string name="my_site_btn_switch_site">切换站点</string>
     <string name="my_site_btn_site_settings">设置</string>
     <string name="my_site_btn_blog_posts">博客文章</string>
     <string name="my_site_header_publish">发布</string>
@@ -2659,13 +2660,13 @@ Language: zh_CN
     <string name="select_categories">选择分类</string>
     <string name="share_link">分享链接</string>
     <string name="reader_empty_posts_in_tag_updating">正在获取文章…</string>
-    <string name="reader_likes_you_and_multi">你和 %,d 人喜欢</string>
-    <string name="reader_likes_multi">%,d 人喜欢</string>
+    <string name="reader_likes_you_and_multi">您和另外 %,d 人赞了</string>
+    <string name="reader_likes_multi">%,d 人赞了</string>
     <string name="reader_label_reply">回复</string>
     <string name="cant_share_no_visible_blog">没有一个博客，你不能分享到WordPress</string>
     <string name="comment_spammed">评论被标记为垃圾评论</string>
     <string name="reader_toast_err_get_post">无法检索这篇文章</string>
-    <string name="reader_likes_you_and_one">你和另一个人喜欢</string>
+    <string name="reader_likes_you_and_one">您和另外1人赞了</string>
     <string name="pick_video">选择视频</string>
     <string name="pick_photo">选择图片</string>
     <string name="sign_up_label">注册</string>
@@ -2675,8 +2676,8 @@ Language: zh_CN
     <string name="reader_toast_err_tag_invalid">该主题无效</string>
     <string name="reader_toast_err_tag_exists">您已经关注此主题</string>
     <string name="reader_toast_err_comment_failed">无法发表评论</string>
-    <string name="reader_likes_only_you">已喜欢</string>
-    <string name="reader_likes_one">1 人喜欢</string>
+    <string name="reader_likes_only_you">已赞</string>
+    <string name="reader_likes_one">1人赞过</string>
     <string name="reader_label_removed_tag">已移除 %s</string>
     <string name="reader_label_added_tag">已添加 %s</string>
     <string name="reader_hint_comment_on_comment">回复评论</string>

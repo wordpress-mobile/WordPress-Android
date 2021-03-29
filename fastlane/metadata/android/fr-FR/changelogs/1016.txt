@@ -1,0 +1,8 @@
+16.9 :
+Nouveautés
+
+L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
+ 
+ Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
+ 
+ Nous avons également amélioré l’expérience de design du site. 

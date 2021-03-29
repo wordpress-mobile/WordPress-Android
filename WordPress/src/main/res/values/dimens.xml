@@ -67,6 +67,8 @@
 
     <dimen name="default_cardview_radius">2dp</dimen>
 
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>

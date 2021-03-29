@@ -365,4 +365,13 @@
     <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_5</color>
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
+
+    <!-- These colors were removed from the login library and moved here as they are still being
+    used by some old layouts. They should be replaced here as well, whenever possible. -->
+    <color name="color_primary_dark">#006b98</color>
+    <color name="light_gray">@color/grey_lighten_30</color>
+    <color name="grey_lighten_30">#e9eff3</color>
+    <color name="grey_lighten_20">#c8d7e1</color>
+    <color name="grey_300">#ffe0e0e0</color>
+    <color name="grey_900">#ff212121</color>
 </resources>

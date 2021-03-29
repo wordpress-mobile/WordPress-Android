@@ -172,9 +172,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
@@ -246,10 +245,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
             // auto-login if username and password are set for wpcom login
             if (mIsWpcom && !TextUtils.isEmpty(mInputUsername) && !TextUtils.isEmpty(mInputPassword)) {
-                getPrimaryButton().post(new Runnable() {
+                getBottomButton().post(new Runnable() {
                     @Override
                     public void run() {
-                        getPrimaryButton().performClick();
+                        getBottomButton().performClick();
                     }
                 });
             }
@@ -277,7 +276,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private void updatePrimaryButtonEnabledStatus() {
         String currentUsername = mUsernameInput.getEditText().getText().toString();
         String currentPassword = mPasswordInput.getEditText().getText().toString();
-        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
+        getBottomButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
     }
 
     protected void next() {
