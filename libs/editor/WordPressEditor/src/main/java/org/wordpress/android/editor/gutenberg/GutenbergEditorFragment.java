@@ -853,10 +853,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
         sendFeaturedImageId(mediaId);
-
-        Snackbar snackbar = Snackbar
-                .make(getActivity().findViewById(R.id.gutenberg_container), R.string.featured_image_removed, Snackbar.LENGTH_LONG);
-        snackbar.show();
     }
 
     public void sendFeaturedImageId(int mediaId) {

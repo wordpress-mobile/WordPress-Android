@@ -161,6 +161,5 @@
     <string name="replace_current_cancel">Cancel</string>
 
     <string name="featured_image_confirmation">Set as Featured Image</string>
-    <string name="featured_image_removed">Removed Featured Image</string>
 
 </resources>
