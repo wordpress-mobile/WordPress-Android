@@ -491,7 +491,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             CommentList commentList = new CommentList();
             commentList.addAll(comments);
 
-            ReaderCommentLeveler leveler = new ReaderCommentLeveler(commentList);
+            CommentLeveler leveler = new CommentLeveler(commentList);
             CommentList leveledComments = leveler.createLevelList();
 
             // get all the comments without children
@@ -557,11 +557,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-
-    public class ReaderCommentLeveler {
+    public static class CommentLeveler {
         private final CommentList mComments;
 
-        public ReaderCommentLeveler(@NonNull CommentList comments) {
+        public CommentLeveler(@NonNull CommentList comments) {
             mComments = comments;
         }
 
@@ -583,7 +582,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             // check for orphans (child comments whose parents weren't found above) and give them
-            // a non-zero level so they're indented by ReaderCommentAdapter
+            // a non-zero level to distinguish them from top level comments
             for (CommentModel comment : result) {
                 if (comment.level == 0 && comment.getParentId() != 0) {
                     comment.level = 1;

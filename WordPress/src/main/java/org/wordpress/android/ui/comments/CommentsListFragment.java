@@ -295,8 +295,16 @@ public class CommentsListFragment extends ViewPagerFragment {
                     if (mActionMode == null) {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
-                            ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(),
-                                    mCommentStatusFilter.toCommentStatus());
+
+                            CommentStatus filterCriteria;
+                            if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
+                                filterCriteria = CommentStatusCriteria.ALL.toCommentStatus();
+                            } else {
+                                filterCriteria = mCommentStatusFilter.toCommentStatus();
+                            }
+
+                            ((OnCommentSelectedListener) getActivity())
+                                    .onCommentSelected(comment.getRemoteCommentId(), filterCriteria);
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
