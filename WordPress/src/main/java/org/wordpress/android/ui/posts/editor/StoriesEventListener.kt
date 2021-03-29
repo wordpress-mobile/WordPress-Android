@@ -174,7 +174,7 @@ class StoriesEventListener @Inject constructor(
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
-        val localMediaId = requireNotNull(event.frameId)
+        val localMediaId = event.frameId
 
         val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
 
