@@ -6,7 +6,6 @@
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
-    <issue id="UseAppTint" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
@@ -78,7 +77,8 @@
     <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
     <issue id="LabelFor" severity="ignore" /> <!-- Severity should be increased to error when minSdk >= 17 -->
     <issue id="OldTargetApi" severity="ignore" /> <!-- We are aware of down sides of having an old targetApi -->
-
+    <issue id="UseAppTint" severity="ignore" /> <!-- android:tint attribute had a problem on API<=21, but our minSdk is 21, ignore -->
+    
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.9.0.jar" />
         <ignore regexp="java-common-1.13.jar" />
