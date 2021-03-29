@@ -200,5 +200,4 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     public void setParentId(long parentId) {
         mParentId = parentId;
     }
-
 }
