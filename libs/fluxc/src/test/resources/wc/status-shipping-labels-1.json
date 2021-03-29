@@ -7,7 +7,7 @@
       "created": 1589295659638,
       "carrier_id": "usps",
       "service_name": "USPS - Priority Mail",
-      "status": "PURCHASE_IN_PROGRESS",
+      "status": "PURCHASED",
       "package_name": "Small Flat Rate Box",
       "product_names": [
         "Polo",
@@ -25,7 +25,7 @@
       "created": 1589295659638,
       "carrier_id": "usps",
       "service_name": "USPS - Priority Mail",
-      "status": "PURCHASE_IN_PROGRESS",
+      "status": "PURCHASED",
       "package_name": "Small Flat Rate Box",
       "product_names": [
         "Polo",
