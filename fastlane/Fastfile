@@ -46,7 +46,7 @@ ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
 ENV["validate_translations"]="lintVanillaRelease"
-REPOSITORY_NAME="wordpress-android"
+REPOSITORY_NAME="WordPress-Android"
 
 ########################################################################
 # Release Lanes
@@ -227,7 +227,7 @@ REPOSITORY_NAME="wordpress-android"
     hotfix = android_current_branch_is_hotfix
     android_update_metadata(options) unless hotfix
     android_bump_version_final_release() unless hotfix
-    version = android_get_release_version() 
+    version = android_get_release_version()
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
     trigger_release_build(branch_to_build: "release/#{version}")
 
@@ -402,8 +402,8 @@ REPOSITORY_NAME="wordpress-android"
    #####################################################################################
    lane :trigger_beta_build do | options |
     circleci_trigger_job(
-      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"], 
-      repository: REPOSITORY_NAME, 
+      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
+      repository: REPOSITORY_NAME,
       branch: options[:branch_to_build],
       job_params: {"beta_build" => true}
     )
@@ -420,8 +420,8 @@ REPOSITORY_NAME="wordpress-android"
   #####################################################################################
   lane :trigger_release_build do | options |
     circleci_trigger_job(
-      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"], 
-      repository: REPOSITORY_NAME, 
+      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
+      repository: REPOSITORY_NAME,
       branch: options[:branch_to_build],
       job_params: {"release_build" => true}
     )
@@ -612,7 +612,7 @@ REPOSITORY_NAME="wordpress-android"
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
-      
+
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
