@@ -209,7 +209,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -400,7 +399,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
-    @Inject WPStoriesFeatureConfig mWPStoriesFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -1215,25 +1213,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
-        MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
         MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
 
         // The following null checks should basically be redundant but were added to manage
         // an odd behaviour recorded with Android 8.0.0
         // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
-        if (switchToAztecMenuItem != null && switchToGutenbergMenuItem != null) {
-            if (mShowGutenbergEditor) {
-                // we're showing Gutenberg so, just offer the Aztec switch
-                switchToAztecMenuItem.setVisible(true);
-                switchToGutenbergMenuItem.setVisible(false);
-            } else {
-                // we're showing Aztec so, hide the "Switch to Aztec" menu
-                switchToAztecMenuItem.setVisible(false);
-
-                switchToGutenbergMenuItem.setVisible(
-                        shouldSwitchToGutenbergBeVisible(mEditorFragment, mSite)
-                );
-            }
+        if (switchToGutenbergMenuItem != null) {
+            boolean switchToGutenbergVisibility = mShowGutenbergEditor ? false
+                    : shouldSwitchToGutenbergBeVisible(mEditorFragment, mSite);
+            switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility);
         }
 
         MenuItem contentInfo = menu.findItem(R.id.menu_content_info);
@@ -1317,16 +1305,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
-        if (mWPStoriesFeatureConfig.isEnabled()) {
-            if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
-                callback.doWhenNoStoriesBeingSaved();
-            } else {
-                // Oops! A story is still being saved, let's wait
-                ToastUtils.showToast(EditPostActivity.this,
-                        getString(R.string.toast_edit_story_update_in_progress_title));
-            }
-        } else {
+        if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
             callback.doWhenNoStoriesBeingSaved();
+        } else {
+            // Oops! A story is still being saved, let's wait
+            ToastUtils.showToast(EditPostActivity.this,
+                    getString(R.string.toast_edit_story_update_in_progress_title));
         }
     }
 
@@ -1423,19 +1407,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
                 } else if (mEditorFragment instanceof GutenbergEditorFragment) {
                     ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-                }
-            } else if (itemId == R.id.menu_switch_to_aztec) {
-                // The following boolean check should be always redundant but was added to manage
-                // an odd behaviour recorded with Android 8.0.0
-                // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
-                if (mShowGutenbergEditor) {
-                    // let's finish this editing instance and start again, but not letting Gutenberg be used
-                    mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-                    mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    mViewModel.finish(ActivityFinishState.SAVED_LOCALLY);
-                } else {
-                    logWrongMenuState("Wrong state in menu_switch_to_aztec: menu should not be visible.");
                 }
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
                 // The following boolean check should be always redundant but was added to manage
@@ -2299,7 +2270,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
+                SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,

@@ -13,6 +13,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
@@ -34,8 +35,8 @@ public class BlockEditorPage {
         titleField.perform(typeText(postTitle), ViewActions.closeSoftKeyboard());
     }
 
-    public void switchToClassic() {
+    public void previewPost() {
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        clickOn("Switch to classic editor");
+        clickOn(onView(withText(R.string.menu_preview)));
     }
 }
