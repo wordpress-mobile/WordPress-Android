@@ -32,6 +32,16 @@ SUPPORTED_LOCALES = [
   { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {} },
 ].freeze
 
+# Env file paths to load
+USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
+
+before_all do |lane|
+  # Check that the env file exists
+  unless is_ci || File.file?(USER_ENV_FILE_PATH)
+    UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")
+  end
+end
+
 platform :android do
 ########################################################################
 # Includes
@@ -40,7 +50,7 @@ import "./ScreenshotFastfile"
 
 # Environment
 ########################################################################
-Dotenv.load('~/.wpandroid-env.default')
+Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]="./"
 ENV["PROJECT_NAME"]="WordPress"
