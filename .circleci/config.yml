@@ -499,7 +499,7 @@ workflows:
         - << pipeline.parameters.beta_build >>
         - << pipeline.parameters.release_build >>
     jobs:
-      - lint:
+      - lint
       - Release Build:
           requires:
             - lint
