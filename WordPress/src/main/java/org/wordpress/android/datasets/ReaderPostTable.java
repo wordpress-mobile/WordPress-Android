@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -293,8 +294,8 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name=''",
-                                    new String[]{Long.toString(blogId)});
+                "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name=''",
+                new String[]{Long.toString(blogId)});
     }
 
     public static int getNumPostsInFeed(long feedId) {
@@ -302,8 +303,8 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name=''",
-                                    new String[]{Long.toString(feedId)});
+                "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name=''",
+                new String[]{Long.toString(feedId)});
     }
 
     public static int getNumPostsWithTag(ReaderTag tag) {
@@ -312,8 +313,8 @@ public class ReaderPostTable {
         }
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT count(*) FROM tbl_posts WHERE tag_name=? AND tag_type=?",
-                                    args);
+                "SELECT count(*) FROM tbl_posts WHERE tag_name=? AND tag_type=?",
+                args);
     }
 
     public static void updatePost(@NonNull ReaderPost post) {
@@ -343,21 +344,25 @@ public class ReaderPostTable {
         addOrUpdatePosts(null, posts);
     }
 
+    @Nullable
     public static ReaderPost getBlogPost(long blogId, long postId, boolean excludeTextColumn) {
         return getPost("blog_id=? AND post_id=?", new String[]{Long.toString(blogId), Long.toString(postId)},
-                       excludeTextColumn);
+                excludeTextColumn);
     }
 
+    @Nullable
     public static ReaderPost getBlogPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
         return getPost("blog_url LIKE ? AND url LIKE ?", new String[]{"%//" + blogSlug, "%/" + postSlug + "/"},
-                       excludeTextColumn);
+                excludeTextColumn);
     }
 
+    @Nullable
     public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
         return getPost("feed_id=? AND feed_item_id=?", new String[]{Long.toString(feedId), Long.toString(feedItemId)},
-                       excludeTextColumn);
+                excludeTextColumn);
     }
 
+    @Nullable
     private static ReaderPost getPost(String where, String[] args, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts WHERE " + where + " LIMIT 1";
@@ -376,29 +381,29 @@ public class ReaderPostTable {
     public static String getPostTitle(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                                       "SELECT title FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                       args);
+                "SELECT title FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static String getPostBlogName(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                                       "SELECT blog_name FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                       args);
+                "SELECT blog_name FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static String getPostText(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                                       "SELECT text FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                       args);
+                "SELECT text FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static boolean postExists(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                                     "SELECT 1 FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                     args);
+                "SELECT 1 FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     private static boolean postExistsForReaderTag(long blogId, long postId, ReaderTag readerTag) {
@@ -456,8 +461,8 @@ public class ReaderPostTable {
     public static int getNumCommentsForPost(long blogId, long postId) {
         String[] args = new String[]{Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                    args);
+                "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static void setNumCommentsForPost(long blogId, long postId, int numComments) {
@@ -480,8 +485,8 @@ public class ReaderPostTable {
     public static int getNumLikesForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT num_likes FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                    args);
+                "SELECT num_likes FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static boolean isPostLikedByCurrentUser(ReaderPost post) {
@@ -491,8 +496,8 @@ public class ReaderPostTable {
     public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
         String[] args = new String[]{Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                                     "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                     args);
+                "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     /*
@@ -539,8 +544,8 @@ public class ReaderPostTable {
         }
         String[] args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                                     "SELECT is_followed FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                                     args);
+                "SELECT is_followed FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
     }
 
     public static boolean isPostSeen(ReaderPost post) {
@@ -843,8 +848,8 @@ public class ReaderPostTable {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing excerpt");
             return "<p>" + post.getExcerpt() + "</p>"
                    + String.format("<p style='text-align:center'><a href='%s'>%s</a></p>",
-                                   post.getUrl(),
-                                   WordPress.getContext().getString(R.string.reader_label_view_original));
+                    post.getUrl(),
+                    WordPress.getContext().getString(R.string.reader_label_view_original));
         } else {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing truncated text");
             return post.getText().substring(0, MAX_TEXT_LEN);
@@ -960,7 +965,7 @@ public class ReaderPostTable {
         sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
@@ -978,7 +983,7 @@ public class ReaderPostTable {
                 "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
@@ -1005,7 +1010,7 @@ public class ReaderPostTable {
                 "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(feedId)});
@@ -1037,7 +1042,7 @@ public class ReaderPostTable {
         sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
@@ -1052,7 +1057,7 @@ public class ReaderPostTable {
         String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_type=?";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         String[] args = {Integer.toString(tagType.toInt())};
@@ -1081,7 +1086,7 @@ public class ReaderPostTable {
         String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
+            sql += " LIMIT " + maxPosts;
         }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});

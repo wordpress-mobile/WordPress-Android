@@ -10,13 +10,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
@@ -44,6 +38,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -52,6 +47,7 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -73,7 +69,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppRatingDialogWrapper
@@ -81,7 +76,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderPostCardActionsHandler @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val readerTracker: ReaderTracker,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
@@ -130,7 +125,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         post: ReaderPost,
         type: ReaderPostCardActionType,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean = false
+        source: String
     ) {
         withContext(bgDispatcher) {
             if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
@@ -142,7 +137,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     }
                 }
             }
-            handleAction(post, type, fromPostDetails, isBookmarkList)
+            handleAction(
+                    post,
+                    type,
+                    isBookmarkList,
+                    source
+            )
         }
     }
 
@@ -156,14 +156,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             FetchSiteState.Failed.NoNetwork -> {
                 _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                 )
             }
             FetchSiteState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                    Event(
-                        SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
-                    )
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -173,30 +171,42 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private suspend fun handleAction(
         post: ReaderPost,
         type: ReaderPostCardActionType,
-        fromPostDetails: Boolean,
-        isBookmarkList: Boolean
+        isBookmarkList: Boolean,
+        source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-            SHARE -> handleShareClicked(post)
+            FOLLOW -> handleFollowClicked(post, source)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
+            SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
-            LIKE -> handleLikeClicked(post, fromPostDetails)
-            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
+            LIKE -> handleLikeClicked(post, source)
+            BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
             REPORT_POST -> handleReportPostClicked(post)
-            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
+            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
+            SPACER_NO_ACTION -> Unit // Do nothing
         }
     }
 
-    suspend fun handleOnItemClicked(post: ReaderPost) {
+    suspend fun handleOnItemClicked(
+        post: ReaderPost,
+        source: String
+    ) {
         withContext(bgDispatcher) {
-            appRatingDialogWrapper.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+            appRatingDialogWrapper.incrementInteractions(
+                    AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+            )
 
             if (post.isBookmarked) {
-                analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+                readerTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                        post.blogId,
+                        post.feedId,
+                        post.isFollowedByCurrentUser,
+                        source
+                )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
@@ -208,25 +218,26 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleHeaderClicked(siteId: Long, feedId: Long) {
+    suspend fun handleHeaderClicked(siteId: Long, feedId: Long, isFollowed: Boolean) {
         withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId, isFollowed)))
         }
     }
 
     suspend fun handleReportPostClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
-            val properties: MutableMap<String, Any> = HashMap()
-            properties["blog_id"] = post.blogId
-            properties["is_jetpack"] = post.isJetpack
-            properties["post_id"] = post.postId
-            analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
+            readerTracker.trackBlogPost(
+                    AnalyticsTracker.Stat.READER_POST_REPORTED,
+                    post.blogId,
+                    post.postId,
+                    post.isJetpack
+            )
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
         }
     }
 
-    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, fromPostDetails: Boolean) {
-        val actionSource = if (fromPostDetails) {
+    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, source: String) {
+        val actionSource = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
             READER_POST_DETAILS
         } else {
             READER_POST_CARD
@@ -257,21 +268,36 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
+    suspend fun handleFollowRecommendedSiteClicked(
+        recommendedBlogUiState: ReaderRecommendedBlogUiState,
+        source: String
+    ) {
         val param = ReaderSiteFollowUseCase.Param(
                 blogId = recommendedBlogUiState.blogId,
                 blogName = recommendedBlogUiState.name,
                 feedId = recommendedBlogUiState.feedId
         )
-        followSite(param)
+        followSite(param, source)
     }
 
-    private suspend fun handleFollowClicked(post: ReaderPost) {
-        followSite(ReaderSiteFollowUseCase.Param(post.blogId, post.feedId, post.blogName))
+    private suspend fun handleFollowClicked(
+        post: ReaderPost,
+        source: String
+    ) {
+        followSite(
+                ReaderSiteFollowUseCase.Param(
+                        post.blogId,
+                        post.feedId,
+                        post.blogName
+                ), source
+        )
     }
 
-    private suspend fun followSite(followSiteParam: ReaderSiteFollowUseCase.Param) {
-        followUseCase.toggleFollow(followSiteParam).collect {
+    private suspend fun followSite(
+        followSiteParam: ReaderSiteFollowUseCase.Param,
+        source: String
+    ) {
+        followUseCase.toggleFollow(followSiteParam, source).collect {
             when (it) {
                 is FollowSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
@@ -289,7 +315,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     siteNotificationsUseCase.fetchSubscriptions()
 
                     if (it.showEnableNotification) {
-                        val action = prepareEnableNotificationSnackbarAction(followSiteParam.blogName, it.blogId)
+                        val action = prepareEnableNotificationSnackbarAction(
+                                followSiteParam.blogName,
+                                it.blogId,
+                                it.feedId
+                        )
                         action.invoke()
                     } else if (it.deleteNotificationSubscription) {
                         siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
@@ -300,8 +330,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleSiteNotificationsClicked(blogId: Long) {
-        when (siteNotificationsUseCase.toggleNotification(blogId)) {
+    private suspend fun handleSiteNotificationsClicked(blogId: Long, feedId: Long) {
+        when (siteNotificationsUseCase.toggleNotification(blogId, feedId)) {
             is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
             }
             is SiteNotificationState.Failed.NoNetwork -> {
@@ -317,8 +347,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleShareClicked(post: ReaderPost) {
-        analyticsTrackerWrapper.track(SHARED_ITEM_READER, post.blogId)
+    private fun handleShareClicked(
+        post: ReaderPost,
+        source: String
+    ) {
+        readerTracker.trackBlog(
+                AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                post.blogId,
+                post.feedId,
+                post.isFollowedByCurrentUser,
+                source
+        )
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {
@@ -327,12 +366,16 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
-        analyticsTrackerWrapper.track(READER_ARTICLE_VISITED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private suspend fun handleBlockSiteClicked(blogId: Long) {
-        blockBlogUseCase.blockBlog(blogId).collect {
+    private suspend fun handleBlockSiteClicked(
+        blogId: Long,
+        feedId: Long,
+        source: String
+    ) {
+        blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
@@ -343,7 +386,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                             UiStringRes(R.string.undo),
                                             {
                                                 coroutineScope.launch {
-                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
+                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
                                                     _refreshPosts.postValue(Event(Unit))
                                                 }
                                             })
@@ -366,8 +409,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleLikeClicked(post: ReaderPost, fromPostDetails: Boolean) {
-        likeUseCase.perform(post, !post.isLikedByCurrentUser, fromPostDetails).collect {
+    private suspend fun handleLikeClicked(post: ReaderPost, source: String) {
+        likeUseCase.perform(post, !post.isLikedByCurrentUser, source).collect {
             when (it) {
                 is PostLikeState.PostLikedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
@@ -388,14 +431,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleBookmarkClicked(
-        postId: Long,
-        blogId: Long,
+        post: ReaderPost,
         isBookmarkList: Boolean,
-        fromPostDetails: Boolean
+        source: String
     ) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList, fromPostDetails).collect {
+        bookmarkUseCase.toggleBookmark(post, isBookmarkList, source).collect {
             when (it) {
-                is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
+                is PreLoadPostContent -> _preloadPostEvents.postValue(
+                        Event(PreLoadPostContent(post.blogId, post.postId))
+                )
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment
@@ -408,9 +452,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                                 UiStringRes(R.string.reader_bookmark_snack_title),
                                                 UiStringRes(R.string.reader_bookmark_snack_btn),
                                                 buttonAction = {
-                                                    analyticsTrackerWrapper.track(
-                                                            READER_SAVED_LIST_SHOWN,
-                                                            mapOf("source" to "post_list_saved_post_notice")
+                                                    readerTracker.track(
+                                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
                                                     )
                                                     _navigationEvents.postValue(Event(ShowBookmarkedTab))
                                                 })
@@ -451,7 +495,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
     }
 
-    private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
+    private fun prepareEnableNotificationSnackbarAction(
+        blogName: String?,
+        blogId: Long,
+        feedId: Long
+    ): () -> Unit {
         return {
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
             val blog = if (blogName?.isEmpty() == true) thisSite else blogName
@@ -469,8 +517,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
                                         coroutineScope.launch(bgDispatcher) {
-                                            analyticsTrackerWrapper
-                                                    .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
+                                            readerTracker.trackBlog(
+                                                    AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                                    blogId,
+                                                    feedId
+                                            )
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
                                             siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
                                         }

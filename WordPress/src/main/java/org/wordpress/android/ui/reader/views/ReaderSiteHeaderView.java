@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -51,6 +52,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -80,7 +82,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogInfoListener = listener;
     }
 
-    public void loadBlogInfo(long blogId, long feedId) {
+    public void loadBlogInfo(
+            final long blogId,
+            final long feedId,
+            final String source
+    ) {
         mBlogId = blogId;
         mFeedId = feedId;
 
@@ -99,7 +105,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (localBlogInfo != null) {
-            showBlogInfo(localBlogInfo);
+            showBlogInfo(localBlogInfo, source);
         }
 
         // then get from server if doesn't exist locally or is time to update it
@@ -108,7 +114,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 @Override
                 public void onResult(ReaderBlog serverBlogInfo) {
                     if (isAttachedToWindow()) {
-                        showBlogInfo(serverBlogInfo);
+                        showBlogInfo(serverBlogInfo, source);
                     }
                 }
             };
@@ -121,7 +127,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void showBlogInfo(ReaderBlog blogInfo) {
+    private void showBlogInfo(ReaderBlog blogInfo, String source) {
         // do nothing if unchanged
         if (blogInfo == null || blogInfo.isSameAs(mBlogInfo)) {
             return;
@@ -173,7 +179,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleFollowStatus(v);
+                    toggleFollowStatus(v, source);
                 }
             });
         }
@@ -187,7 +193,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
-    private void toggleFollowStatus(final View followButton) {
+    private void toggleFollowStatus(final View followButton, final String source) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -204,7 +210,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 mFollowListener.onFollowTapped(
                         followButton,
                         mBlogInfo.getName(),
-                        mIsFeed ? 0 : mBlogInfo.blogId);
+                        mIsFeed ? 0 : mBlogInfo.blogId,
+                        mBlogInfo.feedId);
             } else {
                 mFollowListener.onFollowingTapped();
             }
@@ -231,9 +238,23 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         boolean result;
         if (mIsFeed) {
-            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(
+                    mBlogId,
+                    mFeedId,
+                    isAskingToFollow,
+                    listener,
+                    source,
+                    mReaderTracker
+            );
         } else {
-            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(
+                    mBlogId,
+                    mFeedId,
+                    isAskingToFollow,
+                    listener,
+                    source,
+                    mReaderTracker
+            );
         }
 
         if (result) {

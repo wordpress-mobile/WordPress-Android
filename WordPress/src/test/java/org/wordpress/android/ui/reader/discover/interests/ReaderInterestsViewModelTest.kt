@@ -35,9 +35,9 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val CURRENT_LANGUAGE = "en"
 
@@ -54,11 +54,11 @@ class ReaderInterestsViewModelTest {
     @Mock lateinit var parentViewModel: ReaderViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
-    @Mock lateinit var trackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository, trackerWrapper)
+        viewModel = ReaderInterestsViewModel(readerTagRepository, readerTracker)
     }
 
     @Test
