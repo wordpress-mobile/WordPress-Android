@@ -668,20 +668,6 @@ public class CommentsListFragment extends ViewPagerFragment {
                     getAdapter().loadMoreComments(mCommentStatusFilter.toCommentStatus(), event.offset);
                 } else {
                     getAdapter().reloadComments(mCommentStatusFilter.toCommentStatus());
-                    // after creating comment on self hosted site, we want to fetch it from the endpoint
-                    // if UNREPLIED fitler is active
-                    if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT && !mSite.isUsingWpComRestApi()
-                        && mCommentStatusFilter.toCommentStatus() == CommentStatus.UNREPLIED
-                        && !event.changedCommentsLocalIds.isEmpty()) {
-                        CommentModel createdComment =
-                                mCommentStore.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
-
-                        if (createdComment != null) {
-                            mDispatcher.dispatch(CommentActionBuilder
-                                    .newFetchCommentAction(
-                                            new RemoteCommentPayload(mSite, createdComment.getRemoteCommentId())));
-                        }
-                    }
                 }
             }
             return;

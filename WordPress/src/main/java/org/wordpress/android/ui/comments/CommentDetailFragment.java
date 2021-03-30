@@ -126,15 +126,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         NOTIFICATION,
         SITE_COMMENTS;
 
-         AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
+        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
             switch (this) {
                 case NOTIFICATION:
                     return AnalyticsCommentActionSource.NOTIFICATIONS;
                 case SITE_COMMENTS:
                     return AnalyticsCommentActionSource.SITE_COMMENTS;
             }
-             throw new IllegalArgumentException(
-                     this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
+            throw new IllegalArgumentException(
+                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
         }
     }
 
@@ -1339,6 +1339,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
             mEditReply.setText(null);
             mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+        }
+
+        // Self Hosted site does not return a newly created comment, so we need to fetch it manually.
+        if (!mSite.isUsingWpComRestApi() && !event.changedCommentsLocalIds.isEmpty()) {
+            CommentModel createdComment = mCommentStore.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
+
+            if (createdComment != null) {
+                mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(
+                        new RemoteCommentPayload(mSite, createdComment.getRemoteCommentId())));
+            }
         }
 
         // approve the comment
