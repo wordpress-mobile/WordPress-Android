@@ -37,7 +37,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
-import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
