@@ -23,9 +23,9 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestChipStyleColor
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -72,6 +72,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun mapPostToUiState(
+        source: String,
         post: ReaderPost,
         isDiscover: Boolean = false,
         photonWidth: Int,
@@ -90,6 +91,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     ): ReaderPostUiState {
         return withContext(bgDispatcher) {
             mapPostToUiStateBlocking(
+                    source,
                     post,
                     isDiscover,
                     photonWidth,
@@ -111,6 +113,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     @Suppress("LongParameterList")
     fun mapPostToUiStateBlocking(
+        source: String,
         post: ReaderPost,
         isDiscover: Boolean = false,
         photonWidth: Int,
@@ -128,8 +131,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
         moreMenuItems: List<ReaderPostCardAction>? = null
     ): ReaderPostUiState {
         return ReaderPostUiState(
+                source = source,
                 postId = post.postId,
                 blogId = post.blogId,
+                feedId = post.feedId,
+                isFollowed = post.isFollowedByCurrentUser,
                 blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isP2orA8C),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
@@ -200,7 +206,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
-        onItemClicked: (Long, Long) -> Unit,
+        onItemClicked: (Long, Long, Boolean) -> Unit,
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
         recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)

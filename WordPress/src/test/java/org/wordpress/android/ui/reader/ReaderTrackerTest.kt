@@ -9,12 +9,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.FILTERED_LIST
-import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
-import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.PAGED_POST
-import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.SUBFILTERED_LIST
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import java.util.Calendar
 import java.util.Date
 
@@ -23,12 +21,18 @@ class ReaderTrackerTest {
     @Mock lateinit var dateProvider: DateProvider
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var tracker: ReaderTracker
 
     @Before
     fun setup() {
-        tracker = ReaderTracker(dateProvider, appPrefsWrapper, analyticsTrackerWrapper)
+        tracker = ReaderTracker(
+                dateProvider,
+                appPrefsWrapper,
+                analyticsTrackerWrapper,
+                analyticsUtilsWrapper
+        )
     }
 
     @Test
@@ -51,22 +55,22 @@ class ReaderTrackerTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-        tracker.start(MAIN_READER)
-        tracker.start(FILTERED_LIST)
-        tracker.start(PAGED_POST)
-        tracker.start(SUBFILTERED_LIST)
+        tracker.start(ReaderTrackerType.MAIN_READER)
+        tracker.start(ReaderTrackerType.FILTERED_LIST)
+        tracker.start(ReaderTrackerType.PAGED_POST)
+        tracker.start(ReaderTrackerType.SUBFILTERED_LIST)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 1))
-        tracker.stop(MAIN_READER)
+        tracker.stop(ReaderTrackerType.MAIN_READER)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 2))
-        tracker.stop(FILTERED_LIST)
+        tracker.stop(ReaderTrackerType.FILTERED_LIST)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 3))
-        tracker.stop(PAGED_POST)
+        tracker.stop(ReaderTrackerType.PAGED_POST)
 
         whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, Int.MAX_VALUE - 4))
-        tracker.stop(SUBFILTERED_LIST)
+        tracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
 
         val expected = mapOf(
                 "time_in_main_reader" to Int.MAX_VALUE - 1,
@@ -88,22 +92,22 @@ class ReaderTrackerTest {
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-            tracker.start(MAIN_READER)
-            tracker.start(FILTERED_LIST)
-            tracker.start(PAGED_POST)
-            tracker.start(SUBFILTERED_LIST)
+            tracker.start(ReaderTrackerType.MAIN_READER)
+            tracker.start(ReaderTrackerType.FILTERED_LIST)
+            tracker.start(ReaderTrackerType.PAGED_POST)
+            tracker.start(ReaderTrackerType.SUBFILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
-            tracker.stop(MAIN_READER)
+            tracker.stop(ReaderTrackerType.MAIN_READER)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
-            tracker.stop(FILTERED_LIST)
+            tracker.stop(ReaderTrackerType.FILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
-            tracker.stop(PAGED_POST)
+            tracker.stop(ReaderTrackerType.PAGED_POST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 4))
-            tracker.stop(SUBFILTERED_LIST)
+            tracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
 
         val expected = mapOf(
@@ -126,22 +130,22 @@ class ReaderTrackerTest {
 
             whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-            tracker.start(MAIN_READER)
-            tracker.start(FILTERED_LIST)
-            tracker.start(PAGED_POST)
-            tracker.start(SUBFILTERED_LIST)
+            tracker.start(ReaderTrackerType.MAIN_READER)
+            tracker.start(ReaderTrackerType.FILTERED_LIST)
+            tracker.start(ReaderTrackerType.PAGED_POST)
+            tracker.start(ReaderTrackerType.SUBFILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 1))
-            tracker.stop(MAIN_READER)
+            tracker.stop(ReaderTrackerType.MAIN_READER)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 2))
-            tracker.stop(FILTERED_LIST)
+            tracker.stop(ReaderTrackerType.FILTERED_LIST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 3))
-            tracker.stop(PAGED_POST)
+            tracker.stop(ReaderTrackerType.PAGED_POST)
 
             whenever(dateProvider.getCurrentDate()).thenReturn(addToDate(startPoint, 4))
-            tracker.stop(SUBFILTERED_LIST)
+            tracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
 
         var expected = mapOf(
@@ -167,7 +171,7 @@ class ReaderTrackerTest {
     fun `tracker is not running if not started`() {
         tracker.setupTrackers()
 
-        assertThat(tracker.isRunning(MAIN_READER)).isEqualTo(false)
+        assertThat(tracker.isRunning(ReaderTrackerType.MAIN_READER)).isEqualTo(false)
     }
 
     @Test
@@ -176,9 +180,9 @@ class ReaderTrackerTest {
         val startPoint = Date()
         whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-        tracker.start(MAIN_READER)
+        tracker.start(ReaderTrackerType.MAIN_READER)
 
-        assertThat(tracker.isRunning(MAIN_READER)).isEqualTo(true)
+        assertThat(tracker.isRunning(ReaderTrackerType.MAIN_READER)).isEqualTo(true)
     }
 
     @Test
@@ -187,10 +191,10 @@ class ReaderTrackerTest {
         val startPoint = Date()
         whenever(dateProvider.getCurrentDate()).thenReturn(startPoint)
 
-        tracker.start(MAIN_READER)
-        tracker.stop(MAIN_READER)
+        tracker.start(ReaderTrackerType.MAIN_READER)
+        tracker.stop(ReaderTrackerType.MAIN_READER)
 
-        assertThat(tracker.isRunning(MAIN_READER)).isEqualTo(false)
+        assertThat(tracker.isRunning(ReaderTrackerType.MAIN_READER)).isEqualTo(false)
     }
 
     private fun addToDate(date: Date, seconds: Int): Date {

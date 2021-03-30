@@ -54,6 +54,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
@@ -87,6 +88,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject ReaderTracker mReaderTracker;
     @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
     @Inject ListScenarioUtils mListScenarioUtils;
 
@@ -424,12 +426,18 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         return fragment;
     }
 
-    public void showBlogPreviewActivity(long siteId) {
+    public void showBlogPreviewActivity(long siteId, @Nullable Boolean isFollowed) {
         if (isFinishing()) {
             return;
         }
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
+        ReaderActivityLauncher.showReaderBlogPreview(
+                this,
+                siteId,
+                isFollowed,
+                ReaderTracker.SOURCE_NOTIFICATION,
+                mReaderTracker
+        );
     }
 
     public void showPostActivity(long siteId, long postId) {
@@ -440,11 +448,11 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
-     public void showScanActivityForSite(long siteId) {
-         SiteModel site = getSiteOrToast(siteId);
-         if (site != null) {
+    public void showScanActivityForSite(long siteId) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
             ActivityLauncher.viewScan(this, site);
-         }
+        }
     }
 
     public void showStatsActivityForSite(long siteId, FormattableRangeType rangeType) {
@@ -490,7 +498,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             return;
         }
 
-         ActivityLauncher.viewBackupList(this, site);
+        ActivityLauncher.viewBackupList(this, site);
     }
 
     public void showWebViewActivityForUrl(String url) {
