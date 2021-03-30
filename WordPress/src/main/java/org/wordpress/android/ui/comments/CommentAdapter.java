@@ -2,14 +2,15 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.graphics.ColorUtils;
@@ -66,14 +67,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
-    private final int mStatusColorSpam;
-    private final int mStatusColorUnapproved;
-
     private int mSelectedItemBackground;
 
     private final int mAvatarSz;
-    private final String mStatusTextSpam;
-    private final String mStatusTextUnapproved;
 
     private OnDataLoadedListener mOnDataLoadedListener;
     private OnCommentPressedListener mOnCommentPressedListener;
@@ -90,8 +86,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTxtTitle;
         private final TextView mTxtComment;
-        private final TextView mTxtStatus;
-        private final TextView mTxtDate;
         private final ImageView mImgAvatar;
         private final ImageView mImgCheckmark;
         private final ViewGroup mContainerView;
@@ -100,8 +94,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(view);
             mTxtTitle = view.findViewById(R.id.title);
             mTxtComment = view.findViewById(R.id.comment);
-            mTxtStatus = view.findViewById(R.id.status);
-            mTxtDate = view.findViewById(R.id.text_date);
             mImgCheckmark = view.findViewById(R.id.image_checkmark);
             mImgAvatar = view.findViewById(R.id.avatar);
             mContainerView = view.findViewById(R.id.layout_container);
@@ -134,14 +126,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mContext = context;
 
         mSite = site;
-
-        mStatusColorSpam = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorError);
-        mStatusColorUnapproved = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorWarningDark);
-
-
-        mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
-        mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
-
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
 
         mSelectedItemBackground = ColorUtils
@@ -177,7 +161,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return holder;
     }
 
-    private String getFormattedTitle(CommentModel comment) {
+    private Spannable getFormattedTitle(CommentModel comment) {
         String formattedTitle;
         Context context = WordPress.getContext();
 
@@ -186,12 +170,27 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             author = comment.getAuthorName().trim();
         }
 
+        String postTitle = comment.getPostTitle().trim();
         if (!TextUtils.isEmpty(comment.getPostTitle())) {
-            formattedTitle = context.getString(R.string.comment_title, author, comment.getPostTitle().trim());
+            formattedTitle = context.getString(R.string.comment_title, author, postTitle);
         } else {
             formattedTitle = author;
         }
-        return formattedTitle;
+
+        SpannableStringBuilder string = new SpannableStringBuilder(formattedTitle);
+
+        int authorStartIndex = formattedTitle.indexOf(author);
+        int authorEndIndex = authorStartIndex + author.length();
+
+        int titleStartIndex = formattedTitle.indexOf(postTitle);
+        int titleEndIndex = titleStartIndex + postTitle.length();
+
+        string.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), authorStartIndex, authorEndIndex,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        string.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), titleStartIndex, titleEndIndex,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return string;
     }
 
     private String getAvatarForDisplay(CommentModel comment, int avatarSize) {
@@ -223,29 +222,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // Note: following operation can take some time, we could maybe cache the calculated objects (title, spanned
         // content) to make the list scroll smoother.
-        holder.mTxtTitle.setText(Html.fromHtml(getFormattedTitle(comment)));
+        holder.mTxtTitle.setText(getFormattedTitle(comment));
         holder.mTxtComment.setText(getSpannedContent(comment));
-        holder.mTxtDate.setText(getFormattedDate(comment, mContext));
-
-        // status is only shown for comments that haven't been approved
-        final boolean showStatus;
-        CommentStatus commentStatus = CommentStatus.fromString(comment.getStatus());
-        switch (commentStatus) {
-            case SPAM:
-                showStatus = true;
-                holder.mTxtStatus.setText(mStatusTextSpam);
-                holder.mTxtStatus.setTextColor(mStatusColorSpam);
-                break;
-            case UNAPPROVED:
-                showStatus = true;
-                holder.mTxtStatus.setText(mStatusTextUnapproved);
-                holder.mTxtStatus.setTextColor(mStatusColorUnapproved);
-                break;
-            default:
-                showStatus = false;
-                break;
-        }
-        holder.mTxtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
+//        holder.mTxtDate.setText(getFormattedDate(comment, mContext));
 
         int checkmarkVisibility;
         if (mEnableSelection && isItemSelected(position)) {
@@ -261,18 +240,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder.mImgCheckmark.getVisibility() != checkmarkVisibility) {
             holder.mImgCheckmark.setVisibility(checkmarkVisibility);
-        }
-
-        // comment text needs to be to the left of date/status when the title is a single line and
-        // the status is displayed or else the status may overlap the comment text - note that
-        // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
-        // check getLineCount() <= 1
-        boolean adjustComment = (showStatus && holder.mTxtTitle.getLineCount() <= 1);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mTxtComment.getLayoutParams();
-        if (adjustComment) {
-            params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
-        } else {
-            params.addRule(RelativeLayout.LEFT_OF, 0);
         }
 
         // request to load more comments when we near the end

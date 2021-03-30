@@ -41,45 +41,13 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_date_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:gravity="end"
-            android:orientation="vertical">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_date"
-                style="@style/ReaderTextView.Date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="date" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_sz_small"
-                android:visibility="gone"
-                tools:text="status"
-                tools:visibility="visible" />
-        </LinearLayout>
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/layout_date_status"
             android:layout_toEndOf="@+id/frame_avatar"
             android:ellipsize="end"
             android:gravity="start"
-            android:lines="2"
             android:maxLines="2"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
@@ -92,7 +60,7 @@
             android:layout_below="@+id/title"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_toEndOf="@+id/frame_avatar"
-            android:alpha="@dimen/material_emphasis_medium"
+            android:alpha="@dimen/material_emphasis_high_type"
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
