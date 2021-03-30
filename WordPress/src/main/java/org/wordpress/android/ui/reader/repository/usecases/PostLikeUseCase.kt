@@ -1,16 +1,11 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.AlreadyRunning
@@ -18,19 +13,17 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Unchanged
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class PostLikeUseCase @Inject constructor(
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()
@@ -38,8 +31,8 @@ class PostLikeUseCase @Inject constructor(
     suspend fun perform(
         post: ReaderPost,
         isAskingToLike: Boolean,
-        fromPostDetails: Boolean = false
-    ) = flow<PostLikeState> {
+        source: String
+    ) = flow {
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
@@ -55,7 +48,7 @@ class PostLikeUseCase @Inject constructor(
         }
 
         // track like event
-        trackEvent(request, post, fromPostDetails)
+        trackEvent(request, post, source)
 
         handleLocalDb(post, request)
     }
@@ -63,25 +56,25 @@ class PostLikeUseCase @Inject constructor(
     private fun trackEvent(
         request: PostLikeRequest,
         post: ReaderPost,
-        fromPostDetails: Boolean
+        source: String
     ) {
         if (request.isAskingToLike) {
-            val likedStat = if (fromPostDetails) {
-                READER_ARTICLE_DETAIL_LIKED
+            val likedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
             } else {
-                READER_ARTICLE_LIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_LIKED
             }
-            analyticsUtilsWrapper.trackWithReaderPostDetails(likedStat, post)
+            readerTracker.trackPost(likedStat, post, source)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
             readerPostActionsWrapper.bumpPageViewForPost(post)
         } else {
-            val unLikedStat = if (fromPostDetails) {
-                READER_ARTICLE_DETAIL_UNLIKED
+            val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
+                AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
             } else {
-                READER_ARTICLE_UNLIKED
+                AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
             }
-            analyticsUtilsWrapper.trackWithReaderPostDetails(unLikedStat, post)
+            readerTracker.trackPost(unLikedStat, post, source)
         }
     }
 

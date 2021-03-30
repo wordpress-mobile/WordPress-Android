@@ -20,8 +20,11 @@ sealed class ReaderCardUiState {
     data class ReaderWelcomeBannerCardUiState(@StringRes val titleRes: Int) : ReaderCardUiState()
 
     data class ReaderPostUiState(
+        val source: String,
         val postId: Long,
         val blogId: Long,
+        val feedId: Long,
+        val isFollowed: Boolean,
         val blogSection: ReaderBlogSectionUiState,
         val title: UiString?,
         val excerpt: String?, // mTxtText
@@ -115,7 +118,7 @@ sealed class ReaderCardUiState {
             val description: String?,
             val iconUrl: String?,
             val isFollowed: Boolean,
-            val onItemClicked: (Long, Long) -> Unit,
+            val onItemClicked: (Long, Long, Boolean) -> Unit,
             val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
         ) {
             val followContentDescription: UiStringRes by lazy {
