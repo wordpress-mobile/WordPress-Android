@@ -21,8 +21,10 @@ import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCom
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
+import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -40,6 +42,7 @@ class EngagedPeopleListFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var readerTracker: ReaderTracker
 
     private lateinit var viewModel: EngagedPeopleListViewModel
     private lateinit var recycler: RecyclerView
@@ -75,6 +78,12 @@ class EngagedPeopleListFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
+        initObservers()
+
+        viewModel.start(listScenario!!)
+    }
+
+    private fun initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, { state ->
             if (!isAdded) return@observe
 
@@ -101,7 +110,17 @@ class EngagedPeopleListFragment : Fragment() {
 
             when (event) {
                 is PreviewSiteById -> {
-                    ReaderActivityLauncher.showReaderBlogPreview(activity, event.siteId)
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            activity,
+                            event.siteId,
+                            false, // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
+                            if (activity is NotificationsDetailActivity) {
+                                ReaderTracker.SOURCE_NOTIFICATION
+                            } else {
+                                ReaderTracker.SOURCE_POST_DETAIL
+                            },
+                            readerTracker
+                    )
                 }
                 is PreviewSiteByUrl -> {
                     val url = event.siteUrl
@@ -126,8 +145,6 @@ class EngagedPeopleListFragment : Fragment() {
 
             showSnackbar(messageHolder)
         })
-
-        viewModel.start(listScenario!!)
     }
 
     private fun openUrl(context: Context, url: String) {
