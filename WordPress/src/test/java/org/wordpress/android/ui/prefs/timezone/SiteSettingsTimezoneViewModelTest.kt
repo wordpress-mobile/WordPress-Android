@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.timezone
 
 import android.content.Context
+import org.assertj.core.api.Assertions
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -21,36 +22,49 @@ class SiteSettingsTimezoneViewModelTest : BaseUnitTest() {
 
     @Test
     fun testSearchTimezones() {
-        viewModel.timezones.observeForever {}
+        var filteredList: List<TimezonesList>? = null
+        viewModel.timezones.observeForever {
+            filteredList = it
+        }
+
         viewModel.searchTimezones("Sydney")
-        assertEquals(viewModel.timezones.value, listOf<TimezonesList>())
+
+        Assertions.assertThat(filteredList).isNotNull
     }
 
     @Test
     fun testGetShowEmptyView() {
-        viewModel.showEmptyView.observeForever {}
+        var showEmptyView = false
+        viewModel.showEmptyView.observeForever {
+            showEmptyView = it
+        }
+
         viewModel.filterTimezones("")
-        assertEquals(viewModel.showEmptyView.value, true)
+
+        assertEquals(showEmptyView, true)
     }
 
     @Test
     fun testGetSelectedTimezone() {
-        viewModel.selectedTimezone.observeForever {}
-        viewModel.onTimezoneSelected("Australia/Sydney")
-        assertEquals(viewModel.selectedTimezone.value, "Australia/Sydney")
-    }
+        var selectedTimezone: String? = null
+        viewModel.selectedTimezone.observeForever {
+            selectedTimezone = it
+        }
 
-    @Test
-    fun testOnTimezoneSelected() {
-        viewModel.dismissBottomSheet.observeForever {}
         viewModel.onTimezoneSelected("Australia/Sydney")
-        assertEquals(viewModel.dismissBottomSheet.value, null)
+
+        Assertions.assertThat(selectedTimezone).isNotNull
     }
 
     @Test
     fun testOnSearchCancelled() {
-        viewModel.timezones.observeForever {}
+        var timezones: List<TimezonesList>? = null
+        viewModel.timezones.observeForever {
+            timezones = it
+        }
+
         viewModel.onSearchCancelled()
-        assertEquals(viewModel.timezones.value, listOf<TimezonesList>())
+
+        Assertions.assertThat(timezones).isNotNull
     }
 }
