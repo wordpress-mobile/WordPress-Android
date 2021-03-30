@@ -84,7 +84,6 @@ class EngagedPeopleListFragment : Fragment() {
 
             if (state.showEmptyState) {
                 uiHelpers.setTextOrHide(emptyView.title, state.emptyStateTitle)
-                uiHelpers.setImageOrHide(emptyView.image, state.emptyStateImage)
                 uiHelpers.setTextOrHide(emptyView.button, state.emptyStateButtonText)
                 emptyView.button.setOnClickListener { state.emptyStateAction?.invoke() }
 

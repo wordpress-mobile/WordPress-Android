@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import androidx.annotation.DrawableRes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -148,7 +147,6 @@ class GetLikesUseCase @Inject constructor(
                     orderedLikes,
                     EmptyStateData(
                             orderedLikes.isEmpty(),
-                            R.drawable.img_illustration_cloud_off_152dp,
                             UiStringRes(R.string.no_network_title)
                     )
             )
@@ -163,7 +161,6 @@ class GetLikesUseCase @Inject constructor(
                     orderedLikes,
                     EmptyStateData(
                             orderedLikes.isEmpty(),
-                            R.drawable.img_illustration_empty_results_216dp,
                             UiStringRes(R.string.get_likes_empty_state_title)
                     )
             )
@@ -213,7 +210,6 @@ class GetLikesUseCase @Inject constructor(
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
-                @DrawableRes val imageResId: Int,
                 val title: UiStringRes?
             )
         }

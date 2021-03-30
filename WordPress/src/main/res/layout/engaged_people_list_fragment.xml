@@ -22,7 +22,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recycler"
-        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
         app:aevButton="@string/retry"
         app:aevTitle="@string/media_empty_list"
         tools:visibility="visible" />

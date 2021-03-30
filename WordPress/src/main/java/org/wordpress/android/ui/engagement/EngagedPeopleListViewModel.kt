@@ -57,7 +57,6 @@ class EngagedPeopleListViewModel @Inject constructor(
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
         val showEmptyState: Boolean,
-        @DrawableRes val emptyStateImage: Int?,
         val emptyStateTitle: UiString?,
         val emptyStateAction: (() -> Unit)?,
         val emptyStateButtonText: UiString?
@@ -135,14 +134,12 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         var showEmptyState = false
-        var emptyStateImage: Int? = null
         var emptyStateTitle: UiString? = null
         var emptyStateAction: (() -> Unit)? = null
 
         if (updateLikesState is Failure) {
             updateLikesState.emptyStateData?.let {
                 showEmptyState = it.showEmptyState
-                emptyStateImage = it.imageResId
                 emptyStateTitle = it.title
                 emptyStateAction = ::onRefreshData
             }
@@ -152,7 +149,6 @@ class EngagedPeopleListViewModel @Inject constructor(
                 showLoading = updateLikesState is InitialLoading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
-                emptyStateImage = emptyStateImage,
                 emptyStateTitle = emptyStateTitle,
                 emptyStateAction = emptyStateAction,
                 emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
