@@ -26,7 +26,8 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
     }
 
     void initiateDiscovery() {
-        if (!NetworkUtils.checkConnection(getActivity())) {
+        if (mLoginBaseDiscoveryListener == null || !NetworkUtils.checkConnection(getActivity())) {
+            // Fragment was detached or there's no active network connection
             return;
         }
 

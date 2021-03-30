@@ -1,6 +1,5 @@
 package org.wordpress.android.login;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ public class SignupGoogleFragment extends GoogleFragment {
     private static final String ARG_FORCE_SIGNUP_AT_START = "ARG_FORCE_SIGNUP_AT_START";
 
     private ArrayList<Integer> mOldSitesIds;
-    private ProgressDialog mProgressDialog;
     private boolean mSignupRequested;
     private boolean mForceSignupAtStart;
 
@@ -64,8 +62,6 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
-        mProgressDialog = ProgressDialog.show(
-                getActivity(), null, getString(R.string.signup_with_google_progress), true, false, null);
         super.onAttach(context);
         Bundle args = getArguments();
         if (args != null) {
@@ -75,6 +71,11 @@ public class SignupGoogleFragment extends GoogleFragment {
             mPhotoUrl = args.getString(ARG_PHOTO_URL);
             mForceSignupAtStart = args.getBoolean(ARG_FORCE_SIGNUP_AT_START);
         }
+    }
+
+    @Override
+    protected String getProgressDialogText() {
+        return getString(R.string.signup_with_google_progress);
     }
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +90,6 @@ public class SignupGoogleFragment extends GoogleFragment {
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList(OLD_SITES_IDS, mOldSitesIds);
         outState.putBoolean(SIGN_UP_REQUESTED, mSignupRequested);
-    }
-
-    @Override
-    public void onDetach() {
-        dismissProgressDialog();
-        super.onDetach();
     }
 
     @Override
@@ -204,12 +199,6 @@ public class SignupGoogleFragment extends GoogleFragment {
                 }
 
                 break;
-        }
-    }
-
-    private void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
         }
     }
 

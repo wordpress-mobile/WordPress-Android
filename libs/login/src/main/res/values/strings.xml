@@ -3,11 +3,8 @@
     <string name="email_address">Email address</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link">Send link</string>
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
-    <string name="send_verification_email">Send verification email</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="or_type_your_password">Or type your password</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -20,12 +17,7 @@
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
     <string name="get_started">Get Started</string>
     <string name="next">Next</string>
-    <string name="open_mail">Open mail</string>
     <string name="check_email">Check email</string>
-    <string name="alternatively">Alternatively:</string>
-    <string name="enter_site_address_instead">Log in by entering your site address.</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
-    <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
@@ -43,15 +35,10 @@
     <string name="login_get_link_by_email">Get a login link by email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
-    <string name="connect_more">Connect another site</string>
-    <string name="connect_site">Connect a site</string>
     <string name="login_continue">Continue</string>
-    <string name="login_done">Done</string>
-    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
@@ -65,9 +52,6 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
-    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
-    <string name="login_email_client_not_found">Can\'t detect your email client app</string>
-    <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
@@ -78,23 +62,15 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="sign_up_label">Sign Up</string>
-    <string name="sign_up">Sign Up for WordPress.com</string>
-    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
-    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
-    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
-    <string name="enter_your_site_address">Enter your site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
@@ -109,7 +85,6 @@
     <string name="email_invalid">Enter a valid email address</string>
     <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="logging_in">Logging in</string>
-    <string name="forgot_password">Lost your password?</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="error_generic">An error occurred</string>
     <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
@@ -147,7 +122,6 @@
     <string name="selfhosted_site_login_title">Login credentials</string>
     <string name="verification_2fa_screen_title">Code verification</string>
 
-    <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
@@ -164,6 +138,4 @@
     <!-- Placeholder for notification channel to be used by login service notification.
      This resource must be overwritten in the host project with a real notification channel id it has configured. -->
     <string name="login_notification_channel_id">placeholder</string>
-
-    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
 </resources>

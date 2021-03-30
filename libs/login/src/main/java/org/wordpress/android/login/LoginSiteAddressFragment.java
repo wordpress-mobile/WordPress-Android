@@ -117,9 +117,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 discover();
             }
@@ -163,7 +162,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mLoginSiteAddressValidator.getIsValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override public void onChanged(Boolean enabled) {
-                getPrimaryButton().setEnabled(enabled);
+                getBottomButton().setEnabled(enabled);
             }
         });
         mLoginSiteAddressValidator.getErrorMessageResId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -217,7 +216,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void onEditorCommit() {
-        if (getPrimaryButton().isEnabled()) {
+        if (getBottomButton().isEnabled()) {
             discover();
         }
     }
@@ -385,7 +384,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                 handleConnectSiteInfoForWoo(event.info, hasJetpack);
             } else {
-                handleConnectSiteInfoForWordPress(event.info, hasJetpack);
+                handleConnectSiteInfoForWordPress(event.info);
             }
         }
     }
@@ -407,23 +406,21 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
     }
 
-    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
-        if (siteInfo.isWPCom || hasJetpack) {
-            // It's a WordPress.com or a connected Jetpack site
+    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo) {
+        if (siteInfo.isWPCom) {
+            // It's a Simple or Atomic site
             if (mLoginListener.getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
                 // We're only interested in self-hosted sites
-                if (hasJetpack) {
-                    // If Jetpack site, treat it as self-hosted and start the discovery process
-                    // Note: This also includes Atomic sites
+                if (siteInfo.hasJetpack) {
+                    // This is an Atomic site, so treat it as self-hosted and start the discovery process
                     initiateDiscovery();
                     return;
                 }
             }
-            // It's a WordPress.com or a connected Jetpack site, so treat it as such
             endProgressIfNeeded();
             mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
         } else {
-            // Not a WordPress.com or a connected Jetpack site
+            // It's a Jetpack or self-hosted site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
                 // We're only interested in WordPress.com accounts
                 showError(R.string.enter_wpcom_or_jetpack_site);

@@ -5,4 +5,8 @@
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="Theme.LoginFlow.TransparentStatusBar" parent="Theme.LoginFlow">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

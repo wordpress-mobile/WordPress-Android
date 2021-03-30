@@ -52,6 +52,11 @@ public class LoginGoogleFragment extends GoogleFragment {
     }
 
     @Override
+    protected String getProgressDialogText() {
+        return getString(R.string.logging_in);
+    }
+
+    @Override
     protected void startFlow() {
         if (!mLoginRequested) {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: startFlow");
