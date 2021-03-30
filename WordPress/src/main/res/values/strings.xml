@@ -10,7 +10,7 @@
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
-    <string name="no_network_title">No network available</string>
+    <string name="no_network_title">No network available.</string>
     <string name="no_network_message">There is no network available</string>
     <string name="request_failed_message">There was a problem handling the request. Please try again later.</string>
     <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
@@ -1466,8 +1466,8 @@
     </string-array>
 
     <!-- likes -->
-    <string name="get_likes_unknown_error">An unknown error occurred getting likes</string>
-    <string name="get_likes_empty_state_title">Error occurred getting likes</string>
+    <string name="get_likes_unknown_error">An unknown error occurred getting likes.</string>
+    <string name="get_likes_empty_state_title">An error occurred getting likes data</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
