@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
@@ -47,7 +48,9 @@ class GetLikesHandler @Inject constructor(
             is LikesData -> _likesStatusUpdate.postValue(state)
             is Failure -> {
                 _likesStatusUpdate.postValue(state)
-                _snackbarEvents.postValue(Event(SnackbarMessageHolder(state.error)))
+                if (state.failureType != NO_NETWORK || !state.emptyStateData.showEmptyState) {
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(state.error)))
+                }
             }
         }
     }

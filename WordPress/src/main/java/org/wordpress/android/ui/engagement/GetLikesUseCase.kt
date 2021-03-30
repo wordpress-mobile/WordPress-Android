@@ -206,7 +206,7 @@ class GetLikesUseCase @Inject constructor(
             val failureType: FailureType,
             val error: UiString,
             val cachedLikes: List<LikeModel>,
-            val emptyStateData: EmptyStateData? = null
+            val emptyStateData: EmptyStateData
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
