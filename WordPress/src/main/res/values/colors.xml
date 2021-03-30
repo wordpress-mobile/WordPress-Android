@@ -43,7 +43,7 @@
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/purple_20</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_10</color>
-    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_20</color>
+    <color name="login_prologue_background_circle_blue">@color/blue_20</color>
     <color name="login_prologue_background_circle_light_blue">@color/blue_5</color>
     <color name="login_prologue_background_circle_green">@color/green_5</color>
     <color name="login_prologue_background_circle_yellow">@color/yellow_10</color>
@@ -102,21 +102,21 @@
     <color name="neutral_80">@color/gray_80</color>
     <color name="neutral_90">@color/gray_90</color>
     <color name="neutral_100">@color/gray_100</color>
-    <color name="primary">@color/wordpress_blue_50</color>
-    <color name="primary_0">@color/wordpress_blue_0</color>
-    <color name="primary_5">@color/wordpress_blue_5</color>
-    <color name="primary_10">@color/wordpress_blue_10</color>
-    <color name="primary_20">@color/wordpress_blue_20</color>
-    <color name="primary_30">@color/wordpress_blue_30</color>
-    <color name="primary_40">@color/wordpress_blue_40</color>
-    <color name="primary_50">@color/wordpress_blue_50</color>
-    <color name="primary_60">@color/wordpress_blue_60</color>
-    <color name="primary_70">@color/wordpress_blue_70</color>
-    <color name="primary_80">@color/wordpress_blue_80</color>
-    <color name="primary_90">@color/wordpress_blue_90</color>
-    <color name="primary_100">@color/wordpress_blue_100</color>
-    <color name="primary_dark">@color/wordpress_blue_80</color>
-    <color name="primary_light">@color/wordpress_blue_30</color>
+    <color name="primary">@color/blue_50</color>
+    <color name="primary_0">@color/blue_0</color>
+    <color name="primary_5">@color/blue_5</color>
+    <color name="primary_10">@color/blue_10</color>
+    <color name="primary_20">@color/blue_20</color>
+    <color name="primary_30">@color/blue_30</color>
+    <color name="primary_40">@color/blue_40</color>
+    <color name="primary_50">@color/blue_50</color>
+    <color name="primary_60">@color/blue_60</color>
+    <color name="primary_70">@color/blue_70</color>
+    <color name="primary_80">@color/blue_80</color>
+    <color name="primary_90">@color/blue_90</color>
+    <color name="primary_100">@color/blue_100</color>
+    <color name="primary_dark">@color/blue_80</color>
+    <color name="primary_light">@color/blue_30</color>
     <color name="success">@color/green_50</color>
     <color name="success_0">@color/green_0</color>
     <color name="success_5">@color/green_5</color>
@@ -281,6 +281,8 @@
     <color name="woocommerce_purple_80">#3c2861</color>
     <color name="woocommerce_purple_90">#271b3d</color>
     <color name="woocommerce_purple_100">#140e1f</color>
+
+    <!-- Deprecated as of 2.3.0 -->
     <color name="wordpress_blue">#006088</color>
     <color name="wordpress_blue_0">#e6f1f5</color>
     <color name="wordpress_blue_5">#bedae6</color>
@@ -294,6 +296,7 @@
     <color name="wordpress_blue_80">#002c40</color>
     <color name="wordpress_blue_90">#001d2d</color>
     <color name="wordpress_blue_100">#00101c</color>
+
     <color name="yellow">#907300</color>
     <color name="yellow_0">#f5efe4</color>
     <color name="yellow_5">#f5e1b3</color>

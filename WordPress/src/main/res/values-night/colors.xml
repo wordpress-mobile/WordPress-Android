@@ -42,7 +42,7 @@
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/green_60</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
-    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_60</color>
+    <color name="login_prologue_background_circle_blue">@color/blue_60</color>
     <color name="login_prologue_background_circle_light_blue">@color/blue_60</color>
     <color name="login_prologue_background_circle_green">@color/green_60</color>
     <color name="login_prologue_background_circle_yellow">@color/yellow_60</color>
