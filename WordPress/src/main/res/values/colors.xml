@@ -282,7 +282,7 @@
     <color name="woocommerce_purple_90">#271b3d</color>
     <color name="woocommerce_purple_100">#140e1f</color>
 
-    <!-- Deprecated as of 2.3.0 -->
+    <!-- Deprecated as of 2.4.0 -->
     <color name="wordpress_blue">#006088</color>
     <color name="wordpress_blue_0">#e6f1f5</color>
     <color name="wordpress_blue_5">#bedae6</color>
