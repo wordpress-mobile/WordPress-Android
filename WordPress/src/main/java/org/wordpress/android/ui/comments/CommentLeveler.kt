@@ -4,13 +4,14 @@ import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.models.CommentList
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import java.util.ArrayList
 
 /**
  * Adaptation of ReaderCommentLeveler. We should combine them together as part of Comment Unification.
  */
 class CommentLeveler(private val mComments: List<CommentModel>) {
-    fun createLevelList(): CommentList {
-        val result = CommentList()
+    fun createLevelList(): ArrayList<CommentModel> {
+        val result = ArrayList<CommentModel>()
 
         // reset all levels, and add root comments to result
         for (comment in mComments) {
@@ -42,7 +43,7 @@ class CommentLeveler(private val mComments: List<CommentModel>) {
      * walk comments in the passed list that have the passed level and add their children
      * beneath them
      */
-    private fun walkCommentsAtLevel(comments: CommentList, level: Int): Boolean {
+    private fun walkCommentsAtLevel(comments: ArrayList<CommentModel>, level: Int): Boolean {
         var hasChanges = false
         var index = 0
         while (index < comments.size) {

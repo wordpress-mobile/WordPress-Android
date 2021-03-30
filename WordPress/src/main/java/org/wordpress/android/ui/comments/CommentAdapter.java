@@ -279,7 +279,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             params.addRule(RelativeLayout.LEFT_OF, 0);
         }
 
-        // request to load more comments when we near the end
+        // request to load more comments when we near the end (UNREPLIED filter does not have a pagination)
         if (commentStatus != CommentStatus.UNREPLIED && mOnLoadMoreListener != null && position >= getItemCount() - 1
             && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
@@ -449,8 +449,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
             LoadCommentsTaskParameters parameters = params[0];
             int numOfCommentsToFetch;
+            // UNREPLIED filter has no paging, so we always request MAX_COMMENTS_IN_RESPONSE
             if (mStatusFilter == CommentStatus.UNREPLIED) {
-                numOfCommentsToFetch = 100;
+                numOfCommentsToFetch = CommentsListFragment.MAX_COMMENTS_IN_RESPONSE;
             } else if (parameters.mIsLoadingCache) {
                 numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
             } else if (parameters.mIsReloadingContent) {
@@ -487,21 +488,20 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             AccountModel account = mAccountStore.getAccount();
             String myEmail = account.getEmail();
 
-
             CommentLeveler leveler = new CommentLeveler(comments);
-            CommentList leveledComments = leveler.createLevelList();
+            ArrayList<CommentModel> leveledComments = leveler.createLevelList();
 
-            // get all the comments without children
             ArrayList<CommentModel> topLevelComments = new ArrayList<>();
             for (CommentModel comment : leveledComments) {
+                // only check top level comments
                 if (comment.level == 0) {
                     ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
-
-                    if (childrenComments.isEmpty() && !comment.getAuthorEmail().equals(myEmail)) {
+                    // comment is not mine and has no replies
+                    if (!comment.getAuthorEmail().equals(myEmail) && childrenComments.isEmpty()) {
                         topLevelComments.add(comment);
-                    } else if (!comment.getAuthorEmail().equals(myEmail)) {
+                    } else if (!comment.getAuthorEmail().equals(myEmail)) {  // comment is not mine and has replies
                         boolean hasMyReplies = false;
-                        for (CommentModel childrenComment : childrenComments) {
+                        for (CommentModel childrenComment : childrenComments) { // check if any replies are mine
                             if (childrenComment.getAuthorEmail().equals(myEmail)) {
                                 hasMyReplies = true;
                                 break;

@@ -54,6 +54,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 public class CommentsListFragment extends ViewPagerFragment {
     static final int COMMENTS_PER_PAGE = 30;
+    static final int MAX_COMMENTS_IN_RESPONSE = 100;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
     static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
     static final String AUTO_REFRESHED_KEY = "has_auto_refreshed";
@@ -296,7 +297,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
                             CommentStatus commentStatus;
-                            // for purposes of opening comment details UNREPLIED should be treated as ALL
+                            // for purposes of comment details UNREPLIED should be treated as ALL
                             if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
                                 commentStatus = CommentStatusCriteria.ALL.toCommentStatus();
                             } else {
@@ -503,7 +504,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         mIsUpdatingComments = true;
         if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
             mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                    new FetchCommentsPayload(mSite, CommentStatus.ALL, 100, 0)));
+                    new FetchCommentsPayload(mSite, CommentStatus.ALL, MAX_COMMENTS_IN_RESPONSE, 0)));
         } else {
             mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
                     new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
