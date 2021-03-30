@@ -617,10 +617,10 @@
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_paging_title">Paging</string>
-    <string name="site_settings_whitelist_title">Automatically approve</string>
+    <string name="site_settings_allowlist_title">Automatically approve</string>
     <string name="site_settings_multiple_links_title">Links in comments</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
-    <string name="site_settings_blacklist_title">Blacklist</string>
+    <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
@@ -698,7 +698,7 @@
     <string name="jetpack_send_wp_notifications_title">Send push notifications</string>
     <string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
     <string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
-    <string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
+    <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
     <string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
@@ -709,9 +709,9 @@
     <string name="site_settings_privacy_hidden_summary">Hidden</string>
     <string name="site_settings_privacy_private_summary">Private</string>
     <string name="site_settings_threading_summary">%d levels</string>
-    <string name="site_settings_whitelist_all_summary">Comments from all users</string>
-    <string name="site_settings_whitelist_known_summary">Comments from known users</string>
-    <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
+    <string name="site_settings_allowlist_all_summary">Comments from all users</string>
+    <string name="site_settings_allowlist_known_summary">Comments from known users</string>
+    <string name="site_settings_allowlist_none_summary" translatable="false">@string/none</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
 
@@ -796,10 +796,10 @@
     <string name="site_settings_paging_hint">Display comments in chunks of a specified size</string>
     <string name="site_settings_identity_required_hint">Comment author must fill out name and e-mail</string>
     <string name="site_settings_user_account_required_hint">Users must be registered and logged in to comment</string>
-    <string name="site_settings_whitelist_hint">Comment author must have a previously approved comment</string>
+    <string name="site_settings_allowlist_hint">Comment author must have a previously approved comment</string>
     <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
     <string name="site_settings_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
-    <string name="site_settings_blacklist_hint">Comments that match a filter are marked as spam</string>
+    <string name="site_settings_denylist_hint">Comments that match a filter are marked as spam</string>
 
     <!-- Related Posts -->
     <string name="site_settings_rp_switch_title">Show Related Posts</string>
@@ -818,7 +818,7 @@
     <string name="site_settings_learn_more_header" translatable="false">@string/learn_more</string>
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
-    <!-- List Editors (Blacklist, Hold for Moderation) -->
+    <!-- List Editors (Denylist, Hold for Moderation) -->
     <string name="site_settings_list_editor_summary_one">1 item</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
 
@@ -826,8 +826,8 @@
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_denylist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_jetpack_allowlist_description">You may mark an IP address (or series of addresses) as \"Always allowed\", preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 
     <!-- Dialogs -->
     <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
@@ -1372,12 +1372,12 @@
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
-    <string name="notification_settings_master_status_on">On</string>
-    <string name="notification_settings_master_status_off">Off</string>
-    <string name="notification_settings_master_hint_on">Disable notifications</string>
-    <string name="notification_settings_master_hint_off">Enable notifications</string>
-    <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
-    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_main_status_on">On</string>
+    <string name="notification_settings_main_status_off">Off</string>
+    <string name="notification_settings_main_hint_on">Disable notifications</string>
+    <string name="notification_settings_main_hint_off">Enable notifications</string>
+    <string name="notification_settings_main_off_title">To receive notifications on this device, turn Notification Settings on.</string>
+    <string name="notification_settings_main_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
     <string name="notification_settings_category_followed_sites">Followed Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">All My Followed Sites</string>
@@ -1416,15 +1416,15 @@
     <string name="notification_settings_followed_dialog_email_comments">Email me new comments</string>
     <string name="notification_settings_followed_dialog_title">Notifications</string>
 
-    <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
-    <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
-    <string name="notifications_tab_dialog_master_hint_off">Enable notifications display on notifications tab for this site</string>
-    <string name="notifications_tab_dialog_master_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
-    <string name="notifications_tab_dialog_master_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
+    <string name="notifications_tab_dialog_main_status_on">Notifications for this site</string>
+    <string name="notifications_tab_dialog_main_status_off">Notifications for this site</string>
+    <string name="notifications_tab_dialog_main_hint_on">Disable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_main_hint_off">Enable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_main_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
+    <string name="notifications_tab_dialog_main_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
 
-    <string name="master_switch_default_title_on">On</string>
-    <string name="master_switch_default_title_off">Off</string>
+    <string name="main_switch_default_title_on">On</string>
+    <string name="main_switch_default_title_off">Off</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1900,8 +1900,6 @@
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
-    <string name="reader_btn_bookmark">Save</string>
-    <string name="reader_btn_bookmarked">Saved</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
@@ -2705,7 +2703,7 @@
 
     <!-- Signup -->
     <string name="sign_up_label">Sign Up</string>
-    <string name="sign_up">Sign Up for WordPress.com</string>
+    <string name="sign_up" tools:ignore="UnusedResources">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
@@ -3034,8 +3032,6 @@
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
-    <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
-    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
@@ -3214,6 +3210,11 @@
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
+    <string name="gutenberg_native_a_link_to_a_category" tools:ignore="UnusedResources">A link to a category.</string>
+    <string name="gutenberg_native_a_link_to_a_page" tools:ignore="UnusedResources">A link to a page.</string>
+    <string name="gutenberg_native_a_link_to_a_post" tools:ignore="UnusedResources">A link to a post.</string>
+    <string name="gutenberg_native_a_link_to_a_tag" tools:ignore="UnusedResources">A link to a tag.</string>
+    <string name="gutenberg_native_a_link_to_a_url" tools:ignore="UnusedResources">A link to a URL.</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
@@ -3250,6 +3251,8 @@
     <!-- translators: displayed right after the block is removed. -->
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Block removed</string>
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
+    <string name="gutenberg_native_buttongroup" tools:ignore="UnusedResources">ButtonGroup</string>
+    <string name="gutenberg_native_category_link" tools:ignore="UnusedResources">Category Link</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
     <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Choose audio</string>
@@ -3268,6 +3271,7 @@
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
+    <string name="gutenberg_native_document_outline" tools:ignore="UnusedResources">document outline</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
     <!-- translators: accessibility text (hint for focusing a slider) -->
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider" tools:ignore="UnusedResources">Double tap to change the value using slider</string>
@@ -3348,12 +3352,14 @@
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
+    <string name="gutenberg_native_page_link" tools:ignore="UnusedResources">Page Link</string>
     <!-- translators: accessibility text. empty page title. -->
     <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Page title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the page title. -->
     <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Page title. %s</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
+    <string name="gutenberg_native_post_link" tools:ignore="UnusedResources">Post Link</string>
     <!-- translators: accessibility text. empty post title. -->
     <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Post title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the post title. -->
@@ -3379,6 +3385,7 @@
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Search Settings</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
     <string name="gutenberg_native_select_item" tools:ignore="UnusedResources">Select item</string>
@@ -3386,6 +3393,10 @@
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h" tools:ignore="UnusedResources">Summarize your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
+    <string name="gutenberg_native_summary" tools:ignore="UnusedResources">summary</string>
+    <string name="gutenberg_native_table_of_contents" tools:ignore="UnusedResources">Table of Contents</string>
+    <string name="gutenberg_native_tag_link" tools:ignore="UnusedResources">Tag Link</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>

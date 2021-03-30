@@ -156,16 +156,12 @@ Language: eu_ES
     <string name="site_settings_language_hint">Blog honen hizkuntza nagusia</string>
     <string name="site_settings_tagline_hint">Deskripzio labur bat edo esaldi burutsu bat zure bloga deskribatzeko</string>
     <string name="site_settings_title_hint">Azaldu hitz gutxitan gune hau zertaz doan</string>
-    <string name="site_settings_whitelist_known_summary">Erabiltzaile ezagunen iruzkinak</string>
-    <string name="site_settings_whitelist_all_summary">Erabiltzaile guztien iruzkinak</string>
     <string name="site_settings_privacy_private_summary">Pribatua</string>
     <string name="site_settings_privacy_hidden_summary">Ezkutua</string>
     <string name="site_settings_delete_site_title">Ezabatu gunea</string>
     <string name="site_settings_privacy_public_summary">Publikoa</string>
-    <string name="site_settings_blacklist_title">Zerrenda beltza</string>
     <string name="site_settings_moderation_hold_title">Moderatzeko gelditu</string>
     <string name="site_settings_multiple_links_title">Estekak iruzkinetan</string>
-    <string name="site_settings_whitelist_title">Automatikoki onartu</string>
     <string name="site_settings_threading_title">Hariztaketa</string>
     <string name="site_settings_paging_title">Orrikatzea</string>
     <string name="site_settings_allow_comments_title">Baimendu iruzkinak</string>

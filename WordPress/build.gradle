@@ -17,6 +17,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://www.jitpack.io" }
     maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.application'
@@ -58,9 +59,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-283"
+            versionName "alpha-285"
         }
-        versionCode 1015
+        versionCode 1022
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -72,15 +73,12 @@ android {
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
-        buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
-        buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
         buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "SCAN_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
-        buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
     }
@@ -109,12 +107,11 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.9-rc-3"
+                versionName "17.0-rc-2"
             }
-            versionCode 1014
+            versionCode 1021
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
-            buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
@@ -127,8 +124,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
-            // Enable this for testing consolidated media picker
-            // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -502,9 +497,6 @@ if (project.hasProperty("debugStoreFile")) {
         }
     }
 }
-
-def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
-assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
 
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'

@@ -56,24 +56,29 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
         return new ReaderWebView(getActivity());
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // check network again to detect disconnects during loading + configuration change
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+            if (post != null) {
+                ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
+                ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
+                ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
+                    @Override public void onPageFinished(WebView view, String url) {
+                        selfRemoveFragment();
+                    }
+                });
 
-            ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
-            ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
-            ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
-                @Override public void onPageFinished(WebView view, String url) {
-                    selfRemoveFragment();
-                }
-            });
-
-            ReaderPostRenderer rendered =
-                    new ReaderPostRenderer((ReaderWebView) view, post, mReaderCssProvider);
-            rendered.beginRender(); // rendering will cache post content using native WebView implementation.
+                ReaderPostRenderer rendered =
+                        new ReaderPostRenderer((ReaderWebView) view, post, mReaderCssProvider);
+                rendered.beginRender(); // rendering will cache post content using native WebView implementation.
+            } else {
+                // abort mission if post is not available
+                selfRemoveFragment();
+            }
         } else {
             // abort mission if no network is available
             selfRemoveFragment();

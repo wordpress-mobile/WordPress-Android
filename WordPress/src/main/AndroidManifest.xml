@@ -100,7 +100,7 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/Theme.LoginFlow.TransparentStatusBar"
+            android:theme="@style/LoginTheme.TransparentStatusBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -120,17 +120,17 @@
         <activity
             android:name=".ui.accounts.LoginEpilogueActivity"
             android:label="@string/login_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.PostSignupInterstitialActivity"
             android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/Theme.LoginFlow"
+            android:theme="@style/LoginTheme"
             />
 
         <activity

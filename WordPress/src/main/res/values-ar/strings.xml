@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-09 21:13:12+0000
+Translation-Revision-Date: 2021-03-23 18:56:06+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -875,14 +875,6 @@ Language: ar
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="notifications_tab_dialog_switch_desc">الإشعارات</string>
-    <string name="master_switch_default_title_off">إيقاف التشغيل</string>
-    <string name="master_switch_default_title_on">تشغيل</string>
-    <string name="notifications_tab_dialog_master_off_message">يؤدي إيقاف تشغيل تنبيهات هذا الموقع إلى تعطيل التنبيهات المعروضة في علامة تبويب \"التنبيهات\" في هذا الموقع. يمكنك ضبط نوع التنبيه الذي تراه بعد تشغيل التنبيهات لهذا الموقع.</string>
-    <string name="notifications_tab_dialog_master_off_title">لرؤية التنبيهات في علامة تبويب \"التنبيهات\" في هذا الموقع، شغِّل التنبيهات لهذا الموقع.</string>
-    <string name="notifications_tab_dialog_master_hint_off">تمكين التنبيهات المعروضة في علامة تبويب \"التنبيهات\" في هذا الموقع</string>
-    <string name="notifications_tab_dialog_master_hint_on">تعطيل التنبيهات المعروضة في علامة تبويب \"التنبيهات\" في هذا الموقع</string>
-    <string name="notifications_tab_dialog_master_status_off">التنبيهات لهذا الموقع</string>
-    <string name="notifications_tab_dialog_master_status_on">التنبيهات لهذا الموقع</string>
     <string name="pick_media">إضافة صورة أو فيديو</string>
     <string name="error_post_not_submitted_retrying">لم نتمكن من إرسال هذه المقالة للمراجعة، ولكننا سنحاول مرة أخرى لاحقًا. </string>
     <string name="error_post_not_scheduled_retrying">لم نتمكن من جدولة هذه المقالة، ولكننا سنحاول مرة أخرى لاحقًا.</string>
@@ -1204,8 +1196,6 @@ Language: ar
     <string name="site_creation_error_generic_subtitle">حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة مجددًا</string>
     <string name="site_creation_error_generic_title">حدثت مشكلة</string>
     <string name="site_creation_fetch_suggestions_error_unknown">حدثت مشكلة</string>
-    <string name="site_creation_segments_subtitle">يساعدنا هذا على إجراء توصيات. لكن هذا الأمر لا يتوقف أبدًا — فجميع المواقع تتطور!</string>
-    <string name="site_creation_segments_title">أخبرنا بنوع الموقع الذي ترغب في إنشائه</string>
     <string name="new_site_creation_preview_title">تم إنشاء موقعك!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d من %2$d</string>
     <string name="new_site_creation_screen_title_general">إنشاء موقع</string>
@@ -1455,12 +1445,10 @@ Language: ar
     <string name="reader_empty_saved_posts_title">لم يتم حفظ أي مقالات — حتى الآن!</string>
     <string name="reader_bookmark_snack_title">تم حفظ المقالة</string>
     <string name="reader_bookmark_snack_btn">عرض الكل</string>
-    <string name="reader_btn_bookmarked">تم الحفظ</string>
-    <string name="reader_btn_bookmark">حفظ</string>
     <string name="reader_remove_bookmark">حذف من المقالات المحفوظة</string>
     <string name="reader_add_bookmark">إضافة إلى المقالات المحفوظة</string>
     <string name="reader_save_for_later_title">المقالات المحفوظة</string>
-    <string name="removed">تمت إزالته</string>
+    <string name="removed">تمت الإزالة</string>
     <string name="my_site_icon_content_description">تغيير رمز الموقع</string>
     <string name="my_site_icon_dialog_cancel_button">إلغاء</string>
     <string name="my_site_icon_dialog_remove_button">إزالة</string>
@@ -1809,12 +1797,10 @@ Language: ar
     <string name="jetpack_disconnect_confirm">قطع الاتصال</string>
     <string name="jetpack_disconnect_confirmation_message">هل تريد بالتأكيد قطع اتصال Jetpack بهذا الموقع؟</string>
     <string name="jetpack_disconnect_pref_title">\"قطع الاتصال بـ WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">يمكنك إدراج عنوان IP أو سلسلة عناوين في قائمة السماح مما يعمل على منع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">يلزم إجراء مصادقة من خطوتين</string>
     <string name="jetpack_match_wpcom_via_email_title">مطابقة الحسابات باستخدام البريد الإلكتروني</string>
     <string name="jetpack_allow_wpcom_sign_in_title">السماح بتسجيل الدخول إلى WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">تسجيل الدخول إلى WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">عناوين IP المدرجة في قائمة السماح</string>
     <string name="jetpack_prevent_brute_force_title">حظر محاولات تسجيل الدخول الضارة</string>
     <string name="jetpack_prevent_brute_force_category_title">الحماية من هجمات القوة الغاشمة</string>
     <string name="jetpack_send_wp_notifications_title">إرسال تنبيهات الدفع</string>
@@ -1855,12 +1841,6 @@ Language: ar
     <string name="notification_settings_category_other">أخرى</string>
     <string name="notification_settings_item_your_sites_all_your_sites">كل مواقعي</string>
     <string name="notification_settings_category_your_sites">مواقعك</string>
-    <string name="notification_settings_master_off_message">سيؤدي إيقاف تشغيل إعدادات التنبيهات إلى تعطيل جميع التنبيهات الصادرة عن هذا التطبيق، بغض النظر عن النوع. يمكنك ضبط نوع التنبيه الذي تحصل عليه بعد تشغيل إعدادات التنبيهات.</string>
-    <string name="notification_settings_master_off_title">لتلقي تنبيهات على هذا الجهاز، شغّل إعدادات التنبيهات.</string>
-    <string name="notification_settings_master_hint_off">تمكين الإشعارات</string>
-    <string name="notification_settings_master_hint_on">تعطيل التنبيهات</string>
-    <string name="notification_settings_master_status_off">إيقاف التشغيل</string>
-    <string name="notification_settings_master_status_on">تشغيل</string>
     <string name="max_video_resolution">أقصى حجم للفيديو</string>
     <string name="max_thumbnail_px_size">أقصى حجم للصورة</string>
     <string name="error_upload_post_media_param">حدث خطأ عند رفع الوسائط في هذه المقالة: %s.</string>
@@ -2313,7 +2293,6 @@ Language: ar
     <string name="site_settings_paging_dialog_description">تحديد مناقشات التعليقات في صفحات متعددة.</string>
     <string name="site_settings_paging_dialog_header">التعليقات لكل صفحة</string>
     <string name="site_settings_close_after_dialog_title">إغلاق التعليق</string>
-    <string name="site_settings_blacklist_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم وضع علامة عليه باعتباره تعليقًا مزعجًا. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة \"بريس\" كلمة \"ووردبريس\".</string>
     <string name="site_settings_hold_for_moderation_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم حجزه في قائمة انتظار الإدارة. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة \"بريس\" كلمة \"ووردبريس\".</string>
     <string name="site_settings_list_editor_input_hint">أدخل كلمة أو عبارة</string>
     <string name="site_settings_list_editor_no_items_text">لا توجد عناصر</string>
@@ -2328,10 +2307,8 @@ Language: ar
     <string name="site_settings_rp_show_header_title">عرض الترويسة</string>
     <string name="site_settings_rp_switch_summary">تعرض المقالات ذات الصلة المحتوى ذا الصلة من موقعك أسفل مقالاتك.</string>
     <string name="site_settings_rp_switch_title">عرض المقالات ذات الصلة</string>
-    <string name="site_settings_blacklist_hint">يتم وضع علامة على التعليقات التي تتطابق مع عامل التصفية باعتبارها بريدًا مزعجًا</string>
     <string name="site_settings_moderation_hold_hint">يتم وضع التعليقات التي تتطابق مع عامل التصفية في قائمة انتظار الإدارة</string>
     <string name="site_settings_multiple_links_hint">يتجاهل حد الرابط من المستخدمين المعروفين</string>
-    <string name="site_settings_whitelist_hint">يجب أن يملك صاحب التعليق تعليقات سابقة</string>
     <string name="site_settings_user_account_required_hint">يجب على الزوار التسجيل ليتمكنوا من التعليق</string>
     <string name="site_settings_identity_required_hint">يجب على كاتب التعليق كتابة الاسم والبريد الإلكتروني</string>
     <string name="site_settings_paging_hint">عرض التعليقات في أجزاء من الحجم المحدد</string>
@@ -2354,17 +2331,13 @@ Language: ar
     <string name="site_settings_address_hint">تغيير عنوانك غير مدعوم حاليًا</string>
     <string name="site_settings_tagline_hint">وصف موجز أو عبارة جذابة يراد بها وصف مدونتك</string>
     <string name="site_settings_title_hint">بكلمات قليلة، اكتب نبذة موجزة عن هذا الموقع</string>
-    <string name="site_settings_whitelist_known_summary">تعليقات من مستخدمين معروفين</string>
-    <string name="site_settings_whitelist_all_summary">تعليقات من جميع المستخدمين</string>
     <string name="site_settings_threading_summary">مستويات %d</string>
     <string name="site_settings_privacy_private_summary">خاص</string>
     <string name="site_settings_privacy_hidden_summary">مخفي</string>
     <string name="site_settings_privacy_public_summary">عام</string>
     <string name="site_settings_delete_site_title">حذف الموقع</string>
-    <string name="site_settings_blacklist_title">قائمة الحظر</string>
     <string name="site_settings_moderation_hold_title">احتجاز من أجل الإدارة</string>
     <string name="site_settings_multiple_links_title">الروابط في التعليقات</string>
-    <string name="site_settings_whitelist_title">الموافقة تلقائيًا</string>
     <string name="site_settings_paging_title">ترقيم الصفحات</string>
     <string name="site_settings_threading_title">مؤشر الترابط</string>
     <string name="site_settings_sort_by_title">فرز حسب</string>

@@ -242,17 +242,6 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
-    public static void launchFileLibrary(Activity activity, boolean multiSelect, int requestCode) {
-        switch (requestCode) {
-            case RequestCodes.FILE_LIBRARY:
-                activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect), requestCode);
-                break;
-            case RequestCodes.AUDIO_LIBRARY:
-                activity.startActivityForResult(prepareAudioLibraryIntent(activity, multiSelect), requestCode);
-                break;
-        }
-    }
-
     public static void launchChooserWithContext(
             Activity activity,
             OpenSystemPicker openSystemPicker,
@@ -276,16 +265,6 @@ public class WPMediaUtils {
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
         return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
                 new MimeTypes().getVideoAndImageTypesOnly(), R.string.pick_media);
-    }
-
-    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_OPEN_DOCUMENT, "*/*",
-                new MimeTypes().getAllTypes(), R.string.pick_file);
-    }
-
-    private static Intent prepareAudioLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
-                new MimeTypes().getAudioTypesOnly(), R.string.pick_audio);
     }
 
     private static Intent prepareIntent(Context context, boolean multiSelect, String action, String intentType,

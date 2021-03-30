@@ -21,6 +21,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -98,7 +99,11 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
                 viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
                     if (range != null) {
-                        formattableContentClickHandler.onClick(activity, range)
+                        formattableContentClickHandler.onClick(
+                                activity,
+                                range,
+                                ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
+                        )
                     }
                 })
 
