@@ -210,7 +210,7 @@ class GetLikesUseCase @Inject constructor(
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
-                val title: UiStringRes?
+                val title: UiStringRes? = null
             )
         }
     }
