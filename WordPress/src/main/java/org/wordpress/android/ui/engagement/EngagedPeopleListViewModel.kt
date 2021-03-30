@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
