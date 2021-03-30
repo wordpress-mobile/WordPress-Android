@@ -150,39 +150,41 @@
     <color name="warning_dark">@color/yellow_40</color>
     <color name="warning_light">@color/yellow_5</color>
 
-    <!-- STUDIO 2.2.0 -->
-    <color name="blue">#2271b1</color>
-    <color name="blue_0">#e9eff5</color>
-    <color name="blue_5">#c5d9ed</color>
-    <color name="blue_10">#9ec2e6</color>
-    <color name="blue_20">#72aee6</color>
-    <color name="blue_30">#5198d9</color>
-    <color name="blue_40">#3582c4</color>
-    <color name="blue_50">#2271b1</color>
-    <color name="blue_60">#135e96</color>
-    <color name="blue_70">#0a4b78</color>
-    <color name="blue_80">#043959</color>
-    <color name="blue_90">#01263a</color>
-    <color name="blue_100">#00131c</color>
-    <color name="celadon">#007e65</color>
+    <!-- STUDIO 2.5.0 -->
+    <color name="blue">#0675c4</color>
+    <color name="blue_0">#e9f0f5</color>
+    <color name="blue_5">#bbe0fa</color>
+    <color name="blue_10">#91caf2</color>
+    <color name="blue_20">#68b3e8</color>
+    <color name="blue_30">#399ce3</color>
+    <color name="blue_40">#1689db</color>
+    <color name="blue_50">#0675c4</color>
+    <color name="blue_60">#055d9c</color>
+    <color name="blue_70">#044b7a</color>
+    <color name="blue_80">#02395c</color>
+    <color name="blue_90">#01283d</color>
+    <color name="blue_100">#001621</color>
+
+    <color name="celadon">#008763</color>
     <color name="celadon_0">#e4f2ed</color>
-    <color name="celadon_5">#a7e8d4</color>
-    <color name="celadon_10">#63d6b6</color>
-    <color name="celadon_20">#2ebd99</color>
-    <color name="celadon_30">#09a884</color>
-    <color name="celadon_40">#009172</color>
-    <color name="celadon_50">#007e65</color>
-    <color name="celadon_60">#006753</color>
-    <color name="celadon_70">#005042</color>
-    <color name="celadon_80">#003b30</color>
-    <color name="celadon_90">#002721</color>
-    <color name="celadon_100">#001c17</color>
+    <color name="celadon_5">#a7e8d3</color>
+    <color name="celadon_10">#66deb9</color>
+    <color name="celadon_20">#31cc9f</color>
+    <color name="celadon_30">#09b585</color>
+    <color name="celadon_40">#009e73</color>
+    <color name="celadon_50">#008763</color>
+    <color name="celadon_60">#007053</color>
+    <color name="celadon_70">#005c44</color>
+    <color name="celadon_80">#004533</color>
+    <color name="celadon_90">#003024</color>
+    <color name="celadon_100">#001c15</color>
+
     <color name="gray">#646970</color>
     <color name="gray_0">#f6f7f7</color>
     <color name="gray_5">#dcdcde</color>
     <color name="gray_10">#c3c4c7</color>
     <color name="gray_20">#a7aaad</color>
-    <color name="gray_30">#8e9196</color>
+    <color name="gray_30">#8c8f94</color>
     <color name="gray_40">#787c82</color>
     <color name="gray_50">#646970</color>
     <color name="gray_60">#50575e</color>
@@ -203,7 +205,7 @@
     <color name="green_80">#00450c</color>
     <color name="green_90">#003008</color>
     <color name="green_100">#001c05</color>
-    <color name="jetpack_green">#00BE28</color>
+    <color name="jetpack_green">#069e08</color>
     <color name="jetpack_green_0">#f0f2eb</color>
     <color name="jetpack_green_5">#d0e6b8</color>
     <color name="jetpack_green_10">#9dd977</color>
@@ -268,6 +270,7 @@
     <color name="red_80">#691c1c</color>
     <color name="red_90">#451313</color>
     <color name="red_100">#240a0a</color>
+
     <color name="woocommerce_purple">#7f54b3</color>
     <color name="woocommerce_purple_0">#f7edf7</color>
     <color name="woocommerce_purple_5">#e5cfe8</color>
@@ -294,19 +297,19 @@
     <color name="wordpress_blue_80">#002c40</color>
     <color name="wordpress_blue_90">#001d2d</color>
     <color name="wordpress_blue_100">#00101c</color>
-    <color name="yellow">#907300</color>
-    <color name="yellow_0">#f5efe4</color>
-    <color name="yellow_5">#f5e1b3</color>
-    <color name="yellow_10">#f2cf75</color>
-    <color name="yellow_20">#f0c443</color>
-    <color name="yellow_30">#dbae17</color>
-    <color name="yellow_40">#b69000</color>
-    <color name="yellow_50">#907300</color>
-    <color name="yellow_60">#705b00</color>
-    <color name="yellow_70">#5c4b00</color>
-    <color name="yellow_80">#453900</color>
-    <color name="yellow_90">#302800</color>
-    <color name="yellow_100">#1c1700</color>
+    <color name="yellow">#9d6e00</color>
+    <color name="yellow_0">#f5f1e1</color>
+    <color name="yellow_5">#f5e6b3</color>
+    <color name="yellow_10">#f2d76b</color>
+    <color name="yellow_20">#f0c930</color>
+    <color name="yellow_30">#deb100</color>
+    <color name="yellow_40">#c08c00</color>
+    <color name="yellow_50">#9d6e00</color>
+    <color name="yellow_60">#7d5600</color>
+    <color name="yellow_70">#674600</color>
+    <color name="yellow_80">#4f3500</color>
+    <color name="yellow_90">#320</color>
+    <color name="yellow_100">#1c1300</color>
 
     <!-- TRANSLUCENT -->
     <color name="black_translucent_20">#33000000</color>
