@@ -38,12 +38,12 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -56,8 +56,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
-    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject lateinit var readerTracker: ReaderTracker
     private lateinit var parentViewModel: ReaderViewModel
 
     private var binding: ReaderDiscoverFragmentLayoutBinding? = null
@@ -71,7 +71,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         super.onViewCreated(view, savedInstanceState)
         binding = ReaderDiscoverFragmentLayoutBinding.bind(view).apply {
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+            recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager, readerTracker)
 
             val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
             val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
@@ -134,9 +134,21 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(activity, event.site, event.post, event.source)
         is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
         is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(event)
-        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, event.tag)
+        is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+                context,
+                event.tag,
+                ReaderTracker.SOURCE_DISCOVER,
+                readerTracker
+        )
         is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, event.videoUrl)
-        is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(context, event.siteId, event.feedId)
+        is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                context,
+                event.siteId,
+                event.feedId,
+                event.isFollowed,
+                ReaderTracker.SOURCE_DISCOVER,
+                readerTracker
+        )
         is ShowReportPost -> ReaderActivityLauncher.openUrl(
                 context,
                 readerUtilsWrapper.getReportPostUrl(event.url),

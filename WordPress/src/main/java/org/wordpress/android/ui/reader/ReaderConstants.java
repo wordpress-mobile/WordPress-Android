@@ -32,6 +32,7 @@ public class ReaderConstants {
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
 
     // intent arguments / keys
+    static final String ARG_SOURCE = "source";
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
     public static final String ARG_IS_FEED = "is_feed";

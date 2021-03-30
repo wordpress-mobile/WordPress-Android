@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -61,15 +62,23 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
     private String mSearchFilter;
+    private final String mSource;
 
     @Inject protected ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType, String searchFilter) {
+    public ReaderBlogAdapter(
+            Context context,
+            ReaderBlogType blogType,
+            String searchFilter,
+            String source
+    ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         setHasStableIds(false);
         mBlogType = blogType;
         mSearchFilter = searchFilter;
+        mSource = source;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -228,9 +237,23 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final boolean result;
 
         if (blog.feedId != 0) {
-            result = ReaderBlogActions.followFeedById(blog.feedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(
+                    blog.blogId,
+                    blog.feedId,
+                    isAskingToFollow,
+                    listener,
+                    mSource,
+                    mReaderTracker
+            );
         } else {
-            result = ReaderBlogActions.followBlogById(blog.blogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(
+                    blog.blogId,
+                    blog.feedId,
+                    isAskingToFollow,
+                    listener,
+                    mSource,
+                    mReaderTracker
+            );
         }
 
         if (result) {

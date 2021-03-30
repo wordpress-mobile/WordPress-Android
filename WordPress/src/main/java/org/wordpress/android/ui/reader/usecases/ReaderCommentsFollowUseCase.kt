@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.FOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.UNFOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsActionResult.ERROR
@@ -19,14 +20,13 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 
 class ReaderCommentsFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider,
     private val accountStore: AccountStore,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerTracker: ReaderTracker,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
     private val FOLLOW_COMMENT_ACTION = "follow_action"
@@ -117,7 +117,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
 
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
 
-        analyticsUtilsWrapper.trackFollowCommentsWithReaderPostDetails(
+        readerTracker.trackPostComments(
                 Stat.COMMENT_FOLLOW_CONVERSATION,
                 blogId,
                 postId,
