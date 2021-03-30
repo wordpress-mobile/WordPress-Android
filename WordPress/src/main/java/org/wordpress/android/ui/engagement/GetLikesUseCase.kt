@@ -143,7 +143,7 @@ class GetLikesUseCase @Inject constructor(
         return if (noNetworkDetected) {
             Failure(
                     NO_NETWORK,
-                    UiStringRes(R.string.no_network_title),
+                    UiStringRes(R.string.get_likes_no_network_error),
                     orderedLikes,
                     EmptyStateData(
                             orderedLikes.isEmpty(),

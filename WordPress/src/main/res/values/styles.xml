@@ -1019,7 +1019,9 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
+    <style name="ActionableEmptyStateButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Invite.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:layout_marginEnd">
             @dimen/actionable_empty_view_text_margin_horizontal
         </item>
