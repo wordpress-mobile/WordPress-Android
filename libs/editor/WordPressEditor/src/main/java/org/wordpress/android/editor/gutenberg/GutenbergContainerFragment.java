@@ -113,7 +113,6 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext(),
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,

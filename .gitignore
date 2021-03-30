@@ -91,3 +91,5 @@ WordPress/debug.keystore
 WordPress/*.jks
 
 local-builds.gradle
+
+libs/gutenberg-mobile

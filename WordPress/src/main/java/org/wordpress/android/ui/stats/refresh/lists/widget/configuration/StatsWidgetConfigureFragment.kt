@@ -12,9 +12,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
+import org.wordpress.android.databinding.StatsWidgetConfigureFragmentBinding
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
@@ -88,63 +88,64 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         }
 
         viewModel.start(appWidgetId, widgetType, siteSelectionViewModel, colorSelectionViewModel)
+        with(StatsWidgetConfigureFragmentBinding.bind(view)) {
+            siteContainer.setOnClickListener {
+                siteSelectionViewModel.openSiteDialog()
+            }
+            colorContainer.setOnClickListener {
+                colorSelectionViewModel.openColorDialog()
+            }
 
-        site_container.setOnClickListener {
-            siteSelectionViewModel.openSiteDialog()
-        }
-        color_container.setOnClickListener {
-            colorSelectionViewModel.openColorDialog()
-        }
+            addWidgetButton.setOnClickListener {
+                viewModel.addWidget()
+            }
 
-        add_widget_button.setOnClickListener {
-            viewModel.addWidget()
-        }
+            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
+            })
 
-        siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-            StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-        })
-
-        colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetColorSelectionDialogFragment().show(
                         requireFragmentManager(),
                         "stats_view_mode_selection_fragment"
                 )
-        })
+            })
 
-        merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
-                viewLifecycleOwner,
-                {
-                    ToastUtils.showToast(activity, it)
-                })
+            merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
+                    viewLifecycleOwner,
+                    {
+                        ToastUtils.showToast(activity, it)
+                    })
 
-        viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
-            uiModel?.let {
-                if (uiModel.siteTitle != null) {
-                    site_value.text = uiModel.siteTitle
+            viewModel.settingsModel.observe(viewLifecycleOwner, { uiModel ->
+                uiModel?.let {
+                    if (uiModel.siteTitle != null) {
+                        siteValue.text = uiModel.siteTitle
+                    }
+                    colorValue.setText(uiModel.color.title)
+                    addWidgetButton.isEnabled = uiModel.buttonEnabled
                 }
-                color_value.setText(uiModel.color.title)
-                add_widget_button.isEnabled = uiModel.buttonEnabled
-            }
-        })
+            })
 
-        viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
-            analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
-            when (it.widgetType) {
-                WEEK_VIEWS -> {
-                    viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+            viewModel.widgetAdded.observeEvent(viewLifecycleOwner, {
+                analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
+                when (it.widgetType) {
+                    WEEK_VIEWS -> {
+                        viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                    }
+                    ALL_TIME_VIEWS -> {
+                        allTimeWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                    }
+                    TODAY_VIEWS -> {
+                        todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
+                    }
                 }
-                ALL_TIME_VIEWS -> {
-                    allTimeWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
-                }
-                TODAY_VIEWS -> {
-                    todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
-                }
-            }
-            val resultValue = Intent()
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            activity?.setResult(RESULT_OK, resultValue)
-            activity?.finish()
-        })
+                val resultValue = Intent()
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                activity?.setResult(RESULT_OK, resultValue)
+                activity?.finish()
+            })
+        }
     }
 
     enum class WidgetType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
