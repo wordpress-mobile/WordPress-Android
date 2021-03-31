@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -83,6 +84,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
@@ -148,9 +150,9 @@ public class SiteRestClient extends BaseWPComRestClient {
         mAppSecrets = appSecrets;
     }
 
-    public void fetchSites() {
-        Map<String, String> params = new HashMap<>();
-        params.put("fields", SITE_FIELDS);
+    public void fetchSites(List<SiteFilter> filters) {
+        Map<String, String> params = getFetchSitesParams(filters);
+        
         String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SitesResponse.class,
@@ -182,6 +184,15 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
         );
         add(request);
+    }
+
+    @NotNull private Map<String, String> getFetchSitesParams(List<SiteFilter> filters) {
+        Map<String, String> params = new HashMap<>();
+        if (filters != null && !filters.isEmpty()) {
+            params.put("filters", TextUtils.join(",", filters));
+        }
+        params.put("fields", SITE_FIELDS);
+        return params;
     }
 
     public void fetchSite(final SiteModel site) {
