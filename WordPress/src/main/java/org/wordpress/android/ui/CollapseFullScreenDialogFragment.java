@@ -281,7 +281,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
             mMenuAction = menu.add(0, ID_ACTION, 0, this.mAction);
             mMenuAction.setIcon(R.drawable.ic_send_white_24dp);
             MenuItemCompat.setIconTintList(mMenuAction,
-                    AppCompatResources.getColorStateList(view.getContext(), R.color.accent_neutral_30_selector));
+                    AppCompatResources.getColorStateList(view.getContext(), R.color.primary_neutral_30_selector));
             mMenuAction.setEnabled(false);
             mMenuAction.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mMenuAction.setOnMenuItemClickListener(
