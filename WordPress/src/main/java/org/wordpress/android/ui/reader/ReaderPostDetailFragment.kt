@@ -429,6 +429,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         super.onViewCreated(view, savedInstanceState)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
+        initLikeFacesRecycler(savedInstanceState)
+        initViewModel(binding, savedInstanceState)
+
+        showPost()
+    }
+
+    private fun initLikeFacesRecycler(savedInstanceState: Bundle?) {
+        if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_LIKERS_LIST_STATE)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -436,13 +444,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
                 contextProvider.getContext(),
-                R.dimen.margin_extra_small)
+                R.dimen.margin_small)
         )
         likeFacesRecycler.layoutManager = layoutManager
 
-        initViewModel(binding, savedInstanceState)
-
-        showPost()
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
