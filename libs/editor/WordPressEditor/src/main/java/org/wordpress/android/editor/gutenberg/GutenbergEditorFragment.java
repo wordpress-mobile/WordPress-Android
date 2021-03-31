@@ -54,7 +54,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
@@ -65,7 +64,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTo
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
@@ -358,21 +356,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 mEditorFragmentListener::onPerformFetch,
                 mEditorImagePreviewListener::onImagePreviewRequested,
                 mEditorEditMediaListener::onMediaEditorRequested,
-                new OnLogGutenbergUserEventListener() {
-                    @Override
-                    public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
-                        switch (event) {
-                            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                            case EDITOR_SESSION_TEMPLATE_APPLY:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                        }
-                    }
-                },
                 new OnGutenbergDidRequestUnsupportedBlockFallbackListener() {
                     @Override
                     public void gutenbergDidRequestUnsupportedBlockFallback(UnsupportedBlock unsupportedBlock) {
