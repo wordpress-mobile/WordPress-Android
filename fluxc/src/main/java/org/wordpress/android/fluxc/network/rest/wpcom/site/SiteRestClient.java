@@ -152,8 +152,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void fetchSites(List<SiteFilter> filters) {
         Map<String, String> params = getFetchSitesParams(filters);
-        
-        String url = WPCOMREST.me.sites.getUrlV1_1();
+
+        String url = WPCOMREST.me.sites.getUrlV1_2();
         final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SitesResponse.class,
                 new Listener<SitesResponse>() {
