@@ -4,8 +4,8 @@
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">@color/blue_30</item>
         <item name="colorPrimaryVariant">@color/blue_50</item>
-        <item name="colorSecondary">@color/pink_30</item>
-        <item name="colorSecondaryVariant">@color/pink_50</item>
+        <item name="colorSecondary">@color/blue_30</item>
+        <item name="colorSecondaryVariant">@color/blue_50</item>
         <item name="android:colorBackground">@color/background_dark</item>
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>

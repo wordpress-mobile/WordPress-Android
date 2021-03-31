@@ -5,8 +5,8 @@
         <!-- Material theme -->
         <item name="colorPrimary">@color/blue_50</item>
         <item name="colorPrimaryVariant">@color/blue_70</item>
-        <item name="colorSecondary">@color/pink_50</item>
-        <item name="colorSecondaryVariant">@color/pink_70</item>
+        <item name="colorSecondary">@color/blue_50</item>
+        <item name="colorSecondaryVariant">@color/blue_70</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="colorSurface">@android:color/white</item>
         <item name="colorError">@color/red_50</item>
