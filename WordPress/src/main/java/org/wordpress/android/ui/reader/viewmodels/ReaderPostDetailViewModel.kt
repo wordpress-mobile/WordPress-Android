@@ -171,8 +171,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             _snackbarEvents.value = event
         }
 
-        _snackbarEvents.addSource(getLikesHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            _snackbarEvents.addSource(getLikesHandler.snackbarEvents) { event ->
+                _snackbarEvents.value = event
+            }
         }
 
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
@@ -183,8 +185,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             _navigationEvents.value = event
         }
 
-        _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
-            _updateLikesState.value = state
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
+                _updateLikesState.value = state
+            }
         }
     }
 
