@@ -1469,6 +1469,11 @@
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="get_likes_unknown_error">An unknown error occurred getting likes.</string>
     <string name="get_likes_empty_state_title">An error occurred getting likes data</string>
+    <string name="like_title_single_text">1 Like</string>
+    <string name="like_title_multiple_text">%d Likes</string>
+    <string name="like_faces_single_liker_text">1 blogger likes this.</string>
+    <string name="like_faces_multiple_liker_text">%d bloggers like this.</string>
+    <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
