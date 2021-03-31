@@ -91,7 +91,9 @@ public class ReaderPostTable {
             + "tags," // 48
             + "organization_id," // 49
             + "is_seen," // 50
-            + "is_seen_supported"; // 51
+            + "is_seen_supported," // 51
+            + "author_blog_id," // 52
+            + "author_blog_url"; // 53
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -144,7 +146,9 @@ public class ReaderPostTable {
             + "tags," // 47
             + "organization_id," // 48
             + "is_seen," // 49
-            + "is_seen_supported"; // 50
+            + "is_seen_supported," // 50
+            + "author_blog_id," // 51
+            + "author_blog_url"; // 52
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -199,6 +203,8 @@ public class ReaderPostTable {
                    + " organization_id INTEGER DEFAULT 0,"
                    + " is_seen INTEGER DEFAULT 0,"
                    + " is_seen_supported INTEGER DEFAULT 0,"
+                   + " author_blog_id INTEGER DEFAULT 0,"
+                   + " author_blog_url TEXT,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -869,7 +875,7 @@ public class ReaderPostTable {
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
                 + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47,"
-                + "?48,?49,?50,?51)");
+                + "?48,?49,?50,?51,?52,?53)");
 
         db.beginTransaction();
         try {
@@ -933,6 +939,8 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(49, post.organizationId);
                 stmtPosts.bindLong(50, SqlUtils.boolToSql(post.isSeen));
                 stmtPosts.bindLong(51, SqlUtils.boolToSql(post.isSeenSupported));
+                stmtPosts.bindLong(52, post.authorBlogId);
+                stmtPosts.bindString(53, post.getAuthorBlogUrl());
                 stmtPosts.execute();
             }
 
@@ -1190,6 +1198,8 @@ public class ReaderPostTable {
         }
 
         post.organizationId = c.getInt(c.getColumnIndex("organization_id"));
+        post.authorBlogId = c.getLong(c.getColumnIndex("author_blog_id"));
+        post.setAuthorBlogUrl(c.getString(c.getColumnIndex("author_blog_url")));
 
         return post;
     }
