@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject DeeplinkNavigator mDeeplinkNavigator;
-    @Inject CreateSiteUriHandler mCreateSiteUriHandler;
+    @Inject EmailUriHandler mEmailUriHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +95,15 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 handleShowStats(uri);
             } else if (shouldShowPages(uri)) {
                 handleShowPages(uri);
-            } else if (mCreateSiteUriHandler.shouldHandleUri(uri)) {
-                mCreateSiteUriHandler.handleUri(uri);
             } else {
-                // not handled
-                finish();
+                UriWrapper uriWrapper = new UriWrapper(uri);
+                // https://public-api.wordpress.com/bar/
+                if (mEmailUriHandler.shouldHandleUri(uriWrapper)) {
+                    mEmailUriHandler.handleUri(uriWrapper);
+                } else {
+                    // not handled
+                    finish();
+                }
             }
         } else {
             finish();
@@ -106,7 +111,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void setupObservers() {
-        mCreateSiteUriHandler.getNavigateAction().observe(this, navigateActionEvent -> {
+        mEmailUriHandler.getNavigateAction().observe(this, navigateActionEvent -> {
             navigateActionEvent.applyIfNotHandled(navigateAction -> {
                 mDeeplinkNavigator.handleNavigationAction(navigateAction, this);
                 return null;
