@@ -3,35 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/liker_faces"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    android:clipChildren="true"
-    android:id="@+id/liker_faces">
+    tools:visibility="visible"
+    android:clipChildren="true">
 
     <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:id="@+id/flexbox"
-        android:paddingStart="@dimen/margin_extra_large_extra_medium_large"
-        android:paddingEnd="@dimen/margin_extra_large_extra_medium_large"
-        android:paddingTop="@dimen/margin_extra_medium_large"
         android:paddingBottom="@dimen/margin_extra_medium_large"
-        app:flexWrap="wrap"
+        android:paddingEnd="@dimen/margin_extra_large_extra_medium_large"
+        android:paddingStart="@dimen/margin_extra_large_extra_medium_large"
+        android:paddingTop="@dimen/margin_extra_medium_large"
         app:alignItems="center"
+        app:flexWrap="wrap"
         app:maxLine="2">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/likes_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/liker_face_item"
-            tools:itemCount="5"
-            tools:orientation="horizontal"
-            tools:layoutManager="LinearLayoutManager"
             android:layout_marginEnd="@dimen/margin_large"
-            android:clipChildren="false"/>
+            android:clipChildren="false"
+            tools:itemCount="5"
+            tools:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/liker_face_item"
+            tools:orientation="horizontal" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/num_bloggers"
@@ -43,6 +44,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/material_on_surface_emphasis_medium"
             tools:text="19 bloggers like this." />
 
     </com.google.android.flexbox.FlexboxLayout>
