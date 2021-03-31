@@ -204,8 +204,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddFileClicked(boolean allowMultipleSelection);
         void onAddAudioFileClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
-        void onGutenbergEditorSessionTemplateApplyTracked(String template);
-        void onGutenbergEditorSessionTemplatePreviewTracked(String template);
         void showUserSuggestions(Consumer<String> onResult);
         void showXpostSuggestions(Consumer<String> onResult);
         void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown);

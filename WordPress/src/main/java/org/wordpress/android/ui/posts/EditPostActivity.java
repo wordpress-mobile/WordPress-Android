@@ -3219,14 +3219,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.applyTemplate(template);
     }
 
-    @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
-        mPostEditorAnalyticsSession.applyTemplate(template);
-    }
-
-    @Override public void onGutenbergEditorSessionTemplatePreviewTracked(String template) {
-        // Preview mode is deprecated. See: https://github.com/wordpress-mobile/gutenberg-mobile/issues/3217
-    }
-
     @Override public void showUserSuggestions(Consumer<String> onResult) {
         showSuggestions(SuggestionType.Users, onResult);
     }
