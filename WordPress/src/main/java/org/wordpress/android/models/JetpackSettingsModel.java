@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class JetpackSettingsModel {
-    public final ArrayList<String> jetpackProtectWhitelist = new ArrayList<>();
+    public final ArrayList<String> jetpackProtectAllowlist = new ArrayList<>();
 
     public long localTableId;
     public boolean monitorActive;
@@ -44,7 +44,7 @@ public class JetpackSettingsModel {
         ssoMatchEmail = other.ssoMatchEmail;
         ssoRequireTwoFactor = other.ssoRequireTwoFactor;
         commentLikes = other.commentLikes;
-        jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
+        jetpackProtectAllowlist.addAll(other.jetpackProtectAllowlist);
         serveImagesFromOurServers = other.serveImagesFromOurServers;
         serveStaticFilesFromOurServers = other.serveStaticFilesFromOurServers;
         lazyLoadImages = other.lazyLoadImages;
@@ -58,29 +58,29 @@ public class JetpackSettingsModel {
         if (!(other instanceof JetpackSettingsModel)) return false;
         JetpackSettingsModel otherModel = (JetpackSettingsModel) other;
         return monitorActive == otherModel.monitorActive
-                && emailNotifications == otherModel.emailNotifications
-                && wpNotifications == otherModel.wpNotifications
-                && jetpackProtectEnabled == otherModel.jetpackProtectEnabled
-                && ssoActive == otherModel.ssoActive
-                && ssoMatchEmail == otherModel.ssoMatchEmail
-                && ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor
-                && serveImagesFromOurServers == otherModel.serveImagesFromOurServers
-                && serveStaticFilesFromOurServers == otherModel.serveStaticFilesFromOurServers
-                && lazyLoadImages == otherModel.lazyLoadImages
-                && commentLikes == otherModel.commentLikes
-                && sharingEnabled == otherModel.sharingEnabled
-                && improvedSearch == otherModel.improvedSearch
-                && adFreeVideoHosting == otherModel.adFreeVideoHosting
-                && whitelistMatches(otherModel.jetpackProtectWhitelist);
+               && emailNotifications == otherModel.emailNotifications
+               && wpNotifications == otherModel.wpNotifications
+               && jetpackProtectEnabled == otherModel.jetpackProtectEnabled
+               && ssoActive == otherModel.ssoActive
+               && ssoMatchEmail == otherModel.ssoMatchEmail
+               && ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor
+               && serveImagesFromOurServers == otherModel.serveImagesFromOurServers
+               && serveStaticFilesFromOurServers == otherModel.serveStaticFilesFromOurServers
+               && lazyLoadImages == otherModel.lazyLoadImages
+               && commentLikes == otherModel.commentLikes
+               && sharingEnabled == otherModel.sharingEnabled
+               && improvedSearch == otherModel.improvedSearch
+               && adFreeVideoHosting == otherModel.adFreeVideoHosting
+               && allowlistMatches(otherModel.jetpackProtectAllowlist);
     }
 
-    public boolean whitelistMatches(List<String> otherWhitelist) {
-        if (otherWhitelist == null) {
+    public boolean allowlistMatches(List<String> otherAllowlist) {
+        if (otherAllowlist == null) {
             return false;
         }
 
-        Set<String> whitelistSet = new HashSet<>(jetpackProtectWhitelist);
-        Set<String> otherSet = new HashSet<>(otherWhitelist);
-        return whitelistSet.equals(otherSet);
+        Set<String> allowlistSet = new HashSet<>(jetpackProtectAllowlist);
+        Set<String> otherSet = new HashSet<>(otherAllowlist);
+        return allowlistSet.equals(otherSet);
     }
 }

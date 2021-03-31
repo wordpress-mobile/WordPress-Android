@@ -30,8 +30,14 @@ sealed class ReaderNavigationEvents {
         @StringRes val message: Int = R.string.reader_save_posts_locally_dialog_message
         @StringRes val buttonLabel: Int = R.string.dialog_button_ok
     }
+
     data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
-    data class ShowBlogPreview(val siteId: Long, val feedId: Long) : ReaderNavigationEvents()
+    data class ShowBlogPreview(
+        val siteId: Long,
+        val feedId: Long,
+        val isFollowed: Boolean
+    ) : ReaderNavigationEvents()
+
     data class ShowReportPost(val url: String) : ReaderNavigationEvents()
     object ShowReaderSubs : ReaderNavigationEvents()
     data class ShowRelatedPostDetails(val postId: Long, val blogId: Long) :
@@ -39,4 +45,8 @@ sealed class ReaderNavigationEvents {
 
     data class ReplaceRelatedPostDetailsWithHistory(val postId: Long, val blogId: Long, val isGlobal: Boolean) :
             ReaderNavigationEvents()
+
+    data class ShowMediaPreview(val site: SiteModel?, val featuredImage: String) : ReaderNavigationEvents()
+    data class OpenUrl(val url: String) : ReaderNavigationEvents()
+    data class ShowPostInWebView(val post: ReaderPost) : ReaderNavigationEvents()
 }

@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,7 +33,6 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private long mBlogId;
     private long mPostId;
 
-    @Inject FeaturedImageUtils mFeaturedImageUtils;
     @Inject ReaderCssProvider mReaderCssProvider;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
@@ -58,24 +56,29 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
         return new ReaderWebView(getActivity());
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // check network again to detect disconnects during loading + configuration change
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+            if (post != null) {
+                ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
+                ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
+                ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
+                    @Override public void onPageFinished(WebView view, String url) {
+                        selfRemoveFragment();
+                    }
+                });
 
-            ((ReaderWebView) view).setIsPrivatePost(post.isPrivate);
-            ((ReaderWebView) view).setBlogSchemeIsHttps(UrlUtils.isHttps(post.getBlogUrl()));
-            ((ReaderWebView) view).setPageFinishedListener(new ReaderWebView.ReaderWebViewPageFinishedListener() {
-                @Override public void onPageFinished(WebView view, String url) {
-                    selfRemoveFragment();
-                }
-            });
-
-            ReaderPostRenderer rendered =
-                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils, mReaderCssProvider);
-            rendered.beginRender(); // rendering will cache post content using native WebView implementation.
+                ReaderPostRenderer rendered =
+                        new ReaderPostRenderer((ReaderWebView) view, post, mReaderCssProvider);
+                rendered.beginRender(); // rendering will cache post content using native WebView implementation.
+            } else {
+                // abort mission if post is not available
+                selfRemoveFragment();
+            }
         } else {
             // abort mission if no network is available
             selfRemoveFragment();

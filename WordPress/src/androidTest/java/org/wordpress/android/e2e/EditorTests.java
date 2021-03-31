@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.components.MasterbarComponent;
 import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.SiteSettingsPage;
@@ -39,11 +38,10 @@ public class EditorTests extends BaseTest {
         logoutIfNecessary();
         wpLogin();
 
-        MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
+        MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
 
-        MySitesPage mySitesPage = new MySitesPage();
-        mySitesPage.gotoSiteSettings();
+        mySitesPage.clickSettingsItem();
 
         // Set to Classic.
         new SiteSettingsPage().setEditorToClassic();
@@ -51,10 +49,9 @@ public class EditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mb.clickBlogPosts();
+        mySitesPage.clickBlogPostsItem();
 
-        new MySitesPage()
-                .startNewPost();
+        mySitesPage.startNewPost();
     }
 
     @Test

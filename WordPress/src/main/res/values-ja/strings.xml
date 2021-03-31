@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-02 04:27:51+0000
+Translation-Revision-Date: 2021-03-12 05:30:05+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
+    <string name="reader_title_interests">トピックをフォロー</string>
+    <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
+    <string name="activity_log_backup_download_notice_download_action">ダウンロード</string>
     <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
+    <string name="threat_fix_all_confirmation_message_plural">%s件のアクティブな脅威を修正してもよければ確認してください。</string>
+    <string name="scan_idle_threats_description_plural">スキャンで %2s に%1s個の潜在的な脅威が見つかりました。 以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
+    <string name="scan_fixing_threats_description_plural">現在バックグラウンドでこれらの脅威を修正しています。その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
+    <string name="gutenberg_native_edit_focal_point">焦点を編集</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">ダブルタップして「ボトムシート」を開き、画像を編集、置換、クリアする</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">ダブルタップして「アクションシート」を開き、画像を編集、置換、クリアする</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">サイトの名前を入力してください</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>全タスク完了&lt;/b>&lt;br/>より多くの人に発信できるでしょう。素晴らしいです !</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>全タスク完了&lt;/b>&lt;br/>サイトをカスタマイズしました。いい感じです !</string>
     <string name="quick_start_card_menu_hide">今は非表示にする</string>
+    <string name="magic_link_not_meaning_to_create_account">新しいアカウントを作成しない場合は、 戻ってメールアドレスを再度入力してください。</string>
+    <string name="invite_links_disable_dialog_message">招待リンクを無効化すると、このリンクを使用してチームに参加できなくなります。本当に実行しますか ?</string>
     <string name="invite_links_disable_dialog_title">招待リンクを無効化</string>
     <string name="invite_links_bad_format_response">無効な応答を受信しました</string>
     <string name="invite_links_null_response">応答がありませんでした</string>
     <string name="invite_links_cannot_get_role_data_error">権限グループ「%1$s」のデータ取得中にエラーが発生しました</string>
     <string name="invite_links_cannot_get_roles_error">権限グループの取得中にエラーが発生しました</string>
     <string name="invite_links_generic_get_data_error">招待リンクデータの取得中に不明なエラーが発生しました</string>
+    <string name="invite_links_helper_text">このリンクを使用すると、チームメンバーを1人ずつではなく一括で招待できます。 {{strong}}この URL にアクセスすると、だれでも組織に登録されます。{{/strong}}リンクをだれから受け取ったかは関係ないため、信頼できる人と共有するようにしてください。</string>
+    <string name="invite_links_expire_date">%1$sに期限切れ</string>
     <string name="invite_links_disable_invite_link">招待リンクを無効化</string>
     <string name="invite_links_share_invite_link">招待リンクを共有</string>
     <string name="invite_links_generate">新規リンクを作成</string>
@@ -23,8 +40,12 @@ Language: ja_JP
     <string name="invite_links_section_title">招待リンク</string>
     <string name="threats_found_singular">検出された脅威</string>
     <string name="threats_found_plural">検出された脅威</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>スキャン完了&lt;/b> &lt;br>&lt;/br> %s件の潜在的な脅威が見つかりました</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>スキャン完了&lt;/b> &lt;br>&lt;/br> 1件の潜在的な脅威が見つかりました</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>スキャン完了&lt;/b> &lt;br>&lt;/br>脅威は見つかりませんでした</string>
     <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="disable">無効化</string>
+    <string name="quick_start_card_menu_unpin">これを固定解除</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_list_view_site_title">サイトを表示</string>
     <string name="quick_start_list_upload_icon_subtitle">センスのよいサイトアイコンを追加しましょう。</string>
@@ -77,10 +98,13 @@ Language: ja_JP
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">検出</string>
     <string name="scan_here_to_help">サポートはこちら</string>
+    <string name="scan_idle_threats_description_singular">スキャンで %1$s に1個の潜在的な脅威が見つかりました。 以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%2$sにご連絡ください。</string>
     <string name="scan_idle_manual_scan_description">サイトを再度確認するには、手動スキャンを実行するか、本日中に行われる Jetpack のサイトスキャンをお待ちください。</string>
     <string name="scan_provisioning_description">Jetpack Scan へようこそ ! お客様のサイトを調査し、フルスキャンを実行するための設定を行います。 スキャンに影響する可能性のある問題を見つけたらお知らせします。その後、最初のフルスキャンが開始されます。</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan へようこそ。現在サイトの初回チェックを行っており、結果はすぐに表示されます。</string>
+    <string name="scan_fixing_threats_description_singular">バックグラウンドでこの脅威を修正しています。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
     <string name="scan_scanning_description">スキャンが完了したら、通知が送信されます。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
+    <string name="scan_fixing_threats_title_plural">脅威の修正</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan はサイトのスキャンを完了できませんでした。 サイトがダウンしていないか確認してください。ダウンしていない場合、再度実行してください。 ダウンしている場合、または Jetpack Scan に問題がある場合、サポートチームまでご連絡ください。</string>
     <string name="scan_request_failed_title">問題が発生しました。</string>
     <string name="activity_log_currently_backing_up_message_no_dates">サイトのバックアップ</string>
@@ -90,6 +114,7 @@ Language: ja_JP
     <string name="activity_log_backup_finished_snackbar_message">サイトは正常にバックアップされました\n%1$s %2$sからバックアップ</string>
     <string name="activity_log_backup_started_snackbar_message">サイトをバックアップしています\n%1$s %2$sからバックアップしています</string>
     <string name="pick_audio">音声ファイルを選択</string>
+    <string name="restore_another_process_running">実行中の復元が他にあります。</string>
     <string name="restore_complete_failed_icon_content_description">エラーアイコン</string>
     <string name="restore_complete_failed_action_button_content_description">完了ボタン</string>
     <string name="restore_complete_failed_title">復元失敗</string>
@@ -100,6 +125,7 @@ Language: ja_JP
     <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_progress_footnote">お待ちいただく必要はありません。 サイトが完全に復元されたらお知らせします。</string>
     <string name="restore_progress_icon_content_description">サイト復元アイコン</string>
     <string name="restore_progress_description_with_two_parameters">サイトを %1$s %2$s に復元しています。</string>
     <string name="restore_progress_header">現在サイトを復元中</string>
@@ -120,6 +146,7 @@ Language: ja_JP
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
     <string name="quick_start_card_menu_remove">二度と表示しない</string>
+    <string name="quick_start_card_menu_pin">上部固定</string>
     <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
@@ -135,7 +162,9 @@ Language: ja_JP
     <string name="reader_marked_post_as_unseen">投稿を未読にする</string>
     <string name="reader_marked_post_as_seen">投稿を既読にする</string>
     <string name="threat_fix_all_status_error_message">修正のステータスの取得中にエラーが発生しました。 サポートにご連絡ください。</string>
+    <string name="threat_fix_all_status_success_message_singular">脅威は正常に修正されました。</string>
     <string name="threat_fix_all_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
+    <string name="threat_fix_all_confirmation_message_singular">1件のアクティブな脅威を修正してよろしいですか ?</string>
     <string name="threat_fix_all_warning_title">すべての脅威を修正</string>
     <string name="threat_ignore_error_message">脅威を無視する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_ignore_success_message">脅威を無視しました。</string>
@@ -171,6 +200,7 @@ Language: ja_JP
     <string name="backup_download_complete_header">バックアップをダウンロードする準備が整いました</string>
     <string name="backup_download_complete_page_title">バックアップ</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_footnote">お待ちいただく必要はありません。 バックアップが完了したら通知します。</string>
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>
     <string name="backup_download_progress_header">現在、サイトのダウンロード可能なバックアップを作成中です</string>
@@ -216,6 +246,10 @@ Language: ja_JP
     <string name="threat_item_header_database_threat">データベース %s 脅威</string>
     <string name="threat_item_header_infected_core_file">%s: 感染したコアファイル</string>
     <string name="threat_item_header_threat_found">脅威を検出しました</string>
+    <string name="threats_fix_all">すべて修正</string>
+    <string name="scan_in_few_seconds">数秒前</string>
+    <string name="scan_in_minutes_ago">%s分前</string>
+    <string name="scan_in_hours_ago">%s時間前</string>
     <string name="scan_this_site">このサイト</string>
     <string name="scan_idle_last_scan_description">前回の Jetpack スキャンは%sに実行され、リスクは見つかりませんでした。 %s</string>
     <string name="scan_idle_threats_found_title">サイトが危険にさらされている可能性があります</string>
@@ -266,6 +300,7 @@ Language: ja_JP
     <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
     <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
     <string name="new_site_creation_domain_header_title">ドメインを選択</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
     <string name="reader_btn_follow_comments">メールで会話をフォロー</string>
@@ -360,7 +395,6 @@ Language: ja_JP
     <string name="stories_intro_main_title">ストーリー投稿の紹介</string>
     <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
     <string name="mlp_notice_page_created">ページが作成されました</string>
-    <string name="mlp_preview_title">レイアウトのプレビュー</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s は写真へのアクセスを拒否されました。 これを解決するには、権限を編集して%2$sと%3$sをオンにしてください。</string>
     <string name="media_insert_failed">メディアの挿入に失敗しました。</string>
     <string name="media_insert_failed_with_reason">メディアの挿入に失敗しました : %s</string>
@@ -599,7 +633,7 @@ Language: ja_JP
     <string name="gutenberg_native_select_a_color">色を選択</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">ダブルタップして色設定に移動</string>
     <string name="reader_empty_followed_blogs_description">サイトをフォローすると、こちらにコンテンツが表示されます</string>
-    <string name="feature_announcement_find_out_mode">詳細</string>
+    <string name="feature_announcement_find_out_mode">さらに詳しく</string>
     <string name="feature_announcement_dialog_label">WordPress の新機能</string>
     <string name="insert_label_with_count">%d を挿入</string>
     <string name="crop">切り取り</string>
@@ -684,8 +718,6 @@ Language: ja_JP
     <string name="app_theme_light">ライト</string>
     <string name="app_theme">外観</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">このページに最近変更が加えられましたが、保存されませんでした。読み込むバージョンを選択します。\n\n</string>
-    <string name="gutenberg_native_warning_message">警告メッセージ</string>
-    <string name="gutenberg_native_success_message">成功メッセージ</string>
     <string name="gutenberg_native_show_post_content">投稿の内容を表示</string>
     <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
     <string name="gutenberg_native_link_to">リンク先</string>
@@ -793,20 +825,16 @@ Language: ja_JP
     <string name="gutenberg_native_unsupported">非サポート</string>
     <string name="gutenberg_native_ungroup">グループ解除</string>
     <string name="gutenberg_native_translate">翻訳</string>
-    <string name="gutenberg_native_title">タイトル:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">タップしてキーボードを非表示</string>
     <string name="gutenberg_native_tap_here_to_show_help">タップしてヘルプを表示</string>
     <string name="gutenberg_native_take_a_video">動画を撮る</string>
     <string name="gutenberg_native_take_a_photo_or_video">写真または動画を撮る</string>
     <string name="gutenberg_native_take_a_photo">写真を撮る</string>
     <string name="gutenberg_native_start_writing">執筆を開始…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">サイドバータイトルプラグイン</string>
     <string name="gutenberg_native_show_section">セクションを表示</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
     <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
     <string name="gutenberg_native_cut_block">ブロックを切り取る</string>
-    <string name="gutenberg_native_reset_block">ブロックをリセット</string>
-    <string name="gutenberg_native_remove_annotations">注釈を削除</string>
     <string name="gutenberg_native_problem_opening_the_video">動画を開く際に問題が発生しました</string>
     <string name="gutenberg_native_problem_displaying_block">ブロックの表示中に問題が発生しました</string>
     <string name="gutenberg_native_post_title_s">投稿タイトル。%s</string>
@@ -816,17 +844,12 @@ Language: ja_JP
     <string name="gutenberg_native_open_settings">設定を開く</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">このリクエストを処理できるアプリケーションはありません。Web ブラウザーをインストールしてください。</string>
     <string name="gutenberg_native_navigate_up">上に移動</string>
-    <string name="gutenberg_native_my_pre_publish_panel">公開前パネル</string>
-    <string name="gutenberg_native_my_post_status_info">投稿ステータス情報</string>
-    <string name="gutenberg_native_my_post_publish_panel">公開後パネル</string>
-    <string name="gutenberg_native_my_document_setting_panel">ドキュメント設定パネル</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に上に移動します</string>
     <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
     <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
     <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
     <string name="gutenberg_native_hide_keyboard">キーボードを非表示</string>
-    <string name="gutenberg_native_here_is_the_panel_content">こちらがパネルコンテンツです。</string>
     <string name="gutenberg_native_help_icon">ヘルプアイコン</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">メディアを挿入できませんでした。\nタップするとオプションを表示します。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">ダブルタップして前回の変更を元に戻す</string>
@@ -841,9 +864,7 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">ダブルタップしてスライダーを使用して値を変更</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
-    <string name="gutenberg_native_content">コンテンツ…</string>
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
-    <string name="gutenberg_native_annotations_sidebar">注釈サイドバー</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度お試しください。</string>
     <string name="gutenberg_native_alt_text">代替テキスト</string>
     <string name="gutenberg_native_add_video">動画を追加</string>
@@ -851,19 +872,9 @@ Language: ja_JP
     <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
     <string name="gutenberg_native_add_image">画像を追加</string>
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
-    <string name="gutenberg_native_add_annotation">注釈を追加</string>
-    <string name="gutenberg_native_add_a_description">説明を追加</string>
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
     <string name="reader_acessibility_list_loaded">「リストに %1$d 項目が読み込まれました」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
-    <string name="master_switch_default_title_off">オフ</string>
-    <string name="master_switch_default_title_on">オン</string>
-    <string name="notifications_tab_dialog_master_off_message">このサイトの通知をオフにすると、このサイトの通知タブでは通知表示が無効になります。サイトの通知をオンにすると、表示される通知の種類を調整できます。</string>
-    <string name="notifications_tab_dialog_master_off_title">このサイトの通知タブで通知を表示するには、このサイトの通知をオンにします。</string>
-    <string name="notifications_tab_dialog_master_hint_off">このサイトの通知タブで通知表示を有効にする</string>
-    <string name="notifications_tab_dialog_master_hint_on">このサイトの通知タブで通知表示を無効にする</string>
-    <string name="notifications_tab_dialog_master_status_off">このサイトの通知</string>
-    <string name="notifications_tab_dialog_master_status_on">このサイトの通知</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -1185,8 +1196,6 @@ Language: ja_JP
     <string name="site_creation_error_generic_subtitle">サーバーエラーです。もう一度お試しください</string>
     <string name="site_creation_error_generic_title">問題が発生しました</string>
     <string name="site_creation_fetch_suggestions_error_unknown">問題が発生しました</string>
-    <string name="site_creation_segments_subtitle">おすすめを提案させていただくのに役立ちます。しかし、サイトはすべて進化するものであるため、後で変更することもでます。</string>
-    <string name="site_creation_segments_title">どのようなサイトを作りたいか教えてください</string>
     <string name="new_site_creation_preview_title">サイトを作成しました。</string>
     <string name="new_site_creation_screen_title_step_count">%1$d/%2$d</string>
     <string name="new_site_creation_screen_title_general">サイトを作成</string>
@@ -1436,8 +1445,6 @@ Language: ja_JP
     <string name="reader_empty_saved_posts_title">投稿はまだ保存されていません。</string>
     <string name="reader_bookmark_snack_title">投稿を保存しました</string>
     <string name="reader_bookmark_snack_btn">すべて表示</string>
-    <string name="reader_btn_bookmarked">保存しました</string>
-    <string name="reader_btn_bookmark">保存</string>
     <string name="reader_remove_bookmark">保存済み投稿から削除</string>
     <string name="reader_add_bookmark">保存済み投稿へ追加</string>
     <string name="reader_save_for_later_title">保存済みの投稿</string>
@@ -1790,12 +1797,10 @@ Language: ja_JP
     <string name="jetpack_disconnect_confirm">連携解除</string>
     <string name="jetpack_disconnect_confirmation_message">このサイトから Jetpack の接続を解除してもよいですか ?</string>
     <string name="jetpack_disconnect_pref_title">「WordPress.com との連携を解除」</string>
-    <string name="site_settings_jetpack_whitelist_description">1つの IP アドレスまたは一連の IP アドレスをホワイトリストに追加すると、それらの IP アドレスが Jetpack によりブロックされなくなります。IPv4と IPv6を使用できます。範囲を指定するには、下限値と上限値をダッシュで区切って入力します。例:12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">二段階認証が必要</string>
     <string name="jetpack_match_wpcom_via_email_title">メールを使用してアカウントを照合する</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com ログインを許可する</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com ログイン</string>
-    <string name="jetpack_brute_force_whitelist_title">ホワイトリストに登録された IP アドレス</string>
     <string name="jetpack_prevent_brute_force_title">悪意のあるログイン試行をブロックする</string>
     <string name="jetpack_prevent_brute_force_category_title">総当たり攻撃からの保護</string>
     <string name="jetpack_send_wp_notifications_title">プッシュ通知を送信する</string>
@@ -1836,12 +1841,6 @@ Language: ja_JP
     <string name="notification_settings_category_other">その他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">自分の全サイト</string>
     <string name="notification_settings_category_your_sites">あなたのサイト</string>
-    <string name="notification_settings_master_off_message">通知設定をオフにすると、通知の種類に関係なく、このアプリからの通知がすべて無効になります。通知設定をオンにした後で、受信する通知の種類を調整できます。</string>
-    <string name="notification_settings_master_off_title">この端末で通知を受信するには、通知設定を有効化してください。</string>
-    <string name="notification_settings_master_hint_off">通知を有効にする</string>
-    <string name="notification_settings_master_hint_on">通知を無効化</string>
-    <string name="notification_settings_master_status_off">オフ</string>
-    <string name="notification_settings_master_status_on">オン</string>
     <string name="max_video_resolution">最大動画サイズ</string>
     <string name="max_thumbnail_px_size">最大画像サイズ</string>
     <string name="error_upload_post_media_param">投稿内のメディアのアップロード中にエラーが発生しました: %s。</string>
@@ -2144,7 +2143,9 @@ Language: ja_JP
     <string name="invite_error_invalid_usernames_multiple">送信できません。無効なユーザー名またはメールアドレスがあります</string>
     <string name="invite_error_invalid_usernames_one">送信できません。ユーザー名またはメールアドレスが無効です</string>
     <string name="invite_error_no_usernames">最低1つのユーザー名を追加してください</string>
+    <string name="invite_message_title">カスタムメッセージ</string>
     <string name="invite">招待</string>
+    <string name="invite_names_title">ユーザー名またはメールアドレス</string>
     <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
     <string name="send_link">リンクを送信</string>
@@ -2152,6 +2153,7 @@ Language: ja_JP
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
     <string name="reader_empty_search_description">お使いの言語で「%s」についての投稿は見つかりませんでした</string>
     <string name="reader_hint_post_search">WordPress.com を検索</string>
+    <string name="reader_title_related_post_detail">関連記事</string>
     <string name="preview_screen_links_disabled">プレビュー画面ではリンクが無効になっています</string>
     <string name="send">送信</string>
     <string name="person_removed">%1$s を削除しました</string>
@@ -2291,7 +2293,6 @@ Language: ja_JP
     <string name="site_settings_paging_dialog_description">コメントスレッドを複数のページに分けます。</string>
     <string name="site_settings_paging_dialog_header">1ページあたりのコメント数</string>
     <string name="site_settings_close_after_dialog_title">コメントを閉じます</string>
-    <string name="site_settings_blacklist_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、スパムとしてマークされます。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
     <string name="site_settings_hold_for_moderation_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、承認待ちになります。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
     <string name="site_settings_list_editor_input_hint">単語やフレーズを入力してください</string>
     <string name="site_settings_list_editor_no_items_text">項目なし</string>
@@ -2306,10 +2307,8 @@ Language: ja_JP
     <string name="site_settings_rp_show_header_title">ヘッダーを表示</string>
     <string name="site_settings_rp_switch_summary">「関連記事」は投稿の下にサイト内の関連コンテンツを表示します。</string>
     <string name="site_settings_rp_switch_title">関連記事を表示</string>
-    <string name="site_settings_blacklist_hint">フィルターに一致するコメントはスパムとしてマークされます</string>
     <string name="site_settings_moderation_hold_hint">フィルターに一致するコメントは承認待ちになります</string>
     <string name="site_settings_multiple_links_hint">既知のユーザーからのリンク制限を無視します</string>
-    <string name="site_settings_whitelist_hint">すでに承認されたコメントの投稿者のコメントを許可し、それ以外のコメントを承認待ちにする</string>
     <string name="site_settings_user_account_required_hint">ユーザー登録してログインしたユーザーのみコメントをつけられるようにする</string>
     <string name="site_settings_identity_required_hint">コメントの際、名前とメールアドレスの入力を必須にする</string>
     <string name="site_settings_paging_hint">コメントを指定したサイズに分けて表示します</string>
@@ -2332,17 +2331,13 @@ Language: ja_JP
     <string name="site_settings_address_hint">アドレスの変更は現在サポートされていません</string>
     <string name="site_settings_tagline_hint">ブログの簡単な説明やブログを表す魅力的なフレーズ</string>
     <string name="site_settings_title_hint">このサイトを短い文章で説明してください</string>
-    <string name="site_settings_whitelist_known_summary">既知のユーザーからのコメント</string>
-    <string name="site_settings_whitelist_all_summary">すべてのユーザーからのコメント</string>
     <string name="site_settings_threading_summary">%d階層</string>
     <string name="site_settings_privacy_private_summary">プライベート</string>
     <string name="site_settings_privacy_hidden_summary">非表示</string>
     <string name="site_settings_privacy_public_summary">一般公開</string>
     <string name="site_settings_delete_site_title">サイトを削除</string>
-    <string name="site_settings_blacklist_title">ブラックリスト</string>
     <string name="site_settings_moderation_hold_title">承認待ち</string>
     <string name="site_settings_multiple_links_title">コメント内のリンク</string>
-    <string name="site_settings_whitelist_title">自動で承認</string>
     <string name="site_settings_paging_title">ページ送り</string>
     <string name="site_settings_threading_title">スレッド化</string>
     <string name="site_settings_sort_by_title">並び替え</string>

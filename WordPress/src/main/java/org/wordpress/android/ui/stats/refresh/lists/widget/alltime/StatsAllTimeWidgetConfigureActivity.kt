@@ -2,17 +2,17 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.StatsAllTimeWidgetConfigureActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class StatsAllTimeWidgetConfigureActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(StatsAllTimeWidgetConfigureActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
 
-        setContentView(R.layout.stats_all_time_widget_configure_activity)
-
-        setSupportActionBar(toolbar_main)
+            setSupportActionBar(toolbar.toolbarMain)
+        }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

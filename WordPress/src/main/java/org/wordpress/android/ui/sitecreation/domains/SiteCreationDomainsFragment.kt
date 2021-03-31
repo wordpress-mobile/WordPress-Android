@@ -115,7 +115,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         viewModel.onHelpClicked.observe(this, Observer {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         })
-        viewModel.start(getSegmentIdFromArguments())
+        viewModel.start()
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
@@ -132,8 +132,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscapeBySize() || visible)
     }
 
-    private fun getSegmentIdFromArguments(): Long? = arguments?.getLong(EXTRA_SEGMENT_ID)
-
     override fun onDestroyView() {
         super.onDestroyView()
         searchInputWithHeader = null
@@ -141,15 +139,11 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
-        private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, segmentId: Long?): SiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            if (segmentId != null) {
-                bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
-            }
             fragment.arguments = bundle
             return fragment
         }

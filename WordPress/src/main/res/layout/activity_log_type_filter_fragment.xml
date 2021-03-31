@@ -36,7 +36,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/progress_layout" />
+    <include android:id="@+id/progress" layout="@layout/progress_layout" />
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"

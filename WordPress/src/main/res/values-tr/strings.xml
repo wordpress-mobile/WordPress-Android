@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-28 17:15:46+0000
+Translation-Revision-Date: 2021-03-17 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="scan_idle_with_threats_description_plural">Tarama %2s ile ilgili %1s potansiyel tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %3$s.</string>
-    <string name="threat_fix_all_warning_message_plural">Lütfen tüm %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
+    <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
+    <string name="reader_title_interests">Konuları takip et</string>
+    <string name="activity_log_backup_download_notice_download_action">İndir</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
+    <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Lütfen tüm %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
     <string name="threat_fix_all_status_success_message_plural">Tehditler başarıyla düzeltildi.</string>
+    <string name="scan_idle_threats_description_plural">Tarama işlemi %2$s üzerinde %1$s olası tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %3$s.</string>
     <string name="scan_fixing_threats_description_plural">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal bir şekilde kullanmaya devam edebilirsiniz, ilerlemeyi istediğiniz zaman kontrol edebilirsiniz.</string>
     <string name="gutenberg_native_edit_focal_point">Odak noktasını düzenle</string>
     <string name="quick_start_completed_type_grow_message">&lt;b>Tüm görevler tamamlandı&lt;/b>&lt;br/>Daha fazla kişiye ulaşacaksınız. İyi iş!</string>
@@ -33,11 +38,11 @@ Language: tr
     <string name="invite_links_share_invite_link">Davet bağlantısını paylaş</string>
     <string name="invite_links_disable_invite_link">Davet bağlantısını etkisizleştir</string>
     <string name="invite_links_expire_date">Son kullanma tarihi: %1$s</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Tarama tamamlandı&lt;/b> &lt;br>&lt;/br> Tehdit bulunamadı</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Tarama tamamlandı&lt;/b> &lt;br>&lt;/br> 1 potansiyel tehdit bulundu</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Tarama tamamlandı&lt;/b> &lt;br>&lt;/br> %s potansiyel tehdit bulundu</string>
     <string name="threats_found_plural">Tehditler bulundu</string>
     <string name="threats_found_singular">Tehdit bulundu</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Tarama Bitti&lt;/b> &lt;br> Tehdit bulunmadı</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Tarama tamamlandı&lt;/b> &lt;br> %s Olası tehditler bulundu</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Tarama tamamlandı&lt;/b> &lt;br> Bir olası tehdit bulundu</string>
     <string name="disable">Etkisizleştir</string>
     <string name="scan_fixing_threats_title_singular">Tehditler düzeltiliyor</string>
     <string name="quick_start_card_menu_unpin">Sabitlemeyi kaldır</string>
@@ -93,7 +98,7 @@ Language: tr
     <string name="threat_status_fixed">Sabit</string>
     <string name="threat_found_header">Bulundu</string>
     <string name="scan_here_to_help">yardım etmek için buradayım</string>
-    <string name="scan_idle_with_threats_description_singular">Tarama %2s ile ilgili %1s potansiyel tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize ihtiyacın olursa %3$s.</string>
+    <string name="scan_idle_threats_description_singular">Tarama işlemi %1$s üzerinde bir olası tehdit buldu. Lütfen aşağıdan tehdidi inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %2$s.</string>
     <string name="scan_idle_manual_scan_description">Sitenizi yeniden gözden geçirmek için manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
     <string name="scan_provisioning_description">Jetpack Scan\'e hoş geldiniz! Sitenize göz atıyor ve tam bir tarama yapacak şekilde ayarlıyoruz. Taramayı etkileyebilecek herhangi bir sorun tespit edersek size haber vereceğiz, ardından ilk tam taramanız başlayacaktır.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.</string>
@@ -159,7 +164,7 @@ Language: tr
     <string name="threat_fix_all_status_error_message">Düzeltme durumu alınırken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
     <string name="threat_fix_all_status_success_message_singular">Tehditler başarıyla düzeltildi.</string>
     <string name="threat_fix_all_error_message">Tehditler düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
-    <string name="threat_fix_all_warning_message_singular">Lütfen %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Lütfen bir aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
     <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
     <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
     <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
@@ -368,11 +373,11 @@ Language: tr
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">Fotoğrafçı Cameron Karsten\'in çalışmalarından çok ilham alıyorum. Bu teknikleri bir sonraki adımda deneyeceğim</string>
     <string name="login_prologue_second_subtitle_one">İlham Alma</string>
-    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni yazılar keşfedin.</string>
     <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
     <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
     <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
     <string name="login_prologue_title_third">Yorumları ve bildirimleri gerçek zamanlı olarak görün.</string>
+    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni bloglar keşfedin.</string>
     <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
     <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
@@ -390,7 +395,6 @@ Language: tr
     <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
     <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
     <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>
-    <string name="mlp_preview_title">Düzen Önizlemesi</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s fotoğraflarınıza erişimi reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s ve %3$s özelliklerini açın.</string>
     <string name="media_insert_failed">Medya eklenemedi.</string>
     <string name="media_insert_failed_with_reason">Medya eklenemedi: %s</string>
@@ -593,9 +597,9 @@ Language: tr
     <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı gerektirir.</string>
     <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
-    <string name="reader_choose_interests_content_description">İlgi alanlarınızı seçin</string>
-    <string name="reader_label_choose_your_interests">İlgi alanlarınızı seçin</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
+    <string name="reader_choose_interests_content_description">Konularınızı seçin</string>
+    <string name="reader_label_choose_your_interests"> Konularınızı seçin</string>
     <string name="update_now">Şimdi güncelle</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
@@ -714,8 +718,6 @@ Language: tr
     <string name="editor_page_saved_locally_failed_media">Sayfa, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="editor_uploading_page">Sayfanız yükleniyor</string>
     <string name="app_theme_default">Pil tasarrufu ile ayarlanır</string>
-    <string name="gutenberg_native_warning_message">Uyarı Mesajı</string>
-    <string name="gutenberg_native_success_message">Başarı Mesajı</string>
     <string name="gutenberg_native_show_post_content">Gönderi içeriğini göster</string>
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
@@ -825,18 +827,14 @@ Language: tr
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
-    <string name="gutenberg_native_title">Başlık:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klavyeyi gizlemek için dokunun</string>
     <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Kenar çubuğu başlık eklentisi</string>
     <string name="gutenberg_native_show_section">Bölümü göster</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
-    <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
     <string name="gutenberg_native_cut_block">Bloğu kes</string>
-    <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
     <string name="gutenberg_native_problem_displaying_block">Blok görüntülenirken bir sorun oluştu</string>
     <string name="gutenberg_native_post_title_s">Yazı başlığı. %s</string>
@@ -846,17 +844,12 @@ Language: tr
     <string name="gutenberg_native_open_settings">Ayarları aç</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Hiçbir uygulama bu isteği yerine getiremiyor. Lütfen bir Web tarayıcısı yükleyin.</string>
     <string name="gutenberg_native_navigate_up">Yukarı Git</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Yayımlama öncesi panelim</string>
-    <string name="gutenberg_native_my_post_status_info">Gönderi durumu bilgilerim</string>
-    <string name="gutenberg_native_my_post_publish_panel">Yayımlama sonrası panelim</string>
-    <string name="gutenberg_native_my_document_setting_panel">Belge ayarları panelim</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
-    <string name="gutenberg_native_here_is_the_panel_content">İşte panel içeriği!</string>
     <string name="gutenberg_native_help_icon">Yardım simgesi</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
@@ -870,30 +863,18 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_edit_this_value">Bu değeri düzenlemek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Kaydırıcıyı kullanarak değeri değiştirmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Blok eklemek için çift dokunun</string>
-    <string name="gutenberg_native_content">İçerik…</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
-    <string name="gutenberg_native_annotations_sidebar">Ek Açıklamalar Kenar Çubuğu</string>
     <string name="gutenberg_native_alt_text">Alternatif metin</string>
     <string name="gutenberg_native_add_video">VİDEO EKLE</string>
     <string name="gutenberg_native_add_url">URL ekle</string>
     <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
     <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>
-    <string name="gutenberg_native_add_annotation">Ek açıklama ekle</string>
-    <string name="gutenberg_native_add_a_description">Açıklama ekle</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
     <string name="reader_empty_saved_posts_content_description">Bir gönderiyi listenize kaydetmek için Gönderileri Kaydetmek için Ekle düğmesine dokunun.</string>
     <string name="reader_acessibility_list_loaded">\"Listeye %1$d öğe yüklendi.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Bildirimler</string>
-    <string name="master_switch_default_title_off">Kapalı</string>
-    <string name="master_switch_default_title_on">Açık</string>
-    <string name="notifications_tab_dialog_master_off_message">Bu site için bildirimleri kapatmak, bildirimler sekmesinde görünen bildirimleri devre dışı bırakacaktır. Bu site için bildirimleri açtıktan sonra ne tür bir bildirim göreceğinize ince ayar yapabilirsiniz.</string>
-    <string name="notifications_tab_dialog_master_status_off">Bu site için bildirimler</string>
-    <string name="notifications_tab_dialog_master_status_on">Bu site için bildirimler</string>
-    <string name="notifications_tab_dialog_master_off_title">Bu sitenin bildirimlerini, bildirimler sekmesindeki bildirimleri görmek için, açın.</string>
-    <string name="notifications_tab_dialog_master_hint_off">Bu site için bildirimler sekmesinde bildirim gösterimini etkinleştir</string>
-    <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
     <string name="pick_media">Görsel veya video ekle.</string>
     <string name="error_post_not_published_retrying_private">Bu özel yazıyı yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
     <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
@@ -1167,14 +1148,14 @@ Language: tr
     <string name="menu_switch_to_aztec_editor">Klasik düzenleyiciye geç</string>
     <string name="exit">çıkış</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
-    <string name="quick_start_sites_type_grow">Kitlenizi Genişletin</string>
-    <string name="quick_start_sites_type_customize">Sitenizi Özelleştirin</string>
     <string name="quick_start_sites">Sonraki Adımlar</string>
     <string name="quick_start_complete_tasks_header">Tamamlandı (%d)</string>
     <string name="quick_start_dialog_view_site_message">Tamamlanmış ürününüzün tadını çıkarın!</string>
     <string name="quick_start_dialog_upload_icon_title">Bir site simgesi yükleyin</string>
     <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Mevcut paketi ve kullanılabilecek diğer paketleri görmek için %1$s Paket %2$s seçeneğine dokunun</string>
+    <string name="quick_start_sites_type_grow">Kitlenizi genişletin</string>
+    <string name="quick_start_sites_type_customize">Sitenizi özelleştirin</string>
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">İlk gönderinizi taslak olarak yayınlayın.</string>
@@ -1215,8 +1196,6 @@ Language: tr
     <string name="site_creation_error_generic_subtitle">Sunucu ile iletişim kurulurken hata oluştu, lütfen tekrar deneyin</string>
     <string name="site_creation_error_generic_title">Bir hata oluştu</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Bir hata oluştu</string>
-    <string name="site_creation_segments_subtitle">Bu, öneriler sunmamıza yardımcı olur. Ancak bu sizi asla kısıtlamaz çünkü tüm siteler değişir!</string>
-    <string name="site_creation_segments_title">Ne tür bir site oluşturmak istediğinizi bize söyleyin</string>
     <string name="new_site_creation_preview_title">Siteniz oluşturuldu!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d/%2$d</string>
     <string name="new_site_creation_screen_title_general">Site Oluştur</string>
@@ -1372,8 +1351,8 @@ Language: tr
     <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
     <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
     <string name="quick_start_dialog_follow_sites_message">Size hitab eden siteleri bulun ve yayınladıkları zaman güncellemeleri almak için bunları takip edin.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Benzer alanlardaki siteleri aramak için %1$s Ara %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Devam etmek için %1$s Okuyucu %2$s seçeneğine dokunun.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Benzer konulara sahip siteleri aramak için %1$sAra%2$s\'ya dokunun</string>
     <string name="quick_start_button_negative">Şimdi değil</string>
     <string name="quick_start_button_negative_short">Vazgeç</string>
     <string name="quick_start_button_positive">Git</string>
@@ -1462,8 +1441,6 @@ Language: tr
     <string name="site_address_login_title">Site adresi ile giriş</string>
     <string name="email_address_login_title">E-posta ile giriş</string>
     <string name="alternatively">Alternatif olarak:</string>
-    <string name="reader_btn_bookmarked">Kaydedildi</string>
-    <string name="reader_btn_bookmark">Kaydet</string>
     <string name="reader_save_for_later_title">Kaydedilen gönderiler</string>
     <string name="removed">Kaldırıldı</string>
     <string name="reader_empty_saved_posts_title">Henüz hiç yazı kaydedilmedi!</string>
@@ -1820,12 +1797,10 @@ Language: tr
     <string name="jetpack_disconnect_confirmation_message">Jetpack\'in siteden bağlantısını kesmek istediğinize emin misiniz?</string>
     <string name="jetpack_disconnect_confirm">Bağlantıyı kes</string>
     <string name="jetpack_disconnect_pref_title">\"WordPress.com\'dan bağlantıyı kes\"</string>
-    <string name="site_settings_jetpack_whitelist_description">Jetpack tarafından engellenmelerini önleyen bir IP adresini veya bir dizi adresleri beyaz listeye ekleyebilirsiniz. IPv4 ve IPv6 kabul edilebilir. Bir aralığı belirtmek için, düşük değeri ve yüksek değeri bir çizgi ile ayırarak girin. Örnek: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">İki adımlı kimlik doğrulamayı zorunlu kıl</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com oturum açmaya izin ver</string>
     <string name="jetpack_match_wpcom_via_email_title">E-posta kullanarak hesapları eşleştir</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com oturum açma</string>
-    <string name="jetpack_brute_force_whitelist_title">Beyaz listedeki IP adresleri</string>
     <string name="jetpack_prevent_brute_force_title">Kötü amaçlı giriş girişimleri engelle</string>
     <string name="jetpack_prevent_brute_force_category_title">Brute force saldırı koruması</string>
     <string name="jetpack_send_wp_notifications_title">Anlık bildirimleri gönder</string>
@@ -1866,12 +1841,6 @@ Language: tr
     <string name="notification_settings_category_other">Diğer</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Tüm sitelerim</string>
     <string name="notification_settings_category_your_sites">Siteleriniz</string>
-    <string name="notification_settings_master_off_message">Bildirim ayarlarını devre dışı bırakmak, bu uygulamada türüne bakılmaksızın tüm bildirimleri devre dışı bırakır. Bildirim ayarlarını açtıktan sonra almak istediğiniz bildirim türlerini ayarlayabilirsiniz.</string>
-    <string name="notification_settings_master_off_title">Bu cihazda bildirim almak için Bildirim Ayarlarını etkinleştirin.</string>
-    <string name="notification_settings_master_hint_off">Bildirimleri etkinleştir</string>
-    <string name="notification_settings_master_hint_on">Bildirimleri devre dışı bırak</string>
-    <string name="notification_settings_master_status_off">Kapalı</string>
-    <string name="notification_settings_master_status_on">Açık</string>
     <string name="max_video_resolution">Azami video boyutu</string>
     <string name="max_thumbnail_px_size">Azami görsel boyutu</string>
     <string name="error_upload_post_media_param">Bu yazıya ortam dosyası yüklenirken bir hata oluştu: %s.</string>
@@ -2126,7 +2095,7 @@ Language: tr
     <string name="signout">Çıkış yap</string>
     <string name="sign_in_wpcom">WordPress.com hesabına giriş yap</string>
     <string name="reader_label_global_related_posts">WordPress.com üzerinden daha fazlası</string>
-    <string name="reader_label_local_related_posts">%s üzerinden daha fazlası</string>
+    <string name="reader_label_local_related_posts">Daha fazlası: %s</string>
     <string name="preference_open_device_settings">Cihaz ayarlarını aç</string>
     <string name="invite_invalid_email">%s: Geçersiz e-posta</string>
     <string name="invite_user_blocked_invites">%s: Kullanıcı bloklu davetler</string>
@@ -2184,6 +2153,7 @@ Language: tr
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
     <string name="reader_hint_post_search">WordPress üzerinde ara</string>
+    <string name="reader_title_related_post_detail">İlişkili yazı</string>
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
     <string name="send">Gönder</string>
     <string name="user_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
@@ -2323,7 +2293,6 @@ Language: tr
     <string name="site_settings_paging_dialog_description">Yorum zincirlerini birden çok sayfaya böl.</string>
     <string name="site_settings_paging_dialog_header">Sayfa başına yorum</string>
     <string name="site_settings_close_after_dialog_title">Yorumları kapat</string>
-    <string name="site_settings_blacklist_description">Bir yorum içeriğinde, adında, adresinde, e-posta ya da IP’sinde bu sözcüklerden biri bulunuyorsa bu yorum, istenmeyen olarak işaretlenecektir. Sözcük parçaları girebilirsiniz; örneğin \"press\" ifadesi \"WordPress\" ile eşleşecektir.</string>
     <string name="site_settings_hold_for_moderation_description">Bir yorumun içeriğinde, adında, adresinde, e-posta ya da IP’sinde bu sözcüklerden biri bulunuyorsa bu yorum, denetim kuyruğuna alınır. Sözcük parçaları girebilirsiniz; örneğin \"press\" ifadesi \"WordPress\" ile eşleşecektir.</string>
     <string name="site_settings_list_editor_input_hint">Bir sözcük veya sözcük grubu girin</string>
     <string name="site_settings_list_editor_no_items_text">Öğe yok</string>
@@ -2338,10 +2307,8 @@ Language: tr
     <string name="site_settings_rp_show_header_title">Başlığı göster</string>
     <string name="site_settings_rp_switch_summary">Benzer Yazılar, yazılarınızın altında sitenizden ilgili içerikler gösterir.</string>
     <string name="site_settings_rp_switch_title">Benzer yazıları göster</string>
-    <string name="site_settings_blacklist_hint">Bir filtre ile eşleşen yorumlar istenmeyen olarak işaretlenir</string>
     <string name="site_settings_moderation_hold_hint">Bir filtre ile eşleşen yorumlar denetim kuyruğuna alınır</string>
     <string name="site_settings_multiple_links_hint">Bilinen kullanıcılar için bağlantı sayısı sınırını yoksayar</string>
-    <string name="site_settings_whitelist_hint">Yorum yazarının önceden onaylanmış bir yorumu olmalıdır</string>
     <string name="site_settings_user_account_required_hint">Kullanıcılar yorum yapmak için kaydolmalı ve oturum açmalılardır</string>
     <string name="site_settings_identity_required_hint">Yorum yazarı ad ve e-posta alanlarını doldurmalıdır</string>
     <string name="site_settings_paging_hint">Yorumları belirlenen bir boyuttaki öbekler halinde görüntüle</string>
@@ -2364,17 +2331,13 @@ Language: tr
     <string name="site_settings_address_hint">Adresinizi değiştirme şu anda desteklenmiyor</string>
     <string name="site_settings_tagline_hint">Blogunuzu anlatan kısa bir açıklama ya da akılda kalıcı bir ifade</string>
     <string name="site_settings_title_hint">Birkaç kelimeyle bu sitenin ne ile ilgili olduğunu anlatın</string>
-    <string name="site_settings_whitelist_known_summary">Bilinen kullanıcılardan yorumlar</string>
-    <string name="site_settings_whitelist_all_summary">Tüm kullanıcılardan yorumlar</string>
     <string name="site_settings_threading_summary">%d seviye</string>
     <string name="site_settings_privacy_private_summary">Özel</string>
     <string name="site_settings_privacy_hidden_summary">Gizli</string>
     <string name="site_settings_delete_site_title">Siteyi sil</string>
     <string name="site_settings_privacy_public_summary">Herkese açık</string>
-    <string name="site_settings_blacklist_title">Kara liste</string>
     <string name="site_settings_moderation_hold_title">Denetleme için tut</string>
     <string name="site_settings_multiple_links_title">Yorumlardaki bağlantılar</string>
-    <string name="site_settings_whitelist_title">Otomatik olarak onayla</string>
     <string name="site_settings_threading_title">Yorum zinciri ayarı</string>
     <string name="site_settings_paging_title">Sayfa ayarı</string>
     <string name="site_settings_sort_by_title">Sırala</string>

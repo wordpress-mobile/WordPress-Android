@@ -1,10 +1,25 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.1
+-----
+
+
+17.0
+-----
+* [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
+* [*] [Block Editor] Remove the cancel button from settings options [https://github.com/WordPress/gutenberg/pull/29599]
+* [**] Stories: enabled pinch to zoom on your slides background images! [https://github.com/wordpress-mobile/WordPress-Android/pull/14284]
+
 16.9
 -----
-* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
+* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
 * [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
+* [**] The classic editor will no longer be available for new posts soon, but this won’t affect editing any existing posts or pages. Users should consider switching over to the Block Editor now. [#14205]
 * [**] My Site: Quick Start was completely redesigned and is now always shown after creating a site [https://github.com/wordpress-mobile/WordPress-Android/pull/14122]
+
+16.8.1
+------
+* [**] Block Editor: Reduce the number of items per page when fetching reusable blocks to prevent a crash. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3227]
 
 16.8
 -----

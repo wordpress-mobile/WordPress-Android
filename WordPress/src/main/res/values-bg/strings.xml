@@ -92,13 +92,7 @@ Language: bg
     <string name="notification_settings_category_other">Други</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Всички мои сайтове</string>
     <string name="notification_settings_category_your_sites">Вашите сайтове</string>
-    <string name="notification_settings_master_off_message">Изключване на състемата за известия, ще спре изпращането на известия, независимо от типа им. Може да донастройте системата за известия като я включите.</string>
-    <string name="notification_settings_master_off_title">За да получавате известия на устройството, активирайте системата за известия.</string>
-    <string name="notification_settings_master_hint_off">Включване на известията</string>
-    <string name="notification_settings_master_hint_on">Изключване на известията</string>
-    <string name="notification_settings_master_status_off">Изключено</string>
     <string name="max_video_resolution">Максимален размер на видеото</string>
-    <string name="notification_settings_master_status_on">Включено</string>
     <string name="max_thumbnail_px_size">Максимален размер на изображенията</string>
     <string name="error_upload_post_media_param">Възникна грешка при качване на медиата в тази публикация %s.</string>
     <string name="error_upload_post_param">Възникна грешка при качването на тази публикация: %s.</string>
@@ -280,7 +274,6 @@ Language: bg
     <string name="sign_in_wpcom">Влизане в WordPress.com</string>
     <string name="signout">Излизане</string>
     <string name="reader_label_global_related_posts">Още на WordPress.com</string>
-    <string name="reader_label_local_related_posts">Още в %s</string>
     <string name="preference_open_device_settings">Настройки на устройството</string>
     <string name="invite_invalid_email">%s: Невалиден имейл</string>
     <string name="invite_user_blocked_invites">%s: потребителят е забранил поканите</string>
@@ -334,6 +327,7 @@ Language: bg
     <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
+    <string name="reader_title_related_post_detail">Свързана публикация</string>
     <string name="preview_screen_links_disabled">Връзките на екрана за преглед са деактивирани</string>
     <string name="send">Изпращане</string>
     <string name="person_removed">%1$s бе успешно премахнат</string>
@@ -466,7 +460,6 @@ Language: bg
     <string name="site_settings_paging_dialog_description">Разделяне на коментарите на няколко страници.</string>
     <string name="site_settings_paging_dialog_header">Коментари на страница</string>
     <string name="site_settings_close_after_dialog_title">Затваряне на коментарите</string>
-    <string name="site_settings_blacklist_description">Когато коментар съдържа която и да е от тези думи в съдържанието, името, адрес или IP адреса си, той ще бъде отбелязан като спам. Частични думи също работят, може да въведете „press“, което ще съвпадне с „WordPress“.</string>
     <string name="site_settings_hold_for_moderation_description">Когато коментар съдържа която и да е от тези думи в съдържанието, името, адрес или IP адреса си, той ще бъде изпращан за модерация. Частични думи също работят, може да въведете „press“, което ще съвпадне с „WordPress“.</string>
     <string name="site_settings_list_editor_input_hint">Въведете дума или фраза</string>
     <string name="site_settings_list_editor_no_items_text">Няма елементи</string>
@@ -481,10 +474,8 @@ Language: bg
     <string name="site_settings_rp_show_header_title">Показване на заглавката</string>
     <string name="site_settings_rp_switch_summary">Показва подобно съдържание от вашия сайт под вашите публикации.</string>
     <string name="site_settings_rp_switch_title">Показване на подобни публикации</string>
-    <string name="site_settings_blacklist_hint">Коментарите, които съвпаднат с термин за филтриране, ще бъдат отбелязани като спам.</string>
     <string name="site_settings_moderation_hold_hint">Коментарите, които отговарят на този филтър, ще бъдат добавени в опашката за модериране.</string>
     <string name="site_settings_multiple_links_hint">Игнорира лимита за връзки от познати потребители</string>
-    <string name="site_settings_whitelist_hint">Авторът на коментара трябва да има поне един одобрен коментар</string>
     <string name="site_settings_user_account_required_hint">Потребителите трябва да са регистрирани и влезли за да коментират</string>
     <string name="site_settings_identity_required_hint">Авторът на коментара трябва да попълни своите име и имейл</string>
     <string name="site_settings_paging_hint">Показване на коментарите в части с определен размер</string>
@@ -507,17 +498,13 @@ Language: bg
     <string name="site_settings_address_hint">В момента не можете да променяте вашия адрес</string>
     <string name="site_settings_tagline_hint">Кратък текст или привлекателна фраза, описваща вашия блог</string>
     <string name="site_settings_title_hint">Описание на сайта</string>
-    <string name="site_settings_whitelist_known_summary">Коментари от познати потребители</string>
-    <string name="site_settings_whitelist_all_summary">Коментари от всички потребители</string>
     <string name="site_settings_threading_summary">%d нива</string>
     <string name="site_settings_privacy_private_summary">Частен</string>
     <string name="site_settings_privacy_hidden_summary">Скрит</string>
     <string name="site_settings_delete_site_title">Изтриване на сайт</string>
     <string name="site_settings_privacy_public_summary">Публичен</string>
-    <string name="site_settings_blacklist_title">Черен списък</string>
     <string name="site_settings_moderation_hold_title">За модерация</string>
     <string name="site_settings_multiple_links_title">Връзки в коментарите</string>
-    <string name="site_settings_whitelist_title">Автоматично одобряване</string>
     <string name="site_settings_paging_title">Страниране</string>
     <string name="site_settings_threading_title">Опашка</string>
     <string name="site_settings_sort_by_title">Сортиране по</string>

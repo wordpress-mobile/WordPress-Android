@@ -25,51 +25,45 @@ class UnifiedLoginTracker
     ) {
         currentFlow = flow
         currentStep = step
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                analyticsTracker.track(
-                        stat = UNIFIED_LOGIN_STEP,
-                        properties = buildDefaultParams()
-                )
-            } else {
-                handleMissingFlowOrStep("step: ${step.value}")
-            }
+        if (currentFlow != null && currentStep != null) {
+            analyticsTracker.track(
+                    stat = UNIFIED_LOGIN_STEP,
+                    properties = buildDefaultParams()
+            )
+        } else {
+            handleMissingFlowOrStep("step: ${step.value}")
         }
     }
 
     fun trackFailure(error: String?) {
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                currentFlow?.let {
-                    analyticsTracker.track(
-                            stat = UNIFIED_LOGIN_FAILURE,
-                            properties = buildDefaultParams().apply {
-                                error?.let {
-                                    put(FAILURE, error)
-                                }
+        if (currentFlow != null && currentStep != null) {
+            currentFlow?.let {
+                analyticsTracker.track(
+                        stat = UNIFIED_LOGIN_FAILURE,
+                        properties = buildDefaultParams().apply {
+                            error?.let {
+                                put(FAILURE, error)
                             }
-                    )
-                }
-            } else {
-                handleMissingFlowOrStep("failure: $error")
+                        }
+                )
             }
+        } else {
+            handleMissingFlowOrStep("failure: $error")
         }
     }
 
     fun trackClick(click: Click) {
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            if (currentFlow != null && currentStep != null) {
-                currentFlow?.let {
-                    analyticsTracker.track(
-                            stat = UNIFIED_LOGIN_INTERACTION,
-                            properties = buildDefaultParams().apply {
-                                put(CLICK, click.value)
-                            }
-                    )
-                }
-            } else {
-                handleMissingFlowOrStep("click: ${click.value}")
+        if (currentFlow != null && currentStep != null) {
+            currentFlow?.let {
+                analyticsTracker.track(
+                        stat = UNIFIED_LOGIN_INTERACTION,
+                        properties = buildDefaultParams().apply {
+                            put(CLICK, click.value)
+                        }
+                )
             }
+        } else {
+            handleMissingFlowOrStep("click: ${click.value}")
         }
     }
 

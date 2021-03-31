@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 10:45:33+0000
+Translation-Revision-Date: 2021-03-09 14:08:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
+    <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
     <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
     <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe situl tău.</string>
     <string name="threat_fix_all_status_success_message_plural">Amenințările au fost înlăturate cu succes.</string>
-    <string name="threat_fix_all_warning_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
-    <string name="scan_idle_with_threats_description_plural">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
+    <string name="scan_idle_threats_description_plural">Scanarea a găsit %1$s amenințări posibile pe %2$s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
     <string name="scan_fixing_threats_description_plural">Lucrăm din greu, în fundal, pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
     <string name="gutenberg_native_edit_focal_point">Editează punctul central</string>
     <string name="new_site_creation_search_domain_example">exemplu.com</string>
@@ -36,11 +38,11 @@ Language: ro
     <string name="invite_links_section_title">Legătură la invitație</string>
     <string name="invite_links_disable_invite_link">Dezactivează legătura la invitație</string>
     <string name="invite_links_share_invite_link">Partajează legătura la invitație</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Nu am găsit amenințări</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit o posibilă amenințare</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit %s posibile amenințări</string>
     <string name="threats_found_singular">Amenințare găsită</string>
     <string name="threats_found_plural">Amenințări găsite</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Nu am găsit amenințări</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Am găsit o posibilă amenințare</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br> Am găsit %s posibile amenințări</string>
     <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
     <string name="disable">Dezactivează</string>
     <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
@@ -96,7 +98,7 @@ Language: ro
     <string name="threat_status_fixed">Înlăturate</string>
     <string name="threat_found_header">Găsite</string>
     <string name="scan_here_to_help">aici pentru a te ajuta</string>
-    <string name="scan_idle_with_threats_description_singular">Scanarea a găsit %1s posibilă amenințare pe %2s. Te rog examinează amenințarea și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s dacă ai nevoie de noi.</string>
+    <string name="scan_idle_threats_description_singular">Scanarea a găsit o posibilă amenințare pe %1$s. Te rog examinează amenințarea și acționează sau atinge butonul Înlătură-le pe toate. Suntem %2$s dacă ai nevoie de noi.</string>
     <string name="scan_idle_manual_scan_description">Pentru a analiza situl din nou, Rulează acum o scanare manuală sau așteaptă ca Jetpack să-ți scaneze situl azi, mai târziu.</string>
     <string name="scan_provisioning_description">Bine ai venit la scanarea Jetpack Scan! Îți investigăm situl și ne pregătim să facem o scanare completă. Te vom anunța dacă detectăm probleme care ar putea afecta scanarea, apoi va începe prima scanare completă.</string>
     <string name="scan_scanning_is_initial_description">Bine ai venit la scanarea Jetpack, acum aruncăm o primă privire pe situl tău, vei primi rezultatele în curând.</string>
@@ -161,7 +163,7 @@ Language: ro
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
     <string name="threat_fix_all_status_error_message">Eroare la primirea stării pentru înlăturarea amenințărilor. Te rog contactează suportul.</string>
     <string name="threat_fix_all_error_message">Eroare la înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_warning_message_singular">Te rog confirmă că vrei să înlături %s amenințare activă.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Te rog confirmă că vrei să înlături o amenințare activă.</string>
     <string name="threat_fix_all_status_success_message_singular">Amenințarea a fost înlăturată cu succes.</string>
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>
@@ -370,12 +372,12 @@ Language: ro
     <string name="login_prologue_fifth_subtitle_two">Știri pe web</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">M-au inspirat foarte mult lucrările fotografului Cameron Karsten. Voi încerca aceste tehnici pe viitor</string>
-    <string name="login_prologue_title_fifth">Urmărește-ți siturile preferate și descoperi lecturi noi.</string>
     <string name="login_prologue_title_fourth">Urmărești cum îți crește audiența cu analitice detaliate.</string>
     <string name="login_prologue_title_third">Vezi comentariile și notificările în timp real.</string>
     <string name="login_prologue_title_second">Cu acest editor puternic poți publica din mers.</string>
     <string name="login_prologue_title_first">Bine ai venit la cel mai popular constructor de situri web din lume.</string>
     <string name="login_prologue_second_subtitle_one">Inspiră-te</string>
+    <string name="login_prologue_title_fifth">Urmărește-ți siturile preferate și descoperi bloguri noi.</string>
     <string name="media_loading_failed">Încărcarea media a eșuat</string>
     <string name="reader_discover_recommended_blogs_header">Situri de urmărit</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Lucrăm continuu pentru a adăuga mai multe blocuri la fiecare lansare.</string>
@@ -393,7 +395,6 @@ Language: ro
     <string name="stories_intro_main_title">Prezentăm Articole narațiune</string>
     <string name="mlp_notice_blank_page_created">A fost creată o pagină goală</string>
     <string name="mlp_notice_page_created">A fost creată o pagină</string>
-    <string name="mlp_preview_title">Previzualizare aranjament</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s și %3$s.</string>
     <string name="media_insert_failed">Inserarea media a eșuat.</string>
     <string name="media_insert_failed_with_reason">Inserarea media a eșuat: %s</string>
@@ -589,8 +590,6 @@ Language: ro
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Articolele aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestui articol în „ciornă” pentru a-l putea edita?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publicării</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Muți articolul în Ciorne?</string>
-    <string name="reader_label_choose_your_interests">Alege ce te interesează</string>
-    <string name="reader_choose_interests_content_description">Alege ce te interesează</string>
     <string name="reader_btn_done">Gata</string>
     <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
     <string name="post_status_post_published">Publicat</string>
@@ -599,6 +598,8 @@ Language: ro
     <string name="publish_date">Data publicării</string>
     <string name="ccpa_privacy_notice_read">Citește notificarea de confidențialitate CCPA</string>
     <string name="ccpa_privacy_notice_caption">Legea privind confidențialitatea consumatorilor din California (CCPA) ne obligă să oferim rezidenților din California câteva informații suplimentare despre categoriile de informații cu caracter personal pe care le colectăm și le partajăm, de unde și cum obținem aceste informații cu caracter personal și de ce le folosim.</string>
+    <string name="reader_label_choose_your_interests">Alege subiecte</string>
+    <string name="reader_choose_interests_content_description">Alege subiecte</string>
     <string name="ccpa_privacy_notice_header">Notificări de confidențialitate pentru utilizatorii din California</string>
     <string name="status_and_visibility">Stare și vizibilitate</string>
     <string name="update_now">Actualizează acum</string>
@@ -717,8 +718,6 @@ Language: ro
     <string name="quickpress_shortcut_activity_label">Selectează blogul pentru scurtătura QuickPress</string>
     <string name="editor_uploading_page">Pagina ta se încarcă</string>
     <string name="editor_page_saved_locally_failed_media">Pagina a eșuat la încărcările media și a fost salvată local</string>
-    <string name="gutenberg_native_warning_message">Mesaj de avertizare</string>
-    <string name="gutenberg_native_success_message">Mesaj de succes</string>
     <string name="gutenberg_native_show_post_content">Arată conținutul articolului</string>
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
@@ -826,40 +825,31 @@ Language: ro
     <string name="gutenberg_native_unsupported">Neacceptat</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_translate">Tradu</string>
-    <string name="gutenberg_native_title">Titlu:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Atinge pentru a ascunde tastatura</string>
     <string name="gutenberg_native_tap_here_to_show_help">Atinge aici pentru a afișa ajutorul</string>
     <string name="gutenberg_native_take_a_video">Fă un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
     <string name="gutenberg_native_start_writing">Începe să scrii…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Conectare titlu bară laterală</string>
     <string name="gutenberg_native_show_section">Arată secțiunea</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
-    <string name="gutenberg_native_reset_block">Resetează blocul</string>
     <string name="gutenberg_native_cut_block">Șterge blocul</string>
     <string name="gutenberg_native_page_break_block_s">Bloc Sfârșit de pagină. %s</string>
     <string name="gutenberg_native_open_settings">Deschide setările</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nicio aplicație nu poate gestiona această cerere. Te rog instalează un navigator web.</string>
-    <string name="gutenberg_native_remove_annotations">Înlătură adnotările</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
     <string name="gutenberg_native_problem_displaying_block">Problemă la afișarea blocului</string>
     <string name="gutenberg_native_post_title_s">Titlu articol. %s</string>
     <string name="gutenberg_native_post_title_empty">Titlu articol. Gol</string>
     <string name="gutenberg_native_paste_url">Plasează URL-ul</string>
     <string name="gutenberg_native_navigate_up">Navighează în sus</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Panoul meu pentru pre-publicare</string>
-    <string name="gutenberg_native_my_post_status_info">Informații despre starea articolelor mele</string>
-    <string name="gutenberg_native_my_post_publish_panel">Panoul meu pentru publicare articole</string>
-    <string name="gutenberg_native_my_document_setting_panel">Panoul meu pentru setări documente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mută blocul în sus de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mută blocul în jos de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_down">Mută blocul în jos</string>
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ascunde tastatura</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Iată conținutul panoului!</string>
     <string name="gutenberg_native_help_icon">Icon pentru ajutor</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Atinge de două ori pentru a anula ultima modificare</string>
@@ -874,14 +864,10 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_add_a_block">Atinge de două ori pentru a adăuga un bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Atinge de două ori pentru a muta blocul în sus</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
-    <string name="gutenberg_native_content">Conținut…</string>
     <string name="gutenberg_native_choose_from_device">Alege de pe dispozitiv</string>
-    <string name="gutenberg_native_annotations_sidebar">Bară laterală adnotări</string>
     <string name="gutenberg_native_add_image_or_video">ADAUGĂ IMAGINE SAU VIDEO</string>
     <string name="gutenberg_native_add_image">ADAUGĂ IMAGINE</string>
     <string name="gutenberg_native_add_block_here">ADAUGĂ BLOC AICI</string>
-    <string name="gutenberg_native_add_annotation">Adaugă o adnotare</string>
-    <string name="gutenberg_native_add_a_description">Adaugă o descriere</string>
     <string name="gutenberg_native_alt_text">Text alternativ</string>
     <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
@@ -889,14 +875,6 @@ Language: ro
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
-    <string name="master_switch_default_title_off">Oprite</string>
-    <string name="master_switch_default_title_on">Pornite</string>
-    <string name="notifications_tab_dialog_master_off_message">Pornirea notificărilor pentru acest sit va dezactiva afișarea notificărilor în fila notificări pentru acest sit. După pornirea notificărilor pentru acest sit, poți ajusta ce fel de notificări vrei să vezi.</string>
-    <string name="notifications_tab_dialog_master_status_off">Notificări pentru acest sit</string>
-    <string name="notifications_tab_dialog_master_status_on">Notificări pentru acest sit</string>
-    <string name="notifications_tab_dialog_master_hint_off">Activează afișarea notificărilor în fila notificări pentru acest sit</string>
-    <string name="notifications_tab_dialog_master_hint_on">Dezactivează afișarea notificărilor în fila notificări pentru acest sit</string>
-    <string name="notifications_tab_dialog_master_off_title">Pentru a vedea notificările în fila notificări pentru acest sit, pornește notificările pe sit.</string>
     <string name="pick_media">Adaugă imagine sau video</string>
     <string name="error_post_not_published_retrying_private">Nu am putut publica acest articol privat, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_scheduled_retrying">Nu am putut programa acest articol, dar vom încerca din nou mai târziu.</string>
@@ -1218,8 +1196,6 @@ Language: ro
     <string name="site_creation_error_generic_subtitle">Eroare de comunicare cu serverul, te rog încercă din nou</string>
     <string name="site_creation_error_generic_title">A fost o problemă</string>
     <string name="site_creation_fetch_suggestions_error_unknown">A fost o problemă</string>
-    <string name="site_creation_segments_subtitle">Acest lucru ne ajută să facem recomandări. Dar nu trebuie să te limitezi la ele - toate siturile evoluează!</string>
-    <string name="site_creation_segments_title">Spune-ne ce fel de sit vrei să creezi</string>
     <string name="new_site_creation_preview_title">Situl tău a fost creat!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d din %2$d</string>
     <string name="new_site_creation_screen_title_general">Crează un sit</string>
@@ -1373,10 +1349,10 @@ Language: ro
     <string name="quick_start_dialog_need_help_button_positive">Acceptă</string>
     <string name="quick_start_dialog_need_help_button_neutral">Niciodată</string>
     <string name="quick_start_dialog_follow_sites_title">Urmărește alte situri</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Atinge %1$s Caută %2$s pentru a căuta situri cu interese similare</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Atinge %1$s Cititor %2$s pentru a continua</string>
     <string name="quick_start_dialog_need_help_button_negative">Nu, mulțumesc</string>
     <string name="quick_start_dialog_follow_sites_message">Găsește situri care te inspiră și urmărește-le pentru a primi notificări când publică articole noi.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Atinge %1$s Caută %2$s pentru a căuta situri cu subiecte similare</string>
     <string name="my_site_create_new_site_title">Nu ai niciun sit</string>
     <string name="quick_start_button_negative">Nu acum</string>
     <string name="quick_start_button_negative_short">Anulează</string>
@@ -1465,8 +1441,6 @@ Language: ro
     <string name="site_address_login_title">Autentificare prin adresa sitului</string>
     <string name="email_address_login_title">Autentificare prin adresa de email</string>
     <string name="alternatively">Ca alternativă:</string>
-    <string name="reader_btn_bookmarked">Salvate</string>
-    <string name="reader_btn_bookmark">Salvează</string>
     <string name="reader_remove_bookmark">Înlătură din articole salvate</string>
     <string name="reader_add_bookmark">Adaugă la articole salvate</string>
     <string name="reader_save_for_later_title">Articole salvate</string>
@@ -1823,12 +1797,10 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
-    <string name="site_settings_jetpack_whitelist_description">Poți trece în lista albă o adresă IP sau o serie de adrese împiedicându-le de a fi blocate vreodată de către Jetpack. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Autentificare WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">Adrese IP din lista albă</string>
     <string name="jetpack_prevent_brute_force_title">Blochează încercările de autentificare rău intenționate</string>
     <string name="jetpack_prevent_brute_force_category_title">Protecție împotriva atacurilor cu forță-brută</string>
     <string name="jetpack_send_wp_notifications_title">Trimite notificări imediate</string>
@@ -1869,12 +1841,6 @@ Language: ro
     <string name="notification_settings_category_other">Altă</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Toate siturile mele</string>
     <string name="notification_settings_category_your_sites">Siturile tale</string>
-    <string name="notification_settings_master_off_message">Oprirea setărilor de notificare va dezactiva toate notificările din această aplicație, indiferent de tipul lor. Poți ajusta ce tip de notificare vrei să primești după pornirea setărilor de notificare.</string>
-    <string name="notification_settings_master_off_title">Pentru a primi notificări pe acest dispozitiv, pornește setările de notificare.</string>
-    <string name="notification_settings_master_hint_off">Activează notificările</string>
-    <string name="notification_settings_master_hint_on">Dezactivează notificările</string>
-    <string name="notification_settings_master_status_off">Oprite</string>
-    <string name="notification_settings_master_status_on">Pornite</string>
     <string name="max_video_resolution">Dimensiune maximă video</string>
     <string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
     <string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
@@ -2187,6 +2153,7 @@ Language: ro
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
     <string name="reader_empty_search_description">Nu s-a găsit niciun rezultat pentru %s în limba ta</string>
     <string name="reader_hint_post_search">Caută în WordPress</string>
+    <string name="reader_title_related_post_detail">Articol similar</string>
     <string name="preview_screen_links_disabled">Legăturile sunt dezactivate pe ecranul de previzualizare</string>
     <string name="send">Trimite</string>
     <string name="person_removed">%1$s înlăturat cu succes</string>
@@ -2326,7 +2293,6 @@ Language: ro
     <string name="site_settings_paging_dialog_description">Împarte firele de comentarii în mai multe pagini.</string>
     <string name="site_settings_paging_dialog_header">Comentarii per pagină</string>
     <string name="site_settings_close_after_dialog_title">Închidere comentare</string>
-    <string name="site_settings_blacklist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Introdu un cuvânt sau frază</string>
     <string name="site_settings_list_editor_no_items_text">Niciun element</string>
@@ -2341,10 +2307,8 @@ Language: ro
     <string name="site_settings_rp_show_header_title">Arată antetul</string>
     <string name="site_settings_rp_switch_summary">Articole similare afișează conținut relevant de pe situl tău sub articolele tale.</string>
     <string name="site_settings_rp_switch_title">Arată articole similare</string>
-    <string name="site_settings_blacklist_hint">Comentariile care corespund unui filtru sunt marcate ca spam</string>
     <string name="site_settings_moderation_hold_hint">Comentariile care corespund unui filtru sunt puse în coada de moderare</string>
     <string name="site_settings_multiple_links_hint">Ignoră limita de legături pentru utilizatorii cunoscuți</string>
-    <string name="site_settings_whitelist_hint">Autorul comentariului trebuie să mai aibă un comentariu anterior aprobat</string>
     <string name="site_settings_user_account_required_hint">Utilizatorul trebuie să fie înregistrat și autentificat pentru a comenta</string>
     <string name="site_settings_identity_required_hint">Autorul comentariului trebuie să completeze numele și emailul său</string>
     <string name="site_settings_paging_hint">Afișează comentariile în tranșe de o anumită mărime</string>
@@ -2367,17 +2331,13 @@ Language: ro
     <string name="site_settings_address_hint">Schimbarea adresei nu este încă suportată</string>
     <string name="site_settings_tagline_hint">O scurtă descriere sau o frază de impact pentru a descrie blogul tău</string>
     <string name="site_settings_title_hint">Explică, în câteva cuvinte, despre ce este acest sit</string>
-    <string name="site_settings_whitelist_known_summary">Comentarii de la utilizatori necunoscuți</string>
-    <string name="site_settings_whitelist_all_summary">Comentarii de la toți utilizatorii</string>
     <string name="site_settings_threading_summary">%d nivele</string>
     <string name="site_settings_privacy_private_summary">Privat</string>
     <string name="site_settings_privacy_hidden_summary">Ascuns</string>
     <string name="site_settings_privacy_public_summary">Public</string>
     <string name="site_settings_delete_site_title">Șterge situl</string>
-    <string name="site_settings_blacklist_title">Lista neagră</string>
     <string name="site_settings_moderation_hold_title">Reținere pentru moderare</string>
     <string name="site_settings_multiple_links_title">Legături în comentarii</string>
-    <string name="site_settings_whitelist_title">Aprobare automată</string>
     <string name="site_settings_threading_title">Fire de discuție</string>
     <string name="site_settings_paging_title">Paginare</string>
     <string name="site_settings_sort_by_title">Sortează după</string>

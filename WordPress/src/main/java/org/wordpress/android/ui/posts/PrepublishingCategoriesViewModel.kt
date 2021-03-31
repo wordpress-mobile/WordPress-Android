@@ -7,12 +7,13 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
@@ -21,6 +22,8 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -40,6 +43,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private lateinit var siteModel: SiteModel
     private var updateCategoriesJob: Job? = null
     private var addCategoryJob: Job? = null
+    private lateinit var selectedCategoryIds: List<Long>
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
@@ -64,19 +68,32 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     ) {
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
+        this.selectedCategoryIds = selectedCategoryIds
 
         if (isStarted) return
         isStarted = true
 
-        initialize(addCategoryRequest, selectedCategoryIds)
+        initialize(addCategoryRequest)
     }
 
     private fun initialize(
-        addCategoryRequest: PrepublishingAddCategoryRequest?,
-        selectedCategoryIds: List<Long>
+        addCategoryRequest: PrepublishingAddCategoryRequest?
     ) {
         setToolbarTitleUiState()
 
+        updateCategoriesListItemUiState(addCategoryRequest)
+
+        addCategoryRequest?.let {
+            addCategoryJob?.cancel()
+            addCategoryJob = launch(bgDispatcher) {
+                addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
+            }
+        } ?: run {
+            getCategoriesUseCase.fetchSiteCategories(siteModel)
+        }
+    }
+
+    private fun updateCategoriesListItemUiState(addCategoryRequest: PrepublishingAddCategoryRequest? = null) {
         val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
             selectedCategoryIds
         } else {
@@ -90,13 +107,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                         selectedCategoryIds = selectedIds
                 ), progressVisibility = addCategoryRequest != null
         )
-
-        addCategoryRequest?.let {
-            addCategoryJob?.cancel()
-            addCategoryJob = launch(bgDispatcher) {
-                addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
-            }
-        }
     }
 
     private fun setToolbarTitleUiState() {
@@ -155,7 +165,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             getCategoriesUseCase.getSiteCategories(siteModel)
 
     private fun getPostCategories() =
-            getCategoriesUseCase.getPostCategories(editPostRepository, siteModel)
+            getCategoriesUseCase.getPostCategories(editPostRepository)
 
     private fun hasChanges(): Boolean {
         val postCategories = getPostCategories()
@@ -214,6 +224,17 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             )
         } else {
             _uiState.value = uiState.value?.copy(progressVisibility = false)
+        }
+    }
+
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.isError) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+            return
+        }
+
+        if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) {
+            updateCategoriesListItemUiState()
         }
     }
 

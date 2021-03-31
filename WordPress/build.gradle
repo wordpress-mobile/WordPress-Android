@@ -17,6 +17,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://www.jitpack.io" }
     maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.application'
@@ -58,9 +59,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-280"
+            versionName "alpha-285"
         }
-        versionCode 1008
+        versionCode 1022
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -70,22 +71,14 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "TENOR_AVAILABLE", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
-        buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
-        buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
-        buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
-        buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
-        buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
-        buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
         buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "SCAN_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
-        buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
     }
@@ -104,15 +97,11 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.8-rc-3"
+                versionName "17.0-rc-2"
             }
-            versionCode 1007
+            versionCode 1021
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
-            buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
-            buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
-            buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
-            buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
@@ -126,8 +115,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            // Enable this for testing consolidated media picker
-            // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -160,6 +147,7 @@ android {
 
     lintOptions{
         checkDependencies = true
+        checkGeneratedSources = true
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
     }
@@ -183,6 +171,10 @@ android {
             // This is required to switch language in app.
             enableSplit = false
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -241,7 +233,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'org.greenrobot:eventbus:3.2.0'
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
@@ -250,7 +242,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
@@ -329,18 +321,18 @@ dependencies {
     debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:analytics:WordPressAnalytics')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
-        exclude group: 'org.wordpress', module: 'utils' 
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
@@ -497,10 +489,6 @@ if (project.hasProperty("debugStoreFile")) {
     }
 }
 
-def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
-assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
-
 // Keep this at the bottom (https://stackoverflow.com/a/37565535)
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.sentry.android.gradle'
-

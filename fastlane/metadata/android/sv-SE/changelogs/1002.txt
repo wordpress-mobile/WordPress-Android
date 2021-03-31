@@ -1,5 +1,0 @@
-16.7:
-- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
-- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
-- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
-- Nu går det att välja underdomäner under .blog

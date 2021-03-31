@@ -3,9 +3,8 @@ package org.wordpress.android.ui.stats.refresh
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -51,7 +50,7 @@ class StatsViewAllViewModel(
             LOADING -> StatsBlock.Loading(useCaseModel.type, useCaseModel.data ?: useCaseModel.stateData ?: listOf())
             EMPTY -> StatsBlock.EmptyBlock(useCaseModel.type, useCaseModel.stateData ?: useCaseModel.data ?: listOf())
         }
-    }.throttle(this, true)
+    }.throttle(viewModelScope, true)
 
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -76,7 +75,7 @@ class StatsViewAllViewModel(
         refreshData()
     }
 
-    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
+    private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
 
         executeLoading()

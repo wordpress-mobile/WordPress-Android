@@ -65,7 +65,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -135,7 +134,6 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -999,7 +997,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId, boolean imagePicked) {
-        if (isAdded() && imagePicked && mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+        if (isAdded() && imagePicked) {
             int postId = getEditPostRepository().getId();
             mFeaturedImageHelper.trackFeaturedImageEvent(
                     TrackableEvent.IMAGE_PICKED,

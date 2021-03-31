@@ -19,9 +19,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -49,20 +47,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_QUICKPRESS;
 
 public class AnalyticsUtils {
     private static final String BLOG_ID_KEY = "blog_id";
     private static final String POST_ID_KEY = "post_id";
+    private static final String FOLLOW_KEY = "follow";
     private static final String COMMENT_ID_KEY = "comment_id";
     private static final String FEED_ID_KEY = "feed_id";
     private static final String FEED_ITEM_ID_KEY = "feed_item_id";
@@ -73,7 +64,6 @@ public class AnalyticsUtils {
     private static final String INTENT_ACTION = "intent_action";
     private static final String INTENT_HOST = "intent_host";
     private static final String INTENT_DATA = "intent_data";
-    private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
     private static final String NEWS_CARD_ORIGIN = "origin";
     private static final String NEWS_CARD_VERSION = "version";
@@ -237,8 +227,8 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
      *
-     * @param stat The Stat to bump
-     * @param site The site object
+     * @param stat       The Stat to bump
+     * @param site       The site object
      * @param properties Properties to attach to the event
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
@@ -310,9 +300,9 @@ public class AnalyticsUtils {
      * Bump Analytics for comment reply, and add blog and comment details into properties.
      *
      * @param isQuickReply Whether is a quick reply or not
-     * @param site The site object
-     * @param comment The comment object
-     * @param source The source of the comment action
+     * @param site         The site object
+     * @param comment      The comment object
+     * @param source       The source of the comment action
      */
     public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
                                                     CommentModel comment, AnalyticsCommentActionSource source) {
@@ -322,8 +312,9 @@ public class AnalyticsUtils {
                     : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
         }
 
-        AnalyticsTracker.Stat stat = isQuickReply ? Stat.COMMENT_QUICK_ACTION_REPLIED_TO
-                : Stat.COMMENT_REPLIED_TO;
+        AnalyticsTracker.Stat stat = isQuickReply
+                ? AnalyticsTracker.Stat.COMMENT_QUICK_ACTION_REPLIED_TO
+                : AnalyticsTracker.Stat.COMMENT_REPLIED_TO;
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
@@ -354,7 +345,7 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics and add blog_id into properties
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param blogID The REMOTE blog ID.
      */
     public static void trackWithSiteId(AnalyticsTracker.Stat stat, long blogID) {
@@ -365,24 +356,11 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    /**
-     * Bump Analytics for a reader post
-     *
-     * @param stat The Stat to bump
-     * @param post The reader post to track
-     */
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
-        trackWithReaderPostDetails(stat, post, null);
-    }
-
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post,
-                                                  Map<String, Object> properties) {
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat,
+                                                  @Nullable ReaderPost post,
+                                                  @NonNull Map<String, Object> properties) {
         if (post == null) {
             return;
-        }
-
-        if (properties == null) {
-            properties = new HashMap<>();
         }
 
         // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
@@ -391,6 +369,7 @@ public class AnalyticsUtils {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
         }
+        properties.put(FOLLOW_KEY, post.isFollowedByCurrentUser);
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
@@ -405,32 +384,10 @@ public class AnalyticsUtils {
         }
     }
 
-    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
-        trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
-    }
-
     public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(BLOG_ID_KEY, blogId);
         properties.put(POST_ID_KEY, postId);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
-            commentId) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(BLOG_ID_KEY, blogId);
-        properties.put(POST_ID_KEY, postId);
-        properties.put(COMMENT_ID_KEY, commentId);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(FEED_ID_KEY, feedId);
-        properties.put(FEED_ITEM_ID_KEY, feedItemId);
 
         AnalyticsTracker.track(stat, properties);
     }
@@ -453,10 +410,10 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param action The Intent action the app was started with
-     * @param host The host if applicable
-     * @param data The data URI the app was started with
+     * @param host   The host if applicable
+     * @param data   The data URI the app was started with
      */
     public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, String host, Uri data) {
         Map<String, Object> properties = new HashMap<>();
@@ -470,20 +427,7 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
-     * @param interceptedUri The fallback URI the app was started with
-     */
-    public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(INTERCEPTED_URI, interceptedUri);
-
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    /**
-     * Track when app launched via deep-linking but then fell back to external browser
-     *
-     * @param stat The Stat to bump
+     * @param stat                 The Stat to bump
      * @param interceptorClassname The name of the class that handles the intercept by default
      */
     public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
@@ -503,13 +447,13 @@ public class AnalyticsUtils {
             return;
         }
 
-        AnalyticsTracker.track(TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
+        AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
     }
 
     /**
      * Track when a railcar item has been interacted with
      *
-     * @param stat The event that caused the interaction
+     * @param stat        The event that caused the interaction
      * @param railcarJson The JSON string of the railcar
      */
     private static void trackRailcarInteraction(AnalyticsTracker.Stat stat, String railcarJson) {
@@ -519,7 +463,7 @@ public class AnalyticsUtils {
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
         properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
-        AnalyticsTracker.track(TRAIN_TRACKS_INTERACT, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT, properties);
     }
 
     /**
@@ -527,12 +471,12 @@ public class AnalyticsUtils {
      * @return True if the passed stat event can be recorded as a railcar interaction
      */
     private static boolean canTrackRailcarInteraction(AnalyticsTracker.Stat stat) {
-        return stat == READER_ARTICLE_LIKED
-               || stat == READER_ARTICLE_OPENED
-               || stat == READER_SEARCH_RESULT_TAPPED
-               || stat == READER_ARTICLE_COMMENTED_ON
-               || stat == READER_GLOBAL_RELATED_POST_CLICKED
-               || stat == READER_LOCAL_RELATED_POST_CLICKED;
+        return stat == AnalyticsTracker.Stat.READER_ARTICLE_LIKED
+               || stat == AnalyticsTracker.Stat.READER_ARTICLE_OPENED
+               || stat == AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED
+               || stat == AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON
+               || stat == AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+               || stat == AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
     }
 
     /*
@@ -579,7 +523,7 @@ public class AnalyticsUtils {
         try {
             if (!file.exists()) {
                 AppLog.e(AppLog.T.MEDIA,
-                         "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
+                        "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
                 return properties;
             }
 
@@ -635,7 +579,7 @@ public class AnalyticsUtils {
         AnalyticsUtils.refreshMetadataNewUser(username, email);
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(Stat.CREATED_ACCOUNT, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
     public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
@@ -654,7 +598,7 @@ public class AnalyticsUtils {
     public static void trackLoginProloguePages(int page) {
         Map<String, Integer> properties = new HashMap<>();
         properties.put("page_number", page);
-        AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED, properties);
     }
 
     @VisibleForTesting
@@ -721,31 +665,17 @@ public class AnalyticsUtils {
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 
-
-    public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
-                                                         AnalyticsCommentActionSource actionSource, ReaderPost post) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
-
-        AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
-    }
-
     public static void trackFollowCommentsWithReaderPostDetails(
             AnalyticsTracker.Stat stat,
             long blogId,
             long postId,
-            ReaderPost post,
-            Map<String, Object> properties
+            @Nullable ReaderPost post,
+            @NonNull Map<String, Object> properties
     ) {
         if (post != null) {
             AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
         } else {
-            AppLog.w(AppLog.T.READER, "The passed post obj is null."
-                                     + " Tracking analytics without post details info");
-            // let's log basic info
-            if (properties == null) {
-                properties = new HashMap<>();
-            }
+            AppLog.w(AppLog.T.READER, "The passed post obj is null. Tracking analytics without post details info");
 
             properties.put(BLOG_ID_KEY, blogId);
             properties.put(POST_ID_KEY, postId);

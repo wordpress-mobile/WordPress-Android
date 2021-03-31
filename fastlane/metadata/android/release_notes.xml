@@ -1,112 +1,159 @@
 <ar>
-16.7:
-- يمكن لعملاء Jetpack الآن استعادة موقع أو تنزيل نسخة احتياطية أو إجراء فحص والبحث عن التهديدات وإصلاحها
-- تحديثات متنوعة على محرِّر المكوِّن، بما في ذلك القدرة على تعيين رموز إرساء في مكوِّن العنوان
-- عامل تصفية جديد للمقالات غير المقروءة والقدرة على وضع علامة على المقالات بوصفها مرئية/غير مرئية في القارئ
-- النطاقات الفرعية .blog متاحة الآن
+16.9:
+ما الجديد؟
+
+لن يتوفر المحرر التقليدي Classic Editor قريبًا لإنشاء مقالات جديدة. ستظل قادرًا على تحرير مقالاتك وصفحاتك الحالية في المحرر التقليدي. ولكننا نوصي بالتبديل إلى محرر المكوّنات الآن.
+
+تم إعادة تصميم أداة البدء السريع الخاصة بنا! يظهر هذا الدليل عند إنشاء موقع جديد.
+
+لقد أجرينا أيضًا تحسينات على تجربة تصميم الموقع.
 </ar>
+<de-DE>
+16.9:
+Was gibt's Neues?
+
+Der klassische Editor wird schon bald nicht mehr zum Erstellen neuer Beiträge verfügbar sein. Du kannst deine bestehenden Beiträge und Seiten weiterhin im klassischen Editor bearbeiten, doch wir würden dir empfehlen, jetzt zum neuen Block-Editor zu wechseln. 
+ 
+ Unser Schnellstart-Tool hat ein neues Design bekommen! Dieser Leitfaden wird angezeigt, wenn du eine neue Website erstellst. 
+ 
+ Außerdem haben wir Verbesserungen am Website-Design-Erlebnis vorgenommen. 
+</de-DE>
 <en-US>
-16.7:
-- Jetpack customers can now restore a site or download a backup, scan, and fix threats
-- Various block editor updates, including the ability to set anchors in the Heading block
-- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
-- .blog subdomains now available
+16.9:
+What’s new?
+
+The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.
+
+Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+
+We’ve also made improvements to the site design experience.
 </en-US>
 <es-ES>
-16.7:
-- Ahora, los clientes de Jetpack pueden restaurar un sitio o descargar una copia de seguridad, explorarlo y corregir fallos de seguridad
-- Varias actualizaciones del editor de bloques, incluyendo la capacidad de establecer anclajes en el bloque de encabezado
-- Nuevo filtro de entradas no leidas y la capacidad de marcar las entradas como vistas/no vistas en el Lector
-- Ahora están disponibles los subdominios «.blog»
+16.9:
+¿Qué hay de nuevo?
+
+El editor clásico pronto no estará disponible para crear nuevas entradas. Continuarás pudiendo editar tus entradas y páginas existentes en el editor clásico, pero te recomendamos que cambies ahora al editor de bloques.
+
+¡Nuestra herramienta de inicio rápido ha sido rediseñada! Esta guía aparece cuando creas un nuevo sitio.
+
+También hemos hecho mejoras en el diseño de la experiencia del sitio.
 </es-ES>
 <fr-CA>
-16.7 :
-- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
-- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
-- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
-- Sous-domaines .blog désormais disponibles
+16.9 :
+Nouveautés
+
+L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
+ 
+ Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
+ 
+ Nous avons également amélioré l’expérience de design du site. 
 </fr-CA>
 <fr-FR>
-16.7 :
-- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
-- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
-- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
-- Sous-domaines .blog désormais disponibles
+16.9 :
+Nouveautés
+
+L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
+ 
+ Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
+ 
+ Nous avons également amélioré l’expérience de design du site. 
 </fr-FR>
 <iw-IL>
-16.7:
-- לקוחות של Jetpack יכולים כעת לשחזר אתר או להוריד גיבוי, לסרוק את האתר ולתקן איומים
-- מספר עדכונים בעורך הבלוקים, כולל יכולת להגדיר נקודות עיגון בבלוק הכותרת
-- מסנן חדש של פוסטים שלא נקראו ויכולת לסמן פוסטים כ'נקרא' או כ'לא נקרא' ב-Reader
-- דומיינים משנה של ‎.blog זמינים כעת
+16.9:
+מה חדש?
+
+בקרוב, העורך הקלאסי לא יהיה זמין ליצירה של פוסטים חדשים. עדיין תהיה לך אפשרות לערוך פוסטים ועמודים קיימים בעורך הקלאסי אבל אנחנו ממליצים לעבור לעורך הבלוקים כעת. 
+ 
+ עיצבנו מחדש את הכלי להתחלה מהירה! המדריך מופיע כאשר יוצרים אתר חדש. 
+ 
+ בנוסף, שיפרנו את חוויית העיצוב של האתר. 
 </iw-IL>
 <id>
-16.7:
-- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
-- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
-- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
-- Subdomain .blog sudah tersedia
+16.9:
+Apa yang baru?
+
+Dalam waktu dekat editor klasik tidak akan tersedia lagi untuk pembuatan pos baru. Anda tetap dapat menggunakan editor klasik untuk menyunting pos dan halaman yang sudah ada tetapi kami menyarankan agar Anda segera beralih ke editor blok. 
+ 
+ Alat Mulai Cepat kami punya desain baru! Panduan ini akan muncul saat Anda membuat situs baru. 
+ 
+ Kami juga telah melakukan peningkatan untuk pengalaman mendesain situs. 
 </id>
 <it-IT>
-16.7:
-- I clienti di Jetpack possono ora ripristinare un sito o un scaricare un backup, scansionare e risolvere le minacce
-- Vari aggiornamenti dell'editor a blocchi, inclusa la possibilità di impostare le ancore nel blocco Titolo
-- Nuovo filtro di articoli non letti e possibilità di contrassegnare gli articoli come letti/non letti nel Reader
-- Sono ora disponibili i sottodomini .blog
+16.9:
+Cosa c'è di nuovo?
+
+L'editor classico presto non sarà più disponibile per la creazione di nuovi articoli. Potrai ancora modificare gli articoli e le pagine esistenti nell'editor classico, ma ti consigliamo di passare ora all'editor a blocchi. 
+ 
+ Il nostro strumento per la sessione di orientamento è stato riprogettato. Questa guida verrà visualizzata quando crei un nuovo sito. 
+ 
+ Abbiamo anche apportato miglioramenti all'esperienza di progettazione del sito. 
 </it-IT>
 <ja-JP>
-16.7:
-- Jetpack をご利用のお客様は、サイトの復元やバックアップのダウンロード、スキャン、脅威の修正を実行できるようになりました
-- 見出しブロックにアンカーを設定する機能など、ブロックエディターの各種更新
-- 未読投稿の新しいフィルターと、リーダーで投稿に既読 / 未読のマークを付ける機能
-- .blog サブドメインが利用可能に
+16.9:
+新着情報
+
+間もなく旧エディターでは新規の投稿を作成できなくなります。 既存の投稿やページは引き続き旧エディターでも編集できますが、これを機にブロックエディターに移行することを推奨をしました。 
+ 
+ クイックスタートツールのデザインを変更しました。 このガイドは新しいサイトを作成するとき表示されます。 
+ 
+ サイトデザインの使用環境も改善しました。 
 </ja-JP>
 <ko-KR>
-16.7:
-- 이제 젯팩 고객이 사이트를 복원하거나 백업을 다운로드하고, 위협을 스캔 및 해결할 수 있습니다.
-- 헤딩요소 블록에 앵커를 설정하는 기능을 포함하여 블록 편집기의 다양한 기능 업데이트
-- 새로운 읽지 않은 글 필터 및 리더에 글을 읽음/안 읽음으로 표시하는 기능
-- 이제 .blog를 하위 도메인으로 사용 가능
+16.9:
+새로운 기능
+
+구 버전 편집기는 곧 새 글 작성에 사용할 수 없게 됩니다. 구 버전 편집기에서 기존 글과 페이지는 계속 편집할 수 있지만, 지금 블록 편집기로 전환하는 것이 좋습니다. 
+ 
+ 퀵 스타트 도구를 새롭게 디자인했습니다! 이 가이드는 새 사이트를 만들 때 표시됩니다. 
+ 
+ 사이트 디자인 환경에도 개선 사항을 적용했습니다. 
 </ko-KR>
-<nl-NL>
-16.7:
-- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
-- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
-- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
-- .blog subdomeinen nu beschikbaar
-</nl-NL>
 <ru-RU>
-6.7:
-- Пользователи Jetpack теперь могут восстанавливать сайт или скачивать резервную копию, проверять и устранять угрозы.
-- Различные обновления редактора блоков, включая возможность устанавливать якоря в блоке заголовка.
-- Новый фильтр непрочитанных сообщений и возможность отмечать сообщения как (не)прочитанные в Чтиве
-- Теперь доступны поддомены .blog
+16.9:
+
+Классический редактор скоро станет недоступен для создания новых записей, но это не повлияет на редактирование ваших существующих сообщений и страниц. Мы рекомендуем вам переключиться на редактор блоков, если вы еще этого не сделали.
+
+Наш инструмент быстрого старта был переработан! Он используется при создании нового сайта.
+
+Мы также улучшили процесс оформления сайта.
 </ru-RU>
 <sv-SE>
-16.7:
-- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
-- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
-- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
-- Nu går det att välja underdomäner under .blog
+16.9:
+Nytt
+
+Snart går det inte att använda den klassiska redigeraren för nya inlägg. Du kommer fortfarande att kunna redigera befintliga inlägg och sidor i den, men vi rekommenderar att du växlar över till blockredigeraren nu.
+
+Vårt snabbstartsverktyg har fått ny design! Den guiden visas när du skapar en ny webbplats.
+
+Vi har även förbättrat tillvägagångssättet för design av webbplatsen.
 </sv-SE>
 <tr-TR>
-16.7:
-- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
-- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
-- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
-- .blog alt alan adları artık kullanılabilir
+16.9:
+Yenilikler
+
+Yakında, yeni yayınlar oluşturmak için artık klasik düzenleyici kullanamayacaksınız. Klasik düzenleyicide mevcut yayınlarınızı ve sayfalarınızı yine de düzenleyebilirsiniz, ancak blok düzenleyiciye geçmenizi öneririz. 
+ 
+ Hızlı Başlangıç aracımız yeniden tasarlandı. Bu kılavuz, yeni bir site oluşturduğunuzda görünür. 
+ 
+ Ayrıca site tasarımı deneyiminde de iyileştirmeler yaptık. 
 </tr-TR>
 <zh-CN>
-16.7：
-- Jetpack 客户现在可以恢复站点或者下载备份、扫描和修复威胁
-- 一些区块编辑器更新，包括能够在标题区块中设置锚
-- 添加新的未读文章过滤器，并且能够在阅读器中将文章标记为“已读”/“未读”
-- .blog 子域现已可用
+16.9：
+最新功能
+
+经典编辑器很快将无法用于撰写新文章，但这不会影响编辑现有的文章和页面。如果尚未切换到区块编辑器，建议您切换到区块编辑器。
+
+我们已重新设计快速启动工具！创建新网站时会显示本指南。
+
+我们还改进了网站设计体验。
 </zh-CN>
 <zh-TW>
-16.7：
-- Jetpack 顧客現在可以還原網站或下載備份、掃描與修正威脅
-- 多種區塊編輯器更新，包括在標題區塊設定錨點的功能
-- 新的未讀文章篩選功能，且可以在閱讀器中將文章標註為已看過/未看過
-- 已可使用 .blog 子網域
+16.9：
+有哪些最新內容？
+
+近期內即可使用傳統編輯器建立新文章。 屆時你仍可在傳統編輯器中編輯現有的文章和頁面，但我們建議你現在切換至區塊編輯器。 
+ 
+ 我們的快速入門工具經過重新改版！ 此指南會在你建立新網站時顯示。 
+ 
+ 我們也改善了網站設計體驗。 
 </zh-TW>

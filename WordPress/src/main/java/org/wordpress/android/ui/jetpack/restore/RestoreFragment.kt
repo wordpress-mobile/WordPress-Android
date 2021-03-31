@@ -27,6 +27,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -104,26 +105,21 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
             showView(it)
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, {
-            it?.applyIfNotHandled {
-                showSnackbar()
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+            it.showSnackbar()
+        })
+
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { events ->
+            when (events) {
+                is VisitSite -> ActivityLauncher.openUrlExternal(requireContext(), events.url)
             }
         })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, {
-            it.applyIfNotHandled {
-                when (this) {
-                    is VisitSite -> ActivityLauncher.openUrlExternal(requireContext(), url)
-                }
-            }
-        })
-
-        viewModel.wizardFinishedObservable.observe(viewLifecycleOwner, {
-            it.applyIfNotHandled {
+        viewModel.wizardFinishedObservable.observeEvent(viewLifecycleOwner, { state ->
                 val intent = Intent()
-                val (restoreCreated, ids) = when (this) {
+                val (restoreCreated, ids) = when (state) {
                     is RestoreCanceled -> Pair(false, null)
-                    is RestoreInProgress -> Pair(true, Pair(rewindId, restoreId))
+                    is RestoreInProgress -> Pair(true, Pair(state.rewindId, state.restoreId))
                     is RestoreCompleted -> Pair(true, null)
                 }
                 intent.putExtra(KEY_RESTORE_REWIND_ID, ids?.first)
@@ -132,7 +128,6 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
                     activity.setResult(if (restoreCreated) RESULT_OK else RESULT_CANCELED, intent)
                     activity.finish()
                 }
-            }
         })
     }
 

@@ -3,14 +3,13 @@ package org.wordpress.android.ui.activitylog.detail
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogItemDetailBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
@@ -22,6 +21,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -29,12 +29,13 @@ import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISI
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 private const val DETAIL_TRACKING_SOURCE = "detail"
 private const val FORWARD_SLASH = "/"
 
-class ActivityLogDetailFragment : Fragment() {
+class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
@@ -54,95 +55,105 @@ class ActivityLogDetailFragment : Fragment() {
         (activity?.application as WordPress).component()?.inject(this)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         activity?.let { activity ->
             viewModel = ViewModelProvider(activity, viewModelFactory)
                     .get(ActivityLogDetailViewModel::class.java)
+            with(ActivityLogItemDetailBinding.bind(view)) {
+                val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
+                val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
 
-            val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
-            val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
+                viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
+                    loadLogItem(activityLogModel, activity)
+                })
 
-            viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
-                setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
-                uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
-                uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
+                viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+                    activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
+                })
+                viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+                    activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
+                })
 
-                val spannable = activityLogModel?.content?.let {
-                    notificationsUtilsWrapper.getSpannableContentForRanges(
-                            it,
-                            activityMessage,
-                            { range ->
-                                viewModel.onRangeClicked(range)
-                            },
-                            false
+            viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+                when (it) {
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            it.model.activityID,
+                            RequestCodes.BACKUP_DOWNLOAD,
+                            buildTrackingSource()
+                    )
+                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            it.model.activityID,
+                            RequestCodes.RESTORE,
+                            buildTrackingSource()
+                    )
+                    is ShowRewindDialog -> onRewindButtonClicked(
+                            it.model
                     )
                 }
-
-                val noteBlockSpans = spannable?.getSpans(
-                        0,
-                        spannable.length,
-                        NoteBlockClickableSpan::class.java
-                )
-
-                noteBlockSpans?.forEach {
-                    it.enableColors(activity)
-                }
-
-                uiHelpers.setTextOrHide(activityMessage, spannable)
-                uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
-
-                activityCreatedDate.text = activityLogModel?.createdDate
-                activityCreatedTime.text = activityLogModel?.createdTime
-
-                if (activityLogModel != null) {
-                    activityRestoreButton.setOnClickListener {
-                        viewModel.onRestoreClicked(activityLogModel)
-                    }
-                    activityDownloadBackupButton.setOnClickListener {
-                        viewModel.onDownloadBackupClicked(activityLogModel)
-                    }
-                }
             })
 
-            viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
-                activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-            })
-            viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
-                activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
-            })
-
-            viewModel.navigationEvents.observe(viewLifecycleOwner, {
-                it.applyIfNotHandled {
-                    when (this) {
-                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.BACKUP_DOWNLOAD,
-                                buildTrackingSource()
-                        )
-                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                                requireActivity(),
-                                viewModel.site,
-                                model.activityID,
-                                RequestCodes.RESTORE,
-                                buildTrackingSource()
-                        )
-                        is ShowRewindDialog -> onRewindButtonClicked(
-                                model
+                viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
+                    if (range != null) {
+                        formattableContentClickHandler.onClick(
+                                activity,
+                                range,
+                                ReaderTracker.SOURCE_ACTIVITY_LOG_DETAIL
                         )
                     }
-                }
-            })
+                })
 
-            viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
-                if (range != null) {
-                    formattableContentClickHandler.onClick(activity, range)
-                }
-            })
+                viewModel.start(site, activityLogId, areButtonsVisible)
+            }
+        }
+    }
 
-            viewModel.start(site, activityLogId, areButtonsVisible)
+    private fun ActivityLogItemDetailBinding.loadLogItem(
+        activityLogModel: ActivityLogDetailModel?,
+        activity: FragmentActivity
+    ) {
+        setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
+        uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
+        uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
+
+        val spannable = activityLogModel?.content?.let {
+            notificationsUtilsWrapper.getSpannableContentForRanges(
+                    it,
+                    activityMessage,
+                    { range ->
+                        viewModel.onRangeClicked(range)
+                    },
+                    false
+            )
+        }
+
+        val noteBlockSpans = spannable?.getSpans(
+                0,
+                spannable.length,
+                NoteBlockClickableSpan::class.java
+        )
+
+        noteBlockSpans?.forEach {
+            it.enableColors(activity)
+        }
+
+        uiHelpers.setTextOrHide(activityMessage, spannable)
+        uiHelpers.setTextOrHide(activityType, activityLogModel?.summary)
+
+        activityCreatedDate.text = activityLogModel?.createdDate
+        activityCreatedTime.text = activityLogModel?.createdTime
+
+        if (activityLogModel != null) {
+            activityRestoreButton.setOnClickListener {
+                viewModel.onRestoreClicked(activityLogModel)
+            }
+            activityDownloadBackupButton.setOnClickListener {
+                viewModel.onDownloadBackupClicked(activityLogModel)
+            }
         }
     }
 
@@ -172,14 +183,6 @@ class ActivityLogDetailFragment : Fragment() {
         else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.activity_log_item_detail, container, false)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
@@ -193,7 +196,7 @@ class ActivityLogDetailFragment : Fragment() {
         activity?.finish()
     }
 
-    private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
+    private fun ActivityLogItemDetailBinding.setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
         when {
             actorIcon != null && actorIcon != "" -> {
                 imageManager.loadIntoCircle(activityActorIcon, AVATAR_WITH_BACKGROUND, actorIcon)

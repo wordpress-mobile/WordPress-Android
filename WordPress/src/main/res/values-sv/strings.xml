@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-03 20:04:25+0000
+Translation-Revision-Date: 2021-03-09 06:52:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
+    <string name="reader_title_interests">Följ ämnen</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
     <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
-    <string name="threat_fix_all_warning_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
-    <string name="scan_idle_with_threats_description_plural">Genomsökningen hittade %1s potentiella hot hos %2s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
+    <string name="scan_idle_threats_description_plural">Genomsökningen hittade %1$s potentiella hot hos %2$s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
     <string name="scan_fixing_threats_description_plural">Vi arbetar intensivt med att rätta dessa hot i bakgrunden. Under tiden får du gärna fortsätta att använda din webbplats som vanligt. Du kan när som helst kolla hur arbetet fortskrider.</string>
     <string name="gutenberg_native_edit_focal_point">Ändra plats i fokus</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
@@ -37,10 +39,10 @@ Language: sv_SE
     <string name="invite_links_section_title">Inbjudningslänk</string>
     <string name="invite_links_get_status_retry">Uppdatera länkarnas status</string>
     <string name="threats_found_singular">Hot hittat</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>Inga hot hittades</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>1 potentiellt hot hittades</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>%s potentiella hot hittades</string>
     <string name="threats_found_plural">Hot hittade</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>Inga hot hittades</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>1 potentiellt hot hittades</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>%s potentiella hot hittades</string>
     <string name="disable">Inaktivera</string>
     <string name="scan_fixing_threats_title_singular">Åtgärdar hot</string>
     <string name="quick_start_list_review_pages_subtitle">Kontrollera dina sidor och gör ändringar, lägg till eller ta bort sidor.</string>
@@ -96,7 +98,7 @@ Language: sv_SE
     <string name="threat_status_fixed">Åtgärdat</string>
     <string name="scan_here_to_help">här</string>
     <string name="threat_found_header">Hittade</string>
-    <string name="scan_idle_with_threats_description_singular">Jetpack-genomsökningen hittade %1s potentiella hot hos %2s. Granska hoten nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
+    <string name="scan_idle_threats_description_singular">Jetpack-genomsökningen hittade ett potentiellt hot hos %1$s. Granska hoten nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %2$s om du behöver vår hjälp.</string>
     <string name="scan_provisioning_description">Välkommen till Jetpack Scan! Vi tittar närmare på din webbplats och förbereder för en fullständig genomsökning. Vi meddelar dig om vi upptäcker några problem som kan påverka en genomsökning. Därefter startar din första fullständiga genomsökning.</string>
     <string name="scan_idle_manual_scan_description">För att kontrollera din webbplats igen kan du starta en genomsökning manuellt eller vänta tills Jetpack automatiskt söker igenom webbplatsen senare idag.</string>
     <string name="scan_scanning_is_initial_description">Välkommen till Jetpack Scan. Vi tar nu en första titt på din webbplats och du kommer snart att ha resultaten.</string>
@@ -159,10 +161,10 @@ Language: sv_SE
     <string name="error_media_upload_failed_for_reason">Uppladdningen av media misslyckades.\n%1$s</string>
     <string name="reader_menu_mark_as_seen">Markera som visat</string>
     <string name="reader_menu_mark_as_unseen">Markera som ej visat</string>
-    <string name="threat_fix_all_warning_message_singular">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
     <string name="threat_fix_all_error_message">Fel när hotet åtgärdades. Kontakta vår support.</string>
     <string name="threat_fix_all_status_error_message">Ett fel inträffade när statusen för åtgärdandet skulle hämtas. Kontakta vår support.</string>
     <string name="threat_fix_all_status_success_message_singular">Hotet åtgärdades utan problem.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Bekräfta att du vill åtgärda ett aktivt hot.</string>
     <string name="threat_ignore_warning">Du bör inte ignorera ett säkerhetshot om du inte är helt säker på att det är ofarligt. Om du väljer att ignorera detta hot kommer det att finnas kvar på webbplatsen &lt;b>%s&lt;/b>.</string>
     <string name="threat_ignore_success_message">Hotet har ignorerats.</string>
     <string name="threat_ignore_error_message">Ett fel inträffade när hotet skulle ignoreras. Kontakta vår support.</string>
@@ -373,9 +375,9 @@ Language: sv_SE
     <string name="login_prologue_title_first">Välkommen till världens populäraste webbplatsbyggare.</string>
     <string name="login_prologue_title_second">Med den kraftfulla redigeringsmiljön kan du skapa inlägg på rörlig fot.</string>
     <string name="login_prologue_title_fourth">Se hur din publik växer med hjälp av detaljerad statistik.</string>
-    <string name="login_prologue_title_fifth">Följ dina favoritwebbplatser och hitta nya saker att läsa.</string>
     <string name="login_prologue_second_subtitle_one">Låt dig inspireras</string>
     <string name="login_prologue_title_third">Se kommentarer och aviseringar i realtid.</string>
+    <string name="login_prologue_title_fifth">Följ dina favoritwebbplatser och hitta nya bloggar att läsa.</string>
     <string name="reader_discover_recommended_blogs_header">Webbplatser att följa</string>
     <string name="media_loading_failed">Hämtningen av mediafiler misslyckades</string>
     <string name="gutenberg_native_s_is_not_fully_supported">”%s” stöds inte fullt ut</string>
@@ -387,7 +389,6 @@ Language: sv_SE
     <string name="gutenberg_native_help_button">Hjälpknapp</string>
     <string name="stories_intro_description_first">Kombinera foton, videoklipp och text för att skapa engagerande och smidiga berättelseinlägg som dina besökare kommer att älska.</string>
     <string name="stories_intro_title_second">Berättelseinlägg försvinner inte</string>
-    <string name="mlp_preview_title">Förhandsgranska layout</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s och %3$s.</string>
     <string name="mlp_notice_page_created">Sidan har skapats</string>
     <string name="mlp_notice_blank_page_created">En blank sida har skapats</string>
@@ -592,13 +593,13 @@ Language: sv_SE
     <string name="publish_date">Publiceringsdatum</string>
     <string name="reader_btn_select_few_interests">Välj några för att fortsätta</string>
     <string name="post_status_post_published">Publicerat</string>
-    <string name="reader_label_choose_your_interests">Välj dina intressen</string>
-    <string name="reader_choose_interests_content_description">Välj dina intressen</string>
     <string name="reader_btn_done">Klar</string>
     <string name="post_status_post_scheduled">Schemalagd</string>
     <string name="post_status_post_trashed">Borttagen</string>
     <string name="ccpa_privacy_notice_read">Läs CCPA-sekretessmeddelandet</string>
     <string name="ccpa_privacy_notice_caption">Enligt California Consumer Privacy Act (CCPA) måste vi delge boende i Kalifornien med viss ytterligare information om de kategorier av personuppgifter som vi samlar in och delar, var vi får de uppgifterna från samt hur och varför vi använder dem.</string>
+    <string name="reader_label_choose_your_interests">Välj dina ämnen</string>
+    <string name="reader_choose_interests_content_description">Välj dina ämnen</string>
     <string name="update_now">Uppdatera nu</string>
     <string name="status_and_visibility">Status och synlighet</string>
     <string name="ccpa_privacy_notice_header">Integritetsnotis för användare i Kalifornien</string>
@@ -717,9 +718,7 @@ Language: sv_SE
     <string name="app_theme_light">Ljust</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
-    <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
     <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
-    <string name="gutenberg_native_success_message">Framgångsmeddelande</string>
     <string name="gutenberg_native_link_to">Länk till</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_link_settings">Länkinställningar</string>
@@ -829,15 +828,12 @@ Language: sv_SE
     <string name="gutenberg_native_take_a_video">Spela in en video</string>
     <string name="gutenberg_native_tap_here_to_show_help">Tryck här för att visa hjälp</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tryck för att dölja tangentbordet</string>
-    <string name="gutenberg_native_title">Rubrik:</string>
     <string name="gutenberg_native_translate">Översätt</string>
     <string name="gutenberg_native_ungroup">Lös upp grupp</string>
     <string name="gutenberg_native_unsupported">Stöds ej</string>
-    <string name="gutenberg_native_reset_block">Återställ block</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_show_section">Visa sektion</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Tillägg för sidopanelrubrik</string>
     <string name="gutenberg_native_cut_block">Klipp ut blocket</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Det finns inget program som kan hantera denna begäran. Installera ett webbläsarprogram.</string>
     <string name="gutenberg_native_open_settings">Öppna inställningar</string>
@@ -847,19 +843,13 @@ Language: sv_SE
     <string name="gutenberg_native_post_title_s">Inläggsrubrik. %s</string>
     <string name="gutenberg_native_problem_displaying_block">Problem med att visa block</string>
     <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
-    <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytta block nedåt från rad %1$s till rad %2$s</string>
     <string name="gutenberg_native_move_block_up">Flytta block uppåt</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Flytta block uppåt från rad  %1$s till rad %2$s</string>
-    <string name="gutenberg_native_my_document_setting_panel">Min panel för dokumentinställningar</string>
-    <string name="gutenberg_native_my_post_publish_panel">Min panel för publicering av inlägg</string>
-    <string name="gutenberg_native_my_post_status_info">Min statusinformation om inlägg</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Min granskningspanel före publicering</string>
     <string name="gutenberg_native_navigate_up">Navigera upp</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dubbeltryck för att ångra senaste ändring</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_native_help_icon">Hjälpikon</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Här är panelen innehåll!</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
     <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
@@ -873,12 +863,8 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dubbeltryck för att redigera värdet</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dubbeltryck för att flytta blocket nedåt</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dubbeltryck för att flytta blocket uppåt</string>
-    <string name="gutenberg_native_annotations_sidebar">Sidopanel för bildtexter/beskrivninger</string>
     <string name="gutenberg_native_choose_from_device">Välj från enheten</string>
-    <string name="gutenberg_native_content">Innehåll…</string>
     <string name="gutenberg_native_current_value_is_s">Nuvarande värde är %s</string>
-    <string name="gutenberg_native_add_a_description">Lägg till beskrivning</string>
-    <string name="gutenberg_native_add_annotation">Lägg till bildtext/beskrivning</string>
     <string name="gutenberg_native_add_block_here">LÄGG TILL BLOCK HÄR</string>
     <string name="gutenberg_native_add_image">LÄGG TILL BILD</string>
     <string name="gutenberg_native_add_image_or_video">LÄGG TILL BILD ELLER VIDEO</string>
@@ -888,15 +874,7 @@ Language: sv_SE
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ett okänt fel har inträffatt. Försök igen.</string>
     <string name="reader_acessibility_list_loaded">”Listan har lästs in med %1$d objekt.”</string>
     <string name="reader_empty_saved_posts_content_description">Tryck på knappen ”Lägg till i sparade inlägg” för att lägga till inlägget i din lista.</string>
-    <string name="notifications_tab_dialog_master_off_message">Om du stänger av aviseringar för denna webbplats kommer all visning av aviseringar under aviseringsfliken att stängas av för webbplatsen. Du kan finjustera vilka aviseringar du vill använda efter att du först aktiverat aviseringar för webbplatsen.</string>
-    <string name="master_switch_default_title_on">Till</string>
-    <string name="master_switch_default_title_off">Från</string>
     <string name="notifications_tab_dialog_switch_desc">Aviseringar</string>
-    <string name="notifications_tab_dialog_master_status_on">Aviseringar för denna webbplats</string>
-    <string name="notifications_tab_dialog_master_status_off">Aviseringar för denna webbplats</string>
-    <string name="notifications_tab_dialog_master_hint_on">Inaktivera visning av aviseringar under aviseringsfliken för denna webbplats</string>
-    <string name="notifications_tab_dialog_master_hint_off">Aktivera visning av aviseringar under aviseringsfliken för denna webbplats</string>
-    <string name="notifications_tab_dialog_master_off_title">För att kunna se aviseringar under aviseringsfliken för denna webbplats behöver du aktivera aviseringar för webbplatsen.</string>
     <string name="pick_media">Lägg till bild eller video</string>
     <string name="error_post_not_published_retrying_private">Det gick inte att publicera detta privata inlägg, men vi försöker igen senare.</string>
     <string name="error_post_not_scheduled_retrying">Det gick inte att schemalägga detta inlägg, men vi försöker igen senare.</string>
@@ -1218,8 +1196,6 @@ Language: sv_SE
     <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>
     <string name="site_creation_error_generic_title">Ett fel har inträffat</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ett fel har inträffat</string>
-    <string name="site_creation_segments_subtitle">Detta hjälper oss att ge dig rekommentationer. Men du är aldrig låst till detta – alla webbplatser fortsätter att utvecklas!</string>
-    <string name="site_creation_segments_title">Berätta vilken typ av webbplats du vill skapa</string>
     <string name="new_site_creation_preview_title">Din webbplats har skapats!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d av %2$d</string>
     <string name="new_site_creation_screen_title_general">Skapa webbplats</string>
@@ -1374,9 +1350,9 @@ Language: sv_SE
     <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser med liknande intressen</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>
     <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som inspirerar dig och följ dem för att få uppdateringar när de publicerar.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>
     <string name="quick_start_button_negative">Inte nu</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
@@ -1468,8 +1444,6 @@ Language: sv_SE
     <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
     <string name="reader_bookmark_snack_title">Inlägget sparat</string>
     <string name="reader_bookmark_snack_btn">Se alla</string>
-    <string name="reader_btn_bookmarked">Sparat</string>
-    <string name="reader_btn_bookmark">Spara</string>
     <string name="reader_remove_bookmark">Ta bort från sparade inlägg</string>
     <string name="reader_add_bookmark">Lägg till i sparade inlägg</string>
     <string name="reader_save_for_later_title">Sparade inlägg</string>
@@ -1823,12 +1797,10 @@ Language: sv_SE
     <string name="jetpack_disconnect_confirmation_message">Är du säker på att du vill koppla bort Jetpack från denna webbplats?</string>
     <string name="jetpack_disconnect_confirm">Koppla bort</string>
     <string name="jetpack_disconnect_pref_title">”Koppla bort från WordPress.com”</string>
-    <string name="site_settings_jetpack_whitelist_description">Du kan vitlista en IP-adress eller ett IP-adressintervall så att de aldrig blockeras av Jetpack. Man kan lägga in både IPv4- och IPv6-adresser. Ange ett intervall genom att skriva in det lägsta och det högsta värdet med tankstreck mellan dem. Exempel:: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Kräv tvåstegsautentisering</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillåt inloggning via WordPress.com</string>
     <string name="jetpack_match_wpcom_via_email_title">Koppla samman konton via e-postadressen</string>
     <string name="jetpack_wpcom_sign_in_category_title">Inloggning via WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">Vitlistade IP-adresser</string>
     <string name="jetpack_prevent_brute_force_title">Blockera obehöriga inloggningsförsök</string>
     <string name="jetpack_prevent_brute_force_category_title">Skydd mot brute force-attacker</string>
     <string name="jetpack_send_wp_notifications_title">Skicka push-meddelanden</string>
@@ -1869,12 +1841,6 @@ Language: sv_SE
     <string name="notification_settings_category_other">Övrigt</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Alla mina webbplatser</string>
     <string name="notification_settings_category_your_sites">Dina webbplatser</string>
-    <string name="notification_settings_master_off_message">Om du stänger av aviseringar i inställningarna kommer detta att inaktivera alla aviseringar, oavsett typ, från denna app. Du kan finjustera vilka aviseringar du vill ta emot efter att du åter aktiverat aviseringar i inställningarna.</string>
-    <string name="notification_settings_master_off_title">Aktivera aviseringar för att få aviseringar på denna enhet.</string>
-    <string name="notification_settings_master_hint_off">Aktivera aviseringar</string>
-    <string name="notification_settings_master_hint_on">Inaktivera aviseringar</string>
-    <string name="notification_settings_master_status_off">Av</string>
-    <string name="notification_settings_master_status_on">På</string>
     <string name="max_video_resolution">Maximal videostorlek</string>
     <string name="max_thumbnail_px_size">Maximal bildstorlek</string>
     <string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
@@ -2187,6 +2153,7 @@ Language: sv_SE
     <string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
     <string name="reader_empty_search_description">Inga inlägg hittade för %s på ditt språk</string>
     <string name="reader_hint_post_search">Sök WordPress</string>
+    <string name="reader_title_related_post_detail">Relaterade inlägg</string>
     <string name="preview_screen_links_disabled">Länkar har avaktiverats på förhandsvisningsskärmen</string>
     <string name="send">Skicka</string>
     <string name="user_remove_confirmation_message">Om du tar bort %1$s kommer användaren inte längre kunna besöka webbplatsen, men eventuellt innehåll som skapats av %1$s kommer att finnas kvar.\n\nVill du fortfarande ta bort denna användare?</string>
@@ -2326,7 +2293,6 @@ Language: sv_SE
     <string name="site_settings_paging_dialog_description">Dela upp kommentarstrådar i flera sidor.</string>
     <string name="site_settings_paging_dialog_header">Kommentarer per sida</string>
     <string name="site_settings_close_after_dialog_title">Stäng kommentarer</string>
-    <string name="site_settings_blacklist_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP markeras den som skräppost. Du kan ange delar av ord, så \"press\" kommer att matcha \"Wordpress\".</string>
     <string name="site_settings_hold_for_moderation_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP stannar den i granskningskön Du kan ange delar av ord, så \"press\" kommer att matcha \"Wordpress\".</string>
     <string name="site_settings_list_editor_input_hint">Ange ett ord eller en fras</string>
     <string name="site_settings_list_editor_no_items_text">Inga objekt</string>
@@ -2341,10 +2307,8 @@ Language: sv_SE
     <string name="site_settings_rp_show_header_title">Visa sidhuvud</string>
     <string name="site_settings_rp_switch_summary">Relaterade inlägg visar relevant innehåll från din webbplats nedanför dina inlägg.</string>
     <string name="site_settings_rp_switch_title">Visa relaterade inlägg</string>
-    <string name="site_settings_blacklist_hint">Kommentarer som matchar ett filter markeras som skräppost</string>
     <string name="site_settings_moderation_hold_hint">Kommentarer som matchar ett filter placeras i granskningskön</string>
     <string name="site_settings_multiple_links_hint">Ignorera länkbegränsningen för kända användare</string>
-    <string name="site_settings_whitelist_hint">Kommentarens författare måste ha en tidigare godkänd kommentar</string>
     <string name="site_settings_user_account_required_hint">Användare måste vara registrerade och inloggade för att kunna kommentera</string>
     <string name="site_settings_identity_required_hint">Kommentarens författare måste fylla i namn och e-postadress</string>
     <string name="site_settings_paging_hint">Visa kommentarer i stycken av en viss storlek</string>
@@ -2367,17 +2331,13 @@ Language: sv_SE
     <string name="site_settings_address_hint">Ändring av din adress stöds för närvarande inte</string>
     <string name="site_settings_tagline_hint">En kort beskrivning eller snärtig mening som beskriver din blogg</string>
     <string name="site_settings_title_hint">Beskriv med några få ord vad denna webbplats handlar om</string>
-    <string name="site_settings_whitelist_known_summary">Kommentarer från kända användare</string>
-    <string name="site_settings_whitelist_all_summary">Kommentarer från alla användare</string>
     <string name="site_settings_threading_summary">%d nivåer</string>
     <string name="site_settings_privacy_private_summary">Privat</string>
     <string name="site_settings_privacy_hidden_summary">Dold</string>
     <string name="site_settings_delete_site_title">Radera webbplats</string>
     <string name="site_settings_privacy_public_summary">Offentlig</string>
-    <string name="site_settings_blacklist_title">Svartlista</string>
     <string name="site_settings_moderation_hold_title">Vänta på granskning</string>
     <string name="site_settings_multiple_links_title">Länkar i kommentarer</string>
-    <string name="site_settings_whitelist_title">Godkänn automatiskt</string>
     <string name="site_settings_threading_title">Trådning</string>
     <string name="site_settings_paging_title">Paginering</string>
     <string name="site_settings_sort_by_title">Sortera efter</string>

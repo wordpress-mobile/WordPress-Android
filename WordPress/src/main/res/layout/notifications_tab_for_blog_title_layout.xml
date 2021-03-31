@@ -8,18 +8,18 @@
 
     <include layout="@layout/preference_dialog_title" />
 
-    <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
-        android:id="@+id/master_switch"
+    <org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView
+        android:id="@+id/main_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:masterContentDescription="@string/notifications_tab_dialog_switch_desc"
-        app:masterContentInsetStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
-        app:masterHintOff="@string/notifications_tab_dialog_master_hint_off"
-        app:masterHintOn="@string/notifications_tab_dialog_master_hint_on"
-        app:masterOffsetEnd="@dimen/notifications_tab_dialog_toolbar_content_offset"
-        app:masterTitleOff="@string/notifications_tab_dialog_master_status_off"
-        app:masterTitleOn="@string/notifications_tab_dialog_master_status_on"
-        app:masterViewStyle="normal" />
+        app:mainContentDescription="@string/notifications_tab_dialog_switch_desc"
+        app:mainContentInsetStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        app:mainHintOff="@string/notifications_tab_dialog_main_hint_off"
+        app:mainHintOn="@string/notifications_tab_dialog_main_hint_on"
+        app:mainOffsetEnd="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        app:mainTitleOff="@string/notifications_tab_dialog_main_status_off"
+        app:mainTitleOn="@string/notifications_tab_dialog_main_status_on"
+        app:mainViewStyle="normal" />
 
 </LinearLayout>
 

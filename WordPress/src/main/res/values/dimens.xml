@@ -67,6 +67,8 @@
 
     <dimen name="default_cardview_radius">2dp</dimen>
 
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
@@ -549,7 +551,7 @@
     <!--settings username changer-->
     <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
-    <!--preferences master switch -->
+    <!--preferences main switch -->
     <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
     <dimen name="notifications_settings_dialog_divider_height">1dp</dimen>
 
@@ -617,7 +619,6 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
-    <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
     <dimen name="hpp_button_max_width">244dp</dimen>

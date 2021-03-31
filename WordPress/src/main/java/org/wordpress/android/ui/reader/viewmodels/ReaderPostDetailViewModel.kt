@@ -2,11 +2,13 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
@@ -15,6 +17,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -26,15 +29,24 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
+import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -48,13 +60,18 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerGetPostUseCase: ReaderGetPostUseCase,
+    private val readerFetchPostUseCase: ReaderFetchPostUseCase,
+    private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
+    private val readerTracker: ReaderTracker,
     private val eventBusWrapper: EventBusWrapper,
+    private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MediatorLiveData<ReaderPostDetailsUiState>()
-    val uiState: LiveData<ReaderPostDetailsUiState> = _uiState
+    private val _uiState = MediatorLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
 
     private val _refreshPost = MediatorLiveData<Event<Unit>>()
     val refreshPost: LiveData<Event<Unit>> = _refreshPost
@@ -71,26 +88,38 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
-    var isRelatedPost: Boolean = false
+    private var isRelatedPost: Boolean = false
+
+    var isFeed: Boolean = false
+    var interceptedUri: String? = null
+
+    var post: ReaderPost? = null
+    val hasPost: Boolean
+        get() = post != null
+
+    private val shouldOfferSignIn: Boolean
+        get() = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
 
-    fun start(isRelatedPost: Boolean) {
+    fun start(isRelatedPost: Boolean, isFeed: Boolean, interceptedUri: String?) {
         if (isStarted) {
             return
         }
         isStarted = true
         this.isRelatedPost = isRelatedPost
+        this.isFeed = isFeed
+        this.interceptedUri = interceptedUri
 
         init()
     }
 
     private fun init() {
-        readerPostCardActionsHandler.initScope(this)
+        readerPostCardActionsHandler.initScope(viewModelScope)
         _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
-            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+            val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
 
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
@@ -104,7 +133,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         _refreshPost.addSource(readerPostCardActionsHandler.refreshPosts) {
-            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+            val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     updatePostActions(post)
@@ -125,6 +154,52 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onShowPost(blogId: Long, postId: Long) {
+        launch { getOrFetchReaderPost(blogId = blogId, postId = postId) }
+    }
+
+    private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
+        _uiState.value = LoadingUiState
+
+        getReaderPostFromDb(blogId = blogId, postId = postId)
+        if (post == null) {
+            when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
+                FetchReaderPostState.Success -> {
+                    getReaderPostFromDb(blogId, postId)
+                    updatePostDetailsUi()
+                }
+
+                FetchReaderPostState.AlreadyRunning -> {
+                    AppLog.i(T.READER, "reader post detail > fetch post already running")
+                    _uiState.value = ErrorUiState(null)
+                }
+
+                FetchReaderPostState.Failed.NoNetwork ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
+
+                FetchReaderPostState.Failed.RequestFailed ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+
+                FetchReaderPostState.Failed.NotAuthorised -> trackAndUpdateNotAuthorisedErrorState()
+
+                FetchReaderPostState.Failed.PostNotFound ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
+            }
+        } else {
+            updatePostDetailsUi()
+        }
+    }
+
+    private suspend fun getReaderPostFromDb(blogId: Long, postId: Long) {
+        val (readerPost, isFeedPost) = readerGetPostUseCase.get(blogId = blogId, postId = postId, isFeed = this.isFeed)
+        this.post = readerPost
+        this.isFeed = isFeedPost
+    }
+
+    fun onNotAuthorisedRequestFailure() {
+        trackAndUpdateNotAuthorisedErrorState()
+    }
+
     fun onMoreButtonClicked() {
         changeMoreMenuVisibility(true)
     }
@@ -134,7 +209,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onMoreMenuItemClicked(type: ReaderPostCardActionType) {
-        val currentUiState = uiState.value
+        val currentUiState = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
             onButtonClicked(currentUiState.postId, currentUiState.blogId, type)
         }
@@ -142,7 +217,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun changeMoreMenuVisibility(show: Boolean) {
-        val currentUiState = uiState.value
+        val currentUiState = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
@@ -158,10 +233,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onFeaturedImageClicked(blogId: Long, featuredImageUrl: String) {
+        val site = siteStore.getSiteBySiteId(blogId)
+        _navigationEvents.value = Event(
+                ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
+        )
+    }
+
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false, fromPostDetails = true)
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        type,
+                        isBookmarkList = false,
+                        source = ReaderTracker.SOURCE_POST_DETAIL
+                )
             }
         }
     }
@@ -179,10 +266,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onShowPost(post: ReaderPost) {
-        _uiState.value = convertPostToUiState(post)
-    }
-
     fun onUpdatePost(post: ReaderPost) {
         _uiState.value = convertPostToUiState(post)
     }
@@ -197,9 +280,17 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun onBlogSectionClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.handleHeaderClicked(blogId, it.feedId)
+                readerPostCardActionsHandler.handleHeaderClicked(
+                        blogId,
+                        it.feedId,
+                        it.isFollowedByCurrentUser
+                )
             }
         }
+    }
+
+    fun onVisitPostExcerptFooterClicked(postLink: String) {
+        _navigationEvents.value = Event(ReaderNavigationEvents.OpenUrl(url = postLink))
     }
 
     private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
@@ -226,8 +317,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
-        analyticsUtilsWrapper.trackWithReaderPostDetails(stat = stat, blogId = blogId, postId = postId)
+        val stat = if (isGlobal) {
+            AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+        } else {
+            AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
+        }
+        readerTracker.trackPost(stat, findPost(blogId, postId))
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
@@ -261,6 +356,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
+    private fun updatePostDetailsUi() {
+        post?.let {
+            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, it)
+            _navigationEvents.postValue(Event(ShowPostInWebView(it)))
+            _uiState.value = convertPostToUiState(it)
+        }
+    }
+
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
         isFollowed: Boolean
@@ -278,7 +381,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        _uiState.value = _uiState.value?.copy(
+        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
                 actions = postDetailUiStateBuilder.buildPostActions(
                         post,
                         this@ReaderPostDetailViewModel::onButtonClicked
@@ -287,7 +390,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
-        _uiState.value = _uiState.value?.copy(
+        _uiState.value = (_uiState.value as? ReaderPostDetailsUiState)?.copy(
                 localRelatedPosts = convertRelatedPostsToUiState(
                         sourcePost = sourcePost,
                         relatedPosts = state.localRelatedPosts,
@@ -301,32 +404,80 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    data class ReaderPostDetailsUiState(
-        val postId: Long,
-        val blogId: Long,
-        val headerUiState: ReaderPostDetailsHeaderUiState,
-        val moreMenuItems: List<ReaderPostCardAction>? = null,
-        val actions: ReaderPostActions,
-        val localRelatedPosts: RelatedPostsUiState? = null,
-        val globalRelatedPosts: RelatedPostsUiState? = null
+    private fun trackAndUpdateNotAuthorisedErrorState() {
+        trackNotAuthorisedState()
+
+        _uiState.value = ErrorUiState(
+                message = UiStringRes(getNotAuthorisedErrorMessageRes()),
+                signInButtonVisibility = shouldOfferSignIn
+        )
+    }
+
+    private fun trackNotAuthorisedState() {
+        if (shouldOfferSignIn) {
+            post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
+        }
+        post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, it) }
+    }
+
+    private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
+        if (interceptedUri == null) {
+            R.string.reader_err_get_post_not_authorized
+        } else {
+            R.string.reader_err_get_post_not_authorized_fallback
+        }
+    } else {
+        if (interceptedUri == null) {
+            R.string.reader_err_get_post_not_authorized_signin
+        } else {
+            R.string.reader_err_get_post_not_authorized_signin_fallback
+        }
+    }
+
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val errorVisible: Boolean = false
     ) {
-        data class RelatedPostsUiState(
-            val cards: List<ReaderRelatedPostUiState>?,
-            val isGlobal: Boolean,
-            val headerLabel: UiString?,
-            val railcarJsonStrings: List<String?>
-        ) {
-            data class ReaderRelatedPostUiState(
-                val postId: Long,
-                val blogId: Long,
+        object LoadingUiState : UiState(loadingVisible = true)
+
+        data class ErrorUiState(
+            val message: UiString?,
+            val signInButtonVisibility: Boolean = false
+        ) : UiState(errorVisible = true)
+
+        data class ReaderPostDetailsUiState(
+            val postId: Long,
+            val blogId: Long,
+            val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
+            val headerUiState: ReaderPostDetailsHeaderUiState,
+            val excerptFooterUiState: ExcerptFooterUiState?,
+            val moreMenuItems: List<ReaderPostCardAction>? = null,
+            val actions: ReaderPostActions,
+            val localRelatedPosts: RelatedPostsUiState? = null,
+            val globalRelatedPosts: RelatedPostsUiState? = null
+        ) : UiState() {
+            data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
+
+            data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
+
+            data class RelatedPostsUiState(
+                val cards: List<ReaderRelatedPostUiState>?,
                 val isGlobal: Boolean,
-                val title: UiString?,
-                val excerpt: UiString?,
-                val featuredImageUrl: String?,
-                val featuredImageVisibility: Boolean,
-                val featuredImageCornerRadius: UiDimen,
-                val onItemClicked: (Long, Long, Boolean) -> Unit
-            )
+                val headerLabel: UiString?,
+                val railcarJsonStrings: List<String?>
+            ) {
+                data class ReaderRelatedPostUiState(
+                    val postId: Long,
+                    val blogId: Long,
+                    val isGlobal: Boolean,
+                    val title: UiString?,
+                    val excerpt: UiString?,
+                    val featuredImageUrl: String?,
+                    val featuredImageVisibility: Boolean,
+                    val featuredImageCornerRadius: UiDimen,
+                    val onItemClicked: (Long, Long, Boolean) -> Unit
+                )
+            }
         }
     }
 

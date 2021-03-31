@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 09:54:09+0000
+Translation-Revision-Date: 2021-03-16 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
+    <string name="reader_title_interests">追蹤主題</string>
+    <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
+    <string name="activity_log_backup_download_notice_download_action">下載</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
-    <string name="threat_fix_all_warning_message_plural">請確認你要修正所有 %s 個作用中威脅。</string>
-    <string name="scan_idle_with_threats_description_plural">掃描作業已在 %2s 上找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
+    <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
@@ -35,9 +39,9 @@ Language: zh_TW
     <string name="invite_links_section_title">邀請連結</string>
     <string name="threats_found_singular">發現威脅</string>
     <string name="threats_found_plural">發現數個威脅</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br> %s發現潛在威脅</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br>發現 1 個潛在威脅</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br>沒有發現潛在威脅</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>掃描完成&lt;/b> &lt;br> %s 發現潛在威脅</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>掃描完成&lt;/b> &lt;br> 發現一個潛在威脅</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>掃描完成&lt;/b> &lt;br> 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
     <string name="quick_start_card_menu_unpin">取消釘選此項目</string>
@@ -93,7 +97,7 @@ Language: zh_TW
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">隨時為你提供協助</string>
-    <string name="scan_idle_with_threats_description_singular">掃描作業已在 %2s 上找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
+    <string name="scan_idle_threats_description_singular">掃描作業發現 %1$s 有一個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %2$s。</string>
     <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
@@ -155,7 +159,7 @@ Language: zh_TW
     <string name="threat_fix_all_status_error_message">取得修正狀態時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_fix_all_status_success_message_singular">已成功修正威脅。</string>
     <string name="threat_fix_all_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
-    <string name="threat_fix_all_warning_message_singular">請確認你要修正 %s 個作用中威脅。</string>
+    <string name="threat_fix_all_confirmation_message_singular">請確認你要修正一個作用中威脅。</string>
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
     <string name="threat_ignore_success_message">已忽略威脅。</string>
@@ -357,7 +361,7 @@ Language: zh_TW
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">攝影師 Cameron Karsten 的作品讓我深受啟發。 我下次會嘗試這些技巧</string>
     <string name="login_prologue_second_subtitle_one">激發靈感</string>
-    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新讀物。</string>
+    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新網誌。</string>
     <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
     <string name="login_prologue_title_third">即時查看留言和通知。</string>
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
@@ -379,7 +383,6 @@ Language: zh_TW
     <string name="stories_intro_main_title">限時動態文章介紹</string>
     <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
     <string name="mlp_notice_page_created">已建立頁面</string>
-    <string name="mlp_preview_title">版面配置預覽</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s 存取你的相片時遭拒絕。 若要解決此問題，請編輯存取權限並開啟 %2$s 和 %3$s。</string>
     <string name="media_insert_failed">媒體插入失敗。</string>
     <string name="media_insert_failed_with_reason">媒體插入失敗：%s</string>
@@ -573,8 +576,8 @@ Language: zh_TW
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">移至草稿</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
-    <string name="reader_label_choose_your_interests">選擇你的興趣</string>
-    <string name="reader_choose_interests_content_description">選擇你的興趣</string>
+    <string name="reader_label_choose_your_interests">選擇你的主題</string>
+    <string name="reader_choose_interests_content_description">選擇你的主題</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
     <string name="post_status_post_published">已發表</string>
@@ -701,8 +704,6 @@ Language: zh_TW
     <string name="app_theme_light">淡色系</string>
     <string name="app_theme">外觀</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">你最近變更了這個頁面，但沒有儲存這些變更。選擇要載入的版本：\n\n</string>
-    <string name="gutenberg_native_warning_message">警告訊息</string>
-    <string name="gutenberg_native_success_message">成功訊息</string>
     <string name="gutenberg_native_show_post_content">顯示文章內容</string>
     <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
     <string name="gutenberg_native_link_to">連結至</string>
@@ -810,20 +811,16 @@ Language: zh_TW
     <string name="gutenberg_native_unsupported">不支援</string>
     <string name="gutenberg_native_ungroup">取消群組</string>
     <string name="gutenberg_native_translate">翻譯</string>
-    <string name="gutenberg_native_title">標題：</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">點選即可隱藏鍵盤</string>
     <string name="gutenberg_native_tap_here_to_show_help">點選此處顯示說明</string>
     <string name="gutenberg_native_take_a_video">拍攝視訊</string>
     <string name="gutenberg_native_take_a_photo_or_video">拍攝相片或視訊</string>
     <string name="gutenberg_native_take_a_photo">拍攝照片</string>
     <string name="gutenberg_native_start_writing">開始撰寫內容…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">側邊欄標題外掛程式</string>
     <string name="gutenberg_native_show_section">顯示區段</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 區塊含有無效內容</string>
     <string name="gutenberg_native_s_block_empty">%s 區塊空白</string>
     <string name="gutenberg_native_cut_block">剪下區塊</string>
-    <string name="gutenberg_native_reset_block">重設區塊</string>
-    <string name="gutenberg_native_remove_annotations">移除註解</string>
     <string name="gutenberg_native_problem_opening_the_video">開啟視訊時發生問題</string>
     <string name="gutenberg_native_problem_displaying_block">顯示區塊時發生問題</string>
     <string name="gutenberg_native_post_title_s">文章標題。%s</string>
@@ -833,17 +830,12 @@ Language: zh_TW
     <string name="gutenberg_native_open_settings">開啟設定</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">沒有應用程式可以處理這項要求。請安裝網頁瀏覽器。</string>
     <string name="gutenberg_native_navigate_up">瀏覽</string>
-    <string name="gutenberg_native_my_pre_publish_panel">我的發表前面板</string>
-    <string name="gutenberg_native_my_post_status_info">我的文章狀態資訊</string>
-    <string name="gutenberg_native_my_post_publish_panel">我的發表後面板</string>
-    <string name="gutenberg_native_my_document_setting_panel">我的文件設定面板</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向上移至第 %2$s 列</string>
     <string name="gutenberg_native_move_block_up">向上移動區塊</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
     <string name="gutenberg_native_move_block_down">向下移動區塊</string>
     <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隱藏鍵盤</string>
-    <string name="gutenberg_native_here_is_the_panel_content">這裡是面板內容！</string>
     <string name="gutenberg_native_help_icon">說明圖示</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">無法插入媒體。\n請點選以顯示選項。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">按兩次即可復原上次變更</string>
@@ -858,9 +850,7 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">按兩下以使用滑桿變更數值</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">按兩下以新增區塊</string>
     <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
-    <string name="gutenberg_native_content">內容…</string>
     <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
-    <string name="gutenberg_native_annotations_sidebar">註解側邊欄</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">發生不明的錯誤，請再試一次。</string>
     <string name="gutenberg_native_alt_text">替代文字</string>
     <string name="gutenberg_native_add_video">新增視訊</string>
@@ -868,19 +858,9 @@ Language: zh_TW
     <string name="gutenberg_native_add_image_or_video">新增圖片或視訊</string>
     <string name="gutenberg_native_add_image">新增圖片</string>
     <string name="gutenberg_native_add_block_here">在此新增區塊</string>
-    <string name="gutenberg_native_add_annotation">新增註解</string>
-    <string name="gutenberg_native_add_a_description">新增說明</string>
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
-    <string name="master_switch_default_title_off">關閉</string>
-    <string name="master_switch_default_title_on">開啟</string>
-    <string name="notifications_tab_dialog_master_off_message">若關閉此網站的「通知」功能，將會停用網站通知分頁的通知顯示。你可以開啟網站的「通知」功能，進一步調整想查看哪一類通知。</string>
-    <string name="notifications_tab_dialog_master_off_title">若要在此網站的通知分頁查看通知，請開啟此網站的「通知」功能。</string>
-    <string name="notifications_tab_dialog_master_hint_off">啟用此網站通知分頁的通知顯示</string>
-    <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
-    <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
-    <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -1149,8 +1129,7 @@ Language: zh_TW
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
-    <string name="quick_start_sites_type_grow">拓展你的讀者群</string>
-    <string name="quick_start_sites_type_customize">自訂你的網站</string>
+    <string name="quick_start_sites_type_grow">讀者持續成長</string>
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受完成的成果！</string>
@@ -1197,8 +1176,6 @@ Language: zh_TW
     <string name="site_creation_error_generic_subtitle">與伺服器通訊時發生錯誤，請再試一次</string>
     <string name="site_creation_error_generic_title">發生問題</string>
     <string name="site_creation_fetch_suggestions_error_unknown">發生問題</string>
-    <string name="site_creation_segments_subtitle">這會協助我們向你推薦相關選項。但你不應裹足不前，所有網站都會不斷進步！</string>
-    <string name="site_creation_segments_title">告訴我們你希望建立什麼類型的網站</string>
     <string name="new_site_creation_preview_title">你的網站已建立！</string>
     <string name="new_site_creation_screen_title_step_count">第 %1$d 步 (共 %2$d 步)</string>
     <string name="new_site_creation_screen_title_general">建立網站</string>
@@ -1351,7 +1328,7 @@ Language: zh_TW
     <string name="quick_start_dialog_need_help_button_neutral">從未</string>
     <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s搜尋%2$s以尋找具有相似興趣的網站</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s搜尋%2$s以尋找具有相似主題的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>
     <string name="quick_start_button_positive">執行</string>
@@ -1443,8 +1420,6 @@ Language: zh_TW
     <string name="reader_empty_saved_posts_title">尚未儲存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
     <string name="reader_bookmark_snack_btn">檢視全部</string>
-    <string name="reader_btn_bookmarked">已儲存</string>
-    <string name="reader_btn_bookmark">儲存</string>
     <string name="reader_remove_bookmark">從已儲存文章中移除</string>
     <string name="reader_add_bookmark">加入已儲存文章</string>
     <string name="reader_save_for_later_title">已儲存文章</string>
@@ -1794,12 +1769,10 @@ Language: zh_TW
     <string name="jetpack_disconnect_confirm">中斷連線</string>
     <string name="jetpack_disconnect_confirmation_message">確定要中斷網站與 Jetpack 的連線？</string>
     <string name="jetpack_disconnect_pref_title">「中斷與 WordPress.com 的連線」</string>
-    <string name="site_settings_jetpack_whitelist_description">你可在允許清單中新增 IP 位址或一系列的位址，以避免這些位址受到 Jetpack 封鎖。可接受 IPv4 和 IPv6。若要指定範圍，請輸入最低值及最高值，並以破折號分隔。範例：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要雙步驟驗證</string>
     <string name="jetpack_match_wpcom_via_email_title">使用電子郵件地址比對帳號</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允許登入 WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">登入 WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">在允許清單中的 IP 位址</string>
     <string name="jetpack_prevent_brute_force_title">封鎖嘗試登入的惡意攻擊</string>
     <string name="jetpack_prevent_brute_force_category_title">暴力破解密碼攻擊防護</string>
     <string name="jetpack_send_wp_notifications_title">傳送推播通知</string>
@@ -1839,12 +1812,6 @@ Language: zh_TW
     <string name="notification_settings_category_other">其他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">我所有的網站</string>
     <string name="notification_settings_category_your_sites">你的網站</string>
-    <string name="notification_settings_master_off_message">關閉「通知設定」將停用此應用程式的所有通知，無論何種類型。開啟「通知設定」之後，你可以調整接收的通知類型。</string>
-    <string name="notification_settings_master_off_title">若要在此裝置上接收通知，請開啟「通知設定」。</string>
-    <string name="notification_settings_master_hint_off">啓用通知</string>
-    <string name="notification_settings_master_hint_on">停用通知</string>
-    <string name="notification_settings_master_status_off">關閉</string>
-    <string name="notification_settings_master_status_on">開啟</string>
     <string name="max_video_resolution">影片大小上限</string>
     <string name="max_thumbnail_px_size">圖片大小上限</string>
     <string name="error_upload_post_media_param">於此文章中上傳媒體時發生錯誤：%s.</string>
@@ -2096,7 +2063,7 @@ Language: zh_TW
     <string name="signout">登出</string>
     <string name="sign_in_wpcom">登入 WordPress.com</string>
     <string name="reader_label_global_related_posts">想瞭解更多資訊，請上 WordPress.com</string>
-    <string name="reader_label_local_related_posts">想瞭解更多資訊，請前往 %s</string>
+    <string name="reader_label_local_related_posts">更多來自 %s 的項目</string>
     <string name="preference_open_device_settings">開啟裝置設定</string>
     <string name="invite_invalid_email">%s：電子郵件無效</string>
     <string name="invite_user_blocked_invites">%s：使用者已封鎖邀請</string>
@@ -2152,6 +2119,7 @@ Language: zh_TW
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
     <string name="reader_empty_search_description">在你的語言中找不到與 %s 相關的結果</string>
     <string name="reader_hint_post_search">搜尋 WordPress</string>
+    <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="send">傳送</string>
     <string name="person_removed">已成功移除 %1$s</string>
@@ -2288,7 +2256,6 @@ Language: zh_TW
     <string name="site_settings_paging_dialog_description">將留言串分為數頁。</string>
     <string name="site_settings_paging_dialog_header">每頁留言數</string>
     <string name="site_settings_close_after_dialog_title">關閉留言功能</string>
-    <string name="site_settings_blacklist_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，該留言將標記為垃圾留言。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_hold_for_moderation_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被送進審核清單。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_list_editor_input_hint">輸入字詞或片語</string>
     <string name="site_settings_list_editor_no_items_text">無項目</string>
@@ -2303,10 +2270,8 @@ Language: zh_TW
     <string name="site_settings_rp_show_header_title">顯示頁首</string>
     <string name="site_settings_rp_switch_summary">相關文章會在你的文章下方顯示網站上的相關內容。</string>
     <string name="site_settings_rp_switch_title">顯示相關文章</string>
-    <string name="site_settings_blacklist_hint">與篩選條件相符的留言將標示為垃圾留言</string>
     <string name="site_settings_moderation_hold_hint">與篩選條件相符的留言將被送進審核清單</string>
     <string name="site_settings_multiple_links_hint">忽略已知使用者的連結限制</string>
-    <string name="site_settings_whitelist_hint">先前有經核准的留言才可以發表留言</string>
     <string name="site_settings_user_account_required_hint">已註冊且登入的使用者才可以發表留言</string>
     <string name="site_settings_identity_required_hint">輸入名稱和電子郵件後才可以發表留言</string>
     <string name="site_settings_paging_hint">按照指定的區塊大小顯示留言</string>
@@ -2329,17 +2294,13 @@ Language: zh_TW
     <string name="site_settings_address_hint">目前不支援變更網址</string>
     <string name="site_settings_tagline_hint">使用簡短的說明或好記的字詞組合來描述你的網誌</string>
     <string name="site_settings_title_hint">以簡單幾個字說明此網站主題</string>
-    <string name="site_settings_whitelist_known_summary">已知使用者的留言</string>
-    <string name="site_settings_whitelist_all_summary">所有使用者的留言</string>
     <string name="site_settings_threading_summary">%d 層</string>
     <string name="site_settings_privacy_private_summary">私密</string>
     <string name="site_settings_privacy_hidden_summary">隱藏</string>
     <string name="site_settings_privacy_public_summary">公開</string>
     <string name="site_settings_delete_site_title">刪除網站</string>
-    <string name="site_settings_blacklist_title">封鎖清單</string>
     <string name="site_settings_moderation_hold_title">等待審核</string>
     <string name="site_settings_multiple_links_title">留言中的連結</string>
-    <string name="site_settings_whitelist_title">自動核准</string>
     <string name="site_settings_paging_title">分頁</string>
     <string name="site_settings_threading_title">階層顯示</string>
     <string name="site_settings_sort_by_title">排序依據</string>
