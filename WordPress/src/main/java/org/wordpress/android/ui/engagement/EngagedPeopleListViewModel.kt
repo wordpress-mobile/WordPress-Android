@@ -53,12 +53,14 @@ class EngagedPeopleListViewModel @Inject constructor(
     val onNavigationEvent: LiveData<Event<EngagedListNavigationEvent>> = _onNavigationEvent
 
     data class EngagedPeopleListUiState(
+        val showLikeFacesTrain: Boolean,
+        val numLikes: Int = 0,
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
         val showEmptyState: Boolean,
-        val emptyStateTitle: UiString?,
-        val emptyStateAction: (() -> Unit)?,
-        val emptyStateButtonText: UiString?
+        val emptyStateTitle: UiString? = null,
+        val emptyStateAction: (() -> Unit)? = null,
+        val emptyStateButtonText: UiString? = null
     )
 
     fun start(listScenario: ListScenario) {
@@ -96,8 +98,8 @@ class EngagedPeopleListViewModel @Inject constructor(
             // from the notification).
             // Keeping the logic for now, but remove empty listOf and relevant logic when API will sort likes
             when (loadRequestType) {
-                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId, listOf())
-                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId, listOf())
+                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId)
+                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId)
             }
         }
     }
@@ -145,6 +147,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
+                showLikeFacesTrain = false,
                 showLoading = updateLikesState is InitialLoading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,

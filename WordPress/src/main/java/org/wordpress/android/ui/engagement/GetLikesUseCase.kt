@@ -62,26 +62,23 @@ class GetLikesUseCase @Inject constructor(
 
     suspend fun getLikesForPost(
         siteId: Long,
-        postId: Long,
-        noteLikersIdList: List<Long>
+        postId: Long
     ): Flow<GetLikesState> = flow {
-        getLikes(POST_LIKE, this, siteId, postId, noteLikersIdList)
+        getLikes(POST_LIKE, this, siteId, postId/*, noteLikersIdList*/)
     }
 
     suspend fun getLikesForComment(
         siteId: Long,
-        commentId: Long,
-        noteLikersIdList: List<Long>
+        commentId: Long
     ): Flow<GetLikesState> = flow {
-        getLikes(COMMENT_LIKE, this, siteId, commentId, noteLikersIdList)
+        getLikes(COMMENT_LIKE, this, siteId, commentId/*, noteLikersIdList*/)
     }
 
     private suspend fun getLikes(
         category: LikeCategory,
         flow: FlowCollector<GetLikesState>,
         siteId: Long,
-        entityId: Long,
-        noteLikersIdList: List<Long>
+        entityId: Long
     ) {
         flow.emit(InitialLoading)
         delay(PROGRESS_DELAY_MS)
@@ -119,17 +116,11 @@ class GetLikesUseCase @Inject constructor(
                 if (event.isError) errorMessage = event.error.message
             }
 
-            val noteLikersIdMap = noteLikersIdList.withIndex().associate { it.value to it.index }
-
-            val orderedLikes = likes.sortedWith(compareBy(nullsLast<Int>()) {
-                noteLikersIdMap[it.remoteLikeId]
-            })
-
             flow.emit(
                     if (event.isError) {
-                        getFailureState(noNetworkDetected, orderedLikes, errorMessage)
+                        getFailureState(noNetworkDetected, likes, errorMessage)
                     } else {
-                        LikesData(orderedLikes)
+                        LikesData(likes)
                     }
             )
         }

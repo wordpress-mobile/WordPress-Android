@@ -32,10 +32,10 @@ class LikerViewHolder(
 
         imageManager.loadIntoCircle(this.likerAvatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
 
-        if (liker.userSiteUrl.isNotEmpty()) {
+        if (liker.userSiteUrl.isNotEmpty() && liker.onClick != null) {
             likerRootView.isEnabled = true
             likerRootView.setOnClickListener {
-                liker.onClick(liker.userSiteId, liker.userSiteUrl)
+                liker.onClick.invoke(liker.userSiteId, liker.userSiteUrl)
             }
         } else {
             likerRootView.isEnabled = true

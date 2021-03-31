@@ -10,7 +10,7 @@ data class ListScenario(
     val postOrCommentId: Long,
     val commentPostId: Long = 0,
     val commentSiteUrl: String,
-    val headerData: HeaderData?
+    val headerData: HeaderData
 ) : Parcelable
 
 enum class ListScenarioType {
@@ -25,7 +25,8 @@ data class HeaderData constructor(
     val authorAvatarUrl: String,
     val authorUserId: Long,
     val authorPreferredSiteId: Long,
-    val authorPreferredSiteUrl: String
+    val authorPreferredSiteUrl: String,
+    val numLikes: Int = 0
 ) : Parcelable
 
 sealed class AuthorName : Parcelable {

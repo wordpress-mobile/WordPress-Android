@@ -26,14 +26,14 @@ class GetLikesHandler @Inject constructor(
     private val _likesStatusUpdate = MediatorLiveData<GetLikesState>()
     val likesStatusUpdate: LiveData<GetLikesState> = _likesStatusUpdate
 
-    suspend fun handleGetLikesForPost(siteId: Long, postId: Long, noteLikersIdList: List<Long>) {
-        getLikesUseCase.getLikesForPost(siteId, postId, noteLikersIdList).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForPost(siteId: Long, postId: Long) {
+        getLikesUseCase.getLikesForPost(siteId, postId).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
 
-    suspend fun handleGetLikesForComment(siteId: Long, commentId: Long, noteLikersIdList: List<Long>) {
-        getLikesUseCase.getLikesForComment(siteId, commentId, noteLikersIdList).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForComment(siteId: Long, commentId: Long) {
+        getLikesUseCase.getLikesForComment(siteId, commentId).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
