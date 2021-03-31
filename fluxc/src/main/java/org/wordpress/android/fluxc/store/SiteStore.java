@@ -79,6 +79,14 @@ public class SiteStore extends Store {
         public String url;
     }
 
+    public static class FetchSitesPayload extends Payload<BaseNetworkError> {
+        public List<SiteFilter> filters;
+
+        public FetchSitesPayload(List<SiteFilter> filters) {
+            this.filters = filters;
+        }
+    }
+
     @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
         @NonNull public String siteName;
@@ -1536,7 +1544,7 @@ public class SiteStore extends Store {
                 fetchSite((SiteModel) action.getPayload());
                 break;
             case FETCH_SITES:
-                mSiteRestClient.fetchSites();
+                fetchSites((FetchSitesPayload) action.getPayload());
                 break;
             case FETCHED_SITES:
                 handleFetchedSitesWPComRest((SitesModel) action.getPayload());
@@ -1724,6 +1732,10 @@ public class SiteStore extends Store {
         } else {
             mSiteXMLRPCClient.fetchSite(site);
         }
+    }
+
+    private void fetchSites(FetchSitesPayload payload) {
+        mSiteRestClient.fetchSites(payload.filters);
     }
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
