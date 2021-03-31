@@ -447,7 +447,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 R.dimen.margin_small)
         )
         likeFacesRecycler.layoutManager = layoutManager
-
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
