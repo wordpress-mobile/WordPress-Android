@@ -1213,6 +1213,23 @@ public class SiteStore extends Store {
         }
     }
 
+    public enum SiteFilter {
+        ATOMIC("atomic"),
+        JETPACK("jetpack"),
+        WPCOM("wpcom");
+
+        private final String mString;
+
+        SiteFilter(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
     private PostSqlUtils mPostSqlUtils;
