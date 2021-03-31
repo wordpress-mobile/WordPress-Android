@@ -822,10 +822,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
         sendFeaturedImageId(mediaId);
-
-        Snackbar snackbar = Snackbar
-                .make(getActivity().findViewById(R.id.gutenberg_container), R.string.featured_image_confirmation, Snackbar.LENGTH_LONG);
-        snackbar.show();
+        
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED);
     }
 
