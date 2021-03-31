@@ -33,7 +33,6 @@ import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import org.wordpress.android.editor.BuildConfig;
@@ -822,7 +821,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
         sendFeaturedImageId(mediaId);
-        
+
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED);
     }
 
