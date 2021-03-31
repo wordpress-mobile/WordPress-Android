@@ -81,6 +81,7 @@ android {
         buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
+        buildConfigField "boolean", "IS_JETPACK", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -96,11 +97,13 @@ android {
         wordpress {
             dimension "app"
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "IS_JETPACK", "false"
         }
 
         jetpack {
             dimension "app"
             applicationId "com.jetpack.android"
+            buildConfigField "boolean", "IS_JETPACK", "true"
         }
 
         vanilla { // used for release and beta
