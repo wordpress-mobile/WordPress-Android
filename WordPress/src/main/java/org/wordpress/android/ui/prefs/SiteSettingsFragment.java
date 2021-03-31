@@ -979,9 +979,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else {
             // wp.com site
             removeNonWPComPreferences();
-            if (mSite.isWPCom() && !mSite.isWPComAtomic()) {
-                removeEditorPreferences();
-            }
         }
 
         if (!mSite.isUsingWpComRestApi()) {
@@ -1002,6 +999,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
+        }
+
+        // Simple WPCom Sites now always default to Gutenberg Editor
+        if (mSite.isWPCom() && !mSite.isWPComAtomic()) {
+            removeEditorPreferences();
         }
     }
 
