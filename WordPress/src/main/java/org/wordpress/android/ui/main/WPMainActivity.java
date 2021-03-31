@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -337,7 +338,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    ActivityLauncher.showSignInForResult(this);
+                    if (BuildConfig.IS_JETPACK) {
+                        ActivityLauncher.showSignInForResult(this, false, true);
+                    } else {
+                        ActivityLauncher.showSignInForResult(this);
+                    }
                     finish();
                 }
             }

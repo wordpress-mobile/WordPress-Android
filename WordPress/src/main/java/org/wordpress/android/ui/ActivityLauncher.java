@@ -115,6 +115,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
+import static org.wordpress.android.login.LoginMode.JETPACK_APP_LOGIN_MODE;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
@@ -1172,13 +1173,15 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        showSignInForResult(activity, false);
+        showSignInForResult(activity, false, false);
     }
 
-    public static void showSignInForResult(Activity activity, boolean isWpComOnly) {
+    public static void showSignInForResult(Activity activity, boolean isWpComOnly, boolean isJetpackOnly) {
         Intent intent = new Intent(activity, LoginActivity.class);
         if (isWpComOnly) {
             WPCOM_LOGIN_ONLY.putInto(intent);
+        } else if (isJetpackOnly) {
+            JETPACK_APP_LOGIN_MODE.putInto(intent);
         }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }

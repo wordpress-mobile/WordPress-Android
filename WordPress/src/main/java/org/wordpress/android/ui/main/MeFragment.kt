@@ -123,7 +123,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
             } else {
-                ActivityLauncher.showSignInForResult(activity, true)
+                ActivityLauncher.showSignInForResult(activity, true, false)
             }
         }
         if (savedInstanceState != null) {
