@@ -515,6 +515,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
+        // TODO: remove this take when using pagination (limit the call to needed elements only)
         return likes.take(MAX_NUM_LIKES_FACES).map { likeData ->
             Liker(
                     name = likeData.likerName!!,
