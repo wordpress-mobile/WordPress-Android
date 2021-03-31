@@ -366,6 +366,11 @@
                 android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
 
+        <activity
+            android:name=".ui.DeeplinkWebViewActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:excludeFromRecents="true"/>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
@@ -406,6 +411,11 @@
                     android:scheme="https" />
 
                 <data
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/bar/.*"
+                    android:scheme="https" />
+
+                <data
                     android:host="wordpress.com"
                     android:pathPattern="/post/..*"
                     android:scheme="https" />
@@ -433,16 +443,6 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/pages/..*"
-                    android:scheme="http" />
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern=".*wordpress.com.*start"
-                    android:scheme="https" />
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern=".*wordpress.com.*start"
                     android:scheme="http" />
 
             </intent-filter>
