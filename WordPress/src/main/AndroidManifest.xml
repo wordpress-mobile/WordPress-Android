@@ -435,6 +435,16 @@
                     android:pathPattern="/pages/..*"
                     android:scheme="http" />
 
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern=".*wordpress.com.*start"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern=".*wordpress.com.*start"
+                    android:scheme="http" />
+
             </intent-filter>
 
         </activity>

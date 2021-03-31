@@ -58,6 +58,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+    @Inject DeeplinkNavigator mDeeplinkNavigator;
+    @Inject CreateSiteUriHandler mCreateSiteUriHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
         AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
+
+        setupObservers();
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
@@ -90,6 +94,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 handleShowStats(uri);
             } else if (shouldShowPages(uri)) {
                 handleShowPages(uri);
+            } else if (mCreateSiteUriHandler.shouldHandleUri(uri)) {
+                mCreateSiteUriHandler.handleUri(uri);
             } else {
                 // not handled
                 finish();
@@ -97,6 +103,15 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         } else {
             finish();
         }
+    }
+
+    private void setupObservers() {
+        mCreateSiteUriHandler.getNavigateAction().observe(this, navigateActionEvent -> {
+            navigateActionEvent.applyIfNotHandled(navigateAction -> {
+                mDeeplinkNavigator.handleNavigationAction(navigateAction, this);
+                return null;
+            });
+        });
     }
 
     private boolean shouldOpenEditor(@NonNull Uri uri) {
