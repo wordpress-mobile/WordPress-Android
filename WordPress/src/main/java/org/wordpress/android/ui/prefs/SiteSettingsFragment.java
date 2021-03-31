@@ -979,6 +979,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else {
             // wp.com site
             removeNonWPComPreferences();
+            if (mSite.isWPCom() && !mSite.isWPComAtomic()) {
+                removeEditorPreferences();
+            }
         }
 
         if (!mSite.isUsingWpComRestApi()) {
@@ -1886,6 +1889,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_jetpack_performance_media_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
+    }
+
+    private void removeEditorPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
+                R.string.pref_key_gutenberg_default_for_new_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_site_editor);
     }
 
     private Preference getChangePref(int id) {
