@@ -278,8 +278,15 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
-        LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
-                                                    mIsSocialLogin);
+        LoginWpcomService.loginWithEmailAndPassword(
+                getContext(),
+                mEmailAddress,
+                mRequestedPassword,
+                mIdToken,
+                mService,
+                mIsSocialLogin,
+                mLoginListener.getLoginMode() == LoginMode.JETPACK_APP_LOGIN_MODE
+        );
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 
