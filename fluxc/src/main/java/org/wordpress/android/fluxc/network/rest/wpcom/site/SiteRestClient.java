@@ -112,11 +112,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static final int NEW_SITE_TIMEOUT_MS = 90000;
     private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
         + "capabilities,quota,icon,meta";
-    private static final String JETPACK = "jetpack";
-
 
     private final AppSecrets mAppSecrets;
-    private final boolean mIsJetPackApp;
 
     public static class NewSiteResponsePayload extends Payload<NewSiteError> {
         public NewSiteResponsePayload() {}
@@ -149,14 +146,12 @@ public class SiteRestClient extends BaseWPComRestClient {
                           AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
-        mIsJetPackApp = appContext.getPackageName().contains(JETPACK);
     }
 
     public void fetchSites() {
         Map<String, String> params = new HashMap<>();
         params.put("fields", SITE_FIELDS);
-        if (mIsJetPackApp) params.put("filters", JETPACK);
-        String url = WPCOMREST.me.sites.getUrlV1_2();
+        String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SitesResponse.class,
                 new Listener<SitesResponse>() {
