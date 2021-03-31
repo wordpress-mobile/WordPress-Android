@@ -210,7 +210,8 @@ public class SiteUtils {
             // Default to block editor when mobile editor setting is empty
             return true;
         } else {
-            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
+            boolean isSimpleWPCom = site.isWPCom() && !site.isWPComAtomic();
+            return isSimpleWPCom || site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
     }
 
