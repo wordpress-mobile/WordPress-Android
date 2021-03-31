@@ -10,6 +10,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -33,6 +34,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -59,18 +62,41 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.engagement.EngageItem
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
+import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -79,6 +105,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
+import org.wordpress.android.ui.reader.viewholders.PostLikerItemDecorator
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
@@ -101,6 +128,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
+import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -108,6 +136,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -141,6 +170,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+
+    private lateinit var likeFacesTrain: View
+    private lateinit var likeProgressBar: ProgressBar
+    private lateinit var likeEmptyStateText: TextView
+    private lateinit var likeFacesRecycler: RecyclerView
+    private lateinit var likeNumBloggers: TextView
+
     private lateinit var excerptFooter: ViewGroup
     private lateinit var textExcerptFooter: TextView
 
@@ -179,6 +215,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var viewModelFactory: Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var readerTracker: ReaderTracker
+    @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    @Inject lateinit var contextProvider: ContextProvider
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -262,6 +300,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         initAppBar(view)
         initScrollView(view)
         initWebView(view)
+        initLikeFacesTrain(view)
         initExcerptFooter(view)
         initRelatedPostsView(view)
         initLayoutFooter(view)
@@ -326,6 +365,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setPageFinishedListener(this)
     }
 
+    private fun initLikeFacesTrain(view: View) {
+        if (!likesEnhancementsFeatureConfig.isEnabled()) return
+        likeFacesTrain = view.findViewById(R.id.liker_faces)
+        likeFacesRecycler = view.findViewById(R.id.likes_recycler)
+        likeNumBloggers = view.findViewById(R.id.num_bloggers)
+        likeProgressBar = view.findViewById(R.id.progress_bar)
+        likeEmptyStateText = view.findViewById(R.id.empty_state_text)
+    }
+
     private fun initExcerptFooter(view: View) {
         excerptFooter = view.findViewById(R.id.excerpt_footer)
         textExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer)
@@ -380,6 +428,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = ReaderFragmentPostDetailBinding.bind(view)
+
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_LIKERS_LIST_STATE)?.let {
+            layoutManager.onRestoreInstanceState(it)
+        }
+
+        likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
+                contextProvider.getContext(),
+                R.dimen.margin_extra_small)
+        )
+        likeFacesRecycler.layoutManager = layoutManager
+
         initViewModel(binding, savedInstanceState)
 
         showPost()
@@ -402,6 +462,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         })
 
+        initLikesObserver()
+
         viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar(binding) })
@@ -413,6 +475,60 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
 
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
+    }
+
+    private fun initLikesObserver() {
+        if (!likesEnhancementsFeatureConfig.isEnabled()) return
+        viewModel.likesUiState.observe(viewLifecycleOwner, { state ->
+            if (!isAdded) return@observe
+
+            val activity = requireActivity()
+            if (activity.isFinishing) return@observe
+
+            likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
+            likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
+            if (state.showEmptyState) {
+                uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
+                    getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(activity, it))
+                })
+                likeEmptyStateText.visibility = View.VISIBLE
+            } else {
+                likeEmptyStateText.visibility = View.GONE
+            }
+
+            setupLikeFacesTrain(state.engageItemsList, state.numLikes)
+
+            likeFacesTrain.setOnClickListener {
+                if (!isAdded) return@setOnClickListener
+
+                viewModel.onLikeFacesClicked()
+            }
+        })
+    }
+
+    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int) {
+        val adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter ?: ReaderPostLikersAdapter(
+                imageManager,
+                contextProvider.getContext()
+        ).also {
+            likeFacesRecycler.adapter = it
+        }
+
+        val recyclerViewState = likeFacesRecycler.layoutManager?.onSaveInstanceState()
+        adapter.loadData(items)
+        likeFacesRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+
+        likeNumBloggers.text = when {
+            numLikes == 1 -> {
+                getString(R.string.like_faces_single_liker_text)
+            }
+            items.size > 1 -> {
+                getString(R.string.like_faces_multiple_liker_text, numLikes)
+            }
+            else -> {
+                ""
+            }
+        }
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
@@ -449,17 +565,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
-            is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
+            is ShowMediaPreview -> MediaPreviewActivity
                     .showPreview(requireContext(), site, featuredImage)
 
-            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+            is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
                     context,
                     this.tag,
                     ReaderTracker.SOURCE_POST_DETAIL,
                     readerTracker
             )
 
-            is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+            is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     this.siteId,
                     this.feedId,
@@ -468,49 +584,51 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     readerTracker
             )
 
-            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+            is SharePost -> ReaderActivityLauncher.sharePost(context, post)
 
-            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+            is OpenPost -> ReaderActivityLauncher.openPost(context, post)
 
-            is ReaderNavigationEvents.ShowReportPost ->
+            is ShowReportPost ->
                 ReaderActivityLauncher.openUrl(
                         context,
                         readerUtilsWrapper.getReportPostUrl(url),
-                        OpenUrlType.INTERNAL
+                        INTERNAL
                 )
 
-            is ReaderNavigationEvents.ShowReaderComments ->
+            is ShowReaderComments ->
                 ReaderActivityLauncher.showReaderComments(context, blogId, postId)
 
-            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+            is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
-            is ReaderNavigationEvents.ShowSitePickerForResult ->
+            is ShowSitePickerForResult ->
                 ActivityLauncher
                         .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
 
-            is ReaderNavigationEvents.OpenEditorForReblog ->
+            is OpenEditorForReblog ->
                 ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
 
-            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+            is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
 
-            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+            is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
 
-            is ReaderNavigationEvents.OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
+            is OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
 
-            is ReaderNavigationEvents.ShowRelatedPostDetails ->
+            is ShowRelatedPostDetails ->
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
-            is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
+            is ReplaceRelatedPostDetailsWithHistory ->
                 replaceRelatedPostDetailWithHistory(
                         postId = this.postId,
                         blogId = this.blogId
                 )
 
-            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
-
-            is ReaderNavigationEvents.ShowPostDetail,
-            is ReaderNavigationEvents.ShowVideoViewer,
-            is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
+            is ShowPostInWebView -> showPostInWebView(post)
+            is ShowEngagedPeopleList -> {
+                ActivityLauncher.viewLikeListActivity(activity, this.siteId, this.postId, this.headerData)
+            }
+            is ShowPostDetail,
+            is ShowVideoViewer,
+            is ShowReaderSubs -> Unit // Do Nothing
         }
     }
 
@@ -1355,6 +1473,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     companion object {
+        private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
+
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }

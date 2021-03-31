@@ -4,19 +4,33 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
+import org.wordpress.android.ui.engagement.EngageItem
+import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
+import org.wordpress.android.ui.engagement.GetLikesHandler
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
@@ -47,6 +61,8 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
+import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -68,8 +84,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val getLikesHandler: GetLikesHandler,
+    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
+    private var getLikesJob: Job? = null
+
     private val _uiState = MediatorLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
@@ -81,6 +102,11 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _updateLikesState = MediatorLiveData<GetLikesState>()
+    val likesUiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
+        state -> buildLikersUiState(state)
+    }
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -145,12 +171,27 @@ class ReaderPostDetailViewModel @Inject constructor(
             _snackbarEvents.value = event
         }
 
+        _snackbarEvents.addSource(getLikesHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {
                 pendingReblogPost = target.post
             }
             _navigationEvents.value = event
+        }
+
+        _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
+            _updateLikesState.value = state
+        }
+    }
+
+    private fun onRefreshLikersData(siteId: Long, postId: Long) {
+        getLikesJob?.cancel()
+        getLikesJob = launch(bgDispatcher) {
+            getLikesHandler.handleGetLikesForPost(siteId, postId)
         }
     }
 
@@ -336,6 +377,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
+        if (likesEnhancementsFeatureConfig.isEnabled() && post.numLikes > 0) {
+            onRefreshLikersData(post.blogId, post.postId)
+        }
+
         return postDetailUiStateBuilder.mapPostToUiState(
                 post = post,
                 onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
@@ -434,6 +479,68 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    private fun buildLikersUiState(updateLikesState: GetLikesState?): EngagedPeopleListUiState {
+        val likers = when (updateLikesState) {
+            is LikesData -> {
+                likesToEngagedPeople(updateLikesState.likes)
+            }
+            is Failure -> {
+                likesToEngagedPeople(updateLikesState.cachedLikes)
+            }
+            InitialLoading, null -> listOf()
+        }
+
+        var showEmptyState = false
+        var emptyStateTitle: UiString? = null
+
+        if (updateLikesState is Failure) {
+            updateLikesState.emptyStateData?.let {
+                showEmptyState = it.showEmptyState
+                emptyStateTitle = it.title
+            }
+        }
+
+        return EngagedPeopleListUiState(
+                showLikeFacesTrain = post?.let { it.numLikes > 0 } ?: false,
+                showLoading = updateLikesState is InitialLoading,
+                engageItemsList = likers,
+                showEmptyState = showEmptyState,
+                numLikes = post?.numLikes ?: 0,
+                emptyStateTitle = emptyStateTitle
+        )
+    }
+
+    private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
+        return likes.take(MAX_NUM_LIKES_FACES).map { likeData ->
+            Liker(
+                    name = likeData.likerName!!,
+                    login = likeData.likerLogin!!,
+                    userSiteId = likeData.likerSiteId,
+                    userSiteUrl = likeData.likerSiteUrl!!,
+                    userAvatarUrl = likeData.likerAvatarUrl!!,
+                    remoteId = likeData.remoteLikeId
+            )
+        }
+    }
+
+    fun onLikeFacesClicked() {
+        post?.let { readerPost ->
+            _navigationEvents.value = Event(ShowEngagedPeopleList(
+                    readerPost.blogId,
+                    readerPost.postId,
+                    HeaderData(
+                            AuthorNameString(readerPost.authorName),
+                            readerPost.title,
+                            readerPost.postAvatar,
+                            readerPost.authorId,
+                            readerPost.authorBlogId,
+                            readerPost.authorBlogUrl,
+                            readerPost.numLikes
+                    )
+            ))
+        }
+    }
+
     sealed class UiState(
         val loadingVisible: Boolean = false,
         val errorVisible: Boolean = false
@@ -483,7 +590,13 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        getLikesJob?.cancel()
+        getLikesHandler.clear()
         readerPostCardActionsHandler.onCleared()
         eventBusWrapper.unregister(readerFetchRelatedPostsUseCase)
+    }
+
+    companion object {
+        private const val MAX_NUM_LIKES_FACES = 5
     }
 }

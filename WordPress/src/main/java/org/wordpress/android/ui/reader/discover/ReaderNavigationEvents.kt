@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
+import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 
 sealed class ReaderNavigationEvents {
@@ -49,4 +50,9 @@ sealed class ReaderNavigationEvents {
     data class ShowMediaPreview(val site: SiteModel?, val featuredImage: String) : ReaderNavigationEvents()
     data class OpenUrl(val url: String) : ReaderNavigationEvents()
     data class ShowPostInWebView(val post: ReaderPost) : ReaderNavigationEvents()
+    data class ShowEngagedPeopleList(
+        val siteId: Long,
+        val postId: Long,
+        val headerData: HeaderData
+    ) : ReaderNavigationEvents()
 }
