@@ -42,6 +42,8 @@
 /payment_gateways
 /payment_gateways/<gateway_id>#String
 
+/payments/connection_tokens
+
 /taxes
 /taxes/classes/
 
