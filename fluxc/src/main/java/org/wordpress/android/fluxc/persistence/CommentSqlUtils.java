@@ -226,14 +226,14 @@ public class CommentSqlUtils {
 
     public static int deleteCommentLikes(long siteId, long remoteCommentId) {
         return WellSql.delete(LikeModel.class)
-            .where()
-            .beginGroup()
-            .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
-            .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-            .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
-            .endGroup()
-            .endWhere()
-            .execute();
+                      .where()
+                      .beginGroup()
+                      .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                      .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                      .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                      .endGroup()
+                      .endWhere()
+                      .execute();
     }
 
     public static int insertOrUpdateCommentLikes(long siteId, long remoteCommentId, LikeModel like) {
@@ -245,12 +245,12 @@ public class CommentSqlUtils {
 
         // If the like already exists and has an id, we want to update it.
         likeResult = WellSql.select(LikeModel.class).where()
-                        .beginGroup()
-                        .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
-                        .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                        .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
-                        .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
-                        .endGroup().endWhere().getAsModel();
+                            .beginGroup()
+                            .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                            .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                            .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                            .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                            .endGroup().endWhere().getAsModel();
 
         if (likeResult.isEmpty()) {
             // insert
