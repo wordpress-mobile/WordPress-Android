@@ -820,7 +820,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private void setFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
-        sendFeaturedImageId(mediaId);
+        sendToJSFeaturedImageId(mediaId);
+
+        showNotice(getString(R.string.featured_image_confirmation));
 
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED);
     }
@@ -828,11 +830,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private void removeFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         setFeaturedImageId(mediaId);
-        sendFeaturedImageId(mediaId);
+        sendToJSFeaturedImageId(mediaId);
+
+        showNotice(getString(R.string.featured_image_removed));
+
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.REMOVE_AS_FEATURED_BUTTON_TAPPED);
     }
 
-    public void sendFeaturedImageId(int mediaId) {
+    public void sendToJSFeaturedImageId(int mediaId) {
         getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
     }
 
@@ -850,7 +855,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // string
                             int localMediaId
                                     = StringUtils.stringToInt(
-                                    ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
+                                            ((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
                             getGutenbergContainerFragment().mediaFileUploadFailed(localMediaId);
                             mUploadingMediaProgressMax.remove(localMediaId);
                         }

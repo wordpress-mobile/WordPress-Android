@@ -2456,7 +2456,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
             if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).sendFeaturedImageId((int) mediaId);
+                ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
             }
         }
     }
@@ -2858,7 +2858,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void clearFeaturedImage() {
         if (mEditorFragment instanceof GutenbergEditorFragment) {
-            ((GutenbergEditorFragment) mEditorFragment).sendFeaturedImageId(0);
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId(0);
         }
     }
 
