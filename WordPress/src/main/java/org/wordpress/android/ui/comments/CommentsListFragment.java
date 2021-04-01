@@ -214,6 +214,9 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case UNAPPROVED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_pending;
                     break;
+                case UNREPLIED:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_unreplied;
+                    break;
                 case SPAM:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_spam;
                     break;
