@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -54,6 +55,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
@@ -79,7 +81,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 
@@ -113,7 +114,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
@@ -142,7 +143,7 @@ class ReaderPostDetailViewModelTest {
                 readerFetchPostUseCase,
                 siteStore,
                 accountStore,
-                analyticsUtilsWrapper,
+                readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
                 TEST_DISPATCHER,
@@ -157,11 +158,13 @@ class ReaderPostDetailViewModelTest {
 
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
 
-        whenever(readerPostTableWrapper.getBlogPost(
-                anyOrNull(),
-                anyOrNull(),
-                anyOrNull()
-        )).thenReturn(readerPost)
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(readerPost)
 
         whenever(
                 postDetailsUiStateBuilder.mapPostToUiState(
@@ -470,7 +473,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 
@@ -494,7 +497,8 @@ class ReaderPostDetailViewModelTest {
 
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq(readerPost.blogId),
-                eq(readerPost.feedId)
+                eq(readerPost.feedId),
+                eq(readerPost.isFollowedByCurrentUser)
         )
     }
 
@@ -508,7 +512,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(FOLLOW),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 
@@ -697,7 +701,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(LIKE),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 
@@ -711,7 +715,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(COMMENTS),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 
@@ -725,7 +729,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(REBLOG),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 
@@ -749,7 +753,7 @@ class ReaderPostDetailViewModelTest {
                 eq(readerPost),
                 eq(BOOKMARK),
                 eq(false),
-                eq(true)
+                anyString()
         )
     }
 

@@ -5,10 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -32,6 +29,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
@@ -49,7 +47,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -67,7 +64,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerFetchPostUseCase: ReaderFetchPostUseCase,
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readerTracker: ReaderTracker,
     private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -91,7 +88,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
-    var isRelatedPost: Boolean = false
+    private var isRelatedPost: Boolean = false
 
     var isFeed: Boolean = false
     var interceptedUri: String? = null
@@ -246,7 +243,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false, fromPostDetails = true)
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        type,
+                        isBookmarkList = false,
+                        source = ReaderTracker.SOURCE_POST_DETAIL
+                )
             }
         }
     }
@@ -278,7 +280,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun onBlogSectionClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.handleHeaderClicked(blogId, it.feedId)
+                readerPostCardActionsHandler.handleHeaderClicked(
+                        blogId,
+                        it.feedId,
+                        it.isFollowedByCurrentUser
+                )
             }
         }
     }
@@ -311,8 +317,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
-        analyticsUtilsWrapper.trackWithReaderPostDetails(stat = stat, blogId = blogId, postId = postId)
+        val stat = if (isGlobal) {
+            AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+        } else {
+            AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
+        }
+        readerTracker.trackPost(stat, findPost(blogId, postId))
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
@@ -348,7 +358,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updatePostDetailsUi() {
         post?.let {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, it)
+            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
             _uiState.value = convertPostToUiState(it)
         }
@@ -405,9 +415,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackNotAuthorisedState() {
         if (shouldOfferSignIn) {
-            post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_WPCOM_SIGN_IN_NEEDED, it) }
+            post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
-        post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_USER_UNAUTHORIZED, it) }
+        post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, it) }
     }
 
     private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
