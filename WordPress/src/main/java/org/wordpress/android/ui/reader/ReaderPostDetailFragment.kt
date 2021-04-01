@@ -172,6 +172,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var readerWebView: ReaderWebView
 
     private lateinit var likeFacesTrain: View
+    private lateinit var facesBlock: View
     private lateinit var likeProgressBar: ProgressBar
     private lateinit var likeEmptyStateText: TextView
     private lateinit var likeFacesRecycler: RecyclerView
@@ -368,6 +369,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initLikeFacesTrain(view: View) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         likeFacesTrain = view.findViewById(R.id.liker_faces)
+        facesBlock = view.findViewById(R.id.faces_block)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
         likeNumBloggers = view.findViewById(R.id.num_bloggers)
         likeProgressBar = view.findViewById(R.id.progress_bar)
@@ -500,7 +502,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likeEmptyStateText.visibility = View.GONE
             }
 
-            setupLikeFacesTrain(state.engageItemsList, state.numLikes)
+            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading)
 
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
@@ -510,7 +512,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         })
     }
 
-    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int) {
+    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean) {
+        facesBlock.visibility = if (loading) View.GONE else View.VISIBLE
+
         val adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter ?: ReaderPostLikersAdapter(
                 imageManager,
                 contextProvider.getContext()

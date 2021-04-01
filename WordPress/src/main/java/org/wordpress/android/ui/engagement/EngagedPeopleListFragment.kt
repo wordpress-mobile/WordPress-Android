@@ -21,9 +21,14 @@ import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCom
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
+import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestBlogPost
+import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.services.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -78,43 +83,45 @@ class EngagedPeopleListFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
-        initObservers()
-
-        viewModel.start(listScenario!!)
-    }
-
-    private fun initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, { state ->
             if (!isAdded) return@observe
 
-            loadingView.visibility = if (state.showLoading) View.VISIBLE else View.GONE
-
-            setupAdapter(state.engageItemsList)
-
-            if (state.showEmptyState) {
-                uiHelpers.setTextOrHide(emptyView.title, state.emptyStateTitle)
-                uiHelpers.setTextOrHide(emptyView.button, state.emptyStateButtonText)
-                emptyView.button.setOnClickListener { state.emptyStateAction?.invoke() }
-
-                emptyView.visibility = View.VISIBLE
-            } else {
-                emptyView.visibility = View.GONE
-            }
+            updateUiState(state)
         })
 
         viewModel.onNavigationEvent.observeEvent(viewLifecycleOwner, { event ->
             if (!isAdded) return@observeEvent
 
-            val activity = requireActivity()
-            if (activity.isFinishing) return@observeEvent
+            manageNavigation(event)
+        })
+
+        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
+            if (!isAdded || !lifecycle.currentState.isAtLeast(State.RESUMED)) return@observeEvent
+
+            showSnackbar(messageHolder)
+        })
+
+        viewModel.onServiceRequestEvent.observeEvent(viewLifecycleOwner, { serviceRequest ->
+            if (!isAdded) return@observeEvent
+
+            manageServiceRequest(serviceRequest)
+        })
+
+        viewModel.start(listScenario!!)
+    }
+
+    private fun manageNavigation(event: EngagedListNavigationEvent) {
+        with(requireActivity()) {
+            if (this.isFinishing) return
 
             when (event) {
                 is PreviewSiteById -> {
                     ReaderActivityLauncher.showReaderBlogPreview(
-                            activity,
+                            this,
                             event.siteId,
-                            false, // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
-                            if (activity is NotificationsDetailActivity) {
+                            // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
+                            false,
+                            if (this is NotificationsDetailActivity) {
                                 ReaderTracker.SOURCE_NOTIFICATION
                             } else {
                                 ReaderTracker.SOURCE_POST_DETAIL
@@ -124,27 +131,57 @@ class EngagedPeopleListFragment : Fragment() {
                 }
                 is PreviewSiteByUrl -> {
                     val url = event.siteUrl
-                    openUrl(activity, url)
+                    openUrl(this, url)
                 }
                 is PreviewCommentInReader -> {
                     ReaderActivityLauncher.showReaderComments(
-                            activity,
+                            this,
                             event.siteId,
                             event.commentPostId,
                             event.postOrCommentId
                     )
                 }
                 is PreviewPostInReader -> {
-                    ReaderActivityLauncher.showReaderPostDetail(activity, event.siteId, event.postId)
+                    ReaderActivityLauncher.showReaderPostDetail(this, event.siteId, event.postId)
                 }
             }
-        })
+        }
+    }
 
-        viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { messageHolder ->
-            if (!isAdded || !lifecycle.currentState.isAtLeast(State.RESUMED)) return@observeEvent
+    private fun updateUiState(state: EngagedPeopleListUiState) {
+        loadingView.visibility = if (state.showLoading) View.VISIBLE else View.GONE
 
-            showSnackbar(messageHolder)
-        })
+        setupAdapter(state.engageItemsList)
+
+        if (state.showEmptyState) {
+            uiHelpers.setTextOrHide(emptyView.title, state.emptyStateTitle)
+            uiHelpers.setTextOrHide(emptyView.button, state.emptyStateButtonText)
+            emptyView.button.setOnClickListener { state.emptyStateAction?.invoke() }
+
+            emptyView.visibility = View.VISIBLE
+        } else {
+            emptyView.visibility = View.GONE
+        }
+    }
+
+    private fun manageServiceRequest(serviceRequest: EngagedListServiceRequestEvent) {
+        with(requireActivity()) {
+            if (this.isFinishing) return
+
+            when (serviceRequest) {
+                is RequestBlogPost -> ReaderPostActions.requestBlogPost(
+                        serviceRequest.siteId,
+                        serviceRequest.postId,
+                        null
+                )
+                is RequestComment -> ReaderCommentService.startServiceForComment(
+                        this,
+                        serviceRequest.siteId,
+                        serviceRequest.postId,
+                        serviceRequest.commentId
+                )
+            }
+        }
     }
 
     private fun openUrl(context: Context, url: String) {

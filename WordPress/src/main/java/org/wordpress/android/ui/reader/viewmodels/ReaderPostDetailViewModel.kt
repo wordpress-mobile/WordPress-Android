@@ -504,11 +504,13 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
+        val showLoading = updateLikesState is InitialLoading
+
         return EngagedPeopleListUiState(
                 showLikeFacesTrain = post?.let { it.numLikes > 0 } ?: false,
-                showLoading = updateLikesState is InitialLoading,
+                showLoading = showLoading,
                 engageItemsList = likers,
-                showEmptyState = showEmptyState,
+                showEmptyState = !showLoading && showEmptyState,
                 numLikes = post?.numLikes ?: 0,
                 emptyStateTitle = emptyStateTitle
         )

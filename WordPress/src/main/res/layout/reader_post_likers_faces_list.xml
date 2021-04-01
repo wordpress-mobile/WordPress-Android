@@ -11,7 +11,7 @@
     android:clipChildren="true">
 
     <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/flexbox"
+        android:id="@+id/faces_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"

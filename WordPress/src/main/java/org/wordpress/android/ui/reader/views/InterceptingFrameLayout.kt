@@ -11,7 +11,7 @@ class InterceptingFrameLayout @JvmOverloads constructor (
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     // NOTE: Intercepting touch event to avoid inner views (first use case was with an inner RecyclerView in
-    // reader_post_likers_faces_list.xml
+    // reader_post_likers_faces_list.xml)
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         return true
     }

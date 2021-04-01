@@ -15,6 +15,8 @@ import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCom
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteByUrl
+import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestBlogPost
+import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
@@ -45,12 +47,14 @@ class EngagedPeopleListViewModel @Inject constructor(
     private val _onSnackbarMessage = MediatorLiveData<Event<SnackbarMessageHolder>>()
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
     private val _onNavigationEvent = MutableLiveData<Event<EngagedListNavigationEvent>>()
+    private val _onServiceRequestEvent = MutableLiveData<Event<EngagedListServiceRequestEvent>>()
 
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
     val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
         state -> buildUiState(state, listScenario)
     }
     val onNavigationEvent: LiveData<Event<EngagedListNavigationEvent>> = _onNavigationEvent
+    val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
 
     data class EngagedPeopleListUiState(
         val showLikeFacesTrain: Boolean,
@@ -82,11 +86,37 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     private fun onRefreshData() {
         listScenario?.let {
-            onLoadRequest(it.type, it.siteId, it.postOrCommentId)
+            requestPostOrCommentIfNeeded(it.type, it.siteId, it.postOrCommentId, it.commentPostId)
+            loadRequest(it.type, it.siteId, it.postOrCommentId)
         }
     }
 
-    private fun onLoadRequest(
+    private fun requestPostOrCommentIfNeeded(
+        listScenarioType: ListScenarioType,
+        siteId: Long,
+        postOrCommentId: Long,
+        commentPostId: Long
+    ) {
+        val postId = if (listScenarioType == LOAD_POST_LIKES) postOrCommentId else commentPostId
+        val commentId = if (listScenarioType == LOAD_COMMENT_LIKES) postOrCommentId else 0L
+
+        if (!readerUtilsWrapper.postExists(
+                        siteId,
+                        postId
+                )) {
+            _onServiceRequestEvent.value = Event(RequestBlogPost(siteId, postId))
+        }
+
+        if (listScenarioType == LOAD_COMMENT_LIKES && !readerUtilsWrapper.commentExists(
+                        siteId,
+                        postId,
+                        commentId
+                )) {
+            _onServiceRequestEvent.value = Event(RequestComment(siteId, postId, commentId))
+        }
+    }
+
+    private fun loadRequest(
         loadRequestType: ListScenarioType,
         siteId: Long,
         entityId: Long
