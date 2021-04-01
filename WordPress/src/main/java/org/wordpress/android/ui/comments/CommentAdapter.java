@@ -485,9 +485,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         private ArrayList<CommentModel> getUnrepliedComments(List<CommentModel> comments) {
-            AccountModel account = mAccountStore.getAccount();
-            String myEmail = account.getEmail();
-
             CommentLeveler leveler = new CommentLeveler(comments);
             ArrayList<CommentModel> leveledComments = leveler.createLevelList();
 
@@ -497,12 +494,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (comment.level == 0) {
                     ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
                     // comment is not mine and has no replies
-                    if (!comment.getAuthorEmail().equals(myEmail) && childrenComments.isEmpty()) {
+                    if (!isMyComment(comment) && childrenComments.isEmpty()) {
                         topLevelComments.add(comment);
-                    } else if (!comment.getAuthorEmail().equals(myEmail)) {  // comment is not mine and has replies
+                    } else if (!isMyComment(comment)) {  // comment is not mine and has replies
                         boolean hasMyReplies = false;
                         for (CommentModel childrenComment : childrenComments) { // check if any replies are mine
-                            if (childrenComment.getAuthorEmail().equals(myEmail)) {
+                            if (isMyComment(childrenComment)) {
                                 hasMyReplies = true;
                                 break;
                             }
@@ -515,6 +512,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
             return topLevelComments;
+        }
+
+        private boolean isMyComment(CommentModel comment) {
+            String myEmail;
+            // if site is self hosted, we want to use email associate with it, even if we are logged into wpcom
+            if (!mSite.isUsingWpComRestApi()) {
+                myEmail = mSite.getEmail();
+            } else {
+                AccountModel account = mAccountStore.getAccount();
+                myEmail = account.getEmail();
+            }
+
+            return comment.getAuthorEmail().equals(myEmail);
         }
 
         @Override
