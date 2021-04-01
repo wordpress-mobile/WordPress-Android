@@ -444,7 +444,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
                 contextProvider.getContext(),
-                R.dimen.margin_small)
+                R.dimen.margin_small_medium)
         )
         likeFacesRecycler.layoutManager = layoutManager
     }

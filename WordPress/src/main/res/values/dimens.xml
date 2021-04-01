@@ -648,4 +648,7 @@
     <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
+
+    <!-- likes list -->
+    <dimen name="reader_like_faces_padding">2dp</dimen>
 </resources>

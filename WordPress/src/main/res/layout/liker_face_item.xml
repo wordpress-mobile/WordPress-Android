@@ -7,9 +7,9 @@
     <ImageView
         android:id="@+id/liker_avatar"
         style="@style/ReaderImageView.Avatar.Small"
-        android:background="@drawable/bg_oval_stroke_p2_author_1dp"
+        android:background="@drawable/bg_oval_stroke_liker_2dp"
         android:importantForAccessibility="no"
-        android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+        android:padding="@dimen/reader_like_faces_padding"
         tools:ignore="RtlSymmetry"
         tools:src="@drawable/img_illustration_add_media_150dp"/>
 
