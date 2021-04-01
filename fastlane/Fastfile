@@ -111,7 +111,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
     new_version = android_get_app_version()
-    trigger_beta_build(branch_to_build: "release/#{new_version}")
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
 #####################################################################################
@@ -181,7 +181,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_update_metadata(options)
     android_bump_version_beta()
     new_version = android_get_app_version()
-    trigger_beta_build(branch_to_build: "release/#{new_version}")
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -215,7 +215,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Finalizes a hotfix release by tagging the build"
   lane :finalize_hotfix_release do | options |
     new_version = android_get_app_version()
-    trigger_beta_build(branch_to_build: "release/#{new_version}")
+    trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
   #####################################################################################
@@ -399,24 +399,6 @@ REPOSITORY_NAME="WordPress-Android"
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
-  end
-
-  #####################################################################################
-   # trigger_beta_build
-   # -----------------------------------------------------------------------------------
-   # This lane triggers a beta build on CI
-   # -----------------------------------------------------------------------------------
-   # Usage:
-   # bundle exec fastlane trigger_beta_build [branch_to_build:<branch_name>]
-   #
-   #####################################################################################
-   lane :trigger_beta_build do | options |
-    circleci_trigger_job(
-      circle_ci_token: ENV["CIRCLE_CI_AUTH_TOKEN"],
-      repository: REPOSITORY_NAME,
-      branch: options[:branch_to_build],
-      job_params: {"beta_build" => true}
-    )
   end
 
   #####################################################################################
