@@ -300,19 +300,19 @@
     <color name="wordpress_blue_90">#001d2d</color>
     <color name="wordpress_blue_100">#00101c</color>
 
-    <color name="yellow">#907300</color>
-    <color name="yellow_0">#f5efe4</color>
-    <color name="yellow_5">#f5e1b3</color>
-    <color name="yellow_10">#f2cf75</color>
-    <color name="yellow_20">#f0c443</color>
-    <color name="yellow_30">#dbae17</color>
-    <color name="yellow_40">#b69000</color>
-    <color name="yellow_50">#907300</color>
-    <color name="yellow_60">#705b00</color>
-    <color name="yellow_70">#5c4b00</color>
-    <color name="yellow_80">#453900</color>
-    <color name="yellow_90">#302800</color>
-    <color name="yellow_100">#1c1700</color>
+    <color name="yellow">#9d6e00</color>
+    <color name="yellow_0">#f5f1e1</color>
+    <color name="yellow_5">#f5e6b3</color>
+    <color name="yellow_10">#f2d76b</color>
+    <color name="yellow_20">#f0c930</color>
+    <color name="yellow_30">#deb100</color>
+    <color name="yellow_40">#c08c00</color>
+    <color name="yellow_50">#9d6e00</color>
+    <color name="yellow_60">#7d5600</color>
+    <color name="yellow_70">#674600</color>
+    <color name="yellow_80">#4f3500</color>
+    <color name="yellow_90">#320</color>
+    <color name="yellow_100">#1c1300</color>
 
     <!-- TRANSLUCENT -->
     <color name="black_translucent_20">#33000000</color>
