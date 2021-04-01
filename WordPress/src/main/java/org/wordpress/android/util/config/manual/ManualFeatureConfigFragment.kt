@@ -2,6 +2,7 @@ package org.wordpress.android.util.config.manual
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,13 @@ class ManualFeatureConfigFragment : DaggerFragment(R.layout.manual_feature_confi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(ManualFeatureConfigFragmentBinding.bind(view)) {
+            with(requireActivity() as AppCompatActivity) {
+                setSupportActionBar(toolbar)
+                supportActionBar?.let {
+                    it.setHomeButtonEnabled(true)
+                    it.setDisplayHomeAsUpEnabled(true)
+                }
+            }
             recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 

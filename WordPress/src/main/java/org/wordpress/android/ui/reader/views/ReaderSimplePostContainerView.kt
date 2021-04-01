@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderSimplePostsContainerViewBinding
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -28,6 +28,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
 
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var readerTracker: ReaderTracker
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -54,7 +55,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
      */
     fun trackRailcarRender() { // TODO: move tracking to view model
         for (railcarJson in railcarJsonStrings) {
-            railcarJson?.let { AnalyticsUtils.trackRailcarRender(it) }
+            railcarJson?.let { readerTracker.trackRailcar(it) }
         }
     }
 }

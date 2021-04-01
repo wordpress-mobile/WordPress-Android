@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.PostPrepublishingBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
+import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES

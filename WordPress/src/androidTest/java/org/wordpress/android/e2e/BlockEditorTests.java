@@ -10,7 +10,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
-import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.PostPreviewPage;
 import org.wordpress.android.e2e.pages.SiteSettingsPage;
@@ -58,12 +57,7 @@ public class BlockEditorTests extends BaseTest {
 
         blockEditorPage.enterTitle(title);
 
-        blockEditorPage.switchToClassic();
-
-        EditorPage editorPage = new EditorPage();
-        editorPage.hasTitle(title);
-
-        editorPage.previewPost();
+        blockEditorPage.previewPost();
         sleep();
 
         new PostPreviewPage();

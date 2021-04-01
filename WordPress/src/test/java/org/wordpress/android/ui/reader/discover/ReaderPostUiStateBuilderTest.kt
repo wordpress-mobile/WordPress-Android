@@ -40,9 +40,9 @@ import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -133,8 +133,8 @@ class ReaderPostUiStateBuilderTest {
         val p2UiState = mapPostToUiState(p2post)
         val nonP2UiState = mapPostToUiState(nonP2Post)
         // Assert
-        assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue()
-        assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse()
+        assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue
+        assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
     }
 
     // endregion
@@ -258,7 +258,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue()
+        assertThat(uiState.videoOverlayVisibility).isTrue
     }
 
     @Test
@@ -344,7 +344,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoTitle).isNotNull()
+        assertThat(uiState.photoTitle).isNotNull
     }
 
     @Test
@@ -390,7 +390,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
 
     @Test
@@ -400,7 +400,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isTrue()
+        assertThat(uiState.photoFrameVisibility).isTrue
     }
 
     @Test
@@ -410,7 +410,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
 
     @Test
@@ -420,7 +420,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isTrue()
+        assertThat(uiState.photoFrameVisibility).isTrue
     }
 
     @Test
@@ -430,7 +430,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.photoFrameVisibility).isFalse()
+        assertThat(uiState.photoFrameVisibility).isFalse
     }
     // endregion
 
@@ -508,7 +508,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogSection.blogName).isNotNull()
+        assertThat(uiState.blogSection.blogName).isNotNull
     }
 
     @Test
@@ -577,7 +577,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse
     }
 
     @Test
@@ -587,7 +587,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse
     }
 
     @Test
@@ -597,7 +597,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isTrue()
+        assertThat(uiState.bookmarkAction.isEnabled).isTrue
     }
 
     @Test
@@ -607,7 +607,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isTrue()
+        assertThat(uiState.bookmarkAction.isSelected).isTrue
     }
 
     @Test
@@ -617,7 +617,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isFalse()
+        assertThat(uiState.bookmarkAction.isSelected).isFalse
     }
 
     @Test
@@ -641,7 +641,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isTrue()
+        assertThat(uiState.likeAction.isEnabled).isTrue
     }
 
     @Test
@@ -652,7 +652,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
+        assertThat(uiState.likeAction.isEnabled).isFalse
     }
 
     @Test
@@ -662,7 +662,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
+        assertThat(uiState.likeAction.isEnabled).isFalse
     }
 
     @Test
@@ -686,7 +686,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isTrue()
+        assertThat(uiState.reblogAction.isEnabled).isTrue
     }
 
     @Test
@@ -696,7 +696,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isFalse()
+        assertThat(uiState.reblogAction.isEnabled).isFalse
     }
 
     @Test
@@ -707,7 +707,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.reblogAction.isEnabled).isFalse()
+        assertThat(uiState.reblogAction.isEnabled).isFalse
     }
 
     @Test
@@ -731,7 +731,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isTrue()
+        assertThat(uiState.commentsAction.isEnabled).isTrue
     }
 
     @Test
@@ -741,7 +741,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -751,7 +751,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -762,7 +762,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -773,7 +773,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isTrue()
+        assertThat(uiState.commentsAction.isEnabled).isTrue
     }
 
     @Test
@@ -783,7 +783,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.isEnabled).isFalse
     }
 
     @Test
@@ -869,7 +869,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 listOf(blog),
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
         // Assert
@@ -885,7 +885,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 blogs,
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
 
@@ -902,7 +902,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                 blogs,
-                { _, _ -> },
+                { _, _, _ -> },
                 { }
         )
 
@@ -917,6 +917,7 @@ class ReaderPostUiStateBuilderTest {
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
+                source = "source",
                 post = post,
                 isDiscover = false,
                 photonWidth = 0,

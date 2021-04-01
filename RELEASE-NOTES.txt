@@ -4,9 +4,12 @@
 -----
 * [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
 
+
 17.0
 -----
 * [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
+* [*] [Block Editor] Remove the cancel button from settings options [https://github.com/WordPress/gutenberg/pull/29599]
+* [**] Stories: enabled pinch to zoom on your slides background images! [https://github.com/wordpress-mobile/WordPress-Android/pull/14284]
 
 16.9
 -----

@@ -1,0 +1,8 @@
+16.9:
+Nytt
+
+Snart går det inte att använda den klassiska redigeraren för nya inlägg. Du kommer fortfarande att kunna redigera befintliga inlägg och sidor i den, men vi rekommenderar att du växlar över till blockredigeraren nu.
+
+Vårt snabbstartsverktyg har fått ny design! Den guiden visas när du skapar en ny webbplats.
+
+Vi har även förbättrat tillvägagångssättet för design av webbplatsen.
