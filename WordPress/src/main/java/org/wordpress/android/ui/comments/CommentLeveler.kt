@@ -29,8 +29,11 @@ class CommentLeveler(private val mComments: List<CommentModel>) {
 
         // check for orphans (child comments whose parents weren't found above) and give them
         // a non-zero level to distinguish them from top level comments
-        for (comment in result) {
-            if (comment.level == 0 && comment.parentId != 0L) {
+        val remainingComments = ArrayList(mComments)
+        remainingComments.removeAll(result)
+
+        for (comment in remainingComments) {
+            if (!hasParent(comment)) {
                 comment.level = 1
                 result.add(comment)
                 AppLog.d(READER, "Orphan comment encountered")
@@ -65,6 +68,15 @@ class CommentLeveler(private val mComments: List<CommentModel>) {
     private fun hasChildren(commentId: Long): Boolean {
         for (comment in mComments) {
             if (comment.parentId == commentId) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun hasParent(comment: CommentModel): Boolean {
+        for (parentComment in mComments) {
+            if (parentComment.remoteCommentId == comment.parentId) {
                 return true
             }
         }
