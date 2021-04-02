@@ -3,6 +3,7 @@
 17.1
 -----
 * [**] Comments: added an Unreplied comments filter [https://github.com/wordpress-mobile/WordPress-Android/pull/14373]
+* [***] Block Editor: Improved the accessibility of range and step-type block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3255]
 
 17.0
 -----
