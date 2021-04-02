@@ -12,6 +12,7 @@ public enum CommentStatus {
 
     // Used for filtering
     ALL,
+    UNREPLIED,
 
     // Used for editing
     UNSPAM,  // Unmark the comment as spam. Will attempt to set it to the previous status.

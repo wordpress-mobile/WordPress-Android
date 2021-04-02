@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 142
+        return 143
     }
 
     override fun getDbName(): String {
@@ -1649,6 +1649,10 @@ open class WellSqlConfig : DefaultWellConfig {
                             "LIKER_NAME TEXT,LIKER_LOGIN TEXT,LIKER_AVATAR_URL TEXT,LIKER_SITE_ID INTEGER," +
                             "LIKER_SITE_URL TEXT)"
                     )
+                }
+                142 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD HAS_PARENT BOOLEAN")
+                    db.execSQL("ALTER TABLE CommentModel ADD PARENT_ID INTEGER")
                 }
             }
         }
