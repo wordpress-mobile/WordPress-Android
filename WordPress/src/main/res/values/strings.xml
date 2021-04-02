@@ -397,6 +397,7 @@
     <string name="on">on</string>
     <string name="comment_status_approved">Approved</string>
     <string name="comment_status_unapproved">Pending</string>
+    <string name="comment_status_unreplied">Unreplied</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
     <string name="comment_status_all">All</string>
@@ -404,6 +405,7 @@
     <string name="comments_empty_list">No comments yet</string>
     <string name="comments_empty_list_filtered_approved">No approved comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
+    <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comments_empty_list_filtered_spam">No spam comments</string>
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
@@ -1466,6 +1468,11 @@
         <item>@string/notif_surveys</item>
         <item>@string/notif_events</item>
     </string-array>
+
+    <!-- likes -->
+    <string name="get_likes_no_network_error">No network available.</string>
+    <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
+    <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

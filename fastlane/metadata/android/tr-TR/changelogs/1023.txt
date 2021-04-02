@@ -1,0 +1,2 @@
+17.0:
+WPAndroid'le ilgili üç güncellemeyi duyurmaktan heyecan duyuyoruz. Öyküler kitaplığında sıkıştırma/yaklaştırma/kaydırma işlevini etkinleştirerek görüntüleme olanaklarını her zamankinden daha kapsamlı hale getirdik. Açılır menü şeklindeki yorumlar filtresini sekme haline getirdik. Ayrıca Blok Düzenleyicideki ayar seçeneklerinden iptal düğmesini kaldırdık. 

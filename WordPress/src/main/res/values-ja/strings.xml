@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-12 05:30:05+0000
+Translation-Revision-Date: 2021-03-24 00:23:34+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">タグリンク</string>
+    <string name="gutenberg_native_table_of_contents">目次</string>
+    <string name="gutenberg_native_summary">要約</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">見出しリストを使って投稿を要約します。ここにリンクするには、見出しブロックに HTML アンカーを追加してください。</string>
+    <string name="gutenberg_native_search_settings">検索設定</string>
+    <string name="gutenberg_native_post_link">投稿リンク</string>
+    <string name="gutenberg_native_document_outline">文書アウトライン</string>
+    <string name="gutenberg_native_category_link">カテゴリーリンク</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">URL へのリンク。</string>
+    <string name="gutenberg_native_a_link_to_a_tag">タグへのリンク。</string>
+    <string name="gutenberg_native_a_link_to_a_post">投稿へのリンク。</string>
+    <string name="gutenberg_native_a_link_to_a_page">固定ページへのリンク。</string>
+    <string name="gutenberg_native_a_link_to_a_category">カテゴリーへのリンク。</string>
+    <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
+    <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
     <string name="reader_title_interests">トピックをフォロー</string>
     <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
@@ -412,6 +428,7 @@ Language: ja_JP
     <string name="media_uploading_default">メディアをアップロード中</string>
     <string name="gutenberg_native_select_item">項目を選択</string>
     <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
+    <string name="gutenberg_native_page_link">ページリンク</string>
     <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
     <string name="gutenberg_native_add_this_link">このリンクを追加</string>
     <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
@@ -875,6 +892,14 @@ Language: ja_JP
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
     <string name="reader_acessibility_list_loaded">「リストに %1$d 項目が読み込まれました」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
+    <string name="main_switch_default_title_off">オフ</string>
+    <string name="main_switch_default_title_on">オン</string>
+    <string name="notifications_tab_dialog_main_off_message">このサイトの通知をオフにすると、このサイトの通知タブでは通知表示が無効になります。サイトの通知をオンにすると、表示される通知の種類を調整できます。</string>
+    <string name="notifications_tab_dialog_main_off_title">このサイトの通知タブで通知を表示するには、このサイトの通知をオンにしてください。</string>
+    <string name="notifications_tab_dialog_main_hint_off">このサイトの通知タブで通知表示を有効化</string>
+    <string name="notifications_tab_dialog_main_hint_on">このサイトの通知タブで通知表示を無効化</string>
+    <string name="notifications_tab_dialog_main_status_off">このサイトの通知</string>
+    <string name="notifications_tab_dialog_main_status_on">このサイトの通知</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -1797,6 +1822,7 @@ Language: ja_JP
     <string name="jetpack_disconnect_confirm">連携解除</string>
     <string name="jetpack_disconnect_confirmation_message">このサイトから Jetpack の接続を解除してもよいですか ?</string>
     <string name="jetpack_disconnect_pref_title">「WordPress.com との連携を解除」</string>
+    <string name="site_settings_jetpack_allowlist_description">単一または一連の IP アドレスをホワイトリストに追加すると、それらが Jetpack にブロックされなくなります。IPv4と IPv6を使用できます。範囲を指定するには、下限値と上限値をダッシュで区切って入力します。例: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">二段階認証が必要</string>
     <string name="jetpack_match_wpcom_via_email_title">メールを使用してアカウントを照合する</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com ログインを許可する</string>
@@ -1841,6 +1867,12 @@ Language: ja_JP
     <string name="notification_settings_category_other">その他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">自分の全サイト</string>
     <string name="notification_settings_category_your_sites">あなたのサイト</string>
+    <string name="notification_settings_main_off_message">通知設定をオフにすると、通知の種類に関係なく、このアプリからの通知がすべて無効になります。通知設定をオンにした後で、受信する通知の種類を調整できます。</string>
+    <string name="notification_settings_main_off_title">この端末で通知を受信するには、通知設定を有効化してください。</string>
+    <string name="notification_settings_main_hint_off">通知を有効化</string>
+    <string name="notification_settings_main_hint_on">通知を無効化</string>
+    <string name="notification_settings_main_status_off">オフ</string>
+    <string name="notification_settings_main_status_on">オン</string>
     <string name="max_video_resolution">最大動画サイズ</string>
     <string name="max_thumbnail_px_size">最大画像サイズ</string>
     <string name="error_upload_post_media_param">投稿内のメディアのアップロード中にエラーが発生しました: %s。</string>
@@ -2293,6 +2325,7 @@ Language: ja_JP
     <string name="site_settings_paging_dialog_description">コメントスレッドを複数のページに分けます。</string>
     <string name="site_settings_paging_dialog_header">1ページあたりのコメント数</string>
     <string name="site_settings_close_after_dialog_title">コメントを閉じます</string>
+    <string name="site_settings_denylist_description">コメントの本文、名前、URL、メール、IP にこれらの単語のいずれかが含まれている場合、スパムとしてマークされます。語句の一部を入力できます。例えば、\"press\" は \"WordPress\" に一致します。</string>
     <string name="site_settings_hold_for_moderation_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、承認待ちになります。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
     <string name="site_settings_list_editor_input_hint">単語やフレーズを入力してください</string>
     <string name="site_settings_list_editor_no_items_text">項目なし</string>
@@ -2307,8 +2340,10 @@ Language: ja_JP
     <string name="site_settings_rp_show_header_title">ヘッダーを表示</string>
     <string name="site_settings_rp_switch_summary">「関連記事」は投稿の下にサイト内の関連コンテンツを表示します。</string>
     <string name="site_settings_rp_switch_title">関連記事を表示</string>
+    <string name="site_settings_denylist_hint">フィルターに一致するコメントはスパムとしてマークされます</string>
     <string name="site_settings_moderation_hold_hint">フィルターに一致するコメントは承認待ちになります</string>
     <string name="site_settings_multiple_links_hint">既知のユーザーからのリンク制限を無視します</string>
+    <string name="site_settings_allowlist_hint">すでに承認されたコメントの投稿者のコメントを許可し、それ以外のコメントを承認待ちにする</string>
     <string name="site_settings_user_account_required_hint">ユーザー登録してログインしたユーザーのみコメントをつけられるようにする</string>
     <string name="site_settings_identity_required_hint">コメントの際、名前とメールアドレスの入力を必須にする</string>
     <string name="site_settings_paging_hint">コメントを指定したサイズに分けて表示します</string>
@@ -2331,6 +2366,8 @@ Language: ja_JP
     <string name="site_settings_address_hint">アドレスの変更は現在サポートされていません</string>
     <string name="site_settings_tagline_hint">ブログの簡単な説明やブログを表す魅力的なフレーズ</string>
     <string name="site_settings_title_hint">このサイトを短い文章で説明してください</string>
+    <string name="site_settings_allowlist_known_summary">既知のユーザーからのコメント</string>
+    <string name="site_settings_allowlist_all_summary">すべてのユーザーからのコメント</string>
     <string name="site_settings_threading_summary">%d階層</string>
     <string name="site_settings_privacy_private_summary">プライベート</string>
     <string name="site_settings_privacy_hidden_summary">非表示</string>
@@ -2338,6 +2375,7 @@ Language: ja_JP
     <string name="site_settings_delete_site_title">サイトを削除</string>
     <string name="site_settings_moderation_hold_title">承認待ち</string>
     <string name="site_settings_multiple_links_title">コメント内のリンク</string>
+    <string name="site_settings_allowlist_title">自動承認</string>
     <string name="site_settings_paging_title">ページ送り</string>
     <string name="site_settings_threading_title">スレッド化</string>
     <string name="site_settings_sort_by_title">並び替え</string>
