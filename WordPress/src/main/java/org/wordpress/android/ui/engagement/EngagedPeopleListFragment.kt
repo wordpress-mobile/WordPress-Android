@@ -87,7 +87,7 @@ class EngagedPeopleListFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner, { state ->
             if (!isAdded) return@observe
 
-            loadingView.visibility = if (state.showLoading) View.VISIBLE else View.GONE
+            uiHelpers.updateVisibility(loadingView, state.showLoading)
 
             setupAdapter(state.engageItemsList)
 
