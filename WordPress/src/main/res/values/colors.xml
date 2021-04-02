@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
