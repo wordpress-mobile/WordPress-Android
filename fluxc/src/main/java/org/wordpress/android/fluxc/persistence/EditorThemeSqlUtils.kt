@@ -84,6 +84,7 @@ class EditorThemeSqlUtils {
             set
         @Column var stylesheet: String? = null
         @Column var version: String? = null
+        @Column var rawGlobalStylesBaseStyles: String? = null
 
         override fun setId(id: Int) {
             this.mId = id
@@ -105,7 +106,7 @@ class EditorThemeSqlUtils {
                 gradients = storedGradients.mapNotNull { it.toEditorThemeElement() }
             }
 
-            val editorThemeSupport = EditorThemeSupport(colors, gradients)
+            val editorThemeSupport = EditorThemeSupport(colors, gradients, rawGlobalStylesBaseStyles)
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
         }
