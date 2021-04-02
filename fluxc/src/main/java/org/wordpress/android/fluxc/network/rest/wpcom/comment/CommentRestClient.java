@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.LikeModel;
+import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -23,7 +25,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikeWPComRestResponse.LikesWPComRestResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesResponseUtilsProvider;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.FetchedCommentLikesResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -37,9 +42,18 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CommentRestClient extends BaseWPComRestClient {
-    public CommentRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                             AccessToken accessToken, UserAgent userAgent) {
+    LikesResponseUtilsProvider mLikesResponseUtilsProvider;
+
+    public CommentRestClient(
+            Context appContext,
+            Dispatcher dispatcher,
+            RequestQueue requestQueue,
+            AccessToken accessToken,
+            UserAgent userAgent,
+            LikesResponseUtilsProvider likesResponseUtilsProvider
+    ) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
+        mLikesResponseUtilsProvider = likesResponseUtilsProvider;
     }
 
     public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
@@ -124,6 +138,41 @@ public class CommentRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchCommentLikes(final long siteId, final long commentId) {
+        String url = WPCOMREST.sites.site(siteId).comments.comment(commentId).likes.getUrlV1_2();
+
+        final WPComGsonRequest<LikesWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
+                url, null, LikesWPComRestResponse.class,
+                new Listener<LikesWPComRestResponse>() {
+                    @Override
+                    public void onResponse(LikesWPComRestResponse response) {
+                        List<LikeModel> likes = mLikesResponseUtilsProvider.likesResponseToLikeList(
+                                response,
+                                siteId,
+                                commentId,
+                                LikeType.COMMENT_LIKE
+                        );
+
+                        FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
+                                likes,
+                                siteId,
+                                commentId
+                        );
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(payload));
+                    }
+                },
+
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(
+                                CommentErrorUtils.commentErrorToFetchedCommentLikesPayload(error, siteId, commentId)));
                     }
                 }
         );

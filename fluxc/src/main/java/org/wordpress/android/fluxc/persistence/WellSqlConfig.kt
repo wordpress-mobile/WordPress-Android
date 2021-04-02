@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 141
+        return 142
     }
 
     override fun getDbName(): String {
@@ -1641,6 +1641,14 @@ open class WellSqlConfig : DefaultWellConfig {
                             "MENU_ORDER INTEGER," +
                             "ATTRIBUTES TEXT NOT NULL," +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
+                }
+                141 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE LikeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "TYPE TEXT NOT NULL,REMOTE_SITE_ID INTEGER,REMOTE_ITEM_ID INTEGER,REMOTE_LIKE_ID INTEGER," +
+                            "LIKER_NAME TEXT,LIKER_LOGIN TEXT,LIKER_AVATAR_URL TEXT,LIKER_SITE_ID INTEGER," +
+                            "LIKER_SITE_URL TEXT)"
+                    )
                 }
             }
         }
