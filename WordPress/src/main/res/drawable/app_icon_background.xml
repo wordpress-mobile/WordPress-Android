@@ -8,7 +8,7 @@
       android:pathData="M0,0h432v432h-432z"
       android:strokeWidth="1"
       android:fillType="evenOdd"
-      android:strokeColor="#00000000">
+      android:strokeColor="@android:color/transparent">
     <aapt:attr name="android:fillColor">
       <gradient 
           android:startY="0"
@@ -16,8 +16,8 @@
           android:endY="435.6443"
           android:endX="293.90695"
           android:type="linear">
-        <item android:offset="0" android:color="#FF399CE3"/>
-        <item android:offset="1" android:color="#FF0675C4"/>
+        <item android:offset="0" android:color="@color/primary_30"/>
+        <item android:offset="1" android:color="@color/primary_50"/>
       </gradient>
     </aapt:attr>
   </path>
