@@ -50,7 +50,9 @@ class LikedItemViewHolder(
                 setOnClickListener {
                     likedItem.onGravatarClick.invoke(likedItem.authorPreferredSiteId, likedItem.authorPreferredSiteUrl)
                 }
-                setBackgroundResource(this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless))
+                setBackgroundResource(
+                        this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
+                )
             }
         } else {
             with(this.avatar) {
