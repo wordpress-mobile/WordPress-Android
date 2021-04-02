@@ -8,7 +8,9 @@
     android:layout_height="wrap_content"
     android:visibility="gone"
     tools:visibility="visible"
-    android:clipChildren="true">
+    android:clipChildren="true"
+    android:animateLayoutChanges="true"
+    android:minHeight="@dimen/liker_faces_section_min_height">
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/faces_block"

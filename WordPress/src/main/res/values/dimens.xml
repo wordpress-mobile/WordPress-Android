@@ -651,4 +651,5 @@
 
     <!-- likes list -->
     <dimen name="reader_like_faces_padding">2dp</dimen>
+    <dimen name="liker_faces_section_min_height">80dp</dimen>
 </resources>
