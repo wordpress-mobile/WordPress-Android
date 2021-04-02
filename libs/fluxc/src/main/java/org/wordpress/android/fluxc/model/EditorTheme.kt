@@ -17,17 +17,29 @@ const val MAP_KEY_ELEMENT_DISPLAY_NAME: String = "name"
 const val MAP_KEY_ELEMENT_SLUG: String = "slug"
 const val MAP_KEY_ELEMENT_COLORS: String = "colors"
 const val MAP_KEY_ELEMENT_GRADIENTS: String = "gradients"
+const val MAP_KEY_ELEMENT_GLOBAL_STYLES: String = "rawGlobalStylesBaseStyles"
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
     val stylesheet: String?,
     val version: String?
 ) {
+    constructor(blockEditorSettings: BlockEditorSettings) : this(
+            themeSupport = EditorThemeSupport(
+                    blockEditorSettings.colors,
+                    blockEditorSettings.gradients,
+                    blockEditorSettings.globalStylesBaseStyles.toString()
+            ),
+            stylesheet = null,
+            version = null
+    )
+
     fun toBuilder(siteId: Int): EditorThemeBuilder {
         val element = EditorThemeBuilder()
         element.localSiteId = siteId
         element.stylesheet = stylesheet
         element.version = version
+        element.rawGlobalStylesBaseStyles = themeSupport.rawGlobalStylesBaseStyles
 
         return element
     }
@@ -35,12 +47,18 @@ data class EditorTheme(
     override fun equals(other: Any?): Boolean {
         if (other == null ||
                 other !is EditorTheme ||
-                stylesheet != other.stylesheet ||
-                version != other.version) return false
+                themeSupport != other.themeSupport) return false
 
         return true
     }
 }
+
+data class BlockEditorSettings(
+    @SerializedName("supportsLayout") val isFSETheme: Boolean,
+    @SerializedName("__experimentalGlobalStylesBaseStyles") val globalStylesBaseStyles: JsonElement?,
+    @JsonAdapter(EditorThemeElementListSerializer::class) val colors: List<EditorThemeElement>?,
+    @JsonAdapter(EditorThemeElementListSerializer::class) val gradients: List<EditorThemeElement>?
+)
 
 data class EditorThemeSupport(
     @JsonAdapter(EditorThemeElementListSerializer::class)
@@ -48,7 +66,8 @@ data class EditorThemeSupport(
     val colors: List<EditorThemeElement>?,
     @JsonAdapter(EditorThemeElementListSerializer::class)
     @SerializedName("editor-gradient-presets")
-    val gradients: List<EditorThemeElement>?
+    val gradients: List<EditorThemeElement>?,
+    val rawGlobalStylesBaseStyles: String?
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
@@ -59,6 +78,10 @@ data class EditorThemeSupport(
 
         gradients?.map { it.toBundle() }?.let {
             bundle.putParcelableArrayList(MAP_KEY_ELEMENT_GRADIENTS, ArrayList<Bundle>(it))
+        }
+
+        rawGlobalStylesBaseStyles?.let {
+            bundle.putString(MAP_KEY_ELEMENT_GLOBAL_STYLES, it)
         }
 
         return bundle
