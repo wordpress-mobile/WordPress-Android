@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,7 @@ import org.wordpress.android.util.image.ImageType
 
 class LikedItemViewHolder(
     parent: ViewGroup,
-    private val imageManager: ImageManager,
-    private val context: Context
+    private val imageManager: ImageManager
 ) : EngagedPeopleViewHolder(parent, R.layout.note_block_header) {
     private val name = itemView.findViewById<TextView>(R.id.header_user)
     private val snippet = itemView.findViewById<TextView>(R.id.header_snippet)
@@ -37,7 +35,7 @@ class LikedItemViewHolder(
 
         val avatarUrl = GravatarUtils.fixGravatarUrl(
                 likedItem.authorAvatarUrl,
-                context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+                rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
         )
 
         imageManager.loadIntoCircle(this.avatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl)
@@ -48,11 +46,11 @@ class LikedItemViewHolder(
         ) {
             with(this.avatar) {
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-                contentDescription = context.getString(string.profile_picture, authorName)
+                contentDescription = this.context.getString(string.profile_picture, authorName)
                 setOnClickListener {
                     likedItem.onGravatarClick.invoke(likedItem.authorPreferredSiteId, likedItem.authorPreferredSiteUrl)
                 }
-                setBackgroundResource(context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless))
+                setBackgroundResource(this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless))
             }
         } else {
             with(this.avatar) {

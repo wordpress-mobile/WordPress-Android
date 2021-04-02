@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,8 +12,7 @@ import org.wordpress.android.util.image.ImageType
 
 class LikerViewHolder(
     parent: ViewGroup,
-    private val imageManager: ImageManager,
-    private val context: Context
+    private val imageManager: ImageManager
 ) : EngagedPeopleViewHolder(parent, R.layout.liker_user) {
     private val likerName = itemView.findViewById<TextView>(R.id.user_name)
     private val likerLogin = itemView.findViewById<TextView>(R.id.user_login)
@@ -27,7 +25,7 @@ class LikerViewHolder(
 
         val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
                 liker.userAvatarUrl,
-                context.resources.getDimensionPixelSize(R.dimen.avatar_sz_medium)
+                likerRootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_medium)
         )
 
         imageManager.loadIntoCircle(this.likerAvatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
