@@ -123,6 +123,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
+    private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int)
+    private var lastRenderedLikesData: RenderedLikesData? = null
+
     private val shouldOfferSignIn: Boolean
         get() = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
 
@@ -162,6 +165,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                    onRefreshLikersData(post)
                     updatePostActions(post)
                 }
             }
@@ -192,10 +196,15 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onRefreshLikersData(siteId: Long, postId: Long) {
-        getLikesJob?.cancel()
-        getLikesJob = launch(bgDispatcher) {
-            getLikesHandler.handleGetLikesForPost(siteId, postId)
+    fun onRefreshLikersData(post: ReaderPost) {
+        val isLikeDataChanged = lastRenderedLikesData?.let { it.blogId != post.blogId || it.postId != post.postId || it.numLikes != post.numLikes } ?: true
+
+        if (isLikeDataChanged) {
+            lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
+            getLikesJob?.cancel()
+            getLikesJob = launch(bgDispatcher) {
+                getLikesHandler.handleGetLikesForPost(post.blogId, post.postId)
+            }
         }
     }
 
@@ -381,10 +390,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
-        if (likesEnhancementsFeatureConfig.isEnabled() && post.numLikes > 0) {
-            onRefreshLikersData(post.blogId, post.postId)
-        }
-
         return postDetailUiStateBuilder.mapPostToUiState(
                 post = post,
                 onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
@@ -507,7 +512,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val showLoading = updateLikesState is InitialLoading
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = post?.let { it.numLikes > 0 } ?: false,
+                showLikeFacesTrain =  post?.let { it.isWP && it.numLikes > 0 } ?: false,
                 showLoading = showLoading,
                 engageItemsList = likers,
                 showEmptyState = !showLoading && showEmptyState,

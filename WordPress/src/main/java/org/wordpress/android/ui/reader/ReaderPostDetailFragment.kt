@@ -63,6 +63,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCo
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.engagement.EngageItem
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -319,7 +320,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val swipeToRefreshOffset = resources.getDimensionPixelSize(R.dimen.toolbar_content_offset)
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) { if (isAdded) updatePost() }
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            if (isAdded) {
+                updatePost()
+                //viewModel.post?.let { viewModel.onRefreshLikersData(it) }
+            }
+        }
     }
 
     private fun initAppBar(view: View) {
@@ -468,7 +474,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         })
 
-        initLikesObserver()
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            viewModel.likesUiState.observe(viewLifecycleOwner, { state ->
+                manageLikesUiState(state)
+            })
+        }
 
         viewModel.refreshPost.observeEvent(viewLifecycleOwner, {} /* Do nothing */)
 
@@ -483,19 +493,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
     }
 
-    private fun initLikesObserver() {
-        if (!likesEnhancementsFeatureConfig.isEnabled()) return
-        viewModel.likesUiState.observe(viewLifecycleOwner, { state ->
-            if (!isAdded) return@observe
+    private fun manageLikesUiState(state: EngagedPeopleListUiState) {
+        if (!isAdded) return
 
-            val activity = requireActivity()
-            if (activity.isFinishing) return@observe
+        with(requireActivity()) {
+            if (this.isFinishing) return
 
             likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
             if (state.showEmptyState) {
                 uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
-                    getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(activity, it))
+                    getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(this, it))
                 })
                 likeEmptyStateText.visibility = View.VISIBLE
             } else {
@@ -509,7 +517,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
                 viewModel.onLikeFacesClicked()
             }
-        })
+        }
     }
 
     private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean) {
@@ -915,6 +923,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // with the correct info once the new post loads
         globalRelatedPostsView.visibility = View.GONE
         localRelatedPostsView.visibility = View.GONE
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            likeFacesTrain.visibility = View.GONE
+        }
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
@@ -1018,6 +1029,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     viewModel.post?.let {
+                        viewModel.onRefreshLikersData(it)
                         viewModel.onUpdatePost(it)
                     }
                 }
@@ -1287,7 +1299,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     hasAlreadyUpdatedPost = true
                     updatePost()
                 }
-                viewModel.post?.let { viewModel.onRelatedPostsRequested(it) }
+                viewModel.post?.let {
+                    viewModel.onRefreshLikersData(it)
+                    viewModel.onRelatedPostsRequested(it)
+                }
             }, 300)
         } else {
             url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
