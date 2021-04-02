@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 153
+        return 154
     }
 
     override fun getDbName(): String {
@@ -1772,6 +1772,18 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 152 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD COMMERCIAL_INVOICE_URL TEXT")
+                }
+                153 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS EditorTheme")
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT," +
+                                    "RAW_GLOBAL_STYLES_BASE_STYLES TEXT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
                 }
             }
         }
