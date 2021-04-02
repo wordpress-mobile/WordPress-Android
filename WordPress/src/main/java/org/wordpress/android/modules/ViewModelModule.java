@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -479,6 +480,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PeopleInviteViewModel.class)
     abstract ViewModel peopleInviteViewModel(PeopleInviteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EngagedPeopleListViewModel.class)
+    abstract ViewModel engagedPeopleListViewModel(EngagedPeopleListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

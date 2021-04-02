@@ -1465,6 +1465,11 @@
         <item>@string/notif_events</item>
     </string-array>
 
+    <!-- likes -->
+    <string name="get_likes_no_network_error">No network available.</string>
+    <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
+    <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+
     <!-- reader -->
     <string name="reader">Reader</string>
     <string name="reader_filter_cta">Filter</string>

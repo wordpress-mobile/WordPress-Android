@@ -81,6 +81,7 @@ android {
         buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
+        buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -115,6 +116,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "LIKES_ENHANCEMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
