@@ -197,7 +197,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onRefreshLikersData(post: ReaderPost) {
-        val isLikeDataChanged = lastRenderedLikesData?.let { it.blogId != post.blogId || it.postId != post.postId || it.numLikes != post.numLikes } ?: true
+        val isLikeDataChanged = lastRenderedLikesData?.let {
+            it.blogId != post.blogId || it.postId != post.postId || it.numLikes != post.numLikes
+        } ?: true
 
         if (isLikeDataChanged) {
             lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
@@ -512,7 +514,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val showLoading = updateLikesState is InitialLoading
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain =  post?.let { it.isWP && it.numLikes > 0 } ?: false,
+                showLikeFacesTrain = post?.let { it.isWP && it.numLikes > 0 } ?: false,
                 showLoading = showLoading,
                 engageItemsList = likers,
                 showEmptyState = !showLoading && showEmptyState,
