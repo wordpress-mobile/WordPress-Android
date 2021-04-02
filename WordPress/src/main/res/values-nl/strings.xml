@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-23 23:16:44+0000
+Translation-Revision-Date: 2021-03-24 07:37:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
@@ -9,8 +9,10 @@ Language: nl
     <string name="gutenberg_native_tag_link">Tag link</string>
     <string name="gutenberg_native_table_of_contents">Inhoudsopgave</string>
     <string name="gutenberg_native_summary">samenvatting</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Vat je bericht samen met een lijst met koppen. Voeg HTML-ankers toe aan heading blokken om ze hier te linken.</string>
     <string name="gutenberg_native_search_settings">Zoek instellingen</string>
     <string name="gutenberg_native_post_link">Berichtlink</string>
+    <string name="gutenberg_native_document_outline">documentoverzicht</string>
     <string name="gutenberg_native_category_link">Categorie link</string>
     <string name="gutenberg_native_buttongroup">Knoppen groep</string>
     <string name="gutenberg_native_a_link_to_a_url">Een link naar een URL.</string>
@@ -892,6 +894,12 @@ Language: nl
     <string name="notifications_tab_dialog_switch_desc">Meldingen</string>
     <string name="main_switch_default_title_off">Uit</string>
     <string name="main_switch_default_title_on">Aan</string>
+    <string name="notifications_tab_dialog_main_off_message">Als je Meldingen voor deze site uitschakelt, wordt de weergave van meldingen op het tab Meldingen voor deze site uitgeschakeld. Je kunt afstemmen welk soort melding je ziet nadat je Meldingen voor deze site hebt ingeschakeld.</string>
+    <string name="notifications_tab_dialog_main_off_title">Om meldingen op de tab Meldingen voor deze site te zien, schakel Meldingen voor deze site in.</string>
+    <string name="notifications_tab_dialog_main_hint_off">Schakel de weergave van meldingen in op de tab Meldingen voor deze site</string>
+    <string name="notifications_tab_dialog_main_hint_on">Schakel de weergave van meldingen op de tab Meldingen voor deze site uit</string>
+    <string name="notifications_tab_dialog_main_status_off">Meldingen voor deze site</string>
+    <string name="notifications_tab_dialog_main_status_on">Meldingen voor deze site</string>
     <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>
@@ -1814,6 +1822,7 @@ Language: nl
     <string name="jetpack_disconnect_confirm">Loskoppelen</string>
     <string name="jetpack_disconnect_confirmation_message">Weet je zeker dat je Jetpack wilt loskoppelen van de site?</string>
     <string name="jetpack_disconnect_pref_title">\"Loskoppelen van WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Je kunt een IP-adres (of een reeks adressen) markeren als \"Altijd toegestaan\", waardoor wordt voorkomen dat ze ooit door Jetpack worden geblokkeerd. IPv4 en IPv6 zijn acceptabel. Om een bereik op te geven, voer je de lage waarde en de hoge waarde in, gescheiden door een streepje. Voorbeeld: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Twee-staps verificatie vereisen</string>
     <string name="jetpack_match_wpcom_via_email_title">Accounts matchen via e-mail</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com-login toestaan</string>
@@ -1858,6 +1867,10 @@ Language: nl
     <string name="notification_settings_category_other">Andere</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Al mijn sites</string>
     <string name="notification_settings_category_your_sites">Jouw sites</string>
+    <string name="notification_settings_main_off_message">Als je Meldingsinstellingen uitschakelt, worden alle meldingen van deze app uitgeschakeld, ongeacht het type. Je kunt afstemmen welk soort melding je ontvangt nadat je Meldingsinstellingen hebt ingeschakeld.</string>
+    <string name="notification_settings_main_off_title">Om meldingen op dit apparaat te ontvangen, schakel de melding instelling in.</string>
+    <string name="notification_settings_main_hint_off">Meldingen inschakelen</string>
+    <string name="notification_settings_main_hint_on">Meldingen uitschakelen</string>
     <string name="notification_settings_main_status_off">Uit</string>
     <string name="notification_settings_main_status_on">Aan</string>
     <string name="max_video_resolution">Maximale video grootte</string>
@@ -2312,6 +2325,7 @@ Language: nl
     <string name="site_settings_paging_dialog_description">Deel reacties in threads op in meerdere pagina\'s.</string>
     <string name="site_settings_paging_dialog_header">Reacties per pagina</string>
     <string name="site_settings_close_after_dialog_title">Reacties afsluiten</string>
+    <string name="site_settings_denylist_description">Als een reactie een van deze woorden in de inhoud, naam, URL, e-mail of IP bevat, wordt deze als spam gemarkeerd. Je kunt gedeeltelijke woorden invoeren, dus \"press\" komt overeen met \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Wanneer een reactie een van deze woorden bevat in de inhoud, naam, URL, het e-mailadres of IP-adres, wordt hij in de wachtrij voor moderatie gezet. Ook delen van woorden worden gevonden, dus \"press\" levert ook \"WordPress\" op als resultaat.</string>
     <string name="site_settings_list_editor_input_hint">Voer een woord of zinsdeel in</string>
     <string name="site_settings_list_editor_no_items_text">Geen items</string>
