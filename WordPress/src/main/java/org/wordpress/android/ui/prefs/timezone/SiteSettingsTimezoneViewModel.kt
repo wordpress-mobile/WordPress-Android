@@ -70,7 +70,6 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
         }
     }.distinctUntilChanged()
 
-
     fun searchTimezones(query: CharSequence) {
         searchInput.value = query.toString()
     }
@@ -203,4 +202,3 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
         return sdf.format(cal.time)
     }
 }
-

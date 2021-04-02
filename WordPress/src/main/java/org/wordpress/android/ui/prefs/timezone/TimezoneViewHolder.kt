@@ -34,7 +34,7 @@ class TimezoneViewHolder(
         }
     }
 
-    companion object{
+    companion object {
         fun from(parent: ViewGroup): TimezoneViewHolder {
             val binding = SiteSettingsTimezoneBottomSheetListItemBinding.inflate(
                     LayoutInflater.from(parent.context),

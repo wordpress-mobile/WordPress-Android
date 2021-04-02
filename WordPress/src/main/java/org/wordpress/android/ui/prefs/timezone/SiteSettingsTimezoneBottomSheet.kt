@@ -45,7 +45,8 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        timezoneViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(SiteSettingsTimezoneViewModel::class.java)
+        timezoneViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(SiteSettingsTimezoneViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -91,7 +92,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             list.run {
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
 
-                addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (newState == RecyclerView.SCROLL_STATE_DRAGGING) hideSearchKeyboard()
@@ -215,4 +216,3 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         fun onSelectTimezone(timezone: String)
     }
 }
-

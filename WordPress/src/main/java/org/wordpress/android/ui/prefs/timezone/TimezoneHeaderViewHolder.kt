@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListHeaderBinding
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
 
-class TimezoneHeaderViewHolder (
+class TimezoneHeaderViewHolder(
     private val binding: SiteSettingsTimezoneBottomSheetListHeaderBinding
 ) : ViewHolder(binding.root) {
     fun bind(header: TimezoneHeader) {
@@ -15,7 +15,7 @@ class TimezoneHeaderViewHolder (
         }
     }
 
-    companion object{
+    companion object {
         fun from(parent: ViewGroup): TimezoneHeaderViewHolder {
             val binding = SiteSettingsTimezoneBottomSheetListHeaderBinding.inflate(
                     LayoutInflater.from(parent.context),

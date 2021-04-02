@@ -10,8 +10,7 @@ import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 
 class TimezoneAdapter(
     private val onClick: (timezone: TimezoneItem) -> Unit
-) : ListAdapter<TimezonesList, ViewHolder>(DIFF_CALLBACK)
-{
+) : ListAdapter<TimezonesList, ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             R.layout.site_settings_timezone_bottom_sheet_list_header -> TimezoneHeaderViewHolder.from(parent)
@@ -33,7 +32,6 @@ class TimezoneAdapter(
             else -> R.layout.site_settings_timezone_bottom_sheet_list_item
         }
     }
-
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TimezonesList>() {
