@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.engagement
 
 import android.app.Activity
+import android.content.Context
 import android.text.Spannable
 import dagger.Reusable
 import org.json.JSONArray
@@ -30,7 +31,7 @@ class ListScenarioUtils @Inject constructor(
     val imageManager: ImageManager,
     val notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) {
-    fun mapLikeNoteToListScenario(note: Note, activity: Activity): ListScenario {
+    fun mapLikeNoteToListScenario(note: Note, context: Context): ListScenario {
         if (!note.isLikeType) throw IllegalArgumentException(
                 "mapLikeNoteToListScenario > unexpected note type ${note.type}"
         )
@@ -53,7 +54,7 @@ class ListScenarioUtils @Inject constructor(
                 NoteBlockClickableSpan::class.java
         )
         for (span in spans) {
-            span.enableColors(activity)
+            span.enableColors(context)
         }
 
         return ListScenario(
