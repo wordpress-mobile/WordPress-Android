@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import android.app.Activity
 import android.content.Context
 import android.text.Spannable
 import dagger.Reusable
