@@ -1002,7 +1002,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // Simple WPCom Sites now always default to Gutenberg Editor
-        if (mSite.isWPCom() && !mSite.isWPComAtomic()) {
+        if (SiteUtils.alwaysDefaultToGutenberg(mSite)) {
             removeEditorPreferences();
         }
     }
