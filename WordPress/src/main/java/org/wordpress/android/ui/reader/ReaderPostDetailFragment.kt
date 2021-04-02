@@ -323,7 +323,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (isAdded) {
                 updatePost()
-                //viewModel.post?.let { viewModel.onRefreshLikersData(it) }
             }
         }
     }
