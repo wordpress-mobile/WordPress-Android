@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources">
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
@@ -41,7 +43,7 @@
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/purple_20</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_10</color>
-    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_20</color>
+    <color name="login_prologue_background_circle_blue">@color/blue_20</color>
     <color name="login_prologue_background_circle_light_blue">@color/blue_5</color>
     <color name="login_prologue_background_circle_green">@color/green_5</color>
     <color name="login_prologue_background_circle_yellow">@color/yellow_10</color>
@@ -267,6 +269,8 @@
     <color name="woocommerce_purple_80">#3c2861</color>
     <color name="woocommerce_purple_90">#271b3d</color>
     <color name="woocommerce_purple_100">#140e1f</color>
+
+    <!-- Deprecated as of 2.4.0 -->
     <color name="wordpress_blue">#006088</color>
     <color name="wordpress_blue_0">#e6f1f5</color>
     <color name="wordpress_blue_5">#bedae6</color>
@@ -280,6 +284,7 @@
     <color name="wordpress_blue_80">#002c40</color>
     <color name="wordpress_blue_90">#001d2d</color>
     <color name="wordpress_blue_100">#00101c</color>
+
     <color name="yellow">#9d6e00</color>
     <color name="yellow_0">#f5f1e1</color>
     <color name="yellow_5">#f5e6b3</color>

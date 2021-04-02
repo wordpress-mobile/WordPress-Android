@@ -31,7 +31,7 @@ import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.skip
 import javax.inject.Inject
 
-private const val INITIAL_SCALE = 100
+private const val INITIAL_SCALE = 90
 private const val JS_EVALUATION_DELAY = 250L
 
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
