@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_shortcut_stats"
         android:shortcutId="stats"
         android:shortcutShortLabel="@string/stats"
-        android:enabled="false">
+        android:enabled="true">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_shortcut_notifications"
         android:shortcutId="notifications"
         android:shortcutShortLabel="@string/notifications_screen_title"
-        android:enabled="false">
+        android:enabled="true">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"
