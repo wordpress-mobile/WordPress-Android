@@ -153,7 +153,10 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
             timezonesList.add(TimezoneHeader(
                     resourceProvider.getString(R.string.site_settings_timezones_manual_offsets)
             ))
-            addManualTimezoneItems(jsonTimezonesManualOffsets)
+            for (i in 0 until jsonTimezonesManualOffsets.length()) {
+                val timezone = jsonTimezonesManualOffsets.getJSONObject(i)
+                timezonesList.add(TimezoneItem(timezone.getString("label"), timezone.getString("value")))
+            }
 
             AppLog.d(SETTINGS, timezonesList.toString())
             _timezones.postValue(timezonesList)
@@ -171,13 +174,6 @@ class SiteSettingsTimezoneViewModel @Inject constructor(
             val zoneOffset = getZoneOffset(zone)
             val zoneTime = getTimeAtZone(zone)
             timezonesList.add(TimezoneItem(city, zone, zoneOffset, zoneTime))
-        }
-    }
-
-    private fun addManualTimezoneItems(jsonTimezones: JSONArray) {
-        for (i in 0 until jsonTimezones.length()) {
-            val timezone = jsonTimezones.getJSONObject(i)
-            timezonesList.add(TimezoneItem(timezone.getString("label"), timezone.getString("value")))
         }
     }
 

@@ -95,7 +95,9 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
-                        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) hideSearchKeyboard()
+                        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                            ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
+                        }
                     }
                 })
             }
@@ -130,7 +132,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 searchInputLayout.editText?.text?.clear()
                 searchInputLayout.editText?.clearFocus()
                 timezoneViewModel.onSearchCancelled()
-                hideSearchKeyboard()
+                ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
             }
 
             btnTimezoneSuggestion.setOnClickListener { it as MaterialButton
@@ -141,11 +143,11 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupLiveData() {
         timezoneViewModel.showEmptyView.observe(viewLifecycleOwner, {
-            toggleEmptyView(it)
+            binding?.emptyView?.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         timezoneViewModel.showProgressView.observe(viewLifecycleOwner, {
-            toggleProgressView(it)
+            binding?.progressView?.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         timezoneViewModel.timezones.observe(viewLifecycleOwner, {
@@ -157,7 +159,8 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         })
 
         timezoneViewModel.dismissWithError.observe(viewLifecycleOwner, {
-            dismissWithError()
+            ToastUtils.showToast(activity, R.string.site_settings_timezones_error)
+            dismiss()
         })
 
         timezoneViewModel.selectedTimezone.observe(viewLifecycleOwner, {
@@ -182,29 +185,6 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
                 timezoneViewModel.searchTimezones(it)
             }
         }
-    }
-
-    private fun toggleEmptyView(show: Boolean) {
-        if (isAdded) {
-            binding?.emptyView?.visibility = if (show) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun toggleProgressView(show: Boolean) {
-        if (isAdded) {
-            binding?.progressView?.visibility = if (show) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun hideSearchKeyboard() {
-        if (isAdded) {
-            ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
-        }
-    }
-
-    private fun dismissWithError() {
-        ToastUtils.showToast(activity, R.string.site_settings_timezones_error)
-        dismiss()
     }
 
     companion object {
