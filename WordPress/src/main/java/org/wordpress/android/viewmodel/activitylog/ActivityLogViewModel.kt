@@ -33,7 +33,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
@@ -72,7 +71,6 @@ class ActivityLogViewModel @Inject constructor(
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase,
     private val resourceProvider: ResourceProvider,
-    private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
@@ -383,7 +381,6 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun showFiltersIfSupported() {
         when {
-            !activityLogFiltersFeatureConfig.isEnabled() -> return
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 viewModelScope.launch {

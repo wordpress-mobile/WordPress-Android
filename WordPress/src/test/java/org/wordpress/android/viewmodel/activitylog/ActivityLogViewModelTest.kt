@@ -56,7 +56,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -113,7 +112,6 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
@@ -145,7 +143,6 @@ class ActivityLogViewModelTest {
                 getBackupDownloadStatusUseCase,
                 postDismissBackupDownloadUseCase,
                 resourceProvider,
-                activityLogFiltersFeatureConfig,
                 backupDownloadFeatureConfig,
                 dateUtils,
                 activityLogTracker,
@@ -334,26 +331,7 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun filtersAreNotVisibleWhenFiltersFeatureFlagIsDisabled() = test {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.start(site, rewindableOnly)
-
-        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
-    }
-
-    @Test
-    fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = test {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-
-        viewModel.start(site, rewindableOnly)
-
-        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
-    }
-
-    @Test
     fun filtersAreVisibleWhenSiteOnPaidPlan() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(false)
 
         viewModel.start(site, rewindableOnly)
@@ -363,7 +341,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun filtersAreNotVisibleWhenSiteOnFreePlan() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
 
         viewModel.start(site, rewindableOnly)
@@ -373,7 +350,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(SITE_ID))
                 .thenReturn(JetpackPurchasedProducts(scan = false, backup = true))
