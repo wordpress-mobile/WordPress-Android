@@ -1,9 +1,12 @@
 package org.wordpress.android.login.util;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -42,5 +45,16 @@ public class SiteUtils {
             }
         }
         return null;
+    }
+
+    @NonNull
+    public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackAppLogin) {
+        ArrayList<SiteFilter> siteFilters = new ArrayList<>();
+        if (isJetpackAppLogin) siteFilters.add(SiteFilter.JETPACK);
+
+        FetchSitesPayload payload = new FetchSitesPayload();
+        payload.filters = siteFilters;
+
+        return payload;
     }
 }

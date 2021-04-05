@@ -25,15 +25,14 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -383,9 +382,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             setState(LoginStep.FETCHING_SITES);
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            ArrayList siteFilters = new ArrayList();
-            if (mIsJetpackAppLogin) siteFilters.add(SiteFilter.JETPACK);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsJetpackAppLogin);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
 
