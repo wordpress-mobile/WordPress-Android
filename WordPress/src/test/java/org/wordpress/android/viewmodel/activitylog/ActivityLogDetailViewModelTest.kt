@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -33,7 +32,6 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val areButtonsVisible = true
@@ -74,8 +72,7 @@ class ActivityLogDetailViewModelTest {
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
-                activityLogStore,
-                restoreFeatureConfig
+                activityLogStore
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
@@ -226,23 +223,9 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given restore feature is disabled, when on restore clicked, then show rewind dialog with model`() {
+    fun `when on restore clicked, then show restore with model`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn("123")
-        whenever(restoreFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.onRestoreClicked(model)
-
-        navigationEvents.last().peekContent()?.let {
-            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRewindDialog).model)
-        }
-    }
-
-    @Test
-    fun `given restore feature is enabled, when on restore clicked, then show restore with model`() {
-        val model = mock<ActivityLogDetailModel>()
-        whenever(model.rewindId).thenReturn("123")
-        whenever(restoreFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.onRestoreClicked(model)
 

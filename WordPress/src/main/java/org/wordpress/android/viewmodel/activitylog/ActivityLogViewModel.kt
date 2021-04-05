@@ -33,7 +33,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
@@ -72,8 +71,7 @@ class ActivityLogViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
-    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val restoreFeatureConfig: RestoreFeatureConfig
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -206,8 +204,7 @@ class ActivityLogViewModel @Inject constructor(
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
                     model,
-                    withRestoreProgressItem || withBackupDownloadProgressItem,
-                    restoreFeatureConfig.isEnabled()
+                    withRestoreProgressItem || withBackupDownloadProgressItem
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {

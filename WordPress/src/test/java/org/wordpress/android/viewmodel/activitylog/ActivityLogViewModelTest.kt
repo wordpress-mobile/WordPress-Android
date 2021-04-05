@@ -56,7 +56,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
@@ -114,7 +113,6 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     @Mock private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
@@ -143,8 +141,7 @@ class ActivityLogViewModelTest {
                 resourceProvider,
                 dateUtils,
                 activityLogTracker,
-                jetpackCapabilitiesUseCase,
-                restoreFeatureConfig
+                jetpackCapabilitiesUseCase
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
@@ -1040,35 +1037,35 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `given backup progress item, when reloading events, then the notice banner is not visible`() {
-            val displayBackupProgressItem = true
-            val displayBackupProgressWithDate = true
-            val displayNoticeItem = false
-            initBackupProgressMocks(displayBackupProgressWithDate)
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = true
+        val displayNoticeItem = false
+        initBackupProgressMocks(displayBackupProgressWithDate)
 
-            viewModel.reloadEvents(
-                    done = false,
-                    backupDownloadEvent = BackupDownloadEvent(
-                            displayProgress = displayBackupProgressItem,
-                            displayNotice = displayNoticeItem,
-                            rewindId = REWIND_ID
-                    )
-            )
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem,
+                        rewindId = REWIND_ID
+                )
+        )
 
-            assertEquals(
-                    viewModel.events.value,
-                    expectedActivityList(
-                            displayRestoreProgress = false,
-                            restoreProgressWithDate = false,
-                            displayBackupProgress = displayBackupProgressItem,
-                            backupProgressWithDate = displayBackupProgressWithDate,
-                            emptyList = false,
-                            rewindDisabled = displayBackupProgressItem,
-                            isLastPageAndFreeSite = false,
-                            canLoadMore = true,
-                            withFooter = false
-                    )
-            )
-        }
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
 
     /* RELOAD EVENTS - RESTORE AND BACKUP DOWNLOAD */
 
@@ -1460,7 +1457,8 @@ class ActivityLogViewModelTest {
                 DOWNLOAD_URL,
                 DOWNLOAD_PUBLISHED,
                 DOWNLOAD_VALID_UNTIL,
-                DOWNLOAD_IS_VALID)
+                DOWNLOAD_IS_VALID
+        )
         whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
                 .thenReturn(flow { emit(progress); emit(complete) })
         initBackupProgressMocks()
@@ -1618,20 +1616,17 @@ class ActivityLogViewModelTest {
 
     private fun firstItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[0],
-            rewindDisabled = rewindDisabled,
-            restoreFeatureEnabled = false
+            rewindDisabled = rewindDisabled
     )
 
     private fun secondItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[1],
-            rewindDisabled = rewindDisabled,
-            restoreFeatureEnabled = false
+            rewindDisabled = rewindDisabled
     )
 
     private fun thirdItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[2],
-            rewindDisabled = rewindDisabled,
-            restoreFeatureEnabled = false
+            rewindDisabled = rewindDisabled
     )
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

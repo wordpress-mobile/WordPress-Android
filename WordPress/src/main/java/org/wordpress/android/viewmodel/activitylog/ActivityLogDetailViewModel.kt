@@ -12,7 +12,6 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
@@ -26,8 +25,7 @@ const val ACTIVITY_LOG_REWIND_ID_KEY: String = "activity_log_rewind_id_key"
 class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore,
-    private val restoreFeatureConfig: RestoreFeatureConfig
+    private val activityLogStore: ActivityLogStore
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -89,12 +87,7 @@ class ActivityLogDetailViewModel
 
     fun onRestoreClicked(model: ActivityLogDetailModel) {
         if (model.rewindId != null) {
-            val navigationEvent = if (restoreFeatureConfig.isEnabled()) {
-                ActivityLogDetailNavigationEvents.ShowRestore(model)
-            } else {
-                ActivityLogDetailNavigationEvents.ShowRewindDialog(model)
-            }
-            _navigationEvents.value = Event(navigationEvent)
+            _navigationEvents.value = Event(ActivityLogDetailNavigationEvents.ShowRestore(model))
         } else {
             AppLog.e(ACTIVITY_LOG, "Trying to restore activity without rewind ID")
         }

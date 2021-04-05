@@ -17,16 +17,12 @@ import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
-import javax.inject.Inject
 
 class ActivityLogListActivity : LocaleAwareActivity(),
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface {
-    @Inject lateinit var restoreFeatureConfig: RestoreFeatureConfig
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)

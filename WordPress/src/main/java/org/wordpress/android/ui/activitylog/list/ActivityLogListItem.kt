@@ -43,8 +43,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
         constructor(
             model: ActivityLogModel,
-            rewindDisabled: Boolean = false,
-            restoreFeatureEnabled: Boolean
+            rewindDisabled: Boolean = false
         ) : this(
                 model.activityID,
                 model.summary,
@@ -57,7 +56,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
                 buttonIcon = MORE,
                 showMoreMenu = true,
-                launchRestoreWizard = restoreFeatureEnabled
+                launchRestoreWizard = true
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()
