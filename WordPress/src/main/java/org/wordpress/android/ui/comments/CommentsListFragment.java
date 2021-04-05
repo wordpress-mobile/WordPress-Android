@@ -54,6 +54,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 public class CommentsListFragment extends ViewPagerFragment {
     static final int COMMENTS_PER_PAGE = 30;
+    static final int MAX_COMMENTS_IN_RESPONSE = 100;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
     static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
     static final String AUTO_REFRESHED_KEY = "has_auto_refreshed";
@@ -72,6 +73,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         ALL(R.string.comment_status_all),
         UNAPPROVED(R.string.comment_status_unapproved),
         APPROVED(R.string.comment_status_approved),
+        UNREPLIED(R.string.comment_status_unreplied),
         TRASH(R.string.comment_status_trash),
         SPAM(R.string.comment_status_spam),
         DELETE(R.string.comment_status_trash);
@@ -212,6 +214,9 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case UNAPPROVED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_pending;
                     break;
+                case UNREPLIED:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_unreplied;
+                    break;
                 case SPAM:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_spam;
                     break;
@@ -294,9 +299,16 @@ public class CommentsListFragment extends ViewPagerFragment {
                     if (mActionMode == null) {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
-                            ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(),
-                                    mCommentStatusFilter
-                                            .toCommentStatus());
+                            CommentStatus commentStatus;
+                            // for purposes of comment details UNREPLIED should be treated as ALL
+                            if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
+                                commentStatus = CommentStatusCriteria.ALL.toCommentStatus();
+                            } else {
+                                commentStatus = mCommentStatusFilter.toCommentStatus();
+                            }
+
+                            ((OnCommentSelectedListener) getActivity())
+                                    .onCommentSelected(comment.getRemoteCommentId(), commentStatus);
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
@@ -493,9 +505,14 @@ public class CommentsListFragment extends ViewPagerFragment {
             mLoadMoreProgress.setVisibility(View.VISIBLE);
         }
         mIsUpdatingComments = true;
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
-                        offset)));
+        if (mCommentStatusFilter == CommentStatusCriteria.UNREPLIED) {
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, CommentStatus.ALL, MAX_COMMENTS_IN_RESPONSE, 0)));
+        } else {
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
+                            offset)));
+        }
     }
 
     @Override
@@ -627,6 +644,11 @@ public class CommentsListFragment extends ViewPagerFragment {
         }
 
         if (event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
+            return true;
+        }
+
+        if (mCommentStatusFilter.toCommentStatus() == CommentStatus.UNREPLIED && event.requestedStatus
+                .equals(CommentStatus.ALL)) {
             return true;
         }
 
