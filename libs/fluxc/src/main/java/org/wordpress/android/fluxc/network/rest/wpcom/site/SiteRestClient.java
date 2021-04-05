@@ -13,7 +13,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -150,7 +149,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         mAppSecrets = appSecrets;
     }
 
-    public void fetchSites(List<SiteFilter> filters) {
+    public void fetchSites(@NonNull List<SiteFilter> filters) {
         Map<String, String> params = getFetchSitesParams(filters);
 
         String url = WPCOMREST.me.sites.getUrlV1_2();
@@ -186,9 +185,10 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    @NotNull private Map<String, String> getFetchSitesParams(List<SiteFilter> filters) {
+    @NonNull
+    private Map<String, String> getFetchSitesParams(@NonNull List<SiteFilter> filters) {
         Map<String, String> params = new HashMap<>();
-        if (filters != null && !filters.isEmpty()) {
+        if (!filters.isEmpty()) {
             params.put("filters", TextUtils.join(",", filters));
         }
         params.put("fields", SITE_FIELDS);
