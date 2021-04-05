@@ -1335,6 +1335,13 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns the number of .COM Atomic sites in the store.
+     */
+    public int getWPComAtomicSitesCount() {
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count();
+    }
+
+    /**
      * Returns sites with a name or url matching the search string.
      */
     @NonNull
@@ -1356,6 +1363,13 @@ public class SiteStore extends Store {
      */
     public boolean hasWPComSite() {
         return getWPComSitesCount() != 0;
+    }
+
+    /**
+     * Checks whether the store contains at least one .COM Atomic site.
+     */
+    public boolean hasWPComAtomicSite() {
+        return getWPComAtomicSitesCount() != 0;
     }
 
     /**
