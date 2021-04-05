@@ -135,6 +135,11 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew :libs:WordPressProcessors:test --stacktrace
+      - run:
+          name: Test ImageEditor
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew :libs:ImageEditor:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:
