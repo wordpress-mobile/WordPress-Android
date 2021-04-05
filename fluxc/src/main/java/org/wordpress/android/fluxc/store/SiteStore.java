@@ -80,9 +80,9 @@ public class SiteStore extends Store {
     }
 
     public static class FetchSitesPayload extends Payload<BaseNetworkError> {
-        public List<SiteFilter> filters;
+        @NonNull public List<SiteFilter> filters;
 
-        public FetchSitesPayload(List<SiteFilter> filters) {
+        public FetchSitesPayload(@NonNull List<SiteFilter> filters) {
             this.filters = filters;
         }
     }
