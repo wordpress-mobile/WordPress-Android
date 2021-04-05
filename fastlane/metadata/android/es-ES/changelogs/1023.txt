@@ -1,0 +1,2 @@
+17.0:
+Nos complace anunciar tres actualizaciones de WPAndroid. Hemos activado la funcionalidad de pellizco/zoom/panorámica en la biblioteca de historias, haciendo las posibilidades de visualización más completas que nunca. Hemos cambiado el filtro de comentarios de un menú desplegable a pestañas. Y hemos eliminado el botón de cancelación de las opciones de ajuste en el editor de bloques.

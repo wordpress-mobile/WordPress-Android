@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-09 14:08:48+0000
+Translation-Revision-Date: 2021-03-24 11:53:46+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">Legătură la etichetă</string>
+    <string name="gutenberg_native_table_of_contents">Cuprins</string>
+    <string name="gutenberg_native_summary">rezumat</string>
+    <string name="gutenberg_native_search_settings">Setări căutare</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Face un rezumat al articolului folosind o listă de subtitluri. Adaugă ancore HTML la blocurile Subtitlu pentru a le lega aici.</string>
+    <string name="gutenberg_native_post_link">Legătură la articol</string>
+    <string name="gutenberg_native_document_outline">schiță document</string>
+    <string name="gutenberg_native_category_link">Legătură la categorie</string>
+    <string name="gutenberg_native_a_link_to_a_url">O legătură la un URL.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">O legătură la o etichetă.</string>
+    <string name="gutenberg_native_a_link_to_a_post">O legătură la un articol.</string>
+    <string name="gutenberg_native_a_link_to_a_page">O legătură la o pagină.</string>
+    <string name="gutenberg_native_a_link_to_a_category">O legătură la o categorie.</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="site_settings_denylist_title">Comentarii neaprobate</string>
+    <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
     <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
@@ -412,6 +428,7 @@ Language: ro
     <string name="media_uploading_gif_library_photo">Încărcare GIF media</string>
     <string name="gutenberg_native_select_item">Selectează un element</string>
     <string name="gutenberg_native_search_or_type_url">Caută sau tastează URL-ul</string>
+    <string name="gutenberg_native_page_link">Legătură la pagină</string>
     <string name="gutenberg_native_add_this_telephone_link">Adaugă această legătură la telefon</string>
     <string name="gutenberg_native_add_this_link">Adaugă această legătură</string>
     <string name="gutenberg_native_add_this_email_link">Adaugă această legătură la email</string>
@@ -875,6 +892,14 @@ Language: ro
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
+    <string name="main_switch_default_title_off">Oprite</string>
+    <string name="main_switch_default_title_on">Pornite</string>
+    <string name="notifications_tab_dialog_main_off_message">Oprirea notificărilor pentru acest sit va dezactiva afișarea notificărilor în fila Notificări. După ce activezi notificările pentru acest sit, poți ajusta ce fel de notificări vrei să vezi.</string>
+    <string name="notifications_tab_dialog_main_status_off">Notificări pentru acest sit</string>
+    <string name="notifications_tab_dialog_main_status_on">Notificări pentru acest sit</string>
+    <string name="notifications_tab_dialog_main_hint_off">Activează afișarea notificărilor pentru acest sit în fila Notificări</string>
+    <string name="notifications_tab_dialog_main_hint_on">Dezactivează afișarea notificărilor pentru acest sit în fila Notificări</string>
+    <string name="notifications_tab_dialog_main_off_title">Pentru a vedea notificările pentru acest sit în fila Notificări, pornește notificările pe sit.</string>
     <string name="pick_media">Adaugă imagine sau video</string>
     <string name="error_post_not_published_retrying_private">Nu am putut publica acest articol privat, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_scheduled_retrying">Nu am putut programa acest articol, dar vom încerca din nou mai târziu.</string>
@@ -1797,6 +1822,7 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
+    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
@@ -1841,6 +1867,12 @@ Language: ro
     <string name="notification_settings_category_other">Altă</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Toate siturile mele</string>
     <string name="notification_settings_category_your_sites">Siturile tale</string>
+    <string name="notification_settings_main_off_message">Oprirea setărilor pentru notificări va dezactiva toate notificările din această aplicație, indiferent de tipul lor. După ce activezi setările pentru notificări pentru acest sit, poți ajusta ce fel de notificări vrei să vezi.</string>
+    <string name="notification_settings_main_off_title">Pentru a primi notificări pe acest dispozitiv, pornește setările pentru notificări.</string>
+    <string name="notification_settings_main_hint_off">Activează notificările</string>
+    <string name="notification_settings_main_hint_on">Dezactivează notificările</string>
+    <string name="notification_settings_main_status_off">Oprite</string>
+    <string name="notification_settings_main_status_on">Pornite</string>
     <string name="max_video_resolution">Dimensiune maximă video</string>
     <string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
     <string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
@@ -2293,6 +2325,7 @@ Language: ro
     <string name="site_settings_paging_dialog_description">Împarte firele de comentarii în mai multe pagini.</string>
     <string name="site_settings_paging_dialog_header">Comentarii per pagină</string>
     <string name="site_settings_close_after_dialog_title">Închidere comentare</string>
+    <string name="site_settings_denylist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că „press” se va potrivi și pentru „WordPress”.</string>
     <string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Introdu un cuvânt sau frază</string>
     <string name="site_settings_list_editor_no_items_text">Niciun element</string>
@@ -2307,8 +2340,10 @@ Language: ro
     <string name="site_settings_rp_show_header_title">Arată antetul</string>
     <string name="site_settings_rp_switch_summary">Articole similare afișează conținut relevant de pe situl tău sub articolele tale.</string>
     <string name="site_settings_rp_switch_title">Arată articole similare</string>
+    <string name="site_settings_denylist_hint">Comentariile care corespund unui filtru sunt marcate ca spam</string>
     <string name="site_settings_moderation_hold_hint">Comentariile care corespund unui filtru sunt puse în coada de moderare</string>
     <string name="site_settings_multiple_links_hint">Ignoră limita de legături pentru utilizatorii cunoscuți</string>
+    <string name="site_settings_allowlist_hint">Autorul comentariului trebuie să aibă un comentariu aprobat anterior</string>
     <string name="site_settings_user_account_required_hint">Utilizatorul trebuie să fie înregistrat și autentificat pentru a comenta</string>
     <string name="site_settings_identity_required_hint">Autorul comentariului trebuie să completeze numele și emailul său</string>
     <string name="site_settings_paging_hint">Afișează comentariile în tranșe de o anumită mărime</string>
@@ -2331,6 +2366,8 @@ Language: ro
     <string name="site_settings_address_hint">Schimbarea adresei nu este încă suportată</string>
     <string name="site_settings_tagline_hint">O scurtă descriere sau o frază de impact pentru a descrie blogul tău</string>
     <string name="site_settings_title_hint">Explică, în câteva cuvinte, despre ce este acest sit</string>
+    <string name="site_settings_allowlist_known_summary">Comentarii de la utilizatori cunoscuți</string>
+    <string name="site_settings_allowlist_all_summary">Comentarii de la toți utilizatorii</string>
     <string name="site_settings_threading_summary">%d nivele</string>
     <string name="site_settings_privacy_private_summary">Privat</string>
     <string name="site_settings_privacy_hidden_summary">Ascuns</string>
@@ -2338,6 +2375,7 @@ Language: ro
     <string name="site_settings_delete_site_title">Șterge situl</string>
     <string name="site_settings_moderation_hold_title">Reținere pentru moderare</string>
     <string name="site_settings_multiple_links_title">Legături în comentarii</string>
+    <string name="site_settings_allowlist_title">Aprobă automat</string>
     <string name="site_settings_threading_title">Fire de discuție</string>
     <string name="site_settings_paging_title">Paginare</string>
     <string name="site_settings_sort_by_title">Sortează după</string>

@@ -41,4 +41,8 @@ class ReaderUtilsWrapper @Inject constructor(
     fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
 
     fun getReportPostUrl(blogUrl: String): String = ReaderUtils.getReportPostUrl(blogUrl)
+
+    fun postAndCommentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
+        return ReaderUtils.postAndCommentExists(blogId, postId, commentId)
+    }
 }

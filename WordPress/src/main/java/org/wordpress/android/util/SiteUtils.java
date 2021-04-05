@@ -213,8 +213,12 @@ public class SiteUtils {
             // Default to block editor when mobile editor setting is empty
             return true;
         } else {
-            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
+            return alwaysDefaultToGutenberg(site) || site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
+    }
+
+    public static boolean alwaysDefaultToGutenberg(SiteModel site) {
+        return site.isWPCom() && !site.isWPComAtomic();
     }
 
     public static String getSiteNameOrHomeURL(SiteModel site) {

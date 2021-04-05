@@ -1000,6 +1000,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
         }
+
+        // Simple WPCom Sites now always default to Gutenberg Editor
+        if (SiteUtils.alwaysDefaultToGutenberg(mSite)) {
+            removeEditorPreferences();
+        }
     }
 
     private void updateHomepageSummary() {
@@ -1886,6 +1891,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_jetpack_performance_media_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
+    }
+
+    private void removeEditorPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
+                R.string.pref_key_gutenberg_default_for_new_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_site_editor);
     }
 
     private Preference getChangePref(int id) {
