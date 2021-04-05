@@ -21,6 +21,7 @@ import com.yalantis.ucrop.UCropActivity
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
@@ -123,7 +124,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
             } else {
-                ActivityLauncher.showSignInForResult(activity, true, false)
+                if (BuildConfig.IS_JETPACK_APP) {
+                    ActivityLauncher.showSignInForResultJetpackOnly(activity)
+                } else {
+                    ActivityLauncher.showSignInForResultWpComOnly(activity)
+                }
             }
         }
         if (savedInstanceState != null) {

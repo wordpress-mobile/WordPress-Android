@@ -339,9 +339,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     authTokenToSet = getAuthToken();
                 } else {
                     if (BuildConfig.IS_JETPACK_APP) {
-                        ActivityLauncher.showSignInForResult(this, false, true);
+                        ActivityLauncher.showSignInForResultJetpackOnly(this);
                     } else {
-                        ActivityLauncher.showSignInForResult(this);
+                        ActivityLauncher.showSignInForResultWpComOnly(this);
                     }
                     finish();
                 }

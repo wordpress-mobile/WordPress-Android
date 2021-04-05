@@ -1173,16 +1173,19 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        showSignInForResult(activity, false, false);
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showSignInForResult(Activity activity, boolean isWpComOnly, boolean isJetpackOnly) {
+    public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        if (isWpComOnly) {
-            WPCOM_LOGIN_ONLY.putInto(intent);
-        } else if (isJetpackOnly) {
-            JETPACK_APP_LOGIN_MODE.putInto(intent);
-        }
+        WPCOM_LOGIN_ONLY.putInto(intent);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void showSignInForResultJetpackOnly(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        JETPACK_APP_LOGIN_MODE.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
