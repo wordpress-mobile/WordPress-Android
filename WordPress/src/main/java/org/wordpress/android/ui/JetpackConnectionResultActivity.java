@@ -139,7 +139,7 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
 
             ArrayList siteFilters = new ArrayList();
-            if (BuildConfig.IS_JETPACK) siteFilters.add(SiteFilter.JETPACK);
+            if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
 
             ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);

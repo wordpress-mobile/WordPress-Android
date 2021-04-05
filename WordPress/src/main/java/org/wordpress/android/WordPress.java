@@ -211,7 +211,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
                 ArrayList siteFilters = new ArrayList();
-                if (BuildConfig.IS_JETPACK) siteFilters.add(SiteFilter.JETPACK);
+                if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
 
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());

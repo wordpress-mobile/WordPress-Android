@@ -237,7 +237,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-        holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK) ? View.GONE : View.VISIBLE);
+        holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK_APP) ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
                 mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);

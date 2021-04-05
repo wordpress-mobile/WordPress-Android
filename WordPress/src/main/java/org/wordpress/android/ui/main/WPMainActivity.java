@@ -338,7 +338,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    if (BuildConfig.IS_JETPACK) {
+                    if (BuildConfig.IS_JETPACK_APP) {
                         ActivityLauncher.showSignInForResult(this, false, true);
                     } else {
                         ActivityLauncher.showSignInForResult(this);

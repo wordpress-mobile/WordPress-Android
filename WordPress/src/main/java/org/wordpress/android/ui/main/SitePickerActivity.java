@@ -242,7 +242,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK);
+            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
         }
 
         // no point showing search if there aren't multiple blogs
@@ -359,7 +359,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                     }
 
                     ArrayList siteFilters = new ArrayList();
-                    if (BuildConfig.IS_JETPACK) siteFilters.add(SiteFilter.JETPACK);
+                    if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
                 }
         );
