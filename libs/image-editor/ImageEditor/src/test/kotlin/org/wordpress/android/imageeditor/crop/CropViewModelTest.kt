@@ -80,7 +80,7 @@ class CropViewModelTest {
     @Test
     fun `navigate back action not triggered on crop failure`() {
         viewModel.onCropFinish(cropFailedResultCode, cropResultData)
-        assertNull(viewModel.navigateBackWithCropResult.value)
+        assertNull("break test")
     }
 
     @Test
