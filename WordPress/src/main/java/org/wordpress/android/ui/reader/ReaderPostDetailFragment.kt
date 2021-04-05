@@ -44,9 +44,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -76,6 +75,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -101,7 +101,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -179,6 +178,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var viewModelFactory: Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var readerTracker: ReaderTracker
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -452,12 +452,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
                     .showPreview(requireContext(), site, featuredImage)
 
-            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+                    context,
+                    this.tag,
+                    ReaderTracker.SOURCE_POST_DETAIL,
+                    readerTracker
+            )
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     this.siteId,
-                    this.feedId
+                    this.feedId,
+                    this.isFollowed,
+                    ReaderTracker.SOURCE_POST_DETAIL,
+                    readerTracker
             )
 
             is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
@@ -493,7 +501,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
+                replaceRelatedPostDetailWithHistory(
+                        postId = this.postId,
+                        blogId = this.blogId
+                )
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
 
@@ -578,7 +589,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun createMoreMenuPopup(actions: List<ReaderPostCardAction>, v: View) {
-        AnalyticsTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {
             it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
@@ -644,20 +655,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (viewModel.hasPost) {
-                    AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED)
+                    readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, viewModel.post)
                 } else if (viewModel.interceptedUri != null) {
-                    AnalyticsUtils.trackWithInterceptedUri(
-                            Stat.DEEP_LINKED_FALLBACK,
-                            viewModel.interceptedUri
-                    )
+                    readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
                     ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
                     requireActivity().finish()
                 }
                 return true
             }
             R.id.menu_share -> {
-                AnalyticsTracker.track(Stat.SHARED_ITEM)
+                readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, viewModel.post)
                 return true
             }
@@ -951,7 +959,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         val postContent = viewModel.post?.text
-        val isPrivatePost = viewModel?.post?.isPrivate == true
+        val isPrivatePost = viewModel.post?.isPrivate == true
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
             options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
@@ -1045,6 +1053,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
         if (!isAdded) {
@@ -1203,7 +1212,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (ReaderUtils.isBlogPreviewUrl(url)) {
             val siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url)
             if (siteId != 0L) {
-                ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
+                ReaderActivityLauncher.showReaderBlogPreview(
+                        activity,
+                        siteId,
+                        viewModel.post?.isFollowedByCurrentUser,
+                        ReaderTracker.SOURCE_POST_DETAIL,
+                        readerTracker
+                )
             }
             return true
         }

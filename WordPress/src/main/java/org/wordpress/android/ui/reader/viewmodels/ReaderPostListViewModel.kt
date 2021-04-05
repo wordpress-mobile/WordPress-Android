@@ -112,53 +112,129 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param post post to reblog
      */
-    fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onReblogButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch {
-            readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    REBLOG,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onBlockSiteButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onBlockSiteButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch {
-            readerPostCardActionsHandler.onAction(post, BLOCK_SITE, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    BLOCK_SITE,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+    fun onBookmarkButtonClicked(
+        blogId: Long,
+        postId: Long,
+        isBookmarkList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        BOOKMARK,
+                        isBookmarkList,
+                        source = source
+                )
+            }
         }
     }
 
-    fun onFollowSiteClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onFollowSiteClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    FOLLOW,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onSiteNotificationMenuClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+    fun onSiteNotificationMenuClicked(
+        blogId: Long,
+        postId: Long,
+        isBookmarkList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, SITE_NOTIFICATIONS, isBookmarkList)
+            ReaderPostTable.getBlogPost(blogId, postId, true)?.let {
+                readerPostCardActionsHandler.onAction(
+                        it,
+                        SITE_NOTIFICATIONS,
+                        isBookmarkList,
+                        source = source
+                )
+            }
         }
     }
 
-    fun onLikeButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onLikeButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, LIKE, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    LIKE,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onReportPostButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onReportPostButtonClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, REPORT_POST, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    REPORT_POST,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 
-    fun onToggleSeenStatusClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onToggleSeenStatusClicked(
+        post: ReaderPost,
+        bookmarksList: Boolean,
+        source: String
+    ) {
         launch(bgDispatcher) {
-            readerPostCardActionsHandler.onAction(post, TOGGLE_SEEN_STATUS, bookmarksList)
+            readerPostCardActionsHandler.onAction(
+                    post,
+                    TOGGLE_SEEN_STATUS,
+                    bookmarksList,
+                    source = source
+            )
         }
     }
 

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -44,7 +44,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -82,6 +81,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -263,7 +263,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            view.getContext(),
+                            comment.authorBlogId,
+                            mPost.isFollowedByCurrentUser,
+                            ReaderTracker.SOURCE_COMMENT,
+                            mReaderTracker
+                    );
                 }
             };
             commentHolder.mAuthorContainer.setOnClickListener(authorListener);
@@ -423,12 +429,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
-                ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
-                : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
-        AnalyticsUtils.trackCommentActionWithReaderPostDetails(
-                isAskingToLike ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
-                AnalyticsCommentActionSource.READER, mPost);
+        mReaderTracker.trackPost(isAskingToLike
+                        ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                        : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED,
+                mPost
+        );
+        mReaderTracker.trackPost(
+                isAskingToLike ? AnalyticsTracker.Stat.COMMENT_LIKED : AnalyticsTracker.Stat.COMMENT_UNLIKED,
+                mPost,
+                AnalyticsCommentActionSource.READER.toString()
+        );
     }
 
     public boolean refreshComment(long commentId) {

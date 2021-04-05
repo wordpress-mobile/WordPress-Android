@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-16 09:54:09+0000
+Translation-Revision-Date: 2021-03-31 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">Tautan Tag</string>
+    <string name="gutenberg_native_table_of_contents">Daftar Isi</string>
+    <string name="gutenberg_native_summary">ringkasan</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Rangkum pos Anda dengan daftar heading. Tambahkan anchor HTML ke blok Heading untuk menautkannya ke sini.</string>
+    <string name="gutenberg_native_search_settings">Pengaturan Pencarian</string>
+    <string name="gutenberg_native_post_link">Tautan Pos</string>
+    <string name="gutenberg_native_document_outline">outline dokumen</string>
+    <string name="gutenberg_native_category_link">Tautan Kategori</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">Tautan ke URL.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">Tautan ke tag. </string>
+    <string name="gutenberg_native_a_link_to_a_post">Tautan ke pos.</string>
+    <string name="gutenberg_native_a_link_to_a_page">Tautan ke halaman.</string>
+    <string name="gutenberg_native_a_link_to_a_category">Tautan ke kategori.</string>
+    <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
+    <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>
     <string name="reader_title_interests">Ikuti topik</string>
     <string name="stories_intro_main_subtitle">Cara baru untuk membuat dan memposkan konten menarik di situs Anda.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Tutup</string>
@@ -402,6 +418,7 @@ Language: id
     <string name="media_uploading_default">Mengunggah media</string>
     <string name="gutenberg_native_select_item">Pilih item</string>
     <string name="gutenberg_native_search_or_type_url">Cari atau ketik URL</string>
+    <string name="gutenberg_native_page_link">Tautan Halaman</string>
     <string name="gutenberg_native_add_this_telephone_link">Tambahkan link telepon ini</string>
     <string name="gutenberg_native_add_this_link">Tambahkan link ini</string>
     <string name="gutenberg_native_add_this_email_link">Tambahkan link email ini</string>
@@ -1787,6 +1804,7 @@ Language: id
     <string name="jetpack_disconnect_confirm">Putuskan koneksi</string>
     <string name="jetpack_disconnect_confirmation_message">Apakah Anda yakin ingin memutuskan koneksi Jetpack dari situs?</string>
     <string name="jetpack_disconnect_pref_title">\"Putuskan koneksi dari WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Alamat IP (atau beberapa alamat IP) dapat diberi tanda \"Selalu diizinkan\" agar tidak akan pernah diblokir Jetpack. IPv4 dan IPv6 diterima. Untuk menentukan rentang, masukkan nilai rendah dan nilai tinggi yang dipisahkan oleh tanda hubung. Misalnya: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Memerlukan autentikasi dua langkah</string>
     <string name="jetpack_match_wpcom_via_email_title">Cocokkan akun menggunakan email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Izinkan login WordPress.com</string>
@@ -2283,6 +2301,7 @@ Language: id
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>
     <string name="site_settings_paging_dialog_header">Komentar per halaman</string>
     <string name="site_settings_close_after_dialog_title">Tutup komentar</string>
+    <string name="site_settings_denylist_description">Ketika sebuah komentar memuat kata-kata ini di dalam konten, nama, URL, email, atau IP-nya, maka akan ditandai sebagai spam. Anda dapat memasukkan sebagian kata, sehingga \"press\" akan cocok dengan \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Masukkan kata atau kalimat</string>
     <string name="site_settings_list_editor_no_items_text">Tidak ada item</string>

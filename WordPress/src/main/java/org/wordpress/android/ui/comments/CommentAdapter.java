@@ -412,7 +412,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
             LoadCommentsTaskParameters parameters = params[0];
             int numOfCommentsToFetch;
-            if (parameters.mIsLoadingCache) {
+            // UNREPLIED filter has no paging, so we always request MAX_COMMENTS_IN_RESPONSE
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                numOfCommentsToFetch = CommentsListFragment.MAX_COMMENTS_IN_RESPONSE;
+            } else if (parameters.mIsLoadingCache) {
                 numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
             } else if (parameters.mIsReloadingContent) {
                 // round up to nearest page size (eg. 30, 60, 90, etc.)
@@ -424,7 +427,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             List<CommentModel> comments;
-            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
+            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL
+                || mStatusFilter == CommentStatus.UNREPLIED) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
                 comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch, CommentStatus.APPROVED,
                         CommentStatus.UNAPPROVED);
@@ -433,10 +437,57 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         mStatusFilter);
             }
 
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                comments = getUnrepliedComments(comments);
+            }
+
             mTmpComments = new CommentList();
             mTmpComments.addAll(comments);
 
             return !mComments.isSameList(mTmpComments);
+        }
+
+        private ArrayList<CommentModel> getUnrepliedComments(List<CommentModel> comments) {
+            CommentLeveler leveler = new CommentLeveler(comments);
+            ArrayList<CommentModel> leveledComments = leveler.createLevelList();
+
+            ArrayList<CommentModel> topLevelComments = new ArrayList<>();
+            for (CommentModel comment : leveledComments) {
+                // only check top level comments
+                if (comment.level == 0) {
+                    ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
+                    // comment is not mine and has no replies
+                    if (!isMyComment(comment) && childrenComments.isEmpty()) {
+                        topLevelComments.add(comment);
+                    } else if (!isMyComment(comment)) {  // comment is not mine and has replies
+                        boolean hasMyReplies = false;
+                        for (CommentModel childrenComment : childrenComments) { // check if any replies are mine
+                            if (isMyComment(childrenComment)) {
+                                hasMyReplies = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasMyReplies) {
+                            topLevelComments.add(comment);
+                        }
+                    }
+                }
+            }
+            return topLevelComments;
+        }
+
+        private boolean isMyComment(CommentModel comment) {
+            String myEmail;
+            // if site is self hosted, we want to use email associate with it, even if we are logged into wpcom
+            if (!mSite.isUsingWpComRestApi()) {
+                myEmail = mSite.getEmail();
+            } else {
+                AccountModel account = mAccountStore.getAccount();
+                myEmail = account.getEmail();
+            }
+
+            return comment.getAuthorEmail().equals(myEmail);
         }
 
         @Override

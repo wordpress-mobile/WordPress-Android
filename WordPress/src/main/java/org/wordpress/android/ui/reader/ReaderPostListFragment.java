@@ -42,7 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -108,6 +107,7 @@ import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetV
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
@@ -124,7 +124,6 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -136,14 +135,11 @@ import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
@@ -227,6 +223,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
+    @Inject ReaderTracker mReaderTracker;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -262,12 +259,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
     /*
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
-    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType) {
+    static ReaderPostListFragment newInstanceForTag(@NonNull ReaderTag tag, ReaderPostListType listType) {
         return newInstanceForTag(tag, listType, false);
     }
 
     static ReaderPostListFragment newInstanceForTag(
-            ReaderTag tag,
+            @NonNull ReaderTag tag,
             ReaderPostListType listType,
             boolean isTopLevel
     ) {
@@ -415,10 +412,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this, mViewModelFactory)
-                                       .get(ReaderPostListViewModel.class);
+                .get(ReaderPostListViewModel.class);
         if (mIsTopLevel) {
             mReaderViewModel = new ViewModelProvider(getParentFragment(), mViewModelFactory)
-                                                 .get(ReaderViewModel.class);
+                    .get(ReaderViewModel.class);
         }
 
         if (isFilterableScreen()) {
@@ -451,9 +448,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     } else if (navTarget instanceof ShowReportPost) {
                         ShowReportPost data = (ShowReportPost) navTarget;
                         ReaderActivityLauncher.openUrl(
-                            getContext(),
-                            ReaderUtils.getReportPostUrl(data.getUrl()),
-                            INTERNAL);
+                                getContext(),
+                                ReaderUtils.getReportPostUrl(data.getUrl()),
+                                INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
@@ -523,14 +520,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (getParentFragmentManager().findFragmentByTag(tag) == null) {
             getParentFragmentManager().beginTransaction()
-                                 .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                                 .commit();
+                                      .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                      .commit();
         }
     }
 
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
-                                                     .get(WPMainActivityViewModel.class);
+                .get(WPMainActivityViewModel.class);
         mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
                 SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
                 SubFilterViewModel.class
@@ -1046,7 +1043,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void onLoadData(boolean forced) {
                 if (forced) {
-                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH);
                 }
                 updatePosts(forced);
             }
@@ -1142,7 +1139,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
 
-
         if (isFilterableScreen()) {
             initSubFilterViews(rootView, inflater);
         }
@@ -1180,7 +1176,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
+                    mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 populateSearchSuggestions(null);
@@ -1307,9 +1303,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("query", trimQuery);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
+            mReaderTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, trimQuery);
         }
     }
 
@@ -1821,21 +1815,21 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
-            ReaderTag tag = null;
+        ReaderTag tag = null;
 
-            switch (button) {
-                case DISCOVER:
-                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                    break;
-                case FOLLOWED:
-                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
-                    break;
-            }
-            if (tag == null) {
-                tag = ReaderUtils.getDefaultTag();
-            }
+        switch (button) {
+            case DISCOVER:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+                break;
+            case FOLLOWED:
+                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
+                break;
+        }
+        if (tag == null) {
+            tag = ReaderUtils.getDefaultTag();
+        }
 
-            mViewModel.onEmptyStateButtonTapped(tag);
+        mViewModel.onEmptyStateButtonTapped(tag);
     }
 
     /*
@@ -1912,7 +1906,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 // request older posts
                                 updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
 
@@ -1925,7 +1919,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             }
                             if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
 
@@ -1934,7 +1928,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
                             if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                                 updatePostsInCurrentSearch(offset);
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                             }
                             break;
                     }
@@ -1979,7 +1973,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 public void onSiteClicked(@NonNull ReaderSiteModel site) {
                     mLastTappedSiteSearchResult = site;
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            getActivity(), site.getSiteId(), site.getFeedId());
+                            getActivity(),
+                            site.getSiteId(),
+                            site.getFeedId(),
+                            site.isFollowing(),
+                            mPostAdapter.getSource(),
+                            mReaderTracker
+                    );
                 }
 
                 @Override
@@ -2424,13 +2424,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST);
+        AppRatingDialog.INSTANCE.incrementInteractions(
+                AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+        );
 
         if (post.isBookmarked) {
             if (isBookmarksList()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST,
+                        post.blogId,
+                        post.feedId,
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
+                );
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST,
+                        post.blogId,
+                        post.feedId,
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
+                );
             }
         }
 
@@ -2483,7 +2497,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
-                AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
+                mReaderTracker.trackPost(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
@@ -2492,7 +2506,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     /*
      * called when user selects a tag from the tag toolbar
      */
-    private void onTagChanged(ReaderTag tag) {
+    private void onTagChanged(@NonNull ReaderTag tag) {
         if (!isAdded() || isCurrentTag(tag)) {
             return;
         }
@@ -2506,71 +2520,110 @@ public class ReaderPostListFragment extends ViewPagerFragment
         setCurrentTag(tag);
     }
 
-    private void trackTagLoaded(ReaderTag tag) {
+    private void trackTagLoaded(@Nullable ReaderTag tag) {
         if (tag == null) {
             return;
         }
 
         AnalyticsTracker.Stat stat;
         if (tag.isTagTopic()) {
-            stat = Stat.READER_TAG_LOADED;
+            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
-            stat = Stat.READER_LIST_LOADED;
+            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         } else {
             return;
         }
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
-
-        AnalyticsTracker.track(stat, properties);
+        mReaderTracker.trackTag(stat, tag.getTagSlug());
     }
 
     @Override
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                mViewModel.onFollowSiteClicked(post, isBookmarksList());
+                mViewModel.onFollowSiteClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case SITE_NOTIFICATIONS:
-                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
+                mViewModel.onSiteNotificationMenuClicked(
+                        post.blogId,
+                        post.postId,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case SHARE:
-                AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+                mReaderTracker.trackBlog(
+                        AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                        post.blogId,
+                        post.feedId,
+                        post.isFollowedByCurrentUser,
+                        mPostAdapter.getSource()
+                );
                 sharePost(post);
                 break;
             case VISIT_SITE:
-                AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                mReaderTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
             case LIKE:
-                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                mViewModel.onLikeButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case REBLOG:
-                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                mViewModel.onReblogButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case REPORT_POST:
-                mViewModel.onReportPostButtonClicked(post, isBookmarksList());
+                mViewModel.onReportPostButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case BLOCK_SITE:
-                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                mViewModel.onBlockSiteButtonClicked(
+                        post,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case BOOKMARK:
-                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                mViewModel.onBookmarkButtonClicked(
+                        post.blogId,
+                        post.postId,
+                        isBookmarksList(),
+                        mPostAdapter.getSource()
+                );
                 break;
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
                 break;
             case TOGGLE_SEEN_STATUS:
                 if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
-                    mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                    mViewModel.onToggleSeenStatusClicked(
+                            post,
+                            isBookmarksList(),
+                            mPostAdapter.getSource()
+                    );
                 }
+                break;
+            case SPACER_NO_ACTION:
                 break;
         }
     }
 
     @Override
-    public void onFollowTapped(View view, String blogName, final long blogId) {
+    public void onFollowTapped(View view, String blogName, final long blogId, final long feedId) {
         mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
 
         String blog = TextUtils.isEmpty(blogName)
@@ -2583,8 +2636,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                       .setAction(getString(R.string.reader_followed_blog_notifications_action),
                               new View.OnClickListener() {
                                   @Override public void onClick(View view) {
-                                      AnalyticsUtils
-                                              .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                      mReaderTracker.trackBlog(
+                                              AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                              blogId,
+                                              feedId
+                                      );
                                       AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
                                               String.valueOf(blogId), SubscriptionAction.NEW);
                                       mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));

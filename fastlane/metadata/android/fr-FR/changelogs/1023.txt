@@ -1,0 +1,2 @@
+17.0 :
+Nous sommes heureux d’annoncer trois mises à jour de WPAndroid. Nous avons activé la fonctionnalité de pincement/zoom/panoramique dans la bibliothèque Stories, pour un affichage plus complet que jamais. Nous avons transformé en onglets le menu déroulant de filtrage des commentaires. Et nous avons supprimé le bouton Annuler des options de réglage de l’éditeur de blocs. 
