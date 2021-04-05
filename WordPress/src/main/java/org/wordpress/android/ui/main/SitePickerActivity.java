@@ -33,10 +33,8 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
-import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
@@ -357,10 +355,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
-
-                    ArrayList siteFilters = new ArrayList();
-                    if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 }
         );
     }

@@ -69,8 +69,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.ListStore.RemoveExpiredListsPayload;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
@@ -125,7 +123,6 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -210,10 +207,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
-                ArrayList siteFilters = new ArrayList();
-                if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
-
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;

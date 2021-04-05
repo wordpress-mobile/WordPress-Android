@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -17,15 +16,12 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -137,11 +133,7 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
     private void finishAndGoBackToSource() {
         if (mSource == JetpackConnectionSource.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-
-            ArrayList siteFilters = new ArrayList();
-            if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload(siteFilters)));
-
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
             ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);
         }
         finish();
