@@ -51,10 +51,6 @@ public class SiteUtils {
     public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackAppLogin) {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
         if (isJetpackAppLogin) siteFilters.add(SiteFilter.JETPACK);
-
-        FetchSitesPayload payload = new FetchSitesPayload();
-        payload.filters = siteFilters;
-
-        return payload;
+        return new FetchSitesPayload(siteFilters);
     }
 }
