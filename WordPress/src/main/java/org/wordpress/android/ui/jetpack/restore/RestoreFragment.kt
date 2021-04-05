@@ -10,10 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.JetpackBackupRestoreFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
@@ -42,11 +42,12 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initDagger()
-        initBackPressHandler()
-        initAdapter()
-        initViewModel(savedInstanceState)
+        with(JetpackBackupRestoreFragmentBinding.bind(view)) {
+            initDagger()
+            initBackPressHandler()
+            initAdapter()
+            initViewModel(savedInstanceState)
+        }
     }
 
     private fun initDagger() {
@@ -69,16 +70,16 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         viewModel.onBackPressed()
     }
 
-    private fun initAdapter() {
-        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
-        recycler_view.itemAnimator = null
-        recycler_view.addItemDecoration(
+    private fun JetpackBackupRestoreFragmentBinding.initAdapter() {
+        recyclerView.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
+        recyclerView.itemAnimator = null
+        recyclerView.addItemDecoration(
                 HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
         )
     }
 
-    private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(RestoreViewModel::class.java)
+    private fun JetpackBackupRestoreFragmentBinding.initViewModel(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this@RestoreFragment, viewModelFactory).get(RestoreViewModel::class.java)
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
@@ -99,7 +100,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         viewModel.start(site, activityId, savedInstanceState)
     }
 
-    private fun initObservers() {
+    private fun JetpackBackupRestoreFragmentBinding.initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, {
             updateToolbar(it.toolbarState)
             showView(it)
@@ -116,23 +117,23 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         })
 
         viewModel.wizardFinishedObservable.observeEvent(viewLifecycleOwner, { state ->
-                val intent = Intent()
-                val (restoreCreated, ids) = when (state) {
-                    is RestoreCanceled -> Pair(false, null)
-                    is RestoreInProgress -> Pair(true, Pair(state.rewindId, state.restoreId))
-                    is RestoreCompleted -> Pair(true, null)
-                }
-                intent.putExtra(KEY_RESTORE_REWIND_ID, ids?.first)
-                intent.putExtra(KEY_RESTORE_RESTORE_ID, ids?.second)
-                requireActivity().let { activity ->
-                    activity.setResult(if (restoreCreated) RESULT_OK else RESULT_CANCELED, intent)
-                    activity.finish()
-                }
+            val intent = Intent()
+            val (restoreCreated, ids) = when (state) {
+                is RestoreCanceled -> Pair(false, null)
+                is RestoreInProgress -> Pair(true, Pair(state.rewindId, state.restoreId))
+                is RestoreCompleted -> Pair(true, null)
+            }
+            intent.putExtra(KEY_RESTORE_REWIND_ID, ids?.first)
+            intent.putExtra(KEY_RESTORE_RESTORE_ID, ids?.second)
+            requireActivity().let { activity ->
+                activity.setResult(if (restoreCreated) RESULT_OK else RESULT_CANCELED, intent)
+                activity.finish()
+            }
         })
     }
 
-    private fun showView(state: RestoreUiState) {
-        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(state.items)
+    private fun JetpackBackupRestoreFragmentBinding.showView(state: RestoreUiState) {
+        ((recyclerView.adapter) as JetpackBackupRestoreAdapter).update(state.items)
     }
 
     private fun updateToolbar(toolbarState: ToolbarState) {
