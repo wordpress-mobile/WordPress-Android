@@ -174,6 +174,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mUnifiedLoginTracker.setSource(Source.SHARE);
                     checkSmartLockPasswordAndStartLogin();
                     break;
+                case WOO_LOGIN_MODE:
+                    break;
             }
         } else {
             mSmartLockHelperState = SmartLockHelperState.valueOf(
@@ -315,6 +317,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
+                break;
+            case WOO_LOGIN_MODE:
                 break;
         }
     }
