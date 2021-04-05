@@ -51,8 +51,8 @@ public class LoginTests extends BaseTest {
     public void loginWithSiteAddress() {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
-                       .enterEmailAddress()
-                       .enterPassword()
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
+                       .enterPassword(E2E_WP_COM_USER_PASSWORD)
                        .confirmLogin();
     }
 

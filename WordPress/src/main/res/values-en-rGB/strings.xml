@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-08 23:05:36+0000
+Translation-Revision-Date: 2021-03-23 23:12:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">Tag Link</string>
+    <string name="gutenberg_native_table_of_contents">Table of Contents</string>
+    <string name="gutenberg_native_summary">summary</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Summarise your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
+    <string name="gutenberg_native_search_settings">Search Settings</string>
+    <string name="gutenberg_native_post_link">Post Link</string>
+    <string name="gutenberg_native_document_outline">document outline</string>
+    <string name="gutenberg_native_category_link">Category Link</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">A link to a URL.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">A link to a tag.</string>
+    <string name="gutenberg_native_a_link_to_a_post">A link to a post.</string>
+    <string name="gutenberg_native_a_link_to_a_page">A link to a page.</string>
+    <string name="gutenberg_native_a_link_to_a_category">A link to a category.</string>
+    <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
+    <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="gutenberg_native_add_button_text">Add button text</string>
     <string name="reader_title_interests">Follow topics</string>
     <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
@@ -412,6 +428,7 @@ Language: en_GB
     <string name="media_uploading_default">Uploading media</string>
     <string name="gutenberg_native_select_item">Select item</string>
     <string name="gutenberg_native_search_or_type_url">Search or type URL</string>
+    <string name="gutenberg_native_page_link">Page Link</string>
     <string name="gutenberg_native_add_this_telephone_link">Add this telephone link</string>
     <string name="gutenberg_native_add_this_link">Add this link</string>
     <string name="gutenberg_native_add_this_email_link">Add this email link</string>
@@ -875,14 +892,14 @@ Language: en_GB
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">The list has loaded with %1$d items.</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
-    <string name="master_switch_default_title_off">Off</string>
-    <string name="master_switch_default_title_on">On</string>
-    <string name="notifications_tab_dialog_master_off_message">Turning notifications for this site off will disable notifications display on notifications tab for this site. You can fine tune which kind of notification you see after turning notifications for this site on.</string>
-    <string name="notifications_tab_dialog_master_off_title">To see notifications on notifications tab for this site, turn notifications for this site on.</string>
-    <string name="notifications_tab_dialog_master_hint_off">Enable notifications display on notifications tab for this site</string>
-    <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
-    <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
-    <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
+    <string name="main_switch_default_title_off">Off</string>
+    <string name="main_switch_default_title_on">On</string>
+    <string name="notifications_tab_dialog_main_off_message">Turning off Notifications for this site will disable the notifications display on the notifications tab for this site. You can fine-tune which kind of notification you see after turning on Notifications for this site.</string>
+    <string name="notifications_tab_dialog_main_off_title">To see notifications on the notifications tab for this site, turn on Notifications for this site.</string>
+    <string name="notifications_tab_dialog_main_hint_off">Enable the notifications display on the notifications tab for this site</string>
+    <string name="notifications_tab_dialog_main_hint_on">Disable the notifications display on the notifications tab for this site</string>
+    <string name="notifications_tab_dialog_main_status_off">Notifications for this site</string>
+    <string name="notifications_tab_dialog_main_status_on">Notifications for this site</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -1204,8 +1221,6 @@ Language: en_GB
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="site_creation_segments_title">Tell us what kind of site you’d like to make</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_screen_title_general">Create Site</string>
@@ -1455,8 +1470,6 @@ Language: en_GB
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_bookmark_snack_btn">View All</string>
-    <string name="reader_btn_bookmarked">Saved</string>
-    <string name="reader_btn_bookmark">Save</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_save_for_later_title">Saved posts</string>
@@ -1809,12 +1822,11 @@ Language: en_GB
     <string name="jetpack_disconnect_confirm">Disconnect</string>
     <string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
     <string name="jetpack_disconnect_pref_title">\"Disconnect from WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">You may mark an IP address (or series of addresses) as \"Always allowed\", preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Require two-step authentication</string>
     <string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
-    <string name="jetpack_brute_force_whitelist_title">Whitelisted IP addresses</string>
     <string name="jetpack_prevent_brute_force_title">Block malicious login attempts</string>
     <string name="jetpack_prevent_brute_force_category_title">Brute force attack protection</string>
     <string name="jetpack_send_wp_notifications_title">Send push notifications</string>
@@ -1855,12 +1867,12 @@ Language: en_GB
     <string name="notification_settings_category_other">Other</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
-    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
-    <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
-    <string name="notification_settings_master_hint_off">Enable notifications</string>
-    <string name="notification_settings_master_hint_on">Disable notifications</string>
-    <string name="notification_settings_master_status_off">Off</string>
-    <string name="notification_settings_master_status_on">On</string>
+    <string name="notification_settings_main_off_message">Turning off Notification Settings will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning on Notification Settings.</string>
+    <string name="notification_settings_main_off_title">To receive notifications on this device, turn on Notification Settings.</string>
+    <string name="notification_settings_main_hint_off">Enable notifications</string>
+    <string name="notification_settings_main_hint_on">Disable notifications</string>
+    <string name="notification_settings_main_status_off">Off</string>
+    <string name="notification_settings_main_status_on">On</string>
     <string name="max_video_resolution">Maximum Video Size</string>
     <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -2313,7 +2325,7 @@ Language: en_GB
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
     <string name="site_settings_paging_dialog_header">Comments per page</string>
     <string name="site_settings_close_after_dialog_title">Close commenting</string>
-    <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_denylist_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_list_editor_no_items_text">No items</string>
@@ -2328,10 +2340,10 @@ Language: en_GB
     <string name="site_settings_rp_show_header_title">Show Header</string>
     <string name="site_settings_rp_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
     <string name="site_settings_rp_switch_title">Show Related Posts</string>
-    <string name="site_settings_blacklist_hint">Comments that match a filter are marked as spam</string>
+    <string name="site_settings_denylist_hint">Comments that match a filter are marked as spam</string>
     <string name="site_settings_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
     <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
-    <string name="site_settings_whitelist_hint">Comment author must have a previously approved comment</string>
+    <string name="site_settings_allowlist_hint">Comment author must have a previously approved comment</string>
     <string name="site_settings_user_account_required_hint">Users must be registered and logged in to comment</string>
     <string name="site_settings_identity_required_hint">Comment author must fill out name and e-mail</string>
     <string name="site_settings_paging_hint">Display comments in chunks of a specified size</string>
@@ -2354,17 +2366,16 @@ Language: en_GB
     <string name="site_settings_address_hint">Changing your address is not currently supported</string>
     <string name="site_settings_tagline_hint">A short description or catchy phrase to describe your blog</string>
     <string name="site_settings_title_hint">In a few words, explain what this site is about</string>
-    <string name="site_settings_whitelist_known_summary">Comments from known users</string>
-    <string name="site_settings_whitelist_all_summary">Comments from all users</string>
+    <string name="site_settings_allowlist_known_summary">Comments from known users</string>
+    <string name="site_settings_allowlist_all_summary">Comments from all users</string>
     <string name="site_settings_threading_summary">%d levels</string>
     <string name="site_settings_privacy_private_summary">Private</string>
     <string name="site_settings_privacy_hidden_summary">Hidden</string>
     <string name="site_settings_privacy_public_summary">Public</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
-    <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_multiple_links_title">Links in comments</string>
-    <string name="site_settings_whitelist_title">Automatically approve</string>
+    <string name="site_settings_allowlist_title">Automatically approve</string>
     <string name="site_settings_paging_title">Paging</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_sort_by_title">Sort by</string>

@@ -28,7 +28,7 @@ public class LoginFlow {
     public LoginFlow chooseContinueWithWpCom() {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
-        clickOn(R.id.first_button);
+        clickOn(R.id.continue_with_wpcom_button);
         return this;
     }
 
@@ -97,7 +97,7 @@ public class LoginFlow {
     public LoginFlow chooseEnterYourSiteAddress() {
         // Login Prologue – We want to continue with a site address not a WordPress.com account
         // See LoginPrologueFragment
-        clickOn(R.id.second_button);
+        clickOn(R.id.enter_your_site_address_button);
         return this;
     }
 

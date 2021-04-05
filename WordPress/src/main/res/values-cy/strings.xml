@@ -232,7 +232,6 @@ Language: cy_GB
     <string name="site_settings_paging_dialog_description">Torri\'r edefyn sylw i dudalennau lluosog.</string>
     <string name="site_settings_paging_dialog_header">Sylwadau fesul tudalen</string>
     <string name="site_settings_close_after_dialog_title">Cau sylwadau</string>
-    <string name="site_settings_blacklist_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost, neu IP, bydd yn cael ei farcio fel sbam. Gallwch gynnig geiriau rhannol, felly bydd \"press\" yn canfod \"WordPress\"</string>
     <string name="site_settings_hold_for_moderation_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost neu IP, bydd yn cael ei gadw yn y rhes cymedroli. Gallwch gynnig geiriau rhannol, felly bydd \"press\" yn canfod \"WordPress\"</string>
     <string name="site_settings_list_editor_input_hint">Teipiwch air neu ymadrodd</string>
     <string name="site_settings_list_editor_no_items_text">Dim eitemau</string>
@@ -247,10 +246,8 @@ Language: cy_GB
     <string name="site_settings_rp_show_header_title">Dangos Pennyn</string>
     <string name="site_settings_rp_switch_summary">Mae Cofnodion Perthynol yn dangos cynnwys perthnasol o\'ch gwefan islaw eich cofnodion.</string>
     <string name="site_settings_rp_switch_title">Dangos Cofnodion sy\'n Perthyn</string>
-    <string name="site_settings_blacklist_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael eu marcio fel sbam</string>
     <string name="site_settings_moderation_hold_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael gosod yn y rhes cymedroli</string>
     <string name="site_settings_multiple_links_hint">Anwybyddu terfyn dolen gan ddefnyddwyr hysbys</string>
-    <string name="site_settings_whitelist_hint">Rhaid i awdur y sylw fod wedi cyfrannu sylw cymeradwy yn y gorffennol</string>
     <string name="site_settings_user_account_required_hint">Rhaid i ddefnyddwyr fod wedi\'u cofrestru ac wedi mewngofnodi cyn cynnig sylw</string>
     <string name="site_settings_identity_required_hint">Rhaid i awdur sylw rhoi enw ac e-bost</string>
     <string name="site_settings_paging_hint">Dangos sylwadau mewn darnau o faint penodol</string>
@@ -273,17 +270,13 @@ Language: cy_GB
     <string name="site_settings_address_hint">Nid yw newid eich cyfeiriad yn cael ei gynnal ar hyn o bryd</string>
     <string name="site_settings_tagline_hint">Disgrifiad byr neu ymadrodd bachog i ddisgrifio eich blog</string>
     <string name="site_settings_title_hint">Mewn ychydig eiriau, yn esboniwch beth yw natur y wefan hon</string>
-    <string name="site_settings_whitelist_known_summary">Sylwadau gan ddefnyddwyr hysbys</string>
-    <string name="site_settings_whitelist_all_summary">Sylwadau gan pob defnyddiwr</string>
     <string name="site_settings_threading_summary">%d lefel</string>
     <string name="site_settings_privacy_private_summary">Preifat</string>
     <string name="site_settings_privacy_hidden_summary">Cudd</string>
     <string name="site_settings_delete_site_title">Dileu Gwefan</string>
     <string name="site_settings_privacy_public_summary">Cyhoeddus</string>
-    <string name="site_settings_blacklist_title">Rhestr ddu</string>
     <string name="site_settings_moderation_hold_title">Dal ar gyfer Cymedroli</string>
     <string name="site_settings_multiple_links_title">Dolenni mewn sylwadau</string>
-    <string name="site_settings_whitelist_title">Gymeradwyo\'n awtomatig</string>
     <string name="site_settings_threading_title">Edafu</string>
     <string name="site_settings_paging_title">Tudalennu</string>
     <string name="site_settings_sort_by_title">Trefnu yn ôl</string>

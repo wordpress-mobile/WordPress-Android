@@ -34,7 +34,6 @@ Language: th
     <string name="site_settings_rp_preview1_site">ใน \"มือถือ\"</string>
     <string name="site_settings_rp_show_images_title">แสดงรูปภาพ</string>
     <string name="site_settings_rp_show_header_title">แสดงส่วนหัว</string>
-    <string name="site_settings_whitelist_hint">ผู้เขียนความเห็นต้องมีความเห็นก่อนหน้าที่ได้รับอนุมัติแล้ว</string>
     <string name="site_settings_user_account_required_hint">ผู้ใช้ต้องลงทะเบียนและเข้าสู่ระบบเพื่อจะเขียนความเห็น</string>
     <string name="site_settings_identity_required_hint">ผู้เขียนความเห็นต้องใส่ชื่อและอีเมล</string>
     <string name="site_settings_sort_by_hint">กำหนดลำดับความเห็นที่จะแสดง</string>
@@ -50,17 +49,13 @@ Language: th
     <string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
     <string name="site_settings_username_hint">บัญชีผู้ใช้ปัจจุบัน</string>
     <string name="site_settings_privacy_hint">กำหนดว่าใครสามารถเห็นเว็บของคุณได้</string>
-    <string name="site_settings_whitelist_known_summary">ความเห็นจากผู้ใช้ที่รู้จัก</string>
-    <string name="site_settings_whitelist_all_summary">ความเห็นจากผู้ใช้ทั้งหมด</string>
     <string name="site_settings_threading_summary">%d ระดับ</string>
     <string name="site_settings_privacy_private_summary">ส่วนตัว</string>
     <string name="site_settings_privacy_hidden_summary">ซ่อน</string>
     <string name="site_settings_delete_site_title">ลบเว็บ</string>
     <string name="site_settings_privacy_public_summary">สาธารณะ</string>
-    <string name="site_settings_blacklist_title">บัญชีดำ</string>
     <string name="site_settings_moderation_hold_title">กดค้างเพื่อจัดการ</string>
     <string name="site_settings_multiple_links_title">ลิงก์ในความเห็น</string>
-    <string name="site_settings_whitelist_title">อนุมัติอัตโนมัติ</string>
     <string name="site_settings_sort_by_title">เรียงตาม</string>
     <string name="site_settings_account_required_title">ผู้ใช้ต้องเข้าสู่ระบบ</string>
     <string name="site_settings_identity_required_title">ต้องประกอบด้วยชื่อและอีเมล</string>

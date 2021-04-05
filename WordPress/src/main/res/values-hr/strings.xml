@@ -186,7 +186,6 @@ Language: hr
     <string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>
     <string name="site_settings_paging_dialog_header">Komentara po stranici</string>
     <string name="site_settings_close_after_dialog_title">Zatvori komentiranje</string>
-    <string name="site_settings_blacklist_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
     <string name="site_settings_hold_for_moderation_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
     <string name="site_settings_list_editor_input_hint">Unesite riječi ili frazu</string>
     <string name="site_settings_list_editor_no_items_text">Nema stavki</string>
@@ -201,10 +200,8 @@ Language: hr
     <string name="site_settings_rp_show_header_title">Prikaži zaglavlje</string>
     <string name="site_settings_rp_switch_summary">Srodne objave prikazuju srodni sadržaj sa vaše stranice ispod vaših objava.</string>
     <string name="site_settings_rp_switch_title">Prikaži srodne objave</string>
-    <string name="site_settings_blacklist_hint">Komentari koji odgovaraju filteru označeni su kao spam</string>
     <string name="site_settings_moderation_hold_hint">Komentari koji odgovaraju filteru stavljeni su na čekanje</string>
     <string name="site_settings_multiple_links_hint">Ignoriranje limita poveznica od poznatih korisnika</string>
-    <string name="site_settings_whitelist_hint">Autor komentara mora imati prethodno odobreni komentar</string>
     <string name="site_settings_user_account_required_hint">Korisnici moraju biti registrirani i prijavljeni kako bi objavili komentare</string>
     <string name="site_settings_identity_required_hint">Autor komentara mora popuniti ime i adresu e-pošte</string>
     <string name="site_settings_paging_hint">Prikaži komentare u grupama određene veličine</string>
@@ -227,17 +224,13 @@ Language: hr
     <string name="site_settings_address_hint">Promjena vaše adrese trenutno nije podržana</string>
     <string name="site_settings_tagline_hint">Kratki opis ili pamtljiva fraza koja opisuje vaš blog</string>
     <string name="site_settings_title_hint">U nekoliko riječi, objasnite o čemu govori ova web-stranice.</string>
-    <string name="site_settings_whitelist_known_summary">Komentari od nepoznatih korisnika</string>
-    <string name="site_settings_whitelist_all_summary">Komentari svih korisnika</string>
     <string name="site_settings_threading_summary">%d nivoa</string>
     <string name="site_settings_privacy_private_summary">Privatno</string>
     <string name="site_settings_privacy_hidden_summary">Skriveno</string>
     <string name="site_settings_privacy_public_summary">Javno</string>
     <string name="site_settings_delete_site_title">Obriši web-stranicu</string>
-    <string name="site_settings_blacklist_title">Crna lista</string>
     <string name="site_settings_moderation_hold_title">Zadržati za moderaciju</string>
     <string name="site_settings_multiple_links_title">Poveznice u komentarima</string>
-    <string name="site_settings_whitelist_title">Automatsko odobravanje</string>
     <string name="site_settings_threading_title">Grananje</string>
     <string name="site_settings_paging_title">Paging</string>
     <string name="site_settings_sort_by_title">Sortiraj po</string>

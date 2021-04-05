@@ -18,7 +18,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -95,7 +94,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 
-    private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
     private static final String KEY_SIGNUP_FROM_LOGIN_ENABLED = "KEY_SIGNUP_FROM_LOGIN_ENABLED";
     private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
@@ -156,11 +154,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
                     mIsSignupFromLoginEnabled = true;
-                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-                        checkSmartLockPasswordAndStartLogin();
-                    } else {
-                        loginFromPrologue();
-                    }
+                    checkSmartLockPasswordAndStartLogin();
                     break;
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
@@ -205,11 +199,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loginFromPrologue() {
         showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            mIsSmartLockTriggeredFromPrologue = true;
-            mIsSiteLoginAvailableFromPrologue = true;
-            initSmartLockIfNotFinished(true);
-        }
+        mIsSmartLockTriggeredFromPrologue = true;
+        mIsSiteLoginAvailableFromPrologue = true;
+        initSmartLockIfNotFinished(true);
     }
 
     @Override
@@ -410,8 +402,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
-                    true, BuildConfig.UNIFIED_LOGIN_AVAILABLE), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, true, true), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
@@ -419,8 +410,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
             slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
-                    !mIsSiteLoginAvailableFromPrologue, BuildConfig.UNIFIED_LOGIN_AVAILABLE), true,
-                    LoginEmailFragment.TAG);
+                    !mIsSiteLoginAvailableFromPrologue, true), true, LoginEmailFragment.TAG);
         }
     }
 

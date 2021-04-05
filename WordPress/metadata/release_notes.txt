@@ -1,7 +1,1 @@
-What’s new?
-
-The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.
-
-Our Quick Start tool has been redesigned! This guide appears when you create a new site.
-
-We’ve also made improvements to the site design experience.
+We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.

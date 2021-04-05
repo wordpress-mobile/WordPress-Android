@@ -8,10 +8,11 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.add_category.*
-import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.AddCategoryBinding
+import org.wordpress.android.databinding.PrepublishingAddCategoryFragmentBinding
+import org.wordpress.android.databinding.PrepublishingToolbarBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -59,29 +60,31 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBackButton()
-        initSubmitButton()
-        initAdapter()
-        initSpinner()
-        initInputText()
-        initViewModel()
+        with(PrepublishingAddCategoryFragmentBinding.bind(view)) {
+            prepublishingToolbar.initBackButton()
+            addCategory.initSubmitButton()
+            addCategory.initAdapter()
+            addCategory.initSpinner()
+            addCategory.initInputText()
+            initViewModel()
+        }
     }
 
-    private fun initBackButton() {
-        back_button.setOnClickListener {
+    private fun PrepublishingToolbarBinding.initBackButton() {
+        backButton.setOnClickListener {
             viewModel.onBackButtonClick()
         }
     }
 
-    private fun initSubmitButton() {
-        submit_button.setOnClickListener {
+    private fun AddCategoryBinding.initSubmitButton() {
+        submitButton.setOnClickListener {
             viewModel.onSubmitButtonClick()
         }
     }
 
-    private fun initInputText() {
-        category_name.requestFocus()
-        category_name.addTextChangedListener(object : TextWatcher {
+    private fun AddCategoryBinding.initInputText() {
+        categoryName.requestFocus()
+        categoryName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
 
@@ -93,26 +96,26 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             }
         })
 
-        ActivityUtils.showKeyboard(category_name)
+        ActivityUtils.showKeyboard(categoryName)
     }
 
-    private fun initAdapter() {
+    private fun AddCategoryBinding.initAdapter() {
         val categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
                 R.layout.categories_row_parent,
                 arrayListOf<CategoryNode>()
         )
-        parent_category.adapter = categoryAdapter
+        parentCategory.adapter = categoryAdapter
     }
 
-    private fun initSpinner() {
-        parent_category.setOnTouchListener { v, _ ->
+    private fun AddCategoryBinding.initSpinner() {
+        parentCategory.setOnTouchListener { v, _ ->
             spinnerTouched = true
             v.performClick()
             false
         }
 
-        parent_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        parentCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -130,8 +133,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         }
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory)
+    private fun PrepublishingAddCategoryFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@PrepublishingAddCategoryFragment, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
@@ -143,9 +146,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         viewModel.start(siteModel, !needsRequestLayout)
     }
 
-    private fun startObserving() {
+    private fun PrepublishingAddCategoryFragmentBinding.startObserving() {
         viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
-            ActivityUtils.hideKeyboardForced(category_name)
+            ActivityUtils.hideKeyboardForced(addCategory.categoryName)
         })
 
         viewModel.navigateBack.observe(viewLifecycleOwner, { bundle ->
@@ -158,7 +161,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         })
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
-            toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
+            prepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
@@ -166,11 +169,11 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         })
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-            loadCategories(uiState.categories)
-            if (uiState.selectedParentCategoryPosition != parent_category.selectedItemPosition) {
-                parent_category.setSelection(uiState.selectedParentCategoryPosition)
+            addCategory.loadCategories(uiState.categories)
+            if (uiState.selectedParentCategoryPosition != addCategory.parentCategory.selectedItemPosition) {
+                addCategory.parentCategory.setSelection(uiState.selectedParentCategoryPosition)
             }
-            updateSubmitButton(uiState.submitButtonUiState)
+            addCategory.updateSubmitButton(uiState.submitButtonUiState)
         })
 
         parentViewModel.triggerOnDeviceBackPressed.observeEvent(viewLifecycleOwner, {
@@ -178,17 +181,17 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         })
     }
 
-    private fun updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
-        with(submit_button) {
+    private fun AddCategoryBinding.updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
+        with(submitButton) {
             isEnabled = submitButtonUiState.enabled
         }
         with(uiHelpers) {
-            updateVisibility(submit_button, submitButtonUiState.visibility)
+            updateVisibility(submitButton, submitButtonUiState.visibility)
         }
     }
 
-    private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
-        (parent_category.adapter as? ParentCategorySpinnerAdapter)?.replaceItems(categoryLevels)
+    private fun AddCategoryBinding.loadCategories(categoryLevels: ArrayList<CategoryNode>) {
+        (parentCategory.adapter as? ParentCategorySpinnerAdapter)?.replaceItems(categoryLevels)
     }
 
     private fun SnackbarMessageHolder.showToast() {

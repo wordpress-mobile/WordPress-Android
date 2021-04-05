@@ -32,10 +32,6 @@ Language: hi_IN
     <string name="notification_settings_category_other">अन्य </string>
     <string name="notification_settings_item_your_sites_all_your_sites">मेरे सभी साईट </string>
     <string name="notification_settings_category_your_sites">आपके साइट </string>
-    <string name="notification_settings_master_hint_off">सूचना सक्रिय करें </string>
-    <string name="notification_settings_master_hint_on">सूचना असक्रिये करें </string>
-    <string name="notification_settings_master_status_off">बंद करें </string>
-    <string name="notification_settings_master_status_on">ऑन </string>
     <string name="max_video_resolution">अधिकतम वीडियो साइज</string>
     <string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
     <string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>

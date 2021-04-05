@@ -214,6 +214,9 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     private void showCommentList(CommentList commentList) {
+        if (isFinishing()) {
+            return;
+        }
         final int previousItem = mViewPager.getCurrentItem();
 
         // Only notify adapter when loading new page

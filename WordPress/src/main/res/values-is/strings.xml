@@ -265,7 +265,6 @@ Language: is
     <string name="site_settings_paging_dialog_description">Skipta umræðuþráðum niður á síður.</string>
     <string name="site_settings_paging_dialog_header">Athugasemdir á síðu</string>
     <string name="site_settings_close_after_dialog_title">Loka fyrir athuagsemdir</string>
-    <string name="site_settings_blacklist_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún merkt sem amapóstur. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún flutt í biðröð. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Sláðu inn orð eða setningu</string>
     <string name="site_settings_list_editor_no_items_text">Engin atriði</string>
@@ -280,10 +279,8 @@ Language: is
     <string name="site_settings_rp_show_header_title">Sýna haus</string>
     <string name="site_settings_rp_switch_summary">Tengdar færslur birta viðeigandi efni af vefnum þínum fyrir neðan færsluna þína.</string>
     <string name="site_settings_rp_switch_title">Sýna tengdar færslur</string>
-    <string name="site_settings_blacklist_hint">Athugasemdir sem passa við síu verða merktar sem amapóstur</string>
     <string name="site_settings_moderation_hold_hint">Athugasemdir sem passa við síu verða settar í biðröð fyrir samþykki</string>
     <string name="site_settings_multiple_links_hint">Hundsar takmörkun fjölda tengla fyrir þekkta notendur</string>
-    <string name="site_settings_whitelist_hint">Höfundur verður að hafa fengið athugasemd samþykkta a.m.k. einu sinni áður</string>
     <string name="site_settings_user_account_required_hint">Gestir verða að vera skráðir inn með notandanafni til þess að taka þátt í umræðum</string>
     <string name="site_settings_identity_required_hint">Höfundur athugasemdar verður að tilgreina nafn og netfang</string>
     <string name="site_settings_paging_hint">Birta athugasemdir í skömmtum af tilgreindri stærð</string>
@@ -306,17 +303,13 @@ Language: is
     <string name="site_settings_address_hint">Það er ekki hægt að breyta veffangi eins og er</string>
     <string name="site_settings_tagline_hint">Stutt lýsing eða grípandi setning til þess að lýsa blogginu þínu</string>
     <string name="site_settings_title_hint">Í fáeinum orðum, segðu hvað þessi vefur fjallar um</string>
-    <string name="site_settings_whitelist_known_summary">Athugasemdir frá þekktum notendum</string>
-    <string name="site_settings_whitelist_all_summary">Athugasemdir frá öllum notendum</string>
     <string name="site_settings_threading_summary">%d stig</string>
     <string name="site_settings_privacy_private_summary">Einkamál</string>
     <string name="site_settings_privacy_hidden_summary">Falinn</string>
     <string name="site_settings_delete_site_title">Eyða vef</string>
     <string name="site_settings_privacy_public_summary">Birt</string>
-    <string name="site_settings_blacklist_title">Svartlisti</string>
     <string name="site_settings_moderation_hold_title">Setja á bið eftir samþykki</string>
     <string name="site_settings_multiple_links_title">Tenglar í athugasemdum</string>
-    <string name="site_settings_whitelist_title">Samþykkja sjálfkrafa</string>
     <string name="site_settings_paging_title">Síðuskipting</string>
     <string name="site_settings_threading_title">Þræðir</string>
     <string name="site_settings_sort_by_title">Raða eftir</string>
