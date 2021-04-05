@@ -3,7 +3,6 @@ package org.wordpress.android.ui.activitylog.list
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.MORE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
@@ -45,7 +44,6 @@ sealed class ActivityLogListItem(val type: ViewType) {
         constructor(
             model: ActivityLogModel,
             rewindDisabled: Boolean = false,
-            backupDownloadFeatureEnabled: Boolean,
             restoreFeatureEnabled: Boolean
         ) : this(
                 model.activityID,
@@ -57,8 +55,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.rewindID,
                 model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = if (backupDownloadFeatureEnabled) MORE else HISTORY,
-                showMoreMenu = backupDownloadFeatureEnabled,
+                buttonIcon = MORE,
+                showMoreMenu = true,
                 launchRestoreWizard = restoreFeatureEnabled
         )
 

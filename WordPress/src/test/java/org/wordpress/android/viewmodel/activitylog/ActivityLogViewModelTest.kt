@@ -56,7 +56,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -112,7 +111,6 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var resourceProvider: ResourceProvider
-    @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
@@ -143,7 +141,6 @@ class ActivityLogViewModelTest {
                 getBackupDownloadStatusUseCase,
                 postDismissBackupDownloadUseCase,
                 resourceProvider,
-                backupDownloadFeatureConfig,
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
@@ -1622,21 +1619,18 @@ class ActivityLogViewModelTest {
     private fun firstItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[0],
             rewindDisabled = rewindDisabled,
-            backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
     )
 
     private fun secondItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[1],
             rewindDisabled = rewindDisabled,
-            backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
     )
 
     private fun thirdItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
             model = activityList[2],
             rewindDisabled = rewindDisabled,
-            backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
     )
 

@@ -33,7 +33,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
@@ -71,7 +70,6 @@ class ActivityLogViewModel @Inject constructor(
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase,
     private val resourceProvider: ResourceProvider,
-    private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
@@ -209,7 +207,6 @@ class ActivityLogViewModel @Inject constructor(
             val currentItem = ActivityLogListItem.Event(
                     model,
                     withRestoreProgressItem || withBackupDownloadProgressItem,
-                    backupDownloadFeatureConfig.isEnabled(),
                     restoreFeatureConfig.isEnabled()
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event

@@ -12,7 +12,6 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
-import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
@@ -28,8 +27,7 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val restoreFeatureConfig: RestoreFeatureConfig,
-    private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig
+    private val restoreFeatureConfig: RestoreFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -61,7 +59,7 @@ class ActivityLogDetailViewModel
         this.areButtonsVisible = areButtonsVisible
 
         _restoreVisible.value = areButtonsVisible
-        _downloadBackupVisible.value = areButtonsVisible && backupDownloadFeatureConfig.isEnabled()
+        _downloadBackupVisible.value = areButtonsVisible
 
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore
