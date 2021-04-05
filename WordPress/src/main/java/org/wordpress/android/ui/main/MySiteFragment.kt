@@ -159,7 +159,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -206,7 +205,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
-    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
@@ -305,9 +303,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         site: SiteModel,
         products: JetpackPurchasedProducts
     ) {
-        rowScan.setVisible(
-                siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), products.scan, site)
-        )
+        rowScan.setVisible(products.scan && !site.isWPCom && !site.isWPComAtomic)
         rowBackup.setVisible(products.backup)
     }
 

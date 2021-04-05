@@ -9,17 +9,13 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
-import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
 class ScanAndBackupSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
-    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) : MySiteSource<JetpackCapabilities> {
     override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<JetpackCapabilities> {
         val site = selectedSiteRepository.getSelectedSite()
@@ -29,11 +25,7 @@ class ScanAndBackupSource @Inject constructor(
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                     result.postValue(
                             JetpackCapabilities(
-                                    scanAvailable = siteUtilsWrapper.isScanEnabled(
-                                            scanScreenFeatureConfig.isEnabled(),
-                                            it.scan,
-                                            site
-                                    ),
+                                    scanAvailable = it.scan && !site.isWPCom && !site.isWPComAtomic,
                                     backupAvailable = it.backup
                             )
                     )
