@@ -25,7 +25,4 @@ class SiteUtilsWrapper @Inject constructor() {
     // TODO: Inline this method when legacy MySiteFragment is removed
     fun isScanEnabled(scanFeatureFlagEnabled: Boolean, scanPurchased: Boolean, site: SiteModel) =
             SiteUtils.isScanEnabled(scanFeatureFlagEnabled, scanPurchased, site)
-    // TODO: Inline this method when legacy MySiteFragment is removed
-    fun isBackupEnabled(backupFeatureFlagEnabled: Boolean, backupPurchased: Boolean) =
-            SiteUtils.isBackupEnabled(backupFeatureFlagEnabled, backupPurchased)
 }

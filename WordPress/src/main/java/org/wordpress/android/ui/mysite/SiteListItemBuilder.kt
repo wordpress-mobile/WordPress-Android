@@ -13,7 +13,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -24,7 +23,6 @@ class SiteListItemBuilder
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
     private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
@@ -42,7 +40,7 @@ class SiteListItemBuilder
     }
 
     fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
-        return if (backupScreenFeatureConfig.isEnabled() && isBackupAvailable) {
+        return if (isBackupAvailable) {
             ListItem(
                     R.drawable.ic_gridicons_cloud_upload_white_24dp,
                     UiStringRes(R.string.backup),

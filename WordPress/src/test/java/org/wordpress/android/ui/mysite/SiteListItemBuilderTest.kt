@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -21,7 +20,6 @@ class SiteListItemBuilderTest {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
-    @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
@@ -33,7 +31,6 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
-                backupScreenFeatureConfig,
                 scanScreenFeatureConfig,
                 themeBrowserUtils
         )
@@ -107,9 +104,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `backup item built if backup screen feature config enabled & backup feature is available`() {
+    fun `backup item built if backup is available`() {
         val isBackupsAvailable = true
-        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
 
         val item = siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION, isBackupsAvailable)
 
@@ -117,10 +113,10 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `backup item not built if backup screen feature config not enabled`() {
-        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(false)
+    fun `backup item not built if backup is not available`() {
+        val isBackupsAvailable = false
 
-        val item = siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION, isBackupsAvailable)
 
         assertThat(item).isNull()
     }
