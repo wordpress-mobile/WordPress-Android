@@ -80,10 +80,18 @@ public class SiteStore extends Store {
     }
 
     public static class FetchSitesPayload extends Payload<BaseNetworkError> {
-        @NonNull public List<SiteFilter> filters;
+        @NonNull private List<SiteFilter> mFilters = new ArrayList<>();
 
         public FetchSitesPayload() {
-            this.filters = new ArrayList<>();
+        }
+
+        public FetchSitesPayload(@NonNull List<SiteFilter> filters) {
+            this.mFilters = filters;
+        }
+
+        @NonNull
+        public List<SiteFilter> getFilters() {
+            return mFilters;
         }
     }
 
@@ -1749,7 +1757,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchSites(FetchSitesPayload payload) {
-        mSiteRestClient.fetchSites(payload.filters);
+        mSiteRestClient.fetchSites(payload.getFilters());
     }
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
