@@ -143,7 +143,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
             switch (getLoginMode()) {
                 case FULL:
-                case JETPACK_APP_LOGIN_MODE:
+                case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = true;
                     loginFromPrologue();
@@ -277,7 +277,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
-            case JETPACK_APP_LOGIN_MODE:
+            case JETPACK_LOGIN_ONLY:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
                     ActivityLauncher.showPostSignupInterstitial(this);

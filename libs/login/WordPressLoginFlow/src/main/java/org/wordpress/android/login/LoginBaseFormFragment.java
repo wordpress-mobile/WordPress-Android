@@ -342,7 +342,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
     private boolean isJetpackAppLogin() {
         return (mLoginListener instanceof LoginListener)
-               && ((LoginListener) mLoginListener).getLoginMode() == LoginMode.JETPACK_APP_LOGIN_MODE;
+               && ((LoginListener) mLoginListener).getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY;
     }
 
     @SuppressWarnings("unused")

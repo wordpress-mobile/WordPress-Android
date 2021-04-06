@@ -115,7 +115,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_APP_LOGIN_MODE;
+import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
@@ -1185,7 +1185,7 @@ public class ActivityLauncher {
 
     public static void showSignInForResultJetpackOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        JETPACK_APP_LOGIN_MODE.putInto(intent);
+        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
