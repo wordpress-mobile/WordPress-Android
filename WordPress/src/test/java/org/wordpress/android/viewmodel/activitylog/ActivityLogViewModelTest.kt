@@ -1526,8 +1526,7 @@ class ActivityLogViewModelTest {
             rewindId = null,
             date = Date(),
             isButtonVisible = true,
-            buttonIcon = ActivityLogListItem.Icon.DEFAULT,
-            isProgressBarVisible = false
+            buttonIcon = ActivityLogListItem.Icon.DEFAULT
     )
 
     private fun backupDownloadCompleteEvent() = BackupDownloadEvent(

@@ -31,8 +31,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val rewindId: String?,
         val date: Date,
         override val isButtonVisible: Boolean,
-        val buttonIcon: Icon,
-        val isProgressBarVisible: Boolean = false
+        val buttonIcon: Icon
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val formattedTime: String = date.toFormattedTimeString()
