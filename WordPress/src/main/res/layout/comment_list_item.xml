@@ -23,14 +23,14 @@
 
             <ImageView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/comment_avatar_width"
-                android:layout_height="@dimen/comment_avatar_width"
+                android:layout_width="@dimen/comment_avatar_sz"
+                android:layout_height="@dimen/comment_avatar_sz"
                 android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/image_checkmark"
-                android:layout_width="@dimen/comment_avatar_width"
-                android:layout_height="@dimen/comment_avatar_width"
+                android:layout_width="@dimen/comment_avatar_sz"
+                android:layout_height="@dimen/comment_avatar_sz"
                 android:background="@drawable/bg_oval_primary_40"
                 android:contentDescription="@string/comment_checkmark_desc"
                 android:src="@drawable/ic_checkmark_white_24dp"
