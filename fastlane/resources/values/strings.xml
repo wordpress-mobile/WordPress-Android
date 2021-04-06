@@ -396,6 +396,7 @@
     <string name="on">on</string>
     <string name="comment_status_approved">Approved</string>
     <string name="comment_status_unapproved">Pending</string>
+    <string name="comment_status_unreplied">Unreplied</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
     <string name="comment_status_all">All</string>
@@ -403,6 +404,7 @@
     <string name="comments_empty_list">No comments yet</string>
     <string name="comments_empty_list_filtered_approved">No approved comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
+    <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comments_empty_list_filtered_spam">No spam comments</string>
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
@@ -1465,6 +1467,11 @@
         <item>@string/notif_events</item>
     </string-array>
 
+    <!-- likes -->
+    <string name="get_likes_no_network_error">No network available.</string>
+    <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
+    <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+
     <!-- reader -->
     <string name="reader">Reader</string>
     <string name="reader_filter_cta">Filter</string>
@@ -1613,7 +1620,6 @@
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
-    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="menu_content_info">Content structure</string>
 
@@ -2068,7 +2074,6 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
-    <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -2617,21 +2622,15 @@
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
     <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link" tools:ignore="UnusedResources">Send link</string>
-    <string name="enter_your_password_instead" tools:ignore="UnusedResources">Enter your password instead</string>
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
     <string name="or_type_your_password">Or type your password</string>
-    <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="get_started">Get Started</string>
     <string name="next">Next</string>
-    <string name="open_mail" tools:ignore="UnusedResources">Open mail</string>
     <string name="check_email">Check email</string>
-    <string name="enter_site_address_instead">Log in by entering your site address.</string>
-    <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
@@ -2655,7 +2654,6 @@
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help" tools:ignore="UnusedResources">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
@@ -2669,11 +2667,9 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
-    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
-    <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
@@ -2684,10 +2680,8 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
-    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="enter_credentials_for_site" tools:ignore="UnusedResources">Log in with your %1$s site credentials</string>
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
@@ -2703,9 +2697,6 @@
 
     <!-- Signup -->
     <string name="sign_up_label">Sign Up</string>
-    <string name="sign_up" tools:ignore="UnusedResources">Sign Up for WordPress.com</string>
-    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
-    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
@@ -2721,17 +2712,13 @@
     <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
-    <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
@@ -3208,13 +3195,8 @@
     <string name="stories_intro_create_story_post_label">Create Story Post</string>
 
     <!--Autogenerated:Gutenberg Native-->
-    <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
-    <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
-    <string name="gutenberg_native_a_link_to_a_category" tools:ignore="UnusedResources">A link to a category.</string>
-    <string name="gutenberg_native_a_link_to_a_page" tools:ignore="UnusedResources">A link to a page.</string>
-    <string name="gutenberg_native_a_link_to_a_post" tools:ignore="UnusedResources">A link to a post.</string>
-    <string name="gutenberg_native_a_link_to_a_tag" tools:ignore="UnusedResources">A link to a tag.</string>
-    <string name="gutenberg_native_a_link_to_a_url" tools:ignore="UnusedResources">A link to a URL.</string>
+    <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: setting label (example: width), %3$s: Current value. %4$s: value measurement unit (example: pixels) -->
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s is %3$s %4$s.</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
@@ -3251,8 +3233,11 @@
     <!-- translators: displayed right after the block is removed. -->
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Block removed</string>
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
+    <string name="gutenberg_native_button_inside" tools:ignore="UnusedResources">Button inside</string>
+    <string name="gutenberg_native_button_outside" tools:ignore="UnusedResources">Button outside</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources">Button position</string>
     <string name="gutenberg_native_buttongroup" tools:ignore="UnusedResources">ButtonGroup</string>
-    <string name="gutenberg_native_category_link" tools:ignore="UnusedResources">Category Link</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources">Cancel search</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
     <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Choose audio</string>
@@ -3262,9 +3247,11 @@
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
     <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Choose images</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources">Clear search</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources">Current placeholder text is</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
@@ -3273,8 +3260,10 @@
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <string name="gutenberg_native_document_outline" tools:ignore="UnusedResources">document outline</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
-    <!-- translators: accessibility text (hint for focusing a slider) -->
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider" tools:ignore="UnusedResources">Double tap to change the value using slider</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">double–tap to change unit</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Double tap to edit button text</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Double tap to edit label text</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Double tap to edit placeholder text</string>
     <!-- translators: accessibility text -->
     <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Double tap to edit this value</string>
     <!-- translators: accessibility text (hint for moving to color settings) -->
@@ -3317,9 +3306,11 @@
     <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Help button</string>
     <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources">Hide search heading</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
     <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Inside</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
     <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">Lock icon</string>
@@ -3344,22 +3335,23 @@
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
     <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">No application can handle this request.</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
+    <string name="gutenberg_native_no_button" tools:ignore="UnusedResources">No button</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources">No custom placeholder set</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open" tools:ignore="UnusedResources">OPEN</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources">Outside</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
-    <string name="gutenberg_native_page_link" tools:ignore="UnusedResources">Page Link</string>
     <!-- translators: accessibility text. empty page title. -->
     <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Page title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the page title. -->
     <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Page title. %s</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
-    <string name="gutenberg_native_post_link" tools:ignore="UnusedResources">Post Link</string>
     <!-- translators: accessibility text. empty post title. -->
     <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Post title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the post title. -->
@@ -3384,8 +3376,13 @@
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
+    <string name="gutenberg_native_search_block" tools:ignore="UnusedResources">Search block</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Search block label. Current text is</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Search blocks</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Search button. Current button text is</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Search input field.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
-    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Search Settings</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources">Search settings</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
     <string name="gutenberg_native_select_item" tools:ignore="UnusedResources">Select item</string>
@@ -3396,7 +3393,6 @@
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h" tools:ignore="UnusedResources">Summarize your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
     <string name="gutenberg_native_summary" tools:ignore="UnusedResources">summary</string>
     <string name="gutenberg_native_table_of_contents" tools:ignore="UnusedResources">Table of Contents</string>
-    <string name="gutenberg_native_tag_link" tools:ignore="UnusedResources">Tag Link</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
@@ -3407,6 +3403,7 @@
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Unsupported</string>
     <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
     <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">Uploading…</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources">Use icon button</string>
     <!-- translators: accessibility text. Empty video caption. -->
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <!-- translators: accessibility text. %s: video caption. -->
