@@ -149,7 +149,7 @@ class EngagedPeopleListFragment : Fragment() {
     }
 
     private fun updateUiState(state: EngagedPeopleListUiState) {
-        loadingView.visibility = if (state.showLoading) View.VISIBLE else View.GONE
+        uiHelpers.updateVisibility(loadingView, state.showLoading)
 
         setupAdapter(state.engageItemsList)
 

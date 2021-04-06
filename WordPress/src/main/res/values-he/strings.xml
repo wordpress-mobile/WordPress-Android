@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-17 13:54:08+0000
+Translation-Revision-Date: 2021-04-01 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">קישור לתגית</string>
+    <string name="gutenberg_native_table_of_contents">תוכן עניינים</string>
+    <string name="gutenberg_native_summary">סיכום</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">לסכם את הפוסט עם רשימה של כותרות. להוסיף עוגנים של HTML לבלוקים של כותרת כדי לקשר אותם כאן.</string>
+    <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
+    <string name="gutenberg_native_post_link">קישור לפוסט</string>
+    <string name="gutenberg_native_document_outline">חלוקת המסמך לרמות</string>
+    <string name="gutenberg_native_category_link">קישור לקטגוריה</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">קישור לכתובת URL.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">קישור לתגית מסוימת.</string>
+    <string name="gutenberg_native_a_link_to_a_post">קישור לפוסט מסוים.</string>
+    <string name="gutenberg_native_a_link_to_a_page">קישור לעמוד מסוים.</string>
+    <string name="gutenberg_native_a_link_to_a_category">קישור לקטגוריה מסוימת.</string>
+    <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
+    <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
     <string name="reader_title_interests">לעקוב אחר נושאים</string>
     <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
@@ -403,6 +419,7 @@ Language: he_IL
     <string name="media_uploading_default">מעלה מדיה</string>
     <string name="gutenberg_native_select_item">לבחור פריט</string>
     <string name="gutenberg_native_search_or_type_url">לחפש או להקליד כתובת URL</string>
+    <string name="gutenberg_native_page_link">קישור לעמוד</string>
     <string name="gutenberg_native_add_this_telephone_link">להוסיף קישור למספר הטלפון</string>
     <string name="gutenberg_native_add_this_link">להוסיף את הקישור</string>
     <string name="gutenberg_native_add_this_email_link">להוסיף את הקישור לאימייל</string>
@@ -866,6 +883,13 @@ Language: he_IL
     <string name="reader_acessibility_list_loaded">\"הרשימה נטענה עם %1$d פריטים.\"</string>
     <string name="reader_empty_saved_posts_content_description">יש להקיש על הכפתור \'הוספה\' ו-\'שמירת פוסט\' כדי לשמור את הפוסט ברשימה שלך.</string>
     <string name="notifications_tab_dialog_switch_desc">הודעות</string>
+    <string name="main_switch_default_title_off">מושבת</string>
+    <string name="notifications_tab_dialog_main_off_message">ביטול ההודעות עבור אתר זה יגרום להשבתה של הצגת הודעות בלשונית \'הודעות\' של האתר. אפשר לבחור אילו סוגים של הודעות יוצגו לאחר הפעלת ההודעות לאתר זה.</string>
+    <string name="notifications_tab_dialog_main_off_title">להצגת הודעות בלשונית \'הודעות\' של אתר זה, יש להפעיל הודעות לאתר.</string>
+    <string name="notifications_tab_dialog_main_hint_off">להפעיל הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
+    <string name="notifications_tab_dialog_main_hint_on">להשבית הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
+    <string name="notifications_tab_dialog_main_status_off">הודעות לאתר זה</string>
+    <string name="notifications_tab_dialog_main_status_on">הודעות לאתר זה</string>
     <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>
@@ -1788,6 +1812,7 @@ Language: he_IL
     <string name="jetpack_disconnect_confirm">התנתקות</string>
     <string name="jetpack_disconnect_confirmation_message">האם ברצונך לנתק את Jetpack מהאתר?</string>
     <string name="jetpack_disconnect_pref_title">\"התנתקות מ-WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">אפשר להוסיף כתובת IP (או סדרת כתובות) לרשימת \'מותרות תמיד\' כדי למנוע לחלוטין את חסימתן על ידי Jetpack. יש תמיכה ב-IPv4 ו-IPv6. כדי לציין טווח, יש להזין את הערך הנמוך והערך הגבוה כשהם מופרדים באמצעות מקף. לדוגמה: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">דרישת זיהוי בשני שלבים</string>
     <string name="jetpack_match_wpcom_via_email_title">התאמת חשבונות באמצעות אימייל</string>
     <string name="jetpack_allow_wpcom_sign_in_title">הרשאת התחברות ל-WordPress.com</string>
@@ -1832,6 +1857,11 @@ Language: he_IL
     <string name="notification_settings_category_other">אחר</string>
     <string name="notification_settings_item_your_sites_all_your_sites">כל האתרים שלי</string>
     <string name="notification_settings_category_your_sites">האתרים שלך</string>
+    <string name="notification_settings_main_off_message">הפסקת הפעולה של הגדרות ההודעות תשבית את כל סוגי ההודעות באפליקציה. אפשר לבחור אילו הודעות ברצונך לקבל אחרי ההפעלה של הגדרות ההודעות.</string>
+    <string name="notification_settings_main_off_title">כדי לקבל הודעות למכשיר זה, יש להפעיל את הגדרות ההודעות.</string>
+    <string name="notification_settings_main_hint_off">להפעיל הודעות</string>
+    <string name="notification_settings_main_hint_on">להשבית הודעות</string>
+    <string name="notification_settings_main_status_off">מושבת</string>
     <string name="max_video_resolution">גודל מקסימלי של קובץ וידאו</string>
     <string name="max_thumbnail_px_size">גודל מקסימלי של קובץ תמונה</string>
     <string name="error_upload_post_media_param">אירעה שגיאה בטעינה של המדיה בפוסט הנוכחי: %s.</string>
@@ -2283,6 +2313,7 @@ Language: he_IL
     <string name="site_settings_paging_dialog_description">חלוקת שרשורי תגובות למספר עמודים.</string>
     <string name="site_settings_paging_dialog_header">תגובות לעמוד</string>
     <string name="site_settings_close_after_dialog_title">סגור לתגובות</string>
+    <string name="site_settings_denylist_description">תגובה שתכיל מילה מהמילים האלו בתוכן, בשם, בכתובת, באימייל או ב-IP שלה תסומן כתגובת זבל. אפשר להשתמש גם בחלקי מילים, כך ש-\"press\" תתאים למילה \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת האתר, באימייל או ב-IP תישמר בתור המנהל. אפשר להשתמש גם בחלקי מילים, כך ש-\"press\" תתאים למילה \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">הזנת מילה או ביטוי</string>
     <string name="site_settings_list_editor_no_items_text">אין פריטים</string>

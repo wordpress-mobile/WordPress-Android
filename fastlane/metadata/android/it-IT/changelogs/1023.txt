@@ -1,0 +1,2 @@
+17.0:
+Siamo felici di annunciare tre aggiornamenti a WordPress per Android. Abbiamo abilitato la funzionalità di avvicinamento delle dita/zoom/panoramica nella libreria Storie, rendendo le possibilità di visualizzazione più complete che mai. Abbiamo spostato il filtro dei commenti da un menu a discesa alle schede. Abbiamo anche rimosso il pulsante Annulla dalle opzioni delle impostazioni nell'editor a blocchi. 

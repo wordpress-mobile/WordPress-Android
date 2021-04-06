@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.util.AppLog;
@@ -332,7 +333,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload()));
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
     }

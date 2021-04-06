@@ -469,13 +469,13 @@ ENV["validate_translations"]="lintVanillaRelease"
     {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
-  BINARY_IMPORTED_LIBRARIES = [
+  binary_imported_libraries = [
     {
       name: "Gutenberg Native",
       import_key: "gutenbergMobileVersion",
       repository: "wordpress-mobile/gutenberg-mobile",
       strings_file_path: "bundle/android/strings.xml",
-      github_release_prefix: "v"
+      github_release_prefix: ""
     },
   ]
 
@@ -582,7 +582,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
-      
+
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")

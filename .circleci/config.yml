@@ -56,6 +56,9 @@ jobs:
       - run:
           name: Test WordPressProcessors
           command: ./gradlew :libs:WordPressProcessors:test --stacktrace
+      - run:
+          name: Test ImageEditor
+          command: ./gradlew :libs:image-editor:ImageEditor:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:

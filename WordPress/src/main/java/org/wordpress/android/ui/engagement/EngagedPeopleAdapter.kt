@@ -26,8 +26,8 @@ class EngagedPeopleAdapter constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EngagedPeopleViewHolder {
         return when (viewType) {
-            EngageItemType.LIKED_ITEM.ordinal -> LikedItemViewHolder(parent, imageManager, context)
-            EngageItemType.LIKER.ordinal -> LikerViewHolder(parent, imageManager, context)
+            EngageItemType.LIKED_ITEM.ordinal -> LikedItemViewHolder(parent, imageManager)
+            EngageItemType.LIKER.ordinal -> LikerViewHolder(parent, imageManager)
             else -> throw IllegalArgumentException("Illegal view type $viewType")
         }
     }

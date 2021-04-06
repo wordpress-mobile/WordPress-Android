@@ -672,7 +672,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted
             )
             if (countGrowUncompleted > 0) {
-                quickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
+                quickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_blue_50_multiple_users_white_40dp)
                 quickStartGrowTitle.isEnabled = true
                 quickStartGrowTitle.paintFlags = quickStartGrowTitle.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
             } else {
