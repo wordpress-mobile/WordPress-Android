@@ -40,14 +40,14 @@ sealed class ActivityLogListItem(val type: ViewType) {
             model: ActivityLogModel,
             rewindDisabled: Boolean = false
         ) : this(
-                model.activityID,
-                model.summary,
-                model.content?.text ?: "",
-                model.gridicon,
-                model.status,
-                model.rewindable ?: false,
-                model.rewindID,
-                model.published,
+                activityId = model.activityID,
+                title = model.summary,
+                description = model.content?.text ?: "",
+                gridIcon = model.gridicon,
+                eventStatus = model.status,
+                isRewindable = model.rewindable ?: false,
+                rewindId = model.rewindID,
+                date = model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
                 buttonIcon = MORE
         )
