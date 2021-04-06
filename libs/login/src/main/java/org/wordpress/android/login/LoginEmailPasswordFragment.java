@@ -285,7 +285,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 mIdToken,
                 mService,
                 mIsSocialLogin,
-                mLoginListener.getLoginMode() == LoginMode.JETPACK_APP_LOGIN_MODE
+                mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY
         );
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
