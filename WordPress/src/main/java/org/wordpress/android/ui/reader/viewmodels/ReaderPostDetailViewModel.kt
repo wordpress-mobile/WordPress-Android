@@ -23,7 +23,7 @@ import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeo
 import org.wordpress.android.ui.engagement.GetLikesHandler
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -205,7 +205,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
             getLikesJob?.cancel()
             getLikesJob = launch(bgDispatcher) {
-                getLikesHandler.handleGetLikesForPost(post.blogId, post.postId)
+                getLikesHandler.handleGetLikesForPost(post.blogId, post.postId, post.numLikes)
             }
         }
     }
@@ -491,34 +491,36 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun buildLikersUiState(updateLikesState: GetLikesState?): EngagedPeopleListUiState {
-        val likers = when (updateLikesState) {
+        val (likers, numLikes) = when (updateLikesState) {
             is LikesData -> {
-                likesToEngagedPeople(updateLikesState.likes)
+                Pair(likesToEngagedPeople(updateLikesState.likes), updateLikesState.expectedNumLikes)
             }
             is Failure -> {
-                likesToEngagedPeople(updateLikesState.cachedLikes)
+                Pair(likesToEngagedPeople(updateLikesState.cachedLikes), updateLikesState.expectedNumLikes)
             }
-            InitialLoading, null -> listOf()
+            Loading, null -> Pair(listOf(), 0)
         }
+
+        val showLoading = updateLikesState is Loading
 
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
-        if (updateLikesState is Failure) {
+        if (updateLikesState is Failure && !showLoading) {
             updateLikesState.emptyStateData?.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
             }
         }
 
-        val showLoading = updateLikesState is InitialLoading
+        val showLikeFacesTrain = post?.let { it.isWP && ((numLikes > 0 && likers.isNotEmpty()) || showLoading) } ?: false
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = post?.let { it.isWP && it.numLikes > 0 } ?: false,
+                showLikeFacesTrain = showLikeFacesTrain,
                 showLoading = showLoading,
-                engageItemsList = likers,
-                showEmptyState = !showLoading && showEmptyState,
-                numLikes = post?.numLikes ?: 0,
+                engageItemsList = if (showLikeFacesTrain) likers else listOf(),
+                numLikes = post?.let { numLikes } ?: 0,
+                showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle
         )
     }

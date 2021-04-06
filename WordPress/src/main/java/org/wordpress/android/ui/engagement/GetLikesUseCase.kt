@@ -24,7 +24,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure.EmptyStateData
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeCategory.COMMENT_LIKE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeCategory.POST_LIKE
@@ -62,25 +62,28 @@ class GetLikesUseCase @Inject constructor(
 
     suspend fun getLikesForPost(
         siteId: Long,
-        postId: Long
+        postId: Long,
+        numLikes: Int
     ): Flow<GetLikesState> = flow {
-        getLikes(POST_LIKE, this, siteId, postId/*, noteLikersIdList*/)
+        getLikes(POST_LIKE, this, siteId, postId, numLikes)
     }
 
     suspend fun getLikesForComment(
         siteId: Long,
-        commentId: Long
+        commentId: Long,
+        numLikes: Int
     ): Flow<GetLikesState> = flow {
-        getLikes(COMMENT_LIKE, this, siteId, commentId/*, noteLikersIdList*/)
+        getLikes(COMMENT_LIKE, this, siteId, commentId, numLikes)
     }
 
     private suspend fun getLikes(
         category: LikeCategory,
         flow: FlowCollector<GetLikesState>,
         siteId: Long,
-        entityId: Long
+        entityId: Long,
+        numLikes: Int
     ) {
-        flow.emit(InitialLoading)
+        flow.emit(Loading)
         delay(PROGRESS_DELAY_MS)
 
         val noNetworkDetected = !networkUtilsWrapper.isNetworkAvailable()
@@ -118,9 +121,9 @@ class GetLikesUseCase @Inject constructor(
 
             flow.emit(
                     if (event.isError) {
-                        getFailureState(noNetworkDetected, likes, errorMessage)
+                        getFailureState(noNetworkDetected, likes, errorMessage, numLikes)
                     } else {
-                        LikesData(likes)
+                        LikesData(likes, numLikes)
                     }
             )
         }
@@ -129,7 +132,8 @@ class GetLikesUseCase @Inject constructor(
     private fun getFailureState(
         noNetworkDetected: Boolean,
         orderedLikes: List<LikeModel>,
-        errorMessage: String?
+        errorMessage: String?,
+        expectedNumLikes: Int
     ): Failure {
         return if (noNetworkDetected) {
             Failure(
@@ -139,7 +143,8 @@ class GetLikesUseCase @Inject constructor(
                     EmptyStateData(
                             orderedLikes.isEmpty(),
                             UiStringRes(R.string.no_network_title)
-                    )
+                    ),
+                    expectedNumLikes
             )
         } else {
             Failure(
@@ -153,7 +158,8 @@ class GetLikesUseCase @Inject constructor(
                     EmptyStateData(
                             orderedLikes.isEmpty(),
                             UiStringRes(R.string.get_likes_empty_state_title)
-                    )
+                    ),
+                    expectedNumLikes
             )
         }
     }
@@ -189,15 +195,16 @@ class GetLikesUseCase @Inject constructor(
     }
 
     sealed class GetLikesState {
-        object InitialLoading : GetLikesState()
+        object Loading : GetLikesState()
 
-        data class LikesData(val likes: List<LikeModel>) : GetLikesState()
+        data class LikesData(val likes: List<LikeModel>, val expectedNumLikes: Int) : GetLikesState()
 
         data class Failure(
             val failureType: FailureType,
             val error: UiString,
             val cachedLikes: List<LikeModel>,
-            val emptyStateData: EmptyStateData
+            val emptyStateData: EmptyStateData,
+            val expectedNumLikes: Int
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,

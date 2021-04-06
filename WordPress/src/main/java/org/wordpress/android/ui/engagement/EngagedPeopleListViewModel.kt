@@ -19,7 +19,7 @@ import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.Reques
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
@@ -87,7 +87,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     private fun onRefreshData() {
         listScenario?.let {
             requestPostOrCommentIfNeeded(it.type, it.siteId, it.postOrCommentId, it.commentPostId)
-            loadRequest(it.type, it.siteId, it.postOrCommentId)
+            loadRequest(it.type, it.siteId, it.postOrCommentId, it.headerData.numLikes)
         }
     }
 
@@ -119,7 +119,8 @@ class EngagedPeopleListViewModel @Inject constructor(
     private fun loadRequest(
         loadRequestType: ListScenarioType,
         siteId: Long,
-        entityId: Long
+        entityId: Long,
+        numLikes: Int
     ) {
         getLikesJob?.cancel()
         getLikesJob = launch(bgDispatcher) {
@@ -128,8 +129,8 @@ class EngagedPeopleListViewModel @Inject constructor(
             // from the notification).
             // Keeping the logic for now, but remove empty listOf and relevant logic when API will sort likes
             when (loadRequestType) {
-                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId)
-                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId)
+                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId, numLikes)
+                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId, numLikes)
             }
         }
     }
@@ -161,7 +162,7 @@ class EngagedPeopleListViewModel @Inject constructor(
             is Failure -> {
                 likesToEngagedPeople(updateLikesState.cachedLikes)
             }
-            InitialLoading, null -> listOf()
+            Loading, null -> listOf()
         }
 
         var showEmptyState = false
@@ -178,7 +179,7 @@ class EngagedPeopleListViewModel @Inject constructor(
 
         return EngagedPeopleListUiState(
                 showLikeFacesTrain = false,
-                showLoading = updateLikesState is InitialLoading,
+                showLoading = updateLikesState is Loading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,

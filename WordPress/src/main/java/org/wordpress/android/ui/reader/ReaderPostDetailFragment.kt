@@ -454,6 +454,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 R.dimen.margin_small_medium)
         )
         likeFacesRecycler.layoutManager = layoutManager
+        likeFacesRecycler.itemAnimator = null
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
@@ -496,10 +497,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded) return
 
         with(requireActivity()) {
-            if (this.isFinishing) return
+            if (this.isFinishing) return@with
 
-            likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
+            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading)
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
+            likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
+
             if (state.showEmptyState) {
                 uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
                     getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(this, it))
@@ -508,8 +511,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             } else {
                 likeEmptyStateText.visibility = View.GONE
             }
-
-            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading)
 
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
@@ -522,11 +523,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean) {
         facesBlock.visibility = if (loading) View.GONE else View.VISIBLE
 
-        val adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter ?: ReaderPostLikersAdapter(
-                imageManager,
-                contextProvider.getContext()
-        ).also {
-            likeFacesRecycler.adapter = it
+        var adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter
+
+        if (adapter == null) {
+            adapter = ReaderPostLikersAdapter(
+                    imageManager,
+                    contextProvider.getContext()
+            )
+
+            likeFacesRecycler.adapter = adapter
         }
 
         val recyclerViewState = likeFacesRecycler.layoutManager?.onSaveInstanceState()
