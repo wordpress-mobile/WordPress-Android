@@ -348,7 +348,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLikeFacesTrain(view: View) {
-        if (!likesEnhancementsFeatureConfig.isEnabled()) return
         likeFacesTrain = view.findViewById(R.id.liker_faces)
         facesBlock = view.findViewById(R.id.faces_block)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
@@ -999,7 +998,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (result.isNewOrChanged) {
                     viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     viewModel.post?.let {
-                        viewModel.onRefreshLikersData(it)
+                        if (likesEnhancementsFeatureConfig.isEnabled()) {
+                            viewModel.onRefreshLikersData(it)
+                        }
                         viewModel.onUpdatePost(it)
                     }
                 }
@@ -1270,7 +1271,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     updatePost()
                 }
                 viewModel.post?.let {
-                    viewModel.onRefreshLikersData(it)
+                    if (likesEnhancementsFeatureConfig.isEnabled()) {
+                        viewModel.onRefreshLikersData(it)
+                    }
                     viewModel.onRelatedPostsRequested(it)
                 }
             }, 300)

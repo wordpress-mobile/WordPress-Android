@@ -53,7 +53,7 @@ class GetLikesUseCase @Inject constructor(
     private var getLikesContinuations = mutableMapOf<String, Continuation<OnChanged<*>>>()
 
     init {
-        dispatcher.register(this@GetLikesUseCase)
+        dispatcher.register(this)
     }
 
     fun clear() {

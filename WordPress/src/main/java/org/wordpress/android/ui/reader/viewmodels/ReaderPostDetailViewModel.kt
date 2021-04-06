@@ -168,7 +168,9 @@ class ReaderPostDetailViewModel @Inject constructor(
             val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    onRefreshLikersData(post)
+                    if (likesEnhancementsFeatureConfig.isEnabled()) {
+                        onRefreshLikersData(post)
+                    }
                     updatePostActions(post)
                 }
             }
@@ -200,6 +202,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onRefreshLikersData(post: ReaderPost) {
+        if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val isLikeDataChanged = lastRenderedLikesData?.let {
             it.blogId != post.blogId || it.postId != post.postId || it.numLikes != post.numLikes
         } ?: true
