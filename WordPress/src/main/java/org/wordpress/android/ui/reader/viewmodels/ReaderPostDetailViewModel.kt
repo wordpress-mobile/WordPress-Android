@@ -580,7 +580,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                             readerPost.authorId,
                             readerPost.authorBlogId,
                             readerPost.authorBlogUrl,
-                            readerPost.numLikes
+                            lastRenderedLikesData?.numLikes ?: readerPost.numLikes
                     )
             ))
         }
