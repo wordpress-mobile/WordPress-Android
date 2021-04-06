@@ -91,7 +91,7 @@ ENV["validate_translations"]="lintVanillaRelease"
     localize_libs()
     send_strings_for_translation()
     ensure_git_status_clean()
-    get_prs_list(repository:GHHELPER_REPO, milestone:new_version report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
+    get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
   #####################################################################################
