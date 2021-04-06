@@ -64,7 +64,8 @@ class EngagedPeopleListViewModel @Inject constructor(
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
         val emptyStateAction: (() -> Unit)? = null,
-        val emptyStateButtonText: UiString? = null
+        val emptyStateButtonText: UiString? = null,
+        val likersFacesText: UiString? = null
     )
 
     fun start(listScenario: ListScenario) {

@@ -57,12 +57,14 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.map
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -87,7 +89,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val getLikesHandler: GetLikesHandler,
-    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
+    private val contextProvider: ContextProvider
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -514,8 +517,23 @@ class ReaderPostDetailViewModel @Inject constructor(
                 engageItemsList = if (showLikeFacesTrain) likers else listOf(),
                 numLikes = post?.let { numLikes } ?: 0,
                 showEmptyState = showEmptyState,
-                emptyStateTitle = emptyStateTitle
+                emptyStateTitle = emptyStateTitle,
+                likersFacesText = getLikersFacesText(numLikes)
         )
+    }
+
+    private fun getLikersFacesText(numLikes: Int): UiString? {
+        return when {
+            numLikes == 1 -> {
+                UiStringRes(R.string.like_faces_single_liker_text)
+            }
+            numLikes > 1 -> {
+                UiStringText(contextProvider.getContext().getString(R.string.like_faces_multiple_liker_text, numLikes))
+            }
+            else -> {
+                null
+            }
+        }
     }
 
     private fun getLikersEssentials(updateLikesState: GetLikesState?): Pair<List<EngageItem>, Int> {

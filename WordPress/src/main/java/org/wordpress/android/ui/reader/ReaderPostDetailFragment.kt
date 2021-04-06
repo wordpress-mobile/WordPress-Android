@@ -119,6 +119,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListe
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -495,7 +496,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading)
+            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading, state.likersFacesText)
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
             likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
 
@@ -516,7 +517,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean) {
+    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean, likersText: UiString?) {
         facesBlock.visibility = if (loading) View.GONE else View.VISIBLE
 
         var adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter
@@ -534,17 +535,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         adapter.loadData(items)
         likeFacesRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
 
-        likeNumBloggers.text = when {
-            numLikes == 1 -> {
-                getString(R.string.like_faces_single_liker_text)
-            }
-            items.size > 1 -> {
-                getString(R.string.like_faces_multiple_liker_text, numLikes)
-            }
-            else -> {
-                ""
-            }
-        }
+        uiHelpers.setTextOrHide(likeNumBloggers, likersText)
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
