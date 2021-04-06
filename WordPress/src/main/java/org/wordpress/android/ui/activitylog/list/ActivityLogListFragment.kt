@@ -23,9 +23,7 @@ import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
@@ -130,10 +128,6 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         super.onSaveInstanceState(outState)
     }
 
-    fun onRestoreConfirmed(activityId: String) {
-        viewModel.onRestoreConfirmed(activityId)
-    }
-
     fun onQueryRestoreStatus(rewindId: String, restoreId: Long) {
         viewModel.onQueryRestoreStatus(rewindId, restoreId)
     }
@@ -232,22 +226,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
                     RequestCodes.RESTORE,
                     trackingSource
             )
-            is ShowRewindDialog -> displayRewindDialog(events.event)
             is DownloadBackupFile -> ActivityLauncher.downloadBackupDownloadFile(requireActivity(), events.url)
-        }
-    }
-
-    private fun displayRewindDialog(item: ActivityLogListItem.Event) {
-        val dialog = BasicFragmentDialog()
-        item.rewindId?.let {
-            dialog.initialize(
-                    it,
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel)
-            )
-            dialog.show(requireFragmentManager(), it)
         }
     }
 

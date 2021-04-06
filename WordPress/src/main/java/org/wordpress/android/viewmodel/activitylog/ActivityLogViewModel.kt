@@ -25,7 +25,6 @@ import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBack
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
-import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -64,7 +63,6 @@ typealias DateRange = Pair<Long, Long>
 @Suppress("LargeClass", "LongParameterList")
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
-    private val postRestoreUseCase: PostRestoreUseCase,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase,
@@ -495,12 +493,7 @@ class ActivityLogViewModel @Inject constructor(
     // todo: This code block should be removed once the restore feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
-            val navigationEvent = if (item.launchRestoreWizard) {
-                ActivityLogNavigationEvents.ShowRestore(item)
-            } else {
-                ActivityLogNavigationEvents.ShowRewindDialog(item)
-            }
-            _navigationEvents.value = Event(navigationEvent)
+            _navigationEvents.value = Event(ActivityLogNavigationEvents.ShowRestore(item))
         }
     }
 
@@ -511,11 +504,7 @@ class ActivityLogViewModel @Inject constructor(
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = when (secondaryAction) {
                 ActivityLogListItem.SecondaryAction.RESTORE -> {
-                    if (item.launchRestoreWizard) {
-                        ActivityLogNavigationEvents.ShowRestore(item)
-                    } else {
-                        ActivityLogNavigationEvents.ShowRewindDialog(item)
-                    }
+                    ActivityLogNavigationEvents.ShowRestore(item)
                 }
                 ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP -> {
                     ActivityLogNavigationEvents.ShowBackupDownload(item)
@@ -587,22 +576,9 @@ class ActivityLogViewModel @Inject constructor(
         requestEventsUpdate(false)
     }
 
-    fun onRestoreConfirmed(rewindId: String) {
-        activityLogTracker.trackRestoreStarted(rewindId, site, rewindableOnly)
-        viewModelScope.launch { handleRestoreRequest(postRestoreUseCase.postRestoreRequest(rewindId, site)) }
-        showRestoreStartedMessage(rewindId)
-    }
-
     fun onQueryRestoreStatus(rewindId: String, restoreId: Long) {
         queryRestoreStatus(restoreId)
         showRestoreStartedMessage(rewindId)
-    }
-
-    private fun handleRestoreRequest(state: RestoreRequestState) {
-        when (state) {
-            is RestoreRequestState.Success -> state.restoreId?.let { queryRestoreStatus(it) }
-            else -> Unit // Do nothing
-        }
     }
 
     private fun queryRestoreStatus(restoreId: Long? = null) {

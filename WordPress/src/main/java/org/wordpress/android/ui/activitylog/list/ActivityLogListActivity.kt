@@ -16,13 +16,9 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWI
 import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
-import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 
-class ActivityLogListActivity : LocaleAwareActivity(),
-        BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
+class ActivityLogListActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -69,17 +65,11 @@ class ActivityLogListActivity : LocaleAwareActivity(),
                 when (data?.getStringExtra(ActivityLogDetailActivity.EXTRA_INNER_FLOW)) {
                     ActivityLogDetailActivity.EXTRA_RESTORE_FLOW -> onActivityResultForRestore(data)
                     ActivityLogDetailActivity.EXTRA_BACKUP_DOWNLOAD_FLOW -> onActivityResultForBackupDownload(data)
-                    else -> onActivityResultForActivityLogDetails(data)
+                    else -> Unit // Do nothing
                 }
             }
             RequestCodes.RESTORE -> onActivityResultForRestore(data)
             RequestCodes.BACKUP_DOWNLOAD -> onActivityResultForBackupDownload(data)
-        }
-    }
-
-    private fun onActivityResultForActivityLogDetails(data: Intent?) {
-        data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
-            passRestoreConfirmation(it)
         }
     }
 
@@ -98,21 +88,6 @@ class ActivityLogListActivity : LocaleAwareActivity(),
                 ?: JetpackBackupDownloadActionState.CANCEL.id
         if (actionState != JetpackBackupDownloadActionState.CANCEL.id && rewindId != null && downloadId != null) {
             passQueryBackupDownloadStatus(rewindId, downloadId, actionState)
-        }
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        passRestoreConfirmation(instanceTag)
-    }
-
-    override fun onNegativeClicked(instanceTag: String) {
-        // Unused
-    }
-
-    private fun passRestoreConfirmation(rewindId: String) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (fragment is ActivityLogListFragment) {
-            fragment.onRestoreConfirmed(rewindId)
         }
     }
 

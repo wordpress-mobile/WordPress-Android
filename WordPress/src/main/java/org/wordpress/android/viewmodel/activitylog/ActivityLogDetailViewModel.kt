@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
-const val ACTIVITY_LOG_REWIND_ID_KEY: String = "activity_log_rewind_id_key"
 
 class ActivityLogDetailViewModel
 @Inject constructor(
