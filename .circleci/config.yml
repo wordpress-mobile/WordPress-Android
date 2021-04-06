@@ -52,7 +52,7 @@ jobs:
       - update-gradle-memory
       - run:
           name: Test WordPress
-          command: ./gradlew testVanillaRelease --stacktrace --no-daemon
+          command: ./gradlew testWordpressVanillaRelease --stacktrace --no-daemon
       - run:
           name: Test WordPressProcessors
           command: ./gradlew :libs:WordPressProcessors:test --stacktrace
