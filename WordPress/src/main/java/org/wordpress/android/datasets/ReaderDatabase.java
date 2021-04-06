@@ -108,7 +108,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 147 - added tbl_blog_info.unseen_count
      * 148 - added tbl_posts.is_seen
      * 149 - added tbl_posts.is_seen_supported that will be false for posts created before 2020-07-13
-     * 150 - added tbl_posts.author_blod_id and tbl_posts.author_blod_url
+     * 150 - added tbl_posts.author_blog_id and tbl_posts.author_blog_url
      */
 
     /*
