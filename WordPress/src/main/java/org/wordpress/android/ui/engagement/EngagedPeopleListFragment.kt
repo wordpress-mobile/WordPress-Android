@@ -112,7 +112,7 @@ class EngagedPeopleListFragment : Fragment() {
 
     private fun manageNavigation(event: EngagedListNavigationEvent) {
         with(requireActivity()) {
-            if (this.isFinishing) return
+            if (this.isFinishing) return@with
 
             when (event) {
                 is PreviewSiteById -> {
@@ -166,7 +166,7 @@ class EngagedPeopleListFragment : Fragment() {
 
     private fun manageServiceRequest(serviceRequest: EngagedListServiceRequestEvent) {
         with(requireActivity()) {
-            if (this.isFinishing) return
+            if (this.isFinishing) return@with
 
             when (serviceRequest) {
                 is RequestBlogPost -> ReaderPostActions.requestBlogPost(
