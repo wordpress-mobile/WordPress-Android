@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">@color/blue_50</color>
     <color name="colorPrimaryVariant">@color/blue_70</color>
-    <color name="colorSecondary">@color/pink_50</color>
-    <color name="colorSecondaryVariant">@color/pink_70</color>
+    <color name="colorSecondary">@color/blue_50</color>
+    <color name="colorSecondaryVariant">@color/blue_70</color>
 
     <!-- SEMANTICS -->
     <color name="primary">@color/blue_50</color>
