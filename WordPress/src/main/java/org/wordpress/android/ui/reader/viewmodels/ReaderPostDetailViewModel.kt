@@ -491,18 +491,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun buildLikersUiState(updateLikesState: GetLikesState?): EngagedPeopleListUiState {
-        val (likers, numLikes) = when (updateLikesState) {
-            is LikesData -> {
-                Pair(likesToEngagedPeople(updateLikesState.likes), updateLikesState.expectedNumLikes)
-            }
-            is Failure -> {
-                Pair(likesToEngagedPeople(updateLikesState.cachedLikes), updateLikesState.expectedNumLikes)
-            }
-            Loading, null -> Pair(listOf(), 0)
-        }
+        val (likers, numLikes) = getLikersEssentials(updateLikesState)
 
         val showLoading = updateLikesState is Loading
-
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
@@ -513,7 +504,9 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
-        val showLikeFacesTrain = post?.let { it.isWP && ((numLikes > 0 && likers.isNotEmpty()) || showLoading) } ?: false
+        val showLikeFacesTrain = post?.let {
+            it.isWP && ((numLikes > 0 && likers.isNotEmpty()) || showLoading)
+        } ?: false
 
         return EngagedPeopleListUiState(
                 showLikeFacesTrain = showLikeFacesTrain,
@@ -523,6 +516,18 @@ class ReaderPostDetailViewModel @Inject constructor(
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle
         )
+    }
+
+    private fun getLikersEssentials(updateLikesState: GetLikesState?): Pair<List<EngageItem>, Int> {
+        return when (updateLikesState) {
+            is LikesData -> {
+                Pair(likesToEngagedPeople(updateLikesState.likes), updateLikesState.expectedNumLikes)
+            }
+            is Failure -> {
+                Pair(likesToEngagedPeople(updateLikesState.cachedLikes), updateLikesState.expectedNumLikes)
+            }
+            Loading, null -> Pair(listOf(), 0)
+        }
     }
 
     private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
