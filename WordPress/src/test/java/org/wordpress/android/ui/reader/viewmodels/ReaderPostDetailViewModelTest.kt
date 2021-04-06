@@ -84,6 +84,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -122,6 +123,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
     @Mock private lateinit var getLikesHandler: GetLikesHandler
     @Mock private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    @Mock private lateinit var contextProvider: ContextProvider
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -154,7 +156,8 @@ class ReaderPostDetailViewModelTest {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 getLikesHandler,
-                likesEnhancementsFeatureConfig
+                likesEnhancementsFeatureConfig,
+                contextProvider
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
