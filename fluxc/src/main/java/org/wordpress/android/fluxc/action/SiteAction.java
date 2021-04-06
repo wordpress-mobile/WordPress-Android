@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponse
 import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
@@ -47,7 +48,7 @@ public enum SiteAction implements IAction {
     FETCH_PROFILE_XML_RPC,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE,
-    @Action
+    @Action(payloadType = FetchSitesPayload.class)
     FETCH_SITES,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
     FETCH_SITES_XML_RPC,

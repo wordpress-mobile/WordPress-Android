@@ -79,6 +79,22 @@ public class SiteStore extends Store {
         public String url;
     }
 
+    public static class FetchSitesPayload extends Payload<BaseNetworkError> {
+        @NonNull private List<SiteFilter> mFilters = new ArrayList<>();
+
+        public FetchSitesPayload() {
+        }
+
+        public FetchSitesPayload(@NonNull List<SiteFilter> filters) {
+            this.mFilters = filters;
+        }
+
+        @NonNull
+        public List<SiteFilter> getFilters() {
+            return mFilters;
+        }
+    }
+
     @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
         @NonNull public String siteName;
@@ -1213,6 +1229,23 @@ public class SiteStore extends Store {
         }
     }
 
+    public enum SiteFilter {
+        ATOMIC("atomic"),
+        JETPACK("jetpack"),
+        WPCOM("wpcom");
+
+        private final String mString;
+
+        SiteFilter(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
     private PostSqlUtils mPostSqlUtils;
@@ -1310,6 +1343,13 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns the number of .COM Atomic sites in the store.
+     */
+    public int getWPComAtomicSitesCount() {
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count();
+    }
+
+    /**
      * Returns sites with a name or url matching the search string.
      */
     @NonNull
@@ -1331,6 +1371,13 @@ public class SiteStore extends Store {
      */
     public boolean hasWPComSite() {
         return getWPComSitesCount() != 0;
+    }
+
+    /**
+     * Checks whether the store contains at least one .COM Atomic site.
+     */
+    public boolean hasWPComAtomicSite() {
+        return getWPComAtomicSitesCount() != 0;
     }
 
     /**
@@ -1519,7 +1566,7 @@ public class SiteStore extends Store {
                 fetchSite((SiteModel) action.getPayload());
                 break;
             case FETCH_SITES:
-                mSiteRestClient.fetchSites();
+                fetchSites((FetchSitesPayload) action.getPayload());
                 break;
             case FETCHED_SITES:
                 handleFetchedSitesWPComRest((SitesModel) action.getPayload());
@@ -1707,6 +1754,10 @@ public class SiteStore extends Store {
         } else {
             mSiteXMLRPCClient.fetchSite(site);
         }
+    }
+
+    private void fetchSites(FetchSitesPayload payload) {
+        mSiteRestClient.fetchSites(payload.getFilters());
     }
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {

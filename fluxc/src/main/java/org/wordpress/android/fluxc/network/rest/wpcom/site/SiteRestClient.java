@@ -83,6 +83,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
@@ -112,6 +113,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static final int NEW_SITE_TIMEOUT_MS = 90000;
     private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
         + "capabilities,quota,icon,meta";
+    public static final String FIELDS = "fields";
+    public static final String FILTERS = "filters";
 
     private final AppSecrets mAppSecrets;
 
@@ -148,10 +151,10 @@ public class SiteRestClient extends BaseWPComRestClient {
         mAppSecrets = appSecrets;
     }
 
-    public void fetchSites() {
-        Map<String, String> params = new HashMap<>();
-        params.put("fields", SITE_FIELDS);
-        String url = WPCOMREST.me.sites.getUrlV1_1();
+    public void fetchSites(@NonNull List<SiteFilter> filters) {
+        Map<String, String> params = getFetchSitesParams(filters);
+
+        String url = WPCOMREST.me.sites.getUrlV1_2();
         final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -184,9 +187,17 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    @NonNull
+    private Map<String, String> getFetchSitesParams(@NonNull List<SiteFilter> filters) {
+        Map<String, String> params = new HashMap<>();
+        if (!filters.isEmpty()) params.put(FILTERS, TextUtils.join(",", filters));
+        params.put(FIELDS, SITE_FIELDS);
+        return params;
+    }
+
     public void fetchSite(final SiteModel site) {
         Map<String, String> params = new HashMap<>();
-        params.put("fields", SITE_FIELDS);
+        params.put(FIELDS, SITE_FIELDS);
         String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 SiteWPComRestResponse.class,
