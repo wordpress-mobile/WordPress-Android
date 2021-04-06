@@ -78,26 +78,6 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostInWebView
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -572,17 +552,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
-            is ShowMediaPreview -> MediaPreviewActivity
+            is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
                     .showPreview(requireContext(), site, featuredImage)
 
-            is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
                     context,
                     this.tag,
                     ReaderTracker.SOURCE_POST_DETAIL,
                     readerTracker
             )
 
-            is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+            is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     this.siteId,
                     this.feedId,
@@ -591,51 +571,51 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     readerTracker
             )
 
-            is SharePost -> ReaderActivityLauncher.sharePost(context, post)
+            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
 
-            is OpenPost -> ReaderActivityLauncher.openPost(context, post)
+            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
 
-            is ShowReportPost ->
+            is ReaderNavigationEvents.ShowReportPost ->
                 ReaderActivityLauncher.openUrl(
                         context,
                         readerUtilsWrapper.getReportPostUrl(url),
                         INTERNAL
                 )
 
-            is ShowReaderComments ->
+            is ReaderNavigationEvents.ShowReaderComments ->
                 ReaderActivityLauncher.showReaderComments(context, blogId, postId)
 
-            is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
-            is ShowSitePickerForResult ->
+            is ReaderNavigationEvents.ShowSitePickerForResult ->
                 ActivityLauncher
                         .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
 
-            is OpenEditorForReblog ->
+            is ReaderNavigationEvents.OpenEditorForReblog ->
                 ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
 
-            is ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
 
-            is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
 
-            is OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
+            is ReaderNavigationEvents.OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
 
-            is ShowRelatedPostDetails ->
+            is ReaderNavigationEvents.ShowRelatedPostDetails ->
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
-            is ReplaceRelatedPostDetailsWithHistory ->
+            is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
                 replaceRelatedPostDetailWithHistory(
                         postId = this.postId,
                         blogId = this.blogId
                 )
 
-            is ShowPostInWebView -> showPostInWebView(post)
-            is ShowEngagedPeopleList -> {
+            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
+            is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewLikeListActivity(activity, this.siteId, this.postId, this.headerData)
             }
-            is ShowPostDetail,
-            is ShowVideoViewer,
-            is ShowReaderSubs -> Unit // Do Nothing
+            is ReaderNavigationEvents.ShowPostDetail,
+            is ReaderNavigationEvents.ShowVideoViewer,
+            is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
         }
     }
 
