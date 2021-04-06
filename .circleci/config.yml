@@ -83,7 +83,7 @@ jobs:
           command: ./gradlew --stacktrace WordPress:detekt
       - run:
           name: Lint
-          command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+          command: ./gradlew --stacktrace lintWordpressVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
           no_output_timeout: 40m
       - run:
           name: Violations
