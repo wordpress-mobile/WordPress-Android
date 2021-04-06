@@ -28,10 +28,11 @@ class EventItemViewHolder(
     override fun updateChanges(bundle: Bundle) {
         if (bundle.containsKey(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
             actionButton.visibility =
-                    if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY))
+                    if (bundle.getBoolean(ActivityLogDiffCallback.LIST_ITEM_BUTTON_VISIBILITY_KEY)) {
                         View.VISIBLE
-                    else
+                    } else {
                         View.GONE
+                    }
         }
     }
 
