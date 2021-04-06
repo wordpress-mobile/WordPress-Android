@@ -10,32 +10,29 @@
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/content_margin"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingEnd="@dimen/content_margin"
-        android:paddingBottom="@dimen/margin_large">
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large">
 
         <FrameLayout
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:id="@+id/frame_avatar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_small"
-            android:layout_marginEnd="@dimen/margin_large">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/notifications_avatar_sz"
-                android:layout_height="@dimen/notifications_avatar_sz"
+                android:layout_width="@dimen/comment_avatar_width"
+                android:layout_height="@dimen/comment_avatar_width"
                 android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/image_checkmark"
-                android:layout_width="@dimen/notifications_avatar_sz"
-                android:layout_height="@dimen/notifications_avatar_sz"
+                android:layout_width="@dimen/comment_avatar_width"
+                android:layout_height="@dimen/comment_avatar_width"
                 android:background="@drawable/bg_oval_primary_40"
                 android:contentDescription="@string/comment_checkmark_desc"
-                android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_checkmark_white_24dp"
                 android:visibility="gone" />
 
