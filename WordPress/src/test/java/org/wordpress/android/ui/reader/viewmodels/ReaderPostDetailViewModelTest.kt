@@ -152,12 +152,12 @@ class ReaderPostDetailViewModelTest {
                 readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
+                contextProvider,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 getLikesHandler,
-                likesEnhancementsFeatureConfig,
-                contextProvider
+                likesEnhancementsFeatureConfig
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
