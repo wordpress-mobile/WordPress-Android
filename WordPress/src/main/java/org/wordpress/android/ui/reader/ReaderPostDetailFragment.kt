@@ -69,7 +69,6 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
-import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -579,7 +578,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.openUrl(
                         context,
                         readerUtilsWrapper.getReportPostUrl(url),
-                        INTERNAL
+                        OpenUrlType.INTERNAL
                 )
 
             is ReaderNavigationEvents.ShowReaderComments ->
