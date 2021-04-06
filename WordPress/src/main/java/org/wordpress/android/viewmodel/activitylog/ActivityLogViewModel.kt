@@ -490,13 +490,6 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    // todo: This code block should be removed once the restore feature exclusively uses the more menu
-    fun onActionButtonClicked(item: ActivityLogListItem) {
-        if (item is ActivityLogListItem.Event) {
-            _navigationEvents.value = Event(ActivityLogNavigationEvents.ShowRestore(item))
-        }
-    }
-
     fun onSecondaryActionClicked(
         secondaryAction: ActivityLogListItem.SecondaryAction,
         item: ActivityLogListItem

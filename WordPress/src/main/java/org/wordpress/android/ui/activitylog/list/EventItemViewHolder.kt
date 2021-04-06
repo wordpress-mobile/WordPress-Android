@@ -17,7 +17,6 @@ import org.wordpress.android.util.getColorResIdFromAttribute
 class EventItemViewHolder(
     parent: ViewGroup,
     private val itemClickListener: (ActivityLogListItem) -> Unit,
-    private val rewindClickListener: (ActivityLogListItem) -> Unit,
     private val secondaryActionClickListener: (SecondaryAction, ActivityLogListItem) -> Boolean
 ) : ActivityLogViewHolder(parent, R.layout.activity_log_list_event_item) {
     private val summary: TextView = itemView.findViewById(R.id.action_summary)
@@ -40,11 +39,10 @@ class EventItemViewHolder(
         summary.text = activity.title
         text.text = activity.description
 
-        val colorRes = if (activity.showMoreMenu) R.attr.wpColorOnSurfaceMedium else R.attr.colorPrimary
         ColorUtils.setImageResourceWithTint(
                 actionButton,
                 activity.buttonIcon.drawable,
-                actionButton.context.getColorResIdFromAttribute(colorRes)
+                actionButton.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         )
         if (activity.isButtonVisible) {
             actionButton.visibility = View.VISIBLE
@@ -58,13 +56,7 @@ class EventItemViewHolder(
             itemClickListener(activity.copy(isButtonVisible = actionButton.visibility == View.VISIBLE))
         }
 
-        actionButton.setOnClickListener {
-            if (activity.showMoreMenu) {
-                renderMoreMenu(activity, it)
-            } else {
-                rewindClickListener(activity)
-            }
-        }
+        actionButton.setOnClickListener { renderMoreMenu(activity, it) }
     }
 
     private fun renderMoreMenu(event: ActivityLogListItem, v: View) {

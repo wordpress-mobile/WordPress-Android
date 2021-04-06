@@ -298,14 +298,6 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onActionButtonClickShowsRestore() {
-        viewModel.onActionButtonClicked(event())
-
-        assertThat(navigationEvents.last().peekContent())
-                .isInstanceOf(ActivityLogNavigationEvents.ShowRestore::class.java)
-    }
-
-    @Test
     fun loadsNextPageOnScrollToBottom() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))

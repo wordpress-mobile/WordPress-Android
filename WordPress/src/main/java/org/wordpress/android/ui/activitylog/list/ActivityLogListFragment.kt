@@ -295,10 +295,6 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         viewModel.onItemClicked(item)
     }
 
-    private fun onItemButtonClicked(item: ActivityLogListItem) {
-        viewModel.onActionButtonClicked(item)
-    }
-
     private fun onSecondaryActionClicked(
         secondaryAction: ActivityLogListItem.SecondaryAction,
         item: ActivityLogListItem
@@ -311,7 +307,6 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         if (logListView.adapter == null) {
             adapter = ActivityLogAdapter(
                     this@ActivityLogListFragment::onItemClicked,
-                    this@ActivityLogListFragment::onItemButtonClicked,
                     this@ActivityLogListFragment::onSecondaryActionClicked,
                     uiHelpers
             )
