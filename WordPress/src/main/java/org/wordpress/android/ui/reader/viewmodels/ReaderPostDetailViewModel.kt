@@ -85,12 +85,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
+    private val contextProvider: ContextProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val getLikesHandler: GetLikesHandler,
-    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
-    private val contextProvider: ContextProvider
+    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -511,7 +511,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         val showLikeFacesTrain = post?.let {
-            it.isWP && ((numLikes > 0 && likers.isNotEmpty()) || showLoading)
+            it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
         return EngagedPeopleListUiState(
@@ -521,12 +521,15 @@ class ReaderPostDetailViewModel @Inject constructor(
                 numLikes = post?.let { numLikes } ?: 0,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,
-                likersFacesText = getLikersFacesText(numLikes)
+                likersFacesText = getLikersFacesText(showEmptyState, numLikes)
         )
     }
 
-    private fun getLikersFacesText(numLikes: Int): UiString? {
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int): UiString? {
         return when {
+            showEmptyState -> {
+                null
+            }
             numLikes == 1 -> {
                 UiStringRes(R.string.like_faces_single_liker_text)
             }
