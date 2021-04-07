@@ -60,7 +60,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getRangeIdOrZero
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -87,7 +86,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var listScenarioUtils: ListScenarioUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,7 +135,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         val confetti: LottieAnimationView = requireActivity().findViewById(R.id.confetti)
-        if (note?.isViewMilestoneType() == true && !confettiShown) {
+        if (note?.isViewMilestoneType == true && !confettiShown) {
             confetti.playAnimation()
             confettiShown = true
         }
@@ -285,13 +283,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     } else {
                         activity.showWebViewActivityForUrl(clickedSpan.url)
                     }
-                SCAN -> if (scanScreenFeatureConfig.isEnabled()) {
-                    activity.showScanActivityForSite(clickedSpan.siteId)
-                } else {
-                    if (!TextUtils.isEmpty(clickedSpan.url)) {
-                        activity.showWebViewActivityForUrl(clickedSpan.url)
-                    }
-                }
+                SCAN -> activity.showScanActivityForSite(clickedSpan.siteId)
                 STAT, FOLLOW ->
                     // We can open native stats if the site is a wpcom or Jetpack sites
                     activity.showStatsActivityForSite(clickedSpan.siteId, clickedSpan.rangeType)
