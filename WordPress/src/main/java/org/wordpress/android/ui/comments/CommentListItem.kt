@@ -20,7 +20,7 @@ sealed class CommentListItem(val type: CommentListItemType) {
                 return when (ordinal) {
                     HEADER.ordinal -> HEADER
                     COMMENT.ordinal -> COMMENT
-                    else -> throw IllegalArgumentException("Illegal ordinal $ordinal")
+                    else -> throw IllegalArgumentException("Illegal CommentListItem ordinal $ordinal")
                 }
             }
         }

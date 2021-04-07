@@ -168,8 +168,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
                 counter++;
             }
         }
-
-
         return counter;
     }
 
@@ -355,9 +353,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
             }
 
             // Sort by date
-            Collections.sort(comments, (commentModel, t1) -> {
-                Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
-                Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
+            Collections.sort(comments, (commentModelX, commentModelY) -> {
+                Date d0 = DateTimeUtils.dateFromIso8601(commentModelX.getDatePublished());
+                Date d1 = DateTimeUtils.dateFromIso8601(commentModelY.getDatePublished());
                 if (d0 == null || d1 == null) {
                     return 0;
                 }

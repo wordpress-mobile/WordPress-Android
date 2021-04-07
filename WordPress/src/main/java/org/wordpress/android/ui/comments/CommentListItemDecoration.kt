@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 import org.wordpress.android.R.dimen
 
+/**
+ * CommentListItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
+ * Based on DividerItemDecoration.
+ */
 class CommentListItemDecoration(context: Context) : ItemDecoration() {
     private val divider: Drawable?
     private val bounds = Rect()
@@ -67,9 +71,9 @@ class CommentListItemDecoration(context: Context) : ItemDecoration() {
     }
 
     init {
-        val a = context.obtainStyledAttributes(ATTRS)
-        divider = a.getDrawable(0)
-        a.recycle()
+        val attrs = context.obtainStyledAttributes(ATTRS)
+        divider = attrs.getDrawable(0)
+        attrs.recycle()
         dividerStartOffset = context.resources.getDimensionPixelOffset(dimen.divider_start_offset)
     }
 }

@@ -11,4 +11,3 @@
     android:textAllCaps="true"
     android:textAppearance="?attr/textAppearanceOverline"
     tools:text="January 8" />
-

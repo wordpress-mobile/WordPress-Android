@@ -16,7 +16,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.R.integer
 import org.wordpress.android.R.string
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
@@ -48,8 +47,8 @@ class CommentViewHolder(
     fun bind(item: CommentListItem.Comment, isSelected: Boolean) {
         val commentModel = item.comment
 
-        title.text = getFormattedTitle(commentModel)
-        commentBody.text = getSpannedContent(commentModel, commentBody.context)?.trim()
+        title.text = getFormattedTitle(commentModel, title.context)
+        commentBody.text = getSpannedContent(commentModel, commentBody.context)
 
         uiHelpers.updateVisibility(checkMark, isSelected)
 
@@ -72,7 +71,8 @@ class CommentViewHolder(
         uiHelpers.updateVisibility(statusIndicator, CommentStatus.fromString(commentModel.status) == UNAPPROVED)
 
         itemView.setOnClickListener {
-            clickListener.onCommentPressed(adapterPosition, it) }
+            clickListener.onCommentPressed(adapterPosition, it)
+        }
         itemView.setOnLongClickListener {
             clickListener.onCommentLongPressed(adapterPosition, it)
             true
@@ -89,14 +89,14 @@ class CommentViewHolder(
         return avatarForDisplay
     }
 
-    private fun getSpannedContent(comment: CommentModel, context: Context): Spanned? {
-        val content = StringUtils.notNullStr(comment.content)
-        return WPHtml.fromHtml(content, null, null, context, null, 0)
+    private fun getSpannedContent(comment: CommentModel, context: Context): Spanned {
+        val spannedContent = WPHtml.fromHtml(StringUtils.notNullStr(comment.content), null, null, context, null, 0)
+        val trimmedContent = spannedContent.trim()
+        return spannedContent.subSequence(0, trimmedContent.length) as Spanned
     }
 
-    private fun getFormattedTitle(comment: CommentModel): Spannable {
+    private fun getFormattedTitle(comment: CommentModel, context: Context): Spannable {
         val formattedTitle: String
-        val context = WordPress.getContext()
         var author = context.getString(string.anonymous)
         if (!TextUtils.isEmpty(comment.authorName)) {
             author = comment.authorName.trim { it <= ' ' }

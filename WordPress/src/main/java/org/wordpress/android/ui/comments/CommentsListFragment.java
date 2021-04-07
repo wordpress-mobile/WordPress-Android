@@ -293,6 +293,9 @@ public class CommentsListFragment extends ViewPagerFragment {
                 @Override
                 public void onCommentPressed(int position, View view) {
                     CommentModel comment = ((Comment) getAdapter().getItem(position)).getComment();
+                    if (comment == null) {
+                        return;
+                    }
                     if (mActionMode == null) {
                         mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
