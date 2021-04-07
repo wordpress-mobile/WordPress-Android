@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
@@ -122,7 +123,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NotNull CommentListViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull CommentListViewHolder viewHolder, int position,
+                                 @NonNull List<Object> payloads) {
         if (viewHolder instanceof CommentSubHeaderViewHolder) {
             ((CommentSubHeaderViewHolder) viewHolder)
                     .bind((SubHeader) mComments.get(position));
@@ -135,6 +137,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
             && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
+    }
+
+    @Override
+    public void onBindViewHolder(@NotNull CommentListViewHolder viewHolder, int position) {
+        onBindViewHolder(viewHolder, position, new ArrayList<>());
     }
 
     public CommentListItem getItem(int position) {

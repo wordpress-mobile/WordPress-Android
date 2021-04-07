@@ -13,7 +13,7 @@ class CommentListItemDiffCallback(
         val newItem = newList[newItemPosition]
 
         return when {
-            oldItem is SubHeader && newItem is SubHeader -> oldItem.longId() == newItem.longId()
+            oldItem is SubHeader && newItem is SubHeader -> oldItem.label == newItem.label
             oldItem is Comment && newItem is Comment -> {
                 oldItem.comment.remoteCommentId == newItem.comment.remoteCommentId
             }
@@ -46,4 +46,15 @@ class CommentListItemDiffCallback(
 
         return false
     }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        if (oldItem is Comment && newItem is Comment) {
+            return Payload
+        }
+        return null
+    }
+
+    object Payload
 }
