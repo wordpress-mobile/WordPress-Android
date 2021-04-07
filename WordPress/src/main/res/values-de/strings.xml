@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-17 22:15:32+0000
+Translation-Revision-Date: 2021-04-01 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">Schlagwort-Link</string>
+    <string name="gutenberg_native_table_of_contents">Inhaltsverzeichnis</string>
+    <string name="gutenberg_native_summary">Zusammenfassung</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Fasse deinen Beitrag mit einer Liste an Überschriften zusammen. Füge HTML-Anker zu Überschriftenblöcken hinzu, um sie hier zu verknüpfen.</string>
+    <string name="gutenberg_native_search_settings">Sucheinstellungen</string>
+    <string name="gutenberg_native_post_link">Beitragslink</string>
+    <string name="gutenberg_native_document_outline">Gliederung des Dokuments</string>
+    <string name="gutenberg_native_category_link">Kategorielink</string>
+    <string name="gutenberg_native_buttongroup">Schaltflächengruppe</string>
+    <string name="gutenberg_native_a_link_to_a_url">Ein Link zu einer URL.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">Ein Link zu einem Schlagwort.</string>
+    <string name="gutenberg_native_a_link_to_a_post">Ein Link zu einem Beitrag.</string>
+    <string name="gutenberg_native_a_link_to_a_page">Ein Link zu einer Seite.</string>
+    <string name="gutenberg_native_a_link_to_a_category">Ein Link zu einer Kategorie.</string>
+    <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
+    <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
     <string name="reader_title_interests">Themen folgen</string>
     <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
@@ -409,6 +425,7 @@ Language: de
     <string name="media_uploading_default">Medien werden hochgeladen …</string>
     <string name="gutenberg_native_select_item">Artikel auswählen</string>
     <string name="gutenberg_native_search_or_type_url">URL suchen oder eingeben</string>
+    <string name="gutenberg_native_page_link">Seitenlink</string>
     <string name="gutenberg_native_add_this_telephone_link">Diesen Telefonlink hinzufügen</string>
     <string name="gutenberg_native_add_this_link">Diesen Link hinzufügen</string>
     <string name="gutenberg_native_add_this_email_link">Diesen E-Mail-Link hinzufügen</string>
@@ -1794,6 +1811,7 @@ Language: de
     <string name="jetpack_disconnect_confirm">Trennen</string>
     <string name="jetpack_disconnect_confirmation_message">Möchtest du die Verbindung von Jetpack mit der Website wirklich trennen?</string>
     <string name="jetpack_disconnect_pref_title">\"Verbindung mit WordPress.com trennen\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Du kannst eine IP-Adresse oder eine Reihe von IP-Adressen als „Immer zulassen“ markieren und so dafür sorgen, dass diese niemals von Jetpack blockiert werden. IPv4 und IPv6 sind zulässig. Gib für einen Bereich den unteren und oberen Wert ein (getrennt durch einen Bindestrich). Beispiel: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Zwei-Faktor-Authentifizierung erforderlich</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com-Anmeldung zulassen</string>
     <string name="jetpack_match_wpcom_via_email_title">Konten anhand der E-Mail-Adresse abgleichen</string>
@@ -1838,6 +1856,7 @@ Language: de
     <string name="notification_settings_item_your_sites_all_your_sites">Alle meine Websites</string>
     <string name="notification_settings_category_other">Sonstige</string>
     <string name="notification_settings_category_your_sites">Deine Websites</string>
+    <string name="notification_settings_main_off_message">Wenn du Benachrichtigungseinstellungen deaktivierst, werden alle Benachrichtigungen von dieser App, unabhängig vom Typ, deaktiviert. Du kannst detailliert festlegen, welche Art von Benachrichtigung du erhältst, nachdem du die Benachrichtigungseinstellungen aktiviert hast.</string>
     <string name="max_video_resolution">Maximale Videogröße</string>
     <string name="max_thumbnail_px_size">Maximale Bildgröße</string>
     <string name="error_upload_post_media_param">Es gab einen Fehler beim Hochladen der Medien in diesem Beitrag: %s.</string>

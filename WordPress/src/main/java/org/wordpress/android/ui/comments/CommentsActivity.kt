@@ -38,6 +38,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.SPAM
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.TRASH
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNAPPROVED
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNREPLIED
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener
 import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickListener
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -62,7 +63,7 @@ class CommentsActivity : LocaleAwareActivity(),
     private lateinit var appBar: AppBarLayout
     private lateinit var site: SiteModel
 
-    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, SPAM, TRASH)
+    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, UNREPLIED, SPAM, TRASH)
 
     private var disabledTabsOpacity: Float = 0F
 

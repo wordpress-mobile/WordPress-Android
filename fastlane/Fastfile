@@ -32,6 +32,16 @@ SUPPORTED_LOCALES = [
   { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {} },
 ].freeze
 
+# Env file paths to load
+USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
+
+before_all do |lane|
+  # Check that the env file exists
+  unless is_ci || File.file?(USER_ENV_FILE_PATH)
+    UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")
+  end
+end
+
 platform :android do
 ########################################################################
 # Includes
@@ -40,7 +50,7 @@ import "./ScreenshotFastfile"
 
 # Environment
 ########################################################################
-Dotenv.load('~/.wpandroid-env.default')
+Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
@@ -459,13 +469,13 @@ ENV["validate_translations"]="lintVanillaRelease"
     {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
-  BINARY_IMPORTED_LIBRARIES = [
+  binary_imported_libraries = [
     {
       name: "Gutenberg Native",
       import_key: "gutenbergMobileVersion",
       repository: "wordpress-mobile/gutenberg-mobile",
       strings_file_path: "bundle/android/strings.xml",
-      github_release_prefix: "v"
+      github_release_prefix: ""
     },
   ]
 
@@ -572,7 +582,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
-      
+
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
