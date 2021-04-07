@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
@@ -375,7 +376,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             setState(LoginStep.FETCHING_SITES);
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload()));
         }
     }
 
