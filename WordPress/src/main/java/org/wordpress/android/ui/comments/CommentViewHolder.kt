@@ -45,7 +45,7 @@ class CommentViewHolder(
         val commentModel = item.comment
 
         title.text = getFormattedTitle(commentModel)
-        commentBody.text = getSpannedContent(commentModel, commentBody.context)
+        commentBody.text = getSpannedContent(commentModel, commentBody.context)?.trim()
 
         uiHelpers.updateVisibility(checkMark, isSelected)
 

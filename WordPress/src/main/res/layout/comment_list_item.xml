@@ -28,6 +28,7 @@
                 android:contentDescription="@null" />
 
             <ImageView
+                android:padding="@dimen/margin_medium"
                 android:id="@+id/image_checkmark"
                 android:layout_width="@dimen/comment_avatar_sz"
                 android:layout_height="@dimen/comment_avatar_sz"
@@ -61,10 +62,9 @@
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
-            android:paddingEnd="@dimen/margin_large"
             android:textAppearance="?attr/textAppearanceBody2"
             tools:ignore="RtlSymmetry"
-            tools:text="comment" />
+            tools:text="comment " />
 
     </RelativeLayout>
 
