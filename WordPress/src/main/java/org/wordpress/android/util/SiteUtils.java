@@ -369,4 +369,9 @@ public class SiteUtils {
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
     }
+
+    // TODO: Inline this method when the legacy 'MySiteFragment' class is removed.
+    public static boolean isScanEnabled(boolean scanPurchased, SiteModel site) {
+        return scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
+    }
 }

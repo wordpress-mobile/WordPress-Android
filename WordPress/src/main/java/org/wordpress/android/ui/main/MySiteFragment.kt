@@ -303,7 +303,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         site: SiteModel,
         products: JetpackPurchasedProducts
     ) {
-        rowScan.setVisible(products.scan && !site.isWPCom && !site.isWPComAtomic)
+        rowScan.setVisible(SiteUtils.isScanEnabled(products.scan, site))
         rowBackup.setVisible(products.backup)
     }
 
