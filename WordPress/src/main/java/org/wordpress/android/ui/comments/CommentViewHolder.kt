@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.StyleSpan
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +18,8 @@ import org.wordpress.android.R.integer
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.CommentModel
+import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.ui.comments.CommentAdapter.OnCommentPressedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
@@ -40,6 +43,7 @@ class CommentViewHolder(
     private val avatar: ImageView = itemView.findViewById(R.id.avatar)
     private val checkMark: ImageView = itemView.findViewById(R.id.image_checkmark)
     private val containerView: ViewGroup = itemView.findViewById(R.id.layout_container)
+    private val statusIndicator: View = itemView.findViewById(R.id.status_indicator)
 
     fun bind(item: CommentListItem.Comment, isSelected: Boolean) {
         val commentModel = item.comment
@@ -64,6 +68,8 @@ class CommentViewHolder(
             )
             containerView.background = null
         }
+
+        uiHelpers.updateVisibility(statusIndicator, CommentStatus.fromString(commentModel.status) == UNAPPROVED)
 
         itemView.setOnClickListener {
             clickListener.onCommentPressed(adapterPosition, it) }
