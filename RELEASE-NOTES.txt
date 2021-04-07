@@ -9,10 +9,9 @@
 * [**] Comments: added an Unreplied comments filter [https://github.com/wordpress-mobile/WordPress-Android/pull/14373]
 * [***] Block Editor: Improved the accessibility of range and step-type block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3255]
 * [**] Updated the app icon to match the new color scheme within the app. [#14391]
-* [*] Colors: Replaced pink with blue as the accent color of the app [https://github.com/wordpress-mobile/WordPress-Android/pull/14376]
+* [**] Colors: Replaced pink with blue as the accent color of the app [https://github.com/wordpress-mobile/WordPress-Android/pull/14376]
 * [*] Colors: Updated color palette to 2.5.0 [https://github.com/wordpress-mobile/WordPress-Android/pull/14370]
 * [*] Colors: Replaced wordpress_blue with blue color [https://github.com/wordpress-mobile/WordPress-Android/pull/14369]
-* [*] Colors: Updated app icons with the new colors [https://github.com/wordpress-mobile/WordPress-Android/pull/14391]
 
 17.0
 -----
