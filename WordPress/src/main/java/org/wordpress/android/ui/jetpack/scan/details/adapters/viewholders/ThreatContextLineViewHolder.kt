@@ -3,22 +3,21 @@ package org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.threat_context_lines_list_context_line_item.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.ThreatContextLinesListContextLineItemBinding
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState.ThreatContextLineItemState
 import org.wordpress.android.ui.utils.PaddingBackgroundColorSpan
+import org.wordpress.android.util.viewBinding
 
 class ThreatContextLineViewHolder(
     parent: ViewGroup,
-    override val containerView: View = LayoutInflater.from(parent.context)
-        .inflate(R.layout.threat_context_lines_list_context_line_item, parent, false)
-) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    val binding: ThreatContextLinesListContextLineItemBinding = parent.viewBinding(
+            ThreatContextLinesListContextLineItemBinding::inflate
+    )
+) : RecyclerView.ViewHolder(binding.root) {
     private val highlightedContentTextPadding = itemView.context.resources.getDimensionPixelSize(R.dimen.margin_small)
 
     fun onBind(itemState: ThreatContextLineItemState) {
@@ -27,14 +26,14 @@ class ThreatContextLineViewHolder(
     }
 
     private fun updateLineNumber(itemState: ThreatContextLineItemState) {
-        with(line_number) {
+        with(binding.lineNumber) {
             setBackgroundColor(ContextCompat.getColor(itemView.context, itemState.lineNumberBackgroundColorRes))
             text = itemState.line.lineNumber.toString()
         }
     }
 
     private fun updateContent(itemState: ThreatContextLineItemState) {
-        with(content) {
+        with(binding.content) {
             setBackgroundColor(ContextCompat.getColor(itemView.context, itemState.contentBackgroundColorRes))
             text = getHighlightedContentText(itemState)
             // Fixes highlighted background clip by the bounds of the TextView
@@ -54,8 +53,8 @@ class ThreatContextLineViewHolder(
 
                 val foregroundSpan = ForegroundColorSpan(ContextCompat.getColor(context, highlightedTextColorRes))
                 val backgroundSpan = PaddingBackgroundColorSpan(
-                    backgroundColor = ContextCompat.getColor(context, highlightedBackgroundColorRes),
-                    padding = highlightedContentTextPadding
+                        backgroundColor = ContextCompat.getColor(context, highlightedBackgroundColorRes),
+                        padding = highlightedContentTextPadding
                 )
 
                 with(spannableText) {

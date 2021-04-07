@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 348de22c625922cca9a5060261fa7a0c4005786e
-  tag: 0.16.0
+  revision: 2caa42b65d701760067ae23310ad1b0495277d82
+  tag: 0.17.0
   specs:
     fastlane-plugin-wpmreleasetoolkit (0.16.0)
       activesupport (~> 5)
@@ -21,7 +21,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (3.0.3)
-    activesupport (5.2.4.5)
+    activesupport (5.2.5)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -162,7 +162,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    i18n (1.8.9)
+    i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
     json (2.5.1)

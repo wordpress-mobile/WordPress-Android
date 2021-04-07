@@ -52,10 +52,13 @@ jobs:
       - update-gradle-memory
       - run:
           name: Test WordPress
-          command: ./gradlew testVanillaRelease --stacktrace --no-daemon
+          command: ./gradlew testWordpressVanillaRelease --stacktrace --no-daemon
       - run:
           name: Test WordPressProcessors
           command: ./gradlew :libs:WordPressProcessors:test --stacktrace
+      - run:
+          name: Test ImageEditor
+          command: ./gradlew :libs:image-editor:ImageEditor:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:
@@ -80,7 +83,7 @@ jobs:
           command: ./gradlew --stacktrace WordPress:detekt
       - run:
           name: Lint
-          command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+          command: ./gradlew --stacktrace lintWordpressVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
           no_output_timeout: 40m
       - run:
           name: Violations
@@ -121,13 +124,13 @@ jobs:
             VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
-            ./gradlew --stacktrace assembleJalapenoDebug -PversionName="$VERSION_NAME"
+            ./gradlew --stacktrace assembleWordpressJalapenoDebug -PversionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
             mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/jalapeno/debug/org.wordpress.android-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+            mv WordPress/build/outputs/apk/wordpressJalapeno/debug/org.wordpress.android-wordpress-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
       - store_artifacts:
           path: Artifacts
           destination: Artifacts

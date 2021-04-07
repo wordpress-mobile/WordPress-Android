@@ -90,7 +90,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private var chipifyEnabled = false
     private var maxChips = 0
 
-    private var isRtl = false
+    private var isRightToLeft = false
 
     private var itemsManager: ItemsManagerInterface? = null
 
@@ -157,7 +157,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         label = findViewById(R.id.flexbox_label)
         hint = findViewById(R.id.flexbox_hint)
 
-        isRtl = RtlUtils.isRtl(context)
+        isRightToLeft = RtlUtils.isRtl(context)
 
         if (hasHint()) {
             label.setText(hintResourceId)
@@ -528,7 +528,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun animateViewTo(targetState: HelperTextState) {
-        if (isRtl) {
+        if (isRightToLeft) {
             hint.pivotX = hint.width.toFloat()
             hint.pivotY = 0f
         } else {

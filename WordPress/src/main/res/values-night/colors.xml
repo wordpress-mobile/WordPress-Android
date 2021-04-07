@@ -34,8 +34,8 @@
     <color name="stats_bar_chart_accent_top">@color/pink_60</color>
     <color name="stats_bar_chart_accent_bottom">@color/pink_30</color>
     <color name="stats_bar_chart_gridline">@color/gray_80</color>
-    <color name="stats_map_activity_low">@color/pink_80</color>
-    <color name="stats_map_activity_high">@color/pink_30</color>
+    <color name="stats_map_activity_low">@color/blue_80</color>
+    <color name="stats_map_activity_high">@color/blue_30</color>
     <color name="stats_map_activity_empty">@color/gray_80</color>
 
     <!-- Login Prologue -->
