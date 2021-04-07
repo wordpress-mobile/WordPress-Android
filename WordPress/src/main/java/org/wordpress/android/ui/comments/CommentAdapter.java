@@ -108,7 +108,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
         }
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return getItem(position).getType().ordinal();
@@ -184,9 +183,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
         }
 
         mEnableSelection = enable;
-        if (mEnableSelection) {
-            notifyDataSetChanged();
-        } else {
+        if (!mEnableSelection) {
             clearSelectedComments();
         }
     }
@@ -236,13 +233,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
         }
 
         notifyItemChanged(position);
-
-//        if (view != null && view.getTag() instanceof CommentHolder) {
-//            CommentHolder holder = (CommentHolder) view.getTag();
-//            // animate the selection change
-//            AniUtils.startAnimation(holder.mImgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-//            holder.mImgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-//        }
 
         if (mOnSelectedChangeListener != null) {
             mOnSelectedChangeListener.onSelectedItemsChanged();

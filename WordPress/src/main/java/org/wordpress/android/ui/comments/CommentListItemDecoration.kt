@@ -50,7 +50,9 @@ class CommentListItemDecoration(context: Context) : ItemDecoration() {
     }
 
     override fun getItemOffsets(
-        outRect: Rect, view: View, parent: RecyclerView,
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
         state: State
     ) {
         if (divider == null) {

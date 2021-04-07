@@ -33,20 +33,26 @@ class CommentListItemDiffCallback(
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
+        var isSame = false
+
         if (oldItem is SubHeader && newItem is SubHeader) {
-            return oldItem.label == newItem.label
+            isSame = oldItem.label == newItem.label
         }
 
         if (oldItem is Comment && newItem is Comment) {
-            return oldItem.comment.status == newItem.comment.status &&
+            isSame = oldItem.comment.status == newItem.comment.status &&
                     oldItem.comment.content == newItem.comment.content &&
                     oldItem.comment.datePublished == newItem.comment.datePublished &&
                     oldItem.comment.authorName == newItem.comment.authorName
         }
 
-        return false
+        return isSame
     }
 
+    /**
+     * Since we don't currently have a logic for updating only a part of the view, this method sends empty Payload
+     * to avoid view blinking in RecyclerView.
+     */
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
