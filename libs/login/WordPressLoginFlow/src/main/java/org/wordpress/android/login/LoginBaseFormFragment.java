@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -333,9 +334,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload()));
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(isJetpackAppLogin());
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
+    }
+
+    private boolean isJetpackAppLogin() {
+        return (mLoginListener instanceof LoginListener)
+               && ((LoginListener) mLoginListener).getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY;
     }
 
     @SuppressWarnings("unused")

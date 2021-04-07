@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -15,6 +16,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -378,5 +381,12 @@ public class SiteUtils {
     // TODO: Inline this method when legacy MySiteFragment is removed
     public static boolean isBackupEnabled(boolean backupFeatureFlagEnabled, boolean backupPurchased) {
         return backupFeatureFlagEnabled && backupPurchased;
+    }
+
+    @NonNull
+    public static FetchSitesPayload getFetchSitesPayload() {
+        ArrayList<SiteFilter> siteFilters = new ArrayList<>();
+        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
+        return new FetchSitesPayload(siteFilters);
     }
 }

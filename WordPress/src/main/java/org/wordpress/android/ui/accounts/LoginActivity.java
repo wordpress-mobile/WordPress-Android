@@ -143,6 +143,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
             switch (getLoginMode()) {
                 case FULL:
+                case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = true;
                     loginFromPrologue();
@@ -172,6 +173,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case SHARE_INTENT:
                     mUnifiedLoginTracker.setSource(Source.SHARE);
                     checkSmartLockPasswordAndStartLogin();
+                    break;
+                case WOO_LOGIN_MODE:
                     break;
             }
         } else {
@@ -274,6 +277,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
+            case JETPACK_LOGIN_ONLY:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
                     ActivityLauncher.showPostSignupInterstitial(this);
@@ -313,6 +317,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
+                break;
+            case WOO_LOGIN_MODE:
                 break;
         }
     }
