@@ -475,7 +475,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       import_key: "gutenbergMobileVersion",
       repository: "wordpress-mobile/gutenberg-mobile",
       strings_file_path: "bundle/android/strings.xml",
-      github_release_prefix: "v"
+      github_release_prefix: ""
     },
   ]
 
