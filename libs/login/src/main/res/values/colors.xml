@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme Colors -->
-    <color name="wp_blue_40">#1689db</color>
+    <color name="wp_blue_30">#399ce3</color>
     <color name="wp_blue_50">#0675c4</color>
     <color name="wp_blue_70">#044b7a</color>
 
