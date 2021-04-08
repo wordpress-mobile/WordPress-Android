@@ -153,7 +153,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
 
     @Override
     public long getItemId(int position) {
-        return mComments.get(position).longId();
+        CommentListItem listItem = getItem(position);
+
+        if (listItem instanceof SubHeader) {
+            return listItem.longId();
+        } else if (listItem instanceof Comment) {
+            return ((Comment) listItem).getComment().getRemoteCommentId();
+        }
+        return -1;
     }
 
     @Override
