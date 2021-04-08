@@ -326,7 +326,6 @@ public class SiteSqlUtils {
     }
 
     public static @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
-        ArrayList<GutenbergLayout> blockLayouts = new ArrayList<>();
         List<GutenbergLayoutModel> layouts =
                 WellSql.select(GutenbergLayoutModel.class)
                        .where()
