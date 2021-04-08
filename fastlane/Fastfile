@@ -91,7 +91,7 @@ ENV["validate_translations"]="lintVanillaRelease"
     localize_libs()
     send_strings_for_translation()
     ensure_git_status_clean()
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
+    get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
   #####################################################################################
@@ -550,7 +550,7 @@ ENV["validate_translations"]="lintVanillaRelease"
 ########################################################################
   desc "Get a list of pull request from `start_tag` to the current state"
   lane :get_pullrequests_list do | options |
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
+    get_prs_list(repository:GHHELPER_REPO, report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
   #####################################################################################
