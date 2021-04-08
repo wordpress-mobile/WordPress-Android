@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="org.wordpress.android.ui.jetpack.restore.RestoreFragment"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </androidx.fragment.app.FragmentContainerView>
+    </fragment>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"

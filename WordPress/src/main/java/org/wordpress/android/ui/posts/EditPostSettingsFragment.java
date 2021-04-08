@@ -65,7 +65,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -135,7 +134,6 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -569,18 +567,27 @@ public class EditPostSettingsFragment extends Fragment {
      * called by the activity when the user taps OK on a PostSettingsDialogFragment
      */
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+        int index;
+        PostStatus status = null;
         switch (fragment.getDialogType()) {
+            case HOMEPAGE_STATUS:
+                index = fragment.getCheckedIndex();
+                status = getHomepageStatusAtIndex(index);
+                break;
             case POST_STATUS:
-                int index = fragment.getCheckedIndex();
-                PostStatus status = getPostStatusAtIndex(index);
-                updatePostStatus(status);
-                PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_VISIBILITY_CHANGED);
+                index = fragment.getCheckedIndex();
+                status = getPostStatusAtIndex(index);
                 break;
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                 break;
+        }
+
+        if (status != null) {
+            updatePostStatus(status);
+            PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_VISIBILITY_CHANGED);
         }
     }
 
@@ -589,11 +596,23 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        int index = getCurrentPostStatusIndex();
+        boolean isSiteHomepage = isSiteHomepage();
+        int index = isSiteHomepage ? getCurrentHomepageStatusIndex() : getCurrentPostStatusIndex();
         FragmentManager fm = getActivity().getSupportFragmentManager();
+
+        DialogType statusType = isSiteHomepage ? DialogType.HOMEPAGE_STATUS : DialogType.POST_STATUS;
         PostSettingsListDialogFragment fragment =
-                PostSettingsListDialogFragment.newInstance(DialogType.POST_STATUS, index);
+                PostSettingsListDialogFragment.newInstance(statusType, index);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
+    }
+
+    private boolean isSiteHomepage() {
+        EditPostRepository postRepository = getEditPostRepository();
+        boolean isPage = postRepository.isPage();
+        boolean isPublishedPage = postRepository.getStatus() == PostStatus.PUBLISHED
+                                  || postRepository.getStatus() == PostStatus.PRIVATE;
+        boolean isHomepage = postRepository.getRemotePostId() == getSite().getPageOnFront();
+        return isPage && isPublishedPage && isHomepage;
     }
 
     private void showPostFormatDialog() {
@@ -902,6 +921,32 @@ public class EditPostSettingsFragment extends Fragment {
         return 0;
     }
 
+    private PostStatus getHomepageStatusAtIndex(int index) {
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
+        }
+    }
+
+    private int getCurrentHomepageStatusIndex() {
+        switch (getEditPostRepository().getStatus()) {
+            case PRIVATE:
+                return 1;
+            case DRAFT:
+            case PENDING:
+            case TRASHED:
+            case UNKNOWN:
+            case PUBLISHED:
+            case SCHEDULED:
+                return 0;
+        }
+        return 0;
+    }
+
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
@@ -952,7 +997,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId, boolean imagePicked) {
-        if (isAdded() && imagePicked && mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+        if (isAdded() && imagePicked) {
             int postId = getEditPostRepository().getId();
             mFeaturedImageHelper.trackFeaturedImageEvent(
                     TrackableEvent.IMAGE_PICKED,

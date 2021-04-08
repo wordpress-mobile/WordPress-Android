@@ -3,7 +3,6 @@ package org.wordpress.android.util.analytics
 import androidx.core.util.Pair
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.util.Date
@@ -70,12 +69,19 @@ class ActivityLogTracker @Inject constructor(
         tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
     }
 
-    fun trackRestoreStarted(rewindId: String, site: SiteModel, rewindableOnly: Boolean) {
-        val properties = mutableMapOf("rewind_id" to rewindId as Any)
+    fun trackDownloadBackupDownloadButtonClicked(rewindableOnly: Boolean) {
         if (rewindableOnly) {
-            AnalyticsUtils.trackWithSiteDetails(Stat.JETPACK_BACKUP_REWIND_STARTED, site, properties)
+            tracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED)
         } else {
-            AnalyticsUtils.trackWithSiteDetails(Stat.ACTIVITY_LOG_REWIND_STARTED, site, properties)
+            tracker.track(Stat.ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED)
+        }
+    }
+
+    fun trackDownloadBackupDismissButtonClicked(rewindableOnly: Boolean) {
+        if (rewindableOnly) {
+            tracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED)
+        } else {
+            tracker.track(Stat.ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED)
         }
     }
 }

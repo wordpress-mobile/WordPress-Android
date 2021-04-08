@@ -29,10 +29,8 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
-import kotlinx.android.synthetic.main.reader_gap_marker_view.view.*
-import kotlinx.android.synthetic.main.stats_block_list_item.view.*
-import kotlinx.android.synthetic.main.wp_edit_text_with_chips_outlined.view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import java.util.LinkedHashMap
@@ -92,7 +90,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private var chipifyEnabled = false
     private var maxChips = 0
 
-    private var isRtl = false
+    private var isRightToLeft = false
 
     private var itemsManager: ItemsManagerInterface? = null
 
@@ -159,7 +157,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         label = findViewById(R.id.flexbox_label)
         hint = findViewById(R.id.flexbox_hint)
 
-        isRtl = RtlUtils.isRtl(context)
+        isRightToLeft = RtlUtils.isRtl(context)
 
         if (hasHint()) {
             label.setText(hintResourceId)
@@ -181,7 +179,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         throwExceptionIfChipifyNotEnabled()
 
         if (!hasText() || !canAddMoreChips()) {
-            editor.setText("")
+            resetText()
             return null
         }
 
@@ -198,9 +196,11 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         val chips = getChipsMap()
 
         chips[item]?.let {
-            flexbox.removeView(it)
-            if (flexbox.childCount == 1) {
-                styleView(isEditorFocused(), hasItemsOrText(), true)
+            withBinding {
+                flexbox.removeView(it)
+                if (flexbox.childCount == 1) {
+                    styleView(isEditorFocused(), hasItemsOrText(), true)
+                }
             }
         }
     }
@@ -219,6 +219,12 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     fun containsChip(item: String): Boolean {
         throwExceptionIfChipifyNotEnabled()
         return getChipsMap().containsKey(item)
+    }
+
+    private fun <T> withBinding(block: WpEditTextWithChipsOutlinedBinding.() -> T): T {
+        return with(WpEditTextWithChipsOutlinedBinding.bind(this)) {
+            block()
+        }
     }
 
     private fun loadOutlineDrawable() {
@@ -329,17 +335,21 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         }
     }
 
-    private fun canAddMoreChips() = flexbox.childCount < maxChips + 1 || maxChips == 0
+    private fun canAddMoreChips(): Boolean {
+        return withBinding {
+            flexbox.childCount < maxChips + 1 || maxChips == 0
+        }
+    }
 
     private fun addItem(item: String) {
         if (!canAddMoreChips() && item.isNotBlank()) {
-            editor.setText("")
+            resetText()
         } else {
             val cleanedItem = removeDelimiterFromItemIfPresent(item)
 
             if (cleanedItem.isNullOrBlank()) return
 
-            editor.setText("")
+            resetText()
 
             itemsManager?.onAddItem(cleanedItem) ?: chipify(cleanedItem, ItemValidationState.NEUTRAL)
         }
@@ -375,19 +385,26 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         if (!isAlreadyInGroup) {
             chip.setOnCloseIconClickListener { chipView ->
                 val itemName = chip.text.toString()
+                withBinding {
+                    flexbox.removeView(chipView)
+                    itemsManager?.onRemoveItem(itemName)
 
-                flexbox.removeView(chipView)
-                itemsManager?.onRemoveItem(itemName)
-
-                if (flexbox.childCount == 1) {
-                    styleView(isEditorFocused(), hasItemsOrText(), true)
+                    if (flexbox.childCount == 1) {
+                        styleView(isEditorFocused(), hasItemsOrText(), true)
+                    }
                 }
             }
 
             flexBox.addView(chip as View, index)
         }
 
-        editor.setText("")
+        resetText()
+    }
+
+    private fun resetText() {
+        editor.apply {
+            text?.clear() ?: setText("")
+        }
     }
 
     private fun removeDelimiterFromItemIfPresent(item: String?): String? {
@@ -412,11 +429,12 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     // This should be fast enough for our use case, so we get fresh data always
     private fun getChipsMap(): MutableMap<String, Chip> {
         val chips: MutableMap<String, Chip> = LinkedHashMap()
-
-        for (i in 0 until flexbox.childCount) {
-            val v: View = flexbox.getChildAt(i)
-            if (v is Chip) {
-                chips[v.text.toString()] = v
+        withBinding {
+            for (i in 0 until flexbox.childCount) {
+                val v: View = flexbox.getChildAt(i)
+                if (v is Chip) {
+                    chips[v.text.toString()] = v
+                }
             }
         }
 
@@ -428,15 +446,18 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
             return false
         }
 
-        // try and remove the last entered username
-        if (flexbox.childCount > 1) {
-            val chipToRemove = flexBox.getChildAt(flexbox.childCount - 2) as Chip
-            val itemName = chipToRemove.text.toString()
-            flexBox.removeViewAt(flexbox.childCount - 2)
-            itemsManager?.onRemoveItem(itemName)
-            return true
+        return withBinding {
+            // try and remove the last entered username
+            if (flexbox.childCount > 1) {
+                val chipToRemove = flexBox.getChildAt(flexbox.childCount - 2) as Chip
+                val itemName = chipToRemove.text.toString()
+                flexBox.removeViewAt(flexbox.childCount - 2)
+                itemsManager?.onRemoveItem(itemName)
+                true
+            } else {
+                false
+            }
         }
-        return false
     }
 
     private fun endsWithDelimiter(string: String): Boolean {
@@ -507,7 +528,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun animateViewTo(targetState: HelperTextState) {
-        if (isRtl) {
+        if (isRightToLeft) {
             hint.pivotX = hint.width.toFloat()
             hint.pivotY = 0f
         } else {
@@ -596,7 +617,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun hasItemsOrText() = hasItems() || hasText()
-    private fun hasItems() = flexbox.childCount > 1
+    private fun hasItems() = withBinding { flexbox.childCount > 1 }
     private fun hasText() = (editor.text?.length ?: 0) > 0
     private fun isEditorFocused() = editor.isFocused
     private fun hasHint() = hintResourceId != 0

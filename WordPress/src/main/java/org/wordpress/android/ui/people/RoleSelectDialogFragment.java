@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.RoleUtils;
+import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 
 public class RoleSelectDialogFragment extends DialogFragment {
     @Inject SiteStore mSiteStore;
+    @Inject ContextProvider mContextProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class RoleSelectDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         SiteModel site = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        final List<RoleModel> inviteRoles = RoleUtils.getInviteRoles(mSiteStore, site, this);
+        final List<RoleModel> inviteRoles = RoleUtils.getInviteRoles(mSiteStore, site, mContextProvider.getContext());
         final String[] stringRoles = new String[inviteRoles.size()];
         for (int i = 0; i < inviteRoles.size(); i++) {
             stringRoles[i] = inviteRoles.get(i).getDisplayName();

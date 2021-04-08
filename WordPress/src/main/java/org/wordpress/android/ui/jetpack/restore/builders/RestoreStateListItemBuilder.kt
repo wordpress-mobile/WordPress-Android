@@ -93,9 +93,7 @@ class RestoreStateListItemBuilder @Inject constructor(
     fun buildProgressListStateItems(
         progress: Int = 0,
         published: Date,
-        isIndeterminate: Boolean = false,
-        showNotifyMe: Boolean,
-        onNotifyMeClick: () -> Unit
+        isIndeterminate: Boolean = false
     ): List<JetpackListItemState> {
         return mutableListOf(
                 buildIconState(
@@ -105,13 +103,10 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
                 buildProgressState(progress, isIndeterminate),
-                buildActionButtonState(
-                        titleRes = R.string.restore_progress_action_button,
-                        contentDescRes = R.string.restore_progress_action_button_content_description,
-                        onClick = onNotifyMeClick,
-                        isEnabled = showNotifyMe
-                ),
-                buildFootnoteState(R.string.restore_progress_footnote)
+                buildFootnoteState(
+                        iconRes = R.drawable.ic_info_outline_white_24dp,
+                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
+                        textRes = R.string.restore_progress_footnote)
         )
     }
 
@@ -230,8 +225,14 @@ class RestoreStateListItemBuilder @Inject constructor(
                     itemTopMarginResId = topMarginResId,
                     itemBottomMarginResId = bottomMarginResId)
 
-    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
-            UiStringRes(textRes)
+    private fun buildFootnoteState(
+        @DrawableRes iconRes: Int? = null,
+        @DimenRes iconSizeResId: Int? = null,
+        @StringRes textRes: Int
+    ) = FootnoteState(
+            iconRes = iconRes,
+            iconSizeResId = iconSizeResId,
+            text = UiStringRes(textRes)
     )
 
     private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(

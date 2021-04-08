@@ -21,18 +21,13 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
-
-import javax.inject.Inject;
 
 /**
  * topmost view in reader comment adapter - show info about the post
  */
 public class ReaderCommentsPostHeaderView extends LinearLayout {
-    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
-
     public ReaderCommentsPostHeaderView(Context context) {
         super(context);
         initView(context);
@@ -97,9 +92,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             ImageManager.getInstance().loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
         }
 
-        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-            setFollowButtonState(followButtonState);
-        }
+        setFollowButtonState(followButtonState);
     }
 
     public void setFollowButtonState(@Nullable final FollowCommentsUiState followButtonState) {

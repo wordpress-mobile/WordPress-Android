@@ -17,7 +17,6 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_ERROR
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -211,9 +210,7 @@ class RestoreViewModel @Inject constructor(
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = progressStart,
                         published = restoreState.published as Date,
-                        isIndeterminate = true,
-                        onNotifyMeClick = this@RestoreViewModel::onNotifyMeClick,
-                        showNotifyMe = !restoreState.shouldInitProgress
+                        isIndeterminate = true
                 ),
                 type = StateType.PROGRESS
         )
@@ -479,11 +476,6 @@ class RestoreViewModel @Inject constructor(
     private fun onCancelClick() {
         wizardManager.onBackPressed()
         showStep(NavigationTarget(DETAILS, restoreState))
-    }
-
-    private fun onNotifyMeClick() {
-        AnalyticsTracker.track(JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED)
-        _wizardFinishedObservable.value = constructProgressEvent()
     }
 
     private fun onVisitSiteClick() {

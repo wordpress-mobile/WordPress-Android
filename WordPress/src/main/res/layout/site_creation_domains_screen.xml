@@ -43,6 +43,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
 
+    <include
+        android:id="@+id/domain_list_example"
+        layout="@layout/site_creation_domains_screen_example"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout" />
+
     <View
         android:id="@+id/create_site_button_shaddow"
         android:layout_width="match_parent"

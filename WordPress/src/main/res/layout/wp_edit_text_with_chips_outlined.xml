@@ -27,7 +27,8 @@
             app:layout_flexGrow="1"
             android:background="@android:color/transparent"
             android:imeOptions="actionDone|flagNoExtractUi"
-            android:inputType="text|textNoSuggestions"
+            android:inputType="text|textNoSuggestions|textEmailAddress"
+            android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:minWidth="@dimen/min_touch_target_sz"
             android:minHeight="@dimen/edit_text_with_chips_edit_view_min_height"/>

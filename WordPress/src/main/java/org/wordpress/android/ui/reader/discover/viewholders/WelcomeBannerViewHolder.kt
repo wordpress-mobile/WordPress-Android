@@ -1,16 +1,18 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.reader_cardview_welcome_banner.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderCardviewWelcomeBannerBinding
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
+import org.wordpress.android.util.viewBinding
 
 class WelcomeBannerViewHolder(
     parentView: ViewGroup
-) : ReaderViewHolder(parentView, R.layout.reader_cardview_welcome_banner) {
-    override fun onBind(uiState: ReaderCardUiState) {
+) : ReaderViewHolder<ReaderCardviewWelcomeBannerBinding>(
+        parentView.viewBinding(ReaderCardviewWelcomeBannerBinding::inflate)
+) {
+    override fun onBind(uiState: ReaderCardUiState) = with(binding) {
         val state = uiState as ReaderWelcomeBannerCardUiState
-        welcome_title.setText(state.titleRes)
+        welcomeTitle.setText(state.titleRes)
     }
 }

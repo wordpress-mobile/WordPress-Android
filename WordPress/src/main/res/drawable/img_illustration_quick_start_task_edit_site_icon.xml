@@ -4,41 +4,41 @@
     android:viewportWidth="168"
     android:viewportHeight="94">
     <path
-        android:pathData="M0,0h168v94h-168z"
-        android:fillColor="@color/gray_0" />
+        android:fillColor="@color/quick_start_task_card_illustration_background"
+        android:pathData="M0 0h168v94H0z" />
     <path
-        android:pathData="M66.5,21.5L101.5,21.5A8,8 0,0 1,109.5 29.5L109.5,64.5A8,8 0,0 1,101.5 72.5L66.5,72.5A8,8 0,0 1,58.5 64.5L58.5,29.5A8,8 0,0 1,66.5 21.5z"
-        android:fillColor="@color/blue_0" />
+        android:fillColor="@color/quick_start_task_card_illustration_edit_site_icon_area"
+        android:pathData="M58.5 29.5c0-4.42 3.58-8 8-8h35c4.42 0 8 3.58 8 8v35c0 4.42-3.58 8-8 8h-35c-4.42 0-8-3.58-8-8z" />
     <group>
-        <clip-path android:pathData="M66.5,21.5L101.5,21.5A8,8 0,0 1,109.5 29.5L109.5,64.5A8,8 0,0 1,101.5 72.5L66.5,72.5A8,8 0,0 1,58.5 64.5L58.5,29.5A8,8 0,0 1,66.5 21.5z" />
+        <clip-path android:pathData="M58.5 29.5c0-4.42 3.58-8 8-8h35c4.42 0 8 3.58 8 8v35c0 4.42-3.58 8-8 8h-35c-4.42 0-8-3.58-8-8z" />
         <path
-            android:pathData="M78.956,45.572L40.835,76.351H145.165V68.321L113.063,32.859L88.987,54.939L78.956,45.572Z"
-            android:fillColor="@color/gray_5" />
+            android:fillColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_fill"
+            android:pathData="M78.96 45.57L40.84 76.35h104.32v-8.03l-32.1-35.46L89 54.94l-10.03-9.37z" />
         <path
-            android:pathData="M42.174,75.681L78.957,45.571L97.683,62.968"
-            android:strokeLineJoin="round"
+            android:pathData="M42.17 75.68l36.79-30.1 18.72 17.39"
             android:strokeWidth="1"
-            android:strokeColor="@color/gray_40"
-            android:strokeLineCap="round" />
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
         <path
-            android:pathData="M72.937,55.608L68.924,53.601L78.956,45.571L86.981,52.932L85.644,54.27L80.962,53.601L72.937,55.608Z"
-            android:strokeLineJoin="round"
-            android:strokeWidth="1"
             android:fillColor="@color/white"
-            android:strokeColor="@color/gray_40"
-            android:strokeLineCap="round" />
-        <path
-            android:pathData="M88.989,54.939L113.065,32.859L144.497,67.652"
-            android:strokeLineJoin="round"
+            android:pathData="M72.94 55.6l-4.02-2 10.04-8.03 8.02 7.36-1.34 1.34-4.68-0.67-8.02 2z"
             android:strokeWidth="1"
-            android:strokeColor="@color/gray_40"
-            android:strokeLineCap="round" />
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
         <path
-            android:pathData="M108.382,42.895L104.369,40.888L113.063,32.859L120.42,40.888L116.407,42.895L112.395,41.557L108.382,42.895Z"
-            android:strokeLineJoin="round"
-            android:strokeWidth="0.632514"
+            android:pathData="M88.99 54.94l24.08-22.08 31.43 34.8"
+            android:strokeWidth="1"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
             android:fillColor="@color/white"
-            android:strokeColor="@color/gray_40"
-            android:strokeLineCap="round" />
+            android:pathData="M108.38 42.9l-4.01-2.01 8.7-8.03 7.35 8.03-4.01 2-4.02-1.33-4 1.34z"
+            android:strokeWidth="0.63"
+            android:strokeColor="@color/quick_start_task_card_illustration_edit_site_icon_mountain_stroke"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
     </group>
 </vector>

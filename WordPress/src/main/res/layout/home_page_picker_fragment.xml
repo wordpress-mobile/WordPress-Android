@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                layout="@layout/home_page_picker_header_section"
+                layout="@layout/modal_layout_picker_header_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -54,27 +54,40 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <include
+            layout="@layout/modal_layout_picker_categories_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoriesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mlp_categories_bar_height"
+            android:background="?attr/layoutPickerBackground"
+            android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/mlp_layout_card_margin_end"
+            android:paddingStart="@dimen/mlp_layout_card_margin_start"
+            android:scrollbars="none" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        layout="@layout/home_page_picker_loading_skeleton"
+        layout="@layout/modal_layout_picker_layouts_skeleton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/layoutsRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:maxWidth="@dimen/hpp_maximum_container_width"
-        android:layout_gravity="center|top"
-        android:paddingStart="@dimen/hpp_card_padding"
-        android:paddingEnd="0dp"
-        android:paddingBottom="@dimen/toolbar_content_offset"
         android:background="?attr/layoutPickerBackground"
+        android:paddingBottom="@dimen/toolbar_content_offset"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
-        android:scrollbars="none"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <org.wordpress.android.ui.ActionableEmptyView

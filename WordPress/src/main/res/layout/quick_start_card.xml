@@ -57,6 +57,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingEnd="@dimen/margin_medium_large"
-        android:paddingStart="@dimen/margin_medium_large" />
+        android:requiresFadingEdge="horizontal" />
 </LinearLayout>

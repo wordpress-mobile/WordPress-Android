@@ -41,7 +41,7 @@
         app:layout_constraintStart_toEndOf="@+id/my_site_item_primary_text"/>
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_focus_point"
+        android:id="@+id/my_site_item_quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center"

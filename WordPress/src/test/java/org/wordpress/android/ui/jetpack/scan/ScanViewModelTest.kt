@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.MainCoroutineScopeRule
@@ -44,8 +45,8 @@ import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.ScanningStateUpdatedInDb
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
@@ -68,11 +69,13 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var scanTracker: ScanTracker
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
 
     private lateinit var viewModel: ScanViewModel
 
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
     private val fakeUiStringText = UiStringText("")
+    private val fakeDetectedAt = UiStringText("")
     private val fakeSubHeaderColor = 1
     private val fakeThreatId = 1L
     private val fakeIconId = 1
@@ -88,6 +91,7 @@ class ScanViewModelTest : BaseUnitTest() {
             fetchFixThreatsStatusUseCase,
             scanStore,
             scanTracker,
+            htmlMessageUtils,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
@@ -101,8 +105,9 @@ class ScanViewModelTest : BaseUnitTest() {
             }
         whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Complete)
+            flowOf(FetchFixThreatsState.Complete(fixedThreatsCount = 1))
         )
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt())).thenReturn("")
     }
 
     @Test
@@ -359,6 +364,73 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given no threats found, when scan button is clicked, then no threats message is displayed`() = test {
+        val noThreatsFoundMessage = "no threats found"
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.scan_finished_no_threats_found_message))
+            .thenReturn(noThreatsFoundMessage)
+        whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
+            .thenReturn(flowOf(Success(fakeScanStateModel)))
+        whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
+        val observers = init()
+
+        (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first()
+            .onClick.invoke()
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(noThreatsFoundMessage)))
+    }
+
+    @Test
+    fun `given single threat found, when scan button is clicked, then single threat found message is displayed`() =
+        test {
+            val threatFoundMessage = "1 potential threat found"
+            whenever(
+                htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_finished_potential_threats_found_message_singular
+                    )
+            ).thenReturn(threatFoundMessage)
+            val fakeScanStateModelWithThreat = fakeScanStateModel.copy(
+                threats = listOf(ThreatTestData.genericThreatModel)
+            )
+            whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
+                .thenReturn(flowOf(Success(fakeScanStateModelWithThreat)))
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
+            val observers = init()
+
+            (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first()
+                .onClick.invoke()
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(threatFoundMessage)))
+        }
+
+    @Test
+    fun `given multiple threats found, when scan button is clicked, then plural threats found message is displayed`() =
+        test {
+            val threats = listOf(ThreatTestData.genericThreatModel, ThreatTestData.genericThreatModel)
+            val threatsFoundMessage = "${threats.size} potential threats found."
+            whenever(
+                htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                        R.string.scan_finished_potential_threats_found_message_plural,
+                        "${threats.size}"
+                    )
+            ).thenReturn(threatsFoundMessage)
+            val fakeScanStateModelWithThreats = fakeScanStateModel.copy(threats = threats)
+            whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
+                .thenReturn(flowOf(Success(fakeScanStateModelWithThreats)))
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
+            val observers = init()
+
+            (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first()
+                .onClick.invoke()
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(threatsFoundMessage)))
+        }
+
+    @Test
     fun `when fix all threats button is clicked, then fix threats confirmation dialog action is triggered`() =
         test {
             val observers = init()
@@ -371,7 +443,7 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when fix threats confirmation dialog action is triggered, then fix threats confirmation dialog is shown`() =
+    fun `when fix threat confirmation dialog action is triggered, then fix threat confirmation dialog is shown`() =
         test {
             val scanStateModelWithFixableThreats = fakeScanStateModel
                 .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
@@ -386,10 +458,7 @@ class ScanViewModelTest : BaseUnitTest() {
             with(confirmationDialog) {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
                 assertThat(message).isEqualTo(
-                    UiStringResWithParams(
-                        R.string.threat_fix_all_warning_message,
-                        listOf(UiStringText("1"))
-                    )
+                    UiStringRes(R.string.threat_fix_all_confirmation_message_singular)
                 )
                 assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
                 assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
@@ -422,10 +491,10 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given threats are fixed, when threats fix status is checked, then success message is shown`() =
+    fun `given threats are fixed, when threats fix status is checked, then pluralised success message is shown`() =
         test {
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Complete)
+                flowOf(FetchFixThreatsState.Complete(fixedThreatsCount = 2))
             )
             val observers = init()
 
@@ -433,7 +502,23 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
             assertThat(snackBarMsg).isEqualTo(
-                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message))
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_plural))
+            )
+        }
+
+    @Test
+    fun `given single threat is fixed, when threat fix status is checked, then single threat success msg is shown`() =
+        test {
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Complete(fixedThreatsCount = 1))
+            )
+            val observers = init()
+
+            fetchFixThreatsStatus(observers)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_singular))
             )
         }
 
@@ -618,6 +703,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ThreatItemState(
             threatId = fakeThreatId,
             isFixing = false,
+            firstDetectedDate = fakeDetectedAt,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,

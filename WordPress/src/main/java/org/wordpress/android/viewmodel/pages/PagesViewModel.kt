@@ -980,7 +980,7 @@ class PagesViewModel
         }
     }
 
-    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(coroutineContext) {
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiDispatcher) {
         setValue(value)
     }
 

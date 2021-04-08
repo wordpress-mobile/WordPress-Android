@@ -4,9 +4,7 @@ import android.R.id
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.reader_no_site_to_reblog.noSiteToReblogView
-import kotlinx.android.synthetic.main.toolbar_main.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderNoSiteToReblogBinding
 import org.wordpress.android.ui.ActivityLauncher
 
 /*
@@ -15,16 +13,19 @@ import org.wordpress.android.ui.ActivityLauncher
 class NoSiteToReblogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.reader_no_site_to_reblog)
 
-        setSupportActionBar(toolbar_main)
+        val binding = ReaderNoSiteToReblogBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.includeToolbarMain.toolbarMain)
 
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
 
-        noSiteToReblogView.button.setOnClickListener {
+        binding.noSiteToReblogView.button.setOnClickListener {
             ActivityLauncher.viewMySiteInNewStack(this@NoSiteToReblogActivity)
             setResult(RESULT_OK)
             finish()

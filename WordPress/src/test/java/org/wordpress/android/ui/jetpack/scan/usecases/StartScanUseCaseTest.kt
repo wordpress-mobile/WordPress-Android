@@ -32,7 +32,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
     @Mock lateinit var scanStore: ScanStore
 
     @Before
-    fun setup() {
+    fun setup() = test {
         useCase = StartScanUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)

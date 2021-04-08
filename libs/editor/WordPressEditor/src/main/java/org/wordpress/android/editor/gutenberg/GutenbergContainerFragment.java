@@ -23,9 +23,9 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
@@ -62,7 +62,6 @@ public class GutenbergContainerFragment extends Fragment {
                                   RequestExecutor fetchExecutor,
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
-                                  OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   OnGutenbergDidSendButtonPressedActionListener
@@ -70,6 +69,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   ShowSuggestionsUtil showSuggestionsUtil,
                                   OnMediaFilesCollectionBasedBlockEditorListener
                                           onMediaFilesCollectionBasedBlockEditorListener,
+                                  OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -82,11 +82,11 @@ public class GutenbergContainerFragment extends Fragment {
                     fetchExecutor,
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
-                    onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
+                    onFPPTooltipShownEventListener,
                     isDarkMode);
     }
 
@@ -110,7 +110,6 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext(),
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,

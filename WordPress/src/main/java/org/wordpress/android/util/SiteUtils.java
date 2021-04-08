@@ -211,8 +211,12 @@ public class SiteUtils {
             // Default to block editor when mobile editor setting is empty
             return true;
         } else {
-            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
+            return alwaysDefaultToGutenberg(site) || site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
+    }
+
+    public static boolean alwaysDefaultToGutenberg(SiteModel site) {
+        return site.isWPCom() && !site.isWPComAtomic();
     }
 
     public static String getSiteNameOrHomeURL(SiteModel site) {
@@ -371,13 +375,8 @@ public class SiteUtils {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
     }
 
-    // TODO: Inline this method when legacy MySiteFragment is removed
-    public static boolean isScanEnabled(boolean scanFeatureFlagEnabled, boolean scanPurchased, SiteModel site) {
-        return scanFeatureFlagEnabled && scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
-    }
-
-    // TODO: Inline this method when legacy MySiteFragment is removed
-    public static boolean isBackupEnabled(boolean backupFeatureFlagEnabled, boolean backupPurchased) {
-        return backupFeatureFlagEnabled && backupPurchased;
+    // TODO: Inline this method when the legacy 'MySiteFragment' class is removed.
+    public static boolean isScanEnabled(boolean scanPurchased, SiteModel site) {
+        return scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
     }
 }

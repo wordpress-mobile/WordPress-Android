@@ -29,7 +29,7 @@ local.properties
 *.iml
 *.ipr
 *.iws
-/.idea/*
+.idea/
 
 # IntelliJ/Android Studio exceptions
 !/.idea/codeStyles/

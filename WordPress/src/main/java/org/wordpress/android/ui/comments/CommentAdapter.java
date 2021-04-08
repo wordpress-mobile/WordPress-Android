@@ -18,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
@@ -34,6 +36,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -86,6 +89,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Inject CommentStore mCommentStore;
     @Inject ImageManager mImageManager;
+    @Inject AccountStore mAccountStore;
 
     class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTxtTitle;
@@ -275,8 +279,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             params.addRule(RelativeLayout.LEFT_OF, 0);
         }
 
-        // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+        // request to load more comments when we near the end (UNREPLIED filter does not have a pagination)
+        if (commentStatus != CommentStatus.UNREPLIED && mOnLoadMoreListener != null && position >= getItemCount() - 1
             && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
@@ -395,14 +399,26 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    void loadInitialCachedComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, true, false));
+    }
+
+    void reloadComments(CommentStatus statusFilter) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(0, false, true));
+    }
+
+    void loadMoreComments(CommentStatus statusFilter, int offset) {
+        loadComments(statusFilter, new LoadCommentsTaskParameters(offset, false, false));
+    }
+
     /*
      * load comments using an AsyncTask
      */
-    void loadComments(CommentStatus statusFilter) {
+    private void loadComments(CommentStatus statusFilter, LoadCommentsTaskParameters params) {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
-            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
     }
 
@@ -411,7 +427,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private boolean mIsLoadTaskRunning = false;
 
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCommentsTask extends AsyncTask<LoadCommentsTaskParameters, Void, Boolean> {
         private CommentList mTmpComments;
         final CommentStatus mStatusFilter;
 
@@ -430,20 +446,85 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            List<CommentModel> comments;
-            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
-                // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-                comments = mCommentStore.getCommentsForSite(mSite, false,
-                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+        protected Boolean doInBackground(LoadCommentsTaskParameters... params) {
+            LoadCommentsTaskParameters parameters = params[0];
+            int numOfCommentsToFetch;
+            // UNREPLIED filter has no paging, so we always request MAX_COMMENTS_IN_RESPONSE
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                numOfCommentsToFetch = CommentsListFragment.MAX_COMMENTS_IN_RESPONSE;
+            } else if (parameters.mIsLoadingCache) {
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE;
+            } else if (parameters.mIsReloadingContent) {
+                // round up to nearest page size (eg. 30, 60, 90, etc.)
+                numOfCommentsToFetch = ((mComments.size() + CommentsListFragment.COMMENTS_PER_PAGE - 1)
+                                        / CommentsListFragment.COMMENTS_PER_PAGE)
+                                       * CommentsListFragment.COMMENTS_PER_PAGE;
             } else {
-                comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
+                numOfCommentsToFetch = CommentsListFragment.COMMENTS_PER_PAGE + parameters.mOffset;
+            }
+
+            List<CommentModel> comments;
+            if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL
+                || mStatusFilter == CommentStatus.UNREPLIED) {
+                // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch, CommentStatus.APPROVED,
+                        CommentStatus.UNAPPROVED);
+            } else {
+                comments = mCommentStore.getCommentsForSite(mSite, false, numOfCommentsToFetch,
+                        mStatusFilter);
+            }
+
+            if (mStatusFilter == CommentStatus.UNREPLIED) {
+                comments = getUnrepliedComments(comments);
             }
 
             mTmpComments = new CommentList();
             mTmpComments.addAll(comments);
 
             return !mComments.isSameList(mTmpComments);
+        }
+
+        private ArrayList<CommentModel> getUnrepliedComments(List<CommentModel> comments) {
+            CommentLeveler leveler = new CommentLeveler(comments);
+            ArrayList<CommentModel> leveledComments = leveler.createLevelList();
+
+            ArrayList<CommentModel> topLevelComments = new ArrayList<>();
+            for (CommentModel comment : leveledComments) {
+                // only check top level comments
+                if (comment.level == 0) {
+                    ArrayList<CommentModel> childrenComments = leveler.getChildren(comment.getRemoteCommentId());
+                    // comment is not mine and has no replies
+                    if (!isMyComment(comment) && childrenComments.isEmpty()) {
+                        topLevelComments.add(comment);
+                    } else if (!isMyComment(comment)) {  // comment is not mine and has replies
+                        boolean hasMyReplies = false;
+                        for (CommentModel childrenComment : childrenComments) { // check if any replies are mine
+                            if (isMyComment(childrenComment)) {
+                                hasMyReplies = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasMyReplies) {
+                            topLevelComments.add(comment);
+                        }
+                    }
+                }
+            }
+            return topLevelComments;
+        }
+
+        private boolean isMyComment(CommentModel comment) {
+            String myEmail;
+            // if site is self hosted, we want to use email associate with it, even if we are logged into wpcom
+            if (!mSite.isUsingWpComRestApi()) {
+                myEmail = mSite.getEmail();
+            } else {
+                AccountModel account = mAccountStore.getAccount();
+                myEmail = account.getEmail();
+            }
+
+            return comment.getAuthorEmail().equals(myEmail);
         }
 
         @Override
@@ -468,6 +549,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             mIsLoadTaskRunning = false;
+        }
+    }
+
+    static class LoadCommentsTaskParameters {
+        int mOffset;
+        boolean mIsLoadingCache;
+        boolean mIsReloadingContent;
+
+        LoadCommentsTaskParameters(int offset, boolean isLoadingCache, boolean isReloadingContent) {
+            mOffset = offset;
+            mIsLoadingCache = isLoadingCache;
+            mIsReloadingContent = isReloadingContent;
         }
     }
 }

@@ -362,11 +362,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackEmailSignupConfirmationViewed() {
-        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.START);
-    }
-
-    @Override
     public void trackSocialSignupConfirmationViewed() {
         mUnifiedLoginTracker.track(Flow.GOOGLE_SIGNUP, Step.START);
     }

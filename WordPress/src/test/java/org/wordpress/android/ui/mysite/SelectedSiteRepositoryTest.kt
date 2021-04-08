@@ -198,6 +198,15 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         verify(siteSettingsInterfaceWrapper).clear()
     }
 
+    @Test
+    fun `emits null site ID when site not selected`() {
+        var emptySiteIdEmitted = false
+
+        selectedSiteRepository.siteSelected.observeForever { emptySiteIdEmitted = true }
+
+        assertThat(emptySiteIdEmitted).isTrue()
+    }
+
     private fun initializeSiteAndSiteSettings() {
         selectedSiteRepository.updateSite(siteModel)
         doAnswer {

@@ -1,11 +1,17 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.CHOSEN_DOMAIN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.FILTER
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.LOCATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -18,8 +24,11 @@ enum class SiteCreationErrorType {
     UNKNOWN;
 }
 
+private const val DESIGN_ERROR_CONTEXT = "design"
+private const val SITE_CREATION_LOCATION = "site_creation"
+
 @Singleton
-class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) {
+class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
         SEGMENT_NAME("segment_name"),
@@ -27,7 +36,10 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         CHOSEN_DOMAIN("chosen_domain"),
         SEARCH_TERM("search_term"),
         THUMBNAIL_MODE("thumbnail_mode"),
-        PREVIEW_MODE("preview_mode")
+        PREVIEW_MODE("preview_mode"),
+        LOCATION("location"),
+        FILTER("filter"),
+        SELECTED_FILTERS("selected_filters")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -141,10 +153,10 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackSiteDesignThumbnailModeTapped(previewMode: String) {
+    override fun trackThumbnailModeTapped(mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED,
-                mapOf(PREVIEW_MODE.key to previewMode)
+                mapOf(PREVIEW_MODE.key to mode)
         )
     }
 
@@ -161,38 +173,65 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackSiteDesignPreviewViewed(template: String, previewMode: String) {
+    override fun trackPreviewViewed(template: String, mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
-    fun trackSiteDesignPreviewLoading(template: String, previewMode: String) {
+    override fun trackPreviewLoading(template: String, mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
-    fun trackSiteDesignPreviewLoaded(template: String, previewMode: String) {
+    override fun trackPreviewLoaded(template: String, mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
-                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to mode)
         )
     }
 
-    fun trackSiteDesignPreviewModeTapped(previewMode: String) {
+    override fun trackPreviewModeTapped(mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED,
-                mapOf(PREVIEW_MODE.key to previewMode)
+                mapOf(PREVIEW_MODE.key to mode)
         )
     }
 
-    fun trackSiteDesignPreviewModeChanged(previewMode: String) {
+    override fun trackPreviewModeChanged(mode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
-                mapOf(PREVIEW_MODE.key to previewMode)
+                mapOf(PREVIEW_MODE.key to mode)
+        )
+    }
+
+    override fun trackNoNetworkErrorShown(message: String) =
+            trackErrorShown(DESIGN_ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
+
+    override fun trackErrorShown(message: String) = trackErrorShown(DESIGN_ERROR_CONTEXT, UNKNOWN, message)
+
+    override fun filterSelected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
+    }
+
+    override fun filterDeselected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
         )
     }
 }

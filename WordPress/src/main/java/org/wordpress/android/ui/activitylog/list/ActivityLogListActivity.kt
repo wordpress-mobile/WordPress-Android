@@ -4,34 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.activity_log_list_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
+import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWIND_ID
+import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
-import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
-import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
-import javax.inject.Inject
 
-class ActivityLogListActivity : LocaleAwareActivity(),
-        BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
-    @Inject lateinit var restoreFeatureConfig: RestoreFeatureConfig
-
+class ActivityLogListActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        val binding = ActivityLogListActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.checkAndUpdateUiToBackupScreen()
 
-        setContentView(R.layout.activity_log_list_activity)
-        checkAndUpdateUiToBackupScreen()
-
-        setSupportActionBar(toolbar_main)
+        setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
@@ -48,10 +43,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
      * necessity to split those features in separate screens in order not to increase further the complexity of this
      * screen's architecture.
      */
-    private fun checkAndUpdateUiToBackupScreen() {
+    private fun ActivityLogListActivityBinding.checkAndUpdateUiToBackupScreen() {
         if (intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)) {
             setTitle(R.string.backup)
-            activity_type_filter.visibility = View.GONE
+            activityTypeFilter.visibility = View.GONE
         }
     }
 
@@ -67,20 +62,14 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCodes.ACTIVITY_LOG_DETAIL -> {
-                if (restoreFeatureConfig.isEnabled()) {
-                    onActivityResultForRestore(data)
-                } else {
-                    onActivityResultForActivityLogDetails(data)
+                when (data?.getStringExtra(ActivityLogDetailActivity.EXTRA_INNER_FLOW)) {
+                    ActivityLogDetailActivity.EXTRA_RESTORE_FLOW -> onActivityResultForRestore(data)
+                    ActivityLogDetailActivity.EXTRA_BACKUP_DOWNLOAD_FLOW -> onActivityResultForBackupDownload(data)
+                    else -> Unit // Do nothing
                 }
             }
             RequestCodes.RESTORE -> onActivityResultForRestore(data)
             RequestCodes.BACKUP_DOWNLOAD -> onActivityResultForBackupDownload(data)
-        }
-    }
-
-    private fun onActivityResultForActivityLogDetails(data: Intent?) {
-        data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
-            passRestoreConfirmation(it)
         }
     }
 
@@ -95,23 +84,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     private fun onActivityResultForBackupDownload(data: Intent?) {
         val rewindId = data?.getStringExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID)
         val downloadId = data?.getLongExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, 0)
-        if (rewindId != null && downloadId != null) {
-            passQueryBackupDownloadStatus(rewindId, downloadId)
-        }
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        passRestoreConfirmation(instanceTag)
-    }
-
-    override fun onNegativeClicked(instanceTag: String) {
-        // Unused
-    }
-
-    private fun passRestoreConfirmation(rewindId: String) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (fragment is ActivityLogListFragment) {
-            fragment.onRestoreConfirmed(rewindId)
+        val actionState = data?.getIntExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, 0)
+                ?: JetpackBackupDownloadActionState.CANCEL.id
+        if (actionState != JetpackBackupDownloadActionState.CANCEL.id && rewindId != null && downloadId != null) {
+            passQueryBackupDownloadStatus(rewindId, downloadId, actionState)
         }
     }
 
@@ -122,10 +98,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun passQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+    private fun passQueryBackupDownloadStatus(rewindId: String, downloadId: Long, actionState: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
-            fragment.onQueryBackupDownloadStatus(rewindId, downloadId)
+            fragment.onQueryBackupDownloadStatus(rewindId, downloadId, actionState)
         }
     }
 }

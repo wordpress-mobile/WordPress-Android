@@ -5,8 +5,6 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -151,7 +149,7 @@ class StatsViewModel
         }
     }
 
-    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
+    private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
 
         executeLoading()

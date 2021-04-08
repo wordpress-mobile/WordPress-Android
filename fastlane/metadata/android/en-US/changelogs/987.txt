@@ -1,7 +1,0 @@
-16.6:
-What’s new?
-Site Creation: When browsing homepage designs, you can view and switch between mobile, tablet, and desktop previews.
-Reader: For better organization, we added a filter feature to your tab of followed P2 sites.
-Quick Start: We improved the tour that guides you through the app, adding steps to review pages and edit your homepage.
-
-

@@ -367,7 +367,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
                         blogId, postId);
 
-                ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0,
+                ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
                         mInterceptedUri);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);

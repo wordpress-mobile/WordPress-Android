@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.login_intro_template_view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.LoginIntroTemplateViewBinding
 import kotlin.math.min
 
-class LoginProloguePageFragment : Fragment() {
+class LoginProloguePageFragment : Fragment(R.layout.login_intro_template_view) {
     @StringRes private var promoTitle: Int? = null
     @LayoutRes private var promoLayoutId: Int? = null
     @LayoutRes private var promoBackgroundId: Int? = null
@@ -47,20 +46,14 @@ class LoginProloguePageFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.login_intro_template_view, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val inflater = LayoutInflater.from(view.context)
+        val binding = LoginIntroTemplateViewBinding.bind(view)
 
-        promoTitle?.let { promo_title.setText(it) }
+        promoTitle?.let { binding.promoTitle.setText(it) }
 
-        val container = view.findViewById<ViewGroup>(R.id.promo_layout_container)
+        val container = binding.promoLayoutContainer
         container.post {
             promoLayoutId?.let {
                 val content = inflater.inflate(promoLayoutId!!, container, false)
@@ -99,7 +92,7 @@ class LoginProloguePageFragment : Fragment() {
             }
         }
         promoBackgroundId?.let {
-            inflater.inflate(it, promo_background_container, true)
+            inflater.inflate(it, binding.promoBackgroundContainer, true)
         }
     }
 }

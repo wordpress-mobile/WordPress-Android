@@ -19,6 +19,11 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <!--Threats List Header-->
+    <style name="Scan.Threats.Date" parent="Scan.Threats.Header" >
+        <item name="android:paddingTop">@dimen/margin_large</item>
+    </style>
+
     <!--Threat List Item-->
     <style name="Scan.Threat.Icon" parent="">
         <item name="android:layout_width">@dimen/scan_threat_item_icon_size</item>

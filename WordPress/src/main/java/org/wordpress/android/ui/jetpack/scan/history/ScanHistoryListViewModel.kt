@@ -13,7 +13,9 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatDateItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
@@ -65,6 +67,7 @@ class ScanHistoryListViewModel @Inject constructor(
     ) = parentViewModel.threats
             .map { threatList -> filterByTabType(threatList, tabType) }
             .map { threatList -> mapToThreatUiStateList(threatList) }
+            .map { threatItemStateList -> addDateHeaders(threatItemStateList) }
             .map { threatUiStateList ->
                 if (threatUiStateList.isEmpty()) {
                     EmptyHistory
@@ -77,7 +80,18 @@ class ScanHistoryListViewModel @Inject constructor(
             threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
 
     private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
-            threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
+            threatList.map { model ->
+                scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
+            }
+
+    private fun addDateHeaders(threatItemList: List<ThreatItemState>) =
+            threatItemList.groupBy { threatItem -> threatItem.firstDetectedDate }
+                    .flatMap { entry ->
+                        val uiStateList = mutableListOf<ScanListItemState>()
+                        uiStateList.add(ThreatDateItemState(entry.key))
+                        uiStateList.addAll(entry.value)
+                        uiStateList
+                    }
 
     private fun onItemClicked(threatId: Long) {
         launch {

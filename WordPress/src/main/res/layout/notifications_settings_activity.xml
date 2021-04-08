@@ -27,16 +27,16 @@
                 android:focusableInTouchMode="true"
                 app:theme="@style/WordPress.ActionBar" />
 
-            <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
-                android:id="@+id/master_switch"
+            <org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView
+                android:id="@+id/main_switch"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
 
-                app:masterContentDescription="@string/notification_settings_switch_desc"
-                app:masterHintOff="@string/notification_settings_master_hint_off"
-                app:masterHintOn="@string/notification_settings_master_hint_on"
-                app:masterTitleOff="@string/notification_settings_master_status_off"
-                app:masterTitleOn="@string/notification_settings_master_status_on" />
+                app:mainContentDescription="@string/notification_settings_switch_desc"
+                app:mainHintOff="@string/notification_settings_main_hint_off"
+                app:mainHintOn="@string/notification_settings_main_hint_on"
+                app:mainTitleOff="@string/notification_settings_main_status_off"
+                app:mainTitleOn="@string/notification_settings_main_status_on" />
 
 
         </LinearLayout>
@@ -70,7 +70,7 @@
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
                 android:paddingStart="@dimen/toolbar_content_offset"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:text="@string/notification_settings_master_off_title" />
+                android:text="@string/notification_settings_main_off_title" />
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Body1"
@@ -80,7 +80,7 @@
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/toolbar_content_offset"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:text="@string/notification_settings_master_off_message" />
+                android:text="@string/notification_settings_main_off_message" />
 
         </LinearLayout>
 

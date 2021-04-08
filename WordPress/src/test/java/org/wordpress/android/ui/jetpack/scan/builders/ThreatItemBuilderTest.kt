@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -41,7 +42,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     fun setUp() {
         builder = ThreatItemBuilder(dateFormatWrapper)
         whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
-        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
+        whenever(dateFormat.format(anyOrNull()))
             .thenReturn(TEST_FIXED_ON_DATE)
     }
 

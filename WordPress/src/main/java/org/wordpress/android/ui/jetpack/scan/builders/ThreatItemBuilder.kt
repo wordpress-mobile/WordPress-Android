@@ -33,6 +33,7 @@ class ThreatItemBuilder @Inject constructor(
     ) = ThreatItemState(
         threatId = threatModel.baseThreatModel.id,
         isFixing = isFixing,
+        firstDetectedDate = getDateString(threatModel.baseThreatModel.firstDetected),
         header = buildThreatItemHeader(threatModel),
         subHeader = buildThreatItemSubHeader(threatModel),
         subHeaderColor = buildThreatItemSubHeaderColor(threatModel),

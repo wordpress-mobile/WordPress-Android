@@ -1,7 +1,0 @@
-16.6:
-Vad är nytt?
-Skapa webbplats: När du letar efter startsidedesigner kan du visa och växla mellan förhandsgranskningar för mobil, surfplatta och skrivbord.
-Läsare: För bättre organisering har vi lagt till en filterfunktion på din flik med P2-sidor som följs.
-Snabbstart: Vi har förbättrat turen som guidar dig genom appen och lagt till steg för att granska sidor och redigera din startsida.
-
-

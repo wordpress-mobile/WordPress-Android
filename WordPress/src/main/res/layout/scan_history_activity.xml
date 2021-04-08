@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_container_view"
     android:name="org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment"
     android:layout_width="match_parent"

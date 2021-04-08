@@ -1,5 +1,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -28,15 +29,25 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recycler_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/my_site_bottom_spacing"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/my_site_bottom_spacing"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/my_site_content_area" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
@@ -47,6 +58,7 @@
         app:aevButton="@string/my_site_add_new_site"
         app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
         app:aevSubtitle="@string/my_site_create_new_site"
-        app:aevTitle="@string/my_site_create_new_site_title" />
+        app:aevTitle="@string/my_site_create_new_site_title"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -18,7 +18,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
@@ -152,7 +151,7 @@ class BackupDownloadViewModel @Inject constructor(
         when (wizardManager.currentStep) {
             DETAILS.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
             PROGRESS.id -> constructProgressEvent()
-            COMPLETE.id -> _wizardFinishedObservable.value = Event(BackupDownloadCompleted)
+            COMPLETE.id -> constructCompleteEvent()
             ERROR.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
         }
     }
@@ -161,6 +160,19 @@ class BackupDownloadViewModel @Inject constructor(
         _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
             Event(
                     BackupDownloadInProgress(
+                            backupDownloadState.rewindId as String,
+                            backupDownloadState.downloadId as Long
+                    )
+            )
+        } else {
+            Event(BackupDownloadCanceled)
+        }
+    }
+
+    private fun constructCompleteEvent() {
+        _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
+            Event(
+                    BackupDownloadCompleted(
                             backupDownloadState.rewindId as String,
                             backupDownloadState.downloadId as Long
                     )
@@ -201,8 +213,7 @@ class BackupDownloadViewModel @Inject constructor(
         _uiState.value = ProgressState(
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = progressStart,
-                        published = backupDownloadState.published as Date,
-                        onNotifyMeClick = this@BackupDownloadViewModel::onNotifyMeClick
+                        published = backupDownloadState.published as Date
                 ),
                 type = StateType.PROGRESS
         )
@@ -391,16 +402,6 @@ class BackupDownloadViewModel @Inject constructor(
         }
     }
 
-    private fun onNotifyMeClick() {
-        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED)
-        _wizardFinishedObservable.value = Event(
-                BackupDownloadInProgress(
-                        backupDownloadState.rewindId as String,
-                        backupDownloadState.downloadId as Long
-                )
-        )
-    }
-
     private fun onDownloadFileClick() {
         AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(DownloadFile(it))) }
@@ -457,6 +458,9 @@ class BackupDownloadViewModel @Inject constructor(
         ) : BackupDownloadWizardState()
 
         @Parcelize
-        object BackupDownloadCompleted : BackupDownloadWizardState()
+        data class BackupDownloadCompleted(
+            val rewindId: String,
+            val downloadId: Long
+        ) : BackupDownloadWizardState()
     }
 }

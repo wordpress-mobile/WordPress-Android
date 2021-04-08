@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.mysite
 
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.domain_registration_block.view.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.DomainRegistrationBlockBinding
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.util.viewBinding
 
 class DomainRegistrationViewHolder(
     parent: ViewGroup
-) : MySiteItemViewHolder(parent, R.layout.domain_registration_block) {
-    fun bind(item: DomainRegistrationBlock) = itemView.apply {
-        my_site_register_domain_cta.setOnClickListener { item.onClick.click() }
+) : MySiteItemViewHolder<DomainRegistrationBlockBinding>(parent.viewBinding(DomainRegistrationBlockBinding::inflate)) {
+    fun bind(item: DomainRegistrationBlock) = with(binding) {
+        mySiteRegisterDomainCta.setOnClickListener { item.onClick.click() }
     }
 }

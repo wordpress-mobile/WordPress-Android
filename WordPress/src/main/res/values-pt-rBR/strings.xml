@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-21 21:25:58+0000
+Translation-Revision-Date: 2021-02-05 22:57:42+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
-    <string name="gutenberg_native_move_block_position">Mover a posição do bloco</string>
     <string name="gutenberg_native_move_to_bottom">Mover para o fim</string>
     <string name="label_control_upload">Enviar</string>
     <string name="jetpack_icon_content_description">ícone</string>
@@ -16,8 +15,6 @@ Language: pt_BR
     <string name="backup_download_complete_download_action_button">Fazer download</string>
     <string name="backup_download_complete_page_title">Seu backup</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">Não precisa esperar. Vamos lhe avisar quando o backup ficar pronto</string>
-    <string name="backup_download_progress_action_button">Tudo bem, me avise!</string>
     <string name="suggestion_user">usuário</string>
     <string name="threat_ignore">Ignorar ameaça</string>
     <string name="threat_fix_current_not_fixable_header">Resolvendo ameaça</string>
@@ -36,7 +33,6 @@ Language: pt_BR
     <string name="gutenberg_native_copy_file_url">Copiar URL do arquivo</string>
     <string name="gutenberg_native_choose_a_file">Escolha um arquivo</string>
     <string name="new_site_creation_domain_header_title">Escolha um domínio</string>
-    <string name="my_site_btn_jetpack_settings">Configurações do Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_get_status_error">Erro ao coletar o status da assinatura do post</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Não foi possível cancelar a inscrição dos comentários deste post</string>
@@ -106,7 +102,6 @@ Language: pt_BR
     <string name="login_prologue_fifth_caption_two">Os melhores fãs do mundo</string>
     <string name="login_prologue_second_subtitle_two">Me inspiro muito no trabalho do fotógrafo. Vou tentar uma dessas técnicas em meu próximo</string>
     <string name="login_prologue_second_subtitle_one">Inspirando-se</string>
-    <string name="login_prologue_title_fifth">Siga seus sites favoritos e descubra novas leituras.</string>
     <string name="login_prologue_title_fourth">Veja seu público-alvo aumentar usando análises detalhadas.</string>
     <string name="login_prologue_title_third">Veja comentários e notificações em tempo real.</string>
     <string name="login_prologue_title_second">Com o editor avançado, você publica seus posts de onde estiver.</string>
@@ -125,11 +120,9 @@ Language: pt_BR
     <string name="stories_intro_title_first">Agora stories são para todo mundo</string>
     <string name="stories_intro_image_caption_second">Título de exemplo to story</string>
     <string name="stories_intro_image_caption_first">Como criar um post de story</string>
-    <string name="stories_intro_main_subtitle">Agora você tem acesso a posts de story e adoraríamos que você desse uma olhada nesse recurso.</string>
     <string name="stories_intro_main_title">Apresentando os posts de Story</string>
     <string name="mlp_notice_blank_page_created">Página vazia criada</string>
     <string name="mlp_notice_page_created">Página criada</string>
-    <string name="mlp_preview_title">Visualizar layout</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s teve o acesso negado às suas fotos. Para corrigir, edite suas permissões e habilite %2$s e %3$s.</string>
     <string name="media_insert_failed">Inserção de imagem falhou.</string>
     <string name="media_insert_failed_with_reason">Inserção de imagem com falha: %s</string>
@@ -258,11 +251,9 @@ Language: pt_BR
     <string name="gutenberg_native_choose_image">Escolher imagem</string>
     <string name="gutenberg_native_block_removed">Bloco removido</string>
     <string name="enter_your_site_address">Digite o endereço de seu site</string>
-    <string name="continue_with_wpcom">Continuar com WordPress.com</string>
     <string name="signup_confirmation_title">Confirmação de inscrição</string>
     <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
     <string name="continue_terms_of_service_text">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Enviaremos um link por e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_magic_link_message">Nós enviamos um link por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
     <string name="enter_account_info_for_site">Digite as informações da conta de %1$s.</string>
@@ -281,7 +272,6 @@ Language: pt_BR
     <string name="send_link_by_email">Enviar link por e-mail</string>
     <string name="reset_your_password">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e tópico. As primeiras impressões contam!</string>
     <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
@@ -327,8 +317,6 @@ Language: pt_BR
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Posts na lixeira não podem ser editados. Você deseja alterar o status deste post para rascunho para que possa editá-lo?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data de publicação</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover post para rascunhos?</string>
-    <string name="reader_label_choose_your_interests">Escolha seus interesses</string>
-    <string name="reader_choose_interests_content_description">Escolher seus interesses</string>
     <string name="reader_btn_done">Concluído</string>
     <string name="reader_btn_select_few_interests">Selecione alguns para continuar</string>
     <string name="post_status_post_published">Publicado</string>
@@ -453,8 +441,6 @@ Language: pt_BR
     <string name="editor_page_saved_locally_failed_media">A página tem envios de mídias não concluídos e foi salva localmente</string>
     <string name="quickpress_shortcut_activity_label">Selecione blog para atalho QuickPress</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Você fez alterações nessa página recentemente mas não as salvou. Escolha uma versão para carregar:\n</string>
-    <string name="gutenberg_native_warning_message">Mensagem de alerta</string>
-    <string name="gutenberg_native_success_message">Mensagem de sucesso</string>
     <string name="gutenberg_native_show_post_content">Mostrar conteúdo do post</string>
     <string name="gutenberg_native_link_to">Link para</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar apenas o resumo</string>
@@ -560,20 +546,16 @@ Language: pt_BR
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_unsupported">Não compatível</string>
     <string name="gutenberg_native_translate">Traduzir</string>
-    <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
     <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
     <string name="gutenberg_native_start_writing">Comece a escrever…</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Barra lateral de título do plugin</string>
     <string name="gutenberg_native_show_section">Mostrar seção</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
-    <string name="gutenberg_native_reset_block">Redefinir bloco</string>
     <string name="gutenberg_native_cut_block">Recortar bloco</string>
-    <string name="gutenberg_native_remove_annotations">Remover anotações</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema ao abrir o vídeo</string>
     <string name="gutenberg_native_problem_displaying_block">Problema ao exibir o bloco</string>
     <string name="gutenberg_native_post_title_s">Título do post. %s</string>
@@ -583,17 +565,12 @@ Language: pt_BR
     <string name="gutenberg_native_open_settings">Abrir configurações</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nenhum aplicativo pode responder essa requisição. Instale um navegador de internet.</string>
     <string name="gutenberg_native_navigate_up">Navegar acima</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Meu painel de pré publicação</string>
-    <string name="gutenberg_native_my_post_status_info">Minhas informações de status do post</string>
-    <string name="gutenberg_native_my_post_publish_panel">Meu painel de publicação do post</string>
-    <string name="gutenberg_native_my_document_setting_panel">Meu painel de configurações do documento</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloco acima da linha %1$s para a linha %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Aqui está o painel de conteúdo!</string>
     <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Falha ao inserir a mídia.\nToque para ver mais opções.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toque duas vezes para desfazer a última alteração</string>
@@ -608,9 +585,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
-    <string name="gutenberg_native_content">Conteúdo…</string>
     <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
-    <string name="gutenberg_native_annotations_sidebar">Barra lateral de anotações</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu um erro desconhecido. Tente novamente.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">Adicionar vídeo</string>
@@ -618,19 +593,9 @@ Language: pt_BR
     <string name="gutenberg_native_add_image_or_video">Adicionar imagem ou vídeo</string>
     <string name="gutenberg_native_add_image">Adicionar imagem</string>
     <string name="gutenberg_native_add_block_here">Adicionar um bloco aqui</string>
-    <string name="gutenberg_native_add_annotation">Adicionar anotação</string>
-    <string name="gutenberg_native_add_a_description">Adicionar uma descrição</string>
     <string name="reader_empty_saved_posts_content_description">\"Toque no botão Adicionar para salvar posts para adicionar um post à sua lista\"</string>
     <string name="reader_acessibility_list_loaded">\"A lista foi carregada com %1$d itens.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notificações</string>
-    <string name="master_switch_default_title_off">Desativado</string>
-    <string name="master_switch_default_title_on">Ativado</string>
-    <string name="notifications_tab_dialog_master_off_message">\"Desativar as notificações deste site removerá a exibição de todas as notificações dele. Você pode ajustar o tipo de notificações desejadas após ativar as notificações.\"</string>
-    <string name="notifications_tab_dialog_master_off_title">Para ver as notificações desse site na aba notificações, ative as notificações desse site.</string>
-    <string name="notifications_tab_dialog_master_hint_off">Ativar as notificações desse site para serem exibidas na aba notificações</string>
-    <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
-    <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
-    <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
@@ -724,7 +689,6 @@ Language: pt_BR
     <string name="post_settings_notification">Notificação</string>
     <string name="post_settings_time_and_date">Data e hora</string>
     <string name="login_need_help_finding_connected_email">Precisa de ajuda para encontrar o e-mail com que se conectou?</string>
-    <string name="enter_wordpress_site">O site neste endereço não é um site do WordPress. Para que possamos nos conectar a ele, o site precisa ter o WordPress instalado.</string>
     <string name="login_invalid_site_url">Digite o endereço completo do site, tal como exemplo.com.</string>
     <string name="stats_post_views_label">Visualizações</string>
     <string name="stats_collapse_content_description">Recolher</string>
@@ -905,23 +869,21 @@ Language: pt_BR
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
     <string name="exit">sair</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
-    <string name="quick_start_sites_type_grow">Aumente sua audiência</string>
-    <string name="quick_start_sites_type_customize">Personalize seu site</string>
     <string name="quick_start_sites">Próximos passos</string>
-    <string name="quick_start_complete_tasks_header">Concluído (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Aproveite seu produto concluído!</string>
-    <string name="quick_start_dialog_upload_icon_title">Enviar um ícone do site</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toque em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>
+    <string name="quick_start_dialog_upload_icon_title">Envie um ícone do site</string>
+    <string name="quick_start_dialog_view_site_message">Aproveite seu novo site!</string>
+    <string name="quick_start_complete_tasks_header">Concluídas (%d)</string>
     <string name="quick_start_dialog_publish_post_message">Crie um rascunho e publique seu primeiro post.</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos pelos passos básicos em criar um site.</string>
     <string name="quick_start_dialog_migration_title">Fizemos algumas alterações em sua lista</string>
     <string name="quick_start_dialog_check_stats_message_short">Toque em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toque em %1$s Ícone do seu site %2$s para enviar um ícone</string>
     <string name="quick_start_dialog_migration_message">Adicionamos mais tarefas para te ajudar a aumentar sua audiência.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explorar planos</string>
     <string name="quick_start_dialog_explore_plans_message">Aprenda mais sobre as ferramentas de marketing e SEO de nossos planos pagos.</string>
-    <string name="quick_start_dialog_enable_sharing_title">Ativar compartilhamento de post</string>
+    <string name="quick_start_dialog_enable_sharing_title">Ative o compartilhamento de post</string>
+    <string name="quick_start_dialog_explore_plans_title">Explore planos</string>
     <string name="quick_start_dialog_enable_sharing_message">Compartilhar novos posts em suas redes sociais automaticamente.</string>
     <string name="quick_start_dialog_check_stats_title">Verifique as estatísticas de seu site</string>
     <string name="quick_start_dialog_check_stats_message">Mantenha-se atualizado com o desempenho de seu site.</string>
@@ -942,7 +904,6 @@ Language: pt_BR
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
     <string name="notification_new_site_creation_title">Criar site</string>
     <string name="new_site_creation_create_site_button">Criar site</string>
-    <string name="new_site_creation_search_domain_input_hint">Pesquisar por domínios</string>
     <string name="notification_new_site_creation_failed">Ocorreu um problema</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Estamos criando seu novo site</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>
@@ -954,8 +915,6 @@ Language: pt_BR
     <string name="site_creation_error_generic_subtitle">Erro de comunicação com o servidor. Tente novamente.</string>
     <string name="site_creation_error_generic_title">Ocorreu um problema</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ocorreu um problema</string>
-    <string name="site_creation_segments_subtitle">Isso nos ajuda a fazer recomendações mas você não está preso a isso. Todos os sites evoluem!</string>
-    <string name="site_creation_segments_title">Nos conte que tipo de site você gostaria de fazer</string>
     <string name="new_site_creation_preview_title">Seu site foi criado!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d de %2$d</string>
     <string name="new_site_creation_screen_title_general">Criar site</string>
@@ -1097,22 +1056,21 @@ Language: pt_BR
     <string name="quick_start_focus_point_description">toque aqui</string>
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar.</string>
-    <string name="quick_start_dialog_view_site_title">Ver seu site</string>
     <string name="quick_start_dialog_share_site_title">Compartilhar seu site</string>
     <string name="quick_start_dialog_share_site_message">Conectar suas contas em redes sociais para compartilhar novos posts automaticamente.</string>
     <string name="quick_start_dialog_view_site_message_short">Toque em %1$s Ver site %2$s para visualizar seu site</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Toque em %1$s Compartilhar %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Toque em %1$s Conexões %2$s para adicionar suas contas em redes sociais</string>
-    <string name="quick_start_dialog_publish_post_title">Publicar um post</string>
+    <string name="quick_start_dialog_view_site_title">Veja seu site</string>
     <string name="quick_start_dialog_need_help_title">Precisa de alguma ajuda para iniciar?</string>
     <string name="quick_start_dialog_need_help_button_positive">Aceitar</string>
     <string name="quick_start_dialog_publish_post_message_short">Toque em %1$s Criar post %2$s para criar um novo post</string>
+    <string name="quick_start_dialog_publish_post_title">Publique um post</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
-    <string name="quick_start_dialog_follow_sites_title">Seguir outros sites</string>
     <string name="quick_start_dialog_follow_sites_message">Encontre sites com conteúdos de seu interesse e siga-os para receber atualizações assim que forem publicadas.</string>
     <string name="quick_start_dialog_need_help_button_negative">Não obrigado</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Toque em %1$s Pesquisar %2$s para procurar por sites com interesses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toque em %1$s Leitor %2$s para continuar</string>
+    <string name="quick_start_dialog_follow_sites_title">Siga outros sites</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">Agora não</string>
     <string name="my_site_create_new_site_title">Você não tem nenhum site</string>
@@ -1200,8 +1158,6 @@ Language: pt_BR
     <string name="reader_remove_bookmark">Remover dos posts salvos</string>
     <string name="reader_bookmark_snack_title">Post salvo</string>
     <string name="reader_bookmark_snack_btn">Ver tudo</string>
-    <string name="reader_btn_bookmarked">Salvo</string>
-    <string name="reader_btn_bookmark">Salvar</string>
     <string name="reader_add_bookmark">Adicionar aos posts salvos</string>
     <string name="reader_empty_saved_posts_title">Nenhum post salvo ainda.</string>
     <string name="reader_empty_saved_posts_description">Toque em %s para salvar um post em sua lista.</string>
@@ -1222,7 +1178,6 @@ Language: pt_BR
     <string name="activity_log_jetpack_icon">Ícone do Jetpack</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Ícone da atividade</string>
-    <string name="activity">Atividade</string>
     <string name="privacy_policy_read">Ler a política de privacidade</string>
     <string name="privacy_policy_learn_more_header">Política de privacidade</string>
     <string name="cookie_policy_learn_more_header">Política de cookies</string>
@@ -1554,12 +1509,10 @@ Language: pt_BR
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">Tem certeza de que quer desconectar o Jetpack do site?</string>
     <string name="jetpack_disconnect_pref_title">\"Desconectar do WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">Você pode liberar um ou vários endereços IPs para que eles nunca sejam bloqueados pelo Jetpack. São permitidos IPv4 e IPv6. Para especificar uma faixa, digite o valor mais baixo separado do valor mais alto por um hífen. Exemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Exigir autenticação em duas etapas</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar contas usando o e-mail</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir login com o WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Login do WordPress.com</string>
-    <string name="jetpack_brute_force_whitelist_title">Endereços IP permitidos</string>
     <string name="jetpack_prevent_brute_force_title">Bloquear tentativas maliciosas de login</string>
     <string name="jetpack_prevent_brute_force_category_title">Proteção contra ataques de força bruta</string>
     <string name="jetpack_send_wp_notifications_title">Enviar notificações push</string>
@@ -1600,12 +1553,6 @@ Language: pt_BR
     <string name="notification_settings_category_other">Outro</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Todos os meus sites</string>
     <string name="notification_settings_category_your_sites">Seus sites</string>
-    <string name="notification_settings_master_off_message">Desligar as configurações de notificação desabilitará todos os avisos deste aplicativo, não importando o tipo. Você pode escolher detalhadamente quais tipos de notificação quer receber ligando as configurações de notificação.</string>
-    <string name="notification_settings_master_off_title">Para receber notificações neste dispositivo, ligue as configurações de notificação.</string>
-    <string name="notification_settings_master_hint_off">Habilitar notificações</string>
-    <string name="notification_settings_master_hint_on">Desabilitar notificações</string>
-    <string name="notification_settings_master_status_off">Desligado</string>
-    <string name="notification_settings_master_status_on">Ligado</string>
     <string name="max_video_resolution">Tamanho máximo de vídeo</string>
     <string name="max_thumbnail_px_size">Tamanho máximo de imagem</string>
     <string name="error_upload_post_media_param">Ocorreu um erro durante o upload de mídia neste post: %s.</string>
@@ -1860,7 +1807,6 @@ Language: pt_BR
     <string name="signout">Fazer logout</string>
     <string name="sign_in_wpcom">Fazer login em WordPress.com</string>
     <string name="reader_label_global_related_posts">Mais em WordPress.com</string>
-    <string name="reader_label_local_related_posts">Mais em %s</string>
     <string name="preference_open_device_settings">Abrir configurações do dispositivo</string>
     <string name="invite_invalid_email">%s: E-mail inválido</string>
     <string name="invite_user_blocked_invites">%s: Convites de usuários bloqueados </string>
@@ -1908,13 +1854,7 @@ Language: pt_BR
     <string name="invite_error_invalid_usernames_multiple">Não pôde enviar: Contém nome de usuários ou e-mails inválidos</string>
     <string name="invite_error_invalid_usernames_one">Não pôde enviar: Um nome de usuário ou e-mail é inválido</string>
     <string name="invite_error_no_usernames">Adicione pelo menos um nome de usuário</string>
-    <string name="invite_message_info">(Opcional) Você pode inserir uma mensagem personalizada de até 500 caracteres que será incluída no convite para os usuários.</string>
-    <string name="invite_message_remaining_other">%d caracteres restantes</string>
-    <string name="invite_message_remaining_one">1 caractere restante</string>
-    <string name="invite_message_remaining_zero">0 caracteres restantes</string>
-    <string name="invite_message_title">Mensagem personalizada</string>
     <string name="invite">Convidar</string>
-    <string name="invite_names_title">Nome de usuários ou e-mails</string>
     <string name="send_link">Enviar link</string>
     <string name="my_site_header_external">Externo</string>
     <string name="invite_people">Convidar pessoas</string>
@@ -1922,6 +1862,7 @@ Language: pt_BR
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
     <string name="reader_empty_search_description">Nenhum resultado encontrado em seu idioma para %s.</string>
     <string name="reader_hint_post_search">Pesquisar no WordPress</string>
+    <string name="reader_title_related_post_detail">Post relacionado</string>
     <string name="preview_screen_links_disabled">Os links são desabilitados na tela de visualização</string>
     <string name="send">Enviar</string>
     <string name="person_removed">%1$s removido com sucesso</string>
@@ -2061,7 +2002,6 @@ Language: pt_BR
     <string name="site_settings_paging_dialog_description">Dividir tópicos de comentários em várias páginas.</string>
     <string name="site_settings_paging_dialog_header">Comentários por página</string>
     <string name="site_settings_close_after_dialog_title">Encerrar comentários</string>
-    <string name="site_settings_blacklist_description">Quando um comentário tiver uma destas palavras em seu conteúdo, nome, URL, e-mail ou IP, ele será marcado como spam. Você pode inserir partes de palavras, então \"press\" corresponderá a \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Quando um comentário contiver qualquer uma destas palavras em seu conteúdo, nome, URL, endereço de e-mail ou IP, o mesmo será retido na fila de moderação. Você pode inserir partes de palavras, então \"press\" corresponderá a \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Insira uma palavra ou frase</string>
     <string name="site_settings_list_editor_no_items_text">Nenhum item</string>
@@ -2076,10 +2016,8 @@ Language: pt_BR
     <string name="site_settings_rp_show_header_title">Mostrar cabeçalho</string>
     <string name="site_settings_rp_switch_summary">Posts Relacionados exibe conteúdo relevante do seu site abaixo dos seus posts.</string>
     <string name="site_settings_rp_switch_title">Mostrar posts relacionados</string>
-    <string name="site_settings_blacklist_hint">Comentários que corresponderem a um filtro serão marcados como spam</string>
     <string name="site_settings_moderation_hold_hint">Comentários que corresponderem a um filtro serão colocados em uma fila de moderação</string>
     <string name="site_settings_multiple_links_hint">Ignora o limite de links de usuários conhecidos</string>
-    <string name="site_settings_whitelist_hint">O autor do comentário tem que ter um comentário aprovado anteriormente</string>
     <string name="site_settings_user_account_required_hint">Usuários devem estar registrados e logados para comentar</string>
     <string name="site_settings_identity_required_hint">O autor do comentário tem que preencher o nome e email</string>
     <string name="site_settings_paging_hint">Exibir comentários em grupos de tamanho especificado</string>
@@ -2102,17 +2040,13 @@ Language: pt_BR
     <string name="site_settings_address_hint">No momento, você não pode alterar o endereço</string>
     <string name="site_settings_tagline_hint">Uma breve descrição ou uma frase de efeito para descrever o seu blog</string>
     <string name="site_settings_title_hint">Em poucas palavras, explique sobre o que é este site</string>
-    <string name="site_settings_whitelist_known_summary">Comentários de usuários conhecidos</string>
-    <string name="site_settings_whitelist_all_summary">Comentários de todos os usuários</string>
     <string name="site_settings_threading_summary">%d níveis</string>
     <string name="site_settings_privacy_private_summary">Privado</string>
     <string name="site_settings_privacy_hidden_summary">Oculto</string>
     <string name="site_settings_privacy_public_summary">Público</string>
     <string name="site_settings_delete_site_title">Excluir site</string>
-    <string name="site_settings_blacklist_title">Lista bloqueada</string>
     <string name="site_settings_moderation_hold_title">Aguardar moderação</string>
     <string name="site_settings_multiple_links_title">Links nos comentários</string>
-    <string name="site_settings_whitelist_title">Aprovar automaticamente</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_paging_title">Paginação</string>
     <string name="site_settings_sort_by_title">Ordenar por</string>

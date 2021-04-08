@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.mysite
 
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
@@ -18,7 +20,9 @@ data class MySiteUiState(
     val scanAvailable: Boolean = false,
     val backupAvailable: Boolean = false,
     val activeTask: QuickStartTask? = null,
-    val quickStartCategories: List<QuickStartCategory> = listOf()
+    val quickStartCategories: List<QuickStartCategory> = listOf(),
+    val pinnedDynamicCard: DynamicCardType? = null,
+    val visibleDynamicCards: List<DynamicCardType> = listOf()
 ) {
     sealed class PartialState {
         data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -29,6 +33,11 @@ data class MySiteUiState(
         data class QuickStartUpdate(
             val activeTask: QuickStartTask? = null,
             val categories: List<QuickStartCategory> = listOf()
+        ) : PartialState()
+
+        data class DynamicCardsUpdate(
+            val pinnedDynamicCard: DynamicCardType? = null,
+            val cards: List<DynamicCardType>
         ) : PartialState()
     }
 
@@ -45,6 +54,10 @@ data class MySiteUiState(
             is QuickStartUpdate -> this.copy(
                     activeTask = partialState.activeTask,
                     quickStartCategories = partialState.categories
+            )
+            is DynamicCardsUpdate -> this.copy(
+                    pinnedDynamicCard = partialState.pinnedDynamicCard,
+                    visibleDynamicCards = partialState.cards
             )
         }
     }

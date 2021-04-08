@@ -6,7 +6,7 @@ package org.wordpress.android.util;
  * Shortlinks are a quick way to get short and simple links to your posts, pages, and blogs.
  * They use the wp.me domain so you can have more space to write on social media sites.
  * <p/>
- * See: https://github.com/Automattic/jetpack/blob/master/modules/shortlinks.php
+ * See: https://git.io/JqUEl
  */
 
 import android.text.TextUtils;

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.fluxc.model.JetpackCapability
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
@@ -182,14 +181,7 @@ class AppPrefsWrapper @Inject constructor() {
     fun getSiteJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> =
             AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
-    fun getSiteJetpackCapabilitiesLastUpdated(remoteSiteId: Long): Long =
-            AppPrefs.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-
-    fun removeQuickStartTaskType(quickStartTaskType: QuickStartTaskType) =
-            AppPrefs.removeQuickStartTaskType(quickStartTaskType)
-
-    fun isQuickStartTaskTypeRemoved(quickStartTaskType: QuickStartTaskType) =
-            AppPrefs.isQuickStartTaskTypeRemoved(quickStartTaskType)
+    fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

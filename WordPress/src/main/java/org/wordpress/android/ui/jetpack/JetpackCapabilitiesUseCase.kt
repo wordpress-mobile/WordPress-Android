@@ -15,30 +15,33 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPaylo
 import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError
 import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-const val MAX_CACHE_VALIDITY = 1000 * 60 * 15L // 15 minutes
 private val SCAN_CAPABILITIES = listOf(SCAN)
 val BACKUP_CAPABILITIES = listOf(BACKUP, BACKUP_DAILY, BACKUP_REALTIME)
 
 class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
     private val dispatcher: Dispatcher,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val currentDateProvider: CurrentTimeProvider
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private var continuation: HashMap<Long, Continuation<OnJetpackCapabilitiesFetched>?> = hashMapOf()
 
+    init {
+        dispatcher.register(this@JetpackCapabilitiesUseCase)
+    }
+
+    fun clear() {
+        dispatcher.unregister(this)
+    }
+
     suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
         emit(getCachedJetpackPurchasedProducts(remoteSiteId))
-        if (!hasValidCache(remoteSiteId)) {
-            emit(fetchJetpackPurchasedProducts(remoteSiteId))
-        }
+        emit(fetchJetpackPurchasedProducts(remoteSiteId))
     }
 
     fun getCachedJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
@@ -53,11 +56,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
                     backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
             )
 
-    fun hasValidCache(remoteSiteId: Long): Boolean {
-        val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-        return lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
-    }
-
     private fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
         return appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId)
     }
@@ -65,7 +63,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
         forceResumeDuplicateRequests(remoteSiteId)
 
-        dispatcher.register(this@JetpackCapabilitiesUseCase)
         val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
             val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
             continuation[remoteSiteId] = cont
@@ -105,9 +102,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         continuation[event.remoteSiteId]?.let {
             continuation.remove(event.remoteSiteId)
             it.resume(event)
-        }
-        if (continuation.isEmpty()) {
-            dispatcher.unregister(this@JetpackCapabilitiesUseCase)
         }
     }
 

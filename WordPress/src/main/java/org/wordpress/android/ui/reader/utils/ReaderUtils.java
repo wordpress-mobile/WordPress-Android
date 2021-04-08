@@ -124,7 +124,7 @@ public class ReaderUtils {
 
     /*
      * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
-     * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
+     * https://git.io/JqUEP
      * http://stackoverflow.com/a/1612015/1673548
      */
     public static String sanitizeWithDashes(final String title) {

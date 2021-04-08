@@ -14,7 +14,7 @@ data class GutenbergPropsBuilder(
     private val enableXPosts: Boolean,
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
-    private val enablePreviewMode: Boolean,
+    private val enableAudioBlock: Boolean,
     private val localeSlug: String,
     private val postType: String,
     private val editorTheme: Bundle?
@@ -26,12 +26,12 @@ data class GutenbergPropsBuilder(
             enableXPosts = enableXPosts,
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
             canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
+            enableAudioBlock = enableAudioBlock,
             localeSlug = localeSlug,
             postType = postType,
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
-            htmlModeEnabled = isHtmlModeEnabled,
-            isPreview = enablePreviewMode
+            htmlModeEnabled = isHtmlModeEnabled
     )
 }

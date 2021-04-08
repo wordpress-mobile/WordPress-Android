@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.test
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -32,7 +33,7 @@ class FetchHomePageLayoutsUseCaseTest {
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SuggestDomainsPayload>>
-    private val event = OnStarterDesignsFetched(emptyList(), null)
+    private val event = OnStarterDesignsFetched(emptyList(), emptyList(), null)
 
     @Before
     fun setUp() {

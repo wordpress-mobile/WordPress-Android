@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- TODO We should remove this after updating Quick Start tasks -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/orange_0" />
-    <size
-        android:height="94dp"
-        android:width="168dp" />
-</shape>

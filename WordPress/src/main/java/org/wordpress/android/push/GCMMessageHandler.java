@@ -754,7 +754,7 @@ public class GCMMessageHandler {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean shouldReceiveNotifications =
-                    prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
+                    prefs.getBoolean(context.getString(R.string.wp_pref_notifications_main), true);
 
             if (shouldReceiveNotifications) {
                 if (notifyUser) {

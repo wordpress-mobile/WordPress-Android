@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.QuickStartRepository
@@ -40,7 +39,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
@@ -67,10 +66,10 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
-    private val quickStartStore: QuickStartStore,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
     private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
-    private val quickStartRepository: QuickStartRepository
+    private val quickStartRepository: QuickStartRepository,
+    private val quickStartUtilsWrapper: QuickStartUtilsWrapper
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
@@ -176,10 +175,8 @@ class PageListViewModel @Inject constructor(
             if (mySiteImprovementsFeatureConfig.isEnabled()) {
                 quickStartRepository.completeTask(EDIT_HOMEPAGE)
             } else {
-                QuickStartUtils.completeTaskAndRemindNextOne(
-                        quickStartStore,
+                quickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         EDIT_HOMEPAGE,
-                        dispatcher,
                         pagesViewModel.site,
                         _quickStartEvent.value,
                         context
@@ -305,9 +302,11 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
             pages.filter { it.post.authorId == accountStore.account.userId }
-        else pages
+        } else {
+            pages
+        }
 
         val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = (if (shouldSortTopologically) {
@@ -324,6 +323,11 @@ class PageListViewModel @Inject constructor(
                         DEFAULT_INDENT
                     }
                     val itemUiStateData = createItemUiStateData(it)
+                    val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                        null
+                    } else {
+                        it.post.authorDisplayName
+                    }
                     PublishedPage(
                             remoteId = it.remoteId,
                             localId = it.pageId,
@@ -339,8 +343,7 @@ class PageListViewModel @Inject constructor(
                             actionsEnabled = actionsEnabled,
                             progressBarUiState = itemUiStateData.progressBarUiState,
                             showOverlay = itemUiStateData.showOverlay,
-                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                null else it.post.authorDisplayName,
+                            author = author,
                             showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                     )
                 }
@@ -350,16 +353,23 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
             pages.filter { it.post.authorId == accountStore.account.userId }
-        else pages
+        } else {
+            pages
+        }
 
-        return filteredPages.asSequence().groupBy { it.date.toFormattedDateString() }
+        return filteredPages.groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) ->
                     listOf(Divider(date)) +
                             results.map {
                                 val itemUiStateData = createItemUiStateData(it)
 
+                                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                                    null
+                                } else {
+                                    it.post.authorDisplayName
+                                }
                                 ScheduledPage(
                                         remoteId = it.remoteId,
                                         localId = it.pageId,
@@ -372,8 +382,7 @@ class PageListViewModel @Inject constructor(
                                         actionsEnabled = actionsEnabled,
                                         progressBarUiState = itemUiStateData.progressBarUiState,
                                         showOverlay = itemUiStateData.showOverlay,
-                                        author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                            null else it.post.authorDisplayName,
+                                        author = author,
                                         showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                                 )
                             }
@@ -385,60 +394,68 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
             pages.filter { it.post.authorId == accountStore.account.userId }
-        else pages
+        } else {
+            pages
+        }
 
         return filteredPages
                 .map {
-            val itemUiStateData = createItemUiStateData(it)
-            DraftPage(
-                    remoteId = it.remoteId,
-                    localId = it.pageId,
-                    title = it.title,
-                    date = it.date,
-                    labels = itemUiStateData.labels,
-                    labelsColor = itemUiStateData.labelsColor,
-                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                    actions = itemUiStateData.actions,
-                    actionsEnabled = actionsEnabled,
-                    progressBarUiState = itemUiStateData.progressBarUiState,
-                    showOverlay = itemUiStateData.showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName,
-                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-            )
-        }
+                    val itemUiStateData = createItemUiStateData(it)
+                    DraftPage(
+                            remoteId = it.remoteId,
+                            localId = it.pageId,
+                            title = it.title,
+                            date = it.date,
+                            labels = itemUiStateData.labels,
+                            labelsColor = itemUiStateData.labelsColor,
+                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                            actions = itemUiStateData.actions,
+                            actionsEnabled = actionsEnabled,
+                            progressBarUiState = itemUiStateData.progressBarUiState,
+                            showOverlay = itemUiStateData.showOverlay,
+                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                                null else it.post.authorDisplayName,
+                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                    )
+                }
     }
 
     private fun prepareTrashedPages(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
             pages.filter { it.post.authorId == accountStore.account.userId }
-        else pages
+        } else {
+            pages
+        }
 
         return filteredPages
-                    .map {
-            val itemUiStateData = createItemUiStateData(it)
-            TrashedPage(
-                    remoteId = it.remoteId,
-                    localId = it.pageId,
-                    title = it.title,
-                    date = it.date,
-                    labels = itemUiStateData.labels,
-                    labelsColor = itemUiStateData.labelsColor,
-                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
-                    actions = itemUiStateData.actions,
-                    actionsEnabled = actionsEnabled,
-                    progressBarUiState = itemUiStateData.progressBarUiState,
-                    showOverlay = itemUiStateData.showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName,
-                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
-            )
-        }
+                .map {
+                    val itemUiStateData = createItemUiStateData(it)
+                    val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
+                        null
+                    } else {
+                        it.post.authorDisplayName
+                    }
+                    TrashedPage(
+                            remoteId = it.remoteId,
+                            localId = it.pageId,
+                            title = it.title,
+                            date = it.date,
+                            labels = itemUiStateData.labels,
+                            labelsColor = itemUiStateData.labelsColor,
+                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                            actions = itemUiStateData.actions,
+                            actionsEnabled = actionsEnabled,
+                            progressBarUiState = itemUiStateData.progressBarUiState,
+                            showOverlay = itemUiStateData.showOverlay,
+                            author = author,
+                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
+                    )
+                }
     }
 
     private fun topologicalSort(
@@ -458,10 +475,11 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
-        return if (page == null || !PageListType.PUBLISHED.pageStatuses.contains(page.status))
+        return if (page == null || !PUBLISHED.pageStatuses.contains(page.status)) {
             -1
-        else
+        } else {
             getPageItemIndent(page.parent) + 1
+        }
     }
 
     private fun invalidateFeaturedMedia(vararg featuredImageIds: Long) {
@@ -504,14 +522,16 @@ class PageListViewModel @Inject constructor(
         }
         val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
                 _quickStartEvent.value?.task == EDIT_HOMEPAGE
-        return ItemUiStateData(labels,
+        return ItemUiStateData(
+                labels,
                 labelColor,
                 progressBarUiState,
                 showOverlay,
                 actions,
                 subtitle,
                 icon,
-                showQuickStartFocusPoint)
+                showQuickStartFocusPoint
+        )
     }
 
     private data class ItemUiStateData(

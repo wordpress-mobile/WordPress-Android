@@ -21,7 +21,9 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <include layout="@layout/stats_list_fragment" />
+                <include
+                    android:id="@+id/stats_list_fragment"
+                    layout="@layout/stats_list_fragment" />
 
             </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 

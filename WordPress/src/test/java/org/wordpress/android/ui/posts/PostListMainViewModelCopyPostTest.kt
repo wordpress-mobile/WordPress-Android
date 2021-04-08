@@ -66,8 +66,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
                 postListEventListenerFactory = mock(),
                 uploadStarter = mock(),
                 uploadActionUseCase = mock(),
-                savePostToDbUseCase = mock(),
-                wpStoriesFeatureConfig = mock()
+                savePostToDbUseCase = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)
 
