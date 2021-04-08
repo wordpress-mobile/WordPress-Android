@@ -56,6 +56,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject DeeplinkNavigator mDeeplinkNavigator;
+    @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private DeepLinkingIntentReceiverViewModel mViewModel;
 
@@ -103,12 +104,15 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void setupObservers() {
-        mViewModel.getNavigateAction().observe(this, navigateActionEvent -> {
-            navigateActionEvent.applyIfNotHandled(navigateAction -> {
-                mDeeplinkNavigator.handleNavigationAction(navigateAction, this);
-                return null;
-            });
-        });
+        mViewModel.getNavigateAction()
+                  .observe(this, navigateActionEvent -> navigateActionEvent.applyIfNotHandled(navigateAction -> {
+                      mDeeplinkNavigator.handleNavigationAction(navigateAction, this);
+                      return null;
+                  }));
+        mViewModel.getToast().observe(this, toastEvent -> toastEvent.applyIfNotHandled(toastMessage -> {
+            ToastUtils.showToast(getContext(), toastMessage);
+            return null;
+        }));
     }
 
     private boolean shouldOpenEditorFromDeepLink(String host) {
@@ -200,7 +204,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private void handleShowStats(@NonNull Uri uri) {
         String targetHost = extractTargetHost(uri);
         SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = extractHostFromSite(site);
+        String host = mDeepLinkUriUtils.extractHostFromSite(site);
         if (site != null && host != null && StringUtils.equals(host, targetHost)) {
             ActivityLauncher.viewStatsInNewStack(getContext(), site);
         } else {
@@ -218,7 +222,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private void handleShowPages(@NonNull Uri uri) {
         String targetHost = extractTargetHost(uri);
         SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = extractHostFromSite(site);
+        String host = mDeepLinkUriUtils.extractHostFromSite(site);
         if (site != null && host != null && StringUtils.equals(host, targetHost)) {
             ActivityLauncher.viewPagesInNewStack(getContext(), site);
         } else {
@@ -295,13 +299,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private @Nullable SiteModel extractSiteModelFromTargetHost(String host) {
         List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(host);
         return matchedSites.isEmpty() ? null : matchedSites.get(0);
-    }
-
-    private @Nullable String extractHostFromSite(SiteModel site) {
-        if (site != null && site.getUrl() != null) {
-            return Uri.parse(site.getUrl()).getHost();
-        }
-        return null;
     }
 
     private boolean shouldShow(@NonNull Uri uri, @NonNull String path) {

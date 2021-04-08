@@ -8,6 +8,7 @@ import android.net.Uri.Builder
  */
 data class UriWrapper(val uri: Uri) {
     constructor(uriString: String) : this(Uri.parse(uriString))
+
     val pathSegments: List<String> = uri.pathSegments
     val host: String? = uri.host
 

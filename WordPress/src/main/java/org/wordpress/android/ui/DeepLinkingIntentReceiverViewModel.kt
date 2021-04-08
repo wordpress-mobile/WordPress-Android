@@ -1,12 +1,9 @@
 package org.wordpress.android.ui
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -19,7 +16,6 @@ import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenEditorForSi
 import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInEditor
 import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.StartCreateSiteFlow
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -31,10 +27,13 @@ class DeepLinkingIntentReceiverViewModel
     private val siteStore: SiteStore,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    private val deepLinkUriUtils: DeepLinkUriUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
+    private val _toast = MutableLiveData<Event<Int>>()
+    val toast = _toast as LiveData<Event<Int>>
 
     /**
      * URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
@@ -107,7 +106,7 @@ class DeepLinkingIntentReceiverViewModel
      */
     private fun String.toSite(): SiteModel? {
         val site = extractSiteModelFromTargetHost(this)
-        val host = extractHostFromSite(site)
+        val host = deepLinkUriUtils.extractHostFromSite(site)
         // Check if a site is available with given targetHost
         return if (site != null && host != null && host == this) {
             site
@@ -124,7 +123,7 @@ class DeepLinkingIntentReceiverViewModel
         return if (site != null && remotePostId != null) {
             val post = postStore.getPostByRemotePostId(remotePostId, site)
             if (post == null) {
-                ToastUtils.showToast(WordPress.getContext(), R.string.post_not_found)
+                _toast.value = Event(R.string.post_not_found)
             }
             post
         } else {
@@ -136,7 +135,7 @@ class DeepLinkingIntentReceiverViewModel
         return when {
             site == null -> {
                 // Site not found, or host of site doesn't match the host in url
-                ToastUtils.showToast(WordPress.getContext(), string.blog_not_found)
+                _toast.value = Event(R.string.blog_not_found)
                 // Open a new post editor with current selected site
                 OpenEditor
             }
@@ -150,10 +149,6 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun extractSiteModelFromTargetHost(host: String): SiteModel? {
         return siteStore.getSitesByNameOrUrlMatching(host).firstOrNull()
-    }
-
-    private fun extractHostFromSite(site: SiteModel?): String? {
-        return site?.url?.let { Uri.parse(it).host }
     }
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
