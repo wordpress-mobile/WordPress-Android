@@ -5,7 +5,6 @@
     <color name="colorSecondary">@color/blue_50</color>
     <color name="colorSecondaryVariant">@color/blue_70</color>
 
-    <!-- SEMANTICS -->
     <color name="primary">@color/blue_50</color>
     <color name="primary_0">@color/blue_0</color>
     <color name="primary_5">@color/blue_5</color>
