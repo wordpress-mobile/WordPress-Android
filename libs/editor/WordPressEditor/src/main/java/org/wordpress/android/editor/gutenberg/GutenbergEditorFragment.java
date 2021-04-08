@@ -340,13 +340,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onSetFeaturedImageButtonClicked(int mediaId) {
                         showFeaturedImageConfirmationDialog(mediaId);
                     }
-
-                    @Override
-                    public void checkIfFeaturedImage(int mediaId) {
-                        if (mFeaturedImageId == mediaId) {
-                            getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
-                        }
-                    }
                 },
                 new OnEditorMountListener() {
                     @Override
@@ -819,6 +812,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void setFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
+        // Necessary to update image in Post Settings
         setFeaturedImageId(mediaId);
         sendToJSFeaturedImageId(mediaId);
 
@@ -829,6 +823,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void removeFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
+        // Necessary to update image in Post Settings
         setFeaturedImageId(mediaId);
         sendToJSFeaturedImageId(mediaId);
 
