@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.GutenbergLayoutCategoriesModelTable;
@@ -322,6 +323,19 @@ public class SiteSqlUtils {
             blockLayouts.add(GutenbergLayoutModelKt.transform(layout, categories));
         }
         return blockLayouts;
+    }
+
+    public static @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
+        List<GutenbergLayoutModel> layouts =
+                WellSql.select(GutenbergLayoutModel.class)
+                       .where()
+                       .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
+                       .equals(GutenbergLayoutModelTable.SLUG, slug)
+                       .endWhere().getAsModel();
+        if (layouts.size() == 1) {
+            return layouts.get(0).getContent();
+        }
+        return null;
     }
 
     public static void insertOrReplaceBlockLayouts(@NonNull SiteModel site,
