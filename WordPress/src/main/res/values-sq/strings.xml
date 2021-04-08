@@ -6,19 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Lidhje Etikete</string>
     <string name="gutenberg_native_table_of_contents">Tryeza e Lëndës</string>
     <string name="gutenberg_native_summary">përmbledhje</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Përmblidheni postimin tuaj me një listë kryesh. Shtoni spiranca HTML për te blloqe Kryesh për t’i lidhur këtu.</string>
-    <string name="gutenberg_native_search_settings">Rregullime Kërkimi</string>
-    <string name="gutenberg_native_post_link">Lidhje Postimi</string>
     <string name="gutenberg_native_document_outline">përvijim dokumenti</string>
-    <string name="gutenberg_native_category_link">Lidhje Kategorie</string>
-    <string name="gutenberg_native_a_link_to_a_url">Një lidhje te një URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">Një lidhje për te një etiketë.</string>
-    <string name="gutenberg_native_a_link_to_a_post">Një lidhje për te një postim.</string>
-    <string name="gutenberg_native_a_link_to_a_page">Lidhje për te një faqe.</string>
-    <string name="gutenberg_native_a_link_to_a_category">Një lidhje për te një kategori.</string>
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
     <string name="gutenberg_native_add_button_text">Tekst butoni Shtoni</string>
@@ -426,7 +417,6 @@ Language: sq_AL
     <string name="media_uploading_default">Po ngarkohet media</string>
     <string name="gutenberg_native_select_item">Përzgjidhni objekt</string>
     <string name="gutenberg_native_search_or_type_url">Kërkoni ose shtypni URL</string>
-    <string name="gutenberg_native_page_link">Lidhje Faqeje</string>
     <string name="gutenberg_native_add_this_telephone_link">Shtoni këtë lidhje telefoni</string>
     <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
     <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
@@ -795,7 +785,6 @@ Language: sq_AL
     <string name="gutenberg_native_move_image_forward">Lëvize Figurën Përpara</string>
     <string name="gutenberg_native_move_image_backward">Lëvize Figurën Mbrapsht</string>
     <string name="gutenberg_native_gallery_caption_s">Përshkrim galerie. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Vlera e tanishme është %2$s</string>
     <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
     <string name="content_description_person_building_website">Personi që po krijon sajt</string>
     <string name="post_signup_interstitial_not_right_now">Jo tani</string>
@@ -819,7 +808,6 @@ Language: sq_AL
     <string name="login_discovery_error_http_auth">S’qemë në gjendje të hyjmë në sajtin tuaj, ngaqë lyp &lt;b>Mirëfilltësim HTTP&lt;/b>. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="login_discovery_error_xmlrpc">S’qemë në gjendje të hyjmë te &lt;b>kartela&lt;/b> në sajtin tuaj. Do t’ju duhet të lidheni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="login_site_credentials_magic_link_label">Thuajse mbërritëm! Na duhet vetëm të verifikojmë adresën tuaj email të lidhur me Jetpack-un &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Hyni me kredenciale sajti.</string>
     <string name="enter_credentials_for_site">Hyni me kredencialet tuaja për sajtin %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
     <string name="reader_following_display_name">Ndjekur prej jush</string>
@@ -876,7 +864,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Që ta ngrini bllokun sipër, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Që ta ulni bllokun poshtë, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Që të përpunoni këtë vlerë, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Që ta ndryshoni vlerën duke përdorur rrëshqitësin, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Që të shtoni një bllok, prekeni dyfish</string>
     <string name="gutenberg_native_current_value_is_s">Vlera e tanishme është %s</string>
     <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
@@ -990,7 +977,6 @@ Language: sq_AL
     <string name="post_settings_add_to_calendar">Shtoje në kalendar</string>
     <string name="post_settings_notification">Njoftim</string>
     <string name="post_settings_time_and_date">Data dhe Koha</string>
-    <string name="login_need_help_finding_connected_email">Ju duhet ndihmë për të gjetur email-in me të cilin e lidhët?</string>
     <string name="login_invalid_site_url">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
     <string name="enter_email_for_site">Që të lidheni me %1$s, bëni hyrjen te llogaria juaj WordPress.com</string>
     <string name="stats_post_views_label">Pamje</string>
@@ -1164,7 +1150,6 @@ Language: sq_AL
     <string name="plans_loading_error_no_plans_title">S’arrihet të ngarkohen Planet</string>
     <string name="plans_loading_error_network_title">S\'ka lidhje</string>
     <string name="menu_switch_to_gutenberg_editor">Kaloni nën përpunuesin me blloqe</string>
-    <string name="menu_switch_to_aztec_editor">Kaloni nën përpunuesin klasik</string>
     <string name="stats_loading_block_error">Pati një problem në ngarkimin e të dhënave tuaja, rifreskoni faqen dhe riprovoni.</string>
     <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
@@ -1456,14 +1441,12 @@ Language: sq_AL
     <string name="comment_read_source_post">Lexoni postimin burim</string>
     <string name="sites">Sajte</string>
     <string name="signup_magic_link_title">Lidhja magjike u dërgua</string>
-    <string name="signup_email_screen_title">Regjistrim me email</string>
     <string name="verification_2fa_screen_title">Verifikim kodi</string>
     <string name="selfhosted_site_login_title">Kredenciale hyrjeje</string>
     <string name="magic_link_sent_login_title">Lidhja magjike u dërgua</string>
     <string name="magic_link_login_title">Hyrje me lidhje magjike</string>
     <string name="site_address_login_title">Hyrje me adresë sajti</string>
     <string name="email_address_login_title">Hyrje me adresë email</string>
-    <string name="alternatively">Ndryshe:</string>
     <string name="reader_empty_saved_posts_description">Prekeni %s që të ruhet një postim te lista juaj.</string>
     <string name="reader_empty_saved_posts_title">Ende pa postime të ruajtur!</string>
     <string name="reader_bookmark_snack_title">Postimi u ruajt</string>
@@ -1500,7 +1483,6 @@ Language: sq_AL
     <string name="preference_privacy_settings">Rregullime privatësie</string>
     <string name="preference_collect_information">Grumbullo të dhëna</string>
     <string name="post_submitted">Postimi u parashtrua</string>
-    <string name="login_email_button_signup">S’keni llogari? %1$sRegjistrohuni%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Veçoria e shtojcës lyp që sajti të jetë në rregull.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Veçoria e shtojcës lyp që pajtimi i përkatësisë parësore të jetë përshoqëruar me këtë përdorues.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Veçoria e shtojcës lyp privilegje përgjegjësi.</string>
@@ -1666,11 +1648,8 @@ Language: sq_AL
     <string name="username_changer_dismiss_button_positive">Hidhe Tej</string>
     <string name="username_changer_action">Ruaje</string>
     <string name="content_description_add_avatar">Shtoni avatar</string>
-    <string name="signup_with_google_button">Regjistrohuni me Google</string>
-    <string name="signup_with_email_button">Regjistrohuni me Email</string>
     <string name="signup_user_exists">Email tashmë ekzistues në WordPress.com.\nPo vazhdohet me hyrjen.</string>
     <string name="signup_updating_account">Po përditësohet llogaria…</string>
-    <string name="signup_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
     <string name="signup_magic_link_progress">Mesazhi po dërgohet</string>
     <string name="signup_magic_link_error_button_positive">Riprovoni</string>
     <string name="signup_magic_link_error_button_negative">Mbylle</string>
@@ -1683,11 +1662,6 @@ Language: sq_AL
     <string name="signup_epilogue_error_button_negative">Riktheje</string>
     <string name="signup_epilogue_error_generic">Pati ca probleme me përditësimin e llogarisë tuaj. Që të vazhdohet, mund të riprovoni ose prapësoni ndryshimet.</string>
     <string name="signup_epilogue_error_avatar">Pati ca probleme me ngarkimin e avatarit tuaj.</string>
-    <string name="signup_email_header">Që të krijoni llogarinë tuaj të re WordPress.com, ju lutemi, jepni adresën tuaj email.</string>
-    <string name="signup_email_error_generic">Pati ca probleme me kontrollin e adresës email.</string>
-    <string name="sign_up">Regjistrohuni te WordPress.com</string>
-    <string name="enter_username_instead">Hyni me emrin tuaj të përdoruesit.</string>
-    <string name="enter_site_address_instead">Bëni hyrjen duke dhënë adresën e sajtit tuaj.</string>
     <string name="plugin_needs_update">Lyp përditësim</string>
     <string name="plugin_caption_search">Kërkoni Për Shtojca</string>
     <string name="plugin_caption_new">E re</string>
@@ -1808,7 +1782,6 @@ Language: sq_AL
     <string name="login_error_suffix">\nNdoshta të provohej me një llogari tjetër?</string>
     <string name="login_error_generic">Pati problem në lidhjen me llogarinë Google.</string>
     <string name="login_error_button">Mbylle</string>
-    <string name="login_google_button_suffix">Hyni me Google.</string>
     <string name="enter_wpcom_password_google">Që të vazhdohet me këtë llogari Google, ju lutemi, jepni fjalëkalimin për te WordPress.com. Kjo do t’ju kërkohet vetëm një herë.</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>
@@ -1907,7 +1880,6 @@ Language: sq_AL
     <string name="login_site_address_more_help">Ju duhet më tepër ndihmë?</string>
     <string name="login_site_address_help_content">Adresa e sajtit tuaj shfaqet te shtylla në krye të skenës, kur vizitoni sajtin tuaj nën Chrome.</string>
     <string name="login_site_address_help_title">Cila është adresa e sajtit tim?</string>
-    <string name="login_site_address_help">Ju duhet ndihmë për gjetjen e adresës së sajtit tuaj?</string>
     <string name="login_site_address">Adresë sajti</string>
     <string name="enter_site_address">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
     <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
@@ -1919,7 +1891,6 @@ Language: sq_AL
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
     <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
-    <string name="open_mail">Hap postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
@@ -2178,7 +2149,6 @@ Language: sq_AL
     <string name="invite_names_title">Emra përdoruesish ose email-e</string>
     <string name="invite_people">Ftoni Njerëz</string>
     <string name="my_site_header_external">I jashtëm</string>
-    <string name="send_link">Dërgo lidhje</string>
     <string name="label_clear_search_history">Spastro historikun e kërkimeve</string>
     <string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
     <string name="reader_empty_search_description">S’u gjetën përfundime në gjuhën tuaj për %s</string>
@@ -2202,7 +2172,6 @@ Language: sq_AL
     <string name="checking_email">Po kontrollohet email-i</string>
     <string name="magic_link_unavailable_error_message">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
     <string name="logging_in">Po hyhet</string>
-    <string name="enter_your_password_instead">Në vend të kësaj, jepni fjalëkalimin tuaj</string>
     <string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
     <string name="capture_or_pick_photo">Bëni ose përzgjidhni foto</string>
     <string name="plans">Plane</string>
@@ -2586,7 +2555,6 @@ Language: sq_AL
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
-    <string name="forgot_password">Humbët fjalëkalimin tuaj?</string>
     <string name="help">Ndihmë</string>
     <string name="username_or_password_incorrect">Emri i përdoruesit apo fjalëkalimi që dhatë është i pasaktë</string>
     <string name="email_invalid">Jepni një adresë email të vlefshme</string>

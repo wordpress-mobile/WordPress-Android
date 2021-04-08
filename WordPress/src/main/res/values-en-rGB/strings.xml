@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-23 23:12:35+0000
+Translation-Revision-Date: 2021-04-07 19:08:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Tag Link</string>
+    <string name="gutenberg_native_use_icon_button">Use icon button</string>
+    <string name="gutenberg_native_search_input_field">Search input field.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
+    <string name="gutenberg_native_search_blocks">Search blocks</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
+    <string name="gutenberg_native_search_block">Search block</string>
+    <string name="gutenberg_native_outside">Outside</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
+    <string name="gutenberg_native_no_button">No button</string>
+    <string name="gutenberg_native_inside">Inside</string>
+    <string name="gutenberg_native_hide_search_heading">Hide search heading</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Double tap to edit placeholder text</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Double tap to edit label text</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Double tap to edit button text</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">double tap to change unit</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Current placeholder text is</string>
+    <string name="gutenberg_native_clear_search">Clear search</string>
+    <string name="gutenberg_native_cancel_search">Cancel search</string>
+    <string name="gutenberg_native_button_position">Button position</string>
+    <string name="gutenberg_native_button_outside">Button outside</string>
+    <string name="gutenberg_native_button_inside">Button inside</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+    <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
+    <string name="get_likes_no_network_error">No network available.</string>
+    <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
+    <string name="comment_status_unreplied">Unreplied</string>
     <string name="gutenberg_native_table_of_contents">Table of Contents</string>
     <string name="gutenberg_native_summary">summary</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Summarise your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
-    <string name="gutenberg_native_search_settings">Search Settings</string>
-    <string name="gutenberg_native_post_link">Post Link</string>
+    <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="gutenberg_native_document_outline">document outline</string>
-    <string name="gutenberg_native_category_link">Category Link</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
-    <string name="gutenberg_native_a_link_to_a_url">A link to a URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">A link to a tag.</string>
-    <string name="gutenberg_native_a_link_to_a_post">A link to a post.</string>
-    <string name="gutenberg_native_a_link_to_a_page">A link to a page.</string>
-    <string name="gutenberg_native_a_link_to_a_category">A link to a category.</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="gutenberg_native_add_button_text">Add button text</string>
@@ -428,7 +447,6 @@ Language: en_GB
     <string name="media_uploading_default">Uploading media</string>
     <string name="gutenberg_native_select_item">Select item</string>
     <string name="gutenberg_native_search_or_type_url">Search or type URL</string>
-    <string name="gutenberg_native_page_link">Page Link</string>
     <string name="gutenberg_native_add_this_telephone_link">Add this telephone link</string>
     <string name="gutenberg_native_add_this_link">Add this link</string>
     <string name="gutenberg_native_add_this_email_link">Add this email link</string>
@@ -797,7 +815,6 @@ Language: en_GB
     <string name="gutenberg_native_move_image_forward">Move Image Forward</string>
     <string name="gutenberg_native_move_image_backward">Move Image Backward</string>
     <string name="gutenberg_native_gallery_caption_s">Gallery caption. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Current value is %2$s</string>
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="content_description_person_building_website">Person building website</string>
     <string name="post_signup_interstitial_not_right_now">Not right now</string>
@@ -821,7 +838,6 @@ Language: en_GB
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b>HTTP Authentication&lt;/b>. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b>XMLRPC file&lt;/b> on your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="reader_following_display_name">Following</string>
@@ -878,7 +894,6 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Double tap to move the block up</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Double tap to move the block down</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Double tap to edit this value</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Double tap to change the value using slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Double tap to add a block</string>
     <string name="gutenberg_native_current_value_is_s">Current value is %s</string>
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
@@ -992,7 +1007,6 @@ Language: en_GB
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_time_and_date">Date and Time</string>
-    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="stats_post_views_label">Views</string>
@@ -1166,7 +1180,6 @@ Language: en_GB
     <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
     <string name="plans_loading_error_network_title">No connection</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
-    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
@@ -1458,14 +1471,12 @@ Language: en_GB
     <string name="comment_read_source_post">Read the source post</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Magic link sent</string>
-    <string name="signup_email_screen_title">Email signup</string>
     <string name="verification_2fa_screen_title">Code verification</string>
     <string name="selfhosted_site_login_title">Login credentials</string>
     <string name="magic_link_sent_login_title">Magic link sent</string>
     <string name="magic_link_login_title">Magic link login</string>
     <string name="site_address_login_title">Site address login</string>
     <string name="email_address_login_title">Email address login</string>
-    <string name="alternatively">Alternatively:</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
@@ -1502,7 +1513,6 @@ Language: en_GB
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="post_submitted">Post submitted</string>
-    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Plugin feature requires admin privileges.</string>
@@ -1668,11 +1678,8 @@ Language: en_GB
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_action">Save</string>
     <string name="content_description_add_avatar">Add avatar</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_updating_account">Updating account…</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
@@ -1685,11 +1692,6 @@ Language: en_GB
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
-    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
-    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
-    <string name="sign_up">Sign Up for WordPress.com</string>
-    <string name="enter_username_instead">Log in with your username.</string>
-    <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="plugin_needs_update">Needs update</string>
     <string name="plugin_caption_search">Search Plugins</string>
     <string name="plugin_caption_new">New</string>
@@ -1810,7 +1812,6 @@ Language: en_GB
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
@@ -1909,7 +1910,6 @@ Language: en_GB
     <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address">Site address</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
@@ -1921,7 +1921,6 @@ Language: en_GB
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
-    <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
@@ -2180,7 +2179,6 @@ Language: en_GB
     <string name="invite_names_title">Usernames or emails</string>
     <string name="invite_people">Invite People</string>
     <string name="my_site_header_external">External</string>
-    <string name="send_link">Send link</string>
     <string name="label_clear_search_history">Clear search history</string>
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
@@ -2204,7 +2202,6 @@ Language: en_GB
     <string name="checking_email">Checking email</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="logging_in">Logging in</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="plans">Plans</string>
@@ -2588,7 +2585,6 @@ Language: en_GB
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
-    <string name="forgot_password">Lost your password?</string>
     <string name="help">Help</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="email_invalid">Enter a valid email address</string>

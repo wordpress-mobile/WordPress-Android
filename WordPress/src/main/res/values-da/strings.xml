@@ -152,7 +152,6 @@ Language: da_DK
     <string name="schedule_verb">Planlæg</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
     <string name="help">Hjælp</string>
-    <string name="forgot_password">Mistet din adgangskode?</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
     <string name="mnu_comment_unspam">Ikke spam</string>

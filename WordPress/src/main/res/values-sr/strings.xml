@@ -352,7 +352,6 @@ Language: sr_RS
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Направити чланак или страницу</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Тренутна вредност је %2$s</string>
     <string name="gutenberg_native_move_image_forward">Померите слику напред</string>
     <string name="gutenberg_native_move_image_backward">Померите слику назад</string>
     <string name="content_description_person_building_website">Особа која прави веб место</string>
@@ -592,7 +591,6 @@ Language: sr_RS
     <string name="site_settings_gutenberg_default_for_new_posts">Користи блоковски уређивач</string>
     <string name="plans_loading_error_network_title">Нема везе</string>
     <string name="menu_switch_to_gutenberg_editor">Пребаци на блоковски уређивач</string>
-    <string name="menu_switch_to_aztec_editor">Пребаци на класични уређивач</string>
     <string name="stats_loading_error">Подаци нису учитани</string>
     <string name="exit">излаз</string>
     <string name="quick_start_sites">Наредни кораци</string>
@@ -832,10 +830,8 @@ Language: sr_RS
     <string name="reader_empty_search_request_failed">Није могуће извршити претрагу</string>
     <string name="comment_read_source_post">Прочитајте изворни чланак</string>
     <string name="sites">Сајтови</string>
-    <string name="signup_email_screen_title">Регистрација електронском поштом</string>
     <string name="verification_2fa_screen_title">Верификација кодом</string>
     <string name="selfhosted_site_login_title">Креденцијали за пријаву</string>
-    <string name="alternatively">Алтернативно:</string>
     <string name="removed">Уклоњено</string>
     <string name="reader_save_for_later_title">Сачувани чланци</string>
     <string name="reader_add_bookmark">Додато у сачуване чланке</string>
@@ -867,7 +863,6 @@ Language: sr_RS
     <string name="preference_privacy_settings">Подешавања приватности</string>
     <string name="preference_collect_information">Прикупи информације</string>
     <string name="post_submitted">Чланак је предат</string>
-    <string name="login_email_button_signup">Немате налог? %1$sРегиструјте се%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Могућност додатка захтева да сајт буде добро позициониран.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Могућност додатка захтева да претплата на главни домен буде везана за корисника.</string>
     <string name="plugin_install_site_ineligible_site_private">Функција додатка захтева да страница буде јавна.</string>
@@ -1016,13 +1011,9 @@ Language: sr_RS
     <string name="username_changer_dismiss_message">Одбаци промену корисничког имена?</string>
     <string name="username_changer_action">Сачувај</string>
     <string name="content_description_add_avatar">Додај аватар</string>
-    <string name="signup_with_google_button">Региструј се са Google-ом</string>
-    <string name="signup_with_email_button">Региструј се са електронском поштом</string>
     <string name="signup_user_exists">Електронска пошта већ постоји на WordPress.com.\nНаставите са пријавом.</string>
     <string name="signup_updating_account">Ажурирање налога…</string>
     <string name="signup_magic_link_progress">Слање електронске поште</string>
-    <string name="signup_terms_of_service_text">Регистровањем, прихватате наша %1$sПравила коришћења%2$s.</string>
-    <string name="signup_email_header">Да бисте креирали нови WordPress.com налог, унесите своју адресу е-поште.</string>
     <string name="signup_magic_link_error_button_positive">Покушај поново</string>
     <string name="signup_magic_link_error_button_negative">Затвори</string>
     <string name="signup_epilogue_hint_username">Корисничко име</string>
@@ -1030,9 +1021,6 @@ Language: sr_RS
     <string name="signup_epilogue_hint_display">Име које се приказује</string>
     <string name="signup_epilogue_error_button_positive">Покушај поново</string>
     <string name="signup_epilogue_error_button_negative">Врати претходно</string>
-    <string name="sign_up">Региструј се за WordPress.com</string>
-    <string name="enter_username_instead">Пријави се са својим корисничким именом</string>
-    <string name="enter_site_address_instead">Пријави се уношењем адресе свог сајта</string>
     <string name="plugins_empty_search_list">Нема резултата</string>
     <string name="my_site_create_new_site">Направите нову веб локацију за своје предузеће, часопис или лични блог; или повежите постојећу Вордпрес инсталацију.</string>
     <string name="plugin_needs_update">Потребно је ажурирање</string>
@@ -1140,7 +1128,6 @@ Language: sr_RS
     <string name="media_edit_customize_card_caption">Прилагоди</string>
     <string name="media_edit_file_details_card_caption">Детаљи датотеке</string>
     <string name="login_error_suffix">\nА да покушате са другим налогом?</string>
-    <string name="login_google_button_suffix">Улогуј се са Google-ом.</string>
     <string name="login_error_button">Затвори</string>
     <string name="post_settings_remove_featured_image">Уклони издвојену слику</string>
     <string name="post_settings_choose_featured_image">Одабери издвојену слику</string>
@@ -1207,7 +1194,6 @@ Language: sr_RS
     <string name="login_error_while_adding_site">Грешка приликом додавања сајта. Код грешке: %s</string>
     <string name="login_site_address_more_help">Потребна додатна помоћ?</string>
     <string name="login_site_address_help_title">Која је адреса мог сајта?</string>
-    <string name="login_site_address_help">Потребна помоћ приликом тражења адресе сајта?</string>
     <string name="login_site_address">Адреса сајта</string>
     <string name="enter_site_address">Унесите адресу Вордпрес сајта који бисте желели да повежете.</string>
     <string name="login_already_logged_in_wpcom">Већ сте пријављени на WordPress.com</string>
@@ -1216,7 +1202,6 @@ Language: sr_RS
     <string name="connect_more">Повежи други сајт</string>
     <string name="enter_verification_code">Скоро смо тамо! Унесите верификациони код из апликације Authenticator.</string>
     <string name="next">Следећи</string>
-    <string name="open_mail">Отвори пошту</string>
     <string name="image_optimization_promo_title">Укључи оптимизацију слика</string>
     <string name="me_profile_photo">Профилна слика</string>
     <string name="leave_off">Остави искључено</string>
@@ -1412,7 +1397,6 @@ Language: sr_RS
     <string name="invite">Позови</string>
     <string name="invite_names_title">Корисничка имена или адресе е-поште</string>
     <string name="invite_people">Позови људе</string>
-    <string name="send_link">Пошаљи линк</string>
     <string name="my_site_header_external">Спољни</string>
     <string name="label_clear_search_history">Обриши историју претраге</string>
     <string name="dlg_confirm_clear_search_history">Обриши историју претраге?</string>
@@ -1434,7 +1418,6 @@ Language: sr_RS
     <string name="checking_email">Проверавам емаил</string>
     <string name="magic_link_unavailable_error_message">Тренутно недоступно. Молимо вас унесите вашу шифру</string>
     <string name="logging_in">Пријављивање</string>
-    <string name="enter_your_password_instead">Унесите вашу шифру</string>
     <string name="web_address_dialog_hint">Приказано свима када коментаришете.</string>
     <string name="capture_or_pick_photo">Сликај камером или изабери слику</string>
     <string name="plans">Планови</string>
@@ -1773,7 +1756,6 @@ Language: sr_RS
     <string name="reader_title_blog_preview">Сајт читача</string>
     <string name="reader_page_followed_tags">Праћене теме</string>
     <string name="help">Помоћ</string>
-    <string name="forgot_password">Изгубили сте лозинку?</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
     <string name="ssl_certificate_ask_trust">Уколико се уобичајено на ово веб место повезујете без проблема, ова грешка може да значи да неко други покушава да се представи као ваше веб место и у том случају не би требало да наставите. Желите ли ипак да верујете овој потврди?</string>
     <string name="adding_cat_failed">Додавање категорије неуспешно</string>
