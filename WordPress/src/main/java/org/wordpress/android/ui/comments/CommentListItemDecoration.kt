@@ -30,8 +30,8 @@ class CommentListItemDecoration(val context: Context) : ItemDecoration() {
         val left: Int
         val right: Int
         if (parent.clipToPadding) {
-            left = parent.paddingLeft
-            right = parent.width - parent.paddingRight
+            left = parent.paddingStart
+            right = parent.width - parent.paddingEnd
             canvas.clipRect(
                     left, parent.paddingTop, right,
                     parent.height - parent.paddingBottom
