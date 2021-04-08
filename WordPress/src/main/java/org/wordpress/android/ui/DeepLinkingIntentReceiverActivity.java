@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -44,11 +45,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
-    private static final String HOST_API_WORDPRESS_COM = "public-api.wordpress.com";
-    private static final String MOBILE_TRACKING_PATH = "mbar";
-    private static final String REGULAR_TRACKING_PATH = "bar";
-    private static final String POST_PATH = "post";
-    private static final String REDIRECT_TO_PARAM = "redirect_to";
     private static final String STATS_PATH = "stats";
     private static final String PAGES_PATH = "pages";
 
@@ -60,12 +56,14 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject DeeplinkNavigator mDeeplinkNavigator;
-    @Inject EmailUriHandler mEmailUriHandler;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private DeepLinkingIntentReceiverViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(DeepLinkingIntentReceiverViewModel.class);
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
@@ -80,13 +78,13 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             mInterceptedUri = uri.toString();
-            if (shouldOpenEditor(uri)) {
-                handleOpenEditor(uri);
+            UriWrapper uriWrapper = new UriWrapper(uri);
+            if (mViewModel.shouldHandleEmailUrl(uriWrapper)) {
+                mViewModel.handleEmailUrl(uriWrapper);
+            } else if (mViewModel.shouldOpenEditor(uriWrapper)) {
+                mViewModel.handleOpenEditor(uriWrapper);
             } else if (shouldOpenEditorFromDeepLink(host)) {
                 handleOpenEditorFromDeepLink(uri);
-            } else if (shouldHandleTrackingUrl(uri)) {
-                // There is only one handled tracking URL for now (open editor)
-                handleOpenEditorFromTrackingUrl(uri);
             } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
             } else if (shouldViewPost(host)) {
@@ -96,14 +94,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             } else if (shouldShowPages(uri)) {
                 handleShowPages(uri);
             } else {
-                UriWrapper uriWrapper = new UriWrapper(uri);
-                // https://public-api.wordpress.com/bar/
-                if (mEmailUriHandler.shouldHandleUri(uriWrapper)) {
-                    mEmailUriHandler.handleUri(uriWrapper);
-                } else {
-                    // not handled
-                    finish();
-                }
+                // not handled
+                finish();
             }
         } else {
             finish();
@@ -111,7 +103,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void setupObservers() {
-        mEmailUriHandler.getNavigateAction().observe(this, navigateActionEvent -> {
+        mViewModel.getNavigateAction().observe(this, navigateActionEvent -> {
             navigateActionEvent.applyIfNotHandled(navigateAction -> {
                 mDeeplinkNavigator.handleNavigationAction(navigateAction, this);
                 return null;
@@ -119,70 +111,9 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         });
     }
 
-    private boolean shouldOpenEditor(@NonNull Uri uri) {
-        // Match: https://wordpress.com/post/
-        return shouldShow(uri, POST_PATH);
-    }
-
     private boolean shouldOpenEditorFromDeepLink(String host) {
         // Match: wordpress://post/...
         return host != null && host.equals(DEEP_LINK_HOST_POST);
-    }
-
-    private @Nullable Uri getRedirectUri(@NonNull Uri uri) {
-        String redirectTo = uri.getQueryParameter(REDIRECT_TO_PARAM);
-        if (redirectTo == null) {
-            return null;
-        }
-        return Uri.parse(redirectTo);
-    }
-
-    private boolean shouldHandleTrackingUrl(@NonNull Uri uri) {
-        // https://public-api.wordpress.com/mbar/
-        return StringUtils.equals(uri.getHost(), HOST_API_WORDPRESS_COM)
-               && (!uri.getPathSegments().isEmpty()
-                   && StringUtils.equals(uri.getPathSegments().get(0), MOBILE_TRACKING_PATH));
-    }
-
-    private void handleOpenEditorFromTrackingUrl(@NonNull Uri uri) {
-        Uri redirectUri = getRedirectUri(uri);
-        if (redirectUri == null || !shouldOpenEditor(redirectUri)) {
-            // Replace host to redirect to the browser
-            Uri newUri = (new Uri.Builder())
-                    .scheme(uri.getScheme())
-                    .path(REGULAR_TRACKING_PATH)
-                    .query(uri.getQuery())
-                    .fragment(uri.getFragment())
-                    .authority(uri.getAuthority())
-                    .build();
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, newUri);
-            startActivity(browserIntent);
-            finish();
-            return;
-        }
-        handleOpenEditor(redirectUri);
-    }
-
-    /**
-     * Opens post editor for provided uri. If uri contains a site and a postId
-     * (e.g. https://wordpress.com/example.com/1231/), opens the post for editing, if available.
-     * If the uri only contains a site (e.g. https://wordpress.com/example.com/ ), opens a new post
-     * editor for that site, if available.
-     * Else opens the new post editor for currently selected site.
-     */
-    private void handleOpenEditor(@NonNull Uri uri) {
-        List<String> pathSegments = uri.getPathSegments();
-
-        if (pathSegments.size() < 3) {
-            // No postId in path, open new post editor for site
-            openEditorForSite(extractTargetHost(uri));
-            return;
-        }
-
-        // Match: https://wordpress.com/post/blogNameOrUrl/postId
-        String targetHost = pathSegments.get(1);
-        String targetPostId = pathSegments.get(2);
-        openEditorForSiteAndPost(targetHost, targetPostId);
     }
 
     /**
@@ -235,53 +166,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         if (post == null) {
             ToastUtils.showToast(getContext(), R.string.post_not_found);
             // Post not found. Open new post editor for given site.
-            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
-            return;
-        }
-
-        // Open editor with post
-        ActivityLauncher.openEditorForPostInNewStack(getContext(), site, post.getId());
-    }
-
-    private void openEditorForSite(@NonNull String targetHost) {
-        SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = extractHostFromSite(site);
-        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
-            // if we found the site with the matching url, open the editor for this site.
-            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
-        } else {
-            // In other cases, open the editor with the current selected site.
-            ActivityLauncher.openEditorInNewStack(getContext());
-        }
-    }
-
-    private void openEditorForSiteAndPost(@NonNull String targetHost, @NonNull String targetPostId) {
-        // Check if a site is available with given targetHost
-        SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = extractHostFromSite(site);
-        if (site == null || host == null || !StringUtils.equals(host, targetHost)) {
-            // Site not found, or host of site doesn't match the host in url
-            ToastUtils.showToast(getContext(), R.string.blog_not_found);
-            // Open a new post editor with current selected site
-            ActivityLauncher.openEditorInNewStack(getContext());
-            return;
-        }
-
-        Long remotePostId = parseAsLongOrNull(targetPostId);
-
-        if (remotePostId == null) {
-            // No post id provided; open new post editor for given site
-            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
-            return;
-        }
-
-        // Check if post with given id is available for opening
-        PostModel post = mPostStore.getPostByRemotePostId(remotePostId, site);
-
-        if (post == null) {
-            // Post not found
-            ToastUtils.showToast(getContext(), R.string.post_not_found);
-            // Open new post editor for given site
             ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
             return;
         }
