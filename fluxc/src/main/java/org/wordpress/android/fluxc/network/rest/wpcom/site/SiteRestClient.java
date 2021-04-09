@@ -106,6 +106,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -145,8 +147,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
-                          AccessToken accessToken, UserAgent userAgent) {
+    @Inject
+    public SiteRestClient(Context appContext,
+                          Dispatcher dispatcher,
+                          @Named("regular") RequestQueue requestQueue,
+                          AppSecrets appSecrets,
+                          AccessToken accessToken,
+                          UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
     }

@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -42,7 +44,8 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     private static final int FETCH_PLUGIN_DIRECTORY_PAGE_SIZE = 50;
     private final Dispatcher mDispatcher;
 
-    public PluginWPOrgClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent) {
+    @Inject
+    public PluginWPOrgClient(Dispatcher dispatcher, @Named("regular") RequestQueue requestQueue, UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
         mDispatcher = dispatcher;
     }

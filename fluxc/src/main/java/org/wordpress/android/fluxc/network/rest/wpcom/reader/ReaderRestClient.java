@@ -25,12 +25,15 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
 public class ReaderRestClient extends BaseWPComRestClient {
+    @Inject
     public ReaderRestClient(Context appContext, Dispatcher dispatcher,
-                            RequestQueue requestQueue,
+                            @Named("regular") RequestQueue requestQueue,
                             AccessToken accessToken,
                             UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);

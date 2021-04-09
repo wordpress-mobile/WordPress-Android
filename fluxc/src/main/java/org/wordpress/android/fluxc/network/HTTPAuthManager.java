@@ -10,7 +10,10 @@ import org.wordpress.android.fluxc.persistence.HTTPAuthSqlUtils;
 import java.net.URI;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HTTPAuthManager {
+    @Inject
     public HTTPAuthManager() {}
 
     /**

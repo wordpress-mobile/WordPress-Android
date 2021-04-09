@@ -22,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -29,7 +31,10 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
-    public DiscoveryXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+    @Inject
+    public DiscoveryXMLRPCClient(Dispatcher dispatcher,
+                                 @Named("custom-ssl") RequestQueue requestQueue,
+                                 UserAgent userAgent,
                                  HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }

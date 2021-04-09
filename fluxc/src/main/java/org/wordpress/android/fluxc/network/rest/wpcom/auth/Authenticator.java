@@ -35,6 +35,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class Authenticator {
     private static final String WPCOM_OAUTH_PREFIX = "https://public-api.wordpress.com/oauth2";
     private static final String AUTHORIZE_ENDPOINT = WPCOM_OAUTH_PREFIX + "/authorize";
@@ -77,7 +80,11 @@ public class Authenticator {
         }
     }
 
-    public Authenticator(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+    @Inject
+    public Authenticator(Context appContext,
+                         Dispatcher dispatcher,
+                         @Named("regular") RequestQueue requestQueue,
+                         AppSecrets secrets) {
         mAppContext = appContext;
         mDispatcher = dispatcher;
         mRequestQueue = requestQueue;

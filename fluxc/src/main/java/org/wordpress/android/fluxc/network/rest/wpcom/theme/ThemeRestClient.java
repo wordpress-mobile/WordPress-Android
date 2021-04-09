@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -46,7 +48,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
 
-    public ThemeRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+    @Inject
+    public ThemeRestClient(Context appContext, Dispatcher dispatcher,
+                           @Named("regular") RequestQueue requestQueue,
                            AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
