@@ -1171,6 +1171,14 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void showMainActivityAndSignUp(Activity activity) {
+        final Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_WP_COM_SIGN_UP, true);
+        activity.startActivity(intent);
+    }
+
     public static void showSignInForResult(Activity activity) {
         showSignInForResult(activity, false);
     }

@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
@@ -67,7 +68,11 @@ class DeepLinkingIntentReceiverViewModel
         return if (redirectUri != null && redirectUri.host == HOST_WORDPRESS_COM) {
             when (redirectUri.pathSegments.firstOrNull()) {
                 POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
-                START_PATH -> StartCreateSiteFlow(accountStore.hasAccessToken())
+                START_PATH -> if (accountStore.hasAccessToken()) {
+                    StartCreateSiteFlow
+                } else {
+                    ShowSignInFlow
+                }
                 WP_LOGIN -> {
                     buildNavigateAction(redirectUri)
                 }

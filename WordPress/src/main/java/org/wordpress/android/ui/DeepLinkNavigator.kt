@@ -7,6 +7,7 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -15,13 +16,8 @@ class DeepLinkNavigator
 @Inject constructor() {
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
-            is StartCreateSiteFlow -> {
-                if (navigateAction.isSignedToWpCom) {
-                    ActivityLauncher.newBlogForResult(activity)
-                } else {
-                    ActivityLauncher.addSelfHostedSiteForResult(activity)
-                }
-            }
+            StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
+            ShowSignInFlow -> ActivityLauncher.showMainActivityAndSignUp(activity)
             OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
             is OpenEditorForSite -> ActivityLauncher.openEditorForSiteInNewStack(
                     activity,
@@ -45,6 +41,7 @@ class DeepLinkNavigator
         data class OpenInEditor(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
         object OpenEditor : NavigateAction()
-        data class StartCreateSiteFlow(val isSignedToWpCom: Boolean) : NavigateAction()
+        object StartCreateSiteFlow : NavigateAction()
+        object ShowSignInFlow : NavigateAction()
     }
 }
