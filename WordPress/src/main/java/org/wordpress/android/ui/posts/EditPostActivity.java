@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -2254,9 +2253,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
         String postType = mIsPage ? "page" : "post";
-        Log.d("Post type: ", postType);
         int featuredMedia = (int) mEditPostRepository.getFeaturedImageId();
-        Log.d("getEditedPostAttribute, featured media: ", String.valueOf(featuredMedia));
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
