@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
-    <color name="colorPrimary">@color/green_50</color>
-    <color name="colorPrimaryVariant">@color/green_70</color>
-    <color name="colorSecondary">@color/green_50</color>
-    <color name="colorSecondaryVariant">@color/green_70</color>
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryVariant">@color/primary_40</color>
+    <color name="colorSecondary">@color/primary</color>
+    <color name="colorSecondaryVariant">@color/primary_40</color>
 
-    <!-- SEMANTIC -->
     <color name="primary">@color/jetpack_green_50</color>
     <color name="primary_0">@color/jetpack_green_0</color>
     <color name="primary_5">@color/jetpack_green_5</color>
