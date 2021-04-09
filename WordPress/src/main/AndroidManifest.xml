@@ -366,11 +366,6 @@
                 android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
 
-        <activity
-            android:name=".ui.DeeplinkWebViewActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true"/>
-
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
