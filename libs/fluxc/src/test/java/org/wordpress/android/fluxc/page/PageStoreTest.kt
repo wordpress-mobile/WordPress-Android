@@ -42,8 +42,8 @@ import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
-import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
