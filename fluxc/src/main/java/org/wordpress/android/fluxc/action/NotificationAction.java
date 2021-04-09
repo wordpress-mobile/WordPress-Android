@@ -9,9 +9,9 @@ import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationPayl
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload;
+import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsReadPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsReadResponsePayload;
-import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsSeenPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDevicePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload;

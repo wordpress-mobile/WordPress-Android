@@ -11,11 +11,11 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIEncodedBodyRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error as Error
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Available
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.FailedRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Unknown
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse
 import org.wordpress.android.fluxc.store.ReactNativeStore.Companion.slashJoin
 import javax.inject.Inject
