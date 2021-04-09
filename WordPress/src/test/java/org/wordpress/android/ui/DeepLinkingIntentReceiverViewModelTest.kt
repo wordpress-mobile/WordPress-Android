@@ -1,6 +1,5 @@
 package org.wordpress.android.ui
 
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -10,43 +9,26 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction
-import org.wordpress.android.util.UriWrapper
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
-    @Mock lateinit var siteStore: SiteStore
-    @Mock lateinit var postStore: PostStore
+    @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
-    private lateinit var site: SiteModel
-    private lateinit var post: PostModel
-    private val siteUrl = "site123"
-    private val remotePostId = 123L
-    private val localPostId = 1
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
-                siteStore,
-                postStore,
+                editorLinkHandler,
                 accountStore,
                 deepLinkUriUtils,
                 serverTrackingHandler,
                 TEST_DISPATCHER
         )
-        site = SiteModel()
-        site.url = siteUrl
-        post = PostModel()
-        post.setRemotePostId(remotePostId)
-        post.setId(localPostId)
     }
 
     @Test
@@ -133,6 +115,8 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
         val redirect = buildUri("wordpress.com", "post")
         whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        val expectedAction = NavigateAction.OpenEditor
+        whenever(editorLinkHandler.buildOpenEditorNavigateAction(redirect)).thenReturn(expectedAction)
         var navigateAction: NavigateAction? = null
         viewModel.navigateAction.observeForever {
             navigateAction = it?.getContentIfNotHandled()
@@ -140,7 +124,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         viewModel.handleEmailUrl(uri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
+        assertThat(navigateAction).isEqualTo(expectedAction)
         verify(serverTrackingHandler).request(uri)
     }
 
@@ -172,24 +156,11 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `opens editor when site is missing from URL`() {
-        val uri = buildUri("wordpress.com", "post")
-
-        var navigateAction: NavigateAction? = null
-        viewModel.navigateAction.observeForever {
-            navigateAction = it?.getContentIfNotHandled()
-        }
-
-        viewModel.handleOpenEditor(uri)
-
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
-    }
-
-    @Test
-    fun `opens editor when site not found`() {
+    fun `opens navigate action from editor link handler`() {
         val siteUrl = "site123"
         val uri = buildUri("wordpress.com", "post", siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf())
+        val expected = NavigateAction.OpenEditor
+        whenever(editorLinkHandler.buildOpenEditorNavigateAction(uri)).thenReturn(expected)
 
         var navigateAction: NavigateAction? = null
         viewModel.navigateAction.observeForever {
@@ -198,63 +169,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         viewModel.handleOpenEditor(uri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
-    }
-
-    @Test
-    fun `opens editor for a site site when post missing in URL`() {
-        val uri = buildUri("wordpress.com", "post", siteUrl)
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
-
-        var navigateAction: NavigateAction? = null
-        viewModel.navigateAction.observeForever {
-            navigateAction = it?.getContentIfNotHandled()
-        }
-
-        viewModel.handleOpenEditor(uri)
-
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
-    }
-
-    @Test
-    fun `opens editor for a post when both site and post exist`() {
-        val uri = buildUri("wordpress.com", "post", siteUrl, remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
-        whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
-
-        var navigateAction: NavigateAction? = null
-        viewModel.navigateAction.observeForever {
-            navigateAction = it?.getContentIfNotHandled()
-        }
-
-        viewModel.handleOpenEditor(uri)
-
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInEditor(site, localPostId))
-    }
-
-    @Test
-    fun `opens editor for a site site when post not found`() {
-        val uri = buildUri("wordpress.com", "post", siteUrl, remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
-        whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
-
-        var navigateAction: NavigateAction? = null
-        viewModel.navigateAction.observeForever {
-            navigateAction = it?.getContentIfNotHandled()
-        }
-
-        viewModel.handleOpenEditor(uri)
-
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
-    }
-
-    private fun buildUri(host: String, vararg path: String): UriWrapper {
-        val uri = mock<UriWrapper>()
-        whenever(uri.host).thenReturn(host)
-        whenever(uri.pathSegments).thenReturn(path.toList())
-        return uri
+        assertThat(navigateAction).isEqualTo(expected)
     }
 }

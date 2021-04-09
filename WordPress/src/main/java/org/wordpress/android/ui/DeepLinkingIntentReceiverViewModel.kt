@@ -24,8 +24,7 @@ import javax.inject.Named
 
 class DeepLinkingIntentReceiverViewModel
 @Inject constructor(
-    private val siteStore: SiteStore,
-    private val postStore: PostStore,
+    private val editorLinkHandler: EditorLinkHandler,
     private val accountStore: AccountStore,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler,
@@ -33,16 +32,15 @@ class DeepLinkingIntentReceiverViewModel
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
-    private val _toast = MutableLiveData<Event<Int>>()
-    val toast = _toast as LiveData<Event<Int>>
+    val toast = editorLinkHandler.toast
 
     /**
      * URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
      */
     fun shouldHandleEmailUrl(uri: UriWrapper): Boolean {
         // https://public-api.wordpress.com/mbar/
-        return uri.host == HOST_API_WORDPRESS_COM
-                && uri.pathSegments.firstOrNull() == MOBILE_TRACKING_PATH
+        return uri.host == HOST_API_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == MOBILE_TRACKING_PATH
     }
 
     /**
@@ -76,7 +74,7 @@ class DeepLinkingIntentReceiverViewModel
         val redirectUri: UriWrapper? = getRedirectUri(uri)
         return if (redirectUri != null && redirectUri.host == HOST_WORDPRESS_COM) {
             when (redirectUri.pathSegments.firstOrNull()) {
-                POST_PATH -> buildOpenEditorNavigateAction(redirectUri)
+                POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
                 START_PATH -> StartCreateSiteFlow(accountStore.hasAccessToken())
                 WP_LOGIN -> {
                     buildNavigateAction(redirectUri)
@@ -100,66 +98,7 @@ class DeepLinkingIntentReceiverViewModel
      * Else opens the new post editor for currently selected site.
      */
     fun handleOpenEditor(uri: UriWrapper) {
-        _navigateAction.value = Event(buildOpenEditorNavigateAction(uri))
-    }
-
-    private fun buildOpenEditorNavigateAction(uri: UriWrapper): NavigateAction {
-        val pathSegments = uri.pathSegments
-        // Match: https://wordpress.com/post/blogNameOrUrl/postId
-        val targetSite = pathSegments.getOrNull(1)?.toSite()
-        val targetPost = pathSegments.getOrNull(2)?.toPost(targetSite)
-        return openEditorForSiteAndPost(targetSite, targetPost)
-    }
-
-    /**
-     * Converts HOST name of a site to SiteModel. It finds the Site in the current local sites and matches the name
-     * to the host.
-     */
-    private fun String.toSite(): SiteModel? {
-        val site = extractSiteModelFromTargetHost(this)
-        val host = deepLinkUriUtils.extractHostFromSite(site)
-        // Check if a site is available with given targetHost
-        return if (site != null && host != null && host == this) {
-            site
-        } else {
-            null
-        }
-    }
-
-    /**
-     * Converts the post ID in String to the local PostModel (if available).
-     */
-    private fun String.toPost(site: SiteModel?): PostModel? {
-        val remotePostId: Long? = toLongOrNull()
-        return if (site != null && remotePostId != null) {
-            val post = postStore.getPostByRemotePostId(remotePostId, site)
-            if (post == null) {
-                _toast.value = Event(R.string.post_not_found)
-            }
-            post
-        } else {
-            null
-        }
-    }
-
-    private fun openEditorForSiteAndPost(site: SiteModel?, post: PostModel?): NavigateAction {
-        return when {
-            site == null -> {
-                // Site not found, or host of site doesn't match the host in url
-                _toast.value = Event(R.string.blog_not_found)
-                // Open a new post editor with current selected site
-                OpenEditor
-            }
-            post == null -> {
-                // Open new post editor for given site
-                OpenEditorForSite(site)
-            }
-            else -> OpenInEditor(site, post.id)
-        }
-    }
-
-    private fun extractSiteModelFromTargetHost(host: String): SiteModel? {
-        return siteStore.getSitesByNameOrUrlMatching(host).firstOrNull()
+        _navigateAction.value = Event(editorLinkHandler.buildOpenEditorNavigateAction(uri))
     }
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
