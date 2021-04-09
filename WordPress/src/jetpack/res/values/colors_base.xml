@@ -20,4 +20,6 @@
     <color name="primary_100">@color/jetpack_green_100</color>
     <color name="primary_dark">@color/jetpack_green_80</color>
     <color name="primary_light">@color/jetpack_green_30</color>
+
+    <color name="nav_bar">@color/black</color>
 </resources>
