@@ -63,6 +63,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -204,7 +206,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         BLOG
     }
 
-    public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+    @Inject
+    public AccountRestClient(Context appContext, Dispatcher dispatcher, @Named("regular") RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
