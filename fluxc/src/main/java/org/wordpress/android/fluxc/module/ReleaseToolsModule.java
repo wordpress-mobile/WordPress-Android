@@ -20,14 +20,6 @@ import dagger.Provides;
 public class ReleaseToolsModule {
     @Singleton
     @Provides
-    public FluxCImageLoader provideFluxCImageLoader(@Named("custom-ssl") RequestQueue queue, ImageCache imageCache,
-                                                    AccessToken accessToken, HTTPAuthManager httpAuthManager,
-                                                    UserAgent userAgent) {
-        return new FluxCImageLoader(queue, imageCache, accessToken, httpAuthManager, userAgent);
-    }
-
-    @Singleton
-    @Provides
     public Locale provideLocale() {
         return Locale.getDefault();
     }

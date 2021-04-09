@@ -19,15 +19,16 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.SI
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.USERNAME_OR_PASSWORD_MISSING
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 import java.net.URLEncoder
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class JetpackRestClient
-constructor(
+class JetpackRestClient @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

@@ -34,11 +34,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
-    public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+    @Inject
+    public CommentXMLRPCClient(Dispatcher dispatcher,
+                               @Named("custom-ssl") RequestQueue requestQueue,
+                               UserAgent userAgent,
                                HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }

@@ -21,6 +21,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -35,6 +36,7 @@ public class MemorizingTrustManager implements X509TrustManager {
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
     private X509Certificate mLastFailure;
 
+    @Inject
     public MemorizingTrustManager() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
