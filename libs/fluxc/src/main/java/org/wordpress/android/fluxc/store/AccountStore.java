@@ -793,8 +793,7 @@ public class AccountStore extends Store {
     private AccessToken mAccessToken;
     private SelfHostedEndpointFinder mSelfHostedEndpointFinder;
 
-    @Inject
-    public AccountStore(Dispatcher dispatcher, AccountRestClient accountRestClient,
+    @Inject public AccountStore(Dispatcher dispatcher, AccountRestClient accountRestClient,
                         SelfHostedEndpointFinder selfHostedEndpointFinder, Authenticator authenticator,
                         AccessToken accessToken) {
         super(dispatcher);

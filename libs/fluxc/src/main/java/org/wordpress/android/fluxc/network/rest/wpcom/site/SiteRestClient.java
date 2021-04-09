@@ -147,8 +147,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    @Inject
-    public SiteRestClient(Context appContext,
+    @Inject public SiteRestClient(Context appContext,
                           Dispatcher dispatcher,
                           @Named("regular") RequestQueue requestQueue,
                           AppSecrets appSecrets,

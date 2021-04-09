@@ -140,8 +140,7 @@ public class TaxonomyStore extends Store {
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
 
-    @Inject
-    public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
+    @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                          TaxonomyXMLRPCClient taxonomyXMLRPCClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;

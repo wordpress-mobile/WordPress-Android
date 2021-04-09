@@ -48,8 +48,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
 
-    @Inject
-    public ThemeRestClient(Context appContext, Dispatcher dispatcher,
+    @Inject public ThemeRestClient(Context appContext, Dispatcher dispatcher,
                            @Named("regular") RequestQueue requestQueue,
                            AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);

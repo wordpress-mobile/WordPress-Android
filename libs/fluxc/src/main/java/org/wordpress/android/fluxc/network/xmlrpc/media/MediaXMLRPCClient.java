@@ -80,8 +80,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     // to monitor multiple uploads
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
-    @Inject
-    public MediaXMLRPCClient(Dispatcher dispatcher,
+    @Inject public MediaXMLRPCClient(Dispatcher dispatcher,
                              @Named("custom-ssl") RequestQueue requestQueue,
                              @Named("custom-ssl") OkHttpClient okHttpClient,
                              UserAgent userAgent,
