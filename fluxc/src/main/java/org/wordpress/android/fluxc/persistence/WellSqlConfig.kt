@@ -1663,7 +1663,8 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "CAN_CREATE_PACKAGE BOOLEAN," +
                                     "CAN_CREATE_PAYMENT_METHOD BOOLEAN," +
                                     "CAN_CREATE_CUSTOMS_FORM BOOLEAN," +
-                                    "IS_ELIGIBLE BOOLEAN)"
+                                    "IS_ELIGIBLE BOOLEAN," +
+                                    "REASON TEXT)"
                     )
                     db.execSQL("DROP TABLE IF EXISTS WCShippingLabelModel")
                     db.execSQL(
