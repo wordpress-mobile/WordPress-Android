@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/blue_30</color>
-    <color name="colorPrimaryVariant">@color/blue_50</color>
-    <color name="colorSecondary">@color/blue_30</color>
-    <color name="colorSecondaryVariant">@color/blue_50</color>
+    <color name="colorPrimary">@color/primary_30</color>
+    <color name="colorPrimaryVariant">@color/primary_50</color>
+    <color name="colorSecondary">@color/primary_30</color>
+    <color name="colorSecondaryVariant">@color/primary_50</color>
 </resources>
