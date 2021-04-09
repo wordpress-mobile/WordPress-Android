@@ -9,4 +9,5 @@ class DeepLinkUriUtils
     fun extractHostFromSite(site: SiteModel?): String? {
         return site?.url?.let { UriWrapper(it).host }
     }
+    fun getUriFromQueryParameter(uri: UriWrapper, key: String) = uri.getQueryParameter(key)?.let { UriWrapper(it) }
 }

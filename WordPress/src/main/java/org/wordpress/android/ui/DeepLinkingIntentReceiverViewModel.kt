@@ -28,6 +28,7 @@ class DeepLinkingIntentReceiverViewModel
     private val postStore: PostStore,
     private val accountStore: AccountStore,
     private val deepLinkUriUtils: DeepLinkUriUtils,
+    private val serverTrackingHandler: ServerTrackingHandler,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
@@ -57,23 +58,33 @@ class DeepLinkingIntentReceiverViewModel
      * The rest of URIs is redirected back to the browser
      */
     fun handleEmailUrl(uri: UriWrapper) {
-        _navigateAction.value = Event(buildNavigateAction(uri))
+        val navigateAction = buildNavigateAction(uri)
+        val event = if (navigateAction != null) {
+            // Make sure we don't miss server tracking on `mbar` URIs
+            if (shouldHandleEmailUrl(uri)) {
+                serverTrackingHandler.request(uri)
+            }
+            Event(navigateAction)
+        } else {
+            // No need to request the URI with ServerTrackingHandler because the browser will take care of it
+            Event(redirectToBrowser(uri))
+        }
+        _navigateAction.value = event
     }
 
-    private fun buildNavigateAction(uri: UriWrapper, fallbackUri: UriWrapper = uri): NavigateAction {
+    private fun buildNavigateAction(uri: UriWrapper): NavigateAction? {
         val redirectUri: UriWrapper? = getRedirectUri(uri)
         return if (redirectUri != null && redirectUri.host == HOST_WORDPRESS_COM) {
             when (redirectUri.pathSegments.firstOrNull()) {
                 POST_PATH -> buildOpenEditorNavigateAction(redirectUri)
                 START_PATH -> StartCreateSiteFlow(accountStore.hasAccessToken())
                 WP_LOGIN -> {
-                    buildNavigateAction(redirectUri, fallbackUri)
+                    buildNavigateAction(redirectUri)
                 }
-                else -> redirectToBrowser(fallbackUri)
+                else -> null
             }
         } else {
-            // Replace host to redirect to the browser
-            redirectToBrowser(fallbackUri)
+            null
         }
     }
 
@@ -152,11 +163,16 @@ class DeepLinkingIntentReceiverViewModel
     }
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
-        return uri.getQueryParameter(REDIRECT_TO_PARAM)?.let { UriWrapper(it) }
+        return deepLinkUriUtils.getUriFromQueryParameter(uri, REDIRECT_TO_PARAM)
     }
 
     private fun shouldShow(uri: UriWrapper, path: String): Boolean {
         return uri.host == HOST_WORDPRESS_COM && uri.pathSegments.firstOrNull() == path
+    }
+
+    override fun onCleared() {
+        serverTrackingHandler.clear()
+        super.onCleared()
     }
 
     companion object {

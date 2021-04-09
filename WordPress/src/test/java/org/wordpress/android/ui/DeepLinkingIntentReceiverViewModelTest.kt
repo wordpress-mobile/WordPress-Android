@@ -1,6 +1,7 @@
 package org.wordpress.android.ui
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -22,6 +23,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
+    @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private lateinit var site: SiteModel
     private lateinit var post: PostModel
@@ -37,6 +39,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 postStore,
                 accountStore,
                 deepLinkUriUtils,
+                serverTrackingHandler,
                 TEST_DISPATCHER
         )
         site = SiteModel()
@@ -86,6 +89,59 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         viewModel.handleEmailUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
+    }
+
+    @Test
+    fun `create site mbar URL triggers the Site Creation flow`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val firstRedirect = buildUri("wordpress.com", "wp-login.php", "redirect_to...")
+        val secondRedirect = buildUri("wordpress.com", "start")
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(firstRedirect)
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(firstRedirect, "redirect_to")).thenReturn(secondRedirect)
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+        val isSignedIn = true
+        whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
+
+        viewModel.handleEmailUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.StartCreateSiteFlow(isSignedIn))
+        verify(serverTrackingHandler).request(uri)
+    }
+
+    @Test
+    fun `wp-login mbar URL redirects user to browser with missing second redirect`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val redirect = buildUri("wordpress.com", "wp-login.php")
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+        val barUri = buildUri("public-api.wordpress.com", "bar")
+        whenever(uri.copy("bar")).thenReturn(barUri)
+
+        viewModel.handleEmailUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
+    }
+
+    @Test
+    fun `post mbar URL triggers the editor`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val redirect = buildUri("wordpress.com", "post")
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+
+        viewModel.handleEmailUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test
