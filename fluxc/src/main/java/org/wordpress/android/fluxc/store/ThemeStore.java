@@ -235,8 +235,7 @@ public class ThemeStore extends Store {
 
     private final ThemeRestClient mThemeRestClient;
 
-    @Inject
-    public ThemeStore(Dispatcher dispatcher, ThemeRestClient themeRestClient) {
+    @Inject public ThemeStore(Dispatcher dispatcher, ThemeRestClient themeRestClient) {
         super(dispatcher);
         mThemeRestClient = themeRestClient;
     }

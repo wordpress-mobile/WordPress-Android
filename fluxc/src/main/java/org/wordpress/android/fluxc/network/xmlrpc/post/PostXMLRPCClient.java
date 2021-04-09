@@ -61,8 +61,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostXMLRPCClient extends BaseXMLRPCClient {
-    @Inject
-    public PostXMLRPCClient(Dispatcher dispatcher,
+    @Inject public PostXMLRPCClient(Dispatcher dispatcher,
                             @Named("custom-ssl") RequestQueue requestQueue,
                             UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {

@@ -46,8 +46,7 @@ import javax.inject.Singleton;
 public class CommentRestClient extends BaseWPComRestClient {
     LikesResponseUtilsProvider mLikesResponseUtilsProvider;
 
-    @Inject
-    public CommentRestClient(
+    @Inject public CommentRestClient(
             Context appContext,
             Dispatcher dispatcher,
             @Named("regular") RequestQueue requestQueue,

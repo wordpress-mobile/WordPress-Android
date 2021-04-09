@@ -38,8 +38,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
-    @Inject
-    public SiteXMLRPCClient(Dispatcher dispatcher,
+    @Inject public SiteXMLRPCClient(Dispatcher dispatcher,
                             @Named("custom-ssl") RequestQueue requestQueue,
                             UserAgent userAgent,
                             HTTPAuthManager httpAuthManager) {

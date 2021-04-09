@@ -40,8 +40,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
-    @Inject
-    public CommentXMLRPCClient(Dispatcher dispatcher,
+    @Inject public CommentXMLRPCClient(Dispatcher dispatcher,
                                @Named("custom-ssl") RequestQueue requestQueue,
                                UserAgent userAgent,
                                HTTPAuthManager httpAuthManager) {

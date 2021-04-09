@@ -546,8 +546,7 @@ public class PluginStore extends Store {
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
 
-    @Inject
-    public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginWPOrgClient pluginWPOrgClient) {
+    @Inject public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginWPOrgClient pluginWPOrgClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
         mPluginWPOrgClient = pluginWPOrgClient;

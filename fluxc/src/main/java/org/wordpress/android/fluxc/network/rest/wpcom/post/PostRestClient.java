@@ -76,8 +76,7 @@ import javax.inject.Singleton;
 public class PostRestClient extends BaseWPComRestClient {
     LikesResponseUtilsProvider mLikesResponseUtilsProvider;
 
-    @Inject
-    public PostRestClient(Context appContext,
+    @Inject public PostRestClient(Context appContext,
                           Dispatcher dispatcher,
                           @Named("regular") RequestQueue requestQueue,
                           AccessToken accessToken,

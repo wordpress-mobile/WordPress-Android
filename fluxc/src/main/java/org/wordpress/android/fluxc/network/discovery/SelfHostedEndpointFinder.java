@@ -69,8 +69,7 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    @Inject
-    public SelfHostedEndpointFinder(Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
+    @Inject public SelfHostedEndpointFinder(Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
                                     DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
         mDiscoveryXMLRPCClient = discoveryXMLRPCClient;

@@ -13,8 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HTTPAuthManager {
-    @Inject
-    public HTTPAuthManager() {}
+    @Inject public HTTPAuthManager() {}
 
     /**
      * Get an HTTPAuthModel containing username and password for the url parameter

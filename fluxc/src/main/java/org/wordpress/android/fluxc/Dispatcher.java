@@ -13,8 +13,7 @@ import javax.inject.Singleton;
 public class Dispatcher {
     private final EventBus mBus;
 
-    @Inject
-    public Dispatcher() {
+    @Inject public Dispatcher() {
         mBus = EventBus.builder()
                 .logNoSubscriberMessages(true)
                 .sendNoSubscriberEvent(true)

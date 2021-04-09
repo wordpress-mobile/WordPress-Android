@@ -1251,8 +1251,7 @@ public class SiteStore extends Store {
     private PostSqlUtils mPostSqlUtils;
     private PrivateAtomicCookie mPrivateAtomicCookie;
 
-    @Inject
-    public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
+    @Inject public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
                      SiteXMLRPCClient siteXMLRPCClient, PrivateAtomicCookie privateAtomicCookie) {
         super(dispatcher);
         mSiteRestClient = siteRestClient;

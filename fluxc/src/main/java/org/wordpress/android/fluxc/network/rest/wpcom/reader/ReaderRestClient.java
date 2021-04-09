@@ -31,8 +31,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ReaderRestClient extends BaseWPComRestClient {
-    @Inject
-    public ReaderRestClient(Context appContext, Dispatcher dispatcher,
+    @Inject public ReaderRestClient(Context appContext, Dispatcher dispatcher,
                             @Named("regular") RequestQueue requestQueue,
                             AccessToken accessToken,
                             UserAgent userAgent) {
