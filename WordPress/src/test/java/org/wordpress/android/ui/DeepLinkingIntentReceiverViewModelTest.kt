@@ -74,7 +74,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `create site mbar URL triggers the Site Creation flow`() {
+    fun `create site mbar URL triggers the Site Creation flow when logged in`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
         val firstRedirect = buildUri("wordpress.com", "wp-login.php", "redirect_to...")
         val secondRedirect = buildUri("wordpress.com", "start")
@@ -89,7 +89,27 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         viewModel.handleEmailUrl(uri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.StartCreateSiteFlow(isSignedIn))
+        assertThat(navigateAction).isEqualTo(NavigateAction.StartCreateSiteFlow)
+        verify(serverTrackingHandler).request(uri)
+    }
+
+    @Test
+    fun `create site mbar URL triggers the sign up flow when not logged in to WPCom account`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val firstRedirect = buildUri("wordpress.com", "wp-login.php", "redirect_to...")
+        val secondRedirect = buildUri("wordpress.com", "start")
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(firstRedirect)
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(firstRedirect, "redirect_to")).thenReturn(secondRedirect)
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+        val isSignedIn = false
+        whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
+
+        viewModel.handleEmailUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.ShowSignInFlow)
         verify(serverTrackingHandler).request(uri)
     }
 
