@@ -1655,14 +1655,37 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE CommentModel ADD PARENT_ID INTEGER")
                 }
                 143 -> migrate(version) {
-                    db.execSQL("CREATE TABLE WCShippingLabelCreationEligibility (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "LOCAL_SITE_ID INTEGER," +
-                            "REMOTE_ORDER_ID INTEGER," +
-                            "CAN_CREATE_PACKAGE BOOLEAN," +
-                            "CAN_CREATE_PAYMENT_METHOD BOOLEAN," +
-                            "CAN_CREATE_CUSTOMS_FORM BOOLEAN," +
-                            "IS_ELIGIBLE BOOLEAN)")
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelCreationEligibility (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "CAN_CREATE_PACKAGE BOOLEAN," +
+                                    "CAN_CREATE_PAYMENT_METHOD BOOLEAN," +
+                                    "CAN_CREATE_CUSTOMS_FORM BOOLEAN," +
+                                    "IS_ELIGIBLE BOOLEAN)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS WCShippingLabelModel")
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
+                                    "REFUND TEXT NULL," +
+                                    "PRODUCT_IDS TEXT," +
+                                    "DATE_CREATED TEXT)"
+                    )
                 }
             }
         }
