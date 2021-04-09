@@ -39,8 +39,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TaxonomyRestClient extends BaseWPComRestClient {
-    @Inject
-    public TaxonomyRestClient(Context appContext,
+    @Inject public TaxonomyRestClient(Context appContext,
                               Dispatcher dispatcher,
                               @Named("regular") RequestQueue requestQueue,
                               AccessToken accessToken,

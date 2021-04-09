@@ -22,8 +22,7 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
-    @Inject
-    public DiscoveryWPAPIRestClient(Dispatcher dispatcher,
+    @Inject public DiscoveryWPAPIRestClient(Dispatcher dispatcher,
                                     @Named("custom-ssl") RequestQueue requestQueue,
                                     UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);

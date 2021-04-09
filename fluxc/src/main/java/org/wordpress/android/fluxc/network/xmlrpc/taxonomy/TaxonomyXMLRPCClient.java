@@ -39,8 +39,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
-    @Inject
-    public TaxonomyXMLRPCClient(Dispatcher dispatcher,
+    @Inject public TaxonomyXMLRPCClient(Dispatcher dispatcher,
                                 @Named("custom-ssl") RequestQueue requestQueue,
                                 UserAgent userAgent,
                                 HTTPAuthManager httpAuthManager) {

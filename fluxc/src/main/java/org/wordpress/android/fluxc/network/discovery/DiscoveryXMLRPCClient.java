@@ -31,8 +31,7 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
-    @Inject
-    public DiscoveryXMLRPCClient(Dispatcher dispatcher,
+    @Inject public DiscoveryXMLRPCClient(Dispatcher dispatcher,
                                  @Named("custom-ssl") RequestQueue requestQueue,
                                  UserAgent userAgent,
                                  HTTPAuthManager httpAuthManager) {

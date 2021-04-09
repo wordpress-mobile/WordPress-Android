@@ -36,8 +36,7 @@ public class MemorizingTrustManager implements X509TrustManager {
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
     private X509Certificate mLastFailure;
 
-    @Inject
-    public MemorizingTrustManager() {
+    @Inject public MemorizingTrustManager() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
             public KeyStore call() {

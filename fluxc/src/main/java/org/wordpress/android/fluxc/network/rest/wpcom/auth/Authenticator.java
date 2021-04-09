@@ -80,8 +80,7 @@ public class Authenticator {
         }
     }
 
-    @Inject
-    public Authenticator(Context appContext,
+    @Inject public Authenticator(Context appContext,
                          Dispatcher dispatcher,
                          @Named("regular") RequestQueue requestQueue,
                          AppSecrets secrets) {

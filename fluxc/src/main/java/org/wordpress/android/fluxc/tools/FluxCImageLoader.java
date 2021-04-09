@@ -33,8 +33,7 @@ public class FluxCImageLoader extends ImageLoader {
     private HTTPAuthManager mHTTPAuthManager;
     private UserAgent mUserAgent;
 
-    @Inject
-    public FluxCImageLoader(@Named("custom-ssl") RequestQueue queue,
+    @Inject public FluxCImageLoader(@Named("custom-ssl") RequestQueue queue,
                             ImageCache imageCache,
                             AccessToken accessToken,
                             HTTPAuthManager httpAuthManager,

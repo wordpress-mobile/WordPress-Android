@@ -25,8 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NotificationStore @Inject
-constructor(
+class NotificationStore @Inject constructor(
     dispatcher: Dispatcher,
     private val context: Context,
     private val notificationRestClient: NotificationRestClient,
