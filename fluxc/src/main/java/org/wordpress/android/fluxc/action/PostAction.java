@@ -4,18 +4,18 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.store.PostStore.FetchPostLikesPayload;
-import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
-import org.wordpress.android.fluxc.store.PostStore.FetchedPostLikesResponsePayload;
-import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostLikesPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchedPostLikesResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 
 @ActionEnum

@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.BuildConfigWrapper
 import org.wordpress.android.util.AppLog
-import java.lang.RuntimeException
 import javax.inject.Inject
 import javax.inject.Singleton
 
