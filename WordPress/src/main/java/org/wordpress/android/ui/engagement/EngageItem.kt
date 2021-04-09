@@ -2,6 +2,7 @@ package org.wordpress.android.ui.engagement
 
 import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.LIKED_ITEM
 import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.LIKER
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 
 sealed class EngageItem(val type: EngageItemType) {
     data class LikedItem(
@@ -31,7 +32,7 @@ sealed class EngageItem(val type: EngageItemType) {
         val userSiteUrl: String,
         val userAvatarUrl: String,
         val remoteId: Long,
-        val onClick: ((siteId: Long, siteUrl: String) -> Unit)? = null
+        val onClick: ((userProfile: UserProfile) -> Unit)? = null
     ) : EngageItem(LIKER)
 
     enum class EngageItemType {

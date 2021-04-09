@@ -11,6 +11,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
@@ -19,8 +21,8 @@ import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.Reques
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -50,8 +52,8 @@ class EngagedPeopleListViewModel @Inject constructor(
     private val _onServiceRequestEvent = MutableLiveData<Event<EngagedListServiceRequestEvent>>()
 
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
-    val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map {
-        state -> buildUiState(state, listScenario)
+    val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map { state ->
+        buildUiState(state, listScenario)
     }
     val onNavigationEvent: LiveData<Event<EngagedListNavigationEvent>> = _onNavigationEvent
     val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
@@ -198,9 +200,18 @@ class EngagedPeopleListViewModel @Inject constructor(
                     userSiteUrl = likeData.likerSiteUrl!!,
                     userAvatarUrl = likeData.likerAvatarUrl!!,
                     remoteId = likeData.remoteLikeId,
-                    onClick = ::onSiteLinkHolderClicked
+                    onClick = ::onUserProfileHolderClicked
             )
         }
+    }
+
+    private fun onUserProfileHolderClicked(userProfile: UserProfile) {
+        _onNavigationEvent.value = Event(
+                OpenUserProfileBottomSheet(
+                        userProfile,
+                        ::onSiteLinkHolderClicked
+                )
+        )
     }
 
     private fun onSiteLinkHolderClicked(siteId: Long, siteUrl: String) {

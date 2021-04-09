@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -30,10 +31,22 @@ class LikerViewHolder(
 
         imageManager.loadIntoCircle(this.likerAvatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
 
-        if (liker.userSiteUrl.isNotEmpty() && liker.onClick != null) {
+        // TODOD: review conditions to set or not the listener
+        if ((liker.userSiteUrl.isNotEmpty() || liker.userSiteId > 0) && liker.onClick != null) {
             likerRootView.isEnabled = true
             likerRootView.setOnClickListener {
-                liker.onClick.invoke(liker.userSiteId, liker.userSiteUrl)
+                liker.onClick.invoke(
+                        UserProfile(
+                                userAvatarUrl = liker.userAvatarUrl,
+                                blavatarUrl = "", // TODOD: populate empty fields
+                                userName = liker.name,
+                                userLogin = liker.login,
+                                userBio = "",
+                                siteTitle = "",
+                                siteUrl = liker.userSiteUrl,
+                                siteId = liker.userSiteId
+                        )
+                )
             }
         } else {
             likerRootView.isEnabled = true
