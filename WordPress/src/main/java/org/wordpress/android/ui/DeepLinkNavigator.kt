@@ -3,22 +3,18 @@ package org.wordpress.android.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenEditor
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInEditor
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInWebView
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
-class DeeplinkNavigator
+class DeepLinkNavigator
 @Inject constructor() {
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
-            is OpenInWebView -> {
-                DeeplinkWebViewActivity.openUrl(activity, navigateAction.uri.toString())
-            }
             is StartCreateSiteFlow -> {
                 if (navigateAction.isSignedToWpCom) {
                     ActivityLauncher.newBlogForResult(activity)
@@ -45,7 +41,6 @@ class DeeplinkNavigator
     }
 
     sealed class NavigateAction {
-        data class OpenInWebView(val uri: UriWrapper) : NavigateAction()
         data class OpenInBrowser(val uri: UriWrapper) : NavigateAction()
         data class OpenInEditor(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()

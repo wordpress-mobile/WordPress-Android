@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils

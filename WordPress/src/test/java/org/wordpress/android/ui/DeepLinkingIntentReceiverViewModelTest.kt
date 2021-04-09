@@ -10,7 +10,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler

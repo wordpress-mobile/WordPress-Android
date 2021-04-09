@@ -55,7 +55,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
-    @Inject DeeplinkNavigator mDeeplinkNavigator;
+    @Inject DeepLinkNavigator mDeeplinkNavigator;
     @Inject DeepLinkUriUtils mDeepLinkUriUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private DeepLinkingIntentReceiverViewModel mViewModel;

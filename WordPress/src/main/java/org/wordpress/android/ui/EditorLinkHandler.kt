@@ -7,10 +7,10 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenEditor
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.DeeplinkNavigator.NavigateAction.OpenInEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInEditor
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
