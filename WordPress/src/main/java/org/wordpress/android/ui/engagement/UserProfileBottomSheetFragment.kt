@@ -73,10 +73,15 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             when (state) {
                 is UserProfileUiState -> {
                     imageManager.loadIntoCircle(userAvatar, AVATAR_WITH_BACKGROUND, state.userAvatarUrl)
-                    imageManager.loadIntoCircle(blavatar, BLAVATAR, state.blavatarUrl)
+                    imageManager.load(blavatar, BLAVATAR, state.blavatarUrl)
                     userName.text = state.userName
-                    userLogin.text = state.userLogin
-                    userBio.text = state.userBio
+                    userLogin.text = if (state.userLogin.isNotBlank()) "@${state.userLogin}" else ""
+                    if (state.userBio.isNotBlank()) {
+                        userBio.text = state.userBio
+                        userBio.visibility = View.VISIBLE
+                    } else {
+                        userBio.visibility = View.GONE
+                    }
                     siteTitle.text = state.siteTitle
                     siteUrl.text = state.siteUrl
                     siteData.setOnClickListener {

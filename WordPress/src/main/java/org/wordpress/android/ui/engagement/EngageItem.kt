@@ -31,7 +31,12 @@ sealed class EngageItem(val type: EngageItemType) {
         val userSiteId: Long,
         val userSiteUrl: String,
         val userAvatarUrl: String,
+        val userBio: String,
         val remoteId: Long,
+        val preferredBlogId: Long,
+        val preferredBlogName: String,
+        val preferredBlogUrl: String,
+        val preferredBlogBlavatar: String,
         val onClick: ((userProfile: UserProfile) -> Unit)? = null
     ) : EngageItem(LIKER)
 

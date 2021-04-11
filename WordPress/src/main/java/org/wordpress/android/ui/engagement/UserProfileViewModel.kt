@@ -2,20 +2,19 @@ package org.wordpress.android.ui.engagement
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.modules.UI_THREAD
+import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.BottomSheetAction.HideBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetAction.ShowBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import javax.inject.Named
 
 class UserProfileViewModel @Inject constructor(
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) { // TODOD: define if we need any THREAD/ScopedViewModel here
+    private val resourceProvider: ResourceProvider
+) : ViewModel() {
     private val _onBottomSheetAction = MutableLiveData<Event<BottomSheetAction>>()
     val onBottomSheetAction: LiveData<Event<BottomSheetAction>> = _onBottomSheetAction
 
@@ -33,7 +32,11 @@ class UserProfileViewModel @Inject constructor(
                     userName = userName,
                     userLogin = userLogin,
                     userBio = userBio,
-                    siteTitle = siteTitle,
+                    siteTitle = if (siteTitle.isBlank()) {
+                        resourceProvider.getString(R.string.user_profile_untitled_site)
+                    } else {
+                        siteTitle
+                    },
                     siteUrl = siteUrl,
                     siteId = siteId,
                     onClick = onClick

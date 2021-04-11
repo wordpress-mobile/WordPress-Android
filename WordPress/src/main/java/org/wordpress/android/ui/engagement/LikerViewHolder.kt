@@ -31,20 +31,19 @@ class LikerViewHolder(
 
         imageManager.loadIntoCircle(this.likerAvatar, ImageType.AVATAR_WITH_BACKGROUND, likerAvatarUrl)
 
-        // TODOD: review conditions to set or not the listener
-        if ((liker.userSiteUrl.isNotEmpty() || liker.userSiteId > 0) && liker.onClick != null) {
+        if (liker.preferredBlogUrl.isNotEmpty() && liker.onClick != null) {
             likerRootView.isEnabled = true
             likerRootView.setOnClickListener {
                 liker.onClick.invoke(
                         UserProfile(
                                 userAvatarUrl = liker.userAvatarUrl,
-                                blavatarUrl = "", // TODOD: populate empty fields
+                                blavatarUrl = liker.preferredBlogBlavatar,
                                 userName = liker.name,
                                 userLogin = liker.login,
-                                userBio = "",
-                                siteTitle = "",
-                                siteUrl = liker.userSiteUrl,
-                                siteId = liker.userSiteId
+                                userBio = liker.userBio,
+                                siteTitle = liker.preferredBlogName,
+                                siteUrl = liker.preferredBlogUrl,
+                                siteId = liker.preferredBlogId
                         )
                 )
             }
