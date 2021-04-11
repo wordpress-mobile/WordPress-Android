@@ -6,11 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
-import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
@@ -39,7 +37,8 @@ class EngagedPeopleListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val getLikesHandler: GetLikesHandler,
-    private val readerUtilsWrapper: ReaderUtilsWrapper
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val engagementUtils: EngagementUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var getLikesJob: Job? = null
@@ -160,10 +159,10 @@ class EngagedPeopleListViewModel @Inject constructor(
 
         val likers = when (updateLikesState) {
             is LikesData -> {
-                likesToEngagedPeople(updateLikesState.likes)
+                engagementUtils.likesToEngagedPeople(updateLikesState.likes, ::onUserProfileHolderClicked)
             }
             is Failure -> {
-                likesToEngagedPeople(updateLikesState.cachedLikes)
+                engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes, ::onUserProfileHolderClicked)
             }
             Loading, null -> listOf()
         }
@@ -189,20 +188,6 @@ class EngagedPeopleListViewModel @Inject constructor(
                 emptyStateAction = emptyStateAction,
                 emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
         )
-    }
-
-    private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
-        return likes.map { likeData ->
-            Liker(
-                    name = likeData.likerName!!,
-                    login = likeData.likerLogin!!,
-                    userSiteId = likeData.likerSiteId,
-                    userSiteUrl = likeData.likerSiteUrl!!,
-                    userAvatarUrl = likeData.likerAvatarUrl!!,
-                    remoteId = likeData.remoteLikeId,
-                    onClick = ::onUserProfileHolderClicked
-            )
-        }
     }
 
     private fun onUserProfileHolderClicked(userProfile: UserProfile) {
