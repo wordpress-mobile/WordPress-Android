@@ -24,20 +24,25 @@ class LikesResponseUtilsProvider @Inject constructor() {
 
     private fun likeResponseToLike(
         response: LikeWPComRestResponse,
-        siteid: Long,
+        siteId: Long,
         commentId: Long,
         likeType: LikeType
     ): LikeModel {
         return LikeModel().apply {
-            remoteSiteId = siteid
+            remoteSiteId = siteId
             type = likeType.typeName
             remoteItemId = commentId
             remoteLikeId = response.ID
             likerLogin = response.login
             likerName = response.name
             likerAvatarUrl = response.avatar_URL
+            likerBio = response.bio
             likerSiteId = response.site_ID
             likerSiteUrl = response.primary_blog
+            preferredBlogId = response.preferred_blog?.id ?: 0
+            preferredBlogName = response.preferred_blog?.name
+            preferredBlogUrl = response.preferred_blog?.url
+            preferredBlogBlavatarUrl = response.preferred_blog?.icon?.img
         }
     }
 }
