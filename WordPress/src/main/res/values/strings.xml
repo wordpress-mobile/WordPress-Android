@@ -3539,5 +3539,6 @@
 
     <!-- user profile bottom sheet -->
     <string name="user_profile_site_section_header">Site</string>
+    <string name="user_profile_untitled_site">(Untitled)</string>
 
 </resources>
