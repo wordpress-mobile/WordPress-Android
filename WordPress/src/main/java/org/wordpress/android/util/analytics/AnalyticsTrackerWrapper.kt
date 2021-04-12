@@ -4,6 +4,11 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.config.AppConfig.FeatureState
+import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
+import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
 import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
@@ -16,7 +21,22 @@ class AnalyticsTrackerWrapper
     }
 
     fun track(stat: Stat, feature: FeatureConfig) {
-        AnalyticsTracker.track(stat, mapOf(feature.remoteField to feature.isEnabled()))
+        AnalyticsTracker.track(
+                stat,
+                mapOf(
+                        feature.remoteField to feature.isEnabled(),
+                        "${feature.remoteField}_state" to feature.featureState().toName()
+                )
+        )
+    }
+
+    private fun FeatureState.toName(): String {
+        return when(this) {
+            is ManuallyOverriden -> "manually_overriden"
+            is BuildConfigValue -> "build_config_value"
+            is DefaultValue -> "default_value"
+            is RemoteValue -> "remote_value"
+        }
     }
 
     fun track(stat: Stat, experimentConfig: ExperimentConfig) {

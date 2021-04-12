@@ -17,4 +17,6 @@ open class FeatureConfig(
     fun isEnabled(): Boolean {
         return appConfig.isEnabled(this)
     }
+
+    fun featureState() = appConfig.featureState(this)
 }
