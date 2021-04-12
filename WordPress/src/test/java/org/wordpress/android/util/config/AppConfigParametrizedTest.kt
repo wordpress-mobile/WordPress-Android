@@ -2,6 +2,7 @@ package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -38,7 +39,11 @@ class AppConfigParametrizedTest(
 
         assertThat(appConfig.isEnabled(featureConfig)).isEqualTo(params.result.isEnabled)
 
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, featureConfig)
+        if (params.remoteField != null) {
+            verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, params.remoteField, params.result)
+        } else {
+            verifyZeroInteractions(analyticsTracker)
+        }
     }
 
     @Test
@@ -47,19 +52,19 @@ class AppConfigParametrizedTest(
 
         assertThat(appConfig.featureState(featureConfig)).isEqualTo(params.result)
 
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, featureConfig)
+        if (params.remoteField != null) {
+            verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, params.remoteField, params.result)
+        } else {
+            verifyZeroInteractions(analyticsTracker)
+        }
     }
 
     private fun setupFeatureConfig() {
         whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(params.hasManualSetup)
         whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(params.isManuallyEnabled)
         whenever(featureConfig.buildConfigValue).thenReturn(params.buildConfigValue)
-        if (params.hasRemoteField) {
-            whenever(featureConfig.remoteField).thenReturn(remoteField)
-        } else {
-            whenever(featureConfig.remoteField).thenReturn(null)
-        }
-        whenever(remoteConfig.isEnabled(remoteField)).thenReturn(params.remoteConfigValue)
+        whenever(featureConfig.remoteField).thenReturn(params.remoteField)
+        whenever(remoteConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
         whenever(remoteConfig.isInitialized()).thenReturn(params.isInitialized)
     }
 
@@ -86,7 +91,7 @@ class AppConfigParametrizedTest(
                 // Returns build config value true when remote field is missing
                 arrayOf(
                         Params(
-                                hasRemoteField = false,
+                                remoteField = null,
                                 buildConfigValue = true,
                                 result = BuildConfigValue(true)
                         )
@@ -94,7 +99,7 @@ class AppConfigParametrizedTest(
                 // Returns build config value false when remote field is missing
                 arrayOf(
                         Params(
-                                hasRemoteField = false,
+                                remoteField = null,
                                 buildConfigValue = false,
                                 result = BuildConfigValue(false)
                         )
@@ -102,7 +107,7 @@ class AppConfigParametrizedTest(
                 // Returns build config value true if remote field set
                 arrayOf(
                         Params(
-                                hasRemoteField = true,
+                                remoteField = REMOTE_FIELD,
                                 buildConfigValue = true,
                                 result = BuildConfigValue(true)
                         )
@@ -111,7 +116,7 @@ class AppConfigParametrizedTest(
                 arrayOf(
                         Params(
                                 isInitialized = false,
-                                hasRemoteField = true,
+                                remoteField = REMOTE_FIELD,
                                 remoteConfigValue = true,
                                 result = DefaultValue(true)
                         )
@@ -120,7 +125,7 @@ class AppConfigParametrizedTest(
                 arrayOf(
                         Params(
                                 isInitialized = false,
-                                hasRemoteField = true,
+                                remoteField = REMOTE_FIELD,
                                 remoteConfigValue = false,
                                 result = DefaultValue(false)
                         )
@@ -129,7 +134,7 @@ class AppConfigParametrizedTest(
                 arrayOf(
                         Params(
                                 isInitialized = true,
-                                hasRemoteField = true,
+                                remoteField = REMOTE_FIELD,
                                 remoteConfigValue = true,
                                 result = RemoteValue(true)
                         )
@@ -138,19 +143,19 @@ class AppConfigParametrizedTest(
                 arrayOf(
                         Params(
                                 isInitialized = true,
-                                hasRemoteField = true,
+                                remoteField = REMOTE_FIELD,
                                 remoteConfigValue = false,
                                 result = RemoteValue(false)
                         )
                 )
         )
 
-        private const val remoteField = "remote_field"
+        private const val REMOTE_FIELD = "remote_field"
 
         data class Params(
             val hasManualSetup: Boolean = false,
             val isManuallyEnabled: Boolean = false,
-            val hasRemoteField: Boolean = false,
+            val remoteField: String? = null,
             val buildConfigValue: Boolean = false,
             val isInitialized: Boolean = false,
             val remoteConfigValue: Boolean = false,
