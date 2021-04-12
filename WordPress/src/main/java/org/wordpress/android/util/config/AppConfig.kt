@@ -1,7 +1,12 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_SET
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
+import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
 import org.wordpress.android.util.config.ExperimentConfig.Variant
 import org.wordpress.android.util.config.manual.ManualFeatureConfig
 import javax.inject.Inject
@@ -18,7 +23,6 @@ class AppConfig
      * We need to keep the value of an already loaded feature flag to make sure the value is not changed while using the app.
      * We should only reload the flags when the application is created.
      */
-    private val enabledFeatures = mutableMapOf<String, Boolean>()
     private val experimentValues = mutableMapOf<String, String>()
     private val remoteConfigCheck = RemoteConfigCheck(this)
 
@@ -44,17 +48,35 @@ class AppConfig
      * @param feature feature which we're checking remotely
      */
     fun isEnabled(feature: FeatureConfig): Boolean {
+        return featureState(feature).isEnabled
+    }
+
+    /**
+     * Get the enabled flag and the source where it came from.
+     * @param feature feature we're checking remotely
+     */
+    fun featureState(feature: FeatureConfig): FeatureState {
+        return buildFeatureState(feature).also {
+            analyticsTracker.track(
+                    FEATURE_FLAG_SET,
+                    feature
+            )
+        }
+    }
+
+    private fun buildFeatureState(feature: FeatureConfig): FeatureState {
         if (manualFeatureConfig.hasManualSetup(feature)) {
-            return manualFeatureConfig.isManuallyEnabled(feature)
+            return ManuallyOverriden(manualFeatureConfig.isManuallyEnabled(feature))
         }
         if (feature.remoteField == null) {
-            return feature.buildConfigValue
+            return BuildConfigValue(feature.buildConfigValue)
         }
-        return enabledFeatures.getOrPut(feature.remoteField) {
-            val loadedValue = feature.buildConfigValue || remoteConfig.isEnabled(feature.remoteField)
-            enabledFeatures[feature.remoteField] = loadedValue
-            analyticsTracker.track(Stat.FEATURE_FLAG_SET, mapOf(feature.remoteField to loadedValue))
-            loadedValue
+        return if (feature.buildConfigValue) {
+            BuildConfigValue(feature.buildConfigValue)
+        } else if (!remoteConfig.isInitialized()) {
+            DefaultValue(remoteConfig.isEnabled(feature.remoteField))
+        } else {
+            RemoteValue(remoteConfig.isEnabled(feature.remoteField))
         }
     }
 
@@ -73,5 +95,12 @@ class AppConfig
         }
         return experiment.variants.find { it.value == value }
                 ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
+    }
+
+    sealed class FeatureState(open val isEnabled: Boolean) {
+        data class ManuallyOverriden(override val isEnabled: Boolean) : FeatureState(isEnabled)
+        data class BuildConfigValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
+        data class DefaultValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
+        data class RemoteValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
     }
 }
