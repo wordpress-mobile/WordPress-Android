@@ -260,6 +260,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
+        mAppConfig.init();
 
         // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
         mCrashLogging.start(getContext());
