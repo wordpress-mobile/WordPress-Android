@@ -230,7 +230,8 @@ class ScanRestClient(
                     progress = it.progress ?: 0,
                     isInitial = it.isInitial ?: false
                 )
-            }
+            },
+            hasValidCredentials = response.credentials?.firstOrNull()?.stillValid == true
         )
         return FetchedScanStatePayload(scanStateModel, site)
     }
