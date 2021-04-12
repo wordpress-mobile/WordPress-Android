@@ -171,6 +171,16 @@ class ScanStoreTest {
     }
 
     @Test
+    fun `get valid credentials status returns corresponding status from the db`() = test {
+        val scanStateModel = ScanStateModel(State.IDLE, hasValidCredentials = true)
+        whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
+
+        val hasValidCredentials = scanStore.hasValidCredentials(siteModel)
+
+        Assert.assertEquals(true, hasValidCredentials)
+    }
+
+    @Test
     fun `success on start scan returns the success`() = test {
         val payload = ScanStartPayload(siteModel)
         whenever(scanRestClient.startScan(siteModel)).thenReturn(ScanStartResultPayload(siteModel))
