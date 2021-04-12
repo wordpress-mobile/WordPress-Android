@@ -13,14 +13,16 @@ import javax.inject.Inject
  */
 class RemoteConfig
 @Inject constructor() {
-    fun refresh() {
+    fun init() {
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = Builder()
                 .setMinimumFetchIntervalInSeconds(BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL)
                 .build()
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
         firebaseRemoteConfig.setDefaultsAsync(RemoteConfigDefaults.remoteConfigDefaults)
-        firebaseRemoteConfig.fetchAndActivate()
+    }
+    fun refresh() {
+        FirebaseRemoteConfig.getInstance().fetchAndActivate()
                 .addOnCompleteListener { task: Task<Boolean?> ->
                     if (task.isSuccessful) {
                         AppLog.d(

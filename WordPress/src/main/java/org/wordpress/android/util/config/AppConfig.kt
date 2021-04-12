@@ -23,11 +23,18 @@ class AppConfig
     private val remoteConfigCheck = RemoteConfigCheck(this)
 
     /**
-     * This method initialized the config and triggers refresh of remote configuration.
+     * This method initialized the config
+     */
+    fun init() {
+        remoteConfig.init()
+        remoteConfigCheck.checkRemoteFields()
+    }
+
+    /**
+     * This method triggers refresh of remote configuration.
      */
     fun refresh() {
         remoteConfig.refresh()
-        remoteConfigCheck.checkRemoteFields()
     }
 
     /**
