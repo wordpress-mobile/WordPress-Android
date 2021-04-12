@@ -206,7 +206,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         BLOG
     }
 
-    @Inject public AccountRestClient(Context appContext, Dispatcher dispatcher, @Named("regular") RequestQueue requestQueue,
+    @Inject public AccountRestClient(Context appContext, Dispatcher dispatcher,
+                                     @Named("regular") RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
