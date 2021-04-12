@@ -31,7 +31,7 @@ class AnalyticsTrackerWrapper
     }
 
     private fun FeatureState.toName(): String {
-        return when(this) {
+        return when (this) {
             is ManuallyOverriden -> "manually_overriden"
             is BuildConfigValue -> "build_config_value"
             is DefaultValue -> "default_value"

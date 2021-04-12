@@ -65,18 +65,22 @@ class AppConfig
     }
 
     private fun buildFeatureState(feature: FeatureConfig): FeatureState {
-        if (manualFeatureConfig.hasManualSetup(feature)) {
-            return ManuallyOverriden(manualFeatureConfig.isManuallyEnabled(feature))
-        }
-        if (feature.remoteField == null) {
-            return BuildConfigValue(feature.buildConfigValue)
-        }
-        return if (feature.buildConfigValue) {
-            BuildConfigValue(feature.buildConfigValue)
-        } else if (!remoteConfig.isInitialized()) {
-            DefaultValue(remoteConfig.isEnabled(feature.remoteField))
-        } else {
-            RemoteValue(remoteConfig.isEnabled(feature.remoteField))
+        return when {
+            manualFeatureConfig.hasManualSetup(feature) -> {
+                ManuallyOverriden(manualFeatureConfig.isManuallyEnabled(feature))
+            }
+            feature.remoteField == null -> {
+                BuildConfigValue(feature.buildConfigValue)
+            }
+            feature.buildConfigValue -> {
+                BuildConfigValue(feature.buildConfigValue)
+            }
+            !remoteConfig.isInitialized() -> {
+                DefaultValue(remoteConfig.isEnabled(feature.remoteField))
+            }
+            else -> {
+                RemoteValue(remoteConfig.isEnabled(feature.remoteField))
+            }
         }
     }
 
