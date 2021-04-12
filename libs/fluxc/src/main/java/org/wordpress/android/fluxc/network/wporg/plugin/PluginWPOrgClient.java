@@ -44,7 +44,9 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     private static final int FETCH_PLUGIN_DIRECTORY_PAGE_SIZE = 50;
     private final Dispatcher mDispatcher;
 
-    @Inject public PluginWPOrgClient(Dispatcher dispatcher, @Named("regular") RequestQueue requestQueue, UserAgent userAgent) {
+    @Inject public PluginWPOrgClient(Dispatcher dispatcher,
+                                     @Named("regular") RequestQueue requestQueue,
+                                     UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
         mDispatcher = dispatcher;
     }
