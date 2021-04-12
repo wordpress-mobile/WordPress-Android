@@ -56,11 +56,14 @@ class AppConfig
      * @param feature feature we're checking remotely
      */
     fun featureState(feature: FeatureConfig): FeatureState {
-        return buildFeatureState(feature).also {
-            analyticsTracker.track(
-                    FEATURE_FLAG_SET,
-                    feature
-            )
+        return buildFeatureState(feature).also { state ->
+            feature.remoteField?.let {
+                analyticsTracker.track(
+                        FEATURE_FLAG_SET,
+                        feature.remoteField,
+                        state
+                )
+            }
         }
     }
 

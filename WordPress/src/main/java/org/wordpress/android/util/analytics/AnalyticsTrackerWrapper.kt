@@ -30,6 +30,16 @@ class AnalyticsTrackerWrapper
         )
     }
 
+    fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
+        AnalyticsTracker.track(
+                stat,
+                mapOf(
+                        remoteField to featureState.isEnabled,
+                        "${remoteField}_state" to featureState.toName()
+                )
+        )
+    }
+
     private fun FeatureState.toName(): String {
         return when (this) {
             is ManuallyOverriden -> "manually_overriden"
