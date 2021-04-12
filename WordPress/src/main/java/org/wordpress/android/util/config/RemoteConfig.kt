@@ -53,11 +53,13 @@ class RemoteConfig
                     }
                 }
         firebaseRemoteConfig.ensureInitialized().addOnSuccessListener {
-            appPrefsWrapper.flagsFetchedSuccessfully = true
+            RemoteConfigDefaults.remoteConfigDefaults.keys.forEach { key ->
+                appPrefsWrapper.setFlagFetched(key, true)
+            }
         }
     }
 
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
     fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
-    fun isInitialized(): Boolean = appPrefsWrapper.flagsFetchedSuccessfully
+    fun isInitialized(remoteField: String): Boolean = appPrefsWrapper.isFlagFetched(remoteField)
 }

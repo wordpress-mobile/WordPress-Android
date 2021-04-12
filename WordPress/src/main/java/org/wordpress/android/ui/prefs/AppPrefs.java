@@ -157,7 +157,7 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        FLAGS_FETCHED_SUCCESSFULLY
+        FLAG_FETCHED_SUCCESSFULLY
     }
 
     /**
@@ -1219,12 +1219,16 @@ public class AppPrefs {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
-    public static Boolean isFlagsFetchedSuccessfully() {
-        return getBoolean(DeletablePrefKey.FLAGS_FETCHED_SUCCESSFULLY, false);
+    public static Boolean isFlagFetchedSuccessfully(String featureKey) {
+        return prefs().getBoolean(getFlagFetchedKey(featureKey), false);
     }
 
-    public static void setFlagsFetchedSuccessfully(boolean flagsFetchedSuccessfully) {
-        setBoolean(DeletablePrefKey.FLAGS_FETCHED_SUCCESSFULLY, flagsFetchedSuccessfully);
+    public static void setFlagFetchedSuccessfully(String featureKey, boolean flagFetched) {
+        prefs().edit().putBoolean(getFlagFetchedKey(featureKey), flagFetched).apply();
+    }
+
+    @NonNull private static String getFlagFetchedKey(String featureKey) {
+        return DeletablePrefKey.FLAG_FETCHED_SUCCESSFULLY.name() + featureKey;
     }
 
     /*

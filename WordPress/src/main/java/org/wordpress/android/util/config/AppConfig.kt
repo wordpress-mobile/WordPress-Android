@@ -78,7 +78,7 @@ class AppConfig
             feature.buildConfigValue -> {
                 BuildConfigValue(feature.buildConfigValue)
             }
-            !remoteConfig.isInitialized() -> {
+            !remoteConfig.isInitialized(feature.remoteField) -> {
                 DefaultValue(remoteConfig.isEnabled(feature.remoteField))
             }
             else -> {
