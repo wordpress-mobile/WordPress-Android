@@ -36,6 +36,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder,
     private val scanStore: ScanStore
 ) {
+    @Suppress("LongParameterList")
     suspend fun buildScanStateListItems(
         model: ScanStateModel,
         site: SiteModel,
@@ -106,6 +107,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
+    @Suppress("LongParameterList")
     private fun buildThreatsFoundStateItems(
         model: ScanStateModel,
         threats: List<ThreatModel>,

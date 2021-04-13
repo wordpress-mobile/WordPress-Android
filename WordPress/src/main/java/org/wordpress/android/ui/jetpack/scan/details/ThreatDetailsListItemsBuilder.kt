@@ -32,6 +32,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private val dateFormatWrapper: DateFormatWrapper,
     private val resourceProvider: ResourceProvider
 ) {
+    @Suppress("LongParameterList")
     fun buildThreatDetailsListItems(
         threatModel: ThreatModel,
         scanStateHasValidCredentials: Boolean,
