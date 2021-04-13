@@ -15,13 +15,7 @@ data class UriWrapper(val uri: Uri) {
     override fun toString() = uri.toString()
     fun getQueryParameter(key: String): String? = uri.getQueryParameter(key)
     fun copy(path: String): UriWrapper {
-        val newUri = Builder()
-                .scheme(uri.scheme)
-                .path(path)
-                .query(uri.query)
-                .fragment(uri.fragment)
-                .authority(uri.authority)
-                .build()
+        val newUri = uri.buildUpon().path(path).build()
         return this.copy(uri = newUri)
     }
 }
