@@ -35,7 +35,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should handle email mbar mobile URL`() {
         val uri = buildUri("public-api.wordpress.com", "mbar")
 
-        val shouldHandleUri = viewModel.shouldHandleEmailUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
 
         assertThat(shouldHandleUri).isTrue()
     }
@@ -44,7 +44,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should not handle WPcom URL`() {
         val uri = buildUri("wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleEmailUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -53,7 +53,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should not handle bar non-mobile URL`() {
         val uri = buildUri("public-api.wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleEmailUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -68,7 +68,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleEmailUrl(uri)
+        viewModel.handleTrackingUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
@@ -87,7 +87,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val isSignedIn = true
         whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
 
-        viewModel.handleEmailUrl(uri)
+        viewModel.handleTrackingUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.StartCreateSiteFlow)
         verify(serverTrackingHandler).request(uri)
@@ -107,7 +107,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val isSignedIn = false
         whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
 
-        viewModel.handleEmailUrl(uri)
+        viewModel.handleTrackingUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.ShowSignInFlow)
         verify(serverTrackingHandler).request(uri)
@@ -125,7 +125,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleEmailUrl(uri)
+        viewModel.handleTrackingUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
@@ -142,7 +142,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleEmailUrl(uri)
+        viewModel.handleTrackingUrl(uri)
 
         assertThat(navigateAction).isEqualTo(expectedAction)
         verify(serverTrackingHandler).request(uri)

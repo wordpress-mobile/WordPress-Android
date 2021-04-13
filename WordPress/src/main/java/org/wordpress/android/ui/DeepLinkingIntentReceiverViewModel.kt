@@ -28,9 +28,9 @@ class DeepLinkingIntentReceiverViewModel
     val toast = editorLinkHandler.toast
 
     /**
-     * URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
+     * Tracking URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
      */
-    fun shouldHandleEmailUrl(uri: UriWrapper): Boolean {
+    fun shouldHandleTrackingUrl(uri: UriWrapper): Boolean {
         // https://public-api.wordpress.com/mbar/
         return uri.host == HOST_API_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == MOBILE_TRACKING_PATH
@@ -48,11 +48,11 @@ class DeepLinkingIntentReceiverViewModel
      * `wordpress.com/wp-login.php`
      * The rest of URIs is redirected back to the browser
      */
-    fun handleEmailUrl(uri: UriWrapper) {
+    fun handleTrackingUrl(uri: UriWrapper) {
         val navigateAction = buildNavigateAction(uri)
         val event = if (navigateAction != null) {
             // Make sure we don't miss server tracking on `mbar` URIs
-            if (shouldHandleEmailUrl(uri)) {
+            if (shouldHandleTrackingUrl(uri)) {
                 serverTrackingHandler.request(uri)
             }
             Event(navigateAction)
