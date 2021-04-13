@@ -12,7 +12,11 @@ import org.junit.runners.Parameterized
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState
-import org.wordpress.android.util.config.AppConfig.FeatureState.*
+import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
+import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
 import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(Parameterized::class)
@@ -136,7 +140,7 @@ class AppConfigParametrizedTest(
                                 result = RemoteValue(true)
                         )
                 ),
-                // Returns remote value == true from remote field and source REMOTE
+                // Returns default remote value == true from remote field and source Default
                 arrayOf(
                         Params(
                                 remoteFeatureState = DefaultValue(true),
