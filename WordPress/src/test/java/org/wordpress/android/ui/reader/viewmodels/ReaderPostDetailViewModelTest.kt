@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.engagement.GetLikesHandler
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -81,7 +82,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
+import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -118,6 +121,9 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
+    @Mock private lateinit var getLikesHandler: GetLikesHandler
+    @Mock private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    @Mock private lateinit var contextProvider: ContextProvider
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -146,8 +152,12 @@ class ReaderPostDetailViewModelTest {
                 readerTracker,
                 eventBusWrapper,
                 wpUrlUtilsWrapper,
+                contextProvider,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
+                getLikesHandler,
+                likesEnhancementsFeatureConfig
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -206,6 +216,8 @@ class ReaderPostDetailViewModelTest {
 
         whenever(reblogUseCase.onReblogSiteSelected(ArgumentMatchers.anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
+
+        whenever(likesEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
     }
 
     /* SHOW POST - LOADING */

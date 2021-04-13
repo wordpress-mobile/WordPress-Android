@@ -113,6 +113,7 @@
     <dimen name="margin_medium_large">10dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_extra_large_extra_medium_large">20dp</dimen>
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
@@ -647,4 +648,8 @@
     <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
+
+    <!-- likes list -->
+    <dimen name="reader_like_faces_padding">2dp</dimen>
+    <dimen name="liker_faces_section_min_height">80dp</dimen>
 </resources>
