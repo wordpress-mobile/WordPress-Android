@@ -105,10 +105,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given any threat model, when items are built, then icon is added from threat item builder`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].icon).isEqualTo(
             threatItemBuilder.buildThreatItemIcon(ThreatTestData.genericThreatModel)
         )
@@ -116,10 +114,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given any threat model, when items are built, then icon background is added from threat item builder`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].iconBackground).isEqualTo(
             threatItemBuilder.buildThreatItemIconBackground(ThreatTestData.genericThreatModel)
         )
@@ -127,10 +123,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given any threat model, when items are built, then threat item header is added from threat item builder`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
             HeaderState(threatItemBuilder.buildThreatItemHeader(ThreatTestData.genericThreatModel))
         )
@@ -138,10 +132,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given any threat model, when items are built, then threat item description added from threat item builder`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<DescriptionState>()).contains(
             DescriptionState(threatItemBuilder.buildThreatItemDescription(ThreatTestData.genericThreatModel))
         )
@@ -149,10 +141,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given any threat model, when items are built, then problem details are added`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
             HeaderState(UiStringRes(R.string.threat_problem_header))
         )
@@ -165,13 +155,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given file threat with file name, when items are built, then technical details exist in correct sequence`() {
-        // Arrange
         val fileThreatModelWithFileName = ThreatTestData.fileThreatModel
 
-        // Act
         val threatItems = buildThreatDetailsListItems(fileThreatModelWithFileName)
 
-        // Assert
         assertThat(threatItems.map { it::class.java }).containsSequence(
             HeaderState::class.java,
             DescriptionState::class.java,
@@ -182,46 +169,36 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given file threat, when items are built, then technical details header exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(technicalDetailsHeaderItem)
     }
 
     @Test
     fun `given file threat with file name, when items are built, then file name description exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(fileNameDescriptionItem)
     }
 
     @Test
     fun `given file threat without file name, when items are built, then file name description does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel.copy(fileName = null))
 
-        // Assert
         assertThat(threatItems).doesNotContain(fileNameDescriptionItem)
     }
 
     @Test
     fun `given file threat without file nam, when items are built, then file name does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel.copy(fileName = null))
 
-        // Assert
         assertThat(threatItems).doesNotContain(ThreatFileNameState(UiStringText(TEST_FILE_PATH)))
     }
 
     @Test
     fun `given file threat, when items are built, then context lines exist`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(
             ThreatContextLinesItemState(
                 listOf(
@@ -241,10 +218,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given core file modif threat, when items are built, then technical details exist in correct sequence`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
-        // Assert
         assertThat(threatItems.map { it::class.java }).containsSequence(
             HeaderState::class.java,
             DescriptionState::class.java,
@@ -255,37 +230,29 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given core file modif threat, when items are built, then technical details header exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(technicalDetailsHeaderItem)
     }
 
     @Test
     fun `given core file modif threat with file name, when items are built, then file name description exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(fileNameDescriptionItem)
     }
 
     @Test
     fun `given core file modif threat with file name, when items are built, then file name exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(fileNameDescriptionItem)
     }
 
     @Test
     fun `given core file modif threat, when items are built, then diff item exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
-        // Assert
         assertThat(threatItems).contains(
             DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
         )
@@ -295,23 +262,19 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given fixable threat not in fixed status, when items are built, then fix header exists`() {
-        // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
                 fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
             )
         )
 
-        // Act
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
-        // Assert
         assertThat(threatItems).contains(HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header)))
     }
 
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix header does not exists`() {
-        // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
                 fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
@@ -319,32 +282,26 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             )
         )
 
-        // Act
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
-        // Assert
         assertThat(threatItems).doesNotContain(HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header)))
     }
 
     @Test
     fun `given fixable threat not in fixed status, when items are built, then fix description exists`() {
-        // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
                 fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
             )
         )
 
-        // Act
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
-        // Assert
         assertThat(threatItems).contains(DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit)))
     }
 
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix description does not exists`() {
-        // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
                 fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
@@ -352,29 +309,24 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             )
         )
 
-        // Act
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
-        // Assert
         assertThat(threatItems).doesNotContain(DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit)))
     }
 
     @Test
     fun `given fixable threat in current status, when items are built, then fix threat button exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus,
             onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).contains(fixThreatButtonItem)
     }
 
     @Test
     fun `given fixable threat in ignored status, when items are built, then fix threat button exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus.copy(
                 baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
@@ -382,14 +334,12 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).contains(fixThreatButtonItem)
     }
 
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix threat button does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus.copy(
                 baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = FIXED)
@@ -397,27 +347,23 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).doesNotContain(fixThreatButtonItem)
     }
 
     @Test
     fun `given fixable threat in current status, when items are built, then ignore threat button exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus,
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).contains(ignoreThreatButtonItem)
     }
 
     @Test
     fun `given fixable threat in fixed status, when items are built, then ignore threat button does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus.copy(
                 baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = FIXED)
@@ -425,14 +371,12 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).doesNotContain(ignoreThreatButtonItem)
     }
 
     @Test
     fun `given fixable threat in ignored status, when items are built, then ignore threat button does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus.copy(
                 baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
@@ -440,7 +384,6 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).doesNotContain(ignoreThreatButtonItem)
     }
@@ -449,58 +392,47 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given non fixable threat, when items are built, then not fixable header exists`() {
-        // Arrange
         val notFixableThreat = GenericThreatModel(ThreatTestData.baseThreatModel.copy(fixable = null))
 
-        // Act
         val threatItems = buildThreatDetailsListItems(notFixableThreat)
 
-        // Assert
         assertThat(threatItems).contains(HeaderState(UiStringRes(R.string.threat_fix_current_not_fixable_header)))
     }
 
     @Test
     fun `given non fixable threat, when items are built, then not fixable description exists`() {
-        // Arrange
         val notFixableThreat = GenericThreatModel(ThreatTestData.baseThreatModel.copy(fixable = null))
 
-        // Act
         buildThreatDetailsListItems(notFixableThreat)
 
-        // Assert
         verify(htmlMessageUtils)
             .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
     }
 
     @Test
     fun `given non fixable threat in current status, when items are built, then get free estimates button exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.notFixableThreatInCurrentStatus,
             onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).contains(getFreeEstimateButtonItem)
     }
 
     @Test
     fun `given non fixable threat in current status, when items are built, then ignore threat button exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.notFixableThreatInCurrentStatus,
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).contains(ignoreThreatButtonItem)
     }
 
     @Test
     fun `given non fixable threat in ignored status, when items are built, then ignore threat btn does not exists`() {
-        // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.notFixableThreatInCurrentStatus.copy(
                 baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
@@ -508,7 +440,6 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
-        // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).doesNotContain(ignoreThreatButtonItem)
     }
@@ -517,13 +448,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given threat status = fixed, when items are built, then Fixed header is added as main header`() {
-        // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
 
-        // Act
         val threatItems = buildThreatDetailsListItems(threatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
             .isEqualTo(UiStringRes(R.string.threat_status_fixed))
@@ -533,13 +461,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given threat status = fixed, when items are built, then Found header is added below main header`() {
-        // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
 
-        // Act
         val threatItems = buildThreatDetailsListItems(threatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<HeaderState>()[0].text)
             .isEqualTo(UiStringRes(R.string.threat_found_header))
         assertThat(threatItems.filterIsInstance<DescriptionState>()[0].text)
@@ -550,13 +475,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given threat status = ignored, when items are built, then Found header is added as main header`() {
-        // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = IGNORED))
 
-        // Act
         val threatItems = buildThreatDetailsListItems(threatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
             .isEqualTo(UiStringRes(R.string.threat_found_header))
@@ -568,15 +490,12 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given threat status = current, when items are built, then Found header is added as main header`() {
-        // Arrange
         val threatModel = GenericThreatModel(
             ThreatTestData.genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)
         )
 
-        // Act
         val threatItems = buildThreatDetailsListItems(threatModel)
 
-        // Assert
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
             .isEqualTo(UiStringRes(R.string.threat_found_header))
