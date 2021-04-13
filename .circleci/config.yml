@@ -15,13 +15,16 @@ parameters:
   generate_screenshots:
     type: boolean
     default: false
+  release_build:
+    type: boolean
+    default: false
 
 commands:
   copy-gradle-properties:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties 
+          command: cp gradle.properties-example gradle.properties
   update-gradle-memory:
       parameters:
         jvmargs:
@@ -141,7 +144,7 @@ jobs:
     environment:
       JVM_OPTS: -Xmx2048m
     steps:
-      - run: 
+      - run:
           name: Init messages
           command: |
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android failed!'" >> $BASH_ENV
@@ -163,10 +166,10 @@ jobs:
             brew install openjdk
             brew install bundletool
             echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.2.0/bin:$PATH'" >> $BASH_ENV
-      - run: 
+      - run:
           name: Prepare build
           command: |
-            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
+            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV
             SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName | tail -1)
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
             echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
@@ -174,13 +177,13 @@ jobs:
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
       - run:
-          name: Build Zalpha 
+          name: Build Zalpha
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
               bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
-            fi 
+            fi
           no_output_timeout: 15m
-      - run: 
+      - run:
           name: Build Vanilla
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
@@ -429,7 +432,7 @@ jobs:
           command: |
             mkdir -p Artifacts
             mv WordPress/build/outputs/apk/jalapeno/release/org.wordpress.android-jalapeno-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
-      - run: 
+      - run:
           name: Upload APK
           command: |
             curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
@@ -443,6 +446,7 @@ workflows:
       or:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
+        - << pipeline.parameters.release_build >>
     jobs:
       - strings-check
       - test
@@ -464,6 +468,7 @@ workflows:
       or:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
+        - << pipeline.parameters.release_build >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -484,21 +489,13 @@ workflows:
     when: << pipeline.parameters.generate_screenshots >>
     jobs:
       - raw-screenshots
-      - promo-screenshots
+      - promo-screenshots:
+          requires: [raw-screenshots]
   Release Build:
-    unless: << pipeline.parameters.translation_review_build >>
+    when: << pipeline.parameters.release_build >>
     jobs:
-      - lint:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint
       - Release Build:
           requires:
-            - lint 
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^\d+(\.\d+)*(-rc-\d)?$/
+            - lint
+
