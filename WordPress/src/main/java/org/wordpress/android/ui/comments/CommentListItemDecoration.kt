@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 import org.wordpress.android.R.dimen
+import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
 
@@ -69,7 +70,13 @@ class CommentListItemDecoration(val context: Context) : ItemDecoration() {
             outRect[0, 0, 0] = 0
             return
         }
-        outRect[0, 0, 0] = divider.intrinsicHeight
+        val position: Int = parent.getChildAdapterPosition(view)
+        val viewType: Int? = parent.adapter?.getItemViewType(position)
+        if (viewType == CommentListItemType.HEADER.ordinal) {
+            outRect.setEmpty()
+        } else {
+            outRect[0, 0, 0] = divider.intrinsicHeight
+        }
     }
 
     companion object {
@@ -80,6 +87,6 @@ class CommentListItemDecoration(val context: Context) : ItemDecoration() {
         val attrs = context.obtainStyledAttributes(ATTRS)
         divider = attrs.getDrawable(0)
         attrs.recycle()
-        dividerStartOffset = context.resources.getDimensionPixelOffset(dimen.divider_start_offset)
+        dividerStartOffset = context.resources.getDimensionPixelOffset(dimen.comment_list_divider_start_offset)
     }
 }
