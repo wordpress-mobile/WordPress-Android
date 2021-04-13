@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.util.UriWrapper
@@ -27,7 +27,7 @@ class DeepLinkNavigator
                 val browserIntent = Intent(Intent.ACTION_VIEW, navigateAction.uri.uri)
                 activity.startActivity(browserIntent)
             }
-            is OpenInEditor -> ActivityLauncher.openEditorForPostInNewStack(
+            is OpenEditorForPost -> ActivityLauncher.openEditorForPostInNewStack(
                     activity,
                     navigateAction.site,
                     navigateAction.postId
@@ -38,7 +38,7 @@ class DeepLinkNavigator
 
     sealed class NavigateAction {
         data class OpenInBrowser(val uri: UriWrapper) : NavigateAction()
-        data class OpenInEditor(val site: SiteModel, val postId: Int) : NavigateAction()
+        data class OpenEditorForPost(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
         object OpenEditor : NavigateAction()
         object StartCreateSiteFlow : NavigateAction()

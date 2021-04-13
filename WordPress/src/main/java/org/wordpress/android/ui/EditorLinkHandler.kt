@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -79,7 +79,7 @@ class EditorLinkHandler
                 // Open new post editor for given site
                 OpenEditorForSite(site)
             }
-            else -> OpenInEditor(site, post.id)
+            else -> OpenEditorForPost(site, post.id)
         }
     }
 

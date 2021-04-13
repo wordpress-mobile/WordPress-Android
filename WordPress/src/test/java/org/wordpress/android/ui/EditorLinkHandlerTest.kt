@@ -64,7 +64,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInEditor(site, localPostId))
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForPost(site, localPostId))
     }
 
     @Test
