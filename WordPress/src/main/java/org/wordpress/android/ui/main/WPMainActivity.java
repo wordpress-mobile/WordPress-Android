@@ -1366,7 +1366,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen
-            ActivityLauncher.showSignInForResult(this);
+            if (BuildConfig.IS_JETPACK_APP) {
+                ActivityLauncher.showSignInForResultJetpackOnly(this);
+            } else {
+                ActivityLauncher.showSignInForResult(this);
+            }
         } else {
             SiteModel site = getSelectedSite();
             if (site == null && mSiteStore.hasSite()) {
