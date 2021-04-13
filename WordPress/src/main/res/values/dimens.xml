@@ -33,7 +33,6 @@
     <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
 
     <dimen name="divider_size">1dp</dimen>
-    <dimen name="divider_start_offset">72dp</dimen>
     <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
@@ -255,6 +254,7 @@
     <!-- comments -->
     <dimen name="comment_avatar_sz">40dp</dimen>
     <dimen name="comment_status_dot_sz">8dp</dimen>
+    <dimen name="comment_list_divider_start_offset">72dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">16dp</dimen>
