@@ -7,10 +7,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -64,13 +60,13 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun shouldShowEnterServerCredsMessage(hasValidCredentials: Boolean, threatModel: ThreatModel) =
             !hasValidCredentials &&
                     threatModel.baseThreatModel.fixable != null &&
-                    threatModel.baseThreatModel.status != FIXED
+                    threatModel.baseThreatModel.status != ThreatStatus.FIXED
 
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
             add(buildThreatDetailHeader(threatModel))
             // show both Fixed and Found rows for threats in Fixed state
-            if (threatModel.baseThreatModel.status == FIXED) {
+            if (threatModel.baseThreatModel.status == ThreatStatus.FIXED) {
                 add(buildThreatFoundHeaderItem())
                 add(buildThreatFoundDateSubHeaderItem(threatModel))
             }
@@ -156,12 +152,14 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         icon = threatItemBuilder.buildThreatItemIcon(threatModel),
         iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
         header = when (threatModel.baseThreatModel.status) {
-            FIXED -> UiStringRes(R.string.threat_status_fixed)
-            IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
+            ThreatStatus.FIXED -> UiStringRes(R.string.threat_status_fixed)
+            ThreatStatus.IGNORED, ThreatStatus.CURRENT, ThreatStatus.UNKNOWN ->
+                UiStringRes(R.string.threat_found_header)
         },
         description = when (threatModel.baseThreatModel.status) {
-            FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
-            IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
+            ThreatStatus.FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
+            ThreatStatus.IGNORED, ThreatStatus.CURRENT, ThreatStatus.UNKNOWN ->
+                getThreatFoundString(threatModel.baseThreatModel.firstDetected)
         }
     )
 
