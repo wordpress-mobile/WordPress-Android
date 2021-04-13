@@ -1,11 +1,14 @@
 package org.wordpress.android.util.config
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_DEFAULT
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_REMOTE
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig.VALUE_SOURCE_STATIC
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.config.AppConfig.FeatureState
@@ -24,30 +27,10 @@ class RemoteConfig
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
         firebaseRemoteConfig.setDefaultsAsync(RemoteConfigDefaults.remoteConfigDefaults)
         firebaseRemoteConfig.activate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                AppLog.d(
-                        UTILS,
-                        "Remote config activated: ${task.result}"
-                )
-            } else {
-                AppLog.e(
-                        UTILS,
-                        "Remote config activate failed"
-                )
-            }
+            onComplete(task, "activate")
         }
         firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                AppLog.d(
-                        UTILS,
-                        "Remote config fetched and activated: ${task.result}"
-                )
-            } else {
-                AppLog.e(
-                        UTILS,
-                        "Remote config fetchAndActivate failed"
-                )
-            }
+            onComplete(task, "fetchAndActivate")
         }
     }
 
@@ -55,18 +38,27 @@ class RemoteConfig
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         firebaseRemoteConfig.fetch()
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        AppLog.d(
-                                UTILS,
-                                "Remote config fetched: ${task.result}"
-                        )
-                    } else {
-                        AppLog.e(
-                                UTILS,
-                                "Remote config fetch failed"
-                        )
-                    }
+                    onComplete(task, "fetch")
                 }
+    }
+
+    private fun onComplete(task: Task<*>, functionName: String) {
+        if (task.isSuccessful) {
+            val configValues = FirebaseRemoteConfig.getInstance().all.mapValues { it.value.asString() }
+            AnalyticsTracker.track(
+                    Stat.FEATURE_FLAGS_SYNCED_STATE,
+                    configValues + mapOf("function_name" to functionName)
+            )
+            AppLog.d(
+                    UTILS,
+                    "Remote config $functionName: ${task.result}"
+            )
+        } else {
+            AppLog.e(
+                    UTILS,
+                    "Remote config $functionName failed"
+            )
+        }
     }
 
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
