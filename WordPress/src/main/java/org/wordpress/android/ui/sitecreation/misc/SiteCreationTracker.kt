@@ -125,7 +125,11 @@ class SiteCreationTracker @Inject constructor(
         if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mySiteImprovementsFeatureConfig)
         } else {
-            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf(TEMPLATE.key to template), mySiteImprovementsFeatureConfig)
+            tracker.track(
+                    AnalyticsTracker.Stat.SITE_CREATED,
+                    mapOf(TEMPLATE.key to template),
+                    mySiteImprovementsFeatureConfig
+            )
         }
     }
 
