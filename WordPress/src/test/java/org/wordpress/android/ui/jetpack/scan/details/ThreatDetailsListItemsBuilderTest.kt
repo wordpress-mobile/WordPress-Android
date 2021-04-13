@@ -31,12 +31,14 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 
 private const val TEST_THREAT_ITEM_HEADER = "Threat found"
 private const val TEST_THREAT_ITEM_SUB_HEADER = "Miscellaneous vulnerability"
 private const val TEST_FOUND_ON_DATE = "1 January, 2020"
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
+private const val TEST_SITE_ID = 1L
 
 @InternalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
@@ -48,6 +50,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     private lateinit var dateFormatWrapper: DateFormatWrapper
     @Mock
     private lateinit var dateFormat: DateFormat
+    @Mock
+    private lateinit var resourceProvider: ResourceProvider
     private lateinit var builder: ThreatDetailsListItemsBuilder
 
     private val technicalDetailsHeaderItem = HeaderState(UiStringRes(R.string.threat_technical_details_header))
@@ -76,7 +80,12 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = ThreatDetailsListItemsBuilder(htmlMessageUtils, threatItemBuilder, dateFormatWrapper)
+        builder = ThreatDetailsListItemsBuilder(
+                htmlMessageUtils,
+                threatItemBuilder,
+                dateFormatWrapper,
+                resourceProvider
+        )
 
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any())).thenReturn(
             SpannedString("")
@@ -577,13 +586,16 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     private fun buildThreatDetailsListItems(
         model: ThreatModel,
+        scanStateHasValidCredentials: Boolean = true,
         onFixThreatButtonClicked: () -> Unit = mock(),
         onGetFreeEstimateButtonClicked: () -> Unit = mock(),
         onIgnoreThreatButtonClicked: () -> Unit = mock()
     ) = builder.buildThreatDetailsListItems(
         threatModel = model,
+        scanStateHasValidCredentials = scanStateHasValidCredentials,
         onFixThreatButtonClicked = onFixThreatButtonClicked,
         onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
-        onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+        onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked,
+        onEnterServerCredsMessageClicked = mock()
     )
 }

@@ -13,6 +13,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -37,9 +38,9 @@ import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
-private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 1
-private const val ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION = 2
-private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 3
+private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 2
+private const val ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION = 3
+private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 4
 private const val TEST_SITE_NAME = "test site name"
 
 @InternalCoroutinesApi
@@ -53,6 +54,8 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var scanTracker: ScanTracker
+    @Mock private lateinit var scanStore: ScanStore
+
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
     private val fakeUiStringText = UiStringText("")
@@ -67,6 +70,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             ignoreThreatUseCase,
             fixThreatsUseCase,
             selectedSiteRepository,
+            scanStore,
             builder,
             htmlMessageUtils,
             resourceProvider,
@@ -76,7 +80,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), any())).thenReturn(mock())
         whenever(getThreatModelUseCase.get(anyLong())).thenReturn(fakeThreatModel)
-        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenAnswer {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
                 it.getArgument(ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION),
                 it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION)
@@ -85,6 +89,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         whenever(builder.buildFixableThreatDescription(any())).thenAnswer {
             DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
         }
+        whenever(scanStore.hasValidCredentials(site)).thenReturn(true)
     }
 
     @Test
@@ -134,7 +139,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when get free estimate button is clicked, then ShowGetFreeEstimate event is triggered`() = test {
-        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenAnswer {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
                     it.getArgument(ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION)
             )
