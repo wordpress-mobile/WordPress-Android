@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UN
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
 
@@ -31,26 +33,38 @@ import javax.inject.Inject
 class ThreatDetailsListItemsBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val threatItemBuilder: ThreatItemBuilder,
-    private val dateFormatWrapper: DateFormatWrapper
+    private val dateFormatWrapper: DateFormatWrapper,
+    private val resourceProvider: ResourceProvider
 ) {
     fun buildThreatDetailsListItems(
         threatModel: ThreatModel,
+        scanStateHasValidCredentials: Boolean,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
-        onIgnoreThreatButtonClicked: () -> Unit
-    ) = mutableListOf<JetpackListItemState>().apply {
+        onIgnoreThreatButtonClicked: () -> Unit,
+        onEnterServerCredsMessageClicked: () -> Unit
+    ): List<JetpackListItemState> = mutableListOf<JetpackListItemState>().apply {
         addAll(buildBasicThreatDetailsListItems(threatModel))
         addAll(buildTechnicalDetailsListItems(threatModel))
         addAll(buildFixDetailsListItems(threatModel))
         addAll(
-            buildActionButtons(
-                threatModel,
-                onFixThreatButtonClicked,
-                onGetFreeEstimateButtonClicked,
-                onIgnoreThreatButtonClicked
-            )
+                buildActionButtons(
+                        threatModel,
+                        scanStateHasValidCredentials,
+                        onFixThreatButtonClicked,
+                        onGetFreeEstimateButtonClicked,
+                        onIgnoreThreatButtonClicked
+                )
         )
+        if (shouldShowEnterServerCredsMessage(scanStateHasValidCredentials, threatModel)) {
+            add(buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked))
+        }
     }.toList()
+
+    private fun shouldShowEnterServerCredsMessage(hasValidCredentials: Boolean, threatModel: ThreatModel) =
+            !hasValidCredentials &&
+                    threatModel.baseThreatModel.fixable != null &&
+                    threatModel.baseThreatModel.status != FIXED
 
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
@@ -113,6 +127,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
     private fun buildActionButtons(
         threatModel: ThreatModel,
+        hasValidCredentials: Boolean,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
         onIgnoreThreatButtonClicked: () -> Unit
@@ -121,7 +136,12 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
             val isFixable = fixable != null
             if (status != ThreatStatus.FIXED) {
                 if (isFixable) {
-                    add(buildFixThreatButtonAction(onFixThreatButtonClicked))
+                    add(
+                            buildFixThreatButtonAction(
+                                    onFixThreatButtonClicked = onFixThreatButtonClicked,
+                                    isEnabled = hasValidCredentials
+                            )
+                    )
                 } else {
                     add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
                 }
@@ -242,10 +262,14 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         )
     )
 
-    private fun buildFixThreatButtonAction(onFixThreatButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threat_fix),
-        onClick = onFixThreatButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_fix)
+    private fun buildFixThreatButtonAction(
+        onFixThreatButtonClicked: () -> Unit,
+        isEnabled: Boolean = true
+    ) = ActionButtonState(
+            text = UiStringRes(R.string.threat_fix),
+            onClick = onFixThreatButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_fix),
+            isEnabled = isEnabled
     )
 
     private fun buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked: () -> Unit) = ActionButtonState(
@@ -260,4 +284,21 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         contentDescription = UiStringRes(R.string.threat_ignore),
         isSecondary = true
     )
+
+    private fun buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked: () -> Unit): DescriptionState {
+        val clickableText = resourceProvider.getString(R.string.threat_fix_enter_server_creds_message)
+
+        val clickableTextsInfo = listOf(
+                ClickableTextInfo(
+                        startIndex = 0,
+                        endIndex = clickableText.length,
+                        onClick = onEnterServerCredsMessageClicked
+                )
+        )
+
+        return DescriptionState(
+                text = UiStringRes(R.string.threat_fix_enter_server_creds_message),
+                clickableTextsInfo = clickableTextsInfo
+        )
+    }
 }

@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -36,6 +39,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private val ignoreThreatUseCase: IgnoreThreatUseCase,
     private val fixThreatsUseCase: FixThreatsUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val scanStore: ScanStore,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
@@ -66,7 +70,8 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun getData(threatId: Long) {
         viewModelScope.launch {
             threatModel = requireNotNull(getThreatModelUseCase.get(threatId))
-            updateUiState(buildContentUiState(threatModel))
+            val scanStateHasValidCredentials = scanStore.hasValidCredentials(site)
+            updateUiState(buildContentUiState(threatModel, scanStateHasValidCredentials))
         }
     }
 
@@ -150,6 +155,10 @@ class ThreatDetailsViewModel @Inject constructor(
         updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
     }
 
+    private fun onEnterServerCredsMessageClicked() {
+        updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
+    }
+
     private fun updateThreatActionButtons(isEnabled: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
@@ -175,12 +184,14 @@ class ThreatDetailsViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(model: ThreatModel) = Content(
+    private fun buildContentUiState(model: ThreatModel, scanStateHasValidCredentials: Boolean) = Content(
         builder.buildThreatDetailsListItems(
             model,
+            scanStateHasValidCredentials,
             this@ThreatDetailsViewModel::onFixThreatButtonClicked,
             this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
+            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
+            this@ThreatDetailsViewModel::onEnterServerCredsMessageClicked
         )
     )
 
