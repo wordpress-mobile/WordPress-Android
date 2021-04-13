@@ -54,6 +54,7 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
@@ -282,8 +283,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
-            case FULL:
             case JETPACK_LOGIN_ONLY:
+                if (!mSiteStore.hasSite()) {
+                    handleNoJetpackSites();
+                } else {
+                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
+                break;
+            case FULL:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
                     ActivityLauncher.showPostSignupInterstitial(this);
@@ -923,5 +932,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         LoginSiteCheckErrorFragment frag =
                 LoginSiteCheckErrorFragment.Companion.newInstance(siteAddressClean, errorMessage);
         slideInFragment(frag, true, LoginSiteCheckErrorFragment.TAG);
+    }
+
+    public void handleNoJetpackSites() {
+        // hide keyboard if it you can
+        org.wordpress.android.util.ActivityUtils.hideKeyboard(this);
+
+        String errorMessage = getString(R.string.login_no_jetpack_sites);
+
+        LoginNoSitesErrorFragment frag =
+                LoginNoSitesErrorFragment.Companion.newInstance(errorMessage);
+        slideInFragment(frag, false, LoginNoSitesErrorFragment.TAG);
     }
 }
