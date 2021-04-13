@@ -143,9 +143,13 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
             switch (getLoginMode()) {
                 case FULL:
-                case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = true;
+                    loginFromPrologue();
+                    break;
+                case JETPACK_LOGIN_ONLY:
+                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
+                    mIsSignupFromLoginEnabled = false;
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
@@ -206,7 +210,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
         outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
