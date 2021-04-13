@@ -2688,6 +2688,7 @@
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_not_a_jetpack_site">The website %1$s is not a Jetpack site.</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
