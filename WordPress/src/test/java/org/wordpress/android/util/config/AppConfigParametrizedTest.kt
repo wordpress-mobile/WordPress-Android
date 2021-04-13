@@ -12,10 +12,7 @@ import org.junit.runners.Parameterized
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState
-import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
-import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
-import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
-import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.*
 import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(Parameterized::class)
@@ -65,7 +62,7 @@ class AppConfigParametrizedTest(
         whenever(featureConfig.buildConfigValue).thenReturn(params.buildConfigValue)
         whenever(featureConfig.remoteField).thenReturn(params.remoteField)
         whenever(remoteConfig.isEnabled(REMOTE_FIELD)).thenReturn(params.remoteConfigValue)
-        whenever(remoteConfig.isInitialized(REMOTE_FIELD)).thenReturn(params.isInitialized)
+        whenever(remoteConfig.getFeatureState(REMOTE_FIELD)).thenReturn(params.remoteFeatureState)
     }
 
     companion object {
@@ -112,40 +109,40 @@ class AppConfigParametrizedTest(
                                 result = BuildConfigValue(true)
                         )
                 ),
-                // Returns default value == true from remote field when not initialized
+                // Returns remote value == true and source STATIC from remote field
                 arrayOf(
                         Params(
-                                isInitialized = false,
+                                remoteFeatureState = StaticValue(true),
                                 remoteField = REMOTE_FIELD,
                                 remoteConfigValue = true,
-                                result = DefaultValue(true)
+                                result = StaticValue(true)
                         )
                 ),
-                // Returns default value == false from remote field when not initialized
+                // Returns remote value == false and source STATIC from remote field
                 arrayOf(
                         Params(
-                                isInitialized = false,
+                                remoteFeatureState = StaticValue(false),
                                 remoteField = REMOTE_FIELD,
                                 remoteConfigValue = false,
-                                result = DefaultValue(false)
+                                result = StaticValue(false)
                         )
                 ),
-                // Returns remote value == true from remote field when initialized
+                // Returns remote value == true from remote field and source REMOTE
                 arrayOf(
                         Params(
-                                isInitialized = true,
+                                remoteFeatureState = RemoteValue(true),
                                 remoteField = REMOTE_FIELD,
                                 remoteConfigValue = true,
                                 result = RemoteValue(true)
                         )
                 ),
-                // Returns remote value == false from remote field when initialized
+                // Returns remote value == true from remote field and source REMOTE
                 arrayOf(
                         Params(
-                                isInitialized = true,
+                                remoteFeatureState = DefaultValue(true),
                                 remoteField = REMOTE_FIELD,
-                                remoteConfigValue = false,
-                                result = RemoteValue(false)
+                                remoteConfigValue = true,
+                                result = DefaultValue(true)
                         )
                 )
         )
@@ -157,7 +154,7 @@ class AppConfigParametrizedTest(
             val isManuallyEnabled: Boolean = false,
             val remoteField: String? = null,
             val buildConfigValue: Boolean = false,
-            val isInitialized: Boolean = false,
+            val remoteFeatureState: FeatureState? = null,
             val remoteConfigValue: Boolean = false,
             val result: FeatureState
         )

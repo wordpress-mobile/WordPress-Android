@@ -175,14 +175,6 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
-    fun setFlagFetched(featureKey: String, flagFetched: Boolean) {
-        AppPrefs.setFlagFetchedSuccessfully(featureKey, flagFetched)
-    }
-
-    fun isFlagFetched(featureKey: String): Boolean {
-        return AppPrefs.isFlagFetchedSuccessfully(featureKey)
-    }
-
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
             AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 

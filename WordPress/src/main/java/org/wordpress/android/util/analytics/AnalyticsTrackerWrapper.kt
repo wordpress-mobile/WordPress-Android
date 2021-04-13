@@ -9,6 +9,7 @@ import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
 import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
+import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
 import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
@@ -49,8 +50,9 @@ class AnalyticsTrackerWrapper
         return when (this) {
             is ManuallyOverriden -> "manually_overriden"
             is BuildConfigValue -> "build_config_value"
-            is DefaultValue -> "default_value"
-            is RemoteValue -> "remote_value"
+            is RemoteValue -> "remote_source_value"
+            is DefaultValue -> "default_source_value"
+            is StaticValue -> "static_source_value"
         }
     }
 

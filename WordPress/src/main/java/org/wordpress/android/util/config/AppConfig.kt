@@ -4,9 +4,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_VALUE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
-import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
-import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
 import org.wordpress.android.util.config.ExperimentConfig.Variant
 import org.wordpress.android.util.config.manual.ManualFeatureConfig
 import javax.inject.Inject
@@ -78,11 +76,8 @@ class AppConfig
             feature.buildConfigValue -> {
                 BuildConfigValue(feature.buildConfigValue)
             }
-            !remoteConfig.isInitialized(feature.remoteField) -> {
-                DefaultValue(remoteConfig.isEnabled(feature.remoteField))
-            }
             else -> {
-                RemoteValue(remoteConfig.isEnabled(feature.remoteField))
+                remoteConfig.getFeatureState(feature.remoteField)
             }
         }
     }
@@ -107,7 +102,8 @@ class AppConfig
     sealed class FeatureState(open val isEnabled: Boolean) {
         data class ManuallyOverriden(override val isEnabled: Boolean) : FeatureState(isEnabled)
         data class BuildConfigValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
-        data class DefaultValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
         data class RemoteValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
+        data class StaticValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
+        data class DefaultValue(override val isEnabled: Boolean) : FeatureState(isEnabled)
     }
 }
