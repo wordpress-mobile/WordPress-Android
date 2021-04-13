@@ -9,6 +9,7 @@ import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -54,6 +55,12 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         val binding = LoginSignupScreenBinding.bind(view)
 
         with(binding.bottomButtonsContainer) {
+            if (BuildConfig.IS_JETPACK_APP) {
+                continueWithWpcomButton.setText(R.string.continue_with_wpcom_no_signup)
+            } else {
+                continueWithWpcomButton.setText(R.string.continue_with_wpcom)
+            }
+
             continueWithWpcomButton.setOnClickListener {
                 unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
                 loginPrologueListener.showEmailLoginScreen()
