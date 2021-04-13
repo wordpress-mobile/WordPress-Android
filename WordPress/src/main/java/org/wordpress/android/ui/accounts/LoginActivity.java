@@ -56,6 +56,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -82,6 +83,8 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+import kotlin.text.Regex;
+import kotlin.text.RegexOption;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -913,6 +916,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        // Not used in WordPress app
+        Regex protocolRegex = new Regex("^(http[s]?://)", RegexOption.IGNORE_CASE);
+        String siteAddressClean = siteInfo.url.replaceFirst(protocolRegex.toString(), "");
+        String errorMessage = getString(R.string.login_not_a_jetpack_site, siteAddressClean);
+
+        LoginSiteCheckErrorFragment frag =
+                LoginSiteCheckErrorFragment.Companion.newInstance(siteAddressClean, errorMessage);
+        slideInFragment(frag, true, LoginSiteCheckErrorFragment.TAG);
     }
 }
