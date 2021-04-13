@@ -1,0 +1,2 @@
+17.0:
+We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.

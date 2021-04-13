@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-09 14:04:53+0000
+Translation-Revision-Date: 2021-03-24 14:12:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
@@ -179,6 +179,7 @@ Language: es_MX
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
     <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
+    <string name="gutenberg_native_page_link">Enlace a la página</string>
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
@@ -636,6 +637,14 @@ Language: es_MX
     <string name="reader_empty_saved_posts_content_description">Toca el botón \"Añadir a las entradas guardadas\" para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">\"La lista se ha cargado con %1$d elementos.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notificaciones</string>
+    <string name="main_switch_default_title_off">Desactivado</string>
+    <string name="main_switch_default_title_on">Activado</string>
+    <string name="notifications_tab_dialog_main_off_message">Al desactivar los avisos para este sitio, se desactivarán los avisos mostrados en la pestaña de avisos de este sitio. Puedes ajustar qué tipo de aviso ves después de activar los avisos para este sitio.</string>
+    <string name="notifications_tab_dialog_main_hint_off">Activar los avisos mostrados en la pestaña de avisos de este sitio</string>
+    <string name="notifications_tab_dialog_main_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
+    <string name="notifications_tab_dialog_main_status_off">Avisos para este sitio</string>
+    <string name="notifications_tab_dialog_main_status_on">Avisos para este sitio</string>
+    <string name="notifications_tab_dialog_main_off_title">Para ver los avisos en la pestaña de avisos de este sitio, activa los avisos para este sitio.</string>
     <string name="pick_media">Añadir una imagen o un video</string>
     <string name="error_post_not_published_retrying_private">No hemos podido publicar esta entrada privada, pero lo intentaremos de nuevo más tarde.</string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
@@ -1549,6 +1558,7 @@ Language: es_MX
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">¿Estás seguro de querer desconectar Jetpack del sitio?</string>
     <string name="jetpack_disconnect_pref_title">\"Desconecta de WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Puedes marcar una dirección IP (o series de direcciones) como \"Siempre permitida\", evitando que sea bloqueada por Jetpack. Se aceptan IPv4 y IPv6. Para especificar un rango, introduce un valor inferior y un valor superior separados por un guión. Ejemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Requiere la identificación en dos pasos</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar cuentas usando el correo electrónico</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir el acceso con WordPress.com</string>
@@ -1593,7 +1603,13 @@ Language: es_MX
     <string name="notification_settings_category_other">Otros</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Todos mis sitios</string>
     <string name="notification_settings_category_your_sites">Tus sitios</string>
+    <string name="notification_settings_main_off_message">Desactivando los ajustes de avisos se desactivarán todos los avisos de esta aplicación, independientemente del tipo. Puedes ajustar qué tipo de aviso recibes después de activar los ajustes de avisos.</string>
+    <string name="notification_settings_main_off_title">Para recibir avisos en este dispositivo, activa los ajustes de avisos.</string>
+    <string name="notification_settings_main_hint_off">Activar los avisos</string>
+    <string name="notification_settings_main_hint_on">Desactivar los avisos</string>
+    <string name="notification_settings_main_status_off">Desactivado</string>
     <string name="max_video_resolution">Tamaño máximo de video</string>
+    <string name="notification_settings_main_status_on">Activado</string>
     <string name="max_thumbnail_px_size">Tamaño máximo de imagen</string>
     <string name="error_upload_post_media_param">Hubo un error al subir los medios a esta entrada: %s.</string>
     <string name="error_upload_post_param">Hubo un error al subir esta entrada: %s.</string>
@@ -2042,6 +2058,7 @@ Language: es_MX
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>
     <string name="site_settings_paging_dialog_header">Comentarios por página</string>
     <string name="site_settings_close_after_dialog_title">Cerrar los comentarios</string>
+    <string name="site_settings_denylist_description">Cuando un comentario contenga alguna de estas palabras en su contenido, nombre, URL, correo electrónico o IP, será marcado como spam. Puedes introducir palabras parciales, así \"press\" coincidirá con \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Cuando un comentario contenga alguna de las estas palabras en su contenido, nombre, URL, correo electrónico o IP, será puesto en la cola para moderar. Puedes introducir palabras parciales, así \"press\" coincidirá como \"Wordpress\"</string>
     <string name="site_settings_list_editor_input_hint">Introduce una palabra o frase</string>
     <string name="site_settings_list_editor_no_items_text">Sin elementos</string>
@@ -2056,8 +2073,10 @@ Language: es_MX
     <string name="site_settings_rp_show_header_title">Mostrar cabecera</string>
     <string name="site_settings_rp_switch_summary">Las entradas relacionadas muestran contenido relevante de tu sitio debajo de las entradas.</string>
     <string name="site_settings_rp_switch_title">Mostrar entradas relacionadas</string>
+    <string name="site_settings_denylist_hint">Los comentarios que coincidan con un filtro son marcados como spam</string>
     <string name="site_settings_moderation_hold_hint">Los comentarios que coinciden con un filtro, son puestos en la cola para moderar</string>
     <string name="site_settings_multiple_links_hint">Ignorar límite de enlaces de usuarios conocidos</string>
+    <string name="site_settings_allowlist_hint">El autor del comentario debe tener un comentario aprobado previamente</string>
     <string name="site_settings_user_account_required_hint">Los usuarios deben estar registrados e iniciar sesión para comentar</string>
     <string name="site_settings_identity_required_hint">El autor de un comentario debe rellenar el nombre y correo eléctronico</string>
     <string name="site_settings_paging_hint">Mostrar los comentarios en pedazos de un tamaño especificado</string>
@@ -2080,6 +2099,8 @@ Language: es_MX
     <string name="site_settings_address_hint">El cambio de dirección no está soportado en este momento</string>
     <string name="site_settings_tagline_hint">Una descripción corta o frase ingeniosa que describa tu blog</string>
     <string name="site_settings_title_hint">En pocas palabras, explica sobre que es este sitio</string>
+    <string name="site_settings_allowlist_known_summary">Comentarios de usuarios conocidos</string>
+    <string name="site_settings_allowlist_all_summary">Comentarios de todos los usuarios</string>
     <string name="site_settings_threading_summary">%d niveles</string>
     <string name="site_settings_privacy_private_summary">Privado</string>
     <string name="site_settings_privacy_hidden_summary">Oculto</string>
@@ -2087,6 +2108,7 @@ Language: es_MX
     <string name="site_settings_delete_site_title">Borrar el sitio</string>
     <string name="site_settings_moderation_hold_title">Mantener para moderación</string>
     <string name="site_settings_multiple_links_title">Enlaces en comentarios</string>
+    <string name="site_settings_allowlist_title">Aprobar automáticamente</string>
     <string name="site_settings_paging_title">Paginación</string>
     <string name="site_settings_threading_title">Comentarios anidados</string>
     <string name="site_settings_sort_by_title">Ordenar por</string>

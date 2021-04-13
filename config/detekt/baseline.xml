@@ -9,7 +9,6 @@
     <ID>ComplexCondition:MinifiedWidgetUpdater.kt$MinifiedWidgetUpdater$networkAvailable &amp;&amp; hasAccessToken &amp;&amp; siteModel != null &amp;&amp; dataType != null</ID>
     <ID>ComplexCondition:NullCheckExtensions.kt$value1 != null &amp;&amp; value2 != null &amp;&amp; value3 != null &amp;&amp; value4 != null</ID>
     <ID>ComplexCondition:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$activity != null &amp;&amp; requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &amp;&amp; grantResults.isNotEmpty() &amp;&amp; grantResults[0] == PackageManager.PERMISSION_GRANTED</ID>
-    <ID>ComplexCondition:ScanAndBackupSource.kt$ScanAndBackupSource$site != null &amp;&amp; site.id == siteId &amp;&amp; (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled())</ID>
     <ID>ComplexCondition:SiteListItemBuilder.kt$SiteListItemBuilder$!TextUtils.isEmpty(planShortName) &amp;&amp; site.hasCapabilityManageOptions &amp;&amp; !site.isWpForTeamsSite &amp;&amp; (site.isWPCom || site.isAutomatedTransfer)</ID>
     <ID>ComplexCondition:TodayStatsUseCase.kt$TodayStatsUseCase$!hasViews &amp;&amp; !hasVisitors &amp;&amp; !hasLikes &amp;&amp; !hasComments</ID>
     <ID>ComplexMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
@@ -94,7 +93,6 @@
     <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>LongMethod:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>LongMethod:JetpackRemoteInstallFragment.kt$JetpackRemoteInstallFragment$override fun onActivityCreated(savedInstanceState: Bundle?)</ID>
-    <ID>LongMethod:MapViewHolder.kt$MapViewHolder$@SuppressLint("SetJavaScriptEnabled") fun bind(item: MapItem)</ID>
     <ID>LongMethod:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
     <ID>LongMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier&gt;?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
@@ -309,8 +307,6 @@
     <ID>MaxLineLength:WPWebViewUsageCategory.kt$WPWebViewUsageCategory$*</ID>
     <ID>MaxLineLength:XPostsCapabilityChecker.kt$XPostsCapabilityChecker$// suggestions, but because the response will almost always be empty, it's not an expensive call.</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.activitylog.list.EventItemViewHolder.kt:33</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.activitylog.list.EventItemViewHolder.kt:35</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:252</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:254</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:84</ID>
@@ -386,7 +382,6 @@
     <ID>ReturnCount:UploadActionUseCase.kt$UploadActionUseCase$fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun endsWithDelimiter(string: String): Boolean</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeDelimiterFromItemIfPresent(item: String?): String?</ID>
-    <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeLastEnteredItem(): Boolean</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*postsToRefresh.map { LocalId(it.id) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListViewModel.kt$PageListViewModel$(*event.mediaList.map { it.mediaId }.toLongArray())</ID>
@@ -426,7 +421,6 @@
     <ID>TooGenericExceptionThrown:RestoreViewModel.kt$RestoreViewModel$throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")</ID>
     <ID>TooGenericExceptionThrown:StatsDateFormatter.kt$StatsDateFormatter$throw RuntimeException("Unexpected date format")</ID>
     <ID>TooGenericExceptionThrown:ThreatDetailsFragment.kt$ThreatDetailsFragment$throw RuntimeException("ThreatDetailsFragment - missing siteModel extras.")</ID>
-    <ID>TooManyFunctions:ActivityLogListActivity.kt$ActivityLogListActivity : LocaleAwareActivityBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterface</ID>
     <ID>TooManyFunctions:ActivityLogListFragment.kt$ActivityLogListFragment : Fragment</ID>
     <ID>TooManyFunctions:ActivityLogTypeFilterFragment.kt$ActivityLogTypeFilterFragment : DialogFragment</ID>
     <ID>TooManyFunctions:ActivityLogViewModel.kt$ActivityLogViewModel : ViewModel</ID>

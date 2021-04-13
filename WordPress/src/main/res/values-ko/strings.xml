@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-17 09:54:07+0000
+Translation-Revision-Date: 2021-03-31 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">태그 링크</string>
+    <string name="gutenberg_native_table_of_contents">목차</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">헤딩요소 목록으로 글을 요약하세요. 여기에서 HTML 앵커를 헤딩요소 블록에 추가하여 링크를 설정하세요.</string>
+    <string name="gutenberg_native_search_settings">설정 검색</string>
+    <string name="gutenberg_native_post_link">글 링크</string>
+    <string name="gutenberg_native_document_outline">문서 개요</string>
+    <string name="gutenberg_native_category_link">카테고리 링크</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">URL 링크입니다.</string>
+    <string name="gutenberg_native_a_link_to_a_tag">태그 링크입니다.</string>
+    <string name="gutenberg_native_a_link_to_a_post">글 링크입니다.</string>
+    <string name="gutenberg_native_a_link_to_a_page">페이지 링크입니다.</string>
+    <string name="gutenberg_native_a_link_to_a_category">카테고리 링크입니다.</string>
+    <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
+    <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
     <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
     <string name="reader_title_interests">토픽 따르기</string>
     <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
@@ -393,6 +408,7 @@ Language: ko_KR
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="gutenberg_native_search_or_type_url">검색하거나 URL 입력하기</string>
     <string name="gutenberg_native_select_item">항목 선택하기</string>
+    <string name="gutenberg_native_page_link">페이지 링크</string>
     <string name="gutenberg_native_add_this_telephone_link">이 전화 링크 추가하기</string>
     <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
     <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
@@ -1778,6 +1794,7 @@ Language: ko_KR
     <string name="jetpack_disconnect_confirm">연결 해제</string>
     <string name="jetpack_disconnect_confirmation_message">사이트에서 젯팩 연결을 해제하시겠어요?</string>
     <string name="jetpack_disconnect_pref_title">\"워드프레스닷컴과 연결 해제\"</string>
+    <string name="site_settings_jetpack_allowlist_description">젯팩에서 차단하지 않도록 IP 주소(또는 여러 주소)를 \"항상 허용됨\"으로 표시할 수 있습니다. IPv4 및 IPv6를 사용할 수 있습니다. 범위를 지정하려면 낮은 값과 높은 값을 대시로 구분하여 입력하세요. 예: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">2단계 인증 필요</string>
     <string name="jetpack_match_wpcom_via_email_title">이메일을 사용하여 계정 일치</string>
     <string name="jetpack_allow_wpcom_sign_in_title">워드프레스닷컴 로그인 허용</string>

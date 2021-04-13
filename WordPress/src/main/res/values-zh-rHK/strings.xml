@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-16 09:54:10+0000
+Translation-Revision-Date: 2021-03-31 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_tag_link">標籤連結</string>
+    <string name="gutenberg_native_table_of_contents">目錄</string>
+    <string name="gutenberg_native_summary">摘要</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">列出標題以呈現文章摘要。 將 HTML 錨點新增至標題區塊，藉此連結相應文章內容。</string>
+    <string name="gutenberg_native_search_settings">搜尋設定</string>
+    <string name="gutenberg_native_post_link">文章連結</string>
+    <string name="gutenberg_native_document_outline">文件大綱</string>
+    <string name="gutenberg_native_category_link">類別連結</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_a_link_to_a_url">URL 連結。</string>
+    <string name="gutenberg_native_a_link_to_a_tag">標籤連結。</string>
+    <string name="gutenberg_native_a_link_to_a_post">文章連結。</string>
+    <string name="gutenberg_native_a_link_to_a_page">網頁連結。</string>
+    <string name="gutenberg_native_a_link_to_a_category">類別連結。</string>
+    <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
+    <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
     <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
@@ -400,6 +416,7 @@ Language: zh_TW
     <string name="media_uploading_default">正在上傳媒體</string>
     <string name="gutenberg_native_select_item">選取項目</string>
     <string name="gutenberg_native_search_or_type_url">搜尋或輸入 URL</string>
+    <string name="gutenberg_native_page_link">網頁連結</string>
     <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
     <string name="gutenberg_native_add_this_link">新增此連結</string>
     <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
@@ -861,6 +878,7 @@ Language: zh_TW
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
+    <string name="notifications_tab_dialog_main_off_message">若關閉此網站的「通知」功能，將會停用網站通知分頁的通知顯示。 你可以開啟網站的「通知」功能，進一步調整想查看的通知類型。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -1769,6 +1787,7 @@ Language: zh_TW
     <string name="jetpack_disconnect_confirm">中斷連線</string>
     <string name="jetpack_disconnect_confirmation_message">確定要中斷網站與 Jetpack 的連線？</string>
     <string name="jetpack_disconnect_pref_title">「中斷與 WordPress.com 的連線」</string>
+    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要雙步驟驗證</string>
     <string name="jetpack_match_wpcom_via_email_title">使用電子郵件地址比對帳號</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允許登入 WordPress.com</string>
@@ -1812,6 +1831,8 @@ Language: zh_TW
     <string name="notification_settings_category_other">其他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">我所有的網站</string>
     <string name="notification_settings_category_your_sites">你的網站</string>
+    <string name="notification_settings_main_off_message">關閉「通知設定」將停用此應用程式的所有通知，無論類型為何。 開啟「通知設定」之後，你可以調整接收的通知類型。</string>
+    <string name="notification_settings_main_hint_off">啟用通知</string>
     <string name="max_video_resolution">影片大小上限</string>
     <string name="max_thumbnail_px_size">圖片大小上限</string>
     <string name="error_upload_post_media_param">於此文章中上傳媒體時發生錯誤：%s.</string>
@@ -2256,6 +2277,7 @@ Language: zh_TW
     <string name="site_settings_paging_dialog_description">將留言串分為數頁。</string>
     <string name="site_settings_paging_dialog_header">每頁留言數</string>
     <string name="site_settings_close_after_dialog_title">關閉留言功能</string>
+    <string name="site_settings_denylist_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被標記為垃圾留言。 你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_hold_for_moderation_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被送進審核清單。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_list_editor_input_hint">輸入字詞或片語</string>
     <string name="site_settings_list_editor_no_items_text">無項目</string>
@@ -2272,6 +2294,7 @@ Language: zh_TW
     <string name="site_settings_rp_switch_title">顯示相關文章</string>
     <string name="site_settings_moderation_hold_hint">與篩選條件相符的留言將被送進審核清單</string>
     <string name="site_settings_multiple_links_hint">忽略已知使用者的連結限制</string>
+    <string name="site_settings_allowlist_hint">須有留言經核准的記錄，才可發表留言</string>
     <string name="site_settings_user_account_required_hint">已註冊且登入的使用者才可以發表留言</string>
     <string name="site_settings_identity_required_hint">輸入名稱和電子郵件後才可以發表留言</string>
     <string name="site_settings_paging_hint">按照指定的區塊大小顯示留言</string>
