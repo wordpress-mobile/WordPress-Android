@@ -9,6 +9,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -38,7 +39,7 @@ private const val TEST_THREAT_ITEM_HEADER = "Threat found"
 private const val TEST_THREAT_ITEM_SUB_HEADER = "Miscellaneous vulnerability"
 private const val TEST_FOUND_ON_DATE = "1 January, 2020"
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
-private const val TEST_SITE_ID = 1L
+private const val TEST_TEXT = "Test text"
 
 @InternalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
@@ -99,6 +100,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             .thenReturn(TEST_FOUND_ON_DATE)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
             .thenReturn(TEST_FIXED_ON_DATE)
+        whenever(resourceProvider.getString(anyInt())).thenReturn(TEST_TEXT)
     }
 
     /* BASIC DETAILS */
@@ -274,6 +276,79 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given current fixable threat with server creds, when items are built, then fix threat btn is enabled`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInCurrentStatus)
+
+        assertThat(items.filterIsInstance(ActionButtonState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled).isTrue
+    }
+
+    @Test
+    fun `given current fixable threat without server creds, when items are built, then fix threat btn is disabled`() {
+        val items = buildThreatDetailsListItems(
+                model = ThreatTestData.fixableThreatInCurrentStatus,
+                scanStateHasValidCredentials = false
+        )
+
+        assertThat(items.filterIsInstance(ActionButtonState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled).isFalse
+    }
+
+    @Test
+    fun `given current fixable threat with server creds, when items are built, then server creds msg doesn't exist`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInCurrentStatus)
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+    }
+
+    @Test
+    fun `given current fixable threat without server creds, when items are built, then server creds msg exists`() {
+        val items = buildThreatDetailsListItems(
+                model = ThreatTestData.fixableThreatInCurrentStatus,
+                scanStateHasValidCredentials = false
+        )
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNotNull
+    }
+
+    @Test
+    fun `given ignored fixable threat with server creds, when items are built, then server creds msg doesn't exist`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInIgnoredStatus)
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+    }
+
+    @Test
+    fun `given ignored fixable threat without server creds, when items are built, then server creds msg exists`() {
+        val items = buildThreatDetailsListItems(
+                model = ThreatTestData.fixableThreatInIgnoredStatus,
+                scanStateHasValidCredentials = false
+        )
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNotNull
+    }
+
+    @Test
+    fun `given fixed threat with server creds, when items are built, then server creds msg doesn't exist`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+    }
+
+    @Test
+    fun `given fixed threat without server creds, when items are built, then server creds msg doesn't exist`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+    }
+
+    @Test
     fun `given fixable threat in fixed status, when items are built, then fix header does not exists`() {
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
@@ -442,6 +517,14 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
         assertThat(buttonItems).doesNotContain(ignoreThreatButtonItem)
+    }
+
+    @Test
+    fun `given non fixable threat, when items are built, then server creds msg doesn't exist`() {
+        val items = buildThreatDetailsListItems(ThreatTestData.notFixableThreatInCurrentStatus)
+
+        assertThat(items.filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
     }
 
     /* FIXED THREAT */
