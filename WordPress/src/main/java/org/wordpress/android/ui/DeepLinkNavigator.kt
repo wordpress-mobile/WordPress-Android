@@ -17,7 +17,7 @@ class DeepLinkNavigator
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
-            ShowSignInFlow -> ActivityLauncher.showMainActivityAndSignUp(activity)
+            ShowSignInFlow -> ActivityLauncher.showSignInForResult(activity, true)
             OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
             is OpenEditorForSite -> ActivityLauncher.openEditorForSiteInNewStack(
                     activity,
