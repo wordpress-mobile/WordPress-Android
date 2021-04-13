@@ -55,7 +55,7 @@ class AnalyticsTrackerWrapper
         siteModel: SiteModel?,
         feature: FeatureConfig
     ) {
-        AnalyticsUtils.trackWithSiteDetails(stat, siteModel, feature.toParams())
+        AnalyticsUtils.trackWithSiteDetails(stat, siteModel, feature.toParams().toMutableMap<String, Any>())
     }
 
     private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())

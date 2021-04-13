@@ -1,6 +1,5 @@
 package org.wordpress.android.util.config
 
-import android.util.Log
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.store.AccountStore
 import javax.inject.Inject
@@ -20,7 +19,6 @@ class MySiteImprovementsFeatureConfig
     // Temporary solution until the Firebase bug gets fixed
     override fun isEnabled(): Boolean {
         val userId = accountStore.account.userId
-        Log.d("vojta", "User id: $userId")
         return if (userId != 0L) {
             userId % 2L == 0L
         } else {
