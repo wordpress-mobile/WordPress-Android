@@ -146,7 +146,8 @@ class UnifiedLoginTracker
         TWO_FACTOR_AUTHENTICATION("2fa"),
         SHOW_EMAIL_HINTS("show_email_hints"),
         PASSWORD_CHALLENGE("password_challenge"),
-        NOT_A_JETPACK_SITE("not_a_jetpack_site")
+        NOT_A_JETPACK_SITE("not_a_jetpack_site"),
+        NO_JETPACK_SITES("no_jetpack_sites")
     }
 
     enum class Click(val value: String) {
