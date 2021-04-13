@@ -23,20 +23,25 @@ class AnalyticsTrackerWrapper
     fun track(stat: Stat, feature: FeatureConfig) {
         AnalyticsTracker.track(
                 stat,
-                mapOf(
-                        feature.remoteField to feature.isEnabled(),
-                        "${feature.remoteField}_state" to feature.featureState().toName()
-                )
+                feature.toParams()
         )
     }
 
     fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
         AnalyticsTracker.track(
                 stat,
-                mapOf(
-                        remoteField to featureState.isEnabled,
-                        "${remoteField}_state" to featureState.toName()
-                )
+                buildFeatureConfigParams(remoteField, featureState)
+        )
+    }
+
+    private fun FeatureConfig.toParams(): Map<String, Any> {
+        return buildFeatureConfigParams(this.remoteField ?: this.javaClass.name, this.featureState())
+    }
+
+    private fun buildFeatureConfigParams(key: String, featureState: FeatureState): Map<String, Any> {
+        return mapOf(
+                key to featureState.isEnabled,
+                "${key}_state" to featureState.toName()
         )
     }
 
@@ -53,12 +58,18 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
     }
 
-    fun track(stat: Stat, properties: Map<String, *>) {
-        AnalyticsTracker.track(stat, properties)
+    @JvmOverloads
+    fun track(stat: Stat, properties: Map<String, *>, feature: FeatureConfig? = null) {
+        if (feature != null) {
+            AnalyticsTracker.track(stat, properties + feature.toParams())
+        } else {
+            AnalyticsTracker.track(stat, properties)
+        }
     }
 
-    fun track(stat: Stat, site: SiteModel) {
-        AnalyticsUtils.trackWithSiteDetails(stat, site)
+    @JvmOverloads
+    fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig? = null) {
+        AnalyticsUtils.trackWithSiteDetails(stat, site, feature?.toParams())
     }
 
     fun track(stat: Stat, siteId: Long) {

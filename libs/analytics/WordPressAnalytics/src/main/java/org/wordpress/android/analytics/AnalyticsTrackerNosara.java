@@ -1542,8 +1542,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
-            case FEATURE_FLAG_SET:
-                return "feature_flag_set";
+            case FEATURE_FLAG_VALUE:
+                return "feature_flag_value";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:

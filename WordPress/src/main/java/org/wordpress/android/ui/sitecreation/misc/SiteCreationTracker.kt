@@ -15,6 +15,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,7 +29,10 @@ private const val DESIGN_ERROR_CONTEXT = "design"
 private const val SITE_CREATION_LOCATION = "site_creation"
 
 @Singleton
-class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
+class SiteCreationTracker @Inject constructor(
+    val tracker: AnalyticsTrackerWrapper,
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
         SEGMENT_NAME("segment_name"),
@@ -119,9 +123,9 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
      */
     fun trackSiteCreated(template: String?) {
         if (template == null || designSelectionSkipped) {
-            tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mySiteImprovementsFeatureConfig)
         } else {
-            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf(TEMPLATE.key to template))
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf(TEMPLATE.key to template), mySiteImprovementsFeatureConfig)
         }
     }
 

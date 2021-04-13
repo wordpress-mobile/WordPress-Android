@@ -1,7 +1,7 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_SET
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_VALUE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
@@ -59,7 +59,7 @@ class AppConfig
         return buildFeatureState(feature).also { state ->
             feature.remoteField?.let {
                 analyticsTracker.track(
-                        FEATURE_FLAG_SET,
+                        FEATURE_FLAG_VALUE,
                         feature.remoteField,
                         state
                 )

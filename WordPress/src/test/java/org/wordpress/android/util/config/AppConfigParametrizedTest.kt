@@ -40,7 +40,7 @@ class AppConfigParametrizedTest(
         assertThat(appConfig.isEnabled(featureConfig)).isEqualTo(params.result.isEnabled)
 
         if (params.remoteField != null) {
-            verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, params.remoteField, params.result)
+            verify(analyticsTracker).track(Stat.FEATURE_FLAG_VALUE, params.remoteField, params.result)
         } else {
             verifyZeroInteractions(analyticsTracker)
         }
@@ -53,7 +53,7 @@ class AppConfigParametrizedTest(
         assertThat(appConfig.featureState(featureConfig)).isEqualTo(params.result)
 
         if (params.remoteField != null) {
-            verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, params.remoteField, params.result)
+            verify(analyticsTracker).track(Stat.FEATURE_FLAG_VALUE, params.remoteField, params.result)
         } else {
             verifyZeroInteractions(analyticsTracker)
         }
