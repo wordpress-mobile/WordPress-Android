@@ -409,7 +409,7 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane triggers a stable release build on CI
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane trigger_release_build [branch_to_build:<branch_name>]
+  # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
   #
   #####################################################################################
   lane :trigger_release_build do | options |
