@@ -128,23 +128,21 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         onGetFreeEstimateButtonClicked: () -> Unit,
         onIgnoreThreatButtonClicked: () -> Unit
     ) = mutableListOf<JetpackListItemState>().apply {
-        with(threatModel.baseThreatModel) {
-            val isFixable = fixable != null
-            if (status != ThreatStatus.FIXED) {
-                if (isFixable) {
-                    add(
-                            buildFixThreatButtonAction(
-                                    onFixThreatButtonClicked = onFixThreatButtonClicked,
-                                    isEnabled = hasValidCredentials
-                            )
-                    )
-                } else {
-                    add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
-                }
+        val isFixable = threatModel.baseThreatModel.fixable != null
+        if (threatModel.baseThreatModel.status != ThreatStatus.FIXED) {
+            if (isFixable) {
+                add(
+                        buildFixThreatButtonAction(
+                                onFixThreatButtonClicked = onFixThreatButtonClicked,
+                                isEnabled = hasValidCredentials
+                        )
+                )
+            } else {
+                add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
             }
-            if (status == ThreatStatus.CURRENT) {
-                add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
-            }
+        }
+        if (threatModel.baseThreatModel.status == ThreatStatus.CURRENT) {
+            add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
         }
     }
 
