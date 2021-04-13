@@ -1,7 +1,6 @@
 package org.wordpress.android.util
 
 import android.net.Uri
-import android.net.Uri.Builder
 
 /**
  * This class is necessary because standard Uri doesn't work in unit tests (it's always null)
