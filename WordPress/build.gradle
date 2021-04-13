@@ -356,10 +356,6 @@ dependencies {
     compileOnly project(path:':libs:WordPressAnnotations')
     kapt project(':libs:WordPressProcessors')
 
-    // Encrypted Logging
-    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
-    implementation "net.java.dev.jna:jna:4.5.1@aar"
-
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
