@@ -23,19 +23,21 @@
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="@dimen/avatar_sz_large"
-            android:layout_height="@dimen/avatar_sz_large"
+            android:layout_width="@dimen/user_profile_bottom_sheet_avatar_sz"
+            android:layout_height="@dimen/user_profile_bottom_sheet_avatar_sz"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_illustration_magician_hat_128" />
 
         <ImageView
             android:id="@+id/user_site_blavatar"
-            android:layout_width="@dimen/avatar_sz_medium_large"
-            android:layout_height="@dimen/avatar_sz_medium_large"
+            android:layout_width="@dimen/avatar_sz_medium"
+            android:layout_height="@dimen/avatar_sz_medium"
             android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:src="@drawable/img_illustration_magician_hat_128"/>
 
         <LinearLayout
             android:id="@+id/user_data"
@@ -56,11 +58,12 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:fontFamily="serif"
-                android:includeFontPadding="true"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@color/material_on_surface_emphasis_high_type"
-                android:textSize="@dimen/aztec_title_size"
+                android:textSize="@dimen/user_profile_bottom_sheet_user_name_text_size"
                 android:textStyle="bold"
                 tools:text="Pamela Nguyen" />
 
@@ -68,11 +71,10 @@
                 android:id="@+id/user_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:ellipsize="end"
-                android:includeFontPadding="true"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="@color/material_on_surface_emphasis_medium"
                 tools:text="\@pamelanguyen" />
 
@@ -97,7 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:includeFontPadding="true"
+                android:includeFontPadding="false"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="@color/material_on_surface_emphasis_high_type"
@@ -107,9 +110,8 @@
                 android:id="@+id/site_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:ellipsize="end"
-                android:includeFontPadding="true"
+                android:includeFontPadding="false"
                 android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="@color/material_on_surface_emphasis_medium"
@@ -124,9 +126,10 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:importantForAccessibility="no"
-            android:maxLines="3"
+            android:maxLines="5"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:lineSpacingMultiplier="1.2"
+            android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_avatar"
@@ -136,14 +139,14 @@
             android:id="@+id/site_section_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:includeFontPadding="true"
             android:text="@string/user_profile_site_section_header"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintBottom_toTopOf="@+id/user_site_blavatar"
             app:layout_constraintStart_toStartOf="parent"

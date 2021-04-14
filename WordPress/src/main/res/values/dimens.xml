@@ -650,7 +650,10 @@
         @dimen/design_snackbar_padding_vertical
     </dimen>
 
-    <!-- likes list -->
+    <!-- likes list and user profile bottom sheet -->
     <dimen name="reader_like_faces_padding">2dp</dimen>
     <dimen name="liker_faces_section_min_height">80dp</dimen>
+    <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
+    <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
+
 </resources>
