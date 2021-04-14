@@ -109,15 +109,18 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
                 val storyBlockEndIndex = content.indexOf(HEADING_END, storyBlockStartIndex)
-                try {
-                    val jsonString: String = content.substring(
-                            storyBlockStartIndex + HEADING_START.length,
-                            storyBlockEndIndex
-                    )
-                    content = listener.doWithMediaFilesJson(content, jsonString)
-                    storyBlockStartIndex += HEADING_START.length
-                } catch (exception: StringIndexOutOfBoundsException) {
-                    logException(exception, postModel, siteModel)
+                val mediaFilesStartIndex = storyBlockStartIndex + HEADING_START.length
+                if (mediaFilesStartIndex < storyBlockEndIndex) {
+                    try {
+                        val jsonString: String = content.substring(
+                                mediaFilesStartIndex,
+                                storyBlockEndIndex
+                        )
+                        content = listener.doWithMediaFilesJson(content, jsonString)
+                        storyBlockStartIndex += HEADING_START.length
+                    } catch (exception: StringIndexOutOfBoundsException) {
+                        logException(exception, postModel, siteModel)
+                    }
                 }
             }
         }
