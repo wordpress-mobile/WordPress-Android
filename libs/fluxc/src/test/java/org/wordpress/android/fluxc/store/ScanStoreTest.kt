@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.utils.BuildConfigWrapper
+import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 class ScanStoreTest {
@@ -172,12 +173,13 @@ class ScanStoreTest {
 
     @Test
     fun `get valid credentials status returns corresponding status from the db`() = test {
-        val scanStateModel = ScanStateModel(State.IDLE, hasValidCredentials = true)
+        val expectedHasValidCredentials = true
+        val scanStateModel = ScanStateModel(State.IDLE, hasValidCredentials = expectedHasValidCredentials)
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
 
         val hasValidCredentials = scanStore.hasValidCredentials(siteModel)
 
-        Assert.assertEquals(true, hasValidCredentials)
+        assertEquals(expectedHasValidCredentials, hasValidCredentials)
     }
 
     @Test
