@@ -1,12 +1,13 @@
 package org.wordpress.android.fluxc.persistence
 
+import android.app.Application
+import androidx.test.core.app.ApplicationProvider
 import com.yarolegovich.wellsql.WellSql
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -21,7 +22,7 @@ class ScanStateSqlUtilsTest {
 
     @Before
     fun setUp() {
-        val appContext = RuntimeEnvironment.application.applicationContext
+        val appContext = ApplicationProvider.getApplicationContext<Application>()
 
         val config = WellSqlConfig(appContext)
         WellSql.init(config)
