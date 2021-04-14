@@ -53,7 +53,6 @@ Language: hi_IN
     <string name="login_site_address">साइट का पता</string>
     <string name="login_continue">जारी रखें</string>
     <string name="next">अगला</string>
-    <string name="open_mail">मेल खोलें</string>
     <string name="turn_on">चालू करें</string>
     <string name="leave_off">छोड़ दें</string>
     <string name="post_title">शीर्षक</string>
@@ -198,7 +197,6 @@ Language: hi_IN
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
-    <string name="forgot_password">आपका पासवर्ड खो गया?</string>
     <string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
     <string name="email_invalid">मान्य ईमेल पता दर्ज करें</string>
     <string name="error_generic">एक त्रुटि हुई</string>

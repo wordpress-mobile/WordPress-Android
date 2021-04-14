@@ -65,7 +65,6 @@ Language: bg
     <string name="quick_start_dialog_need_help_title">Искате ли малко помощ, за да започнете?</string>
     <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
-    <string name="login_google_button_suffix">Вход с Google.</string>
     <string name="login_error_button">Затваряне</string>
     <string name="post_settings_remove_featured_image">Премахване картинката на публикацията</string>
     <string name="post_settings_choose_featured_image">Избор на картинка за публикацията</string>
@@ -118,7 +117,6 @@ Language: bg
     <string name="login_checking_site_address">Проверяване на адреса на сайта</string>
     <string name="login_site_address_more_help">Имате нужда от помощ?</string>
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
-    <string name="login_site_address_help">Трябва ви помощ, за да намерите адреса на сайта си?</string>
     <string name="login_site_address">Адрес на сайта</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
@@ -324,7 +322,6 @@ Language: bg
     <string name="invite">Покана</string>
     <string name="my_site_header_external">Външна</string>
     <string name="invite_people">Покана</string>
-    <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_title_related_post_detail">Свързана публикация</string>
@@ -346,7 +343,6 @@ Language: bg
     <string name="checking_email">Проверяване на имейл</string>
     <string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
     <string name="logging_in">Влизане</string>
-    <string name="enter_your_password_instead">Въведете паролата си</string>
     <string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
     <string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
     <string name="plan">План</string>
@@ -690,7 +686,6 @@ Language: bg
     <string name="reader_page_followed_blogs">Следени сайтове</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
-    <string name="forgot_password">Изгубена парола?</string>
     <string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
     <string name="mnu_comment_unspam">Не е спам</string>
     <string name="error_refresh_pages">Страниците не могат да бъдат обновени в момента</string>
