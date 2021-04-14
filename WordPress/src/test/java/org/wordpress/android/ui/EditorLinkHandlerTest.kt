@@ -35,9 +35,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `opens editor when site not found`() {
-        val siteUrl = "site123"
         val uri = buildUri(path1 = "post", path2 = siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf())
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
 
@@ -47,8 +45,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a site site when post missing in URL`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl)
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
 
@@ -58,8 +55,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a post when both site and post exist`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
@@ -70,8 +66,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a site site when post not found`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)

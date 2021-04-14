@@ -85,6 +85,7 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
@@ -400,6 +401,29 @@ public class ActivityLauncher {
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
         Intent statsIntent = StatsActivity.buildIntent(context, site);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(statsIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats from the deeplink because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent statsIntent = StatsActivity.buildIntent(context, site, statsTimeframe);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);

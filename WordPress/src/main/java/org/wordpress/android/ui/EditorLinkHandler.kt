@@ -41,14 +41,7 @@ class EditorLinkHandler
      * to the host.
      */
     private fun String.toSite(): SiteModel? {
-        val site = extractSiteModelFromTargetHost(this)
-        val host = deepLinkUriUtils.extractHostFromSite(site)
-        // Check if a site is available with given targetHost
-        return if (site != null && host != null && host == this) {
-            site
-        } else {
-            null
-        }
+        return deepLinkUriUtils.hostToSite(this)
     }
 
     /**

@@ -61,6 +61,11 @@ class StatsActivity : LocaleAwareActivity() {
             return buildIntent(context, site.id)
         }
 
+        @JvmStatic
+        fun buildIntent(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe): Intent {
+            return buildIntent(context, site.id, statsTimeframe)
+        }
+
         private fun buildIntent(
             context: Context,
             localSiteId: Int,

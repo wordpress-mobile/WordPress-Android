@@ -17,11 +17,12 @@ import javax.inject.Named
 
 class DeepLinkingIntentReceiverViewModel
 @Inject constructor(
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     private val editorLinkHandler: EditorLinkHandler,
+    private val statsLinkHandler: StatsLinkHandler,
     private val accountStore: AccountStore,
     private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val serverTrackingHandler: ServerTrackingHandler,
-    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
+    private val serverTrackingHandler: ServerTrackingHandler
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
@@ -40,6 +41,14 @@ class DeepLinkingIntentReceiverViewModel
      * URIs like `wordpress.com/post/...` with optional site name and post ID path parameters should be opened in editor
      */
     fun shouldOpenEditor(uri: UriWrapper) = shouldShow(uri, POST_PATH)
+
+    /**
+     * URIs like `https://wordpress.com/stats/day/$site` should redirect to the stats screen
+     */
+    fun shouldShowStats(uri: UriWrapper): Boolean {
+        // Match: https://wordpress.com/stats/
+        return shouldShow(uri, STATS_PATH)
+    }
 
     /**
      * Recursively handles URIs that have a redirect_to query parameter set to:
@@ -68,6 +77,7 @@ class DeepLinkingIntentReceiverViewModel
         return if (redirectUri != null && redirectUri.host == HOST_WORDPRESS_COM) {
             when (redirectUri.pathSegments.firstOrNull()) {
                 POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
+                STATS_PATH -> statsLinkHandler.buildOpenStatsNavigateAction(redirectUri)
                 START_PATH -> if (accountStore.hasAccessToken()) {
                     StartCreateSiteFlow
                 } else {
@@ -98,6 +108,16 @@ class DeepLinkingIntentReceiverViewModel
         _navigateAction.value = Event(editorLinkHandler.buildOpenEditorNavigateAction(uri))
     }
 
+
+    /**
+     * Opens stats screen for provided uri. If uri contains a stats period and site URL
+     * (e.g. https://wordpress.com/stats/day/example.com/)
+     * If the siteURL is not found for the current user, the link opens the stats screen for the current site
+     */
+    fun handleShowStats(uri: UriWrapper) {
+        _navigateAction.value = Event(statsLinkHandler.buildOpenStatsNavigateAction(uri))
+    }
+
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
         return deepLinkUriUtils.getUriFromQueryParameter(uri, REDIRECT_TO_PARAM)
     }
@@ -118,6 +138,7 @@ class DeepLinkingIntentReceiverViewModel
         private const val REGULAR_TRACKING_PATH = "bar"
         private const val REDIRECT_TO_PARAM = "redirect_to"
         private const val POST_PATH = "post"
+        private const val STATS_PATH = "stats"
         private const val START_PATH = "start"
         private const val WP_LOGIN = "wp-login.php"
     }

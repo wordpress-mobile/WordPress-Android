@@ -14,6 +14,7 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
+    @Mock lateinit var statsLinkHandler: StatsLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
@@ -23,11 +24,12 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
+                TEST_DISPATCHER,
                 editorLinkHandler,
+                statsLinkHandler,
                 accountStore,
                 deepLinkUriUtils,
-                serverTrackingHandler,
-                TEST_DISPATCHER
+                serverTrackingHandler
         )
     }
 
@@ -158,6 +160,15 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `should handle stats url`() {
+        val uri = buildUri("wordpress.com", "stats")
+
+        val shouldHandleUri = viewModel.shouldShowStats(uri)
+
+        assertThat(shouldHandleUri).isTrue()
+    }
+
+    @Test
     fun `does not handle pages url`() {
         val uri = buildUri("wordpress.com", "pages")
 
@@ -188,6 +199,23 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         }
 
         viewModel.handleOpenEditor(uri)
+
+        assertThat(navigateAction).isEqualTo(expected)
+    }
+
+    @Test
+    fun `opens navigate action from stats link handler`() {
+        val siteUrl = "site123"
+        val uri = buildUri("wordpress.com", "stats", siteUrl)
+        val expected = NavigateAction.OpenStats
+        whenever(statsLinkHandler.buildOpenStatsNavigateAction(uri)).thenReturn(expected)
+
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+
+        viewModel.handleShowStats(uri)
 
         assertThat(navigateAction).isEqualTo(expected)
     }
