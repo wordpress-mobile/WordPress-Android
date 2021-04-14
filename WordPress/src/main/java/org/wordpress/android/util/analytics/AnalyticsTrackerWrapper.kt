@@ -23,7 +23,7 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
     }
 
-    fun track(stat: Stat, properties: Map<String, *>) {
+    fun track(stat: Stat, properties: Map<String, Any?>) {
         AnalyticsTracker.track(stat, properties)
     }
 
