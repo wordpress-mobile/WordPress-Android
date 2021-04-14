@@ -52,6 +52,7 @@
 /connect/label/<order_id>/rates
 /connect/label/<order_id>/<shippingLabels>#String
 /connect/label/<order_id>/<shippingLabelId>/refund
+/connect/label/<order_id>/creation_eligibility
 
 /connect/normalize-address
 /connect/packages
