@@ -21,4 +21,3 @@ class LoginNoSitesErrorViewModel @Inject constructor(
         }
     }
 }
-

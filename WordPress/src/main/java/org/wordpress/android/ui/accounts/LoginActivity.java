@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
@@ -50,14 +51,13 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.SlideInFragment;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -84,8 +84,6 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
-import kotlin.text.Regex;
-import kotlin.text.RegexOption;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -121,12 +119,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private boolean mIsSiteLoginAvailableFromPrologue;
 
     private LoginMode mLoginMode;
+    private LoginViewModel mViewModel;
 
     @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
+    @Inject protected ViewModelProvider.Factory mViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +202,19 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
         }
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
+
+        // initObservers
+        mViewModel.getNavigationEvents().observe(this, event -> {
+            SlideInFragment slideInFragment = (SlideInFragment) event.getContentIfNotHandled();
+            slideInFragment(slideInFragment.getFragment(), slideInFragment.getShouldAddToBackStack(),
+                            slideInFragment.getTag());
+                    });
     }
 
     private void loginFromPrologue() {
@@ -925,23 +938,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        Regex protocolRegex = new Regex("^(http[s]?://)", RegexOption.IGNORE_CASE);
-        String siteAddressClean = siteInfo.url.replaceFirst(protocolRegex.toString(), "");
-        String errorMessage = getString(R.string.login_not_a_jetpack_site, siteAddressClean);
-
-        LoginSiteCheckErrorFragment frag =
-                LoginSiteCheckErrorFragment.Companion.newInstance(siteAddressClean, errorMessage);
-        slideInFragment(frag, true, LoginSiteCheckErrorFragment.TAG);
+        mViewModel.handleSiteAddressError(siteInfo);
     }
 
     public void handleNoJetpackSites() {
         // hide keyboard if it you can
         org.wordpress.android.util.ActivityUtils.hideKeyboard(this);
-
-        String errorMessage = getString(R.string.login_no_jetpack_sites);
-
-        LoginNoSitesErrorFragment frag =
-                LoginNoSitesErrorFragment.Companion.newInstance(errorMessage);
-        slideInFragment(frag, false, LoginNoSitesErrorFragment.TAG);
+        mViewModel.handleNoJetpackSites();
     }
 }
