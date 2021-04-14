@@ -299,7 +299,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInCurrentStatus)
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNull()
     }
 
     @Test
@@ -310,7 +311,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNotNull
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNotNull
     }
 
     @Test
@@ -318,7 +320,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInIgnoredStatus)
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNull()
     }
 
     @Test
@@ -329,7 +332,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNotNull
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNotNull
     }
 
     @Test
@@ -337,7 +341,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNull()
     }
 
     @Test
@@ -345,7 +350,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNull()
     }
 
     @Test
@@ -524,7 +530,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val items = buildThreatDetailsListItems(ThreatTestData.notFixableThreatInCurrentStatus)
 
         assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                .isNull()
     }
 
     /* FIXED THREAT */

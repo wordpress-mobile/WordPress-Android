@@ -138,7 +138,11 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanButton)
 
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
-            items.add(buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked))
+            items.add(buildEnterServerCredsMessageState(
+                    onEnterServerCredsMessageClicked = onEnterServerCredsMessageClicked,
+                    threatsCount = threats.size
+                )
+            )
         }
 
         threats.takeIf { it.isNotEmpty() }?.let {
@@ -304,8 +308,17 @@ class ScanStateListItemsBuilder @Inject constructor(
         )
     }
 
-    private fun buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked: () -> Unit): DescriptionState {
-        val clickableText = resourceProvider.getString(R.string.threat_fix_enter_server_creds_message)
+    private fun buildEnterServerCredsMessageState(
+        onEnterServerCredsMessageClicked: () -> Unit,
+        threatsCount: Int
+    ): DescriptionState {
+        val messageResId = if (threatsCount > 1) {
+            R.string.threat_fix_enter_server_creds_message_plural
+        } else {
+            R.string.threat_fix_enter_server_creds_message_singular
+        }
+
+        val clickableText = resourceProvider.getString(messageResId)
 
         val clickableTextsInfo = listOf(
                 ClickableTextInfo(
@@ -315,10 +328,7 @@ class ScanStateListItemsBuilder @Inject constructor(
                 )
         )
 
-        return DescriptionState(
-                text = UiStringRes(R.string.threat_fix_enter_server_creds_message),
-                clickableTextsInfo = clickableTextsInfo
-        )
+        return DescriptionState(text = UiStringRes(messageResId), clickableTextsInfo = clickableTextsInfo)
     }
 
     companion object {

@@ -309,7 +309,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
         (observers.uiStates.last() as ContentUiState).items
                 .filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
                 ?.clickableTextsInfo
                 ?.firstOrNull()
                 ?.onClick
@@ -725,7 +725,7 @@ class ScanViewModelTest : BaseUnitTest() {
             isVisible = false
         ),
         DescriptionState(
-                text = UiStringRes(R.string.threat_fix_enter_server_creds_message),
+                text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
                 clickableTextsInfo = listOf(
                         ClickableTextInfo(
                             startIndex = 0,

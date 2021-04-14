@@ -171,7 +171,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         (observers.uiStates.last() as Content)
                 .items
                 .filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
                 ?.clickableTextsInfo
                 ?.firstOrNull()
                 ?.onClick
@@ -373,7 +373,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         onEnterServerCredsMessageClicked?.let {
             items.add(
                     DescriptionState(
-                    text = UiStringRes(R.string.threat_fix_enter_server_creds_message),
+                    text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
                     clickableTextsInfo = listOf(
                             ClickableTextInfo(
                                     startIndex = 0,

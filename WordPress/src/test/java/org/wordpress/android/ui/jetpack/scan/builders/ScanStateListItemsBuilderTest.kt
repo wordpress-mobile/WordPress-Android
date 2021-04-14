@@ -188,9 +188,10 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                         serverCredsPresent = false
                 )
 
-                assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
-                        .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) })
-                        .isNull()
+                assertThat(
+                        scanStateItems.filterIsInstance(DescriptionState::class.java)
+                        .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
+                ).isNull()
             }
 
     /* IDLE - THREATS FOUND STATE */
@@ -291,12 +292,13 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
             assertThat(scanStateItems.contains(
                     DescriptionState(
-                        text = UiStringRes(R.string.threat_fix_enter_server_creds_message),
+                        text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
                         clickableTextsInfo = listOf(
                                 ClickableTextInfo(
                                         startIndex = 0,
                                         endIndex = resourceProvider
-                                                .getString(R.string.threat_fix_enter_server_creds_message).length,
+                                                .getString(R.string.threat_fix_enter_server_creds_message_singular)
+                                                .length,
                                         onClick = onEnterServerCredsMessageClicked
                                 )
                         )
@@ -310,7 +312,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
 
             assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
-                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                    .isNull()
         }
 
     @Test
@@ -319,7 +322,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             val scanStateItems = buildScanStateItems(fixableThreatsPresent = false)
 
             assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
-                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message) }).isNull()
+                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                    .isNull()
         }
 
     @Test
