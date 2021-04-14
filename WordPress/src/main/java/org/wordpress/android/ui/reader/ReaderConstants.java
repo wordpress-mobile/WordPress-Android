@@ -97,4 +97,7 @@ public class ReaderConstants {
     // JSON Recommended blog key names
     public static final String RECOMMENDED_BLOG_ID = "ID";
     public static final String RECOMMENDED_FEED_ID = "feed_ID";
+
+    // Custom action to handle post deeplinks
+    public static final String ACTION_VIEW_POST = "org.wordpress.android.action.VIEW_POST";
 }
