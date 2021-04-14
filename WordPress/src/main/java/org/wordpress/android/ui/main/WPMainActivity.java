@@ -379,7 +379,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             ActivityLauncher.newBlogForResult(this);
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.showSignInForResult(this, true);
+            ActivityLauncher.showSignInForResultWpComOnly(this);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -665,7 +665,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.viewCurrentBlogPages(this, mSelectedSiteRepository.getSelectedSite());
                     break;
                 case ARG_WP_COM_SIGN_UP:
-                    ActivityLauncher.showSignInForResult(this, true);
+                    ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
             }
         } else {
