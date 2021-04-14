@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-23 23:13:21+0000
+Translation-Revision-Date: 2021-04-09 10:30:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
+    <string name="gutenberg_native_search_input_field">Campo de introducción de búsqueda.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Botón de búsqueda. El texto actual del botón es</string>
+    <string name="gutenberg_native_search_blocks">Bloques de búsqueda</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta del bloque de búsqueda. El texto actual es</string>
+    <string name="gutenberg_native_search_block">Bloque de búsqueda</string>
+    <string name="gutenberg_native_outside">Fuera</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">No se ha establecido ningún marcador de posición personalizado</string>
+    <string name="gutenberg_native_no_button">Sin botón</string>
+    <string name="gutenberg_native_inside">Dentro</string>
+    <string name="gutenberg_native_hide_search_heading">Ocultar el encabezado de búsqueda</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Doble toque para editar el texto del marcador de posición</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Doble toque para editar el texto de la etiqueta</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Doble toque para editar el texto del botón</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">doble-toque para cambiar la unidad</string>
+    <string name="gutenberg_native_current_placeholder_text_is">El texto de marcador de posición actual es</string>
+    <string name="gutenberg_native_clear_search">Vaciar la búsqueda</string>
+    <string name="gutenberg_native_cancel_search">Cancelar la búsqueda</string>
+    <string name="gutenberg_native_button_position">Posición del botón</string>
+    <string name="gutenberg_native_button_outside">Botón exterior</string>
+    <string name="gutenberg_native_button_inside">Botón interior</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Ocurrió un error al obtener los datos de los me gusta</string>
+    <string name="get_likes_unknown_error">Ocurrió un error al obtener los me gusta.</string>
+    <string name="get_likes_no_network_error">No hay ninguna red disponible.</string>
+    <string name="comments_empty_list_filtered_unreplied">No hay ningún comentario sin responder</string>
+    <string name="comment_status_unreplied">Sin responder</string>
     <string name="gutenberg_native_table_of_contents">Tabla de contenidos</string>
     <string name="gutenberg_native_summary">resumen</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Resume tu entrada con una lista de encabezados. Añade anclas HTML a los bloques de encabezados para enlazarlos aquí.</string>
+    <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
     <string name="gutenberg_native_document_outline">esquema del documento</string>
     <string name="gutenberg_native_buttongroup">Grupo de botones</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP siempre permitidas</string>

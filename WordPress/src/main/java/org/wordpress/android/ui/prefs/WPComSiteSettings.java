@@ -79,6 +79,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
     private static final String TIMEZONE_KEY = "timezone_string";
+    private static final String GMT_OFFSET_KEY = "gmt_offset";
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
@@ -693,7 +694,15 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
         mRemoteSettings.dateFormat = settingsObject.optString(DATE_FORMAT_KEY, "");
         mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
-        mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
+
+        // Android returns manual offsets as gmt_offset and not as UTC
+        String remoteTimezone = settingsObject.optString(TIMEZONE_KEY, "");
+        String remoteGmtOffset = settingsObject.optString(GMT_OFFSET_KEY, "");
+        // UTC-7 comes back as gmt_offset: -7, UTC+7 as just gmt_offset: 7 without the +, hence adding prefix
+        String remoteGmtTimezone = remoteGmtOffset.startsWith("-") ? "UTC" + remoteGmtOffset : "UTC+" + remoteGmtOffset;
+        
+        mRemoteSettings.timezone = !TextUtils.isEmpty(remoteTimezone) ? remoteTimezone : remoteGmtTimezone;
+
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
         mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
         mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);

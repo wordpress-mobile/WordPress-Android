@@ -197,16 +197,6 @@ class ReaderTracker @Inject constructor(
 
     fun trackTag(
         stat: AnalyticsTracker.Stat,
-        tag: String
-    ) {
-        val properties = mutableMapOf<String, Any>(
-                TAG_KEY to tag
-        )
-        track(stat, properties)
-    }
-
-    fun trackTag(
-        stat: AnalyticsTracker.Stat,
         tag: String,
         source: String
     ) {
@@ -417,6 +407,17 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_POST_LIST_SAVED_POST_NOTICE = "post_list_saved_post_notice"
 
         private const val UNKNOWN_VALUE = "unknown"
+
+        @JvmStatic
+        fun trackTag(
+            stat: AnalyticsTracker.Stat,
+            tag: String
+        ) {
+            val properties = mutableMapOf<String, Any>(
+                    TAG_KEY to tag
+            )
+            AnalyticsTracker.track(stat, properties)
+        }
     }
 }
 
