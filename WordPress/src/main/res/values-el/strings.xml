@@ -29,7 +29,6 @@ Language: el_GR
     <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Η τρέχουσα τιμή είναι %2$s</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>
@@ -209,10 +208,8 @@ Language: el_GR
     <string name="support_identity_input_dialog_enter_email">Παρακαλώ συμπληρώστε το email σας</string>
     <string name="reader_empty_search_title">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="sites">Ιστότοποι</string>
-    <string name="signup_email_screen_title">Εγγραφή με Email</string>
     <string name="signup_magic_link_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
     <string name="selfhosted_site_login_title">Στοιχεία εισόδου</string>
-    <string name="alternatively">Εναλλακτικά:</string>
     <string name="magic_link_sent_login_title">Ο μαγικός σύνδεσμος στάλθηκε</string>
     <string name="reader_bookmark_snack_btn">Προβολή όλων</string>
     <string name="removed">Αφαιρέθηκε</string>
@@ -234,7 +231,6 @@ Language: el_GR
     <string name="privacy_policy_read">Διαβάστε την πολιτική απορρήτου</string>
     <string name="activity_log_event">Συμβάν</string>
     <string name="post_submitted">Το άρθρο υποβλήθηκε</string>
-    <string name="login_email_button_signup">Δεν έχετε λογαριασμό; %1$sΕγγραφείτε%2$s</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Εγκατάσταση</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Hμερήσια</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">Μία φορά την εβδομάδα</string>
@@ -312,8 +308,6 @@ Language: el_GR
     <string name="signup_epilogue_hint_username">Όνομα χρήστη  </string>
     <string name="signup_magic_link_error_button_negative">Κλείσιμο</string>
     <string name="signup_magic_link_error_button_positive">Προσπαθήστε ξανά</string>
-    <string name="sign_up">Εγγραφείτε για WordPress.com</string>
-    <string name="enter_username_instead">Συνδεθείτε με το όνομα χρήστη σας.</string>
     <string name="my_site_add_new_site">Προσθήκη ιστότοπου</string>
     <string name="plugin_caption_new">Νέο</string>
     <string name="plugin_caption_popular">Δημοφιλή</string>
@@ -401,7 +395,6 @@ Language: el_GR
     <string name="media_edit_file_details_card_caption">Λεπτομέρειες αρχείου</string>
     <string name="login_error_suffix">\nΊσως να δοκιμάσετε ένα διαφορετικό λογαριασμό;</string>
     <string name="login_error_button">Κλείσιμο</string>
-    <string name="login_google_button_suffix">Σύνδεση με Google.</string>
     <string name="post_settings_remove_featured_image">Αφαίρεση χαρακτηριστικής εικόνας</string>
     <string name="post_settings_choose_featured_image">Επιλέξτε χαρακτηρισμένη εικόνα</string>
     <string name="login_log_in_for_share_intent">Συνδεθείτε στο WordPress.com για να μοιραστείτε το περιεχόμενο.</string>
@@ -657,7 +650,6 @@ Language: el_GR
     <string name="invite_error_invalid_usernames_one">Αδυναμία αποστολής: Μη έγκυρο όνομα χρήστη ή ηλ. διεύθυνση</string>
     <string name="invite_error_no_usernames">Παρακαλώ προσθέστε τουλάχιστον ένα όνομα χρήστη</string>
     <string name="invite">Πρόσκληση</string>
-    <string name="send_link">Αποστολή συνδέσμου</string>
     <string name="my_site_header_external">Εξωτερική</string>
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
@@ -683,7 +675,6 @@ Language: el_GR
     <string name="checking_email">Έλεγχος e-mail</string>
     <string name="magic_link_unavailable_error_message">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
     <string name="logging_in">Γίνεται σύνδεση</string>
-    <string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
     <string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
     <string name="capture_or_pick_photo">Τραβήξτε ή επιλέξτε φωτογραφία</string>
     <string name="export_your_content_message">Τα άρθρα, οι σελίδες και οι ρυθμίσεις σας θα σας αποσταλούν με ηλ. ταχυδρομείο στο %s.</string>
@@ -1054,7 +1045,6 @@ Language: el_GR
     <string name="reader_toast_err_unfollow_blog">Αδυναμία διακοπής παρακολούθησης αυτού του Ιστότοπου</string>
     <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενοι Ιστότοποι</string>
     <string name="help">Βοήθεια</string>
-    <string name="forgot_password">Έχασες τον κωδικό σου;</string>
     <string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>

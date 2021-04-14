@@ -456,6 +456,10 @@
             android:theme="@style/WordPress.NoActionBar.TranslucentStatus"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        <activity
+            android:name=".ui.engagement.EngagedPeopleListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            />
         <activity-alias
             android:name=".WPComPostReaderActivity"
             android:targetActivity=".ui.reader.ReaderPostPagerActivity">
