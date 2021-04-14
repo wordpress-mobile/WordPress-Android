@@ -2,10 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Theme.LoginFlow" parent="Base.Theme.LoginFlow.Shared">
-        <item name="colorPrimary">@color/wp_blue_40</item>
-        <item name="colorPrimaryVariant">@color/wp_blue_70</item>
-        <item name="colorSecondary">@color/wp_blue_50</item>
-        <item name="colorSecondaryVariant">@color/wp_blue_70</item>
+        <item name="colorPrimary">@color/wp_blue_30</item>
+        <item name="colorPrimaryVariant">@color/wp_blue_50</item>
+        <item name="colorSecondary">@color/wp_blue_30</item>
+        <item name="colorSecondaryVariant">@color/wp_blue_50</item>
 
         <item name="android:colorBackground">@color/material_black_800</item>
         <item name="colorSurface">@color/material_black_800</item>

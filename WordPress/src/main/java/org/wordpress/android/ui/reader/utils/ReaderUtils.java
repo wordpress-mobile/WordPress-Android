@@ -497,7 +497,7 @@ public class ReaderUtils {
     /**
     * isExternalFeed identifies an external RSS feed
      * blogId will be empty for feeds and in some instances, it is explicitly
-     * setting blogId equal to the feedId  
+     * setting blogId equal to the feedId
      */
     public static boolean isExternalFeed(long blogId, long feedId) {
          return (blogId == 0 && feedId != 0) || blogId == feedId;
@@ -505,5 +505,13 @@ public class ReaderUtils {
 
     public static String getReportPostUrl(String blogUrl) {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
+    }
+
+    public static boolean postExists(long blogId, long postId) {
+        return ReaderPostTable.postExists(blogId, postId);
+    }
+
+    public static boolean commentExists(long blogId, long postId, long commentId) {
+        return ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
 }
