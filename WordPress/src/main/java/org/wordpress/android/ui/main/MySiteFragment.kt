@@ -159,8 +159,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.BackupScreenFeatureConfig
-import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -207,8 +205,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
-    @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
-    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
@@ -287,20 +283,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateScanAndBackup(site: SiteModel) {
-        if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
-            // Make sure that we load the cached value synchronously as we want to suppress the default animation
-            updateScanAndBackupVisibility(
-                    site = site,
-                    products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
-            )
-            uiScope.launch {
-                val products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
-                view?.let {
-                    updateScanAndBackupVisibility(
-                            site = site,
-                            products = products
-                    )
-                }
+        // Make sure that we load the cached value synchronously as we want to suppress the default animation
+        updateScanAndBackupVisibility(
+                site = site,
+                products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
+        )
+        uiScope.launch {
+            val products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+            view?.let {
+                updateScanAndBackupVisibility(
+                        site = site,
+                        products = products
+                )
             }
         }
     }
@@ -309,12 +303,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         site: SiteModel,
         products: JetpackPurchasedProducts
     ) {
-        rowScan.setVisible(
-                siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), products.scan, site)
-        )
-        rowBackup.setVisible(
-                siteUtilsWrapper.isBackupEnabled(backupScreenFeatureConfig.isEnabled(), products.backup)
-        )
+        rowScan.setVisible(SiteUtils.isScanEnabled(products.scan, site))
+        rowBackup.setVisible(products.backup)
     }
 
     private fun completeQuickStartStepsIfNeeded() {

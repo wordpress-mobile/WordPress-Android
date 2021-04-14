@@ -45,4 +45,12 @@ class ReaderUtilsWrapper @Inject constructor(
     fun postAndCommentExists(blogId: Long, postId: Long, commentId: Long): Boolean {
         return ReaderUtils.postAndCommentExists(blogId, postId, commentId)
     }
+
+    fun postExists(blogId: Long, postId: Long) = ReaderUtils.postExists(blogId, postId)
+
+    fun commentExists(
+        blogId: Long,
+        postId: Long,
+        commentId: Long
+    ) = ReaderUtils.commentExists(blogId, postId, commentId)
 }

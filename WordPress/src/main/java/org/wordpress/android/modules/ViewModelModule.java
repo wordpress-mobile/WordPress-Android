@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
@@ -488,4 +490,14 @@ abstract class ViewModelModule {
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteSettingsTimezoneViewModel.class)
+    abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
+    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
 }

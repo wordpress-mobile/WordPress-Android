@@ -44,6 +44,9 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
+import org.wordpress.android.ui.engagement.HeaderData;
+import org.wordpress.android.ui.engagement.ListScenarioType;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -58,6 +61,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.engagement.ListScenario;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -1068,6 +1072,22 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, MeActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
+    }
+
+    public static void viewLikeListActivity(Activity activity, long siteId, long postId, HeaderData headerData) {
+        Intent intent = new Intent(activity, EngagedPeopleListActivity.class);
+        intent.putExtra(
+                EngagedPeopleListActivity.KEY_LIST_SCENARIO,
+                new ListScenario(
+                        ListScenarioType.LOAD_POST_LIKES,
+                        siteId,
+                        postId,
+                        0L,
+                        "",
+                        headerData
+                )
+        );
+        activity.startActivity(intent);
     }
 
     public static void viewAccountSettings(Context context) {
