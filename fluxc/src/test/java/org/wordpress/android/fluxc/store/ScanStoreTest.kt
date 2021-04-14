@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,7 +52,6 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.utils.BuildConfigWrapper
-import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 class ScanStoreTest {
@@ -168,7 +167,7 @@ class ScanStoreTest {
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
         verify(threatSqlUtils).getThreats(siteModel, listOf(CURRENT))
-        Assert.assertEquals(scanStateModel, scanStateFromDb)
+        assertEquals(scanStateModel, scanStateFromDb)
     }
 
     @Test
