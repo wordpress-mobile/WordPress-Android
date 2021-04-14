@@ -29,6 +29,7 @@ public class ReaderPost {
     public long feedId;
     public long feedItemId;
     public long authorId;
+    public long authorBlogId;
 
     private String mTitle;
     private String mText;
@@ -53,6 +54,7 @@ public class ReaderPost {
     private String mShortUrl;
     private String mFeaturedImage;
     private String mFeaturedVideo;
+    private String mAuthorBlogUrl;
 
     public int numReplies; // includes comments, trackbacks & pingbacks
     public int numLikes;
@@ -274,6 +276,7 @@ public class ReaderPost {
         post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.mAuthorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
         post.authorId = jsonAuthor.optLong("ID");
+        post.authorBlogId = jsonAuthor.optLong("site_ID");
 
         // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
         // has a valid avatar - if this field exists and is set to false, skip setting
@@ -292,6 +295,8 @@ public class ReaderPost {
         if (TextUtils.isEmpty(post.mBlogUrl)) {
             post.setBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
         }
+
+        post.setAuthorBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
     }
 
     /*
@@ -482,6 +487,14 @@ public class ReaderPost {
 
     public void setBlogUrl(String blogUrl) {
         this.mBlogUrl = StringUtils.notNullStr(blogUrl);
+    }
+
+    public String getAuthorBlogUrl() {
+        return StringUtils.notNullStr(mAuthorBlogUrl);
+    }
+
+    public void setAuthorBlogUrl(String authorBlogUrl) {
+        this.mAuthorBlogUrl = StringUtils.notNullStr(authorBlogUrl);
     }
 
     public String getBlogImageUrl() {

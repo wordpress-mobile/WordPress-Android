@@ -502,7 +502,6 @@ Language: pt_BR
     <string name="gutenberg_native_move_image_forward">Mover imagem para frente</string>
     <string name="gutenberg_native_move_image_backward">Mover imagem para trás</string>
     <string name="gutenberg_native_gallery_caption_s">Legenda da galeria. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. O valor atual é %2$s</string>
     <string name="create_post_page_fab_tooltip">Criar um post ou página</string>
     <string name="post_signup_interstitial_not_right_now">Agora não</string>
     <string name="content_description_person_building_website">Pessoa construindo um site</string>
@@ -529,7 +528,6 @@ Language: pt_BR
     <string name="enter_credentials_for_site">Acessar com as credenciais do site %1$s</string>
     <string name="reader_following_display_name">Seguindo</string>
     <string name="my_site_bottom_sheet_add_page">Página do site</string>
-    <string name="enter_site_credentials_instead">Acessar com as credenciais do site.</string>
     <string name="posts_cannot_be_started">Não conseguimos abrir os posts agora. Tente novamente mais tarde.</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
@@ -581,7 +579,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_redo_last_change">Toque duas vezes para refazer a última alteração</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Toque duas vezes para mover o bloco para cima</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toque duas vezes para mover o bloco para baixo</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toque duas vezes para alterar o valor usando um slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
@@ -688,7 +685,6 @@ Language: pt_BR
     <string name="post_settings_add_to_calendar">Adicionar ao calendário</string>
     <string name="post_settings_notification">Notificação</string>
     <string name="post_settings_time_and_date">Data e hora</string>
-    <string name="login_need_help_finding_connected_email">Precisa de ajuda para encontrar o e-mail com que se conectou?</string>
     <string name="login_invalid_site_url">Digite o endereço completo do site, tal como exemplo.com.</string>
     <string name="stats_post_views_label">Visualizações</string>
     <string name="stats_collapse_content_description">Recolher</string>
@@ -863,7 +859,6 @@ Language: pt_BR
     <string name="stats_loading_error">Dados não carregados</string>
     <string name="plans_loading_error_no_plans_title">Não foi possível carregar os planos</string>
     <string name="menu_switch_to_gutenberg_editor">Mudar para o editor de blocos</string>
-    <string name="menu_switch_to_aztec_editor">Mudar para o editor clássico</string>
     <string name="stats_loading_block_error">Ocorreu um problema ao carregar seus dados. Atualize sua página para tentar novamente.</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editar novos posts e páginas com o editor de blocos.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
@@ -1144,7 +1139,6 @@ Language: pt_BR
     <string name="reader_save_posts_locally_dialog_title">Salvar posts para depois</string>
     <string name="sites">Sites</string>
     <string name="comment_read_source_post">Ler o post original</string>
-    <string name="signup_email_screen_title">Inscrição por e-mail</string>
     <string name="signup_magic_link_title">Link mágico enviado</string>
     <string name="verification_2fa_screen_title">Código de verificação</string>
     <string name="selfhosted_site_login_title">Informações de acesso</string>
@@ -1152,7 +1146,6 @@ Language: pt_BR
     <string name="magic_link_login_title">Acessar com link mágico</string>
     <string name="site_address_login_title">Endereço do site para acesso</string>
     <string name="email_address_login_title">Endereço de e-mail para acesso</string>
-    <string name="alternatively">Alternativamente:</string>
     <string name="removed">Removido</string>
     <string name="reader_save_for_later_title">Posts salvos</string>
     <string name="reader_remove_bookmark">Remover dos posts salvos</string>
@@ -1189,7 +1182,6 @@ Language: pt_BR
     <string name="cookie_policy_learn_more_caption">Compartilhar informações de como nossos serviços são usados com nossas ferramentas de análise enquanto estiver acessando sua conta do WordPress.com.</string>
     <string name="third_party_policy_learn_more_header">Política de terceiros</string>
     <string name="post_submitted">Post enviado</string>
-    <string name="login_email_button_signup">Não tem uma conta? %1$sRegistre-se%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">O recurso de plugins requer que seu site cumpra alguns requisitos.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">O recurso de plugins precisa que o domínio principal esteja associado a esse usuário.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">Plugin não pode ser instalado em sites VIP.</string>
@@ -1355,11 +1347,8 @@ Language: pt_BR
     <string name="username_changer_dismiss_button_positive">Descartar</string>
     <string name="username_changer_action">Salvar</string>
     <string name="content_description_add_avatar">Adicionar avatar</string>
-    <string name="signup_with_google_button">Inscrever-se com o Google</string>
-    <string name="signup_with_email_button">Inscrever-se com e-mail</string>
     <string name="signup_user_exists">Este e-mail já existe no WordPress.com.\nContinuando com o acesso.</string>
     <string name="signup_updating_account">Atualizando conta…</string>
-    <string name="signup_terms_of_service_text">Ao cadastrar-se, você concorda com os nossos %1$sTermos de serviço%2$s.</string>
     <string name="signup_magic_link_progress">Enviando e-mail</string>
     <string name="signup_magic_link_error_button_positive">Tentar novamente</string>
     <string name="signup_magic_link_error_button_negative">Fechar</string>
@@ -1371,12 +1360,7 @@ Language: pt_BR
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
     <string name="signup_epilogue_error_avatar">Houve um problema ao enviar seu avatar.</string>
-    <string name="signup_email_header">Para criar sua nova conta no WordPress.com, digite seu endereço de e-mail.</string>
-    <string name="signup_email_error_generic">Houve um problema ao verificar o endereço de e-mail.</string>
     <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um link como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
-    <string name="sign_up">Inscrever-se no WordPress.com</string>
-    <string name="enter_username_instead">Acesse com seu nome de usuário.</string>
-    <string name="enter_site_address_instead">Acesse digitando o endereço do seu site.</string>
     <string name="plugin_see_all">Ver todos</string>
     <string name="plugin_manage">Gerenciar</string>
     <string name="plugin_search_error">Não foi possível pesquisar por plugins</string>
@@ -1497,7 +1481,6 @@ Language: pt_BR
     <string name="login_error_suffix">\nTalvez tentar com outra conta?</string>
     <string name="login_error_generic">Houve um problema na conexão com a conta do Google.</string>
     <string name="login_error_button">Fechar</string>
-    <string name="login_google_button_suffix">Acessar com o Google.</string>
     <string name="enter_wpcom_password_google">Para continuar com esta conta do Google, digite a senha da conta correspondente no WordPress.com. Isso só será solicitado uma vez.</string>
     <string name="error_generic_network">Ocorreu um erro na rede. Verifique sua conexão e tente novamente.</string>
     <string name="post_settings_remove_featured_image">Remover imagem destacada</string>
@@ -1589,7 +1572,6 @@ Language: pt_BR
     <string name="login_site_address_more_help">Precisa de mais ajuda?</string>
     <string name="login_site_address_help_content">O endereço do seu site aparece na barra na parte superior da tela quando você visita seu site no Chrome.</string>
     <string name="login_site_address_help_title">Qual é o endereço do meu site?</string>
-    <string name="login_site_address_help">Precisa de ajuda para encontrar o endereço do seu site?</string>
     <string name="login_site_address">Endereço do site</string>
     <string name="enter_site_address">Digite o endereço do site WordPress que você deseja conectar.</string>
     <string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
@@ -1601,7 +1583,6 @@ Language: pt_BR
     <string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
     <string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
     <string name="enter_verification_code">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
-    <string name="open_mail">Abrir e-mail</string>
     <string name="next">Próximo</string>
     <string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
     <string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>
@@ -1855,7 +1836,6 @@ Language: pt_BR
     <string name="invite_error_invalid_usernames_one">Não pôde enviar: Um nome de usuário ou e-mail é inválido</string>
     <string name="invite_error_no_usernames">Adicione pelo menos um nome de usuário</string>
     <string name="invite">Convidar</string>
-    <string name="send_link">Enviar link</string>
     <string name="my_site_header_external">Externo</string>
     <string name="invite_people">Convidar pessoas</string>
     <string name="label_clear_search_history">Limpar histórico de pesquisa</string>
@@ -1881,7 +1861,6 @@ Language: pt_BR
     <string name="checking_email">Verificando e-mail</string>
     <string name="magic_link_unavailable_error_message">Atualmente indisponível. Digite sua senha</string>
     <string name="logging_in">Fazendo login</string>
-    <string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
     <string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
     <string name="capture_or_pick_photo">Tirar or selecionar uma foto</string>
     <string name="export_your_content_message">Seus posts, páginas e configurações serão enviados para você em %s</string>
@@ -2258,7 +2237,6 @@ Language: pt_BR
     <string name="reader_page_followed_tags">Tópicos seguidos</string>
     <string name="reader_hint_add_tag_or_url">Digite um URL ou tópico para seguir</string>
     <string name="help">Ajuda</string>
-    <string name="forgot_password">Perdeu a senha?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="notifications_empty_list">Sem notificações</string>
