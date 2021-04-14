@@ -1539,6 +1539,17 @@ public class SiteStore extends Store {
         }
     }
 
+    /**
+     * Gets the cached content of a page layout
+     *
+     * @param site the current site
+     * @param slug the slug of the layout
+     * @return the content or null if the content is not cached
+     */
+    public @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
+        return SiteSqlUtils.getBlockLayoutContent(site, slug);
+    }
+
     public List<PostFormatModel> getPostFormats(SiteModel site) {
         return SiteSqlUtils.getPostFormats(site);
     }
