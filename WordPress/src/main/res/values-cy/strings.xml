@@ -96,7 +96,6 @@ Language: cy_GB
     <string name="invite_error_invalid_usernames_one">Methu anfon: Mae yna enw defnyddiwr neu e-bost annilys</string>
     <string name="invite_error_no_usernames">Ychwanegwch o leiaf un enw defnyddiwr</string>
     <string name="invite">Gwahodd</string>
-    <string name="send_link">Anfon dolen</string>
     <string name="my_site_header_external">Allanol</string>
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
@@ -120,7 +119,6 @@ Language: cy_GB
     <string name="checking_email">Gwirio e-bost</string>
     <string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
     <string name="logging_in">Mewngofnodi</string>
-    <string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
     <string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
     <string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
     <string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
@@ -457,7 +455,6 @@ Language: cy_GB
     <string name="schedule_verb">Amserlen</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="help">Cymorth</string>
-    <string name="forgot_password">Wedi colli eich cyfrinair?</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>
     <string name="no_network_message">Nid oes rhwydwaith ar gael</string>

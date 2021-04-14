@@ -31,7 +31,7 @@ sealed class EngageItem(val type: EngageItemType) {
         val userSiteUrl: String,
         val userAvatarUrl: String,
         val remoteId: Long,
-        val onClick: (siteId: Long, siteUrl: String) -> Unit
+        val onClick: ((siteId: Long, siteUrl: String) -> Unit)? = null
     ) : EngageItem(LIKER)
 
     enum class EngageItemType {

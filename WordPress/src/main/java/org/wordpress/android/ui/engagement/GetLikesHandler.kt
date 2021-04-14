@@ -9,7 +9,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.InitialLoading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.viewmodel.Event
@@ -26,14 +26,14 @@ class GetLikesHandler @Inject constructor(
     private val _likesStatusUpdate = MediatorLiveData<GetLikesState>()
     val likesStatusUpdate: LiveData<GetLikesState> = _likesStatusUpdate
 
-    suspend fun handleGetLikesForPost(siteId: Long, postId: Long, noteLikersIdList: List<Long>) {
-        getLikesUseCase.getLikesForPost(siteId, postId, noteLikersIdList).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForPost(siteId: Long, postId: Long, numLikes: Int) {
+        getLikesUseCase.getLikesForPost(siteId, postId, numLikes).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
 
-    suspend fun handleGetLikesForComment(siteId: Long, commentId: Long, noteLikersIdList: List<Long>) {
-        getLikesUseCase.getLikesForComment(siteId, commentId, noteLikersIdList).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForComment(siteId: Long, commentId: Long, numLikes: Int) {
+        getLikesUseCase.getLikesForComment(siteId, commentId, numLikes).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
@@ -44,7 +44,7 @@ class GetLikesHandler @Inject constructor(
 
     private fun manageState(state: GetLikesState) {
         when (state) {
-            InitialLoading,
+            Loading,
             is LikesData -> _likesStatusUpdate.postValue(state)
             is Failure -> {
                 _likesStatusUpdate.postValue(state)
