@@ -283,7 +283,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     )
 
     private fun buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked: () -> Unit): DescriptionState {
-        val clickableText = resourceProvider.getString(R.string.threat_fix_enter_server_creds_message_singular)
+        val messageResId = R.string.threat_fix_enter_server_creds_message_singular
+        val clickableText = resourceProvider.getString(messageResId)
 
         val clickableTextsInfo = listOf(
                 ClickableTextInfo(
@@ -293,9 +294,6 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                 )
         )
 
-        return DescriptionState(
-                text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
-                clickableTextsInfo = clickableTextsInfo
-        )
+        return DescriptionState(text = UiStringRes(messageResId), clickableTextsInfo = clickableTextsInfo)
     }
 }
