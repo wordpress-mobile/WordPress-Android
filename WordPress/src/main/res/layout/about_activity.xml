@@ -49,7 +49,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_my_sites_white_24dp" />
+                    android:src="@drawable/ic_about_app_white_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/about_first_line"
