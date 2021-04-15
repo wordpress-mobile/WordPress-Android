@@ -70,7 +70,6 @@ Language: eu_ES
     <string name="invite_error_no_usernames">Mesedez, gehitu gutxienez erabiltzaile-izen bat</string>
     <string name="invite">Gonbidatu</string>
     <string name="my_site_header_external">Kanpokoak</string>
-    <string name="send_link">Bidali esteka</string>
     <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
@@ -83,7 +82,6 @@ Language: eu_ES
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
     <string name="checking_email">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
-    <string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="plan">Plana</string>
     <string name="plans">Planak</string>
@@ -297,7 +295,6 @@ Language: eu_ES
     <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
-    <string name="forgot_password">Pasahitza galdu duzu?</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
     <string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
     <string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>

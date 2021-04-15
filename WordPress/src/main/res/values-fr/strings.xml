@@ -6,20 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Lien de l’étiquette</string>
     <string name="gutenberg_native_table_of_contents">Table des matières</string>
     <string name="gutenberg_native_summary">sommaire</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Résumez votre article avec une liste d’en-têtes. Ajoutez des ancres HTML aux blocs d’en-tête pour les lier ici.</string>
-    <string name="gutenberg_native_search_settings">Paramètres de recherche</string>
-    <string name="gutenberg_native_post_link">Lien de l’article</string>
     <string name="gutenberg_native_document_outline">aperçu du document</string>
-    <string name="gutenberg_native_category_link">Lien de catégorie</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
-    <string name="gutenberg_native_a_link_to_a_url">Un lien vers une URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">Un lien vers une étiquette.</string>
-    <string name="gutenberg_native_a_link_to_a_post">Un lien vers un article.</string>
-    <string name="gutenberg_native_a_link_to_a_page">Un lien vers une page.</string>
-    <string name="gutenberg_native_a_link_to_a_category">Un lien vers une catégorie.</string>
     <string name="jetpack_brute_force_allowlist_title">Adresses IP toujours autorisées</string>
     <string name="site_settings_denylist_title">Commentaires rejetés</string>
     <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>
@@ -375,7 +366,6 @@ Language: fr
     <string name="media_uploading_default">Média en cours de téléversement</string>
     <string name="gutenberg_native_select_item">Sélectionner un élément</string>
     <string name="gutenberg_native_search_or_type_url">Rechercher ou saisir une URL</string>
-    <string name="gutenberg_native_page_link">Lien de page</string>
     <string name="gutenberg_native_add_this_telephone_link">Lien d’ajout de ce téléphone</string>
     <string name="gutenberg_native_add_this_link">Ajouter ce lien</string>
     <string name="gutenberg_native_add_this_email_link">Lien d’ajout de cet e-mail</string>
@@ -744,7 +734,6 @@ Language: fr
     <string name="gutenberg_native_move_image_forward">Déplacer l’image vers l’avant</string>
     <string name="gutenberg_native_move_image_backward">Déplacer l’image vers l’arrière</string>
     <string name="gutenberg_native_gallery_caption_s">Légende de la galerie. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. La valeur actuelle est %2$s</string>
     <string name="create_post_page_fab_tooltip">Créer un article ou une page</string>
     <string name="content_description_person_building_website">Personne en pleine création d’un site Web</string>
     <string name="post_signup_interstitial_not_right_now">Pas maintenant</string>
@@ -768,7 +757,6 @@ Language: fr
     <string name="login_discovery_error_http_auth">Nous n’avons pas pu accéder à votre site car il requiert une &lt;b>authentification HTTP&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_discovery_error_xmlrpc">Nous n’avons pas pu accéder au &lt;b>fichier XMLRPC&lt;/b> sur votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_site_credentials_magic_link_label">Vous y êtes presque ! Nous devons juste vérifier votre adresse e-mail connectée à Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Connectez-vous avec vos identifiants au site.</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Page du site</string>
     <string name="reader_following_display_name">Abonné</string>
@@ -825,7 +813,6 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Appuyer deux fois pour faire monter le bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Appuyer deux fois pour faire descendre le bloc</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Appuyer deux fois pour modifier cette valeur</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Appuyer deux fois pour modifier la valeur à l’aide du curseur</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Appuyer deux fois pour ajouter un bloc</string>
     <string name="gutenberg_native_current_value_is_s">La valeur actuelle est %s</string>
     <string name="gutenberg_native_choose_from_device">Choisir depuis l’appareil</string>
@@ -937,7 +924,6 @@ Language: fr
     <string name="post_settings_add_to_calendar">Ajouter au calendrier</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_time_and_date">Date et heure</string>
-    <string name="login_need_help_finding_connected_email">Besoin d\'aide pour trouver l\'adresse e-mail avec laquelle vous vous êtes connecté ?</string>
     <string name="login_invalid_site_url">Veuillez entrer une adresse de site Web complète, telle que exemple.com.</string>
     <string name="enter_email_for_site">Connectez-vous à WordPress.com pour accéder à %1$s</string>
     <string name="stats_post_views_label">Vues</string>
@@ -1111,7 +1097,6 @@ Language: fr
     <string name="plans_loading_error_no_plans_title">Impossible de charger les plans</string>
     <string name="plans_loading_error_network_title">Pas de connexion</string>
     <string name="menu_switch_to_gutenberg_editor">Basculer sur l’éditeur de blocs</string>
-    <string name="menu_switch_to_aztec_editor">Basculer sur l’éditeur classique</string>
     <string name="stats_loading_block_error">Un problème est survenu lors du chargement de vos données. Rechargez la page pour réessayer.</string>
     <string name="stats_loading_error">Données non chargées</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifier les nouvelles publications et pages avec l’éditeur de blocs</string>
@@ -1403,14 +1388,12 @@ Language: fr
     <string name="comment_read_source_post">Lire la source de l’article</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Lien magique envoyé</string>
-    <string name="signup_email_screen_title">E-mail d’inscription</string>
     <string name="verification_2fa_screen_title">Code de vérification</string>
     <string name="selfhosted_site_login_title">Informations de connexion</string>
     <string name="magic_link_sent_login_title">Lien magique envoyé</string>
     <string name="magic_link_login_title">Lien magique de connexion</string>
     <string name="site_address_login_title">Adresse de site de connexion</string>
     <string name="email_address_login_title">Adresse e-mail de connexion</string>
-    <string name="alternatively">Alternativement :</string>
     <string name="reader_empty_saved_posts_description">Appuyez sur %s pour enregistrer un article dans votre liste.</string>
     <string name="reader_empty_saved_posts_title">Aucun article enregistré — pour le moment !</string>
     <string name="reader_bookmark_snack_title">Article enregistré</string>
@@ -1447,7 +1430,6 @@ Language: fr
     <string name="preference_privacy_settings">Paramètres de confidentialité</string>
     <string name="preference_collect_information">Collecter des informations</string>
     <string name="post_submitted">Article envoyé</string>
-    <string name="login_email_button_signup">Vous n\'avez pas encore de compte ? %1$sS\'inscrire%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La fonctionnalité d\'extension requiert un site en règle.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Vous devez associer cet utilisateur et l’abonnement du domaine principal pour utiliser les extensions.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Vous devez être administrateur pour utiliser les extensions.</string>
@@ -1613,11 +1595,8 @@ Language: fr
     <string name="username_changer_dismiss_button_positive">Supprimer</string>
     <string name="username_changer_action">Enregistrer</string>
     <string name="content_description_add_avatar">Ajouter un avatar</string>
-    <string name="signup_with_google_button">S\'inscrire avec Google</string>
-    <string name="signup_with_email_button">S\'inscrire avec une adresse e-mail</string>
     <string name="signup_user_exists">L\'adresse e-mail existe déjà sur WordPress.com.\nPoursuite de la connexion.</string>
     <string name="signup_updating_account">Mise à jour du compte…</string>
-    <string name="signup_terms_of_service_text">En vous inscrivant, vous acceptez nos %1$sConditions d\'Utilisation%2$s.</string>
     <string name="signup_magic_link_progress">Envoi de l\'e-mail</string>
     <string name="signup_magic_link_error_button_positive">Réessayer</string>
     <string name="signup_magic_link_error_button_negative">Fermer</string>
@@ -1630,11 +1609,6 @@ Language: fr
     <string name="signup_epilogue_error_button_negative">Annuler les modifications</string>
     <string name="signup_epilogue_error_generic">Une erreur s\'est produite lors de la mise à jour de votre compte. Vous pouvez réessayer ou annuler vos modifications pour continuer.</string>
     <string name="signup_epilogue_error_avatar">Une erreur s\'est produite lors du chargement de votre avatar.</string>
-    <string name="signup_email_header">Pour créer votre nouveau compte WordPress.com, veuillez saisir votre adresse e-mail.</string>
-    <string name="signup_email_error_generic">Une erreur s\'est produite lors de la vérification de l\'adresse e-mail.</string>
-    <string name="sign_up">S\'inscrire sur WordPress.com</string>
-    <string name="enter_username_instead">Connectez-vous avec votre identifiant.</string>
-    <string name="enter_site_address_instead">Connectez-vous en saisissant l\'adresse de votre site.</string>
     <string name="plugin_needs_update">Mise à jour nécessaire</string>
     <string name="plugin_caption_search">Chercher parmi les extensions</string>
     <string name="plugin_caption_new">Nouvelles</string>
@@ -1755,7 +1729,6 @@ Language: fr
     <string name="login_error_suffix">Essayer avec un autre compte ?</string>
     <string name="login_error_generic">Il y a eu des problèmes avec le compte Google.</string>
     <string name="login_error_button">Fermer</string>
-    <string name="login_google_button_suffix">Connexion avec Google</string>
     <string name="enter_wpcom_password_google">Pour faire cela avec ce compte Google, veuillez fournir le mot de passe WordPress.com correspondant. Ceci ne sera demandé qu’une seule fois.</string>
     <string name="error_generic_network">Une erreur réseau est survenue. Veuillez vérifier votre connexion et essayer à nouveau.</string>
     <string name="post_settings_remove_featured_image">Retirer l’image mise en avant</string>
@@ -1849,7 +1822,6 @@ Language: fr
     <string name="login_site_address_more_help">Besoin d’aide ?</string>
     <string name="login_site_address_help_content">L’adresse de votre site apparait dans la barre en haut de l’écran quand vous visitez votre site avec Chrome.</string>
     <string name="login_site_address_help_title">Quelle est l’adresse de mon site ?</string>
-    <string name="login_site_address_help">Besoin d’aide pour trouver l’adresse de votre site ?</string>
     <string name="login_site_address">Adresse du site</string>
     <string name="enter_site_address">Saisissez l’adresse du site WordPress que vous voulez connecter.</string>
     <string name="login_already_logged_in_wpcom">Déjà connecté·e à WordPress.com</string>
@@ -1861,7 +1833,6 @@ Language: fr
     <string name="requesting_otp">Demande d’un code de vérification par SMS.</string>
     <string name="login_text_otp">Envoyez-moi un code par SMS à la place</string>
     <string name="enter_verification_code">On y est presque ! Veuillez saisir le code de vérification de votre app d’authentification.</string>
-    <string name="open_mail">Ouvrir les e-mails</string>
     <string name="next">Suivant</string>
     <string name="enter_email_wordpress_com">Connectez-vous à WordPress.com en utilisant une adresse de messagerie pour gérer tous vos sites WordPress.com.</string>
     <string name="image_optimization_promo_desc">L’optimisation réduit la taille des images pour un téléversement plus rapide.\n\nVous pouvez changer ceci à tout moment, dans les réglages du site.</string>
@@ -2118,7 +2089,6 @@ Language: fr
     <string name="invite">Invitation</string>
     <string name="invite_people">Inviter des personnes</string>
     <string name="my_site_header_external">Externe</string>
-    <string name="send_link">Envoyer le lien</string>
     <string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
     <string name="reader_empty_search_description">Aucune article trouvé pour %s dans votre langue</string>
@@ -2142,7 +2112,6 @@ Language: fr
     <string name="checking_email">Vérification de l\'adresse e-mail</string>
     <string name="magic_link_unavailable_error_message">Actuellement indisponible. Veuillez saisir votre mot de passe</string>
     <string name="logging_in">Connexion</string>
-    <string name="enter_your_password_instead">Saisissez votre mot de passe à la place</string>
     <string name="web_address_dialog_hint">Affiché publiquement quand vous commentez.</string>
     <string name="capture_or_pick_photo">Prenez une photo ou choisissez-en une</string>
     <string name="plans">Plans</string>
@@ -2524,7 +2493,6 @@ Language: fr
     <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>
-    <string name="forgot_password">Mot de passe perdu ?</string>
     <string name="help">Aide</string>
     <string name="username_or_password_incorrect">L\'identifiant ou le mot de passe saisi est incorrect</string>
     <string name="email_invalid">Entrez une adresse e-mail valide</string>

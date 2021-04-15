@@ -74,11 +74,22 @@ object ThreatTestData {
             status = ThreatStatus.CURRENT
         )
     )
-
     val notFixableThreatInCurrentStatus = GenericThreatModel(
         baseThreatModel.copy(
             fixable = null,
             status = ThreatStatus.CURRENT
         )
+    )
+    val fixableThreatInFixedStatus = GenericThreatModel(
+            baseThreatModel.copy(
+                    fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+                    status = ThreatStatus.FIXED
+            )
+    )
+    val fixableThreatInIgnoredStatus = GenericThreatModel(
+            baseThreatModel.copy(
+                    fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+                    status = ThreatStatus.IGNORED
+            )
     )
 }
