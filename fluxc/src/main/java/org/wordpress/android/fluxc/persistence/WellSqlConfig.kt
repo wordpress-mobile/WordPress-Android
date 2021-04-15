@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 145
+        return 146
     }
 
     override fun getDbName(): String {
@@ -1690,6 +1690,30 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 144 -> migrate(version) {
                     db.execSQL("ALTER TABLE ScanState ADD HAS_VALID_CREDENTIALS BOOLEAN")
+                }
+                145 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCShippingLabelModel")
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
+                                    "REFUND TEXT NULL," +
+                                    "PRODUCT_IDS TEXT," +
+                                    "DATE_CREATED INTEGER," +
+                                    "EXPIRY_DATE INTEGER)"
+                    )
                 }
             }
         }
