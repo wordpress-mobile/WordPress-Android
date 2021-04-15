@@ -223,10 +223,10 @@ jobs:
           jvmargs: "Xmx1024m"
       - run:
           name: Build
-          command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
+          command: ./gradlew WordPress:assembleWordPressVanillaDebug --stacktrace
       - run:
           name: Build Tests
-          command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleWordPressVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
@@ -267,10 +267,10 @@ jobs:
           jvmargs: "Xmx1024m"
       - run:
           name: Build
-          command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
+          command: ./gradlew WordPress:assembleWordPressVanillaDebug --stacktrace
       - run:
           name: Build Tests
-          command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleWordPressVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
@@ -370,7 +370,7 @@ jobs:
       - update-gradle-memory
       - run:
           name: Build
-          command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleWordPressVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
