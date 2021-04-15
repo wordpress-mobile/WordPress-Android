@@ -11,12 +11,14 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.utils.IntentUtils
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
+    @Mock lateinit var intentUtils: IntentUtils
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
 
     @InternalCoroutinesApi
@@ -27,6 +29,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 accountStore,
                 deepLinkUriUtils,
                 serverTrackingHandler,
+                intentUtils,
                 TEST_DISPATCHER
         )
     }
