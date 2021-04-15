@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-28 12:24:31+0000
+Translation-Revision-Date: 2021-04-09 10:54:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Use icon button</string>
+    <string name="gutenberg_native_search_input_field">Search input field.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
+    <string name="gutenberg_native_search_blocks">Search blocks</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
+    <string name="gutenberg_native_search_block">Search block</string>
+    <string name="gutenberg_native_outside">Outside</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
+    <string name="gutenberg_native_no_button">No button</string>
+    <string name="gutenberg_native_inside">Inside</string>
+    <string name="gutenberg_native_hide_search_heading">Hide search heading</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Double tap to edit placeholder text</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Double tap to edit label text</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Double tap to edit button text</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">double–tap to change unit</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Current placeholder text is</string>
+    <string name="gutenberg_native_clear_search">Clear search</string>
+    <string name="gutenberg_native_cancel_search">Cancel search</string>
+    <string name="gutenberg_native_button_position">Button position</string>
+    <string name="gutenberg_native_button_outside">Button outside</string>
+    <string name="gutenberg_native_button_inside">Button inside</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+    <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
+    <string name="get_likes_no_network_error">No network available.</string>
+    <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
+    <string name="comment_status_unreplied">Unreplied</string>
     <string name="gutenberg_native_table_of_contents">Table of Contents</string>
     <string name="gutenberg_native_summary">summary</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Summarize your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
+    <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="gutenberg_native_document_outline">document outline</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
