@@ -1,9 +1,13 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_SET
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig.Source.DEFAULT
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig.Source.TOKEN
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,30 +26,50 @@ class MySiteImprovementsFeatureConfig
         MY_SITE_IMPROVEMENTS_REMOTE_FIELD
 ) {
     private var cachedEnabledValue: Boolean? = null
-    private var cachedHasUserId: Boolean = false
+    private var cachedSource: Source = DEFAULT
 
     // Temporary solution until the Firebase bug gets fixed
     override fun isEnabled(): Boolean {
-        val userId = accountStore.account.userId
-        val hasUserId = userId != 0L
-        val isEnabled = if (hasUserId) {
-            userId % 2L == 0L
-        } else {
-            true
+        return initEnabledValue(accountStore.accessToken.hashCode(), accountStore.hasAccessToken())
+    }
+
+    private fun initEnabledValue(
+        id: Int,
+        hasToken: Boolean
+    ): Boolean {
+        val (source, isEnabled) = when {
+            hasToken -> {
+                TOKEN to (id % 2L == 0L)
+            }
+            cachedEnabledValue != null -> {
+                cachedSource to (cachedEnabledValue == true)
+            }
+            else -> {
+                DEFAULT to true
+            }
         }
-        if (cachedEnabledValue != isEnabled || cachedHasUserId != hasUserId) {
+        if (cachedEnabledValue != isEnabled || cachedSource != source) {
             analyticsTracker.track(
-                    Stat.FEATURE_FLAG_SET,
-                    mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to isEnabled, "user_id_set" to hasUserId)
+                    FEATURE_FLAG_SET,
+                    mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to isEnabled, "source" to source.name)
             )
             cachedEnabledValue = isEnabled
-            cachedHasUserId = hasUserId
+            cachedSource = source
         }
         return isEnabled
     }
 
+    fun initFromUri(uri: UriWrapper) {
+        if (!accountStore.hasAccessToken()) {
+            val queryParameter = uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER)
+            if (!queryParameter.isNullOrEmpty()) {
+                initEnabledValue(queryParameter.hashCode(), true)
+            }
+        }
+    }
+
     override fun name(): String {
-        return if (cachedHasUserId) {
+        return if (cachedSource != DEFAULT) {
             MY_SITE_IMPROVEMENTS_REMOTE_FIELD
         } else {
             MY_SITE_IMPROVEMENTS_NO_ACCOUNT_FIELD
@@ -55,5 +79,9 @@ class MySiteImprovementsFeatureConfig
     companion object {
         const val MY_SITE_IMPROVEMENTS_REMOTE_FIELD = "my_site_improvements_random_enabled"
         const val MY_SITE_IMPROVEMENTS_NO_ACCOUNT_FIELD = "my_site_improvements_no_account_enabled"
+    }
+
+    enum class Source {
+        TOKEN, DEFAULT
     }
 }

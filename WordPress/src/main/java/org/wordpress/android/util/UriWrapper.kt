@@ -7,4 +7,5 @@ import android.net.Uri
  */
 data class UriWrapper(val uri: Uri) {
     override fun toString() = uri.toString()
+    fun getQueryParameter(key: String) = uri.getQueryParameter(key)
 }
