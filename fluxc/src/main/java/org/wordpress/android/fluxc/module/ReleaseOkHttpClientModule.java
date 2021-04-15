@@ -26,29 +26,29 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
 public class ReleaseOkHttpClientModule {
-    private static CookieJar mCookieJar = new JavaNetCookieJar(new CookieManager());
 
     @Provides
     @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder() {
+    public OkHttpClient.Builder provideOkHttpClientBuilder(final CookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
+        builder.cookieJar(cookieJar);
         return builder;
     }
 
     @Provides
     @Named("no-redirects")
-    public OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder() {
-        OkHttpClient.Builder builder = provideOkHttpClientBuilder();
+    public OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder(final CookieJar cookieJar) {
+        OkHttpClient.Builder builder = provideOkHttpClientBuilder(cookieJar);
         builder.followRedirects(false);
         return builder;
     }
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
+    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(final MemorizingTrustManager memorizingTrustManager,
+                                                                    final CookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
+        builder.cookieJar(cookieJar);
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
