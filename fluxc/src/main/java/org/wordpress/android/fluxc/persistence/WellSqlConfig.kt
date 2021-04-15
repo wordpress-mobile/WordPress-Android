@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 144
+        return 145
     }
 
     override fun getDbName(): String {
@@ -1687,6 +1687,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "PRODUCT_IDS TEXT," +
                                     "DATE_CREATED TEXT)"
                     )
+                }
+                144 -> migrate(version) {
+                    db.execSQL("ALTER TABLE ScanState ADD HAS_VALID_CREDENTIALS BOOLEAN")
                 }
             }
         }
