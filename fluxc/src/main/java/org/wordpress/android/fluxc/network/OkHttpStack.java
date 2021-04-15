@@ -30,10 +30,10 @@ import okhttp3.ResponseBody;
  * use okhttp-urlconnection
  */
 public class OkHttpStack extends BaseHttpStack {
-    private final OkHttpClient.Builder mClientBuilder;
+    private final OkHttpClient okHttpClient;
 
-    public OkHttpStack(OkHttpClient.Builder clientBuilder) {
-        this.mClientBuilder = clientBuilder;
+    public OkHttpStack(final OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
     }
 
     private static void setConnectionParametersForRequest(okhttp3.Request.Builder builder, Request<?> request)
@@ -89,9 +89,11 @@ public class OkHttpStack extends BaseHttpStack {
             throws IOException, AuthFailureError {
         int timeoutMs = request.getTimeoutMs();
 
-        mClientBuilder.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS);
-        mClientBuilder.readTimeout(timeoutMs, TimeUnit.MILLISECONDS);
-        mClientBuilder.writeTimeout(timeoutMs, TimeUnit.MILLISECONDS);
+        final OkHttpClient timeoutAwareClient = okHttpClient.newBuilder()
+                                                            .connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                            .readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                            .writeTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                            .build();
 
         okhttp3.Request.Builder okHttpRequestBuilder = new okhttp3.Request.Builder();
         okHttpRequestBuilder.url(request.getUrl());
@@ -113,13 +115,8 @@ public class OkHttpStack extends BaseHttpStack {
         setConnectionParametersForRequest(okHttpRequestBuilder, request);
 
 
-        for (Interceptor interceptor : mClientBuilder.interceptors()) {
-            mClientBuilder.addNetworkInterceptor(interceptor);
-        }
-
-        OkHttpClient client = mClientBuilder.build();
         okhttp3.Request okHttpRequest = okHttpRequestBuilder.build();
-        Call okHttpCall = client.newCall(okHttpRequest);
+        Call okHttpCall = timeoutAwareClient.newCall(okHttpRequest);
         okhttp3.Response okHttpResponse = okHttpCall.execute();
 
 
