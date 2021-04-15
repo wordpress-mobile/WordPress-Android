@@ -797,11 +797,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-
-    <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/primary_40</item>
-    </style>
-
     <!--Post Settings Styles-->
     <style name="PostSettingsCardViewInnerLayout">
         <item name="android:layout_width">match_parent</item>
