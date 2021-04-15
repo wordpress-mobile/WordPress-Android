@@ -12,8 +12,8 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class DeepLinkingIntentReceiverViewModel
     private val accountStore: AccountStore,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler,
-    private val contextProvider: ContextProvider,
+    private val intentUtils: IntentUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
@@ -114,8 +114,7 @@ class DeepLinkingIntentReceiverViewModel
      * Since that's a custom action that is only handled by the Reader, we can then assume it supports this URI.
      */
     private fun shouldOpenReader(uri: UriWrapper): Boolean {
-        val packageManager = contextProvider.getContext().packageManager
-        return Intent(ReaderConstants.ACTION_VIEW_POST, uri.uri).resolveActivity(packageManager) != null
+        return intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)
     }
 
     override fun onCleared() {
