@@ -23,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentActivity;
@@ -69,7 +68,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollecti
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -333,12 +331,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
                         updateMediaProgress();
-                    }
-                },
-                new OnSetFeaturedImageListener() {
-                    @Override
-                    public void onSetFeaturedImageButtonClicked(int mediaId) {
-                        showFeaturedImageConfirmationDialog(mediaId);
                     }
                 },
                 new OnEditorMountListener() {
@@ -780,56 +772,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void showFeaturedImageConfirmationDialog(final int mediaId) {
-        if (mediaId == 0) {
-            removeFeaturedImage(0);
-        } else if (mFeaturedImageId == 0) {
-            setFeaturedImage(mediaId);
-        } else if (mFeaturedImageId != mediaId) {
-            Builder builder = new MaterialAlertDialogBuilder(getActivity());
-            builder.setTitle(R.string.replace_current_title);
-            builder.setMessage(R.string.replace_current_description);
-            builder.setPositiveButton(R.string.replace_current_confirmation,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                            setFeaturedImage(mediaId);
-                        }
-                    });
-
-            builder.setNegativeButton(R.string.replace_current_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-    }
-
-    private void setFeaturedImage(int mediaId) {
-        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
-        // Necessary to update image in Post Settings
-        setFeaturedImageId(mediaId);
-        sendToJSFeaturedImageId(mediaId);
-
-        showNotice(getString(R.string.featured_image_confirmation));
-
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.SET_AS_FEATURED_BUTTON_TAPPED);
-    }
-
-    private void removeFeaturedImage(int mediaId) {
-        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
-        // Necessary to update image in Post Settings
-        setFeaturedImageId(mediaId);
-        sendToJSFeaturedImageId(mediaId);
-
-        showNotice(getString(R.string.featured_image_removed));
-
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.REMOVE_AS_FEATURED_BUTTON_TAPPED);
     }
 
     public void sendToJSFeaturedImageId(int mediaId) {

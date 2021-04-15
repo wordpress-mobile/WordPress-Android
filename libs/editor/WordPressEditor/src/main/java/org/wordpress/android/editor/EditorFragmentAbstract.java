@@ -179,7 +179,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
         void onAddMediaClicked();
-        void updateFeaturedImage(long mediaId, boolean imagePicked);
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
         void onAddLibraryMediaClicked(boolean allowMultipleSelection);
@@ -259,8 +258,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         UNDERLINE_BUTTON_TAPPED,
         REDO_TAPPED,
         UNDO_TAPPED,
-        REMOVE_AS_FEATURED_BUTTON_TAPPED,
-        SET_AS_FEATURED_BUTTON_TAPPED,
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
     }
