@@ -17,7 +17,7 @@ data class GutenbergPropsBuilder(
     private val enableAudioBlock: Boolean,
     private val localeSlug: String,
     private val postType: String,
-    private val featuredMedia: Int,
+    private val featuredImageId: Int,
     private val editorTheme: Bundle?
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
@@ -30,7 +30,7 @@ data class GutenbergPropsBuilder(
             enableAudioBlock = enableAudioBlock,
             localeSlug = localeSlug,
             postType = postType,
-            featuredMedia = featuredMedia,
+            featuredImageId = featuredImageId,
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),

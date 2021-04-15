@@ -2255,7 +2255,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
         String postType = mIsPage ? "page" : "post";
-        int featuredMedia = (int) mEditPostRepository.getFeaturedImageId();
+        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
@@ -2282,7 +2282,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 wpcomLocaleSlug,
                 postType,
-                featuredMedia,
+                featuredImageId,
                 themeBundle
         );
     }
