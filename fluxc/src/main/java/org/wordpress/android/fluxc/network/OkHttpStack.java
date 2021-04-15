@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Headers;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -30,10 +29,10 @@ import okhttp3.ResponseBody;
  * use okhttp-urlconnection
  */
 public class OkHttpStack extends BaseHttpStack {
-    private final OkHttpClient okHttpClient;
+    private final OkHttpClient mOkHttpClient;
 
     public OkHttpStack(final OkHttpClient okHttpClient) {
-        this.okHttpClient = okHttpClient;
+        this.mOkHttpClient = okHttpClient;
     }
 
     private static void setConnectionParametersForRequest(okhttp3.Request.Builder builder, Request<?> request)
@@ -89,11 +88,11 @@ public class OkHttpStack extends BaseHttpStack {
             throws IOException, AuthFailureError {
         int timeoutMs = request.getTimeoutMs();
 
-        final OkHttpClient timeoutAwareClient = okHttpClient.newBuilder()
-                                                            .connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
-                                                            .readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
-                                                            .writeTimeout(timeoutMs, TimeUnit.MILLISECONDS)
-                                                            .build();
+        final OkHttpClient timeoutAwareClient = mOkHttpClient.newBuilder()
+                                                             .connectTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                             .readTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                             .writeTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                                                             .build();
 
         okhttp3.Request.Builder okHttpRequestBuilder = new okhttp3.Request.Builder();
         okHttpRequestBuilder.url(request.getUrl());

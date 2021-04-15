@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.net.CookieManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,21 +19,19 @@ import javax.net.ssl.TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.CookieJar;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
 public class ReleaseOkHttpClientModule {
-
     @Provides
     @Named("no-redirects")
     public OkHttpClient provideNoRedirectsOkHttpClientBuilder(
             @Named("regular") final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
-                                  .connectTimeout(10000, TimeUnit.MILLISECONDS)
-                                  .readTimeout(10000, TimeUnit.MILLISECONDS)
-                                  .writeTimeout(10000, TimeUnit.MILLISECONDS)
+                                  .connectTimeout(OkHttpConstants.DEFAULT_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                                  .readTimeout(OkHttpConstants.DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+                                  .writeTimeout(OkHttpConstants.DEFAULT_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                                   .followRedirects(false)
                                   .build();
     }
