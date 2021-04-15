@@ -28,27 +28,24 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 public class ReleaseOkHttpClientModule {
 
     @Provides
-    @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder(final CookieJar cookieJar) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(cookieJar);
-        return builder;
-    }
-
-    @Provides
     @Named("no-redirects")
-    public OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder(final CookieJar cookieJar) {
-        OkHttpClient.Builder builder = provideOkHttpClientBuilder(cookieJar);
-        builder.followRedirects(false);
-        return builder;
+    public OkHttpClient provideNoRedirectsOkHttpClientBuilder(
+            @Named("regular") final OkHttpClient okHttpRegularClient) {
+        return okHttpRegularClient.newBuilder()
+                                  .connectTimeout(10000, TimeUnit.MILLISECONDS)
+                                  .readTimeout(10000, TimeUnit.MILLISECONDS)
+                                  .writeTimeout(10000, TimeUnit.MILLISECONDS)
+                                  .followRedirects(false)
+                                  .build();
     }
 
+    @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(final MemorizingTrustManager memorizingTrustManager,
-                                                                    final CookieJar cookieJar) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(cookieJar);
+    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(
+            @Named("regular") final OkHttpClient okHttpClient,
+            final MemorizingTrustManager memorizingTrustManager) {
+        final OkHttpClient.Builder builder = okHttpClient.newBuilder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
@@ -58,28 +55,18 @@ public class ReleaseOkHttpClientModule {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             AppLog.e(T.API, e);
         }
-        return builder;
-    }
-
-    @Singleton
-    @Provides
-    @Named("custom-ssl")
-    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(@Named("custom-ssl") OkHttpClient.Builder builder) {
-        return builder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+        return builder.build();
     }
 
     @Singleton
     @Provides
     @Named("regular")
-    public OkHttpClient provideMediaOkHttpClientInstance(@Named("regular") OkHttpClient.Builder builder) {
-        return builder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+    public OkHttpClient provideMediaOkHttpClientInstance(final CookieJar cookieJar) {
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        return builder.cookieJar(cookieJar)
+                      .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .build();
     }
 }
