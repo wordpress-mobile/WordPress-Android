@@ -1171,6 +1171,8 @@
     <string name="threat_get_free_estimate">Get a free estimate</string>
     <!-- threat alert messages -->
     <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Enter your server credentials to fix threat.</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Enter your server credentials to fix threats.</string>
     <string name="threat_ignore_warning">You shouldn\’t ignore a security issue unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
