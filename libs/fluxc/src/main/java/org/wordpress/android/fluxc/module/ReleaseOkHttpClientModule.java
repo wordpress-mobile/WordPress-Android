@@ -29,9 +29,6 @@ public class ReleaseOkHttpClientModule {
     public OkHttpClient provideNoRedirectsOkHttpClientBuilder(
             @Named("regular") final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
-                                  .connectTimeout(OkHttpConstants.DEFAULT_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-                                  .readTimeout(OkHttpConstants.DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-                                  .writeTimeout(OkHttpConstants.DEFAULT_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                                   .followRedirects(false)
                                   .build();
     }
