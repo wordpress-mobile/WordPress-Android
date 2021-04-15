@@ -105,13 +105,19 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         // --> remove mediaFiles entirely
         // set start index and go up.
         var storyBlockStartIndex = 0
-        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length) {
+        var hasMediaFiles = true
+        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length && hasMediaFiles) {
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
                 val storyBlockEndIndex = content.indexOf(HEADING_END_NO_NEW_LINE, storyBlockStartIndex)
+                val mediaFilesStartIndex = storyBlockStartIndex + HEADING_START.length
+                hasMediaFiles = mediaFilesStartIndex < storyBlockEndIndex
+                if (!hasMediaFiles) {
+                    break
+                }
                 try {
                     val jsonString: String = content.substring(
-                            storyBlockStartIndex + HEADING_START.length,
+                            mediaFilesStartIndex,
                             storyBlockEndIndex
                     )
                     content = listener.doWithMediaFilesJson(content, jsonString)
