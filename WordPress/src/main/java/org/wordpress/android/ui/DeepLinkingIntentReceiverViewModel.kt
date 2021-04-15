@@ -1,5 +1,6 @@
 package org.wordpress.android.ui
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -7,9 +8,12 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -21,6 +25,7 @@ class DeepLinkingIntentReceiverViewModel
     private val accountStore: AccountStore,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler,
+    private val contextProvider: ContextProvider,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
@@ -67,6 +72,7 @@ class DeepLinkingIntentReceiverViewModel
         val redirectUri: UriWrapper? = getRedirectUri(uri)
         return when {
             redirectUri == null -> null
+            shouldOpenReader(redirectUri) -> OpenInReader(redirectUri)
             redirectUri.host == HOST_WORDPRESS_COM -> {
                 when (redirectUri.pathSegments.firstOrNull()) {
                     POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
@@ -100,6 +106,16 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun shouldShow(uri: UriWrapper, path: String): Boolean {
         return uri.host == HOST_WORDPRESS_COM && uri.pathSegments.firstOrNull() == path
+    }
+
+    /**
+     * URIs supported by the Reader are already defined as intent filters in the manifest. Instead of replicating
+     * that logic here, we simply check if we can resolve an [Intent] that uses [ReaderConstants.ACTION_VIEW_POST].
+     * Since that's a custom action that is only handled by the Reader, we can then assume it supports this URI.
+     */
+    private fun shouldOpenReader(uri: UriWrapper): Boolean {
+        val packageManager = contextProvider.getContext().packageManager
+        return Intent(ReaderConstants.ACTION_VIEW_POST, uri.uri).resolveActivity(packageManager) != null
     }
 
     override fun onCleared() {
