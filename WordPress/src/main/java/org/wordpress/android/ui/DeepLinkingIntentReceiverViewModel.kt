@@ -65,21 +65,17 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun buildNavigateAction(uri: UriWrapper): NavigateAction? {
         val redirectUri: UriWrapper? = getRedirectUri(uri)
-        return if (redirectUri != null && redirectUri.host == HOST_WORDPRESS_COM) {
-            when (redirectUri.pathSegments.firstOrNull()) {
-                POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
-                START_PATH -> if (accountStore.hasAccessToken()) {
-                    StartCreateSiteFlow
-                } else {
-                    ShowSignInFlow
+        return when {
+            redirectUri == null -> null
+            redirectUri.host == HOST_WORDPRESS_COM -> {
+                when (redirectUri.pathSegments.firstOrNull()) {
+                    POST_PATH -> editorLinkHandler.buildOpenEditorNavigateAction(redirectUri)
+                    START_PATH -> if (accountStore.hasAccessToken()) StartCreateSiteFlow else ShowSignInFlow
+                    WP_LOGIN -> buildNavigateAction(redirectUri)
+                    else -> null
                 }
-                WP_LOGIN -> {
-                    buildNavigateAction(redirectUri)
-                }
-                else -> null
             }
-        } else {
-            null
+            else -> null
         }
     }
 
