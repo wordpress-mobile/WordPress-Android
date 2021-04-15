@@ -18,7 +18,7 @@
         <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorControlActivated">@color/primary_30</item>
+        <item name="colorControlActivated">@color/colorControlActivated</item>
 
         <item name="toolbarIconNormalColor">@color/grey_darken_20</item>
         <item name="toolbarIconHighlightColor">@color/almost_black</item>
