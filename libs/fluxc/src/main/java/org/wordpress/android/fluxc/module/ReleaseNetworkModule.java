@@ -85,13 +85,13 @@ public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
-    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClientBuilder));
+    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient okHttpClient, Context appContext) {
+        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClient));
         return createRequestQueue(network, appContext);
     }
 
-    private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        Network network = new BasicNetwork(new OkHttpStack(okHttpClientBuilder));
+    private RequestQueue newRequestQueue(OkHttpClient okHttpClient, Context appContext) {
+        Network network = new BasicNetwork(new OkHttpStack(okHttpClient));
         return createRequestQueue(network, appContext);
     }
 
@@ -105,25 +105,25 @@ public class ReleaseNetworkModule {
     @Singleton
     @Named("regular")
     @Provides
-    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient okHttpClient,
                                             Context appContext) {
-        return newRequestQueue(okHttpClientBuilder, appContext);
+        return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
     @Named("no-redirects")
     @Provides
-    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient okHttpClient,
                                                        Context appContext) {
-        return newRetryOnRedirectRequestQueue(okHttpClientBuilder, appContext);
+        return newRetryOnRedirectRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
     @Named("custom-ssl")
     @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient okHttpClient,
                                                      Context appContext) {
-        return newRequestQueue(okHttpClientBuilder, appContext);
+        return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
