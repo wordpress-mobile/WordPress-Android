@@ -31,17 +31,17 @@ import okhttp3.internal.tls.OkHostnameVerifier;
 public abstract class DebugOkHttpClientModule {
     // These allow a library client to use this module without contributing any interceptors
     @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
-    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
 
-    private static CookieJar mCookieJar = new JavaNetCookieJar(new CookieManager());
+    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
 
     @Provides
     @Named("regular")
     public static OkHttpClient.Builder provideOkHttpClientBuilder(
             @Named("interceptors") Set<Interceptor> interceptors,
-            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors,
+            final CookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
+        builder.cookieJar(cookieJar);
         for (Interceptor interceptor : interceptors) {
             builder.addInterceptor(interceptor);
         }
@@ -55,8 +55,9 @@ public abstract class DebugOkHttpClientModule {
     @Named("no-redirects")
     public static OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder(
             @Named("interceptors") Set<Interceptor> interceptors,
-            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
-        OkHttpClient.Builder builder = provideOkHttpClientBuilder(interceptors, networkInterceptors);
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors,
+            final CookieJar cookieJar) {
+        OkHttpClient.Builder builder = provideOkHttpClientBuilder(interceptors, networkInterceptors, cookieJar);
         builder.followRedirects(false);
         return builder;
     }
@@ -66,9 +67,10 @@ public abstract class DebugOkHttpClientModule {
     public static OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
             MemorizingTrustManager memorizingTrustManager,
             @Named("interceptors") Set<Interceptor> interceptors,
-            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors,
+            final CookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
+        builder.cookieJar(cookieJar);
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
