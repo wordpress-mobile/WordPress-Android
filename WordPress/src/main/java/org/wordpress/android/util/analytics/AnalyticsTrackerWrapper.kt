@@ -16,15 +16,19 @@ class AnalyticsTrackerWrapper
     }
 
     fun track(stat: Stat, feature: FeatureConfig) {
-        AnalyticsTracker.track(stat, mapOf(feature.remoteField to feature.isEnabled()))
+        AnalyticsTracker.track(stat, feature.toParams())
     }
 
     fun track(stat: Stat, experimentConfig: ExperimentConfig) {
         AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
     }
 
-    fun track(stat: Stat, properties: Map<String, *>) {
+    fun track(stat: Stat, properties: Map<String, Any?>) {
         AnalyticsTracker.track(stat, properties)
+    }
+
+    fun track(stat: Stat, properties: Map<String, *>, feature: FeatureConfig) {
+        AnalyticsTracker.track(stat, properties + feature.toParams())
     }
 
     fun track(stat: Stat, site: SiteModel) {
@@ -45,4 +49,14 @@ class AnalyticsTrackerWrapper
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
     }
+
+    fun trackWithSiteDetails(
+        stat: Stat,
+        siteModel: SiteModel?,
+        feature: FeatureConfig
+    ) {
+        AnalyticsUtils.trackWithSiteDetails(stat, siteModel, feature.toParams().toMutableMap<String, Any>())
+    }
+
+    private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())
 }

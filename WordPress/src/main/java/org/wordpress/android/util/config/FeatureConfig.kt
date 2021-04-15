@@ -14,7 +14,8 @@ open class FeatureConfig(
     val buildConfigValue: Boolean,
     val remoteField: String? = null
 ) {
-    fun isEnabled(): Boolean {
+    open fun isEnabled(): Boolean {
         return appConfig.isEnabled(this)
     }
+    open fun name() = remoteField ?: this.javaClass.name
 }
