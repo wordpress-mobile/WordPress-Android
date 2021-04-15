@@ -140,7 +140,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
 
         loadData(true, forced)
 
-        verify(analyticsTrackerWrapper, never()).track(eq(STATS_OVERVIEW_ERROR), any<Map<String, *>>())
+        verify(analyticsTrackerWrapper, never()).track(eq(STATS_OVERVIEW_ERROR), any<Map<String, *>>(), isNull())
     }
 
     @Test

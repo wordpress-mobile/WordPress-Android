@@ -4,6 +4,7 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
@@ -16,19 +17,46 @@ class AnalyticsTrackerWrapper
     }
 
     fun track(stat: Stat, feature: FeatureConfig) {
-        AnalyticsTracker.track(stat, mapOf(feature.remoteField to feature.isEnabled()))
+        AnalyticsTracker.track(
+                stat,
+                feature.toParams()
+        )
+    }
+
+    fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
+        AnalyticsTracker.track(
+                stat,
+                buildFeatureConfigParams(remoteField, featureState)
+        )
+    }
+
+    private fun FeatureConfig.toParams(): Map<String, Any> {
+        return buildFeatureConfigParams(this.remoteField ?: this.javaClass.name, this.featureState())
+    }
+
+    private fun buildFeatureConfigParams(key: String, featureState: FeatureState): Map<String, Any> {
+        return mapOf(
+                key to featureState.isEnabled,
+                "${key}_state" to featureState.name
+        )
     }
 
     fun track(stat: Stat, experimentConfig: ExperimentConfig) {
         AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
     }
 
-    fun track(stat: Stat, properties: Map<String, *>) {
-        AnalyticsTracker.track(stat, properties)
+    @JvmOverloads
+    fun track(stat: Stat, properties: Map<String, *>, feature: FeatureConfig? = null) {
+        if (feature != null) {
+            AnalyticsTracker.track(stat, properties + feature.toParams())
+        } else {
+            AnalyticsTracker.track(stat, properties)
+        }
     }
 
-    fun track(stat: Stat, site: SiteModel) {
-        AnalyticsUtils.trackWithSiteDetails(stat, site)
+    @JvmOverloads
+    fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig? = null) {
+        AnalyticsUtils.trackWithSiteDetails(stat, site, feature?.toParams())
     }
 
     fun track(stat: Stat, siteId: Long) {
