@@ -1,6 +1,9 @@
 package org.wordpress.android.ui
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -193,5 +196,39 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         viewModel.handleOpenEditor(uri)
 
         assertThat(navigateAction).isEqualTo(expected)
+    }
+
+    @Test
+    fun `view post mbar URL triggers the reader when it can be resolved`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val redirect = buildUri("wordpress.com", "read")
+        var navigateAction: NavigateAction? = null
+
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        whenever(intentUtils.canResolveWith(any(), eq(redirect))).thenReturn(true)
+
+        viewModel.navigateAction.observeForever { navigateAction = it?.getContentIfNotHandled() }
+        viewModel.handleTrackingUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInReader(redirect))
+        verify(serverTrackingHandler).request(uri)
+    }
+
+    @Test
+    fun `view post mbar URL triggers the browser when it can't be resolved`() {
+        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
+        val redirect = buildUri("wordpress.com", "read")
+        val barUri = buildUri("public-api.wordpress.com", "bar")
+        var navigateAction: NavigateAction? = null
+
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        whenever(intentUtils.canResolveWith(any(), eq(redirect))).thenReturn(false)
+        whenever(uri.copy("bar")).thenReturn(barUri)
+
+        viewModel.navigateAction.observeForever { navigateAction = it?.getContentIfNotHandled() }
+        viewModel.handleTrackingUrl(uri)
+
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
+        verifyZeroInteractions(serverTrackingHandler)
     }
 }
