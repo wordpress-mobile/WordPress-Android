@@ -67,6 +67,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.utils.TimeZoneProvider;
 
 import java.io.File;
+import java.net.CookieManager;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -75,6 +76,8 @@ import dagger.Module;
 import dagger.Provides;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.Dispatchers;
+import okhttp3.CookieJar;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -428,8 +431,14 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public MemorizingTrustManager provideMemorizingTrustManager(Context appContext) {
+    public MemorizingTrustManager provideMemorizingTrustManager() {
         return new MemorizingTrustManager();
+    }
+
+    @Provides
+    @Singleton
+    public CookieJar provideCookieJar() {
+        return new JavaNetCookieJar(new CookieManager());
     }
 
     @Singleton
