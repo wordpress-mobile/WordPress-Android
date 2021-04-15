@@ -247,7 +247,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     companion object {
         const val TEMPORARY_ID_PREFIX = "tempid-"
         const val HEADING_START = "<!-- wp:jetpack/story "
-        const val HEADING_END = " -->\n"
+        const val HEADING_END = " -->"
         const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
         const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
     }
