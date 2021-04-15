@@ -39,9 +39,6 @@ public abstract class DebugOkHttpClientModule {
     public static OkHttpClient provideNoRedirectsOkHttpClientBuilder(
             @Named("regular") final OkHttpClient okHttpRegularClient) {
         return okHttpRegularClient.newBuilder()
-                                  .connectTimeout(10000, TimeUnit.MILLISECONDS)
-                                  .readTimeout(10000, TimeUnit.MILLISECONDS)
-                                  .writeTimeout(10000, TimeUnit.MILLISECONDS)
                                   .followRedirects(false)
                                   .build();
     }
