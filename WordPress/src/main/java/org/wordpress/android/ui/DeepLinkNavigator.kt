@@ -7,8 +7,10 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -32,6 +34,10 @@ class DeepLinkNavigator
                     navigateAction.site,
                     navigateAction.postId
             )
+            is OpenInReader -> {
+                val readerIntent = Intent(ReaderConstants.ACTION_VIEW_POST, navigateAction.uri.uri)
+                activity.startActivity(readerIntent)
+            }
         }
         activity.finish()
     }
@@ -40,6 +46,7 @@ class DeepLinkNavigator
         data class OpenInBrowser(val uri: UriWrapper) : NavigateAction()
         data class OpenEditorForPost(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
+        data class OpenInReader(val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()
         object StartCreateSiteFlow : NavigateAction()
         object ShowSignInFlow : NavigateAction()
