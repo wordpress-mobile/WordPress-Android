@@ -819,8 +819,8 @@ public class PluginStore extends Store {
         // Once the plugin is installed activate it and enable auto-updates
         if (!payload.isError() && payload.plugin != null) {
             try {
-                // Give half a second to the server as otherwise the following configure call may fail
-                Thread.sleep(500);
+                // Give a second to the server as otherwise the following configure call may fail
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 // https://www.javaspecialists.eu/archive/Issue056-Shutting-down-Threads-Cleanly.html
                 Thread.currentThread().interrupt();
