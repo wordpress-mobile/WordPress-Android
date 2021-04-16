@@ -144,14 +144,23 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchCommentLikes(final long siteId, final long commentId, final boolean requestNextPage, final int pageLength) {
+    public void fetchCommentLikes(
+            final long siteId,
+            final long commentId,
+            final boolean requestNextPage,
+            final int pageLength
+    ) {
         String url = WPCOMREST.sites.site(siteId).comments.comment(commentId).likes.getUrlV1_2();
 
         Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(pageLength));
 
         if (requestNextPage) {
-            Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(LikeType.COMMENT_LIKE, siteId, commentId);
+            Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(
+                    LikeType.COMMENT_LIKE,
+                    siteId,
+                    commentId
+            );
             if (pageOffsetParams != null) {
                 params.putAll(pageOffsetParams);
             }
@@ -184,7 +193,14 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentLikesAction(
-                                CommentErrorUtils.commentErrorToFetchedCommentLikesPayload(error, siteId, commentId, requestNextPage, true)));
+                                CommentErrorUtils.commentErrorToFetchedCommentLikesPayload(
+                                        error,
+                                        siteId,
+                                        commentId,
+                                        requestNextPage,
+                                        true
+                                )
+                        ));
                     }
                 }
         );

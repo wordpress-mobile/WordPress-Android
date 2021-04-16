@@ -29,10 +29,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 import javax.inject.Inject;
 
