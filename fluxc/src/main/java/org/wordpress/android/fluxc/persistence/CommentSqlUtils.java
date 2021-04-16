@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommentSqlUtils {
     public static int insertOrUpdateComment(CommentModel comment) {
@@ -249,7 +251,7 @@ public class CommentSqlUtils {
                             .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
                             .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
                             .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
-                            .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                            .equals(LikeModelTable.LIKER_ID, like.getLikerId())
                             .endGroup().endWhere().getAsModel();
 
         if (likeResult.isEmpty()) {
