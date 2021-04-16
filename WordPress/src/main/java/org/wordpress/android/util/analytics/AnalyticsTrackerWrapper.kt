@@ -23,14 +23,10 @@ class AnalyticsTrackerWrapper
     fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
         AnalyticsTracker.track(
                 stat,
-                buildFeatureConfigParams(remoteField, featureState)
-        )
-    }
-
-    private fun buildFeatureConfigParams(key: String, featureState: FeatureState): Map<String, Any> {
-        return mapOf(
-                key to featureState.isEnabled,
-                "${key}_state" to featureState.name
+                mapOf(
+                        remoteField to featureState.isEnabled,
+                        "${remoteField}_state" to featureState.name
+                )
         )
     }
 
@@ -48,10 +44,6 @@ class AnalyticsTrackerWrapper
 
     fun track(stat: Stat, site: SiteModel) {
         AnalyticsUtils.trackWithSiteDetails(stat, site)
-    }
-
-    fun track(stat: Stat, siteId: Long) {
-        AnalyticsUtils.trackWithSiteId(stat, siteId)
     }
 
     /**
