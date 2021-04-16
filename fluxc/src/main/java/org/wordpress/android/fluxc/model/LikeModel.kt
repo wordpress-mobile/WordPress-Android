@@ -25,7 +25,7 @@ class LikeModel : Identifiable {
     @Column var type: String = POST_LIKE.typeName
     @Column var remoteSiteId: Long = 0
     @Column var remoteItemId: Long = 0 // Either Post remote id or Comment remote id
-    @Column var remoteLikeId: Long = 0
+    @Column var likerId: Long = 0
     @Column var likerName: String? = null
         get() = StringUtils.notNullStr(field)
     @Column var likerLogin: String? = null
@@ -43,6 +43,8 @@ class LikeModel : Identifiable {
     @Column var preferredBlogUrl: String? = null
         get() = StringUtils.notNullStr(field)
     @Column var preferredBlogBlavatarUrl: String? = null
+        get() = StringUtils.notNullStr(field)
+    @Column var dateLiked: String? = null
         get() = StringUtils.notNullStr(field)
 
     override fun setId(id: Int) {
