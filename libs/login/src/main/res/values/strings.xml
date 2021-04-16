@@ -12,7 +12,6 @@
     <string name="log_in">Log In</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
-    <string name="enter_email_to_continue_wordpress_com_no_signup">Enter your email address to log in to a WordPress.com account.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
