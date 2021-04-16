@@ -24,6 +24,6 @@ class LikeWPComRestResponse {
     var bio: String? = null
     var site_ID: Long = 0
     var primary_blog: String? = null
-
+    var date_liked: String? = null
     var preferred_blog: PreferredBlogResponse? = null
 }
