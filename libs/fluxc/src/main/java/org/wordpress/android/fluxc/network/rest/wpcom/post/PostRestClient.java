@@ -116,14 +116,23 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPostLikes(final long siteId, final long remotePostId, final boolean requestNextPage, final int pageLength) {
+    public void fetchPostLikes(
+            final long siteId,
+            final long remotePostId,
+            final boolean requestNextPage,
+            final int pageLength
+    ) {
         String url = WPCOMREST.sites.site(siteId).posts.post(remotePostId).likes.getUrlV1_2();
 
         Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(pageLength));
 
         if (requestNextPage) {
-            Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(LikeType.POST_LIKE, siteId, remotePostId);
+            Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(
+                    LikeType.POST_LIKE,
+                    siteId,
+                    remotePostId
+            );
             if (pageOffsetParams != null) {
                 params.putAll(pageOffsetParams);
             }
@@ -141,8 +150,13 @@ public class PostRestClient extends BaseWPComRestClient {
                                 LikeType.POST_LIKE
                         );
 
-                        FetchedPostLikesResponsePayload
-                                payload = new FetchedPostLikesResponsePayload(likes, siteId, remotePostId, requestNextPage, likes.size() >= pageLength);
+                        FetchedPostLikesResponsePayload payload = new FetchedPostLikesResponsePayload(
+                                likes,
+                                siteId,
+                                remotePostId,
+                                requestNextPage,
+                                likes.size() >= pageLength
+                        );
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
                     }
                 },
@@ -150,8 +164,12 @@ public class PostRestClient extends BaseWPComRestClient {
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        FetchedPostLikesResponsePayload
-                                payload = new FetchedPostLikesResponsePayload(siteId, remotePostId, requestNextPage, true);
+                        FetchedPostLikesResponsePayload payload = new FetchedPostLikesResponsePayload(
+                                siteId,
+                                remotePostId,
+                                requestNextPage,
+                                true
+                        );
                         payload.error = new PostError(error.apiError, error.message);
 
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
