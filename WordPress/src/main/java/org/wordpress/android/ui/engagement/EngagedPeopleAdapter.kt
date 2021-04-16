@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.engagement.EngageItem.EngageItemType
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngageItem.NextLikesPageLoader
 import org.wordpress.android.util.image.ImageManager
 import java.lang.IllegalArgumentException
 
@@ -28,14 +29,17 @@ class EngagedPeopleAdapter constructor(
         return when (viewType) {
             EngageItemType.LIKED_ITEM.ordinal -> LikedItemViewHolder(parent, imageManager)
             EngageItemType.LIKER.ordinal -> LikerViewHolder(parent, imageManager)
+            EngageItemType.NEXT_LIKES_PAGE_LOADER.ordinal -> NextPageLoadViewHolder(parent)
             else -> throw IllegalArgumentException("Illegal view type $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: EngagedPeopleViewHolder, position: Int) {
-        when (val item = itemsList[position]) {
+        val item = itemsList[position]
+        when (item) {
             is LikedItem -> (holder as LikedItemViewHolder).bind(item)
             is Liker -> (holder as LikerViewHolder).bind(item)
+            is NextLikesPageLoader -> (holder as NextPageLoadViewHolder).bind(item)
         }
     }
 
