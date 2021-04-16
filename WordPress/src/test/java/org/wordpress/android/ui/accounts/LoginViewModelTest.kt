@@ -62,11 +62,11 @@ class LoginViewModelTest : BaseUnitTest() {
     fun `given site is not jetpack, then error message in navigation matches expected message`() {
         val errorMessage = "Not a jetpack site"
         val url = "nojetpack.wordpress.com"
-        whenever(resourceProvider.getString(R.string.login_no_jetpack_sites, url)).thenReturn(errorMessage)
+        whenever(resourceProvider.getString(R.string.login_not_a_jetpack_site, url)).thenReturn(errorMessage)
         val navigationEvents = initObservers().navigationEvents
 
-        viewModel.onHandleNoJetpackSites()
-        val navigationEvent = navigationEvents.last() as ShowNoJetpackSitesError
+        viewModel.onHandleSiteAddressError(getConnectSiteInfoPayload(url))
+        val navigationEvent = navigationEvents.last() as ShowSiteAddressError
 
         Assertions.assertThat(navigationEvent.errorMessage == errorMessage)
     }
