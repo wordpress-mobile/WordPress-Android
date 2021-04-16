@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.accounts
 
-import androidx.fragment.app.Fragment
-
 sealed class LoginNavigationEvents {
-    data class SlideInFragment(val fragment: Fragment, val shouldAddToBackStack: Boolean, val tag: String) :
-            LoginNavigationEvents()
+    data class ShowSiteAddressError(val url: String, val errorMessage: String) : LoginNavigationEvents()
+    data class ShowNoJetpackSitesError(val errorMessage: String) : LoginNavigationEvents()
+    object ShowSignInForResultJetpackOnly : LoginNavigationEvents()
 }

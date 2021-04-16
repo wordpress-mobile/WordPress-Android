@@ -51,13 +51,16 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.SlideInFragment;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSitesError;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -84,6 +87,8 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -211,10 +216,13 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         // initObservers
         mViewModel.getNavigationEvents().observe(this, event -> {
-            SlideInFragment slideInFragment = (SlideInFragment) event.getContentIfNotHandled();
-            slideInFragment(slideInFragment.getFragment(), slideInFragment.getShouldAddToBackStack(),
-                            slideInFragment.getTag());
-                    });
+            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
+            if (loginEvent instanceof ShowSiteAddressError) {
+                showSiteAddressError((ShowSiteAddressError) loginEvent);
+            } else {
+                showNoJetpackSitesError((ShowNoJetpackSitesError) loginEvent);
+            }
+        });
     }
 
     private void loginFromPrologue() {
@@ -938,12 +946,25 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        mViewModel.handleSiteAddressError(siteInfo);
+        mViewModel.onHandleSiteAddressError(siteInfo);
     }
 
     public void handleNoJetpackSites() {
-        // hide keyboard if it you can
-        org.wordpress.android.util.ActivityUtils.hideKeyboard(this);
-        mViewModel.handleNoJetpackSites();
+        // hide keyboard if you can
+        hideKeyboard(this);
+        mViewModel.onHandleNoJetpackSites();
+    }
+
+
+    private void showSiteAddressError(ShowSiteAddressError event) {
+        LoginSiteCheckErrorFragment fragment =
+                LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl(), event.getErrorMessage());
+        slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
+    }
+
+    private void showNoJetpackSitesError(ShowNoJetpackSitesError event) {
+        LoginNoSitesErrorFragment fragment =
+                LoginNoSitesErrorFragment.Companion.newInstance(event.getErrorMessage());
+        slideInFragment(fragment, false, LoginNoSitesErrorFragment.TAG);
     }
 }
