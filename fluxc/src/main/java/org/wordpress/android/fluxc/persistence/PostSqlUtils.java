@@ -29,8 +29,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -429,7 +431,7 @@ public class PostSqlUtils {
                             .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
                             .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
                             .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
-                            .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                            .equals(LikeModelTable.LIKER_ID, like.getLikerId())
                             .endGroup().endWhere().getAsModel();
 
         if (likeResult.isEmpty()) {

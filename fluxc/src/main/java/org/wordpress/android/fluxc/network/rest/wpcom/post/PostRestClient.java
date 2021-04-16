@@ -36,7 +36,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.common.LikeWPComRestResponse.LikesWPComRestResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesResponseUtilsProvider;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesUtilsProvider;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMetaData;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
@@ -72,12 +72,12 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostRestClient extends BaseWPComRestClient {
-    LikesResponseUtilsProvider mLikesResponseUtilsProvider;
+    LikesUtilsProvider mLikesUtilsProvider;
 
     public PostRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                          UserAgent userAgent, LikesResponseUtilsProvider likesResponseUtilsProvider) {
+                          UserAgent userAgent, LikesUtilsProvider likesUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mLikesResponseUtilsProvider = likesResponseUtilsProvider;
+        mLikesUtilsProvider = likesUtilsProvider;
     }
 
     public void fetchPost(final PostModel post, final SiteModel site) {
@@ -116,15 +116,25 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPostLikes(final long siteId, final long remotePostId) {
+    public void fetchPostLikes(final long siteId, final long remotePostId, final boolean requestNextPage, final int pageLength) {
         String url = WPCOMREST.sites.site(siteId).posts.post(remotePostId).likes.getUrlV1_2();
 
+        Map<String, String> params = new HashMap<>();
+        params.put("number", String.valueOf(pageLength));
+
+        if (requestNextPage) {
+            Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(LikeType.POST_LIKE, siteId, remotePostId);
+            if (pageOffsetParams != null) {
+                params.putAll(pageOffsetParams);
+            }
+        }
+
         final WPComGsonRequest<LikesWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
-                url, null, LikesWPComRestResponse.class,
+                url, params, LikesWPComRestResponse.class,
                 new Listener<LikesWPComRestResponse>() {
                     @Override
                     public void onResponse(LikesWPComRestResponse response) {
-                        List<LikeModel> likes = mLikesResponseUtilsProvider.likesResponseToLikeList(
+                        List<LikeModel> likes = mLikesUtilsProvider.likesResponseToLikeList(
                                 response,
                                 siteId,
                                 remotePostId,
@@ -132,7 +142,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         );
 
                         FetchedPostLikesResponsePayload
-                                payload = new FetchedPostLikesResponsePayload(likes, siteId, remotePostId);
+                                payload = new FetchedPostLikesResponsePayload(likes, siteId, remotePostId, requestNextPage, likes.size() >= pageLength);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
                     }
                 },
@@ -141,7 +151,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         FetchedPostLikesResponsePayload
-                                payload = new FetchedPostLikesResponsePayload(siteId, remotePostId);
+                                payload = new FetchedPostLikesResponsePayload(siteId, remotePostId, requestNextPage, true);
                         payload.error = new PostError(error.apiError, error.message);
 
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostLikesAction(payload));
