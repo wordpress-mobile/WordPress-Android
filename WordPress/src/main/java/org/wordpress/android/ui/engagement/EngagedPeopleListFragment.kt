@@ -41,7 +41,6 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject

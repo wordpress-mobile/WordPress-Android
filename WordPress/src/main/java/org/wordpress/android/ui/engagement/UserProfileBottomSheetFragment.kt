@@ -66,6 +66,24 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(vmKey, UserProfileViewModel::class.java)
 
+        initObservers(view)
+
+        dialog?.setOnShowListener { dialogInterface ->
+            val sheetDialog = dialogInterface as? BottomSheetDialog
+
+            val bottomSheet = sheetDialog?.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+            ) as? FrameLayout
+
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                val metrics = resources.displayMetrics
+                behavior.peekHeight = metrics.heightPixels
+            }
+        }
+    }
+
+    private fun initObservers(view: View) {
         val userAvatar = view.findViewById<ImageView>(R.id.user_avatar)
         val blavatar = view.findViewById<ImageView>(R.id.user_site_blavatar)
         val userName = view.findViewById<TextView>(R.id.user_name)
@@ -119,25 +137,10 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                         siteSectionHeader.visibility = View.GONE
                         blavatar.visibility = View.GONE
                         siteData.visibility = View.GONE
-
                     }
                 }
             }
         })
-
-        dialog?.setOnShowListener { dialogInterface ->
-            val sheetDialog = dialogInterface as? BottomSheetDialog
-
-            val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
-            ) as? FrameLayout
-
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                val metrics = resources.displayMetrics
-                behavior.peekHeight = metrics.heightPixels
-            }
-        }
     }
 
     override fun onAttach(context: Context) {
