@@ -106,6 +106,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -177,6 +178,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
+    public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
@@ -651,7 +653,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    ActivityLauncher.viewBlogStats(this, mSelectedSiteRepository.getSelectedSite());
+                    if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
+                        ActivityLauncher.viewBlogStatsForTimeframe(this, mSelectedSiteRepository.getSelectedSite(),
+                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
+                    } else {
+                        ActivityLauncher.viewBlogStats(this, mSelectedSiteRepository.getSelectedSite());
+                    }
                     break;
                 case ARG_PAGES:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {

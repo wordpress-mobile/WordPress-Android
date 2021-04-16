@@ -34,6 +34,33 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `handles post URI is true`() {
+        val postUri = buildUri("wordpress.com", "post")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isTrue()
+    }
+
+    @Test
+    fun `does not handle post URI with different host`() {
+        val postUri = buildUri("wordpress.org", "post")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isFalse()
+    }
+
+    @Test
+    fun `does not handle URI with different path`() {
+        val postUri = buildUri("wordpress.com", "stats")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isFalse()
+    }
+
+    @Test
     fun `opens editor when site not found`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl)
 

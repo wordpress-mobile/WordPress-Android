@@ -385,54 +385,55 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
-        if (site == null) {
-            AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
-            AnalyticsTracker.track(
-                    STATS_ACCESS_ERROR,
-                    ActivityLauncher.class.getName(),
-                    "NullPointerException",
-                    "Failed to open Stats from the deeplink because of the null SiteModel"
-                                  );
-            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
-            return;
-        }
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-
-        Intent mainActivityIntent = getMainActivityInNewStack(context);
-
-        Intent statsIntent = StatsActivity.buildIntent(context, site);
-
-        taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(statsIntent);
-        taskStackBuilder.startActivities();
+        viewStatsInNewStack(context, site, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
+    public static void viewStatsInNewStack(Context context, SiteModel site,  @Nullable StatsTimeframe statsTimeframe) {
         if (site == null) {
-            AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
-            AnalyticsTracker.track(
-                    STATS_ACCESS_ERROR,
-                    ActivityLauncher.class.getName(),
-                    "NullPointerException",
-                    "Failed to open Stats from the deeplink because of the null SiteModel"
-                                  );
-            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+            handleMissingSite(context);
             return;
         }
+        Intent statsIntent;
+        if (statsTimeframe != null) {
+            statsIntent = StatsActivity.buildIntent(context, site, statsTimeframe);
+        } else {
+            statsIntent = StatsActivity.buildIntent(context, site);
+        }
+
+        runIntentOverMainActivityInNewStack(context, statsIntent);
+    }
+
+    private static void handleMissingSite(Context context) {
+        AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
+        AnalyticsTracker.track(
+                STATS_ACCESS_ERROR,
+                ActivityLauncher.class.getName(),
+                "NullPointerException",
+                "Failed to open Stats from the deeplink because of the null SiteModel"
+        );
+        ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+    }
+
+    private static void runIntentOverMainActivityInNewStack(Context context, Intent intent) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = StatsActivity.buildIntent(context, site, statsTimeframe);
-
         taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(statsIntent);
+        taskStackBuilder.addNextIntent(intent);
         taskStackBuilder.startActivities();
     }
 
     public static void viewStatsInNewStack(Context context) {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        context.startActivity(intent);
+    }
+
+    public static void viewStatsForTimeframeInNewStack(Context context, StatsTimeframe statsTimeframe) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        intent.putExtra(WPMainActivity.ARG_STATS_TIMEFRAME, statsTimeframe);
         context.startActivity(intent);
     }
 
@@ -464,6 +465,21 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
             StatsActivity.start(context, site);
+        }
+    }
+
+    public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+                                  );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            StatsActivity.start(context, site, statsTimeframe);
         }
     }
 

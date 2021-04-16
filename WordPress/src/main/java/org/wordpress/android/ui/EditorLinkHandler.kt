@@ -1,5 +1,6 @@
 package org.wordpress.android.ui
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.DeepLinkingIntentReceiverViewModel.Companion
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -34,6 +36,15 @@ class EditorLinkHandler
         val targetSite = pathSegments.getOrNull(1)?.toSite()
         val targetPost = pathSegments.getOrNull(2)?.toPost(targetSite)
         return openEditorForSiteAndPost(targetSite, targetPost)
+    }
+
+    /**
+     * Returns true if the URI should be handled by EditorLinkHandler.
+     * The handled links are `wordpress.com/post...1
+     */
+    fun isEditorUrl(uri: UriWrapper): Boolean {
+        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == POST_PATH
     }
 
     /**
@@ -76,7 +87,7 @@ class EditorLinkHandler
         }
     }
 
-    private fun extractSiteModelFromTargetHost(host: String): SiteModel? {
-        return siteStore.getSitesByNameOrUrlMatching(host).firstOrNull()
+    companion object {
+        private const val POST_PATH = "post"
     }
 }

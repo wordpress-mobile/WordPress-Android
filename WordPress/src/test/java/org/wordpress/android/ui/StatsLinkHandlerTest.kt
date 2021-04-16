@@ -27,6 +27,33 @@ class StatsLinkHandlerTest {
     }
 
     @Test
+    fun `handles stats URI is true`() {
+        val statsUri = buildUri("wordpress.com", "stats")
+
+        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+
+        assertThat(isStatsUri).isTrue()
+    }
+
+    @Test
+    fun `does not handle stats URI with different host`() {
+        val statsUri = buildUri("wordpress.org", "stats")
+
+        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+
+        assertThat(isStatsUri).isFalse()
+    }
+
+    @Test
+    fun `does not handle URI with different path`() {
+        val statsUri = buildUri("wordpress.com", "post")
+
+        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+
+        assertThat(isStatsUri).isFalse()
+    }
+
+    @Test
     fun `opens stats screen from empty URL`() {
         val uri = buildUri(path1 = "stats")
 

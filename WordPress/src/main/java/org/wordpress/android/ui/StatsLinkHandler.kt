@@ -5,6 +5,8 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
+import org.wordpress.android.ui.EditorLinkHandler.Companion
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -30,11 +32,23 @@ class StatsLinkHandler
             site != null -> {
                 OpenStatsForSite(site)
             }
+            statsTimeframe != null -> {
+                OpenStatsForTimeframe(statsTimeframe)
+            }
             else -> {
                 // In other cases, launch stats with the current selected site.
                 OpenStats
             }
         }
+    }
+
+    /**
+     * Returns true if the URI should be handled by StatsLinkHandler.
+     * The handled links are `https://wordpress.com/stats/day/$site`
+     */
+    fun isStatsUrl(uri: UriWrapper): Boolean {
+        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == STATS_PATH
     }
 
     /**
@@ -46,7 +60,7 @@ class StatsLinkHandler
     }
 
     private fun String.toStatsTimeframe(): StatsTimeframe? {
-        return when(this) {
+        return when (this) {
             "day" -> StatsTimeframe.DAY
             "week" -> StatsTimeframe.WEEK
             "month" -> StatsTimeframe.MONTH
@@ -54,5 +68,8 @@ class StatsLinkHandler
             "insights" -> StatsTimeframe.INSIGHTS
             else -> null
         }
+    }
+    companion object {
+        private const val STATS_PATH = "stats"
     }
 }

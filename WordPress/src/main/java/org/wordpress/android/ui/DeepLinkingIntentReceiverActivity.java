@@ -80,18 +80,14 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             mInterceptedUri = uri.toString();
             UriWrapper uriWrapper = new UriWrapper(uri);
-            if (mViewModel.shouldHandleTrackingUrl(uriWrapper)) {
-                mViewModel.handleTrackingUrl(uriWrapper);
-            } else if (mViewModel.shouldOpenEditor(uriWrapper)) {
-                mViewModel.handleOpenEditor(uriWrapper);
+            if (mViewModel.shouldHandleUrl(uriWrapper)) {
+                mViewModel.handleUrl(uriWrapper);
             } else if (shouldOpenEditorFromDeepLink(host)) {
                 handleOpenEditorFromDeepLink(uri);
             } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
             } else if (shouldViewPost(host)) {
                 handleViewPost(uri);
-            } else if (mViewModel.shouldShowStats(uriWrapper)) {
-                mViewModel.handleShowStats(uriWrapper);
             } else if (shouldShowPages(uri)) {
                 handleShowPages(uriWrapper);
             } else {

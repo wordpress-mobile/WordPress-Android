@@ -11,14 +11,19 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var statsLinkHandler: StatsLinkHandler
+    @Mock lateinit var startLinkHandler: StartLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
+    private val startUrl = buildUri("wordpress.com", "start")
+    private val postUrl = buildUri("wordpress.com", "post")
+    private val statsUrl = buildUri("wordpress.com", "stats")
 
     @InternalCoroutinesApi
     @Before
@@ -27,17 +32,20 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 editorLinkHandler,
                 statsLinkHandler,
-                accountStore,
+                startLinkHandler,
                 deepLinkUriUtils,
                 serverTrackingHandler
         )
+        whenever(startLinkHandler.isStartUrl(startUrl)).thenReturn(true)
+        whenever(editorLinkHandler.isEditorUrl(postUrl)).thenReturn(true)
+        whenever(statsLinkHandler.isStatsUrl(statsUrl)).thenReturn(true)
     }
 
     @Test
     fun `should handle email mbar mobile URL`() {
         val uri = buildUri("public-api.wordpress.com", "mbar")
 
-        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
 
         assertThat(shouldHandleUri).isTrue()
     }
@@ -46,7 +54,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should not handle WPcom URL`() {
         val uri = buildUri("wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -55,7 +63,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should not handle bar non-mobile URL`() {
         val uri = buildUri("public-api.wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleTrackingUrl(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -70,48 +78,27 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleTrackingUrl(uri)
+        viewModel.handleUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
 
     @Test
-    fun `create site mbar URL triggers the Site Creation flow when logged in`() {
+    fun `create site mbar URL triggers the Site Creation flow`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
         val firstRedirect = buildUri("wordpress.com", "wp-login.php", "redirect_to...")
-        val secondRedirect = buildUri("wordpress.com", "start")
+
         whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(firstRedirect)
-        whenever(deepLinkUriUtils.getUriFromQueryParameter(firstRedirect, "redirect_to")).thenReturn(secondRedirect)
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(firstRedirect, "redirect_to")).thenReturn(startUrl)
+        whenever(startLinkHandler.buildNavigateAction()).thenReturn(StartCreateSiteFlow)
         var navigateAction: NavigateAction? = null
         viewModel.navigateAction.observeForever {
             navigateAction = it?.getContentIfNotHandled()
         }
-        val isSignedIn = true
-        whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
 
-        viewModel.handleTrackingUrl(uri)
+        viewModel.handleUrl(uri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.StartCreateSiteFlow)
-        verify(serverTrackingHandler).request(uri)
-    }
-
-    @Test
-    fun `create site mbar URL triggers the sign up flow when not logged in to WPCom account`() {
-        val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
-        val firstRedirect = buildUri("wordpress.com", "wp-login.php", "redirect_to...")
-        val secondRedirect = buildUri("wordpress.com", "start")
-        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(firstRedirect)
-        whenever(deepLinkUriUtils.getUriFromQueryParameter(firstRedirect, "redirect_to")).thenReturn(secondRedirect)
-        var navigateAction: NavigateAction? = null
-        viewModel.navigateAction.observeForever {
-            navigateAction = it?.getContentIfNotHandled()
-        }
-        val isSignedIn = false
-        whenever(accountStore.hasAccessToken()).thenReturn(isSignedIn)
-
-        viewModel.handleTrackingUrl(uri)
-
-        assertThat(navigateAction).isEqualTo(NavigateAction.ShowSignInFlow)
+        assertThat(navigateAction).isEqualTo(StartCreateSiteFlow)
         verify(serverTrackingHandler).request(uri)
     }
 
@@ -127,7 +114,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleTrackingUrl(uri)
+        viewModel.handleUrl(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
@@ -135,16 +122,15 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Test
     fun `post mbar URL triggers the editor`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
-        val redirect = buildUri("wordpress.com", "post")
-        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
+        whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(postUrl)
         val expectedAction = NavigateAction.OpenEditor
-        whenever(editorLinkHandler.buildOpenEditorNavigateAction(redirect)).thenReturn(expectedAction)
+        whenever(editorLinkHandler.buildOpenEditorNavigateAction(postUrl)).thenReturn(expectedAction)
         var navigateAction: NavigateAction? = null
         viewModel.navigateAction.observeForever {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleTrackingUrl(uri)
+        viewModel.handleUrl(uri)
 
         assertThat(navigateAction).isEqualTo(expectedAction)
         verify(serverTrackingHandler).request(uri)
@@ -152,18 +138,14 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     @Test
     fun `should handle post url`() {
-        val uri = buildUri("wordpress.com", "post")
-
-        val shouldHandleUri = viewModel.shouldOpenEditor(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(postUrl)
 
         assertThat(shouldHandleUri).isTrue()
     }
 
     @Test
     fun `should handle stats url`() {
-        val uri = buildUri("wordpress.com", "stats")
-
-        val shouldHandleUri = viewModel.shouldShowStats(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(statsUrl)
 
         assertThat(shouldHandleUri).isTrue()
     }
@@ -172,7 +154,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `does not handle pages url`() {
         val uri = buildUri("wordpress.com", "pages")
 
-        val shouldHandleUri = viewModel.shouldOpenEditor(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -181,7 +163,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `does not handle app link to posts`() {
         val uri = buildUri("pages", "")
 
-        val shouldHandleUri = viewModel.shouldOpenEditor(uri)
+        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -190,6 +172,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `opens navigate action from editor link handler`() {
         val siteUrl = "site123"
         val uri = buildUri("wordpress.com", "post", siteUrl)
+        whenever(editorLinkHandler.isEditorUrl(uri)).thenReturn(true)
         val expected = NavigateAction.OpenEditor
         whenever(editorLinkHandler.buildOpenEditorNavigateAction(uri)).thenReturn(expected)
 
@@ -198,7 +181,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleOpenEditor(uri)
+        viewModel.handleUrl(uri)
 
         assertThat(navigateAction).isEqualTo(expected)
     }
@@ -207,6 +190,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `opens navigate action from stats link handler`() {
         val siteUrl = "site123"
         val uri = buildUri("wordpress.com", "stats", siteUrl)
+        whenever(statsLinkHandler.isStatsUrl(uri)).thenReturn(true)
         val expected = NavigateAction.OpenStats
         whenever(statsLinkHandler.buildOpenStatsNavigateAction(uri)).thenReturn(expected)
 
@@ -215,7 +199,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleShowStats(uri)
+        viewModel.handleUrl(uri)
 
         assertThat(navigateAction).isEqualTo(expected)
     }

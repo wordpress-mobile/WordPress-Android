@@ -51,6 +51,11 @@ class StatsActivity : LocaleAwareActivity() {
             context.startActivity(buildIntent(context, site))
         }
 
+        @JvmStatic
+        fun start(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe) {
+            context.startActivity(buildIntent(context, site, statsTimeframe))
+        }
+
         fun start(context: Context, localSiteId: Int, statsTimeframe: StatsTimeframe, period: String?) {
             val intent = buildIntent(context, localSiteId, statsTimeframe, period)
             context.startActivity(intent)

@@ -10,6 +10,7 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPo
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -37,6 +38,10 @@ class DeepLinkNavigator
                     navigateAction.postId
             )
             OpenStats -> ActivityLauncher.viewStatsInNewStack(activity)
+            is OpenStatsForTimeframe -> ActivityLauncher.viewStatsForTimeframeInNewStack(
+                    activity,
+                    navigateAction.statsTimeframe
+            )
             is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(activity, navigateAction.site)
             is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
                     activity,
@@ -56,6 +61,7 @@ class DeepLinkNavigator
                 NavigateAction()
 
         data class OpenStatsForSite(val site: SiteModel) : NavigateAction()
+        data class OpenStatsForTimeframe(val statsTimeframe: StatsTimeframe) : NavigateAction()
         object OpenStats : NavigateAction()
         object StartCreateSiteFlow : NavigateAction()
         object ShowSignInFlow : NavigateAction()

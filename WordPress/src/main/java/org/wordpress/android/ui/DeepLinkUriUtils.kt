@@ -12,7 +12,8 @@ class DeepLinkUriUtils
         return site?.url?.let { uriUtilsWrapper.parse(it).host }
     }
 
-    fun getUriFromQueryParameter(uri: UriWrapper, key: String) = uri.getQueryParameter(key)?.let { uriUtilsWrapper.parse(it) }
+    fun getUriFromQueryParameter(uri: UriWrapper, key: String) =
+            uri.getQueryParameter(key)?.let { uriUtilsWrapper.parse(it) }
 
     fun extractTargetHost(uri: UriWrapper): String {
         return uri.lastPathSegment ?: ""
