@@ -6,7 +6,6 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
-import org.wordpress.android.ui.EditorLinkHandler.Companion
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject

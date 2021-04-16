@@ -1,18 +1,15 @@
 package org.wordpress.android.ui
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
-import org.wordpress.android.ui.DeepLinkingIntentReceiverViewModel.Companion
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -20,7 +17,6 @@ import javax.inject.Inject
 class EditorLinkHandler
 @Inject constructor(
     private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val siteStore: SiteStore,
     private val postStore: PostStore
 ) {
     private val _toast = MutableLiveData<Event<Int>>()

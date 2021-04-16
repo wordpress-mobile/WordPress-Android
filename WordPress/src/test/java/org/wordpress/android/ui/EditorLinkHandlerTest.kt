@@ -9,12 +9,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var postStore: PostStore
     private lateinit var editorLinkHandler: EditorLinkHandler
     private lateinit var site: SiteModel
@@ -25,7 +23,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        editorLinkHandler = EditorLinkHandler(deepLinkUriUtils, siteStore, postStore)
+        editorLinkHandler = EditorLinkHandler(deepLinkUriUtils, postStore)
         site = SiteModel()
         site.url = siteUrl
         post = PostModel()

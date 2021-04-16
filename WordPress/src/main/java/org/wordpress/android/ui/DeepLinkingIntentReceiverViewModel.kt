@@ -36,7 +36,6 @@ class DeepLinkingIntentReceiverViewModel
         return isTrackingUrl(uri) ||
                 editorLinkHandler.isEditorUrl(uri) ||
                 statsLinkHandler.isStatsUrl(uri)
-
     }
 
     /**

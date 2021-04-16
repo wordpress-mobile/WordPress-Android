@@ -32,4 +32,3 @@ class StartLinkHandler
         private const val START_PATH = "start"
     }
 }
-
