@@ -11,10 +11,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FragmentLoginNoSitesErrorBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_error) {
     companion object {
         const val TAG = "LoginNoSitesErrorFragment"
@@ -29,7 +29,6 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         }
     }
 
-    @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private var loginListener: LoginListener? = null
     private var errorMsg: String? = null
@@ -45,18 +44,45 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initDagger()
+        initErrorMessageView(view)
+        initViewModel()
+        initBackPressHandler()
+    }
 
+    private fun initDagger() {
         (requireActivity().application as WordPress).component().inject(this)
+    }
 
+    private fun initErrorMessageView(view: View) {
         val binding = FragmentLoginNoSitesErrorBinding.bind(view)
-
         binding.loginErrorMsg.text = errorMsg
+    }
 
+    private fun initViewModel() {
         viewModel = ViewModelProvider(this@LoginNoSitesErrorFragment, viewModelFactory)
                 .get(LoginNoSitesErrorViewModel::class.java)
-        viewModel.signOutWordPress(requireActivity().application as WordPress)
 
-        initBackPressHandler()
+        initObservers()
+
+        viewModel.start(requireActivity().application as WordPress)
+    }
+
+    private fun initObservers() {
+        // initObservers
+        viewModel.navigationEvents.observe(viewLifecycleOwner, { events ->
+            events.getContentIfNotHandled()?.let {
+                when (it) {
+                    is ShowSignInForResultJetpackOnly -> showSignInForResultJetpackOnly()
+                    else -> { // no op
+                    }
+                }
+            }
+        })
+    }
+
+    private fun showSignInForResultJetpackOnly() {
+        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
     }
 
     override fun onAttach(context: Context) {
@@ -73,8 +99,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
 
     override fun onResume() {
         super.onResume()
-
-        unifiedLoginTracker.track(step = Step.NO_JETPACK_SITES)
+        viewModel.onFragmentResume()
     }
 
     private fun initBackPressHandler() {
@@ -84,7 +109,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
                         true
                 ) {
                     override fun handleOnBackPressed() {
-                        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
+                        viewModel.onBackPressed()
                     }
                 })
     }
