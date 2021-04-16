@@ -169,6 +169,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
+    public static final String ARG_WP_COM_SIGN_UP = "sign_up";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
@@ -373,6 +374,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.newBlogForResult(this);
+        } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
+            ActivityLauncher.showSignInForResult(this, true);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -656,6 +660,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         initSelectedSite();
                     }
                     ActivityLauncher.viewCurrentBlogPages(this, mSelectedSiteRepository.getSelectedSite());
+                    break;
+                case ARG_WP_COM_SIGN_UP:
+                    ActivityLauncher.showSignInForResult(this, true);
                     break;
             }
         } else {

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -18,6 +18,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -287,6 +288,10 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    private fun onEnterServerCredsMessageClicked() {
+        updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
+    }
+
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
         updateSnackbarMessageEvent(UiStringRes(messageRes))
         fetchScanState()
@@ -322,7 +327,8 @@ class ScanViewModel @Inject constructor(
             onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
             onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
             onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
-            onHelpClicked = this@ScanViewModel::onContactSupportClicked
+            onHelpClicked = this@ScanViewModel::onContactSupportClicked,
+            onEnterServerCredsMessageClicked = this@ScanViewModel::onEnterServerCredsMessageClicked
         )
     )
 

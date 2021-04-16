@@ -4,6 +4,7 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ExperimentConfig
 import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
@@ -17,6 +18,20 @@ class AnalyticsTrackerWrapper
 
     fun track(stat: Stat, feature: FeatureConfig) {
         AnalyticsTracker.track(stat, feature.toParams())
+    }
+
+    fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
+        AnalyticsTracker.track(
+                stat,
+                buildFeatureConfigParams(remoteField, featureState)
+        )
+    }
+
+    private fun buildFeatureConfigParams(key: String, featureState: FeatureState): Map<String, Any> {
+        return mapOf(
+                key to featureState.isEnabled,
+                "${key}_state" to featureState.name
+        )
     }
 
     fun track(stat: Stat, experimentConfig: ExperimentConfig) {

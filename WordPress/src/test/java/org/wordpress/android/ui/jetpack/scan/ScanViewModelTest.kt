@@ -16,6 +16,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -24,10 +25,13 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
@@ -54,6 +58,7 @@ import org.wordpress.android.viewmodel.Event
 private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 4
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 5
+private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 7
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -95,12 +100,13 @@ class ScanViewModelTest : BaseUnitTest() {
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
-        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any()))
+        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenAnswer {
                 createDummyScanStateListItems(
                     it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),
                     it.getArgument(ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
+                    it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION)
                 )
             }
         whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
@@ -296,6 +302,23 @@ class ScanViewModelTest : BaseUnitTest() {
 
             assertThat(uiStates.filterIsInstance<ContentUiState>()).size().isEqualTo(2)
         }
+
+    @Test
+    fun `when server creds msg is clicked, then app opens site's jetpack settings external url`() = test {
+        val observers = init()
+
+        (observers.uiStates.last() as ContentUiState).items
+                .filterIsInstance(DescriptionState::class.java)
+                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
+                ?.clickableTextsInfo
+                ?.firstOrNull()
+                ?.onClick
+                ?.invoke()
+
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(
+                ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}")
+        )
+    }
 
     @Test
     fun `given no network, when scan button is clicked, then no network msg is shown`() = test {
@@ -680,7 +703,8 @@ class ScanViewModelTest : BaseUnitTest() {
     private fun createDummyScanStateListItems(
         onStartScanButtonClicked: (() -> Unit),
         onFixAllButtonClicked: (() -> Unit),
-        onThreatItemClicked: (Long) -> Unit
+        onThreatItemClicked: (Long) -> Unit,
+        onEnterServerCredsMessageClicked: () -> Unit
     ) = listOf(
         ActionButtonState(
             text = fakeUiStringText,
@@ -699,6 +723,16 @@ class ScanViewModelTest : BaseUnitTest() {
             progressLabel = fakeUiStringText,
             isIndeterminate = true,
             isVisible = false
+        ),
+        DescriptionState(
+                text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
+                clickableTextsInfo = listOf(
+                        ClickableTextInfo(
+                            startIndex = 0,
+                            endIndex = 1,
+                            onClick = onEnterServerCredsMessageClicked
+                        )
+                )
         ),
         ThreatItemState(
             threatId = fakeThreatId,

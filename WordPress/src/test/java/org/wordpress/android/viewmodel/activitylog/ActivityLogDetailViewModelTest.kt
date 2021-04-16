@@ -22,8 +22,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
-import org.wordpress.android.util.config.BackupDownloadFeatureConfig
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -34,8 +32,6 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
-    @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val areButtonsVisible = true
@@ -76,9 +72,7 @@ class ActivityLogDetailViewModelTest {
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
-                activityLogStore,
-                restoreFeatureConfig,
-                backupDownloadFeatureConfig
+                activityLogStore
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
@@ -110,24 +104,6 @@ class ActivityLogDetailViewModelTest {
         viewModel.start(site, activityID, false)
 
         assertEquals(false, downloadBackupVisible)
-    }
-
-    @Test
-    fun `given backup download feature is disabled, when view model starts, then download backup button is shown`() {
-        whenever(backupDownloadFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.start(site, activityID, true)
-
-        assertEquals(false, downloadBackupVisible)
-    }
-
-    @Test
-    fun `given backup download feature is enabled, when view model starts, then download backup button is shown`() {
-        whenever(backupDownloadFeatureConfig.isEnabled()).thenReturn(true)
-
-        viewModel.start(site, activityID, true)
-
-        assertEquals(true, downloadBackupVisible)
     }
 
     @Test
@@ -247,23 +223,9 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given restore feature is disabled, when on restore clicked, then show rewind dialog with model`() {
+    fun `when on restore clicked, then show restore with model`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn("123")
-        whenever(restoreFeatureConfig.isEnabled()).thenReturn(false)
-
-        viewModel.onRestoreClicked(model)
-
-        navigationEvents.last().peekContent()?.let {
-            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRewindDialog).model)
-        }
-    }
-
-    @Test
-    fun `given restore feature is enabled, when on restore clicked, then show restore with model`() {
-        val model = mock<ActivityLogDetailModel>()
-        whenever(model.rewindId).thenReturn("123")
-        whenever(restoreFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.onRestoreClicked(model)
 

@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
@@ -41,6 +42,7 @@ import java.util.Date
 private const val DUMMY_CURRENT_TIME = 10000000L
 private const val ONE_MINUTE = 60 * 1000L
 private const val ONE_HOUR = 60 * ONE_MINUTE
+private const val DUMMY_TEXT = "dummy text"
 
 @InternalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
@@ -54,6 +56,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
+    @Mock private lateinit var onEnterServerCredsMessageClicked: () -> Unit
 
     private val baseThreatModel = BaseThreatModel(
         id = 1L,
@@ -78,7 +81,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             scanStore
         )
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
-        whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn("")
+        whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
         whenever(site.name).thenReturn((""))
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
@@ -175,6 +178,22 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 .isEqualTo(subHeader.text)
         }
 
+    @Test
+    fun `given fixing state fixable threats without server creds, when items are built, then creds msg not exists`() =
+            test {
+                val scanStateItems = buildScanStateItems(
+                        model = scanStateModelWithThreats,
+                        fixingThreatIds = listOf(threat.baseThreatModel.id),
+                        fixableThreatsPresent = true,
+                        serverCredsPresent = false
+                )
+
+                assertThat(
+                        scanStateItems.filterIsInstance(DescriptionState::class.java)
+                        .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
+                ).isNull()
+            }
+
     /* IDLE - THREATS FOUND STATE */
 
     @Test
@@ -244,6 +263,67 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
             assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text })
                 .doesNotContain(UiStringRes(R.string.threats_fix_all))
+        }
+
+    @Test
+    fun `given idle state fixable threats without server creds, when items are built, then fix all btn is disabled`() =
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+
+            val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
+                    .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
+            assertThat(fixAllButton?.isEnabled).isFalse
+        }
+
+    @Test
+    fun `given idle state fixable threats with server creds, when items are built, then fix all btn is enabled`() =
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
+
+            val fixAllButton = scanStateItems.filterIsInstance(ActionButtonState::class.java)
+                    .firstOrNull { it.text == UiStringRes(R.string.threats_fix_all) }
+            assertThat(fixAllButton?.isEnabled).isTrue
+        }
+
+    @Test
+    fun `given idle state fixable threats without server creds, when items are built, then server creds msg exists`() =
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+
+            assertThat(scanStateItems.contains(
+                    DescriptionState(
+                        text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
+                        clickableTextsInfo = listOf(
+                                ClickableTextInfo(
+                                        startIndex = 0,
+                                        endIndex = resourceProvider
+                                                .getString(R.string.threat_fix_enter_server_creds_message_singular)
+                                                .length,
+                                        onClick = onEnterServerCredsMessageClicked
+                                )
+                        )
+                    )
+            )).isNotNull
+        }
+
+    @Test
+    fun `given idle state fixable threats with server creds, when items are built, then server creds msg not exists`() =
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)
+
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
+                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                    .isNull()
+        }
+
+    @Test
+    fun `given idle state with no fixable threats, when items are built, then server creds msg does not exists`() =
+        test {
+            val scanStateItems = buildScanStateItems(fixableThreatsPresent = false)
+
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java)
+                    .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+                    .isNull()
         }
 
     @Test
@@ -528,17 +608,33 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     private suspend fun buildScanStateItems(
-        model: ScanStateModel,
-        fixingThreatIds: List<Long> = emptyList()
-    ) = builder.buildScanStateListItems(
-        model = model,
-        site = site,
-        fixingThreatIds = fixingThreatIds,
-        onScanButtonClicked = mock(),
-        onFixAllButtonClicked = mock(),
-        onThreatItemClicked = mock(),
-        onHelpClicked = onHelpClickedMock
-    )
+        model: ScanStateModel? = null,
+        fixingThreatIds: List<Long> = emptyList(),
+        fixableThreatsPresent: Boolean = false,
+        serverCredsPresent: Boolean = false
+    ): List<JetpackListItemState> {
+        var scanStateModel = model ?: scanStateModelWithThreats
+
+        if (fixableThreatsPresent) {
+            val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = mock())))
+            scanStateModel = scanStateModel.copy(threats = threats)
+        }
+
+        if (serverCredsPresent) {
+            scanStateModel = scanStateModel.copy(hasValidCredentials = serverCredsPresent)
+        }
+
+        return builder.buildScanStateListItems(
+                model = scanStateModel,
+                site = site,
+                fixingThreatIds = fixingThreatIds,
+                onScanButtonClicked = mock(),
+                onFixAllButtonClicked = mock(),
+                onThreatItemClicked = mock(),
+                onHelpClicked = onHelpClickedMock,
+                onEnterServerCredsMessageClicked = onEnterServerCredsMessageClicked
+        )
+    }
 
     private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
         threatId = threatModel.baseThreatModel.id,
