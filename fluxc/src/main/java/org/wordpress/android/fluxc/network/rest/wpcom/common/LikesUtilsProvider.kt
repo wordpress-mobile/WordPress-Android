@@ -16,9 +16,9 @@ class LikesUtilsProvider @Inject constructor() {
                 .columns(LikeModelTable.DATE_LIKED)
                 .limit(1)
                 .where().beginGroup()
-                .equals(LikeModelTable.TYPE, type.typeName) //--
+                .equals(LikeModelTable.TYPE, type.typeName)
                 .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemtId) //--
+                .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemtId)
                 .endGroup().endWhere()
                 .orderBy(LikeModelTable.DATE_LIKED, SelectQuery.ORDER_ASCENDING)
                 .asModel

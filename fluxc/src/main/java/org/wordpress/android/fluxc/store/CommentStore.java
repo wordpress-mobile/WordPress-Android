@@ -31,7 +31,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -163,7 +162,13 @@ public class CommentStore extends Store {
         public final boolean hasMore;
         public final boolean isRequestNextPage;
 
-        public FetchedCommentLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long commentRemoteId, boolean isRequestNextPage, boolean hasMore) {
+        public FetchedCommentLikesResponsePayload(
+                @NonNull List<LikeModel> likes,
+                long siteId,
+                long commentRemoteId,
+                boolean isRequestNextPage,
+                boolean hasMore
+        ) {
             this.likes = likes;
             this.siteId = siteId;
             this.commentRemoteId = commentRemoteId;
@@ -573,11 +578,20 @@ public class CommentStore extends Store {
     }
 
     private void fetchCommentLikes(FetchCommentLikesPayload payload) {
-        mCommentRestClient.fetchCommentLikes(payload.siteId, payload.remoteCommentId, payload.requestNextPage, payload.pageLength);
+        mCommentRestClient.fetchCommentLikes(
+                payload.siteId,
+                payload.remoteCommentId,
+                payload.requestNextPage,
+                payload.pageLength
+        );
     }
 
     private void handleFetchedCommentLikes(FetchedCommentLikesResponsePayload payload) {
-        OnCommentLikesChanged event = new OnCommentLikesChanged(payload.siteId, payload.commentRemoteId, payload.hasMore);
+        OnCommentLikesChanged event = new OnCommentLikesChanged(
+                payload.siteId,
+                payload.commentRemoteId,
+                payload.hasMore
+        );
         if (!payload.isError()) {
             if (payload.likes != null) {
                 if (!payload.isRequestNextPage) {

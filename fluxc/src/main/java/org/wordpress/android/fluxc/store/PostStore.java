@@ -196,7 +196,13 @@ public class PostStore extends Store {
         public final boolean hasMore;
         public final boolean isRequestNextPage;
 
-        public FetchedPostLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long remotePostId, boolean isRequestNextPage, boolean hasMore) {
+        public FetchedPostLikesResponsePayload(
+                @NonNull List<LikeModel> likes,
+                long siteId,
+                long remotePostId,
+                boolean isRequestNextPage,
+                boolean hasMore
+        ) {
             this.likes = likes;
             this.siteId = siteId;
             this.remotePostId = remotePostId;
@@ -204,7 +210,12 @@ public class PostStore extends Store {
             this.isRequestNextPage = isRequestNextPage;
         }
 
-        public FetchedPostLikesResponsePayload(long siteId, long remotePostId, boolean isRequestNextPage, boolean hasMore) {
+        public FetchedPostLikesResponsePayload(
+                long siteId,
+                long remotePostId,
+                boolean isRequestNextPage,
+                boolean hasMore
+        ) {
             this.likes = new ArrayList<>();
             this.siteId = siteId;
             this.remotePostId = remotePostId;
@@ -753,8 +764,12 @@ public class PostStore extends Store {
     }
 
     private void fetchPostLikes(FetchPostLikesPayload payload) {
-        //Map<String, String> pageOffsetParams = mPostSqlUtils.getPageOffsetParams(payload.siteId, payload.remotePostId);
-        mPostRestClient.fetchPostLikes(payload.siteId, payload.remotePostId, payload.requestNextPage, payload.pageLength);
+        mPostRestClient.fetchPostLikes(
+                payload.siteId,
+                payload.remotePostId,
+                payload.requestNextPage,
+                payload.pageLength
+        );
     }
 
     private void handleFetchedPostLikes(FetchedPostLikesResponsePayload payload) {
