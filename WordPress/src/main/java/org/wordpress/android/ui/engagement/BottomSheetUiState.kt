@@ -11,5 +11,7 @@ sealed class BottomSheetUiState {
         val siteUrl: String,
         val siteId: Long,
         val onClick: ((siteId: Long, siteUrl: String) -> Unit)? = null
-    ) : BottomSheetUiState()
+    ) : BottomSheetUiState() {
+        val hasSiteUrl: Boolean = siteUrl.isNotBlank()
+    }
 }
