@@ -162,11 +162,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     label.setText(Html.fromHtml(
                             getString(R.string.enter_email_for_site, mLoginSiteUrl)));
                 } else {
-                    if (mIsSignupFromLoginEnabled) {
-                        label.setText(R.string.enter_email_to_continue_wordpress_com);
-                    } else {
-                        label.setText(R.string.enter_email_to_continue_wordpress_com_no_signup);
-                    }
+                    label.setText(R.string.enter_email_to_continue_wordpress_com);
                 }
                 break;
             case WOO_LOGIN_MODE:
