@@ -42,12 +42,13 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class EngagedPeopleListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var contextProvider: ContextProvider
+    @Inject lateinit var resourceProvider: ResourceProvider
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var uiHelpers: UiHelpers
@@ -228,7 +229,7 @@ class EngagedPeopleListFragment : Fragment() {
     private fun setupAdapter(items: List<EngageItem>) {
         val adapter = recycler.adapter as? EngagedPeopleAdapter ?: EngagedPeopleAdapter(
                 imageManager,
-                contextProvider.getContext()
+                resourceProvider
         ).also {
             recycler.adapter = it
         }
