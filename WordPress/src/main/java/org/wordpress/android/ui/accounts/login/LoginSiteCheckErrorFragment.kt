@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
@@ -52,12 +51,18 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity().application as WordPress).component().inject(this)
+        initDagger()
+        initToolbar(view)
+        initErrorMessageView(view)
+    }
 
+    private fun initDagger() {
+        (requireActivity().application as WordPress).component().inject(this)
+    }
+
+    private fun initToolbar(view: View) {
         setHasOptionsMenu(true)
         activity?.title = getString(R.string.log_in)
-
-        val binding = FragmentLoginSiteCheckErrorBinding.bind(view)
 
         val toolbar = view.findViewById(R.id.toolbar) as Toolbar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
@@ -66,9 +71,13 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowTitleEnabled(true)
         }
+    }
 
+    private fun initErrorMessageView(view: View) {
+        val binding = FragmentLoginSiteCheckErrorBinding.bind(view)
         binding.loginErrorMsg.text = errorMsg
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_login, menu)
