@@ -49,7 +49,6 @@ class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val supportHelper: SupportHelper,
-    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private val zendeskInstance: Zendesk
@@ -136,7 +135,6 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper,
                         buildConfigWrapper
                     )
                 )
@@ -168,7 +166,6 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper,
                         buildConfigWrapper
                     )
                 )
@@ -346,14 +343,13 @@ private fun buildZendeskConfig(
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     buildConfigWrapper: BuildConfigWrapper
 ): Configuration {
     val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
-            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper, buildConfigWrapper)
+            buildZendeskCustomFields(context, allSites, selectedSite, buildConfigWrapper)
         )
         .withRequestSubject(ticketSubject)
         .withTags(buildZendeskTags(allSites, selectedSite, origin ?: Origin.UNKNOWN, extraTags))
@@ -368,7 +364,6 @@ private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
     selectedSite: SiteModel?,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     buildConfigWrapper: BuildConfigWrapper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
