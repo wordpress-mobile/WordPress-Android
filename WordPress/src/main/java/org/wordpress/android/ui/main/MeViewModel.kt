@@ -3,11 +3,12 @@ package org.wordpress.android.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -16,7 +17,8 @@ import javax.inject.Named
 class MeViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) : ScopedViewModel(mainDispatcher) {
     private val _showDisconnectDialog = MutableLiveData<Event<Boolean>>()
     val showDisconnectDialog: LiveData<Event<Boolean>> = _showDisconnectDialog
@@ -34,4 +36,6 @@ class MeViewModel
     fun openDisconnectDialog() {
         _showDisconnectDialog.value = Event(true)
     }
+
+    fun getSite() = selectedSiteRepository.getSelectedSite()
 }
