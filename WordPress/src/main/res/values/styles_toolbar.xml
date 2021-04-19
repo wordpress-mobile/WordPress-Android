@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- App -->
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="android:background">@null</item>
@@ -23,12 +24,14 @@
         <item name="expandedTitleMarginStart">16dp</item>
     </style>
 
+    <!-- Zendesk -->
     <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
         <item name="titleTextColor">?attr/colorOnPrimary</item>
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
     </style>
 
+    <!-- TextAppearance -->
     <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
