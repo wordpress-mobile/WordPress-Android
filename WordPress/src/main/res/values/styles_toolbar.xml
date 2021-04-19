@@ -24,6 +24,7 @@
     </style>
 
     <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
         <item name="titleTextColor">?attr/colorOnPrimary</item>
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
     </style>

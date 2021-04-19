@@ -2,6 +2,7 @@
 <resources>
 
     <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
