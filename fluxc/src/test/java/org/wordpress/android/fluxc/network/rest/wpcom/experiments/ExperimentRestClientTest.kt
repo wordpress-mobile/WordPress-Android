@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient.Companion.DEFAULT_VERSION
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient.FetchAssignmentsResponse
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform.CALYPSO
@@ -56,17 +57,88 @@ class ExperimentRestClientTest {
     }
 
     @Test
-    fun `is calling correct url with correct parameters`() = test {
+    fun `calls correct url with default values`() = test {
         initRequest(Success(successfulResponse))
 
-        val platform = defaultPlatform
-        val version = "0.1.0"
+        experimentRestClient.fetchAssignments(defaultPlatform, emptyList())
+
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$DEFAULT_VERSION/assignments/${defaultPlatform.value}/"
+        val expectedParams = mapOf(
+                "experiment_names" to "",
+                "anon_id" to ""
+        )
+
+        assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
+        assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
+    }
+
+    @Test
+    fun `calls correct url with single experiment name`() = test {
+        initRequest(Success(successfulResponse))
+
+        val experimentsNames = listOf("experiment_one")
+
+        experimentRestClient.fetchAssignments(defaultPlatform, experimentsNames)
+
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$DEFAULT_VERSION/assignments/${defaultPlatform.value}/"
+        val expectedParams = mapOf(
+                "experiment_names" to "experiment_one",
+                "anon_id" to ""
+        )
+
+        assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
+        assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
+    }
+
+    @Test
+    fun `calls correct url with multiple experiment names`() = test {
+        initRequest(Success(successfulResponse))
+
+        val experimentNames = listOf("experiment_one", "experiment_two", "experiment_three")
+
+        experimentRestClient.fetchAssignments(defaultPlatform, experimentNames)
+
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$DEFAULT_VERSION/assignments/${defaultPlatform.value}/"
+        val expectedParams = mapOf(
+                "experiment_names" to "experiment_one, experiment_two, experiment_three",
+                "anon_id" to ""
+        )
+
+        assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
+        assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
+    }
+
+    @Test
+    fun `calls correct url with anonymous id`() = test {
+        initRequest(Success(successfulResponse))
+
         val anonymousId = "myAnonymousId"
 
-        experimentRestClient.fetchAssignments(platform, anonymousId, version)
+        experimentRestClient.fetchAssignments(defaultPlatform, emptyList(), anonymousId)
 
-        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$version/assignments/${platform.value}/"
-        val expectedParams = mapOf("anon_id" to anonymousId)
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$DEFAULT_VERSION/assignments/${defaultPlatform.value}/"
+        val expectedParams = mapOf(
+                "experiment_names" to "",
+                "anon_id" to anonymousId
+        )
+
+        assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
+        assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
+    }
+
+    @Test
+    fun `calls correct url with version`() = test {
+        initRequest(Success(successfulResponse))
+
+        val version = "1.0.0"
+
+        experimentRestClient.fetchAssignments(defaultPlatform, emptyList(), null, version)
+
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$version/assignments/${defaultPlatform.value}/"
+        val expectedParams = mapOf(
+                "experiment_names" to "",
+                "anon_id" to ""
+        )
 
         assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
         assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
@@ -76,7 +148,7 @@ class ExperimentRestClientTest {
     fun `returns assignments when API call is successful`() = test {
         initRequest(Success(successfulResponse))
 
-        val payload = experimentRestClient.fetchAssignments(defaultPlatform)
+        val payload = experimentRestClient.fetchAssignments(defaultPlatform, emptyList())
 
         assertThat(payload).isNotNull
         assertThat(payload.assignments.variations).isEqualTo(successfulPayload.assignments.variations)
@@ -87,7 +159,7 @@ class ExperimentRestClientTest {
     fun `returns error when API call fails`() = test {
         initRequest(Error(errorResponse))
 
-        val payload = experimentRestClient.fetchAssignments(defaultPlatform)
+        val payload = experimentRestClient.fetchAssignments(defaultPlatform, emptyList())
 
         assertThat(payload).isNotNull
         assertThat(payload.isError).isTrue
