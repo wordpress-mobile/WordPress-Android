@@ -383,7 +383,7 @@
         <item name="actionTextColorAlpha">1.0</item>
     </style>
 
-    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@drawable/tab_layout_background</item>
         <item name="android:elevation">0dp</item>
         <item name="android:duplicateParentState">true</item>
