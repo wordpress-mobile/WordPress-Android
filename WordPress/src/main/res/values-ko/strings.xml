@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-31 11:54:07+0000
+Translation-Revision-Date: 2021-04-16 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">아이콘 버튼 사용</string>
+    <string name="gutenberg_native_search_input_field">입력 필드를 검색합니다.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">검색 버튼입니다. 현재 버튼 텍스트는</string>
+    <string name="gutenberg_native_search_blocks">블록 검색</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">블록 레이블을 검색합니다. 현재 텍스트는</string>
+    <string name="gutenberg_native_search_block">블록 검색</string>
+    <string name="gutenberg_native_outside">외부</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">설정된 사용자 정의 플레이스홀더 없음</string>
+    <string name="gutenberg_native_no_button">버튼 없음</string>
+    <string name="gutenberg_native_inside">내부</string>
+    <string name="gutenberg_native_hide_search_heading">검색 헤딩요소 숨기기</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">두 번 눌러 레이블 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">두 번 눌러 버튼 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">두 번 눌러 단위 변경하기</string>
+    <string name="gutenberg_native_current_placeholder_text_is">현재 플레이스홀더 텍스트는</string>
+    <string name="gutenberg_native_clear_search">검색 지우기</string>
+    <string name="gutenberg_native_cancel_search">검색 취소</string>
+    <string name="gutenberg_native_button_position">버튼 위치</string>
+    <string name="gutenberg_native_button_outside">버튼 외부</string>
+    <string name="gutenberg_native_button_inside">버튼 내부</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s은(는) %3$s %4$s입니다.</string>
+    <string name="get_likes_empty_state_title">좋아요 데이터를 가져오는 중 오류가 발생함</string>
+    <string name="get_likes_unknown_error">좋아요를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
+    <string name="get_likes_no_network_error">사용 가능한 네트워크가 없습니다.</string>
+    <string name="comments_empty_list_filtered_unreplied">응답 없는 댓글 없음</string>
+    <string name="comment_status_unreplied">응답 없음</string>
     <string name="gutenberg_native_table_of_contents">목차</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">헤딩요소 목록으로 글을 요약하세요. 여기에서 HTML 앵커를 헤딩요소 블록에 추가하여 링크를 설정하세요.</string>
     <string name="gutenberg_native_document_outline">문서 개요</string>
