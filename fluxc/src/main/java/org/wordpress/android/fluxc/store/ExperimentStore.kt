@@ -28,9 +28,10 @@ class ExperimentStore @Inject constructor(
 
     suspend fun fetchAssignments(
         platform: Platform,
+        experimentNames: List<String>,
         anonymousId: String? = null
     ) = coroutineEngine.withDefaultContext(API, this, "fetchAssignments") {
-        val fetchedPayload = experimentRestClient.fetchAssignments(platform, anonymousId)
+        val fetchedPayload = experimentRestClient.fetchAssignments(platform, experimentNames, anonymousId)
         if (!fetchedPayload.isError) {
             storeFetchedAssignments(fetchedPayload.assignments)
             OnAssignmentsFetched(assignments = Assignments.fromModel(fetchedPayload.assignments))
