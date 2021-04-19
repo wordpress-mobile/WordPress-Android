@@ -991,7 +991,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     mAnalyticsTrackerWrapper
-                            .track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
+                            .trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite(),
+                                    mMySiteImprovementsFeatureConfig);
                 }
                 break;
             case READER:
