@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Login -->
-    <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
-        <item name="android:theme">@style/ThemeOverlay.LoginFlow.Toolbar</item>
-    </style>
-
     <!-- TextAppearance -->
     <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">san-serif</item>

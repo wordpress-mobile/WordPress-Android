@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Login -->
+    <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
+        <item name="android:theme">@style/ThemeOverlay.LoginFlow.Toolbar</item>
+    </style>
+
     <!-- App -->
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextColor">?attr/colorOnSurface</item>
