@@ -45,13 +45,15 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_details_icon_content_description,
-                        R.color.success),
+                        R.color.success
+                ),
                 buildHeaderState(R.string.restore_details_header),
                 buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
                 buildActionButtonState(
                         titleRes = R.string.restore_details_action_button,
                         contentDescRes = R.string.restore_details_action_button_content_description,
-                        onClick = onCreateDownloadClick),
+                        onClick = onCreateDownloadClick
+                ),
                 buildSubHeaderState(R.string.restore_details_choose_items_header)
         )
 
@@ -76,18 +78,21 @@ class RestoreStateListItemBuilder @Inject constructor(
             buildIconState(
                     R.drawable.ic_notice_white_24dp,
                     R.string.restore_warning_icon_content_description,
-                    R.color.error),
+                    R.color.error
+            ),
             buildHeaderState(R.string.restore_warning_header),
             buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
             buildActionButtonState(
                     titleRes = R.string.restore_warning_action_button,
                     contentDescRes = R.string.restore_warning_action_button_content_description,
-                    onClick = onConfirmRestoreClick),
+                    onClick = onConfirmRestoreClick
+            ),
             buildActionButtonState(
                     titleRes = R.string.cancel,
                     contentDescRes = R.string.cancel,
                     isSecondary = true,
-                    onClick = onCancelClick)
+                    onClick = onCancelClick
+            )
     )
 
     fun buildProgressListStateItems(
@@ -99,14 +104,16 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_progress_icon_content_description,
-                        R.color.success),
+                        R.color.success
+                ),
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
                 buildProgressState(progress, isIndeterminate),
                 buildFootnoteState(
                         iconRes = R.drawable.ic_info_outline_white_24dp,
                         iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
-                        textRes = R.string.restore_progress_footnote)
+                        textRes = R.string.restore_progress_footnote
+                )
         )
     }
 
@@ -119,25 +126,28 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_complete_icon_content_description,
-                        R.color.success),
+                        R.color.success
+                ),
                 buildHeaderState(R.string.restore_complete_header),
                 buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
                 buildActionButtonState(
                         titleRes = R.string.restore_complete_done_action_button,
                         contentDescRes = R.string.restore_complete_done_button_content_description,
-                        onClick = onDoneClick),
+                        onClick = onDoneClick
+                ),
                 buildActionButtonState(
                         titleRes = R.string.restore_complete_visit_site_action_button,
                         contentDescRes = R.string.restore_complete_visit_site_button_content_description,
                         isSecondary = true,
-                        onClick = onVisitSiteClick)
+                        onClick = onVisitSiteClick
+                )
         )
     }
 
     fun buildErrorListStateErrorItems(errorType: RestoreErrorTypes, onDoneClick: () -> Unit) = (
             if (errorType == RemoteRequestFailure) buildStatusErrorListStateItems(onDoneClick)
             else buildGenericErrorListStateItems(onDoneClick)
-    )
+            )
 
     private fun buildStatusErrorListStateItems(onDoneClick: () -> Unit) = listOf(
             buildHeaderState(R.string.restore_status_failure_heading),
@@ -145,35 +155,41 @@ class RestoreStateListItemBuilder @Inject constructor(
                     R.drawable.ic_query_builder_white_24dp,
                     R.string.restore_status_bullet_clock_icon_content_desc,
                     R.color.warning,
-                    R.string.restore_status_failure_bullet1),
+                    R.string.restore_status_failure_bullet1
+            ),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.restore_status_bullet_checkmark_icon_content_desc,
                     R.color.success,
-                    R.string.restore_status_failure_bullet2),
+                    R.string.restore_status_failure_bullet2
+            ),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.restore_status_bullet_checkmark_icon_content_desc,
                     R.color.success,
                     R.string.restore_status_failure_bullet3,
-                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin),
+                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin
+            ),
             buildActionButtonState(
                     titleRes = R.string.restore_complete_failed_action_button,
                     contentDescRes = R.string.restore_complete_failed_action_button_content_description,
-                    onClick = onDoneClick)
+                    onClick = onDoneClick
+            )
     )
 
     private fun buildGenericErrorListStateItems(onDoneClick: () -> Unit) = listOf(
             buildIconState(
                     R.drawable.ic_notice_white_24dp,
                     R.string.restore_complete_failed_icon_content_description,
-                    R.color.error),
+                    R.color.error
+            ),
             buildHeaderState(R.string.restore_complete_failed_description),
             buildDescriptionState(descRes = R.string.request_failed_message),
             buildActionButtonState(
                     titleRes = R.string.restore_complete_failed_action_button,
                     contentDescRes = R.string.restore_complete_failed_action_button_content_description,
-                    onClick = onDoneClick)
+                    onClick = onDoneClick
+            )
     )
 
     private fun buildIconState(
@@ -209,11 +225,11 @@ class RestoreStateListItemBuilder @Inject constructor(
         isEnabled: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
-        text = UiStringRes(titleRes),
-        contentDescription = UiStringRes(contentDescRes),
-        isSecondary = isSecondary,
-        onClick = onClick,
-        isEnabled = isEnabled
+            text = UiStringRes(titleRes),
+            contentDescription = UiStringRes(contentDescRes),
+            isSecondary = isSecondary,
+            onClick = onClick,
+            isEnabled = isEnabled
     )
 
     private fun buildSubHeaderState(
@@ -221,9 +237,10 @@ class RestoreStateListItemBuilder @Inject constructor(
         @DimenRes topMarginResId: Int? = null,
         @DimenRes bottomMarginResId: Int? = null
     ) = SubHeaderState(
-                    text = UiStringRes(textResId),
-                    itemTopMarginResId = topMarginResId,
-                    itemBottomMarginResId = bottomMarginResId)
+            text = UiStringRes(textResId),
+            itemTopMarginResId = topMarginResId,
+            itemBottomMarginResId = bottomMarginResId
+    )
 
     private fun buildFootnoteState(
         @DrawableRes iconRes: Int? = null,
