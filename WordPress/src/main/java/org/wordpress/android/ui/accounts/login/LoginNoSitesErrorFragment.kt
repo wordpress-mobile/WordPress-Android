@@ -82,7 +82,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
     }
 
     private fun showSignInForResultJetpackOnly() {
-        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
+        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)
     }
 
     override fun onAttach(context: Context) {
