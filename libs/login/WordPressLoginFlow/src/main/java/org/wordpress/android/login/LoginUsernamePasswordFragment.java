@@ -118,7 +118,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         final boolean isWoo = mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE;
         final int labelResId = isWoo ? R.string.enter_credentials_for_site : R.string.enter_account_info_for_site;
         final String formattedSiteAddress =
-                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
+                UrlUtils.getHost(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
         label.setText(getString(labelResId, formattedSiteAddress));
     }
 
