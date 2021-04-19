@@ -43,18 +43,18 @@ class ExperimentStoreTest {
 
     @Test
     fun `fetch assignments emits correct event when successful`() = test {
-        whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
+        whenever(experimentRestClient.fetchAssignments(defaultPlatform, emptyList())).thenReturn(successfulPayload)
 
-        val onAssignmentsFetched = experimentStore.fetchAssignments(defaultPlatform)
+        val onAssignmentsFetched = experimentStore.fetchAssignments(defaultPlatform, emptyList())
 
         assertThat(onAssignmentsFetched).isEqualTo(OnAssignmentsFetched(successfulAssignments))
     }
 
     @Test
     fun `fetch assignments stores result locally when successful`() = test {
-        whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
+        whenever(experimentRestClient.fetchAssignments(defaultPlatform, emptyList())).thenReturn(successfulPayload)
 
-        experimentStore.fetchAssignments(defaultPlatform)
+        experimentStore.fetchAssignments(defaultPlatform, emptyList())
 
         verify(sharedPreferences).edit()
         inOrder(sharedPreferencesEditor).apply {
