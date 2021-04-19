@@ -70,9 +70,8 @@ class CommentListItemDecoration(val context: Context) : ItemDecoration() {
             outRect[0, 0, 0] = 0
             return
         }
-        val position: Int = parent.getChildAdapterPosition(view)
-        val viewType: Int? = parent.adapter?.getItemViewType(position)
-        if (viewType == CommentListItemType.HEADER.ordinal) {
+        val viewHolder = parent.getChildViewHolder(view)
+        if (viewHolder is CommentSubHeaderViewHolder) {
             outRect.setEmpty()
         } else {
             outRect[0, 0, 0] = divider.intrinsicHeight

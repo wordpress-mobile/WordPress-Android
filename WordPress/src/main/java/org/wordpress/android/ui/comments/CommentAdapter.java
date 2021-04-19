@@ -125,11 +125,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
     public void onBindViewHolder(@NonNull CommentListViewHolder viewHolder, int position,
                                  @NonNull List<Object> payloads) {
         if (viewHolder instanceof CommentSubHeaderViewHolder) {
-            ((CommentSubHeaderViewHolder) viewHolder)
-                    .bind((SubHeader) mComments.get(position));
+            ((CommentSubHeaderViewHolder) viewHolder).bind((SubHeader) mComments.get(position));
         } else if (viewHolder instanceof CommentViewHolder) {
-            ((CommentViewHolder) viewHolder)
-                    .bind((Comment) mComments.get(position), mEnableSelection && isItemSelected(position));
+            ((CommentViewHolder) viewHolder).bind(
+                    (Comment) mComments.get(position),
+                    mEnableSelection && isItemSelected(position));
         }
         // request to load more comments when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
