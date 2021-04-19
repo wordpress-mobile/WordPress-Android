@@ -28,11 +28,15 @@ class ExperimentRestClient(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchAssignments(
         platform: Platform,
+        experimentNames: List<String>,
         anonymousId: String? = null,
         version: String = DEFAULT_VERSION
     ): FetchedAssignmentsPayload {
         val url = WPCOMV2.experiments.version(version).assignments.platform(platform.value).url
-        val params = mapOf("anon_id" to anonymousId.orEmpty())
+        val params = mapOf(
+                "experiment_names" to experimentNames.joinToString(),
+                "anon_id" to anonymousId.orEmpty()
+        )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
