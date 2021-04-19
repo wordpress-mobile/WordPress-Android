@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
@@ -24,4 +24,3 @@
     </style>
 
 </resources>
-
