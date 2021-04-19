@@ -1,1 +1,7 @@
-We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.
+What’s new?
+
+We improved accessibility in the block editor for those who use a TalkBack screen reader.
+
+To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
+
+You may have noticed the new color palette! We also updated your app icon to match.

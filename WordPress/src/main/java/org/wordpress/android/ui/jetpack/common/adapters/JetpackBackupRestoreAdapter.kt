@@ -4,10 +4,10 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreFootnoteViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreBulletViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreFootnoteViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreSubHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackCheckboxViewHolder

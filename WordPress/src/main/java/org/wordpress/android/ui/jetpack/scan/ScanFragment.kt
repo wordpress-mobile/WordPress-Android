@@ -16,6 +16,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -105,6 +106,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
                         is ShowContactSupport ->
                             ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, events.site, null)
+
+                        is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
                     }
                 }
         )

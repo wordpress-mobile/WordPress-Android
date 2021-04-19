@@ -130,7 +130,6 @@ Language: is
     <string name="invite_error_no_usernames">Vinsamlegast bættu við a.m.k einu notandanafni</string>
     <string name="invite">Bjóða</string>
     <string name="invite_people">Bjóða fólki</string>
-    <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
@@ -153,7 +152,6 @@ Language: is
     <string name="checking_email">Athuga tölvupóst</string>
     <string name="magic_link_unavailable_error_message">Ekki tiltækt í augnablikinu. Vinsamlegast sláðu inn lykilorðið þitt.</string>
     <string name="logging_in">Skrá inn</string>
-    <string name="enter_your_password_instead">Sláðu inn lykilorðið þitt í staðinn</string>
     <string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
     <string name="capture_or_pick_photo">Taka eða velja mynd</string>
     <string name="plan">Plön</string>
@@ -491,7 +489,6 @@ Language: is
     <string name="schedule_verb">Tímaáætla</string>
     <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
     <string name="help">Hjálp</string>
-    <string name="forgot_password">Tapað lykilorð?</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
     <string name="ssl_certificate_ask_trust">Ef þú getur vanalega tengst þessum vef án vandræða, þá gæti þessi villa þýtt að einhver er að reyna að þykjast vera vefurinn og þú ættir ekki að halda áfram. Viltu treysta þessu skírteini samt sem áður?</string>
     <string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>

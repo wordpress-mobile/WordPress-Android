@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 02:05:46+0000
+Translation-Revision-Date: 2021-04-16 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
+    <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
+    <string name="gutenberg_native_search_blocks">Sök block</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
+    <string name="gutenberg_native_search_block">Sök block</string>
+    <string name="gutenberg_native_outside">Utanför</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Ingen anpassad platshållare angiven</string>
+    <string name="gutenberg_native_no_button">Ingen knapp</string>
+    <string name="gutenberg_native_inside">Inuti</string>
+    <string name="gutenberg_native_hide_search_heading">Dölj sökrubrik</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbelklicka för att redigera platshållartexten</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Dubbelklicka för att redigera etikettexten</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Dubbelklicka för att redigera knapptexten</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Dubbelklicka för att ändra enhet</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Den nuvarande platshållartexten är</string>
+    <string name="gutenberg_native_clear_search">Rensa sökning</string>
+    <string name="gutenberg_native_cancel_search">Avbryt sök</string>
+    <string name="gutenberg_native_button_position">Knapposition</string>
+    <string name="gutenberg_native_button_outside">Knapp utanför</string>
+    <string name="gutenberg_native_button_inside">Knapp inuti</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s är %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Ett fel uppstod vid hämtningen av data för gilla-markeringar</string>
+    <string name="get_likes_unknown_error">Ett okänt fel uppstod vid hämtningen av gilla-markeringar</string>
+    <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
+    <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
+    <string name="comment_status_unreplied">Obesvarat</string>
     <string name="gutenberg_native_search_settings">Sökinställningar</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Sammanfatta ditt inlägg med en rubriklista. Lägg in HTML-länkmål till rubrikblock för att länka till dem härifrån.</string>
     <string name="gutenberg_native_summary">sammanfattning</string>
     <string name="gutenberg_native_table_of_contents">Innehållsförteckning</string>
-    <string name="gutenberg_native_tag_link">Etikettlänk</string>
-    <string name="gutenberg_native_a_link_to_a_category">En länk till en kategori.</string>
-    <string name="gutenberg_native_a_link_to_a_page">En länk till en sida.</string>
-    <string name="gutenberg_native_a_link_to_a_post">En länk till ett inlägg.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">En länk till en etikett.</string>
-    <string name="gutenberg_native_a_link_to_a_url">En länk till en URL.</string>
     <string name="gutenberg_native_buttongroup">Knappgrupp</string>
-    <string name="gutenberg_native_category_link">Kategorilänk</string>
     <string name="gutenberg_native_document_outline">dokumentöversikt</string>
-    <string name="gutenberg_native_post_link">Inläggslänk</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
@@ -428,7 +447,6 @@ Language: sv_SE
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Denna hänvisande webbplats går inte att avmarkera som skräp</string>
     <string name="gutenberg_native_search_or_type_url">Sök eller skriv URL</string>
     <string name="gutenberg_native_select_item">Välj objekt</string>
-    <string name="gutenberg_native_page_link">Sidlänk</string>
     <string name="gutenberg_native_add_this_telephone_link">Länka till detta telefonnummer</string>
     <string name="gutenberg_native_add_this_email_link">Länka till denna e-postadress</string>
     <string name="gutenberg_native_add_this_link">Lägg till denna länk</string>
@@ -797,7 +815,6 @@ Language: sv_SE
     <string name="gutenberg_native_move_image_forward">Flytta bilden framåt</string>
     <string name="gutenberg_native_move_image_backward">Flytta bilden bakåt</string>
     <string name="gutenberg_native_gallery_caption_s">Bildtext för galleri. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Aktuellt värde är %2$s</string>
     <string name="create_post_page_fab_tooltip">Skapa ett inlägg eller en sida</string>
     <string name="content_description_person_building_website">Person som bygger en webbplats</string>
     <string name="post_signup_interstitial_not_right_now">Inte just nu</string>
@@ -824,7 +841,6 @@ Language: sv_SE
     <string name="login_site_credentials_magic_link_label">Nästan klart! Vi behöver bara bekräfta den e-postadress du har registrerad hos Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="login_discovery_error_xmlrpc">Vi kunde inte nå filen &lt;b>XMLRPC&lt;/b> på din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="my_site_bottom_sheet_add_page">Webbplatssida</string>
-    <string name="enter_site_credentials_instead">Logga in med dina inloggningsuppgifter.</string>
     <string name="site_cannot_be_loaded">Vi lyckas inte hämta uppgifterna för din webbplats just nu. Försök igen senare.</string>
     <string name="reader_my_likes_display_name">Gillar</string>
     <string name="reader_discover_display_name">Upptäck</string>
@@ -876,7 +892,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dubbeltryck för att växla inställningens värde</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dubbeltryck för att lägga till block</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dubbeltryck för att ändra värdet via skjutreglage.</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dubbeltryck för att redigera värdet</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dubbeltryck för att flytta blocket nedåt</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dubbeltryck för att flytta blocket uppåt</string>
@@ -992,7 +1007,6 @@ Language: sv_SE
     <string name="post_notification_one_hour_before">1 timme innan</string>
     <string name="post_notification_ten_minutes_before">10 minuter innan</string>
     <string name="post_settings_time_and_date">Datum och tid</string>
-    <string name="login_need_help_finding_connected_email">Behöver du hjälp att hitta e-postadressen du använde för att ansluta dig?</string>
     <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
     <string name="enter_email_for_site">Logga in med WordPress.com för ansluta till %1$s</string>
     <string name="stats_post_views_label">Visningar</string>
@@ -1168,7 +1182,6 @@ Language: sv_SE
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Redigera nya inlägg och sidor med blockredigeraren</string>
     <string name="plans_loading_error_no_plans_title">Kan inte läsa in paketen</string>
     <string name="menu_switch_to_gutenberg_editor">Växla till blockredigeraren</string>
-    <string name="menu_switch_to_aztec_editor">Växla till den klassiska redigeraren</string>
     <string name="stats_loading_block_error">Ett problem inträffade när dina uppgifter skulle läsas in. Ladda om sidan för att försöka en gång till.</string>
     <string name="stats_loading_error">Uppgifterna kunde inte läsas in</string>
     <string name="exit">avbryt</string>
@@ -1458,14 +1471,12 @@ Language: sv_SE
     <string name="comment_read_source_post">Läs käll-inlägget</string>
     <string name="sites">Webbplatser</string>
     <string name="signup_magic_link_title">Magisk länk har skickats</string>
-    <string name="signup_email_screen_title">Registrering via e-post</string>
     <string name="verification_2fa_screen_title">Bekräftelse av kod</string>
     <string name="selfhosted_site_login_title">Inloggningsuppgifter</string>
     <string name="magic_link_sent_login_title">Magisk länk har skickats</string>
     <string name="magic_link_login_title">Inloggning via magisk länk</string>
     <string name="site_address_login_title">Webbplatsens inloggningsadress</string>
     <string name="email_address_login_title">E-postadress för inloggning</string>
-    <string name="alternatively">Alternativt:</string>
     <string name="reader_empty_saved_posts_description">Knacka på %s för att spara ett inlägg till din lista.</string>
     <string name="reader_bookmark_snack_title">Inlägget sparat</string>
     <string name="reader_bookmark_snack_btn">Se alla</string>
@@ -1502,7 +1513,6 @@ Language: sv_SE
     <string name="reader_btn_notifications_on">Slå på webbplatsaviseringar</string>
     <string name="reader_followed_blog_notifications">Aktivera aviseringar för %1$s%2$s%3$s?</string>
     <string name="post_submitted">Inlägget har skickats</string>
-    <string name="login_email_button_signup">Har du inget konto? %1$sRegistrera dig%2$s</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funktionen för tillägg kräver att domänens abonnemang är kopplat till denna användare.</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funktionen för tillägg kräver att webbplatsen har gott anseende.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
@@ -1660,8 +1670,6 @@ Language: sv_SE
     <string name="username_changer_title">Ändra användarnamn</string>
     <string name="username_changer_action">Spara</string>
     <string name="signup_user_exists">E-postadressen finns redan på WordPress.com.\nGår vidare till inloggning.</string>
-    <string name="signup_with_email_button">Registrering med e-postadress</string>
-    <string name="signup_with_google_button">Registrering med Google</string>
     <string name="content_description_add_avatar">Lägg till profilbild</string>
     <string name="username_changer_dismiss_button_positive">Avbryt</string>
     <string name="username_changer_dismiss_message">Avbryt bytet av användarnamn?</string>
@@ -1672,14 +1680,11 @@ Language: sv_SE
     <string name="google_error_timeout">Det tog för lång tid för Google att svara. Du kan behöva vänta tills du har en stabilare internetuppkoppling.</string>
     <string name="notification_site_creation_created">Tryck för att fortsätta.</string>
     <string name="signup_magic_link_progress">Skickar e-post</string>
-    <string name="signup_terms_of_service_text">Genom att registrera dig accepterar du våra %1$sAnvändarvillkor%2$s.</string>
     <string name="signup_updating_account">Uppdaterar kontot…</string>
     <string name="signup_magic_link_error_button_negative">Stäng</string>
     <string name="signup_epilogue_hint_username">Användarnamn</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
     <string name="signup_epilogue_hint_display">Visningsnamn</string>
-    <string name="signup_email_header">Skriv in din e-postadress för att skapa ditt nya WordPress.com-konto.</string>
-    <string name="signup_email_error_generic">Det gick inte att kontrollera e-postadressen.</string>
     <string name="signup_epilogue_error_avatar">Det gick inte att ladda upp din profilbild.</string>
     <string name="signup_epilogue_error_generic">Det gick inte att uppdatera ditt konto. Du kan försöka en gång till eller backa dina ändringar för att fortsätta.</string>
     <string name="signup_epilogue_error_button_negative">Backa</string>
@@ -1687,9 +1692,6 @@ Language: sv_SE
     <string name="signup_magic_link_error_button_positive">Försök igen</string>
     <string name="signup_magic_link_error">Det gick inte att sända e-postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
     <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en länk av samma typ som du just använde, men om du vill, kan du också konfigurera ett lösenord.</string>
-    <string name="enter_username_instead">Logga in med ditt användarnamn.</string>
-    <string name="enter_site_address_instead">Logga in genom att skriva din webbplatsadress.</string>
-    <string name="sign_up">Registrera dig på WordPress.com</string>
     <string name="plugin_manage">Hantera</string>
     <string name="plugin_install">Installera</string>
     <string name="site_settings_like_header">Gilla</string>
@@ -1810,7 +1812,6 @@ Language: sv_SE
     <string name="login_error_suffix">\nDu kanske vill prova ett annat konto?</string>
     <string name="login_error_generic">Det var något som inte stämde vid uppkoppling till Google-kontot.</string>
     <string name="login_error_button">Stäng</string>
-    <string name="login_google_button_suffix">Logga in via Google.</string>
     <string name="enter_wpcom_password_google">Ange motsvarande lösenord för WordPress.com för att fortsätta med detta Google-konto. Denna fråga får du endast en gång.</string>
     <string name="error_generic_network">Ett nätverksfel har inträffat. Kontrollera anslutningen och försök igen.</string>
     <string name="post_settings_remove_featured_image">Ta bort den utvalda bilden</string>
@@ -1909,7 +1910,6 @@ Language: sv_SE
     <string name="login_site_address_help_content">Din webbplatsadress visas i fältet längst upp när du besöker din webbplats i Chrome.</string>
     <string name="login_site_address_more_help">Behöver du mer hjälp?</string>
     <string name="login_site_address_help_title">Vilket webbplatsadress har jag?</string>
-    <string name="login_site_address_help">Behöver du hjälp att hitta din webbplatsadress?</string>
     <string name="enter_site_address">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
     <string name="login_site_address">Webbplatsadress</string>
     <string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
@@ -1923,7 +1923,6 @@ Language: sv_SE
     <string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
     <string name="next">Nästa</string>
-    <string name="open_mail">Öppna e-posten</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
     <string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
     <string name="leave_off">Behåll avstängt</string>
@@ -2178,7 +2177,6 @@ Language: sv_SE
     <string name="invite_message_title">Anpassat meddelande</string>
     <string name="invite">Bjud in</string>
     <string name="invite_names_title">Användarnamn eller e‑post</string>
-    <string name="send_link">Skicka länk</string>
     <string name="my_site_header_external">Externt</string>
     <string name="invite_people">Bjud in personer</string>
     <string name="label_clear_search_history">Rensa sökhistoriken</string>
@@ -2204,7 +2202,6 @@ Language: sv_SE
     <string name="checking_email">Kontrollerar e-post</string>
     <string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
     <string name="logging_in">Loggar in</string>
-    <string name="enter_your_password_instead">Ange ditt lösenord istället</string>
     <string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
     <string name="capture_or_pick_photo">Ta eller välj ett foto</string>
     <string name="export_your_content_message">Dina inlägg, sidor och inställningar kommer att skickas via e-post till %s.</string>
@@ -2587,7 +2584,6 @@ Language: sv_SE
     <string name="reader_page_followed_tags">Följda ämnen</string>
     <string name="reader_hint_add_tag_or_url">Ange en URL eller ämne att följa</string>
     <string name="help">Hjälp</string>
-    <string name="forgot_password">Glömt ditt lösenord?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="no_network_message">Inget nätverk tillgängligt</string>

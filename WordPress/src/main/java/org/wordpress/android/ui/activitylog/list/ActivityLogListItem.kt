@@ -3,7 +3,6 @@ package org.wordpress.android.ui.activitylog.list
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.MORE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
@@ -12,7 +11,6 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LO
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.NOTICE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
 import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
 import java.util.Date
 
 sealed class ActivityLogListItem(val type: ViewType) {
@@ -32,34 +30,26 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val rewindId: String?,
         val date: Date,
         override val isButtonVisible: Boolean,
-        val buttonIcon: Icon,
-        val isProgressBarVisible: Boolean = false,
-        val showMoreMenu: Boolean = false,
-        val launchRestoreWizard: Boolean = false
+        val buttonIcon: Icon
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
-        val formattedTime: String = date.toFormattedTimeString()
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
 
         constructor(
             model: ActivityLogModel,
-            rewindDisabled: Boolean = false,
-            backupDownloadFeatureEnabled: Boolean,
-            restoreFeatureEnabled: Boolean
+            rewindDisabled: Boolean = false
         ) : this(
-                model.activityID,
-                model.summary,
-                model.content?.text ?: "",
-                model.gridicon,
-                model.status,
-                model.rewindable ?: false,
-                model.rewindID,
-                model.published,
+                activityId = model.activityID,
+                title = model.summary,
+                description = model.content?.text ?: "",
+                gridIcon = model.gridicon,
+                eventStatus = model.status,
+                isRewindable = model.rewindable ?: false,
+                rewindId = model.rewindID,
+                date = model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = if (backupDownloadFeatureEnabled) MORE else HISTORY,
-                showMoreMenu = backupDownloadFeatureEnabled,
-                launchRestoreWizard = restoreFeatureEnabled
+                buttonIcon = MORE
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()

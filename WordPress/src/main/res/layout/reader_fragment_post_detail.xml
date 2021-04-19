@@ -48,11 +48,17 @@
                         android:layout_marginEnd="@dimen/reader_detail_margin"
                         android:layout_marginStart="@dimen/reader_detail_margin" />
 
+                    <include
+                        layout="@layout/reader_post_likers_faces_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_post_detail_content" />
+
                     <LinearLayout
                         android:id="@+id/container_related_posts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_post_detail_content"
+                        android:layout_below="@+id/liker_faces"
                         android:orientation="vertical"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
                         android:layout_alignStart="@+id/layout_post_detail_content"
