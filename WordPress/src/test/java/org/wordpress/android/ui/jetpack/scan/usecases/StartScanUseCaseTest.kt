@@ -56,24 +56,24 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when scan start is triggered, then scan starts optimistically by updating scanning scan state in db`() =
-        testWithSuccessResponse {
-            val scanStateModelInIdleState = ScanStateModel(state = ScanStateModel.State.IDLE)
-            val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
-            whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
+            testWithSuccessResponse {
+                val scanStateModelInIdleState = ScanStateModel(state = ScanStateModel.State.IDLE)
+                val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
+                whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
 
-            val result = useCase.startScan(site).toList(mutableListOf())
+                val result = useCase.startScan(site).toList(mutableListOf())
 
-            verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
-            assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
-        }
+                verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
+                assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
+            }
 
     @Test
     fun `given server is unavailable, when scan is started, then RemoteRequestFailure is returned`() =
-        testWithErrorResponse {
-            val result = useCase.startScan(site).toList(mutableListOf())
+            testWithErrorResponse {
+                val result = useCase.startScan(site).toList(mutableListOf())
 
-            assertThat(result).contains(StartScanState.Failure.RemoteRequestFailure)
-        }
+                assertThat(result).contains(StartScanState.Failure.RemoteRequestFailure)
+            }
 
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
         test {
@@ -85,7 +85,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
     private fun <T> testWithErrorResponse(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(scanStore.startScan(any())).thenReturn(
-                OnScanStarted(ScanStartError(ScanStartErrorType.GENERIC_ERROR), START_SCAN)
+                    OnScanStarted(ScanStartError(ScanStartErrorType.GENERIC_ERROR), START_SCAN)
             )
             block()
         }

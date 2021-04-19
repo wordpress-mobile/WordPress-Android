@@ -84,7 +84,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given failure with restore id, when restore status triggers, then return failure`() =
@@ -95,7 +95,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given finished without restore id and rewind id, when restore status triggers, then return complete`() =
@@ -106,7 +106,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
-    }
+            }
 
     @Test
     fun `given finished with restore id and rewind id, when restore status triggers, then return complete`() =
@@ -117,7 +117,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
                 assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
-    }
+            }
 
     @Test
     fun `given finished without restore id no rewind id, when restore status triggers, then return failure`() =
@@ -128,7 +128,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given finished with restore id no rewind id, when restore status triggers, then return failure`() =
@@ -139,7 +139,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given failed without restore id, when restore status triggers, then return failure`() =
@@ -150,7 +150,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given failed with restore id, when restore status triggers, then return failure`() =
@@ -161,7 +161,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
-    }
+            }
 
     @Test
     fun `given running without restore id, when restore status triggers, then return progress`() =
