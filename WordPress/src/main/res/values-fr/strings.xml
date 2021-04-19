@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-31 09:54:09+0000
+Translation-Revision-Date: 2021-04-16 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Utiliser le bouton d’icône</string>
+    <string name="gutenberg_native_search_input_field">Champ de saisie de recherche.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Bouton de recherche. Le texte actuel du bouton est</string>
+    <string name="gutenberg_native_search_blocks">Rechercher des blocs</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Rechercher une étiquette de bloc. Le texte actuel est</string>
+    <string name="gutenberg_native_search_block">Rechercher un bloc</string>
+    <string name="gutenberg_native_outside">Extérieur</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Aucun texte indicatif personnalisé défini</string>
+    <string name="gutenberg_native_no_button">Aucun bouton</string>
+    <string name="gutenberg_native_inside">Intérieur</string>
+    <string name="gutenberg_native_hide_search_heading">Masquer le titre de recherche</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Appuyer deux fois pour modifier le texte indicatif</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Appuyer deux fois pour modifier le texte de l’étiquette</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Appuyer deux fois pour modifier le texte du bouton</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Appuyer deux fois pour modifier l’unité</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Le texte indicatif actuel est</string>
+    <string name="gutenberg_native_clear_search">Supprimer la recherche</string>
+    <string name="gutenberg_native_cancel_search">Annuler la recherche</string>
+    <string name="gutenberg_native_button_position">Position du bouton</string>
+    <string name="gutenberg_native_button_outside">Extérieur du bouton</string>
+    <string name="gutenberg_native_button_inside">Intérieur du bouton</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s est %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Une erreur est survenue lors de l’obtention des données sur les mentions J’aime</string>
+    <string name="get_likes_unknown_error">Une erreur inconnue est survenue lors de l’obtention des mentions J’aime.</string>
+    <string name="get_likes_no_network_error">Aucun réseau disponible.</string>
+    <string name="comments_empty_list_filtered_unreplied">Aucun commentaire sans réponse</string>
+    <string name="comment_status_unreplied">Sans réponse</string>
     <string name="gutenberg_native_table_of_contents">Table des matières</string>
     <string name="gutenberg_native_summary">sommaire</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Résumez votre article avec une liste d’en-têtes. Ajoutez des ancres HTML aux blocs d’en-tête pour les lier ici.</string>
