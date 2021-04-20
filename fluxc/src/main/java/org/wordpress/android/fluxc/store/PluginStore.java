@@ -816,9 +816,16 @@ public class PluginStore extends Store {
         }
         emitChange(event);
 
-        // Once the plugin is installed activate it and enable autoupdates
-        // This is only a temporary solution as we are trying to get this implemented on the server side
+        // Once the plugin is installed activate it and enable auto-updates
         if (!payload.isError() && payload.plugin != null) {
+            try {
+                // Give a second to the server as otherwise the following configure call may fail
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // https://www.javaspecialists.eu/archive/Issue056-Shutting-down-Threads-Cleanly.html
+                Thread.currentThread().interrupt();
+            }
+
             ConfigureSitePluginPayload configurePayload = new ConfigureSitePluginPayload(payload.site,
                     payload.plugin.getName(), payload.plugin.getSlug(), true, true);
             mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(configurePayload));
