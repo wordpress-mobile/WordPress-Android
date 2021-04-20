@@ -45,7 +45,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
-    private static final String STATS_PATH = "stats";
     private static final String PAGES_PATH = "pages";
 
     private String mInterceptedUri;
