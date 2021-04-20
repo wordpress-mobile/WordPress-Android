@@ -2091,6 +2091,10 @@
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="contact_fragment_title" translatable="false">@string/contact_support</string>
 
+    <!-- Contact us -->
+    <!--Note: Support ticket subject, only visible to the end users of the Zendesk support portal, doesn't need a translation -->
+    <string name="support_ticket_subject" translatable="false">WordPress for Android Support</string>
+
     <!--My Site-->
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
