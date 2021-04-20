@@ -4,7 +4,6 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.test.runBlockingTest
@@ -126,8 +125,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
                 eq(
                         Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED
                 ),
-                any<Map<String, *>>(),
-                isNull()
+                any<Map<String, *>>()
         )
     }
 

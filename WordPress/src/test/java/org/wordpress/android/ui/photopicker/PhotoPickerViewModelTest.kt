@@ -224,7 +224,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(navigateEvents).isEmpty()
         clickItem(0)
         assertThat(navigateEvents).isNotEmpty
-        verify(analyticsTrackerWrapper).track(eq(MEDIA_PICKER_PREVIEW_OPENED), any<MutableMap<String, Any>>(), isNull())
+        verify(analyticsTrackerWrapper).track(eq(MEDIA_PICKER_PREVIEW_OPENED), any<MutableMap<String, Any>>())
     }
 
     @Test

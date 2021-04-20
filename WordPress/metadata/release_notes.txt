@@ -1,7 +1,6 @@
-What’s new?
+* [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
+* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
+* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
+* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
+* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
 
-We improved accessibility in the block editor for those who use a TalkBack screen reader.
-
-To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
-
-You may have noticed the new color palette! We also updated your app icon to match.

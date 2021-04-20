@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 00:23:34+0000
+Translation-Revision-Date: 2021-04-16 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
+    <string name="gutenberg_native_search_input_field">検索入力フィールドです。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">検索ボタンです。 現在のボタンテキストは</string>
+    <string name="gutenberg_native_search_blocks">検索ブロック</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">検索ブロックラベルです。 現在のテキストは</string>
+    <string name="gutenberg_native_search_block">検索ブロック</string>
+    <string name="gutenberg_native_outside">外側</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">カスタムプレースホルダーの設定なし</string>
+    <string name="gutenberg_native_no_button">ボタンなし</string>
+    <string name="gutenberg_native_inside">内側</string>
+    <string name="gutenberg_native_hide_search_heading">検索見出しを非表示</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">ダブルタップしてラベルテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">ダブルタップしてボタンテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
+    <string name="gutenberg_native_current_placeholder_text_is">現在のプレースホルダーテキストは</string>
+    <string name="gutenberg_native_clear_search">検索をクリア</string>
+    <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
+    <string name="gutenberg_native_button_position">ボタンの位置</string>
+    <string name="gutenberg_native_button_outside">ボタンの外側</string>
+    <string name="gutenberg_native_button_inside">ボタンの内側</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
+    <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
+    <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
+    <string name="get_likes_no_network_error">利用可能なネットワークがありません。</string>
+    <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
+    <string name="comment_status_unreplied">未返信</string>
     <string name="gutenberg_native_table_of_contents">目次</string>
     <string name="gutenberg_native_summary">要約</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">見出しリストを使って投稿を要約します。ここにリンクするには、見出しブロックに HTML アンカーを追加してください。</string>
