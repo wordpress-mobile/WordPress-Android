@@ -388,7 +388,7 @@ public class ActivityLauncher {
         viewStatsInNewStack(context, site, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site,  @Nullable StatsTimeframe statsTimeframe) {
+    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe) {
         if (site == null) {
             handleMissingSite(context);
             return;
