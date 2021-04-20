@@ -228,7 +228,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         val urlHandled = viewModel.handleUrl(uri)
 
-        assertThat(urlHandled).isFalse
+        assertThat(urlHandled).isTrue
         assertThat(navigateAction).isEqualTo(expectedAction)
         verifyZeroInteractions(serverTrackingHandler)
     }
