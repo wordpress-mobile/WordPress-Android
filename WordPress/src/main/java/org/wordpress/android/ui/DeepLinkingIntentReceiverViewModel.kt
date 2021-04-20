@@ -26,27 +26,32 @@ class DeepLinkingIntentReceiverViewModel
     val toast = editorLinkHandler.toast
 
     /**
-     * This viewmodel handles the following URLs
-     * `wordpress.com/post/...`
-     * `wordpress.com/stats/...`
-     * `public-api.wordpress.com/mbar/`
-     * In these cases this function returns true
-     */
-    fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return isTrackingUrl(uri) ||
-                editorLinkHandler.isEditorUrl(uri) ||
-                statsLinkHandler.isStatsUrl(uri)
-    }
-
-    /**
      * Handles the following URLs
      * `wordpress.com/post...`
      * `wordpress.com/stats...`
      * `public-api.wordpress.com/mbar`
      * and builds the navigation action based on them
      */
-    fun handleUrl(uriWrapper: UriWrapper) {
-        _navigateAction.value = Event(buildNavigateAction(uriWrapper))
+    fun handleUrl(uriWrapper: UriWrapper) : Boolean {
+        return if (shouldHandleUrl(uriWrapper)) {
+            _navigateAction.value = Event(buildNavigateAction(uriWrapper))
+            true
+        } else {
+            false
+        }
+    }
+
+    /**
+     * This viewmodel handles the following URLs
+     * `wordpress.com/post/...`
+     * `wordpress.com/stats/...`
+     * `public-api.wordpress.com/mbar/`
+     * In these cases this function returns true
+     */
+    private fun shouldHandleUrl(uri: UriWrapper): Boolean {
+        return isTrackingUrl(uri) ||
+                editorLinkHandler.isEditorUrl(uri) ||
+                statsLinkHandler.isStatsUrl(uri)
     }
 
     /**

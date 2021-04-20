@@ -38,23 +38,13 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         )
         whenever(startLinkHandler.isStartUrl(startUrl)).thenReturn(true)
         whenever(editorLinkHandler.isEditorUrl(postUrl)).thenReturn(true)
-        whenever(statsLinkHandler.isStatsUrl(statsUrl)).thenReturn(true)
-    }
-
-    @Test
-    fun `should handle email mbar mobile URL`() {
-        val uri = buildUri("public-api.wordpress.com", "mbar")
-
-        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
-
-        assertThat(shouldHandleUri).isTrue()
     }
 
     @Test
     fun `should not handle WPcom URL`() {
         val uri = buildUri("wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
+        val shouldHandleUri = viewModel.handleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -63,7 +53,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `should not handle bar non-mobile URL`() {
         val uri = buildUri("public-api.wordpress.com", "bar")
 
-        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
+        val shouldHandleUri = viewModel.handleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -78,8 +68,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
 
@@ -96,8 +87,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(StartCreateSiteFlow)
         verify(serverTrackingHandler).request(uri)
     }
@@ -114,8 +106,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val barUri = buildUri("public-api.wordpress.com", "bar")
         whenever(uri.copy("bar")).thenReturn(barUri)
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
     }
 
@@ -130,31 +123,18 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(expectedAction)
         verify(serverTrackingHandler).request(uri)
-    }
-
-    @Test
-    fun `should handle post url`() {
-        val shouldHandleUri = viewModel.shouldHandleUrl(postUrl)
-
-        assertThat(shouldHandleUri).isTrue()
-    }
-
-    @Test
-    fun `should handle stats url`() {
-        val shouldHandleUri = viewModel.shouldHandleUrl(statsUrl)
-
-        assertThat(shouldHandleUri).isTrue()
     }
 
     @Test
     fun `does not handle pages url`() {
         val uri = buildUri("wordpress.com", "pages")
 
-        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
+        val shouldHandleUri = viewModel.handleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -163,7 +143,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun `does not handle app link to posts`() {
         val uri = buildUri("pages", "")
 
-        val shouldHandleUri = viewModel.shouldHandleUrl(uri)
+        val shouldHandleUri = viewModel.handleUrl(uri)
 
         assertThat(shouldHandleUri).isFalse()
     }
@@ -181,8 +161,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(expected)
     }
 
@@ -199,8 +180,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
             navigateAction = it?.getContentIfNotHandled()
         }
 
-        viewModel.handleUrl(uri)
+        val urlHandled = viewModel.handleUrl(uri)
 
+        assertThat(urlHandled).isTrue()
         assertThat(navigateAction).isEqualTo(expected)
     }
 }
