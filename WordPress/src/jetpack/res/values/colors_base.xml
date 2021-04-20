@@ -5,8 +5,6 @@
     <color name="colorSecondary">@color/primary</color>
     <color name="colorSecondaryVariant">@color/primary_40</color>
 
-    <color name="colorControlActivated">@color/colorPrimary</color>
-
     <color name="primary">@color/jetpack_green_50</color>
     <color name="primary_0">@color/jetpack_green_0</color>
     <color name="primary_5">@color/jetpack_green_5</color>
