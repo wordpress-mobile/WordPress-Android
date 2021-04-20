@@ -5,7 +5,7 @@ import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType.COM
 import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType.HEADER
 
 sealed class CommentListItem(val type: CommentListItemType) {
-    open fun longId(): Long = hashCode().toLong()
+    open fun longId(): Long = hashCode().toLong().unaryMinus()
 
     data class SubHeader(val label: String) : CommentListItem(HEADER)
     data class Comment(val comment: CommentModel) : CommentListItem(COMMENT)
