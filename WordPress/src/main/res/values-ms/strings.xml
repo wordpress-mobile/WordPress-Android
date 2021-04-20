@@ -31,7 +31,6 @@ Language: ms
     <string name="media_edit_file_details_card_caption">Perincian Fail</string>
     <string name="login_error_suffix">\nMungkin cuba akaun yang lain?</string>
     <string name="login_error_generic">Terdapat kesusahan bersambung dengan akaun Google.</string>
-    <string name="login_google_button_suffix">Log masuk dengan Google.</string>
     <string name="login_error_button">Tutup</string>
     <string name="enter_wpcom_password_google">Untuk teruskan dengan akaun Google ini, sila berikan kata laluan WordPress.com yang sepadan. Ianya hanya akan diminta sekali.</string>
     <string name="error_generic_network">Ralat rangkaian terjadi. Sila periksa sambungan anda dan cuba lagi.</string>
@@ -123,7 +122,6 @@ Language: ms
     <string name="login_site_address_more_help">Perlukan bantuan lebih lanjut?</string>
     <string name="login_site_address_help_content">Alamat laman anda muncul dalam palang pada atas skrin apabila anda melawat laman anda dalam Chrome.</string>
     <string name="login_site_address_help_title">Apa alamat laman saya?</string>
-    <string name="login_site_address_help">Perlu bantuan mencari alamat laman anda?</string>
     <string name="login_site_address">Alamat laman</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
     <string name="login_continue">Teruskan</string>
@@ -134,7 +132,6 @@ Language: ms
     <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
-    <string name="open_mail">Buka surat</string>
     <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>
     <string name="image_optimization_promo_title">Hidupkan pengoptimuman imej?</string>
     <string name="leave_off">Biarkan mati</string>
@@ -383,7 +380,6 @@ Language: ms
     <string name="invite_error_invalid_usernames_one">Tidak dapat menghantar: Nama pengguna atau emel adalah tidak sah</string>
     <string name="invite_error_no_usernames">Sila tambah sekurang-kurangnya satu nama pengguna</string>
     <string name="invite">Jemput</string>
-    <string name="send_link">Hantar pautan</string>
     <string name="my_site_header_external">Luaran</string>
     <string name="invite_people">Jemput Orang</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
@@ -407,7 +403,6 @@ Language: ms
     <string name="checking_email">Menyemak emel</string>
     <string name="magic_link_unavailable_error_message">Tidak terdapat pada masa ini. Sila masukkan kata laluan anda</string>
     <string name="logging_in">Melog masuk</string>
-    <string name="enter_your_password_instead">Sebaliknya masukkan kata laluan anda</string>
     <string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
     <string name="capture_or_pick_photo">Tangkap atau pilih gambar</string>
     <string name="export_your_content_message">Kiriman, halaman, dan tetapan anda akan diemel kepada anda di %s.</string>
@@ -752,7 +747,6 @@ Language: ms
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika anda biasanya berhubung ke laman ini tanpa masalah, ralat ini mungkin bermakna bahawa seseorang sedang cuba menyamar sebagai laman ini, dan anda tidak sepatutnya teruskan. Adakah anda masih ingin mempercayai sijil ini?</string>
-    <string name="forgot_password">Hilang kata laluan anda?</string>
     <string name="adding_cat_success">Kategori berjaya ditambah</string>
     <string name="cat_name_required">Medan nama kategori dikehendaki</string>
     <string name="notifications_empty_list">Tiada notifikasi</string>

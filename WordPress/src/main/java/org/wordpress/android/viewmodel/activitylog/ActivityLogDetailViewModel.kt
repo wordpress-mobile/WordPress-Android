@@ -12,8 +12,6 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
-import org.wordpress.android.util.config.BackupDownloadFeatureConfig
-import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
@@ -22,14 +20,11 @@ import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
 const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
-const val ACTIVITY_LOG_REWIND_ID_KEY: String = "activity_log_rewind_id_key"
 
 class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
-    private val activityLogStore: ActivityLogStore,
-    private val restoreFeatureConfig: RestoreFeatureConfig,
-    private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig
+    private val activityLogStore: ActivityLogStore
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -61,7 +56,7 @@ class ActivityLogDetailViewModel
         this.areButtonsVisible = areButtonsVisible
 
         _restoreVisible.value = areButtonsVisible
-        _downloadBackupVisible.value = areButtonsVisible && backupDownloadFeatureConfig.isEnabled()
+        _downloadBackupVisible.value = areButtonsVisible
 
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore
@@ -91,12 +86,7 @@ class ActivityLogDetailViewModel
 
     fun onRestoreClicked(model: ActivityLogDetailModel) {
         if (model.rewindId != null) {
-            val navigationEvent = if (restoreFeatureConfig.isEnabled()) {
-                ActivityLogDetailNavigationEvents.ShowRestore(model)
-            } else {
-                ActivityLogDetailNavigationEvents.ShowRewindDialog(model)
-            }
-            _navigationEvents.value = Event(navigationEvent)
+            _navigationEvents.value = Event(ActivityLogDetailNavigationEvents.ShowRestore(model))
         } else {
             AppLog.e(ACTIVITY_LOG, "Trying to restore activity without rewind ID")
         }

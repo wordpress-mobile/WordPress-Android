@@ -200,20 +200,23 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             test {
                 whenever(activityLogStore.fetchBackupDownloadState(any()))
                         .thenReturn(
-                            OnBackupDownloadStatusFetched(
-                                    BackupDownloadStatusError(GENERIC_ERROR),
-                                    FETCH_BACKUP_DOWNLOAD_STATE
-                            ))
-                            .thenReturn(
-                                    OnBackupDownloadStatusFetched(
-                                            BackupDownloadStatusError(GENERIC_ERROR),
-                                            FETCH_BACKUP_DOWNLOAD_STATE
-                            ))
-                            .thenReturn(
-                                    OnBackupDownloadStatusFetched(
-                                            BackupDownloadStatusError(GENERIC_ERROR),
-                                            FETCH_BACKUP_DOWNLOAD_STATE
-                            ))
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                )
+                        )
+                        .thenReturn(
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                )
+                        )
+                        .thenReturn(
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                )
+                        )
 
                 val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
@@ -232,12 +235,14 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                                 OnBackupDownloadStatusFetched(
                                         BackupDownloadStatusError(GENERIC_ERROR),
                                         FETCH_BACKUP_DOWNLOAD_STATE
-                                ))
+                                )
+                        )
                         .thenReturn(
                                 OnBackupDownloadStatusFetched(
                                         BackupDownloadStatusError(GENERIC_ERROR),
                                         FETCH_BACKUP_DOWNLOAD_STATE
-                                ))
+                                )
+                        )
                         .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
                 val result = useCase.getBackupDownloadStatus(site, downloadId).toList()

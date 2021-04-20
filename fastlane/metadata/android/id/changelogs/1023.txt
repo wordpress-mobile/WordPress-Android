@@ -1,2 +1,0 @@
-17.0:
-Dengan bangga kami mengumumkan tiga pembaruan untuk WPAndroid. Kami mengaktifkan fungsi cubit untuk/memperbesar/memperkecil/layar pada pustaka Cerita, membuat kemungkinan penampilan cerita lebih rinci. Kami mengubah penyaringan komentar dari menu tarik-turun menjadi tab. Dan kami menghapus tombol batalkan dari opsi pengaturan pada Editor Blok. 

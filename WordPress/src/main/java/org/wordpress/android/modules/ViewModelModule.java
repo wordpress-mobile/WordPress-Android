@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
@@ -500,4 +501,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SiteSettingsTimezoneViewModel.class)
     abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
+    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
 }

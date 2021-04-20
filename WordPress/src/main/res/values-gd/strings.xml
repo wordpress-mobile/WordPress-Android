@@ -123,7 +123,6 @@ Language: gd_GB
     <string name="schedule_verb">Cuir air an sgeideal</string>
     <string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
     <string name="help">Cobhair</string>
-    <string name="forgot_password">Na chaill thu am facal-faire agad?</string>
     <string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
     <string name="ssl_certificate_ask_trust">Ma gheibh thu cothrom air an làrach seo gun duilgheadas sam bith a ghnàth, dh’fhaoidte gu bheil a’ mhearachd seo a’ ciallachadh gu bheil cuideigin a’ leigeil orra gur iad-san an làrach cheart is cha bu chòir dhut leantainn air adhart. A bheil thu airson gabhail ris an teisteanas co-dhiù?</string>
     <string name="no_network_message">Chan eil lìonra ri làimh</string>
