@@ -34,8 +34,9 @@ class DeepLinkingIntentReceiverViewModel
      * and builds the navigation action based on them
      */
     fun handleUrl(uriWrapper: UriWrapper): Boolean {
-        return if (shouldHandleUrl(uriWrapper)) {
-            _navigateAction.value = Event(buildNavigateAction(uriWrapper))
+        val navigateAction = buildNavigateAction(uriWrapper)
+        return if (navigateAction != null) {
+            _navigateAction.value = Event(navigateAction)
             true
         } else {
             false
@@ -70,13 +71,14 @@ class DeepLinkingIntentReceiverViewModel
                 uri.pathSegments.firstOrNull() == WP_LOGIN
     }
 
-    private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction {
-        val navigateAction = when {
+    private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
+        return when {
             isTrackingUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
                     ?.also {
                         // The new URL was build so we need to hit the original `mbar` tracking URL
                         serverTrackingHandler.request(uri)
                     }
+                    ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
             isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
             readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
@@ -84,7 +86,6 @@ class DeepLinkingIntentReceiverViewModel
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
             else -> null
         }
-        return navigateAction ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
     }
 
     private fun getRedirectUriAndBuildNavigateAction(uri: UriWrapper, rootUri: UriWrapper): NavigateAction? {
