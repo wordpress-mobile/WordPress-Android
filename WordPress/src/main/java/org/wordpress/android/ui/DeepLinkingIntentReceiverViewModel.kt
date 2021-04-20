@@ -22,9 +22,9 @@ class DeepLinkingIntentReceiverViewModel
     private val editorLinkHandler: EditorLinkHandler,
     private val statsLinkHandler: StatsLinkHandler,
     private val startLinkHandler: StartLinkHandler,
+    private val readerLinkHandler: ReaderLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val serverTrackingHandler: ServerTrackingHandler,
-    private val intentUtils: IntentUtils
+    private val serverTrackingHandler: ServerTrackingHandler
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
@@ -85,7 +85,7 @@ class DeepLinkingIntentReceiverViewModel
                     null
                 }
             }
-            shouldOpenReader(uri) -> OpenInReader(uri)
+            readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
@@ -101,15 +101,6 @@ class DeepLinkingIntentReceiverViewModel
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
         return deepLinkUriUtils.getUriFromQueryParameter(uri, REDIRECT_TO_PARAM)
-    }
-
-    /**
-     * URIs supported by the Reader are already defined as intent filters in the manifest. Instead of replicating
-     * that logic here, we simply check if we can resolve an [Intent] that uses [ReaderConstants.ACTION_VIEW_POST].
-     * Since that's a custom action that is only handled by the Reader, we can then assume it supports this URI.
-     */
-    private fun shouldOpenReader(uri: UriWrapper): Boolean {
-        return intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)
     }
 
     override fun onCleared() {
