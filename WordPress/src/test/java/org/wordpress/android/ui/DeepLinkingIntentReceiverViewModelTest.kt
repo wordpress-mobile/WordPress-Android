@@ -210,8 +210,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         verify(serverTrackingHandler).request(uri)
     }
 
-    // TODO Fix this test
-    @Ignore("Temporarily ignoring this test as it will be fixed later on")
     @Test
     fun `view post mbar URL triggers the browser when it can't be resolved`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
