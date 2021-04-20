@@ -73,7 +73,7 @@ class DeepLinkingIntentReceiverViewModel
     private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction {
         val trackingUrl = isTrackingUrl(uri)
         val navigateAction = when {
-            trackingUrl || isWpLoginUrl(uri) -> getRedirectUri(uri)?.let { buildNavigateAction(it, rootUri) }
+            trackingUrl || isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
             readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
@@ -86,6 +86,10 @@ class DeepLinkingIntentReceiverViewModel
         return navigateAction ?: OpenInBrowser(
                 rootUri.copy(REGULAR_TRACKING_PATH)
         )
+    }
+
+    private fun getRedirectUriAndBuildNavigateAction(uri: UriWrapper, rootUri: UriWrapper): NavigateAction? {
+        return getRedirectUri(uri)?.let { buildNavigateAction(it, rootUri) }
     }
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {
