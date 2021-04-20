@@ -34,13 +34,7 @@ class DeepLinkingIntentReceiverViewModel
      * and builds the navigation action based on them
      */
     fun handleUrl(uriWrapper: UriWrapper): Boolean {
-        val navigateAction = buildNavigateAction(uriWrapper)
-        return if (navigateAction != null) {
-            _navigateAction.value = Event(navigateAction)
-            true
-        } else {
-            false
-        }
+        return buildNavigateAction(uriWrapper)?.also { _navigateAction.value = Event(it) } != null
     }
 
     /**
