@@ -153,14 +153,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
 
     @Override
     public long getItemId(int position) {
-        CommentListItem listItem = getItem(position);
-
-        if (listItem instanceof SubHeader) {
-            return listItem.longId();
-        } else if (listItem instanceof Comment) {
-            return ((Comment) listItem).getComment().getRemoteCommentId();
-        }
-        return -1;
+        return getItem(position).getId();
     }
 
     @Override
@@ -377,10 +370,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
                     Comment lastItem = (Comment) mTmpComments.get(mTmpComments.size() - 1);
                     if (lastItem == null || !getFormattedDate(lastItem.getComment())
                             .equals(getFormattedDate(comment))) {
-                        mTmpComments.add(new SubHeader(getFormattedDate(comment)));
+                        mTmpComments.add(
+                                new SubHeader(getFormattedDate(comment), comment.getPublishedTimestamp() * -10));
                     }
                 } else {
-                    mTmpComments.add(new SubHeader(getFormattedDate(comment)));
+                    mTmpComments.add(
+                            new SubHeader(getFormattedDate(comment), comment.getPublishedTimestamp() * -10));
                 }
 
                 mTmpComments.add(commentListItem);

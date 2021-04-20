@@ -5,10 +5,12 @@ import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType.COM
 import org.wordpress.android.ui.comments.CommentListItem.CommentListItemType.HEADER
 
 sealed class CommentListItem(val type: CommentListItemType) {
-    open fun longId(): Long = hashCode().toLong().unaryMinus()
-
-    data class SubHeader(val label: String) : CommentListItem(HEADER)
-    data class Comment(val comment: CommentModel) : CommentListItem(COMMENT)
+    abstract val id: Long
+    data class SubHeader(val label: String, override val id: Long) : CommentListItem(HEADER)
+    data class Comment(val comment: CommentModel) : CommentListItem(COMMENT) {
+        override val id: Long
+            get() = comment.remoteCommentId
+    }
 
     enum class CommentListItemType {
         HEADER,
