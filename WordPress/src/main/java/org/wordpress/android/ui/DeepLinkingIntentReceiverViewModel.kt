@@ -1,15 +1,11 @@
 package org.wordpress.android.ui
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
-import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
