@@ -4,6 +4,7 @@
 -----
 * [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
 
+
 17.2
 -----
 * [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
