@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.net.CookieManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,35 +19,27 @@ import javax.net.ssl.TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.CookieJar;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
 public class ReleaseOkHttpClientModule {
-    private static CookieJar mCookieJar = new JavaNetCookieJar(new CookieManager());
-
-    @Provides
-    @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClientBuilder() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
-        return builder;
-    }
-
     @Provides
     @Named("no-redirects")
-    public OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder() {
-        OkHttpClient.Builder builder = provideOkHttpClientBuilder();
-        builder.followRedirects(false);
-        return builder;
+    public OkHttpClient provideNoRedirectsOkHttpClientBuilder(
+            @Named("regular") final OkHttpClient okHttpRegularClient) {
+        return okHttpRegularClient.newBuilder()
+                                  .followRedirects(false)
+                                  .build();
     }
 
+    @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.cookieJar(mCookieJar);
+    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(
+            @Named("regular") final OkHttpClient okHttpClient,
+            final MemorizingTrustManager memorizingTrustManager) {
+        final OkHttpClient.Builder builder = okHttpClient.newBuilder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
@@ -58,28 +49,18 @@ public class ReleaseOkHttpClientModule {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             AppLog.e(T.API, e);
         }
-        return builder;
-    }
-
-    @Singleton
-    @Provides
-    @Named("custom-ssl")
-    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(@Named("custom-ssl") OkHttpClient.Builder builder) {
-        return builder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+        return builder.build();
     }
 
     @Singleton
     @Provides
     @Named("regular")
-    public OkHttpClient provideMediaOkHttpClientInstance(@Named("regular") OkHttpClient.Builder builder) {
-        return builder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+    public OkHttpClient provideMediaOkHttpClientInstance(final CookieJar cookieJar) {
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        return builder.cookieJar(cookieJar)
+                      .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .build();
     }
 }
