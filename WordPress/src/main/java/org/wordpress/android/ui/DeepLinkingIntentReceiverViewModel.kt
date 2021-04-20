@@ -32,7 +32,7 @@ class DeepLinkingIntentReceiverViewModel
      * `public-api.wordpress.com/mbar`
      * and builds the navigation action based on them
      */
-    fun handleUrl(uriWrapper: UriWrapper) : Boolean {
+    fun handleUrl(uriWrapper: UriWrapper): Boolean {
         return if (shouldHandleUrl(uriWrapper)) {
             _navigateAction.value = Event(buildNavigateAction(uriWrapper))
             true
