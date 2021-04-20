@@ -26,6 +26,10 @@
 /products/tags/<id>/
 /products/tags/batch/
 
+/customers/<id>
+/customers/
+/customers/<id>/downloads
+
 /reports/orders/totals/
 /reports/revenue/stats/
 
@@ -38,14 +42,17 @@
 /payment_gateways
 /payment_gateways/<gateway_id>#String
 
+/payments/connection_tokens
+
 /taxes
 /taxes/classes/
 
 /connect/label/print
 /connect/label/<order_id>/
 /connect/label/<order_id>/rates
-/connect/label/<order_id>/<shippingLabelId>/
+/connect/label/<order_id>/<shippingLabels>#String
 /connect/label/<order_id>/<shippingLabelId>/refund
+/connect/label/<order_id>/creation_eligibility
 
 /connect/normalize-address
 /connect/packages
@@ -55,3 +62,4 @@
 /leaderboards
 
 /data/countries
+/system_status

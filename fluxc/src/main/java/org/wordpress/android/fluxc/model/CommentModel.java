@@ -33,8 +33,13 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mPostTitle;
     @Column private String mStatus;
     @Column private String mDatePublished;
+    @Column private long mPublishedTimestamp;
     @Column private String mContent;
     @Column private String mUrl;
+
+    // Parent Comment Data
+    @Column private boolean mHasParent;
+    @Column private long mParentId;
 
     // WPCOM only
     @Column private boolean mILike; // current user likes this comment
@@ -48,6 +53,9 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     public void setId(int id) {
         mId = id;
     }
+
+    // not stored in db - denotes the hierarchical level of this comment
+    public transient int level = 0;
 
     public long getRemoteCommentId() {
         return mRemoteCommentId;
@@ -167,5 +175,29 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public long getPublishedTimestamp() {
+        return mPublishedTimestamp;
+    }
+
+    public void setPublishedTimestamp(long publishedTimestamp) {
+        mPublishedTimestamp = publishedTimestamp;
+    }
+
+    public boolean getHasParent() {
+        return mHasParent;
+    }
+
+    public void setHasParent(boolean hasParent) {
+        mHasParent = hasParent;
+    }
+
+    public long getParentId() {
+        return mParentId;
+    }
+
+    public void setParentId(long parentId) {
+        mParentId = parentId;
     }
 }
