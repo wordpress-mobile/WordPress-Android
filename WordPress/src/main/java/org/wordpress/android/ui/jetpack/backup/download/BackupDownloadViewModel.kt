@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -428,7 +427,8 @@ class BackupDownloadViewModel @Inject constructor(
                 "uploads" to types.uploads,
                 "sqls" to types.sqls,
                 "roots" to types.roots,
-                "contents" to types.contents)
+                "contents" to types.contents
+        )
         val map = mapOf("restore_types" to JSONObject(propertiesSetup))
         AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, map)
     }

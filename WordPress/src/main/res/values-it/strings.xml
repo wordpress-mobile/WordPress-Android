@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-31 15:54:07+0000
+Translation-Revision-Date: 2021-04-16 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
+    <string name="gutenberg_native_search_input_field">Cerca campo di immissione.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Pulsante di ricerca. Il testo del pulsante attuale è</string>
+    <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Cerca etichetta del blocco. Il testo attuale è</string>
+    <string name="gutenberg_native_search_block">Cerca blocco</string>
+    <string name="gutenberg_native_outside">Esterno</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Nessun set di segnaposto personalizzato</string>
+    <string name="gutenberg_native_no_button">Nessun pulsante</string>
+    <string name="gutenberg_native_inside">Interno</string>
+    <string name="gutenberg_native_hide_search_heading">Nascondi titolo della ricerca</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Tocca due volte per modificare il testo del segnaposto</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Tocca due volte per modificare il testo dell\'etichetta</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Tocca due volte per modificare il testo del pulsante</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">tocca due volte per modificare l\'unità</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Il testo del segnaposto attuale è</string>
+    <string name="gutenberg_native_clear_search">Cancella ricerca</string>
+    <string name="gutenberg_native_cancel_search">Annulla ricerca</string>
+    <string name="gutenberg_native_button_position">Posizione pulsante</string>
+    <string name="gutenberg_native_button_outside">Pulsante esterno</string>
+    <string name="gutenberg_native_button_inside">Pulsante interno</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s è %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Si è verificato un errore durante l\'ottenimento dei dati dei Mi piace</string>
+    <string name="get_likes_unknown_error">Si è verificato un errore sconosciuto durante l\'ottenimento dei Mi piace.</string>
+    <string name="get_likes_no_network_error">Nessuna rete disponibile.</string>
+    <string name="comments_empty_list_filtered_unreplied">Nessun commento senza risposta</string>
+    <string name="comment_status_unreplied">Senza risposta</string>
     <string name="gutenberg_native_table_of_contents">Indice dei contenuti</string>
     <string name="gutenberg_native_summary">sommario</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Riassumi il tuo articolo con una lista di intestazioni. Aggiungi delle ancore HTML ai blocchi Intestazione per collegarle qui.</string>
