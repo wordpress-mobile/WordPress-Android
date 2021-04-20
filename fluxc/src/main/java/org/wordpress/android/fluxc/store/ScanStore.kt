@@ -99,6 +99,12 @@ class ScanStore @Inject constructor(
             threatSqlUtils.getThreatByThreatId(threatId)
         }
 
+    suspend fun hasValidCredentials(site: SiteModel) =
+        coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "hasValidCredentials") {
+            val scanStateModel = scanSqlUtils.getScanStateForSite(site)
+            scanStateModel?.hasValidCredentials ?: false
+        }
+
     suspend fun addOrUpdateScanStateModelForSite(action: ScanAction, site: SiteModel, scanStateModel: ScanStateModel) {
         coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "addOrUpdateScanStateModelForSite") {
             scanSqlUtils.replaceScanState(site, scanStateModel)
