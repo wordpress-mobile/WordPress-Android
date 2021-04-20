@@ -95,7 +95,6 @@ Language: hr
     <string name="image_settings_save_toast">Promijene spremljene.</string>
     <string name="invite">Pozovi</string>
     <string name="invite_people">Pozovi osobe</string>
-    <string name="send_link">Pošalji link</string>
     <string name="reader_title_related_post_detail">Vezana objava</string>
     <string name="send">Pošalji</string>
     <string name="people">Ljudi</string>
@@ -437,7 +436,6 @@ Language: hr
     <string name="reader_label_followed_blog">Pratite web-stranicu</string>
     <string name="reader_title_blog_preview">Web-stranica u Čitaču</string>
     <string name="help">Pomoć</string>
-    <string name="forgot_password">Izgubili ste lozinku?</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
     <string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web-stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
     <string name="notifications_empty_list">Nema obavijesti</string>

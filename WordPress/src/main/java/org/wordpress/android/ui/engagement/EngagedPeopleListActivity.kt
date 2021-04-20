@@ -5,6 +5,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
+import java.lang.IllegalArgumentException
 
 class EngagedPeopleListActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,6 +14,9 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
         setContentView(R.layout.engaged_people_list_activity)
 
         val listScenario = intent.getParcelableExtra<ListScenario>(KEY_LIST_SCENARIO)
+                ?: throw IllegalArgumentException(
+                        "ListScenario cannot be null. Make sure to pass a valid ListScenario in the intent"
+                )
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.let {
@@ -20,9 +24,9 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
             it.setDisplayHomeAsUpEnabled(true)
 
             it.title = if (listScenario.headerData.numLikes == 1) {
-                getString(R.string.like_title_single_text)
+                getString(R.string.like_title_singular)
             } else {
-                getString(R.string.like_title_multiple_text, listScenario.headerData.numLikes)
+                getString(R.string.like_title_plural, listScenario.headerData.numLikes)
             }
         }
 

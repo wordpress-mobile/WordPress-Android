@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-27 09:27:29+0000
+Translation-Revision-Date: 2021-04-08 18:19:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_search_block_label_current_text_is">搜索区块标签。当前文字为</string>
+    <string name="gutenberg_native_search_blocks">搜索区块</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">搜索按钮。当前按钮文字为</string>
+    <string name="gutenberg_native_search_input_field">搜索输入字段。</string>
+    <string name="gutenberg_native_use_icon_button">使用图标按钮</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">双击更改单位</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">双击编辑按钮文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">双击可编辑标签文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">双击可编辑占位符文字</string>
+    <string name="gutenberg_native_hide_search_heading">隐藏搜索标题</string>
+    <string name="gutenberg_native_inside">内部</string>
+    <string name="gutenberg_native_no_button">无按钮</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">未设置自定义占位符</string>
+    <string name="gutenberg_native_outside">外部</string>
+    <string name="gutenberg_native_search_block">搜索区块</string>
+    <string name="comment_status_unreplied">未回复</string>
+    <string name="comments_empty_list_filtered_unreplied">没有未回复的评论</string>
+    <string name="get_likes_no_network_error">无网络可用。</string>
+    <string name="get_likes_unknown_error">获取赞时发生未知错误。</string>
+    <string name="get_likes_empty_state_title">在获取点赞数据时发生了未知错误</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s是%3$s%4$s。</string>
+    <string name="gutenberg_native_button_position">按钮位置</string>
+    <string name="gutenberg_native_button_inside">按钮内部</string>
+    <string name="gutenberg_native_button_outside">按钮外部</string>
+    <string name="gutenberg_native_cancel_search">取消搜索</string>
+    <string name="gutenberg_native_clear_search">清除搜索</string>
+    <string name="gutenberg_native_current_placeholder_text_is">当前占位符文本</string>
     <string name="gutenberg_native_search_settings">搜索设置</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">用一个标题列表来总结您的文章。在标题区块中添加HTML锚点，将其链接到这里。</string>
     <string name="gutenberg_native_summary">总结</string>
     <string name="gutenberg_native_table_of_contents">目录</string>
-    <string name="gutenberg_native_tag_link">标签链接</string>
-    <string name="gutenberg_native_a_link_to_a_category">目标分类的链接。</string>
-    <string name="gutenberg_native_a_link_to_a_page">目标页面的链接。</string>
-    <string name="gutenberg_native_a_link_to_a_post">目标链接的文章。</string>
-    <string name="gutenberg_native_a_link_to_a_tag">目标标签的链接。</string>
-    <string name="gutenberg_native_a_link_to_a_url">目标网址的链接。</string>
     <string name="gutenberg_native_buttongroup">按钮分组</string>
-    <string name="gutenberg_native_category_link">分类链接</string>
     <string name="gutenberg_native_document_outline">文档大纲</string>
-    <string name="gutenberg_native_post_link">文章链接</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="gutenberg_native_add_button_text">添加按钮文本</string>
@@ -428,7 +447,6 @@ Language: zh_CN
     <string name="media_uploading_default">正在上传媒体</string>
     <string name="gutenberg_native_select_item">选择项目</string>
     <string name="gutenberg_native_search_or_type_url">搜索或键入 URL</string>
-    <string name="gutenberg_native_page_link">页面链接</string>
     <string name="gutenberg_native_add_this_telephone_link">添加此电话链接</string>
     <string name="gutenberg_native_add_this_link">添加此链接</string>
     <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
@@ -797,7 +815,6 @@ Language: zh_CN
     <string name="gutenberg_native_move_image_forward">向前移动图片</string>
     <string name="gutenberg_native_move_image_backward">向后移动图片</string>
     <string name="gutenberg_native_gallery_caption_s">图库说明。%s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。当前值为 %2$s</string>
     <string name="create_post_page_fab_tooltip">创建文章或页面</string>
     <string name="content_description_person_building_website">网站构建者</string>
     <string name="post_signup_interstitial_not_right_now">现在不行</string>
@@ -824,7 +841,6 @@ Language: zh_CN
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="reader_following_display_name">关注中</string>
     <string name="my_site_bottom_sheet_add_page">站点页面</string>
-    <string name="enter_site_credentials_instead">使用站点凭据登录。</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
@@ -878,7 +894,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_move_the_block_up">轻按两下以向上移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">轻按两下以向下移动区块</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">轻按两下以编辑此值</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">轻按两下以使用滑块更改此值</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">轻按两下以添加区块</string>
     <string name="gutenberg_native_current_value_is_s">当前值为 %s</string>
     <string name="gutenberg_native_choose_from_device">从设备中选择</string>
@@ -993,7 +1008,6 @@ Language: zh_CN
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日期和时间</string>
     <string name="login_invalid_site_url">请输入一个完整的网站地址，例如 example.com。</string>
-    <string name="login_need_help_finding_connected_email">需要帮助查找您连接的电子邮件吗?</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_post_label">文章</string>
     <string name="site_settings_editor">编辑</string>
@@ -1170,7 +1184,6 @@ Language: zh_CN
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用区块编辑器编辑新的文章和页面</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用区块编辑器</string>
     <string name="menu_switch_to_gutenberg_editor">切换到区块编辑器</string>
-    <string name="menu_switch_to_aztec_editor">切换到经典编辑器</string>
     <string name="exit">退出</string>
     <string name="quick_start_sites_type_subtitle">已完成 %1$d 个（共 %2$d 个）</string>
     <string name="quick_start_sites_type_grow">增加您的受众</string>
@@ -1458,14 +1471,12 @@ Language: zh_CN
     <string name="comment_read_source_post">阅读源文章</string>
     <string name="sites">站点</string>
     <string name="signup_magic_link_title">免密登录链接已发送</string>
-    <string name="signup_email_screen_title">电子邮件注册</string>
     <string name="verification_2fa_screen_title">代码验证</string>
     <string name="selfhosted_site_login_title">登录凭据</string>
     <string name="magic_link_sent_login_title">免密登录链接已发送</string>
     <string name="magic_link_login_title">使用免密登录链接登录</string>
     <string name="site_address_login_title">使用站点地址登录</string>
     <string name="email_address_login_title">使用电子邮件地址登录</string>
-    <string name="alternatively">其他方式：</string>
     <string name="reader_bookmark_snack_title">文章已保存</string>
     <string name="reader_bookmark_snack_btn">查看所有</string>
     <string name="reader_remove_bookmark">从已保存的文章中删除</string>
@@ -1502,7 +1513,6 @@ Language: zh_CN
     <string name="preference_privacy_settings">隐私设置</string>
     <string name="preference_collect_information">收集信息</string>
     <string name="post_submitted">文章已提交</string>
-    <string name="login_email_button_signup">还没有帐户？%1$s注册%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">使用插件功能需要站点具有良好的信誉。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">使用插件功能需要具有与该用户关联的主域订阅。</string>
     <string name="plugin_install_site_ineligible_non_admin_user">使用插件功能需要具有管理员权限。</string>
@@ -1667,13 +1677,10 @@ Language: zh_CN
     <string name="username_changer_dismiss_button_positive">放弃</string>
     <string name="username_changer_action">保存</string>
     <string name="content_description_add_avatar">添加头像</string>
-    <string name="signup_with_google_button">使用 Google 注册</string>
-    <string name="signup_with_email_button">使用电子邮件注册</string>
     <string name="signup_user_exists">电子邮件已注册 WordPress.com。\n继续登录。</string>
     <string name="notification_site_creation_created">轻按以继续。</string>
     <string name="signup_updating_account">正在更新帐户…</string>
     <string name="signup_magic_link_progress">正在发送电子邮件</string>
-    <string name="signup_terms_of_service_text">注册即表示您同意我们的%1$s服务条款%2$s。</string>
     <string name="signup_magic_link_error_button_positive">重试</string>
     <string name="signup_magic_link_error_button_negative">关闭</string>
     <string name="signup_epilogue_hint_username">用户名</string>
@@ -1683,13 +1690,8 @@ Language: zh_CN
     <string name="signup_epilogue_error_button_negative">恢复</string>
     <string name="signup_epilogue_error_generic">更新帐户时出现问题。您可以重试或恢复更改以继续。</string>
     <string name="signup_epilogue_error_avatar">上传头像时出现问题。</string>
-    <string name="signup_email_header">要创建新的 WordPress.com 帐户，请输入您的电子邮件地址。</string>
-    <string name="signup_email_error_generic">检查电子邮件地址时出现问题。</string>
     <string name="signup_magic_link_error">发送电子邮件时出现问题。您可以立即重试，或关闭并稍后重试。</string>
     <string name="signup_epilogue_hint_password_detail">通常情况下，您可以随时使用刚刚用过的链接登录，但如果您愿意，也可以设置密码。</string>
-    <string name="sign_up">注册 WordPress.com</string>
-    <string name="enter_username_instead">使用用户名登录。</string>
-    <string name="enter_site_address_instead">通过输入您的站点地址登录。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜索插件</string>
     <string name="plugin_caption_new">新</string>
@@ -1810,7 +1812,6 @@ Language: zh_CN
     <string name="login_error_suffix">\n换个账户试试?</string>
     <string name="login_error_generic">连接到 Google 帐户时出现问题。</string>
     <string name="login_error_button">关闭</string>
-    <string name="login_google_button_suffix">使用 Google 登录。</string>
     <string name="enter_wpcom_password_google">要继续使用此 Google 帐户，请提供匹配的 WordPress.com 密码。此要求仅会出现一次。</string>
     <string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
     <string name="post_settings_remove_featured_image">删除推荐图片</string>
@@ -1909,7 +1910,6 @@ Language: zh_CN
     <string name="login_site_address_more_help">需要更多帮助？</string>
     <string name="login_site_address_help_content">在您使用 Chrome 访问自己的站点时，站点地址显示在屏幕顶部的地址栏中。</string>
     <string name="login_site_address_help_title">我的站点地址是什么？</string>
-    <string name="login_site_address_help">查找站点地址时需要帮助？</string>
     <string name="login_site_address">站点地址</string>
     <string name="enter_site_address">输入您要连接的 WordPress 站点的地址。</string>
     <string name="login_already_logged_in_wpcom">已经登录 WordPress.com</string>
@@ -1921,7 +1921,6 @@ Language: zh_CN
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
-    <string name="open_mail">打开邮箱</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
@@ -2178,7 +2177,6 @@ Language: zh_CN
     <string name="invite_message_title">自定义消息</string>
     <string name="invite">邀请</string>
     <string name="invite_names_title">用户名或邮箱</string>
-    <string name="send_link">发送链接</string>
     <string name="my_site_header_external">外部</string>
     <string name="invite_people">邀请用户</string>
     <string name="label_clear_search_history">清除搜索历史记录</string>
@@ -2204,7 +2202,6 @@ Language: zh_CN
     <string name="checking_email">检查电子邮件地址</string>
     <string name="magic_link_unavailable_error_message">目前不可用。请输入密码</string>
     <string name="logging_in">正在登录</string>
-    <string name="enter_your_password_instead">改为输入密码</string>
     <string name="web_address_dialog_hint">公开显示您的评论。</string>
     <string name="capture_or_pick_photo">拍摄或选择照片</string>
     <string name="export_your_content_message">系统会将您的文章、页面和设置发送到以下电子邮件地址：%s。</string>
@@ -2587,7 +2584,6 @@ Language: zh_CN
     <string name="reader_page_followed_tags">已关注的主题</string>
     <string name="reader_hint_add_tag_or_url">输入要关注的 URL 或主题</string>
     <string name="help">帮助</string>
-    <string name="forgot_password">忘记密码？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>
     <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>
     <string name="no_network_message">没用可用的网络</string>

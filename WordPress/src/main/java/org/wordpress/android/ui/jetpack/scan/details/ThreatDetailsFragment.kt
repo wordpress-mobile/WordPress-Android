@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowGetFreeEstimate
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -23,7 +25,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
@@ -88,9 +89,10 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                                     .getSerializable(WordPress.SITE) as SiteModel
                             ActivityLauncher.viewScanRequestFixState(requireActivity(), site, events.threatId)
                         }
-                        is ThreatDetailsNavigationEvents.ShowGetFreeEstimate -> {
+                        is ShowGetFreeEstimate -> {
                             ActivityLauncher.openUrlExternal(context, events.url())
                         }
+                        is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
                     }
                 }
         )

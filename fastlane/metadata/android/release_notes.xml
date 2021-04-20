@@ -1,70 +1,48 @@
-<ar>
-17.0:
-نحن متحمسون للإعلان عن ثلاثة تحديثات لـ ووردبريس للأندرويد WPAndroid. قمنا بتمكين وظائف القبضة / التكبير / التحريك في مكتبة القصص، مما يجعل إمكانيات العرض أكثر دقة من أي وقت مضى. قمنا بتحويل فلتر التعليقات من قائمة منسدلة إلى علامات تبويب. وقمنا بإزالة زر الإلغاء من خيارات الإعداد في محرر المكوّنات.
-</ar>
-<de-DE>
-17.0:
-Wir freuen uns auf drei Updates für WPAndroid. In der Story-Mediathek gibt es jetzt Zwei-Finger-/Zoom-/Schwenk-Funktionen, die dir mehr Ansichtsoptionen denn je ermöglichen. Den Kommentarfilter findest du nun nicht mehr als Drop-down-Menü sondern als Tabs. Und wir haben die Schaltfläche zum Abbrechen aus den Einstellungsoptionen im Block-Editor entfernt. 
-</de-DE>
 <en-US>
-17.0:
-We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.
+17.1:
+What’s new?
+
+We improved accessibility in the block editor for those who use a TalkBack screen reader.
+
+To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
+
+You may have noticed the new color palette! We also updated your app icon to match.
 </en-US>
 <es-ES>
-17.0:
-Nos complace anunciar tres actualizaciones de WPAndroid. Hemos activado la funcionalidad de pellizco/zoom/panorámica en la biblioteca de historias, haciendo las posibilidades de visualización más completas que nunca. Hemos cambiado el filtro de comentarios de un menú desplegable a pestañas. Y hemos eliminado el botón de cancelación de las opciones de ajuste en el editor de bloques.
-</es-ES>
-<fr-CA>
-17.0 :
-Nous sommes heureux d’annoncer trois mises à jour de WPAndroid. Nous avons activé la fonctionnalité de pincement/zoom/panoramique dans la bibliothèque Stories, pour un affichage plus complet que jamais. Nous avons transformé en onglets le menu déroulant de filtrage des commentaires. Et nous avons supprimé le bouton Annuler des options de réglage de l’éditeur de blocs. 
-</fr-CA>
-<fr-FR>
-17.0 :
-Nous sommes heureux d’annoncer trois mises à jour de WPAndroid. Nous avons activé la fonctionnalité de pincement/zoom/panoramique dans la bibliothèque Stories, pour un affichage plus complet que jamais. Nous avons transformé en onglets le menu déroulant de filtrage des commentaires. Et nous avons supprimé le bouton Annuler des options de réglage de l’éditeur de blocs. 
-</fr-FR>
-<iw-IL>
-17.0:
-אנחנו שמחים להכריז על שלושה עדכונים ב-WPAndroid. הפעלנו את האפשרות של /התמקדות/ וסיבוב בספריית הסטוריז, כדי שאפשרויות הצפייה יהיו מקיפות יותר. החלפנו את מסנן התגובות מתפריט נפתח ללשוניות. והסרנו את הכפתור 'ביטול' מאפשרויות ההגדרה בעורך הבלוקים. 
-</iw-IL>
-<id>
-17.0:
-Dengan bangga kami mengumumkan tiga pembaruan untuk WPAndroid. Kami mengaktifkan fungsi cubit untuk/memperbesar/memperkecil/layar pada pustaka Cerita, membuat kemungkinan penampilan cerita lebih rinci. Kami mengubah penyaringan komentar dari menu tarik-turun menjadi tab. Dan kami menghapus tombol batalkan dari opsi pengaturan pada Editor Blok. 
-</id>
-<it-IT>
-17.0:
-Siamo felici di annunciare tre aggiornamenti a WordPress per Android. Abbiamo abilitato la funzionalità di avvicinamento delle dita/zoom/panoramica nella libreria Storie, rendendo le possibilità di visualizzazione più complete che mai. Abbiamo spostato il filtro dei commenti da un menu a discesa alle schede. Abbiamo anche rimosso il pulsante Annulla dalle opzioni delle impostazioni nell'editor a blocchi. 
-</it-IT>
-<ja-JP>
-17.0:
-WPAndroid に3つのアップデートが追加されました。 ストーリーライブラリでのピンチ / ズーム / パン機能が追加され、今までにないさまざまな形での閲覧が可能になりました。 コメントフィルターをドロップダウンメニューからタブに切り替えました。 ブロックエディターの「設定」オプションから「キャンセル」ボタンを削除しました。  
-</ja-JP>
-<ko-KR>
-17.0:
-WPAndroid에서 세 가지를 업데이트했습니다. 이전보다 더 꼼꼼히 볼 수 있도록 스토리 라이브러리에서 손가락 모으기/확대/축소/이동 기능을 활성화했습니다. 댓글 필터를 드롭다운 메뉴에서 탭으로 옮겼습니다. 그리고 블록 편집기의 설정 옵션에서 취소 버튼을 제거했습니다. 
-</ko-KR>
-<nl-NL>
-17.0:
+17.1:
+¿Qué hay de nuevo?
 
-We zijn verheugd om drie updates voor WPAndroid aan te kondigen. We hebben pinch/zoom/pan-functionaliteit ingeschakeld in de verhalenbibliotheek, waardoor de weergavemogelijkheden uitgebreider zijn dan ooit. We hebben het reactiefilter veranderd van een dropdown menu naar tabs. En we hebben de annuleerknop verwijderd uit de instellingsopties in de blok-editor.
+Hemos mejorado la accesibilidad en el editor de bloques para aquellos que usan un lector de pantalla TalkBack.
+
+Para ayudarte a gestionar los comentarios en tu sitio, ahora hay un filtro «Sin respuesta» para que puedas ver los comentarios sin respuesta en un solo lugar.
+
+¡Quizá hayas notado la nueva paleta de color! También hemos actualizado el icono de tu aplicación para que haga juego.
+</es-ES>
+<nl-NL>
+17.1:
+Wat is er nieuw?
+
+We hebben de toegankelijkheid in de blokeditor verbeterd voor degenen die een TalkBack-schermlezer gebruiken.
+
+Om je te helpen bij het beheren van reacties op je site, is er nu een filter 'Niet beantwoord', zodat je niet-beantwoorde reacties op één plek kunt bekijken.
+
+Misschien heb je het nieuwe kleurenpalet opgemerkt! We hebben ook je app-pictogram geüpdatet om overeen te komen.
 </nl-NL>
 <ru-RU>
-17.0:
-Мы рады представить вам три обновления для WPAndroid. 
-Мы включили функцию сжатия/масштабирования/панорамирования в библиотеке историй, что сделало возможности просмотра более детальными, чем когда-либо. Мы переключили фильтр комментариев из раскрывающегося меню на вкладки. И мы удалили кнопку отмены из параметров настройки в редакторе блоков.
+17.1:
+Что нового:
+
+Мы улучшили доступность в редакторе блоков для тех, кто использует программу чтения с экрана TalkBack.
+
+Чтобы помочь вам управлять комментариями на своем сайте, теперь есть фильтр «Без ответа», чтобы вы могли просматривать комментарии, на которые не ответили, в одном месте.
+
+Возможно, вы заметили новую цветовую палитру! Мы также обновили и значок приложения, чтобы он соответствовал ей.
 </ru-RU>
-<sv-SE>
-17.0:
-Denna gång hela tre nyheter i WPAndroid. Vi har lagt till funktioner för nyp/zooma/rulla i berättelsebiblioteket så att det är enklare än någonsin att se allt. Vi har ändrat kommentarsfiltret från rullgardinsmeny till flikar. Slutligen har vi tagit bort knappen ”avbryt” i inställningarna för blockredigeraren.
-</sv-SE>
-<tr-TR>
-17.0:
-WPAndroid'le ilgili üç güncellemeyi duyurmaktan heyecan duyuyoruz. Öyküler kitaplığında sıkıştırma/yaklaştırma/kaydırma işlevini etkinleştirerek görüntüleme olanaklarını her zamankinden daha kapsamlı hale getirdik. Açılır menü şeklindeki yorumlar filtresini sekme haline getirdik. Ayrıca Blok Düzenleyicideki ayar seçeneklerinden iptal düğmesini kaldırdık. 
-</tr-TR>
 <zh-CN>
-17.0:
-我们很高兴地宣布WPAndroid的三个更新事项。在故事库中启用了捏合/缩放/平移功能，使查看的可能性比以往更彻底。将评论过滤器从下拉菜单换成了标签。从区块编辑器的设置选项中删除了取消按钮。
+17.1:
+我们对使用TalkBack屏幕阅读器的用户改进了其在区块编辑器中的无障碍。
+
+为了有助于您更加方便的管理您站点上的评论，我们添加了一个 “未回复 ”选项，使您可以在一个位置查看所有未回复的评论。
+
+您可能已经注意到了新的调色板！我们也更新了应用程序的图标以使其相匹配。
 </zh-CN>
-<zh-TW>
-17.0：
-我們很高興宣布推出 WPAndroid 的三項更新。 啟用 Stories 媒體庫的撥動/縮放/平移功能，讓使用者能更加全面地觀看畫面上的內容。 將留言篩選器從下拉式選單移至索引標籤。 移除區塊編輯器設定選項中的取消按鈕。 
-</zh-TW>

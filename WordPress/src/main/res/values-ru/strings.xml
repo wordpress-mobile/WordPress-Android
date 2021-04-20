@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 10:10:36+0000
+Translation-Revision-Date: 2021-04-07 19:17:37+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Ссылка на метку</string>
+    <string name="gutenberg_native_use_icon_button">Использовать кнопку со значком</string>
+    <string name="gutenberg_native_search_input_field">Поле ввода для поиска.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Кнопка поиска. Текущий текст кнопки -</string>
+    <string name="gutenberg_native_search_blocks">Блоки поиска</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Ярлык блока поиска. Сейчас -</string>
+    <string name="gutenberg_native_search_block">Блок поиска</string>
+    <string name="gutenberg_native_outside">Снаружи</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Пользовательский заполнитель не назначен</string>
+    <string name="gutenberg_native_no_button">Нет кнопки</string>
+    <string name="gutenberg_native_inside">Внутри</string>
+    <string name="gutenberg_native_hide_search_heading">Скрыть заголовок поиска</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Нажмите дважды для редактирования текста заполнителя</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Нажмите дважды для редактирования текста ярлыка</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Нажмите дважды для редактирования текста кнопки</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Нажмите дважды для смены единиц</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Текущий текст для заполнителя -</string>
+    <string name="gutenberg_native_clear_search">Очистить поиск</string>
+    <string name="gutenberg_native_cancel_search">Отменить поиск</string>
+    <string name="gutenberg_native_button_position">Положение кнопки</string>
+    <string name="gutenberg_native_button_outside">Кнопка снаружи</string>
+    <string name="gutenberg_native_button_inside">Кнопка внутри</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">При получении данных отметок \"нравится\" произошла ошибка.</string>
+    <string name="get_likes_unknown_error">При получении отметок \"нравится\" произошла неизвестная ошибка. </string>
+    <string name="get_likes_no_network_error">Сеть недоступна.</string>
+    <string name="comments_empty_list_filtered_unreplied">Нет комментариев без ответа</string>
+    <string name="comment_status_unreplied">Без ответов</string>
     <string name="gutenberg_native_table_of_contents">Оглавление</string>
     <string name="gutenberg_native_summary">итог</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Завершите вашу запись списком заголовков, добавьте HTML-якоря к блокам заголовков, чтобы создать ссылки на них здесь.</string>
     <string name="gutenberg_native_search_settings">Настройки поиска</string>
-    <string name="gutenberg_native_post_link">Ссылка записи</string>
     <string name="gutenberg_native_document_outline">структура документа</string>
-    <string name="gutenberg_native_category_link">Ссылка на рубрику</string>
     <string name="gutenberg_native_buttongroup">Группа кнопок</string>
-    <string name="gutenberg_native_a_link_to_a_url">Ссылка на URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">Ссылка на метку.</string>
-    <string name="gutenberg_native_a_link_to_a_post">Ссылка на запись.</string>
-    <string name="gutenberg_native_a_link_to_a_page">Ссылка на страницу.</string>
-    <string name="gutenberg_native_a_link_to_a_category">Ссылка на рубрику.</string>
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
     <string name="gutenberg_native_add_button_text">Добавить текст кнопки</string>
@@ -428,7 +447,6 @@ Language: ru
     <string name="media_uploading_default">Загрузка медиафайлов</string>
     <string name="gutenberg_native_select_item">Выбрать элемент</string>
     <string name="gutenberg_native_search_or_type_url">Введите поисковый запрос или URL</string>
-    <string name="gutenberg_native_page_link">Ссылка на страницу</string>
     <string name="gutenberg_native_add_this_telephone_link">Добавить ссылку на номер телефона</string>
     <string name="gutenberg_native_add_this_link">Добавить ссылку</string>
     <string name="gutenberg_native_add_this_email_link">Добавить ссылку на email</string>
@@ -797,7 +815,6 @@ Language: ru
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперед</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
     <string name="gutenberg_native_gallery_caption_s">Подпись галереи. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Текущее значение - %2$s</string>
     <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
     <string name="content_description_person_building_website">Личность, создающая сайт</string>
     <string name="post_signup_interstitial_not_right_now">Не сейчас</string>
@@ -821,7 +838,6 @@ Language: ru
     <string name="login_discovery_error_http_auth">Мы не смогли подключиться к сайту, поскольку он требует &lt;b>HTTP авторизации&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_discovery_error_xmlrpc">Мы не смогли подключиться к &lt;b>XMLRPC&lt;/b> сайта. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Войти с именем пользователя и паролем cайта.</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
     <string name="reader_following_display_name">Подписчик</string>
@@ -878,7 +894,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Нажмите дважды для перемещения блока вверх</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Нажмите дважды для перемещения блока вниз</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Нажмите дважды для изменения</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Нажмите дважды и измените значение используя ползунок</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Нажмите дважды для добавления блока</string>
     <string name="gutenberg_native_current_value_is_s">Текущее значение - %s</string>
     <string name="gutenberg_native_choose_from_device">Выбрать с устройства</string>
@@ -992,7 +1007,6 @@ Language: ru
     <string name="post_settings_add_to_calendar">Добавить в календарь</string>
     <string name="post_settings_notification">Уведомление</string>
     <string name="post_settings_time_and_date">Дата и время</string>
-    <string name="login_need_help_finding_connected_email">Не можете вспомнить адрес эл. почты, указанный при регистрации?</string>
     <string name="login_invalid_site_url">Введите полный адрес вебсайта, например example.com.</string>
     <string name="enter_email_for_site">Войдите на WordPress.com, чтобы подключиться к %1$s</string>
     <string name="stats_post_views_label">Просмотры</string>
@@ -1166,7 +1180,6 @@ Language: ru
     <string name="plans_loading_error_no_plans_title">Невозможно загрузить тарифы</string>
     <string name="plans_loading_error_network_title">Нет подключения</string>
     <string name="menu_switch_to_gutenberg_editor">Переключиться на редактор блоков</string>
-    <string name="menu_switch_to_aztec_editor">Переключиться на классический редактор</string>
     <string name="stats_loading_block_error">Возникла проблема загрузки данных, обновите страницу, чтобы попробовать снова.</string>
     <string name="stats_loading_error">Данные не загружены</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Редактировать новые записи и страницы в редакторе блоков</string>
@@ -1458,14 +1471,12 @@ Language: ru
     <string name="comment_read_source_post">Прочесть исходную запись</string>
     <string name="sites">Сайты</string>
     <string name="signup_magic_link_title">Магическая ссылка отослана</string>
-    <string name="signup_email_screen_title">Email регистрация</string>
     <string name="verification_2fa_screen_title">Проверка кода</string>
     <string name="selfhosted_site_login_title">Данные для входа</string>
     <string name="magic_link_sent_login_title">Магическая ссылка отослана</string>
     <string name="magic_link_login_title">Вход по магической ссылке</string>
     <string name="site_address_login_title">Вход по адресу сайта</string>
     <string name="email_address_login_title">Вход по email адресу</string>
-    <string name="alternatively">Альтернативно:</string>
     <string name="reader_empty_saved_posts_description">Нажмите %s для сохранения записи в ваш список.</string>
     <string name="reader_empty_saved_posts_title">Пока не сохранено никаких записей!</string>
     <string name="reader_bookmark_snack_title">Запись сохранена</string>
@@ -1502,7 +1513,6 @@ Language: ru
     <string name="preference_privacy_settings">Настройки конфиденциальности</string>
     <string name="preference_collect_information">Сбор информации</string>
     <string name="post_submitted">Запись отправлена</string>
-    <string name="login_email_button_signup">Еще нет учетной записи? %1$sЗарегистрируйтесь%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Возможность установки плагинов требует, чтобы сайт не был в серых списках.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Возможность установки плагинов требует связи подписки основного домена и этого пользователя.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Возможность установки плагинов требует привилегий администратора.</string>
@@ -1668,11 +1678,8 @@ Language: ru
     <string name="username_changer_dismiss_button_positive">Отменить</string>
     <string name="username_changer_action">Сохранить</string>
     <string name="content_description_add_avatar">Добавить аватар</string>
-    <string name="signup_with_google_button">Зарегистрироваться через Google</string>
-    <string name="signup_with_email_button">Зарегистрироваться с адресом Email</string>
     <string name="signup_user_exists">Email уже зарегистрирован на WordPress.com\nПереходим ко входу.</string>
     <string name="signup_updating_account">Обновление учетной записи…</string>
-    <string name="signup_terms_of_service_text">Регистрируясь, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
     <string name="signup_magic_link_progress">Отправка email</string>
     <string name="signup_magic_link_error_button_positive">Повторить</string>
     <string name="signup_magic_link_error_button_negative">Закрыть</string>
@@ -1685,11 +1692,6 @@ Language: ru
     <string name="signup_epilogue_error_button_negative">Откат</string>
     <string name="signup_epilogue_error_generic">Возникла ошибка обновления учетной записи. Вы можете повторить или сделать откат изменений.</string>
     <string name="signup_epilogue_error_avatar">Возникла ошибка обновления аватара.</string>
-    <string name="signup_email_header">Для создания новой учетной записи WordPress.com, пожалуйста введите ваш адрес email.</string>
-    <string name="signup_email_error_generic">Возникла ошибка проверки адреса email.</string>
-    <string name="sign_up">Зарегистрироваться на WordPress.com</string>
-    <string name="enter_username_instead">Войти с именем пользователя.</string>
-    <string name="enter_site_address_instead">Войти с адресом вашего сайта.</string>
     <string name="plugin_needs_update">Требует обновления</string>
     <string name="plugin_caption_search">Искать плагины</string>
     <string name="plugin_caption_new">Новые</string>
@@ -1810,7 +1812,6 @@ Language: ru
     <string name="login_error_suffix">\nВозможно попробуете другую учетную запись?</string>
     <string name="login_error_generic">Возникла ошибка подключения к учетной записи Google.</string>
     <string name="login_error_button">Закрыть</string>
-    <string name="login_google_button_suffix">Войти через Google.</string>
     <string name="enter_wpcom_password_google">Чтобы войти через эту учетную запись Google, пожалуйста укажите соответствующий пароль WordPress.com. Это запрашивается только один раз.</string>
     <string name="error_generic_network">Возникла ошибка сети. Проверьте ваше подключение и попробуйте снова.</string>
     <string name="post_settings_remove_featured_image">Убрать изображение записи</string>
@@ -1909,7 +1910,6 @@ Language: ru
     <string name="login_site_address_more_help">Нужна дополнительная помощь?</string>
     <string name="login_site_address_help_content">При открытии сайта в браузере Chrome его адрес отображается в строке в верхней части экрана.</string>
     <string name="login_site_address_help_title">Какой адрес у моего сайта?</string>
-    <string name="login_site_address_help">Как найти адрес своего сайта?</string>
     <string name="login_site_address">Адрес сайта</string>
     <string name="enter_site_address">Введите адрес сайта WordPress, к которому требуется подключиться.</string>
     <string name="login_already_logged_in_wpcom">Вы уже вошли на WordPress.com</string>
@@ -1921,7 +1921,6 @@ Language: ru
     <string name="requesting_otp">Выполняется запрос на получение проверочного кода в SMS-сообщении.</string>
     <string name="login_text_otp">Пришлите мне сообщение с кодом.</string>
     <string name="enter_verification_code">Почти готово! Введите проверочный код из приложения Authenticator.</string>
-    <string name="open_mail">Открыть почту</string>
     <string name="next">Вперед</string>
     <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
     <string name="image_optimization_promo_desc">Средство оптимизации изображений сжимает их для ускорения загрузки.\n\nВы в любой момент можете изменить это в настройках сайта.</string>
@@ -2180,7 +2179,6 @@ Language: ru
     <string name="invite_names_title">Имена пользователей или адреса e-mail</string>
     <string name="invite_people">Пригласить людей</string>
     <string name="my_site_header_external">Внешние ссылки</string>
-    <string name="send_link">Отправить ссылку</string>
     <string name="label_clear_search_history">Очистить историю поиска</string>
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
     <string name="reader_empty_search_description">По запросу «%s» на вашем языке записей не найдено</string>
@@ -2204,7 +2202,6 @@ Language: ru
     <string name="checking_email">Проверка адреса эл. почты</string>
     <string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
     <string name="logging_in">Вход в систему</string>
-    <string name="enter_your_password_instead">Введите пароль.</string>
     <string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
     <string name="capture_or_pick_photo">Сделайте снимок или выберите фото</string>
     <string name="plans">Тарифные планы</string>
@@ -2588,7 +2585,6 @@ Language: ru
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
-    <string name="forgot_password">Забыли пароль?</string>
     <string name="help">Помощь</string>
     <string name="username_or_password_incorrect">Имя пользователя или пароль введены неверно</string>
     <string name="email_invalid">Введите правильный email адрес</string>

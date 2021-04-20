@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.detail
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -16,18 +15,15 @@ import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRestore
-import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
-import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -90,9 +86,6 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                             it.model.activityID,
                             RequestCodes.RESTORE,
                             buildTrackingSource()
-                    )
-                    is ShowRewindDialog -> onRewindButtonClicked(
-                            it.model
                     )
                 }
             })
@@ -190,12 +183,6 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         outState.putBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, viewModel.areButtonsVisible)
     }
 
-    fun onRewindConfirmed(rewindId: String) {
-        val intent = activity?.intent?.putExtra(ACTIVITY_LOG_REWIND_ID_KEY, rewindId)
-        activity?.setResult(RESULT_OK, intent)
-        activity?.finish()
-    }
-
     private fun ActivityLogItemDetailBinding.setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
         when {
             actorIcon != null && actorIcon != "" -> {
@@ -212,24 +199,6 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 activityActorIcon.visibility = View.GONE
                 activityJetpackActorIcon.visibility = View.GONE
             }
-        }
-    }
-
-    private fun onRewindButtonClicked(item: ActivityLogDetailModel) {
-        val dialog = BasicFragmentDialog()
-        item.rewindId?.let {
-            dialog.initialize(
-                    it,
-                    getString(R.string.activity_log_rewind_site),
-                    getString(
-                            R.string.activity_log_rewind_dialog_message,
-                            item.createdDate,
-                            item.createdTime
-                    ),
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel)
-            )
-            dialog.show(parentFragmentManager, it)
         }
     }
 

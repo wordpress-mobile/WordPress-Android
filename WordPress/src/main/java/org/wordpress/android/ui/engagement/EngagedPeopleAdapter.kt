@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -9,11 +8,12 @@ import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngageItem.NextLikesPageLoader
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.lang.IllegalArgumentException
 
 class EngagedPeopleAdapter constructor(
     private val imageManager: ImageManager,
-    private val context: Context
+    private val resourceProvider: ResourceProvider
 ) : Adapter<EngagedPeopleViewHolder>() {
     private var itemsList = listOf<EngageItem>()
 
@@ -28,7 +28,7 @@ class EngagedPeopleAdapter constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EngagedPeopleViewHolder {
         return when (viewType) {
             EngageItemType.LIKED_ITEM.ordinal -> LikedItemViewHolder(parent, imageManager)
-            EngageItemType.LIKER.ordinal -> LikerViewHolder(parent, imageManager)
+            EngageItemType.LIKER.ordinal -> LikerViewHolder(parent, imageManager, resourceProvider)
             EngageItemType.NEXT_LIKES_PAGE_LOADER.ordinal -> NextPageLoadViewHolder(parent)
             else -> throw IllegalArgumentException("Illegal view type $viewType")
         }
