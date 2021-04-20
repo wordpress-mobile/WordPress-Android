@@ -1,13 +1,12 @@
 package org.wordpress.android.ui
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
@@ -15,16 +14,15 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
-import org.wordpress.android.ui.utils.IntentUtils
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var statsLinkHandler: StatsLinkHandler
     @Mock lateinit var startLinkHandler: StartLinkHandler
+    @Mock lateinit var readerLinkHandler: ReaderLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
-    @Mock lateinit var intentUtils: IntentUtils
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private val startUrl = buildUri("wordpress.com", "start")
     private val postUrl = buildUri("wordpress.com", "post")
@@ -38,9 +36,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 editorLinkHandler,
                 statsLinkHandler,
                 startLinkHandler,
+                readerLinkHandler,
                 deepLinkUriUtils,
-                serverTrackingHandler,
-                intentUtils
+                serverTrackingHandler
         )
         whenever(startLinkHandler.isStartUrl(startUrl)).thenReturn(true)
         whenever(editorLinkHandler.isEditorUrl(postUrl)).thenReturn(true)
@@ -197,15 +195,18 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
         val redirect = buildUri("wordpress.com", "read")
         var navigateAction: NavigateAction? = null
+        val expectedAction = NavigateAction.OpenInReader(redirect)
 
         whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
-        whenever(intentUtils.canResolveWith(any(), eq(redirect))).thenReturn(true)
+        whenever(readerLinkHandler.isReaderUrl(redirect)).thenReturn(true)
+        whenever(readerLinkHandler.buildOpenInReaderNavigateAction(redirect)).thenReturn(expectedAction)
 
         viewModel.navigateAction.observeForever { navigateAction = it?.getContentIfNotHandled() }
+
         val urlHandled = viewModel.handleUrl(uri)
 
         assertThat(urlHandled).isTrue
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInReader(redirect))
+        assertThat(navigateAction).isEqualTo(expectedAction)
         verify(serverTrackingHandler).request(uri)
     }
 
@@ -215,16 +216,18 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val redirect = buildUri("wordpress.com", "read")
         val barUri = buildUri("public-api.wordpress.com", "bar")
         var navigateAction: NavigateAction? = null
+        val expectedAction = NavigateAction.OpenInBrowser(barUri)
 
         whenever(deepLinkUriUtils.getUriFromQueryParameter(uri, "redirect_to")).thenReturn(redirect)
-        whenever(intentUtils.canResolveWith(any(), eq(redirect))).thenReturn(false)
+        whenever(readerLinkHandler.isReaderUrl(redirect)).thenReturn(false)
         whenever(uri.copy("bar")).thenReturn(barUri)
 
         viewModel.navigateAction.observeForever { navigateAction = it?.getContentIfNotHandled() }
+
         val urlHandled = viewModel.handleUrl(uri)
 
-        assertThat(urlHandled).isTrue
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenInBrowser(barUri))
+        assertThat(urlHandled).isFalse
+        assertThat(navigateAction).isEqualTo(expectedAction)
         verifyZeroInteractions(serverTrackingHandler)
     }
 }
