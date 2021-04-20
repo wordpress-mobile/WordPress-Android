@@ -35,6 +35,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include
+        android:id="@+id/fullscreen_error_with_retry"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/fullscreen_error_with_retry" />

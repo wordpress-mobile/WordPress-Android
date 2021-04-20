@@ -44,7 +44,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val dateSelector: StatsDateSelector,
+    protected val dateSelector: StatsDateSelector,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {

@@ -30,7 +30,7 @@ class ReaderRecommendedBlogViewHolder(
             }
             updateBlogImage(iconUrl)
             root.setOnClickListener {
-                onItemClicked(blogId, feedId)
+                onItemClicked(blogId, feedId, isFollowed)
             }
         }
     }

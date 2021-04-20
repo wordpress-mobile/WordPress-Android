@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -15,6 +16,7 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -26,11 +28,13 @@ import javax.inject.Inject;
  * users to display
  */
 public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
+    @Nullable private Boolean mIsFollowed;
     private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
 
     @Inject ImageManager mImageManager;
+    @Inject ReaderTracker mReaderTracker;
 
     public ReaderUserAdapter(Context context) {
         super();
@@ -70,7 +74,13 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), user.blogId);
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                v.getContext(),
+                                user.blogId,
+                                mIsFollowed,
+                                ReaderTracker.SOURCE_USER,
+                                mReaderTracker
+                        );
                     }
                 });
                 holder.mRootView.setEnabled(true);
@@ -106,6 +116,10 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
             mTxtUrl = view.findViewById(R.id.text_url);
             mImgAvatar = view.findViewById(R.id.image_avatar);
         }
+    }
+
+    public void setIsFollowed(@Nullable Boolean isFollowed) {
+        mIsFollowed = isFollowed;
     }
 
     public void setUsers(final ReaderUserList users) {

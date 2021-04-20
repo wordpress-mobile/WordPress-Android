@@ -92,7 +92,6 @@ Language: vi_VN
     <string name="invite_error_invalid_usernames_one">Không thể gửi: Một tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_no_usernames">Vui lòng thêm ít nhất 1 tên người dùng</string>
     <string name="invite">Mời</string>
-    <string name="send_link">Gửi liên kết</string>
     <string name="invite_people">Mời mọi người</string>
     <string name="my_site_header_external">Mở rộng</string>
     <string name="label_clear_search_history">Xóa lịch sử tìm kiếm</string>
@@ -118,7 +117,6 @@ Language: vi_VN
     <string name="checking_email">Đang kiểm tra email</string>
     <string name="magic_link_unavailable_error_message">Hiện tại không sẵn có. Vui lòng nhập mật khẩu của bạn</string>
     <string name="logging_in">Đang đăng nhập</string>
-    <string name="enter_your_password_instead">Nhập mật khẩu thay thế của bạn</string>
     <string name="web_address_dialog_hint">Được hiển thị công khai khi bạn bình luận.</string>
     <string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
     <string name="plan">Gói dịch vụ</string>
@@ -472,7 +470,6 @@ Language: vi_VN
     <string name="schedule_verb">Lich trinh</string>
     <string name="reader_page_followed_blogs">Site được theo dõi</string>
     <string name="reader_toast_err_already_follow_blog">Bạn đã theo dõi site này</string>
-    <string name="forgot_password">Quên mật khẩu?</string>
     <string name="help">Trợ giúp</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối với trang web này mà không có vấn đề nào, lỗi này có thể có nghĩa rằng ai đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có muốn tin tưởng chứng chỉ không?</string>

@@ -31,8 +31,8 @@
     <color name="stats_bar_chart_accent_top">@color/pink_30</color>
     <color name="stats_bar_chart_accent_bottom">@color/pink_60</color>
     <color name="stats_bar_chart_gridline">@color/neutral_5</color>
-    <color name="stats_map_activity_low">@color/accent_5</color>
-    <color name="stats_map_activity_high">@color/accent</color>
+    <color name="stats_map_activity_low">@color/blue_5</color>
+    <color name="stats_map_activity_high">@color/blue</color>
     <color name="stats_map_activity_empty">@color/neutral_5</color>
 
     <!-- Post History -->
@@ -43,7 +43,7 @@
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/purple_20</color>
     <color name="login_prologue_background_circle_light_purple">@color/purple_10</color>
-    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_20</color>
+    <color name="login_prologue_background_circle_blue">@color/blue_20</color>
     <color name="login_prologue_background_circle_light_blue">@color/blue_5</color>
     <color name="login_prologue_background_circle_green">@color/green_5</color>
     <color name="login_prologue_background_circle_yellow">@color/yellow_10</color>
@@ -102,21 +102,21 @@
     <color name="neutral_80">@color/gray_80</color>
     <color name="neutral_90">@color/gray_90</color>
     <color name="neutral_100">@color/gray_100</color>
-    <color name="primary">@color/wordpress_blue_50</color>
-    <color name="primary_0">@color/wordpress_blue_0</color>
-    <color name="primary_5">@color/wordpress_blue_5</color>
-    <color name="primary_10">@color/wordpress_blue_10</color>
-    <color name="primary_20">@color/wordpress_blue_20</color>
-    <color name="primary_30">@color/wordpress_blue_30</color>
-    <color name="primary_40">@color/wordpress_blue_40</color>
-    <color name="primary_50">@color/wordpress_blue_50</color>
-    <color name="primary_60">@color/wordpress_blue_60</color>
-    <color name="primary_70">@color/wordpress_blue_70</color>
-    <color name="primary_80">@color/wordpress_blue_80</color>
-    <color name="primary_90">@color/wordpress_blue_90</color>
-    <color name="primary_100">@color/wordpress_blue_100</color>
-    <color name="primary_dark">@color/wordpress_blue_80</color>
-    <color name="primary_light">@color/wordpress_blue_30</color>
+    <color name="primary">@color/blue_50</color>
+    <color name="primary_0">@color/blue_0</color>
+    <color name="primary_5">@color/blue_5</color>
+    <color name="primary_10">@color/blue_10</color>
+    <color name="primary_20">@color/blue_20</color>
+    <color name="primary_30">@color/blue_30</color>
+    <color name="primary_40">@color/blue_40</color>
+    <color name="primary_50">@color/blue_50</color>
+    <color name="primary_60">@color/blue_60</color>
+    <color name="primary_70">@color/blue_70</color>
+    <color name="primary_80">@color/blue_80</color>
+    <color name="primary_90">@color/blue_90</color>
+    <color name="primary_100">@color/blue_100</color>
+    <color name="primary_dark">@color/blue_80</color>
+    <color name="primary_light">@color/blue_30</color>
     <color name="success">@color/green_50</color>
     <color name="success_0">@color/green_0</color>
     <color name="success_5">@color/green_5</color>
@@ -150,39 +150,41 @@
     <color name="warning_dark">@color/yellow_40</color>
     <color name="warning_light">@color/yellow_5</color>
 
-    <!-- STUDIO 2.2.0 -->
-    <color name="blue">#2271b1</color>
-    <color name="blue_0">#e9eff5</color>
-    <color name="blue_5">#c5d9ed</color>
-    <color name="blue_10">#9ec2e6</color>
-    <color name="blue_20">#72aee6</color>
-    <color name="blue_30">#5198d9</color>
-    <color name="blue_40">#3582c4</color>
-    <color name="blue_50">#2271b1</color>
-    <color name="blue_60">#135e96</color>
-    <color name="blue_70">#0a4b78</color>
-    <color name="blue_80">#043959</color>
-    <color name="blue_90">#01263a</color>
-    <color name="blue_100">#00131c</color>
-    <color name="celadon">#007e65</color>
+    <!-- STUDIO 2.5.0 -->
+    <color name="blue">#0675c4</color>
+    <color name="blue_0">#e9f0f5</color>
+    <color name="blue_5">#bbe0fa</color>
+    <color name="blue_10">#91caf2</color>
+    <color name="blue_20">#68b3e8</color>
+    <color name="blue_30">#399ce3</color>
+    <color name="blue_40">#1689db</color>
+    <color name="blue_50">#0675c4</color>
+    <color name="blue_60">#055d9c</color>
+    <color name="blue_70">#044b7a</color>
+    <color name="blue_80">#02395c</color>
+    <color name="blue_90">#01283d</color>
+    <color name="blue_100">#001621</color>
+
+    <color name="celadon">#008763</color>
     <color name="celadon_0">#e4f2ed</color>
-    <color name="celadon_5">#a7e8d4</color>
-    <color name="celadon_10">#63d6b6</color>
-    <color name="celadon_20">#2ebd99</color>
-    <color name="celadon_30">#09a884</color>
-    <color name="celadon_40">#009172</color>
-    <color name="celadon_50">#007e65</color>
-    <color name="celadon_60">#006753</color>
-    <color name="celadon_70">#005042</color>
-    <color name="celadon_80">#003b30</color>
-    <color name="celadon_90">#002721</color>
-    <color name="celadon_100">#001c17</color>
+    <color name="celadon_5">#a7e8d3</color>
+    <color name="celadon_10">#66deb9</color>
+    <color name="celadon_20">#31cc9f</color>
+    <color name="celadon_30">#09b585</color>
+    <color name="celadon_40">#009e73</color>
+    <color name="celadon_50">#008763</color>
+    <color name="celadon_60">#007053</color>
+    <color name="celadon_70">#005c44</color>
+    <color name="celadon_80">#004533</color>
+    <color name="celadon_90">#003024</color>
+    <color name="celadon_100">#001c15</color>
+
     <color name="gray">#646970</color>
     <color name="gray_0">#f6f7f7</color>
     <color name="gray_5">#dcdcde</color>
     <color name="gray_10">#c3c4c7</color>
     <color name="gray_20">#a7aaad</color>
-    <color name="gray_30">#8e9196</color>
+    <color name="gray_30">#8c8f94</color>
     <color name="gray_40">#787c82</color>
     <color name="gray_50">#646970</color>
     <color name="gray_60">#50575e</color>
@@ -203,7 +205,7 @@
     <color name="green_80">#00450c</color>
     <color name="green_90">#003008</color>
     <color name="green_100">#001c05</color>
-    <color name="jetpack_green">#00BE28</color>
+    <color name="jetpack_green">#069e08</color>
     <color name="jetpack_green_0">#f0f2eb</color>
     <color name="jetpack_green_5">#d0e6b8</color>
     <color name="jetpack_green_10">#9dd977</color>
@@ -268,6 +270,7 @@
     <color name="red_80">#691c1c</color>
     <color name="red_90">#451313</color>
     <color name="red_100">#240a0a</color>
+
     <color name="woocommerce_purple">#7f54b3</color>
     <color name="woocommerce_purple_0">#f7edf7</color>
     <color name="woocommerce_purple_5">#e5cfe8</color>
@@ -281,6 +284,8 @@
     <color name="woocommerce_purple_80">#3c2861</color>
     <color name="woocommerce_purple_90">#271b3d</color>
     <color name="woocommerce_purple_100">#140e1f</color>
+
+    <!-- Deprecated as of 2.4.0 -->
     <color name="wordpress_blue">#006088</color>
     <color name="wordpress_blue_0">#e6f1f5</color>
     <color name="wordpress_blue_5">#bedae6</color>
@@ -294,19 +299,20 @@
     <color name="wordpress_blue_80">#002c40</color>
     <color name="wordpress_blue_90">#001d2d</color>
     <color name="wordpress_blue_100">#00101c</color>
-    <color name="yellow">#907300</color>
-    <color name="yellow_0">#f5efe4</color>
-    <color name="yellow_5">#f5e1b3</color>
-    <color name="yellow_10">#f2cf75</color>
-    <color name="yellow_20">#f0c443</color>
-    <color name="yellow_30">#dbae17</color>
-    <color name="yellow_40">#b69000</color>
-    <color name="yellow_50">#907300</color>
-    <color name="yellow_60">#705b00</color>
-    <color name="yellow_70">#5c4b00</color>
-    <color name="yellow_80">#453900</color>
-    <color name="yellow_90">#302800</color>
-    <color name="yellow_100">#1c1700</color>
+
+    <color name="yellow">#9d6e00</color>
+    <color name="yellow_0">#f5f1e1</color>
+    <color name="yellow_5">#f5e6b3</color>
+    <color name="yellow_10">#f2d76b</color>
+    <color name="yellow_20">#f0c930</color>
+    <color name="yellow_30">#deb100</color>
+    <color name="yellow_40">#c08c00</color>
+    <color name="yellow_50">#9d6e00</color>
+    <color name="yellow_60">#7d5600</color>
+    <color name="yellow_70">#674600</color>
+    <color name="yellow_80">#4f3500</color>
+    <color name="yellow_90">#320</color>
+    <color name="yellow_100">#1c1300</color>
 
     <!-- TRANSLUCENT -->
     <color name="black_translucent_20">#33000000</color>
@@ -324,7 +330,7 @@
     <color name="reader_following_empty_view_upper_right_plus">@color/yellow_0</color>
     <color name="reader_following_empty_view_mid_left_plus">@color/green_0</color>
     <color name="reader_following_empty_view_center_circle">@color/blue_0</color>
-    <color name="reader_following_empty_view_left_lower_plus">@color/pink_0</color>
+    <color name="reader_following_empty_view_left_lower_plus">@color/blue_0</color>
     <color name="reader_following_empty_view_outline">@color/gray_10</color>
     <color name="reader_following_empty_view_middle_plus">@android:color/white</color>
     <color name="reader_following_empty_view_background">@color/background_default</color>
@@ -382,4 +388,13 @@
     <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_5</color>
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
+
+    <!-- These colors were removed from the login library and moved here as they are still being
+    used by some old layouts. They should be replaced here as well, whenever possible. -->
+    <color name="color_primary_dark">#006b98</color>
+    <color name="light_gray">@color/grey_lighten_30</color>
+    <color name="grey_lighten_30">#e9eff3</color>
+    <color name="grey_lighten_20">#c8d7e1</color>
+    <color name="grey_300">#ffe0e0e0</color>
+    <color name="grey_900">#ff212121</color>
 </resources>

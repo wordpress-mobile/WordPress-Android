@@ -44,7 +44,7 @@ public class LoginFlow {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
         populateTextField(R.id.input, password);
-        clickOn(R.id.primary_button);
+        clickOn(R.id.bottom_button);
         return this;
     }
 
@@ -54,7 +54,7 @@ public class LoginFlow {
             enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD);
         }
 
-        ViewInteraction continueButton = onView(withId(R.id.primary_button));
+        ViewInteraction continueButton = onView(withId(R.id.bottom_button));
 
         waitForElementToBeDisplayed(continueButton);
         clickOn(continueButton);
@@ -90,7 +90,7 @@ public class LoginFlow {
                 Matchers.<View>instanceOf(EditText.class)));
         populateTextField(usernameElement, username + "\n");
         populateTextField(passwordElement, password + "\n");
-        clickOn(R.id.primary_button);
+        clickOn(R.id.bottom_button);
         return this;
     }
 
@@ -105,7 +105,7 @@ public class LoginFlow {
         // Site Address Screen – Fill it in and click "Continue"
         // See LoginSiteAddressFragment
         populateTextField(R.id.input, siteAddress);
-        clickOn(R.id.primary_button);
+        clickOn(R.id.bottom_button);
         return this;
     }
 }

@@ -39,6 +39,7 @@ import org.wordpress.android.models.Note
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
+import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock
@@ -85,10 +86,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var confettiShown = false
 
     @Inject lateinit var imageManager: ImageManager
-
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-
     @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
+    @Inject lateinit var listScenarioUtils: ListScenarioUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,6 +182,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         notification?.let {
             outState.putString(KEY_NOTE_ID, it.id)
             outState.putInt(KEY_LIST_POSITION, listView.firstVisiblePosition)
+        } ?: run {
+            // This is done so the fragments pre-loaded by the view pager can store the already rescued restoredNoteId
+            if (!TextUtils.isEmpty(restoredNoteId)) {
+                outState.putString(KEY_NOTE_ID, restoredNoteId)
+            }
         }
 
         super.onSaveInstanceState(outState)
@@ -220,7 +225,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         detailActivity.showWebViewActivityForUrl(note.url)
                     }
                 } else if (note.isFollowType) {
-                    detailActivity.showBlogPreviewActivity(note.siteId.toLong())
+                    detailActivity.showBlogPreviewActivity(note.siteId.toLong(), note.isFollowType)
                 } else {
                     // otherwise, load the post in the Reader
                     detailActivity.showPostActivity(note.siteId.toLong(), note.postId.toLong())
@@ -247,7 +252,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
             val detailActivity = activity as NotificationsDetailActivity
             if (siteId != 0L) {
-                detailActivity.showBlogPreviewActivity(siteId)
+                detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl)
             }
@@ -260,10 +265,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             when (clickedSpan.rangeType) {
                 SITE ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.id)
+                    activity.showBlogPreviewActivity(clickedSpan.id, note?.isFollowType)
                 USER ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.siteId)
+                    activity.showBlogPreviewActivity(clickedSpan.siteId, note?.isFollowType)
                 POST ->
                     // Show post detail
                     activity.showPostActivity(clickedSpan.siteId, clickedSpan.id)
@@ -312,7 +317,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (siteId == 0L && !TextUtils.isEmpty(siteUrl)) {
             detailActivity.showWebViewActivityForUrl(siteUrl)
         } else if (siteId != 0L) {
-            detailActivity.showBlogPreviewActivity(siteId)
+            detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
         }
     }
 
@@ -328,7 +333,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             val imageType = if (note.isFollowType) BLAVATAR else AVATAR_WITH_BACKGROUND
             val headerNoteBlock = HeaderNoteBlock(
                     activity,
-                    transformToFormattableContentList(note.header),
+                    listScenarioUtils.transformToFormattableContentList(note.header),
                     imageType,
                     mOnNoteBlockTextClickListener,
                     mOnGravatarClickedListener,
@@ -370,7 +375,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         imageManager,
                         notificationsUtilsWrapper
                 )
-                pingbackUrl = noteBlock.getMetaSiteUrl()
+                pingbackUrl = noteBlock.metaSiteUrl
 
                 // Set listener for comment status changes, so we can update bg and text colors
                 val commentUserNoteBlock: CommentUserNoteBlock = noteBlock
@@ -482,24 +487,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 }
                 return noteList
             }
-        }
-
-        private fun transformToFormattableContentList(headerArray: JSONArray?): List<FormattableContent> {
-            val headersList: MutableList<FormattableContent> = ArrayList()
-            if (headerArray != null) {
-                for (i in 0 until headerArray.length()) {
-                    try {
-                        headersList.add(
-                                notificationsUtilsWrapper.mapJsonToFormattableContent(
-                                        headerArray.getJSONObject(i)
-                                )
-                        )
-                    } catch (e: JSONException) {
-                        AppLog.e(NOTIFS, "Header array has invalid format.")
-                    }
-                }
-            }
-            return headersList
         }
 
         private fun isPingback(note: Note): Boolean {

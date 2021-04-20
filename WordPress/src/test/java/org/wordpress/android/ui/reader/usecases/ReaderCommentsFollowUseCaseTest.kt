@@ -17,6 +17,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
@@ -27,7 +28,6 @@ import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.Pos
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -38,7 +38,7 @@ class ReaderCommentsFollowUseCaseTest {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider
     @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
     private lateinit var followCommentsUseCase: ReaderCommentsFollowUseCase
@@ -55,7 +55,7 @@ class ReaderCommentsFollowUseCaseTest {
                 networkUtilsWrapper,
                 postSubscribersApiCallsProvider,
                 accountStore,
-                analyticsUtilsWrapper,
+                readerTracker,
                 readerPostTableWrapper
         )
     }

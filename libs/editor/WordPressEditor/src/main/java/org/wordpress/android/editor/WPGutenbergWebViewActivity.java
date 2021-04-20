@@ -140,13 +140,13 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     @Override
     protected List<String> getOnGutenbergReadyExternalSources() {
-        String file = getFileContentFromAssets("unsupported-block-editor/remove-nux.js");
+        String file = getFileContentFromAssets("remove-nux.js");
         return Arrays.asList(file);
     }
 
     @Override protected List<String> getOnPageLoadExternalSources() {
         long userId = getIntent().getExtras().getLong(ARG_USER_ID, 0);
-        String file = getFileContentFromAssets("unsupported-block-editor/extra-localstorage-entries.js")
+        String file = getFileContentFromAssets("extra-localstorage-entries.js")
                 .replace("%@", Long.toString(userId));
         return Arrays.asList(file);
     }

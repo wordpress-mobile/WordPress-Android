@@ -27,11 +27,11 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 private const val ERROR = "Error"
 @InternalCoroutinesApi
@@ -42,7 +42,7 @@ class ReaderSiteNotificationsUseCaseTest {
 
     lateinit var useCase: ReaderSiteNotificationsUseCase
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private val event = OnSubscriptionUpdated()
@@ -53,12 +53,12 @@ class ReaderSiteNotificationsUseCaseTest {
     fun setup() {
         useCase = ReaderSiteNotificationsUseCase(
                 dispatcher,
-                analyticsUtilsWrapper,
+                readerTracker,
                 readerBlogTableWrapper,
                 networkUtilsWrapper
         )
 
-        doNothing().whenever(analyticsUtilsWrapper).trackWithSiteId(any(), any())
+        doNothing().whenever(readerTracker).trackBlog(any(), any(), any())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(dispatcher.dispatch(argWhere<Action<Void>> {
             it.type == AccountAction.UPDATE_SUBSCRIPTION_NOTIFICATION_POST
@@ -77,7 +77,7 @@ class ReaderSiteNotificationsUseCaseTest {
         whenever(readerBlogTableWrapper.isNotificationsEnabled(blogId)).thenReturn(false)
 
         // Act
-        useCase.toggleNotification(blogId)
+        useCase.toggleNotification(blogId, 1L)
 
         // Assert
         verify(readerBlogTableWrapper).setNotificationsEnabledByBlogId(blogId, true)
@@ -90,7 +90,7 @@ class ReaderSiteNotificationsUseCaseTest {
         whenever(readerBlogTableWrapper.isNotificationsEnabled(blogId)).thenReturn(true)
 
         // Act
-        useCase.toggleNotification(blogId)
+        useCase.toggleNotification(blogId, 1L)
 
         // Assert
         verify(readerBlogTableWrapper).setNotificationsEnabledByBlogId(blogId, false)
@@ -103,7 +103,7 @@ class ReaderSiteNotificationsUseCaseTest {
         whenever(readerBlogTableWrapper.isNotificationsEnabled(blogId)).thenReturn(true)
 
         // Act
-        useCase.toggleNotification(blogId)
+        useCase.toggleNotification(blogId, 1L)
 
         // Assert
         verify(dispatcher, times(2)).dispatch(dispatchCaptor.capture())
@@ -117,7 +117,7 @@ class ReaderSiteNotificationsUseCaseTest {
         whenever(readerBlogTableWrapper.isNotificationsEnabled(blogId)).thenReturn(false)
 
         // Act
-        useCase.toggleNotification(blogId)
+        useCase.toggleNotification(blogId, 1L)
 
         // Assert
         verify(dispatcher, times(2)).dispatch(dispatchCaptor.capture())
@@ -127,10 +127,9 @@ class ReaderSiteNotificationsUseCaseTest {
     @Test
     fun `fetch subscriptions action invoked if notification is subscribed successfully`() = test {
         // Arrange
-        val blogId = 1L
 
         // Act
-        useCase.toggleNotification(blogId)
+        useCase.toggleNotification(1L, 1L)
 
         // Assert
         verify(dispatcher, times(2)).dispatch(dispatchCaptor.capture())
@@ -139,11 +138,8 @@ class ReaderSiteNotificationsUseCaseTest {
 
     @Test
     fun `Success returned if notification is subscribed successfully`() = test {
-        // Arrange
-        val blogId = 1L
-
         // Act
-        val result = useCase.toggleNotification(blogId)
+        val result = useCase.toggleNotification(1L, 1L)
 
         // Assert
         assertThat(result).isEqualTo(Success)
@@ -152,8 +148,6 @@ class ReaderSiteNotificationsUseCaseTest {
     @Test
     fun `RequestFailed returned if notification subscription failed with error`() = test {
         // Arrange
-        val blogId = 1L
-
         val failedEvent = OnSubscriptionUpdated()
         failedEvent.error = SubscriptionError(ERROR, ERROR)
 
@@ -166,7 +160,7 @@ class ReaderSiteNotificationsUseCaseTest {
         }
 
         // Act
-        val result = useCase.toggleNotification(blogId)
+        val result = useCase.toggleNotification(1L, 1L)
 
         // Assert
         assertThat(result).isEqualTo(RequestFailed)
@@ -175,11 +169,10 @@ class ReaderSiteNotificationsUseCaseTest {
     @Test
     fun `NoNetwork returned on toggling notification when no network is available`() = test {
         // Arrange
-        val blogId = 1L
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         // Act
-        val result = useCase.toggleNotification(blogId)
+        val result = useCase.toggleNotification(1L, 1L)
 
         // Assert
         assertThat(result).isEqualTo(NoNetwork)

@@ -21,41 +21,10 @@ include ':libs:WordPressAnnotations'
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
-include ':@wordpress_react-native-aztec'
-project(':@wordpress_react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
-
-include ':@wordpress_react-native-bridge'
-project(':@wordpress_react-native-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
-
-if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()) {
-    include ':react-native-linear-gradient'
-    project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-linear-gradient/android')
-    include ':react-native-svg'
-    project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-svg/android')
-    include ':react-native-aztec'
-    project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
-    include ':react-native-gutenberg-bridge'
-    project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
-    include ':react-native-video'
-    project(':react-native-video').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-video/android-exoplayer')
-    include ':@react-native-community_slider'
-    project(':@react-native-community_slider').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/@react-native-community/slider/src/android')
-    include ':react-native-get-random-values'
-    project(':react-native-get-random-values').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-get-random-values/android')
-    include ':@react-native-community_masked-view'
-    project(':@react-native-community_masked-view').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/@react-native-community/masked-view/android')
-    include ':react-native-gesture-handler'
-    project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-gesture-handler/android')
-    include ':react-native-screens'
-    project(':react-native-screens').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-screens/android')
-    include ':react-native-safe-area-context'
-    project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-safe-area-context/android')
-    include ':react-native-reanimated'
-    project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-reanimated/android')
-}
-
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
+gradle.ext.gutenbergMobileBinaryPath = "com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.includedBuildGutenbergMobilePath = null
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -86,6 +55,16 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting wputils with the local build"
                 substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
+            }
+        }
+    }
+
+    if (ext.has("localGutenbergMobilePath")) {
+        gradle.ext.includedBuildGutenbergMobilePath = ext.localGutenbergMobilePath
+        includeBuild("$ext.localGutenbergMobilePath/gutenberg/packages/react-native-bridge/android") {
+            dependencySubstitution {
+                println "Substituting gutenberg-mobile with the local build"
+                substitute module("$gradle.ext.gutenbergMobileBinaryPath") with project(':react-native-bridge')
             }
         }
     }

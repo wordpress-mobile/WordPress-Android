@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
@@ -61,6 +60,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
+    private val site: SiteModel by lazy { siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()) }
+
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
@@ -86,8 +87,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
         updateUiState(Loading)
         launch {
-            val siteId = appPrefsWrapper.getSelectedSite()
-            val site = siteStore.getSiteByLocalId(siteId)
             val payload = FetchBlockLayoutsPayload(
                     site,
                     supportedBlocksProvider.fromAssets().supported,
@@ -122,11 +121,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * at this point the only requirement is to have the block editor enabled
      * @return true if the Modal Layout Picker can be shown
      */
-    fun canShowModalLayoutPicker(): Boolean {
-        val siteId = appPrefsWrapper.getSelectedSite()
-        val site = siteStore.getSiteByLocalId(siteId)
-        return SiteUtils.isBlockEditorDefaultForNewPost(site)
-    }
+    fun canShowModalLayoutPicker() = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
     /**
      * Triggers the create page flow and shows the MLP
@@ -164,7 +159,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun createPage() {
         (uiState.value as? Content)?.let { state ->
             layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.content, layout.title)
+                val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
+                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
                 return
             }
         }

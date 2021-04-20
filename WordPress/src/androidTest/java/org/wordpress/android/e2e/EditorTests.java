@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.R;
@@ -54,6 +55,8 @@ public class EditorTests extends BaseTest {
         mySitesPage.startNewPost();
     }
 
+    // For more info see Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/14389
+    @Ignore("Classic Editor being deprecated for new posts, test should be adjusted to editing existing classic post")
     @Test
     public void testPublishSimplePost() {
         String title = "Hello Espresso!";
@@ -66,6 +69,8 @@ public class EditorTests extends BaseTest {
         assertTrue(isPublished);
     }
 
+    // For more info see Issue: https://github.com/wordpress-mobile/WordPress-Android/issues/14389
+    @Ignore("Classic Editor being deprecated for new posts, test should be adjusted to editing existing classic post")
     @Test
     public void testPublishFullPost() {
         String title = "Hello Espresso!";

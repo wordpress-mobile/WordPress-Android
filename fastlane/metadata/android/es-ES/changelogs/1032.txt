@@ -1,0 +1,8 @@
+17.1:
+¿Qué hay de nuevo?
+
+Hemos mejorado la accesibilidad en el editor de bloques para aquellos que usan un lector de pantalla TalkBack.
+
+Para ayudarte a gestionar los comentarios en tu sitio, ahora hay un filtro «Sin respuesta» para que puedas ver los comentarios sin respuesta en un solo lugar.
+
+¡Quizá hayas notado la nueva paleta de color! También hemos actualizado el icono de tu aplicación para que haga juego.
