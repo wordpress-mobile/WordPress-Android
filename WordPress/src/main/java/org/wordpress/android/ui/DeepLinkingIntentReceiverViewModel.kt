@@ -38,19 +38,6 @@ class DeepLinkingIntentReceiverViewModel
     }
 
     /**
-     * This viewmodel handles the following URLs
-     * `wordpress.com/post/...`
-     * `wordpress.com/stats/...`
-     * `public-api.wordpress.com/mbar/`
-     * In these cases this function returns true
-     */
-    private fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return isTrackingUrl(uri) ||
-                editorLinkHandler.isEditorUrl(uri) ||
-                statsLinkHandler.isStatsUrl(uri)
-    }
-
-    /**
      * Tracking URIs like `public-api.wordpress.com/mbar/...` come from emails and should be handled here
      */
     private fun isTrackingUrl(uri: UriWrapper): Boolean {
