@@ -1,3 +1,0 @@
-17.0:
-
-We zijn verheugd om drie updates voor WPAndroid aan te kondigen. We hebben pinch/zoom/pan-functionaliteit ingeschakeld in de verhalenbibliotheek, waardoor de weergavemogelijkheden uitgebreider zijn dan ooit. We hebben het reactiefilter veranderd van een dropdown menu naar tabs. En we hebben de annuleerknop verwijderd uit de instellingsopties in de blok-editor.

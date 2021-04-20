@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-31 09:54:08+0000
+Translation-Revision-Date: 2021-04-16 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
+    <string name="gutenberg_native_search_input_field">搜尋意見回饋欄位。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">搜尋按鈕。 目前的按鈕文字是</string>
+    <string name="gutenberg_native_search_blocks">搜尋區塊</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">搜尋區塊標籤。 目前的文字是</string>
+    <string name="gutenberg_native_search_block">搜尋區塊</string>
+    <string name="gutenberg_native_outside">外部</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">未設定自訂預留位置</string>
+    <string name="gutenberg_native_no_button">沒有按鈕</string>
+    <string name="gutenberg_native_inside">內部</string>
+    <string name="gutenberg_native_hide_search_heading">隱藏搜尋標題</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">按兩下以編輯預留位置文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">按兩下以變更單位</string>
+    <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
+    <string name="gutenberg_native_clear_search">清除搜尋</string>
+    <string name="gutenberg_native_cancel_search">取消搜尋</string>
+    <string name="gutenberg_native_button_position">按鈕位置</string>
+    <string name="gutenberg_native_button_outside">按鈕外部</string>
+    <string name="gutenberg_native_button_inside">按鈕內部</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s。%2$s 是 %3$s %4$s。</string>
+    <string name="get_likes_empty_state_title">取得按讚資料時發生錯誤</string>
+    <string name="get_likes_unknown_error">獲得「讚」時發生未知的錯誤。</string>
+    <string name="get_likes_no_network_error">沒有可用的網路。</string>
+    <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
+    <string name="comment_status_unreplied">尚未回覆</string>
     <string name="gutenberg_native_table_of_contents">目錄</string>
     <string name="gutenberg_native_summary">摘要</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">列出標題以呈現文章摘要。 將 HTML 錨點新增至標題區塊，藉此連結相應文章內容。</string>

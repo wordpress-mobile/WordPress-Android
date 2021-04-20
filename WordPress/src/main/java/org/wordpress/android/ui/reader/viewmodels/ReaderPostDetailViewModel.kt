@@ -126,7 +126,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     val hasPost: Boolean
         get() = post != null
 
-    private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int)
+    private data class RenderedLikesData(val blogId: Long, val postId: Long, val numLikes: Int) {
+        fun isMatchingPost(post: ReaderPost): Boolean {
+            return blogId != post.blogId || postId != post.postId || numLikes != post.numLikes
+        }
+    }
     private var lastRenderedLikesData: RenderedLikesData? = null
 
     private val shouldOfferSignIn: Boolean
@@ -203,9 +207,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onRefreshLikersData(post: ReaderPost) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
-        val isLikeDataChanged = lastRenderedLikesData?.let {
-            it.blogId != post.blogId || it.postId != post.postId || it.numLikes != post.numLikes
-        } ?: true
+        val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 
         if (isLikeDataChanged) {
             lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
@@ -531,10 +533,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 null
             }
             numLikes == 1 -> {
-                UiStringRes(R.string.like_faces_single_liker_text)
+                UiStringRes(R.string.like_faces_singular_text)
             }
             numLikes > 1 -> {
-                UiStringText(contextProvider.getContext().getString(R.string.like_faces_multiple_liker_text, numLikes))
+                UiStringText(contextProvider.getContext().getString(R.string.like_faces_plural_text, numLikes))
             }
             else -> {
                 null

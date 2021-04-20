@@ -45,12 +45,16 @@ private const val TEST_TEXT = "Test text"
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var htmlMessageUtils: HtmlMessageUtils
+
     @Mock
     private lateinit var threatItemBuilder: ThreatItemBuilder
+
     @Mock
     private lateinit var dateFormatWrapper: DateFormatWrapper
+
     @Mock
     private lateinit var dateFormat: DateFormat
+
     @Mock
     private lateinit var resourceProvider: ResourceProvider
     private lateinit var builder: ThreatDetailsListItemsBuilder
@@ -63,20 +67,20 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     private val onIgnoreThreatButtonClicked: () -> Unit = mock()
 
     private val fixThreatButtonItem = ActionButtonState(
-        text = UiStringRes(R.string.threat_fix),
-        onClick = onFixThreatButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_fix)
+            text = UiStringRes(R.string.threat_fix),
+            onClick = onFixThreatButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_fix)
     )
     private val getFreeEstimateButtonItem = ActionButtonState(
-        text = UiStringRes(R.string.threat_get_free_estimate),
-        onClick = onGetFreeEstimateButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_get_free_estimate)
+            text = UiStringRes(R.string.threat_get_free_estimate),
+            onClick = onGetFreeEstimateButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_get_free_estimate)
     )
     private val ignoreThreatButtonItem = ActionButtonState(
-        text = UiStringRes(R.string.threat_ignore),
-        onClick = onIgnoreThreatButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_ignore),
-        isSecondary = true
+            text = UiStringRes(R.string.threat_ignore),
+            onClick = onIgnoreThreatButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_ignore),
+            isSecondary = true
     )
 
     @Before
@@ -89,7 +93,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
 
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any())).thenReturn(
-            SpannedString("")
+                SpannedString("")
         )
         with(threatItemBuilder) {
             whenever(buildThreatItemHeader(any())).thenReturn(UiStringText(TEST_THREAT_ITEM_HEADER))
@@ -97,9 +101,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         }
         whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.firstDetected))
-            .thenReturn(TEST_FOUND_ON_DATE)
+                .thenReturn(TEST_FOUND_ON_DATE)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
-            .thenReturn(TEST_FIXED_ON_DATE)
+                .thenReturn(TEST_FIXED_ON_DATE)
         whenever(resourceProvider.getString(anyInt())).thenReturn(TEST_TEXT)
     }
 
@@ -110,7 +114,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].icon).isEqualTo(
-            threatItemBuilder.buildThreatItemIcon(ThreatTestData.genericThreatModel)
+                threatItemBuilder.buildThreatItemIcon(ThreatTestData.genericThreatModel)
         )
     }
 
@@ -119,7 +123,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].iconBackground).isEqualTo(
-            threatItemBuilder.buildThreatItemIconBackground(ThreatTestData.genericThreatModel)
+                threatItemBuilder.buildThreatItemIconBackground(ThreatTestData.genericThreatModel)
         )
     }
 
@@ -128,7 +132,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
-            HeaderState(threatItemBuilder.buildThreatItemHeader(ThreatTestData.genericThreatModel))
+                HeaderState(threatItemBuilder.buildThreatItemHeader(ThreatTestData.genericThreatModel))
         )
     }
 
@@ -137,7 +141,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         assertThat(threatItems.filterIsInstance<DescriptionState>()).contains(
-            DescriptionState(threatItemBuilder.buildThreatItemDescription(ThreatTestData.genericThreatModel))
+                DescriptionState(threatItemBuilder.buildThreatItemDescription(ThreatTestData.genericThreatModel))
         )
     }
 
@@ -146,10 +150,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
-            HeaderState(UiStringRes(R.string.threat_problem_header))
+                HeaderState(UiStringRes(R.string.threat_problem_header))
         )
         assertThat(threatItems.filterIsInstance<DescriptionState>()).contains(
-            DescriptionState(UiStringText(ThreatTestData.genericThreatModel.baseThreatModel.description))
+                DescriptionState(UiStringText(ThreatTestData.genericThreatModel.baseThreatModel.description))
         )
     }
 
@@ -162,10 +166,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(fileThreatModelWithFileName)
 
         assertThat(threatItems.map { it::class.java }).containsSequence(
-            HeaderState::class.java,
-            DescriptionState::class.java,
-            ThreatFileNameState::class.java,
-            ThreatContextLinesItemState::class.java
+                HeaderState::class.java,
+                DescriptionState::class.java,
+                ThreatFileNameState::class.java,
+                ThreatContextLinesItemState::class.java
         )
     }
 
@@ -202,17 +206,17 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
 
         assertThat(threatItems).contains(
-            ThreatContextLinesItemState(
-                listOf(
-                    ThreatContextLinesItemState.ThreatContextLineItemState(
-                        line = ThreatTestData.contextLine,
-                        lineNumberBackgroundColorRes = R.color.context_line_highlighted_row_background,
-                        contentBackgroundColorRes = R.color.context_line_highlighted_row_background,
-                        highlightedBackgroundColorRes = R.color.red_60,
-                        highlightedTextColorRes = R.color.white
-                    )
+                ThreatContextLinesItemState(
+                        listOf(
+                                ThreatContextLinesItemState.ThreatContextLineItemState(
+                                        line = ThreatTestData.contextLine,
+                                        lineNumberBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                                        contentBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                                        highlightedBackgroundColorRes = R.color.red_60,
+                                        highlightedTextColorRes = R.color.white
+                                )
+                        )
                 )
-            )
         )
     }
 
@@ -223,10 +227,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
         assertThat(threatItems.map { it::class.java }).containsSequence(
-            HeaderState::class.java,
-            DescriptionState::class.java,
-            ThreatFileNameState::class.java,
-            DescriptionState::class.java
+                HeaderState::class.java,
+                DescriptionState::class.java,
+                ThreatFileNameState::class.java,
+                DescriptionState::class.java
         )
     }
 
@@ -256,7 +260,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
         assertThat(threatItems).contains(
-            DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
+                DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
         )
     }
 
@@ -265,9 +269,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat not in fixed status, when items are built, then fix header exists`() {
         val fixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(
-                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
-            )
+                ThreatTestData.baseThreatModel.copy(
+                        fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
+                )
         )
 
         val threatItems = buildThreatDetailsListItems(fixableThreat)
@@ -279,8 +283,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     fun `given current fixable threat with server creds, when items are built, then fix threat btn is enabled`() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInCurrentStatus)
 
-        assertThat(items.filterIsInstance(ActionButtonState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled).isTrue
+        assertThat(
+                items.filterIsInstance(ActionButtonState::class.java)
+                        .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled
+        ).isTrue
     }
 
     @Test
@@ -290,8 +296,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 scanStateHasValidCredentials = false
         )
 
-        assertThat(items.filterIsInstance(ActionButtonState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled).isFalse
+        assertThat(
+                items.filterIsInstance(ActionButtonState::class.java)
+                        .firstOrNull { it.text == UiStringRes(R.string.threat_fix) }?.isEnabled
+        ).isFalse
     }
 
     @Test
@@ -357,10 +365,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix header does not exists`() {
         val fixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(
-                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
-                status = FIXED
-            )
+                ThreatTestData.baseThreatModel.copy(
+                        fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
+                        status = FIXED
+                )
         )
 
         val threatItems = buildThreatDetailsListItems(fixableThreat)
@@ -371,9 +379,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat not in fixed status, when items are built, then fix description exists`() {
         val fixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(
-                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
-            )
+                ThreatTestData.baseThreatModel.copy(
+                        fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
+                )
         )
 
         val threatItems = buildThreatDetailsListItems(fixableThreat)
@@ -384,10 +392,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix description does not exists`() {
         val fixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(
-                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
-                status = FIXED
-            )
+                ThreatTestData.baseThreatModel.copy(
+                        fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
+                        status = FIXED
+                )
         )
 
         val threatItems = buildThreatDetailsListItems(fixableThreat)
@@ -398,8 +406,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in current status, when items are built, then fix threat button exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus,
-            onFixThreatButtonClicked = onFixThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus,
+                onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -409,10 +417,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in ignored status, when items are built, then fix threat button exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus.copy(
-                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
-            ),
-            onFixThreatButtonClicked = onFixThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus.copy(
+                        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel
+                                .copy(status = IGNORED)
+                ),
+                onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -422,10 +431,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in fixed status, when items are built, then fix threat button does not exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus.copy(
-                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = FIXED)
-            ),
-            onFixThreatButtonClicked = onFixThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus.copy(
+                        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel
+                                .copy(status = FIXED)
+                ),
+                onFixThreatButtonClicked = onFixThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -435,8 +445,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in current status, when items are built, then ignore threat button exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus,
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus,
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -446,10 +456,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in fixed status, when items are built, then ignore threat button does not exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus.copy(
-                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = FIXED)
-            ),
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus.copy(
+                        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel
+                                .copy(status = FIXED)
+                ),
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -459,10 +470,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given fixable threat in ignored status, when items are built, then ignore threat button does not exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus.copy(
-                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
-            ),
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                model = ThreatTestData.fixableThreatInCurrentStatus.copy(
+                        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel
+                                .copy(status = IGNORED)
+                ),
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -487,14 +499,14 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         buildThreatDetailsListItems(notFixableThreat)
 
         verify(htmlMessageUtils)
-            .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
+                .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
     }
 
     @Test
     fun `given non fixable threat in current status, when items are built, then get free estimates button exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.notFixableThreatInCurrentStatus,
-            onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked
+                model = ThreatTestData.notFixableThreatInCurrentStatus,
+                onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -504,8 +516,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given non fixable threat in current status, when items are built, then ignore threat button exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.notFixableThreatInCurrentStatus,
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                model = ThreatTestData.notFixableThreatInCurrentStatus,
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -515,10 +527,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given non fixable threat in ignored status, when items are built, then ignore threat btn does not exists`() {
         val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.notFixableThreatInCurrentStatus.copy(
-                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
-            ),
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                model = ThreatTestData.notFixableThreatInCurrentStatus.copy(
+                        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel
+                                .copy(status = IGNORED)
+                ),
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
@@ -544,9 +557,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
-            .isEqualTo(UiStringRes(R.string.threat_status_fixed))
+                .isEqualTo(UiStringRes(R.string.threat_status_fixed))
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
-            .isEqualTo(UiStringText(TEST_FIXED_ON_DATE))
+                .isEqualTo(UiStringText(TEST_FIXED_ON_DATE))
     }
 
     @Test
@@ -556,9 +569,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(threatModel)
 
         assertThat(threatItems.filterIsInstance<HeaderState>()[0].text)
-            .isEqualTo(UiStringRes(R.string.threat_found_header))
+                .isEqualTo(UiStringRes(R.string.threat_found_header))
         assertThat(threatItems.filterIsInstance<DescriptionState>()[0].text)
-            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+                .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
 
     /* IGNORED THREAT */
@@ -571,9 +584,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
-            .isEqualTo(UiStringRes(R.string.threat_found_header))
+                .isEqualTo(UiStringRes(R.string.threat_found_header))
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
-            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+                .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
 
     /* CURRENT THREAT */
@@ -581,16 +594,16 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `given threat status = current, when items are built, then Found header is added as main header`() {
         val threatModel = GenericThreatModel(
-            ThreatTestData.genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)
+                ThreatTestData.genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)
         )
 
         val threatItems = buildThreatDetailsListItems(threatModel)
 
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
-            .isEqualTo(UiStringRes(R.string.threat_found_header))
+                .isEqualTo(UiStringRes(R.string.threat_found_header))
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
-            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+                .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
 
     private fun buildThreatDetailsListItems(
@@ -600,11 +613,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         onGetFreeEstimateButtonClicked: () -> Unit = mock(),
         onIgnoreThreatButtonClicked: () -> Unit = mock()
     ) = builder.buildThreatDetailsListItems(
-        threatModel = model,
-        scanStateHasValidCredentials = scanStateHasValidCredentials,
-        onFixThreatButtonClicked = onFixThreatButtonClicked,
-        onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
-        onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked,
-        onEnterServerCredsMessageClicked = mock()
+            threatModel = model,
+            scanStateHasValidCredentials = scanStateHasValidCredentials,
+            onFixThreatButtonClicked = onFixThreatButtonClicked,
+            onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
+            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked,
+            onEnterServerCredsMessageClicked = mock()
     )
 }
