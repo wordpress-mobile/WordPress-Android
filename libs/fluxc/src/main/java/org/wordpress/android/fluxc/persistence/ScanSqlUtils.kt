@@ -74,7 +74,8 @@ class ScanSqlUtils @Inject constructor() {
             reason = reason,
             error = mostRecentStatus?.error ?: false,
             initial = isInitial,
-            hasCloud = hasCloud
+            hasCloud = hasCloud,
+            hasValidCredentials = hasValidCredentials
         )
     }
 
@@ -91,9 +92,10 @@ class ScanSqlUtils @Inject constructor() {
         @Column var reason: String? = null,
         @Column var error: Boolean = false,
         @Column var initial: Boolean = false,
-        @Column var hasCloud: Boolean = false
+        @Column var hasCloud: Boolean = false,
+        @Column var hasValidCredentials: Boolean = false
     ) : Identifiable {
-        constructor() : this(-1, 0, 0, "", 0, 0, 0, "", false, false, false)
+        constructor() : this(-1, 0, 0, "")
 
         override fun setId(id: Int) {
             this.id = id
@@ -133,7 +135,8 @@ class ScanSqlUtils @Inject constructor() {
                 hasCloud = hasCloud,
                 mostRecentStatus = mostRecentStatus,
                 currentStatus = currentStatus,
-                reason = reason
+                reason = reason,
+                hasValidCredentials = hasValidCredentials
             )
         }
     }
