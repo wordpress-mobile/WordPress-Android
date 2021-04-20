@@ -25,7 +25,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {

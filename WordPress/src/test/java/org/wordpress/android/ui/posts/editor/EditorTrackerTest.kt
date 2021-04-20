@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts.editor
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -24,7 +23,7 @@ class EditorTrackerTest {
         trackEventToStatMap.forEach { (trackableEvent, expectedStat) ->
             editorTracker.trackEditorEvent(trackableEvent, "")
             // Assert
-            verify(analyticsTracker).track(eq(expectedStat), anyOrNull<Map<String, *>>(), isNull())
+            verify(analyticsTracker).track(eq(expectedStat), anyOrNull<Map<String, *>>())
         }
     }
 
@@ -39,7 +38,7 @@ class EditorTrackerTest {
         }
         // Assert
         verify(analyticsTracker, times(trackEventToStatMap.size))
-                .track(anyOrNull(), eq(mapOf("editor" to editorName)), isNull())
+                .track(anyOrNull(), eq(mapOf("editor" to editorName)))
     }
 
     private companion object Fixtures {

@@ -1,2 +1,0 @@
-17.0:
-Denna gång hela tre nyheter i WPAndroid. Vi har lagt till funktioner för nyp/zooma/rulla i berättelsebiblioteket så att det är enklare än någonsin att se allt. Vi har ändrat kommentarsfiltret från rullgardinsmeny till flikar. Slutligen har vi tagit bort knappen ”avbryt” i inställningarna för blockredigeraren.

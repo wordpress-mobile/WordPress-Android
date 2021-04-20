@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestContent
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.DoWithMediaFilesListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.CrashLogging
@@ -217,6 +218,25 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         Assertions.assertThat(postModel.content).isEqualTo(TestContent.storyBlockWithLocalIdsAndUrls)
     }
 
+    @Test
+    fun `post with a Story block with no mediaFiles is not taken into account for processing`() {
+        // Given
+        val siteModel = SiteModel()
+        val postModel = PostModel()
+        val listener: DoWithMediaFilesListener = mock()
+        postModel.setContent(BLOCK_LACKING_MEDIA_FILES_ARRAY)
+
+        // When
+        saveStoryGutenbergBlockUseCase.findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
+                postModel,
+                siteModel,
+                mock()
+        )
+
+        // Then
+        verify(listener, times(0)).doWithMediaFilesJson(any(), any())
+    }
+
     private fun setupFluxCMediaFiles(
         emptyList: Boolean
     ): ArrayList<MediaFile> {
@@ -280,6 +300,9 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     companion object {
+        private const val BLOCK_LACKING_MEDIA_FILES_ARRAY = "<!-- wp:jetpack/story -->\n" +
+                "<div class=\"wp-story wp-block-jetpack-story\"></div>\n" +
+                "<!-- /wp:jetpack/story -->"
         private const val BLOCK_WITH_EMPTY_MEDIA_FILES = "<!-- wp:jetpack/story {\"mediaFiles\":[]} -->\n" +
                 "<div class=\"wp-story wp-block-jetpack-story\"></div>\n" +
                 "<!-- /wp:jetpack/story -->"
