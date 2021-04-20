@@ -81,7 +81,7 @@ class GetLikesHandler @Inject constructor(
     }
 
     companion object {
-        private const val LIKES_PER_PAGE_DEFAULT = 10
+        private const val LIKES_PER_PAGE_DEFAULT = 20
         private const val LIKES_RESULT_NO_LIMITS = -1
     }
 }
