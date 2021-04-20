@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.common.LikesResponseUtilsProvider;
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
@@ -66,6 +67,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.utils.TimeZoneProvider;
 
 import java.io.File;
+import java.net.CookieManager;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -74,6 +76,8 @@ import dagger.Module;
 import dagger.Provides;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.Dispatchers;
+import okhttp3.CookieJar;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -81,13 +85,13 @@ public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
-    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClientBuilder));
+    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient okHttpClient, Context appContext) {
+        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClient));
         return createRequestQueue(network, appContext);
     }
 
-    private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        Network network = new BasicNetwork(new OkHttpStack(okHttpClientBuilder));
+    private RequestQueue newRequestQueue(OkHttpClient okHttpClient, Context appContext) {
+        Network network = new BasicNetwork(new OkHttpStack(okHttpClient));
         return createRequestQueue(network, appContext);
     }
 
@@ -101,25 +105,25 @@ public class ReleaseNetworkModule {
     @Singleton
     @Named("regular")
     @Provides
-    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient okHttpClient,
                                             Context appContext) {
-        return newRequestQueue(okHttpClientBuilder, appContext);
+        return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
     @Named("no-redirects")
     @Provides
-    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient okHttpClient,
                                                        Context appContext) {
-        return newRetryOnRedirectRequestQueue(okHttpClientBuilder, appContext);
+        return newRetryOnRedirectRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
     @Named("custom-ssl")
     @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
+    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient okHttpClient,
                                                      Context appContext) {
-        return newRequestQueue(okHttpClientBuilder, appContext);
+        return newRequestQueue(okHttpClient, appContext);
     }
 
     @Singleton
@@ -187,8 +191,9 @@ public class ReleaseNetworkModule {
     @Provides
     public PostRestClient providePostRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
-                                                AccessToken token, UserAgent userAgent) {
-        return new PostRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+                                                AccessToken token, UserAgent userAgent,
+                                                LikesResponseUtilsProvider likesResponseUtilsProvider) {
+        return new PostRestClient(appContext, dispatcher, requestQueue, token, userAgent, likesResponseUtilsProvider);
     }
 
     @Singleton
@@ -203,8 +208,16 @@ public class ReleaseNetworkModule {
     @Provides
     public CommentRestClient provideCommentRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
-                                                      AccessToken token, UserAgent userAgent) {
-        return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+                                                      AccessToken token, UserAgent userAgent,
+                                                      LikesResponseUtilsProvider likesResponseUtilsProvider) {
+        return new CommentRestClient(
+                appContext,
+                dispatcher,
+                requestQueue,
+                token,
+                userAgent,
+                likesResponseUtilsProvider
+        );
     }
 
     @Singleton
@@ -418,8 +431,14 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public MemorizingTrustManager provideMemorizingTrustManager(Context appContext) {
+    public MemorizingTrustManager provideMemorizingTrustManager() {
         return new MemorizingTrustManager();
+    }
+
+    @Provides
+    @Singleton
+    public CookieJar provideCookieJar() {
+        return new JavaNetCookieJar(new CookieManager());
     }
 
     @Singleton

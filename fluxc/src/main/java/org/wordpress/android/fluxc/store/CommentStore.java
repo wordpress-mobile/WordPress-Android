@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -98,13 +99,15 @@ public class CommentStore extends Store {
         @NonNull public final SiteModel site;
         public final int number;
         public final int offset;
+        public final CommentStatus requestedStatus;
 
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
-                                            int offset) {
+                                            int offset, CommentStatus status) {
             this.comments = comments;
             this.site = site;
             this.number = number;
             this.offset = offset;
+            this.requestedStatus = status;
         }
     }
 
@@ -138,6 +141,28 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class FetchCommentLikesPayload extends Payload<BaseNetworkError> {
+        public final long siteId;
+        public final long remoteCommentId;
+
+        public FetchCommentLikesPayload(long siteId, long remoteCommentId) {
+            this.siteId = siteId;
+            this.remoteCommentId = remoteCommentId;
+        }
+    }
+
+    public static class FetchedCommentLikesResponsePayload extends Payload<CommentError> {
+        @NonNull public final List<LikeModel> likes;
+        public final long siteId;
+        public final long commentRemoteId;
+
+        public FetchedCommentLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long commentRemoteId) {
+            this.likes = likes;
+            this.siteId = siteId;
+            this.commentRemoteId = commentRemoteId;
+        }
+    }
+
     // Errors
 
     public enum CommentErrorType {
@@ -163,10 +188,23 @@ public class CommentStore extends Store {
 
     public static class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
+        public int offset;
         public CommentAction causeOfChange;
+        public CommentStatus requestedStatus;
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
+        }
+    }
+
+    public static class OnCommentLikesChanged extends OnChanged<CommentError> {
+        public CommentAction causeOfChange;
+        public final long siteId;
+        public final long commentId;
+        public List<LikeModel> commentLikes = new ArrayList<>();
+        public OnCommentLikesChanged(long siteId, long commentId) {
+            this.siteId = siteId;
+            this.commentId = commentId;
         }
     }
 
@@ -189,12 +227,13 @@ public class CommentStore extends Store {
      * @param orderByDateAscending If true order the results by ascending published date.
      *                             If false, order the results by descending published date.
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
+     * @param limit Maximum number of comments to return. 0 is unlimited.
      */
     @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
+    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit,
                                                  CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
-        return CommentSqlUtils.getCommentsForSite(site, order, statuses);
+        return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
     }
 
     public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
@@ -267,6 +306,12 @@ public class CommentStore extends Store {
                 break;
             case LIKED_COMMENT:
                 handleLikedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
+                break;
+            case FETCH_COMMENT_LIKES:
+                fetchCommentLikes((FetchCommentLikesPayload) action.getPayload());
+                break;
+            case FETCHED_COMMENT_LIKES:
+                handleFetchedCommentLikes((FetchedCommentLikesResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -413,11 +458,10 @@ public class CommentStore extends Store {
         int rowsAffected = 0;
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         if (!payload.isError()) {
-            // Clear existing comments in case some were deleted on the server. Only remove them if we request the
-            // first comments (offset == 0).
-            if (payload.offset == 0) {
-                CommentSqlUtils.removeComments(payload.site);
-            }
+            // Find comments that were deleted or moved to a different status on the server and remove them from
+            // local DB.
+            CommentSqlUtils.removeCommentGaps(payload.site, payload.comments, payload.number, payload.offset,
+                    payload.requestedStatus);
 
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
@@ -426,6 +470,8 @@ public class CommentStore extends Store {
         }
         event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
+        event.requestedStatus = payload.requestedStatus;
+        event.offset = payload.offset;
         emitChange(event);
     }
 
@@ -510,6 +556,34 @@ public class CommentStore extends Store {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
         event.causeOfChange = CommentAction.LIKE_COMMENT;
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void fetchCommentLikes(FetchCommentLikesPayload payload) {
+        mCommentRestClient.fetchCommentLikes(payload.siteId, payload.remoteCommentId);
+    }
+
+    private void handleFetchedCommentLikes(FetchedCommentLikesResponsePayload payload) {
+        OnCommentLikesChanged event = new OnCommentLikesChanged(payload.siteId, payload.commentRemoteId);
+        if (!payload.isError()) {
+            if (payload.likes != null) {
+                CommentSqlUtils.deleteCommentLikes(payload.siteId, payload.commentRemoteId);
+
+                for (LikeModel like : payload.likes) {
+                    CommentSqlUtils.insertOrUpdateCommentLikes(payload.siteId, payload.commentRemoteId, like);
+                }
+                event.commentLikes.addAll(payload.likes);
+            }
+        } else {
+            List<LikeModel> cachedLikes = CommentSqlUtils.getCommentLikesByCommentId(
+                    payload.siteId,
+                    payload.commentRemoteId
+            );
+            event.commentLikes.addAll(cachedLikes);
+        }
+
+        event.causeOfChange = CommentAction.FETCHED_COMMENT_LIKES;
         event.error = payload.error;
         emitChange(event);
     }

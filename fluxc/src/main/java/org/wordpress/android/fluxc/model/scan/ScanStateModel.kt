@@ -10,7 +10,8 @@ data class ScanStateModel(
     val credentials: List<Credentials>? = null,
     val hasCloud: Boolean = false,
     val mostRecentStatus: ScanProgressStatus? = null,
-    val currentStatus: ScanProgressStatus? = null
+    val currentStatus: ScanProgressStatus? = null,
+    val hasValidCredentials: Boolean = false
 ) {
     enum class State(val value: String) {
         IDLE("idle"),

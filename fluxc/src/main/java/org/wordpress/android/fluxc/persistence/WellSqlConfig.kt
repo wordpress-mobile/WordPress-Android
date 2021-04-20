@@ -4,6 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.preference.PreferenceManager
+import android.view.Gravity
+import android.widget.Toast
 import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
@@ -28,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 146
     }
 
     override fun getDbName(): String {
@@ -1510,10 +1512,236 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "DEMO_URL TEXT NOT NULL)"
                     )
                 }
+                138 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
+                }
+                139 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCCustomerModel")
+                    db.execSQL("CREATE TABLE WCCustomerModel (AVATAR_URL TEXT NOT NULL," +
+                            "DATE_CREATED TEXT NOT NULL,DATE_CREATED_GMT TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL," +
+                            "DATE_MODIFIED_GMT TEXT NOT NULL,EMAIL TEXT NOT NULL,FIRST_NAME TEXT NOT NULL," +
+                            "REMOTE_CUSTOMER_ID INTEGER,IS_PAYING_CUSTOMER INTEGER,LAST_NAME TEXT NOT NULL," +
+                            "ROLE TEXT NOT NULL,USERNAME TEXT NOT NULL,LOCAL_SITE_ID INTEGER,BILLING_ADDRESS1" +
+                            " TEXT NOT NULL,BILLING_ADDRESS2 TEXT NOT NULL,BILLING_CITY TEXT NOT NULL," +
+                            "BILLING_COMPANY TEXT NOT NULL,BILLING_COUNTRY TEXT NOT NULL,BILLING_EMAIL" +
+                            " TEXT NOT NULL,BILLING_FIRST_NAME TEXT NOT NULL,BILLING_LAST_NAME TEXT " +
+                            "NOT NULL,BILLING_PHONE TEXT NOT NULL,BILLING_POSTCODE TEXT NOT NULL,BILLING_STATE" +
+                            " TEXT NOT NULL,SHIPPING_ADDRESS1 TEXT NOT NULL,SHIPPING_ADDRESS2 TEXT NOT NULL," +
+                            "SHIPPING_CITY TEXT NOT NULL,SHIPPING_COMPANY TEXT NOT NULL,SHIPPING_COUNTRY TEXT" +
+                            " NOT NULL,SHIPPING_FIRST_NAME TEXT NOT NULL,SHIPPING_LAST_NAME TEXT NOT NULL," +
+                            "SHIPPING_POSTCODE TEXT NOT NULL,SHIPPING_STATE TEXT NOT NULL,_id INTEGER" +
+                            " PRIMARY KEY AUTOINCREMENT)")
+                }
+                140 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductModel")
+                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "NAME TEXT NOT NULL," +
+                            "SLUG TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "TYPE TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "FEATURED INTEGER," +
+                            "CATALOG_VISIBILITY TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "SHORT_DESCRIPTION TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "ON_SALE INTEGER," +
+                            "TOTAL_SALES INTEGER," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "VIRTUAL INTEGER," +
+                            "DOWNLOADABLE INTEGER," +
+                            "DOWNLOAD_LIMIT INTEGER," +
+                            "DOWNLOAD_EXPIRY INTEGER," +
+                            "SOLD_INDIVIDUALLY INTEGER," +
+                            "EXTERNAL_URL TEXT NOT NULL," +
+                            "BUTTON_TEXT TEXT NOT NULL," +
+                            "TAX_STATUS TEXT NOT NULL," +
+                            "TAX_CLASS TEXT NOT NULL," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY REAL," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "BACKORDERS TEXT NOT NULL," +
+                            "BACKORDERS_ALLOWED INTEGER," +
+                            "BACKORDERED INTEGER," +
+                            "SHIPPING_REQUIRED INTEGER," +
+                            "SHIPPING_TAXABLE INTEGER," +
+                            "SHIPPING_CLASS TEXT NOT NULL," +
+                            "SHIPPING_CLASS_ID INTEGER," +
+                            "REVIEWS_ALLOWED INTEGER," +
+                            "AVERAGE_RATING TEXT NOT NULL," +
+                            "RATING_COUNT INTEGER," +
+                            "PARENT_ID INTEGER," +
+                            "PURCHASE_NOTE TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "CATEGORIES TEXT NOT NULL," +
+                            "TAGS TEXT NOT NULL," +
+                            "IMAGES TEXT NOT NULL," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "VARIATIONS TEXT NOT NULL," +
+                            "DOWNLOADS TEXT NOT NULL," +
+                            "RELATED_IDS TEXT NOT NULL," +
+                            "CROSS_SELL_IDS TEXT NOT NULL," +
+                            "UPSELL_IDS TEXT NOT NULL," +
+                            "GROUPED_PRODUCT_IDS TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
+                    db.execSQL("CREATE TABLE WCProductVariationModel (" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "REMOTE_VARIATION_ID INTEGER," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "ON_SALE INTEGER," +
+                            "PURCHASABLE INTEGER," +
+                            "VIRTUAL INTEGER," +
+                            "DOWNLOADABLE INTEGER," +
+                            "TAX_STATUS TEXT NOT NULL," +
+                            "TAX_CLASS TEXT NOT NULL," +
+                            "DOWNLOAD_LIMIT INTEGER," +
+                            "DOWNLOAD_EXPIRY INTEGER," +
+                            "DOWNLOADS TEXT NOT NULL," +
+                            "BACKORDERS TEXT NOT NULL," +
+                            "BACKORDERS_ALLOWED INTEGER," +
+                            "BACKORDERED INTEGER," +
+                            "SHIPPING_CLASS TEXT NOT NULL," +
+                            "SHIPPING_CLASS_ID INTEGER," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY REAL," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "IMAGE TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
+                }
+                141 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE LikeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "TYPE TEXT NOT NULL,REMOTE_SITE_ID INTEGER,REMOTE_ITEM_ID INTEGER,REMOTE_LIKE_ID INTEGER," +
+                            "LIKER_NAME TEXT,LIKER_LOGIN TEXT,LIKER_AVATAR_URL TEXT,LIKER_SITE_ID INTEGER," +
+                            "LIKER_SITE_URL TEXT)"
+                    )
+                }
+                142 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD HAS_PARENT BOOLEAN")
+                    db.execSQL("ALTER TABLE CommentModel ADD PARENT_ID INTEGER")
+                }
+                143 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelCreationEligibility (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "CAN_CREATE_PACKAGE BOOLEAN," +
+                                    "CAN_CREATE_PAYMENT_METHOD BOOLEAN," +
+                                    "CAN_CREATE_CUSTOMS_FORM BOOLEAN," +
+                                    "IS_ELIGIBLE BOOLEAN," +
+                                    "REASON TEXT)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS WCShippingLabelModel")
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
+                                    "REFUND TEXT NULL," +
+                                    "PRODUCT_IDS TEXT," +
+                                    "DATE_CREATED TEXT)"
+                    )
+                }
+                144 -> migrate(version) {
+                    db.execSQL("ALTER TABLE ScanState ADD HAS_VALID_CREDENTIALS BOOLEAN")
+                }
+                145 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCShippingLabelModel")
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
+                                    "REFUND TEXT NULL," +
+                                    "PRODUCT_IDS TEXT," +
+                                    "DATE_CREATED INTEGER," +
+                                    "EXPIRY_DATE INTEGER)"
+                    )
+                }
             }
         }
         db.setTransactionSuccessful()
         db.endTransaction()
+    }
+
+    /**
+     * Detect when the database is downgraded in debug builds so we can recreate all the tables. Note that we
+     * hide this behind a BuildConfig flag as a protection against accidentally deleting the data (ie: we
+     * don't want this to ever be enabled for release builds by mistake).
+     */
+    override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
+        if (BuildConfig.DEBUG && BuildConfig.WP_ENABLE_DATABASE_DOWNGRADE) {
+            // note: don't call super() here because it throws an exception
+            val toast = Toast.makeText(
+                    context,
+                    "Database downgraded from version $oldVersion to $newVersion",
+                    Toast.LENGTH_LONG
+            )
+            toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+            toast.show()
+
+            AppLog.d(T.DB, "Database downgraded from version $oldVersion to $newVersion")
+            helper?.let { reset(it) }
+        } else {
+            super.onDowngrade(db, helper, oldVersion, newVersion)
+        }
     }
 
     @Suppress("CheckStyle")
