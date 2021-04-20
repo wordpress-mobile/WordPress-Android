@@ -14,7 +14,6 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSit
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
-import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -50,10 +49,7 @@ class DeepLinkNavigator
                     navigateAction.site,
                     navigateAction.statsTimeframe
             )
-            is OpenInReader -> {
-                val readerIntent = Intent(ReaderConstants.ACTION_VIEW_POST, navigateAction.uri.uri)
-                activity.startActivity(readerIntent)
-            }
+            is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
         }
         activity.finish()
     }
