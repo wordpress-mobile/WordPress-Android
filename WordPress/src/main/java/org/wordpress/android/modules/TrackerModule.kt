@@ -11,7 +11,7 @@ import org.wordpress.android.analytics.Tracker
 class TrackerModule {
     @Provides
     fun provideTracker(appContext: Context): Tracker {
-        val prefix = if (BuildConfig.IS_JETPACK_APP) "jpandroid" else "wpandroid"
+        val prefix = if (BuildConfig.IS_JETPACK_APP) "jpandroid_" else "wpandroid_"
         return AnalyticsTrackerNosara(appContext, prefix)
     }
 }
