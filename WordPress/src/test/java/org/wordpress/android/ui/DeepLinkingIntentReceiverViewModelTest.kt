@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
@@ -210,8 +209,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         verify(serverTrackingHandler).request(uri)
     }
 
-    // TODO Fix this test
-    @Ignore("Temporarily ignoring this test as it will be fixed later on")
     @Test
     fun `view post mbar URL triggers the browser when it can't be resolved`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
