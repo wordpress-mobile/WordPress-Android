@@ -32,10 +32,9 @@ data class Assignments(
 
 sealed class Variation(open val name: String) {
     object Control : Variation(CONTROL)
-    data class Treatment(override val name: String = TREATMENT) : Variation(name)
+    data class Treatment(override val name: String) : Variation(name)
     companion object {
         private const val CONTROL = "control"
-        private const val TREATMENT = "treatment"
         fun fromName(name: String?) = when (name) {
             CONTROL, null -> Control
             else -> Treatment(name)
