@@ -4,9 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
@@ -48,6 +49,7 @@ class DeepLinkNavigator
                     navigateAction.site,
                     navigateAction.statsTimeframe
             )
+            is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
         }
         activity.finish()
     }
@@ -56,6 +58,7 @@ class DeepLinkNavigator
         data class OpenInBrowser(val uri: UriWrapper) : NavigateAction()
         data class OpenEditorForPost(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
+        data class OpenInReader(val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()
         data class OpenStatsForSiteAndTimeframe(val site: SiteModel, val statsTimeframe: StatsTimeframe) :
                 NavigateAction()

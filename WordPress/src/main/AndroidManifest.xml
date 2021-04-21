@@ -512,6 +512,7 @@
                     android:scheme="http" >
                 </data>
 
+                <action android:name="org.wordpress.android.action.VIEW_POST" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />

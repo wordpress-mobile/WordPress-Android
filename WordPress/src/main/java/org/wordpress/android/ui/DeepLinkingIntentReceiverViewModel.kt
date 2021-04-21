@@ -18,6 +18,7 @@ class DeepLinkingIntentReceiverViewModel
     private val editorLinkHandler: EditorLinkHandler,
     private val statsLinkHandler: StatsLinkHandler,
     private val startLinkHandler: StartLinkHandler,
+    private val readerLinkHandler: ReaderLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler
 ) : ScopedViewModel(uiDispatcher) {
@@ -80,6 +81,7 @@ class DeepLinkingIntentReceiverViewModel
                     null
                 }
             }
+            readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
