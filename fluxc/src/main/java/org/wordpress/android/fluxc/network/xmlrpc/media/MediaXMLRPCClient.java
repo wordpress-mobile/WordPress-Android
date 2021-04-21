@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import okhttp3.Call;
@@ -78,8 +80,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     // to monitor multiple uploads
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
-    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okHttpClient,
-                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+    @Inject public MediaXMLRPCClient(Dispatcher dispatcher,
+                             @Named("custom-ssl") RequestQueue requestQueue,
+                             @Named("custom-ssl") OkHttpClient okHttpClient,
+                             UserAgent userAgent,
+                             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
         mOkHttpClient = okHttpClient;
     }

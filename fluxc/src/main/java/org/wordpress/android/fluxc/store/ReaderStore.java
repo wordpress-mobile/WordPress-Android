@@ -25,8 +25,7 @@ import javax.inject.Singleton;
 public class ReaderStore extends Store {
     private ReaderRestClient mReaderRestClient;
 
-    @Inject
-    public ReaderStore(Dispatcher dispatcher, ReaderRestClient readerRestClient) {
+    @Inject public ReaderStore(Dispatcher dispatcher, ReaderRestClient readerRestClient) {
         super(dispatcher);
         mReaderRestClient = readerRestClient;
     }

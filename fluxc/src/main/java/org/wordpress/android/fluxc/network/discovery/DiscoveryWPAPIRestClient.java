@@ -14,13 +14,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.TIMEOUT_MS;
 
 @Singleton
 public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
-    public DiscoveryWPAPIRestClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent) {
+    @Inject public DiscoveryWPAPIRestClient(Dispatcher dispatcher,
+                                    @Named("custom-ssl") RequestQueue requestQueue,
+                                    UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
     }
 
