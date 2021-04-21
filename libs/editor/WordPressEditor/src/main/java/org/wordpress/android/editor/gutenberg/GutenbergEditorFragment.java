@@ -782,6 +782,31 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
+        if (mediaId == 0) {
+            removeFeaturedImage(0);
+        } else if (mFeaturedImageId == 0) {
+            setFeaturedImage(mediaId);
+        } else if (mFeaturedImageId != mediaId) {
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+            builder.setTitle(R.string.replace_current_title);
+            builder.setMessage(R.string.replace_current_description);
+            builder.setPositiveButton(R.string.replace_current_confirmation,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            setFeaturedImage(mediaId);
+                        }
+                    });
+
+            builder.setNegativeButton(R.string.replace_current_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     private void setFeaturedImage(int mediaId) {
