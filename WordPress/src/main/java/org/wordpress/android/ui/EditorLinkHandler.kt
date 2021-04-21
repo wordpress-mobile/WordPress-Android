@@ -6,11 +6,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -18,7 +17,6 @@ import javax.inject.Inject
 class EditorLinkHandler
 @Inject constructor(
     private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val siteStore: SiteStore,
     private val postStore: PostStore
 ) {
     private val _toast = MutableLiveData<Event<Int>>()
@@ -37,18 +35,20 @@ class EditorLinkHandler
     }
 
     /**
+     * Returns true if the URI should be handled by EditorLinkHandler.
+     * The handled links are `wordpress.com/post...1
+     */
+    fun isEditorUrl(uri: UriWrapper): Boolean {
+        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == POST_PATH
+    }
+
+    /**
      * Converts HOST name of a site to SiteModel. It finds the Site in the current local sites and matches the name
      * to the host.
      */
     private fun String.toSite(): SiteModel? {
-        val site = extractSiteModelFromTargetHost(this)
-        val host = deepLinkUriUtils.extractHostFromSite(site)
-        // Check if a site is available with given targetHost
-        return if (site != null && host != null && host == this) {
-            site
-        } else {
-            null
-        }
+        return deepLinkUriUtils.hostToSite(this)
     }
 
     /**
@@ -83,7 +83,7 @@ class EditorLinkHandler
         }
     }
 
-    private fun extractSiteModelFromTargetHost(host: String): SiteModel? {
-        return siteStore.getSitesByNameOrUrlMatching(host).firstOrNull()
+    companion object {
+        private const val POST_PATH = "post"
     }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.R;
@@ -45,7 +44,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
-    private static final String STATS_PATH = "stats";
     private static final String PAGES_PATH = "pages";
 
     private String mInterceptedUri;
@@ -80,23 +78,20 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             mInterceptedUri = uri.toString();
             UriWrapper uriWrapper = new UriWrapper(uri);
-            if (mViewModel.shouldHandleTrackingUrl(uriWrapper)) {
-                mViewModel.handleTrackingUrl(uriWrapper);
-            } else if (mViewModel.shouldOpenEditor(uriWrapper)) {
-                mViewModel.handleOpenEditor(uriWrapper);
-            } else if (shouldOpenEditorFromDeepLink(host)) {
-                handleOpenEditorFromDeepLink(uri);
-            } else if (isFromAppBanner(host)) {
-                handleAppBanner(host);
-            } else if (shouldViewPost(host)) {
-                handleViewPost(uri);
-            } else if (shouldShowStats(uri)) {
-                handleShowStats(uri);
-            } else if (shouldShowPages(uri)) {
-                handleShowPages(uri);
-            } else {
-                // not handled
-                finish();
+            boolean urlHandledInViewModel = mViewModel.handleUrl(uriWrapper);
+            if (!urlHandledInViewModel) {
+                if (shouldOpenEditorFromDeepLink(host)) {
+                    handleOpenEditorFromDeepLink(uri);
+                } else if (isFromAppBanner(host)) {
+                    handleAppBanner(host);
+                } else if (shouldViewPost(host)) {
+                    handleViewPost(uri);
+                } else if (shouldShowPages(uri)) {
+                    handleShowPages(uriWrapper);
+                } else {
+                    // not handled
+                    finish();
+                }
             }
         } else {
             finish();
@@ -196,34 +191,15 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         }
     }
 
-    private boolean shouldShowStats(@NonNull Uri uri) {
-        // Match: https://wordpress.com/stats/
-        return shouldShow(uri, STATS_PATH);
-    }
-
-    private void handleShowStats(@NonNull Uri uri) {
-        String targetHost = extractTargetHost(uri);
-        SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = mDeepLinkUriUtils.extractHostFromSite(site);
-        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
-            ActivityLauncher.viewStatsInNewStack(getContext(), site);
-        } else {
-            // In other cases, launch stats with the current selected site.
-            ActivityLauncher.viewStatsInNewStack(getContext());
-        }
-        finish();
-    }
-
     private boolean shouldShowPages(@NonNull Uri uri) {
         // Match: https://wordpress.com/pages/
         return shouldShow(uri, PAGES_PATH);
     }
 
-    private void handleShowPages(@NonNull Uri uri) {
-        String targetHost = extractTargetHost(uri);
-        SiteModel site = extractSiteModelFromTargetHost(targetHost);
-        String host = mDeepLinkUriUtils.extractHostFromSite(site);
-        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
+    private void handleShowPages(@NonNull UriWrapper uri) {
+        String targetHost = mDeepLinkUriUtils.extractTargetHost(uri);
+        SiteModel site = mDeepLinkUriUtils.hostToSite(targetHost);
+        if (site != null) {
             ActivityLauncher.viewPagesInNewStack(getContext(), site);
         } else {
             // In other cases, launch pages with the current selected site.
@@ -292,15 +268,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     // Helper Methods
-    private String extractTargetHost(@NonNull Uri uri) {
-        return uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
-    }
-
-    private @Nullable SiteModel extractSiteModelFromTargetHost(String host) {
-        List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(host);
-        return matchedSites.isEmpty() ? null : matchedSites.get(0);
-    }
-
     private boolean shouldShow(@NonNull Uri uri, @NonNull String path) {
         return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
                && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), path));
