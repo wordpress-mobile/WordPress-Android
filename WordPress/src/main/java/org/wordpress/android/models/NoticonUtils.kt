@@ -6,8 +6,7 @@ import javax.inject.Inject
 class NoticonUtils
 @Inject constructor() {
     fun noticonToGridicon(noticon: String): Int {
-        // Transformation based on Calypso:
-        // https://github.com/Automattic/wp-calypso/blob/master/apps/notifications/src/panel/utils/noticon2gridicon.js
+        // Transformation based on Calypso: https://git.io/JqUEC
         return when (noticon) {
             "\uf814" -> R.drawable.ic_mention_white_24dp
             "\uf300" -> R.drawable.ic_comment_white_24dp

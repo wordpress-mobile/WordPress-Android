@@ -12,10 +12,10 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.stories_intro_dialog_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StoriesIntroDialogFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -71,13 +71,13 @@ class StoriesIntroDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        with(StoriesIntroDialogFragmentBinding.bind(view)) {
+            createStoryIntroButton.setOnClickListener { viewModel.onCreateStoryButtonPressed() }
+            storiesIntroBackButton.setOnClickListener { viewModel.onBackButtonPressed() }
 
-        create_story_intro_button.setOnClickListener { viewModel.onCreateStoryButtonPressed() }
-        stories_intro_back_button.setOnClickListener { viewModel.onBackButtonPressed() }
-
-        story_image_first.setOnClickListener { viewModel.onStoryPreviewTapped1() }
-        story_image_second.setOnClickListener { viewModel.onStoryPreviewTapped2() }
-
+            storyImageFirst.setOnClickListener { viewModel.onStoryPreviewTapped1() }
+            storyImageSecond.setOnClickListener { viewModel.onStoryPreviewTapped2() }
+        }
         viewModel.onCreateButtonClicked.observe(this, Observer {
             activity?.let {
                 mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(it, site)

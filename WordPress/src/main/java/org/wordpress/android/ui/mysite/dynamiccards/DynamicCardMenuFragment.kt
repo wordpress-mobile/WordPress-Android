@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.quick_start_menu_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.QuickStartMenuFragmentBinding
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -40,15 +40,17 @@ class DynamicCardMenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val quickStartCardMenuPin = if (viewModel.isPinned) {
-            R.string.quick_start_card_menu_unpin
-        } else {
-            R.string.quick_start_card_menu_pin
+        with(QuickStartMenuFragmentBinding.bind(view)) {
+            val quickStartCardMenuPin = if (viewModel.isPinned) {
+                R.string.quick_start_card_menu_unpin
+            } else {
+                R.string.quick_start_card_menu_pin
+            }
+            quickStartPinText.setText(quickStartCardMenuPin)
+            pinAction.setOnClickListener { invokeAndDismiss { viewModel.onPinActionClicked() } }
+            hideAction.setOnClickListener { invokeAndDismiss { viewModel.onHideActionClicked() } }
+            removeAction.setOnClickListener { invokeAndDismiss { viewModel.onRemoveActionClicked() } }
         }
-        quick_start_pin_text.setText(quickStartCardMenuPin)
-        pin_action.setOnClickListener { invokeAndDismiss { viewModel.onPinActionClicked() } }
-        hide_action.setOnClickListener { invokeAndDismiss { viewModel.onHideActionClicked() } }
-        remove_action.setOnClickListener { invokeAndDismiss { viewModel.onRemoveActionClicked() } }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog

@@ -1,2 +1,0 @@
-16.8:
-Ini adalah pembaruan paling mutakhir untuk aplikasi Android WordPress. Kami meningkatkan fungsi halaman situs yang diposkan sehingga menjamin bahwa menghapus atau mengembalikannya ke formulir konsep tidak akan merusak situs Anda.  Kami menambahkan dukungan untuk mengatur titik fokus blok Sampul. Selain itu, kami meningkatkan pengelolaan P2 sehingga Anda dapat membuat, membagikan, dan menonaktifkan tautan undangan untuk peran P2.

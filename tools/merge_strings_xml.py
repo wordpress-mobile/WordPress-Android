@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import logging, sys
+import logging, sys, os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import json
@@ -98,16 +98,25 @@ def merge_strings(main_xml, extra_sections):
         add_section(main_root, insertion_point_index, section_name, new_elements)
     # make sure xml file ends with a newline
     main_root.tail = '\n'
-    xml_string = ('<?xml version="1.0" encoding="UTF-8"?>' + '\n' + 
+    xml_string = ('<?xml version="1.0" encoding="UTF-8"?>' + '\n' +
         ET.tostring(main_root, encoding='utf8').split('\n',1)[1])
     with open(main_xml, 'wb') as xml_file:
         xml_file.write(xml_string)
 
 def main():
+    if len(sys.argv) != 3:
+        print 'Usage: merge_strings_xml.py <section name> <strings.xml file path>'
+        sys.exit(1)
+
+    project_root_path = os.path.dirname(os.path.dirname(__file__))
+    main_strings_file = os.path.join(project_root_path, 'WordPress/src/main/res/values/strings.xml')
+    library_name = sys.argv[1]
+    input_file = sys.argv[2]
+    print('Merging strings for: ', library_name)
     merge_strings(
-        './WordPress/src/main/res/values/strings.xml',
+        main_strings_file,
         [
-            { 'name': 'Gutenberg Native', 'file': './libs/gutenberg-mobile/bundle/android/strings.xml' },
+            { 'name': library_name, 'file': input_file },
         ]
     )
 

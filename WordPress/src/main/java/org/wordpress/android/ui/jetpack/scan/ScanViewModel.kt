@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -18,6 +18,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -72,9 +73,9 @@ class ScanViewModel @Inject constructor(
 
     private val fixableThreatIds
         get() = scanStateModel?.threats
-            ?.filter { it.baseThreatModel.fixable != null }
-            ?.map { it.baseThreatModel.id }
-            ?: emptyList()
+                ?.filter { it.baseThreatModel.fixable != null }
+                ?.map { it.baseThreatModel.id }
+                ?: emptyList()
 
     private var scanStateModel: ScanStateModel? = null
     lateinit var site: SiteModel
@@ -105,54 +106,58 @@ class ScanViewModel @Inject constructor(
             if (isRetry) delay(RETRY_DELAY)
 
             fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
-                .collect { state ->
-                    when (state) {
-                        is FetchScanState.Success -> {
-                            scanStateModel = state.scanStateModel
-                            updateUiState(buildContentUiState(state.scanStateModel))
-                            if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
-                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
-                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
-                            } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
-                                showScanFinishedMessage(state.scanStateModel)
+                    .collect { state ->
+                        when (state) {
+                            is FetchScanState.Success -> {
+                                scanStateModel = state.scanStateModel
+                                updateUiState(buildContentUiState(state.scanStateModel))
+                                if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
+                                    scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
+                                    updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                                } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
+                                    showScanFinishedMessage(state.scanStateModel)
+                                }
+                            }
+
+                            is FetchScanState.Failure.NetworkUnavailable -> {
+                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
+                                scanStateModel
+                                        ?.let {
+                                            updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                                        }
+                                        ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+                            }
+
+                            is FetchScanState.Failure.RemoteRequestFailure -> {
+                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
+                                scanStateModel
+                                        ?.let {
+                                            updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
+                                        }
+                                        ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
                             }
                         }
-
-                        is FetchScanState.Failure.NetworkUnavailable -> {
-                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
-                            scanStateModel
-                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
-                                ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
-                        }
-
-                        is FetchScanState.Failure.RemoteRequestFailure -> {
-                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
-                            scanStateModel
-                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
-                                ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
-                        }
                     }
-                }
         }
     }
 
     private fun showScanFinishedMessage(scanStateModel: ScanStateModel) {
         val threatsCount = scanStateModel.threats?.size ?: 0
         val message = UiStringText(
-            when (threatsCount) {
-                0 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.scan_finished_no_threats_found_message
-                )
+                when (threatsCount) {
+                    0 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.scan_finished_no_threats_found_message
+                    )
 
-                1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.scan_finished_potential_threats_found_message_singular
-                )
+                    1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.scan_finished_potential_threats_found_message_singular
+                    )
 
-                else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.scan_finished_potential_threats_found_message_plural,
-                    "$threatsCount"
-                )
-            }
+                    else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.scan_finished_potential_threats_found_message_plural,
+                            "$threatsCount"
+                    )
+                }
         )
         updateSnackbarMessageEvent(message)
     }
@@ -160,23 +165,24 @@ class ScanViewModel @Inject constructor(
     private fun startScan() {
         launch {
             startScanUseCase.startScan(site)
-                .collect { state ->
-                    when (state) {
-                        is StartScanState.ScanningStateUpdatedInDb -> updateUiState(buildContentUiState(state.model))
+                    .collect { state ->
+                        when (state) {
+                            is StartScanState.ScanningStateUpdatedInDb ->
+                                updateUiState(buildContentUiState(state.model))
 
-                        is StartScanState.Success -> fetchScanState(invokedByUser = true)
+                            is StartScanState.Success -> fetchScanState(invokedByUser = true)
 
-                        is StartScanState.Failure.NetworkUnavailable -> {
-                            scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.OFFLINE)
-                            updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
-                        }
-                        is StartScanState.Failure.RemoteRequestFailure -> {
-                            scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.REMOTE)
-                            updateUiState(ContentUiState(emptyList()))
-                            updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                            is StartScanState.Failure.NetworkUnavailable -> {
+                                scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.OFFLINE)
+                                updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                            }
+                            is StartScanState.Failure.RemoteRequestFailure -> {
+                                scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.REMOTE)
+                                updateUiState(ContentUiState(emptyList()))
+                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                            }
                         }
                     }
-                }
         }
     }
 
@@ -205,8 +211,8 @@ class ScanViewModel @Inject constructor(
 
         @StringRes var messageRes: Int? = null
         fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
-            remoteSiteId = site.siteId,
-            fixableThreatIds = fixableThreatIds
+                remoteSiteId = site.siteId,
+                fixableThreatIds = fixableThreatIds
         ).collect { status ->
             var fixingThreatIds = emptyList<Long>()
             when (status) {
@@ -243,7 +249,7 @@ class ScanViewModel @Inject constructor(
                 }
             }
             updateUiState(
-                buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
+                    buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
             )
 
             messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
@@ -268,15 +274,16 @@ class ScanViewModel @Inject constructor(
     private fun onFixAllButtonClicked() {
         scanTracker.trackOnFixAllThreatsButtonClicked()
         updateNavigationEvent(
-            OpenFixThreatsConfirmationDialog(
-                title = UiStringRes(R.string.threat_fix_all_warning_title),
-                message = if (fixableThreatIds.size > 1) {
+                OpenFixThreatsConfirmationDialog(
+                        title = UiStringRes(R.string.threat_fix_all_warning_title),
+                        message = if (fixableThreatIds.size > 1) {
                             UiStringResWithParams(
-                                R.string.threat_fix_all_confirmation_message_plural,
-                                listOf(UiStringText("${fixableThreatIds.size}")))
-                } else UiStringRes(R.string.threat_fix_all_confirmation_message_singular),
-                okButtonAction = this@ScanViewModel::fixAllThreats
-            )
+                                    R.string.threat_fix_all_confirmation_message_plural,
+                                    listOf(UiStringText("${fixableThreatIds.size}"))
+                            )
+                        } else UiStringRes(R.string.threat_fix_all_confirmation_message_singular),
+                        okButtonAction = this@ScanViewModel::fixAllThreats
+                )
         )
     }
 
@@ -285,6 +292,10 @@ class ScanViewModel @Inject constructor(
             scanTracker.trackOnThreatItemClicked(threatId, OnThreatItemClickSource.SCANNER)
             _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
         }
+    }
+
+    private fun onEnterServerCredsMessageClicked() {
+        updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
     }
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
@@ -315,15 +326,16 @@ class ScanViewModel @Inject constructor(
         model: ScanStateModel,
         fixingThreatIds: List<Long> = emptyList()
     ) = ContentUiState(
-        scanStateListItemsBuilder.buildScanStateListItems(
-            model = model,
-            site = site,
-            fixingThreatIds = fixingThreatIds,
-            onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
-            onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
-            onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
-            onHelpClicked = this@ScanViewModel::onContactSupportClicked
-        )
+            scanStateListItemsBuilder.buildScanStateListItems(
+                    model = model,
+                    site = site,
+                    fixingThreatIds = fixingThreatIds,
+                    onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
+                    onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
+                    onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
+                    onHelpClicked = this@ScanViewModel::onContactSupportClicked,
+                    onEnterServerCredsMessageClicked = this@ScanViewModel::onEnterServerCredsMessageClicked
+            )
     )
 
     sealed class UiState(

@@ -32,13 +32,14 @@ public class ReaderConstants {
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
 
     // intent arguments / keys
+    static final String ARG_SOURCE = "source";
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
-    static final String ARG_IS_FEED = "is_feed";
+    public static final String ARG_IS_FEED = "is_feed";
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";
     static final String ARG_POST_ID = "post_id";
-    static final String ARG_INTERCEPTED_URI = "intercepted_uri";
+    public static final String ARG_INTERCEPTED_URI = "intercepted_uri";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_DIRECT_OPERATION = "direct_operation";
     static final String ARG_IMAGE_URL = "image_url";
@@ -55,7 +56,6 @@ public class ReaderConstants {
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
-    static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION = "restore_position";
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";

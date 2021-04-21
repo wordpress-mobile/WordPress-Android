@@ -103,8 +103,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        primaryButton.setOnClickListener(v -> {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(v -> {
             mUnifiedLoginTracker.trackClick(Click.CONTINUE);
             if (mLoginEpilogueListener != null) {
                 mLoginEpilogueListener.onContinue();

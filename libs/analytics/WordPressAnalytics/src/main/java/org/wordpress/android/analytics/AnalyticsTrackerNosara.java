@@ -790,10 +790,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
                 return "editor_photo_added";
-            case EDITOR_ADDED_FILE_VIA_LIBRARY:
-                return "editor_file_added";
-            case EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY:
-                return "editor_audio_file_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
@@ -1540,14 +1536,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
                 return "jetpack_settings_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
-                return "jetpack_whitelisted_ips_viewed";
-            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
-                return "jetpack_whitelisted_ips_changed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED:
+                return "jetpack_allowlisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED:
+                return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
-            case FEATURE_FLAG_SET:
-                return "feature_flag_set";
+            case FEATURE_FLAG_VALUE:
+                return "feature_flag_value";
+            case FEATURE_FLAGS_SYNCED_STATE:
+                return "feature_flags_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
@@ -2018,6 +2016,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
             case READER_POST_MARKED_AS_SEEN:
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:

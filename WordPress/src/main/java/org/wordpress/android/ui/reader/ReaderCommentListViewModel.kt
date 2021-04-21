@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -20,7 +19,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
-import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
@@ -32,8 +30,7 @@ class ReaderCommentListViewModel
 @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val followUnfollowCommentsFeatureConfig: FollowUnfollowCommentsFeatureConfig
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var followStatusGetJob: Job? = null
@@ -76,8 +73,6 @@ class ReaderCommentListViewModel
     }
 
     fun onSwipeToRefresh() {
-        if (!followUnfollowCommentsFeatureConfig.isEnabled()) return
-
         getFollowConversationStatus(blogId, postId, false)
     }
 
@@ -94,7 +89,6 @@ class ReaderCommentListViewModel
     }
 
     private fun onFollowConversationClicked(askSubscribe: Boolean) {
-        if (!followUnfollowCommentsFeatureConfig.isEnabled()) return
         followStatusSetJob?.cancel()
         followStatusSetJob = launch(bgDispatcher) {
             followCommentsHandler.handleFollowCommentsClicked(blogId, postId, askSubscribe)
@@ -102,7 +96,6 @@ class ReaderCommentListViewModel
     }
 
     private fun getFollowConversationStatus(blogId: Long, postId: Long, isInit: Boolean) {
-        if (!followUnfollowCommentsFeatureConfig.isEnabled()) return
         followStatusGetJob?.cancel()
         followStatusGetJob = launch(bgDispatcher) {
             followCommentsHandler.handleFollowCommentsStatusRequest(blogId, postId, isInit)

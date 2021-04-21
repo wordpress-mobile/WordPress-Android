@@ -13,10 +13,10 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.MediaPickerActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -73,32 +73,34 @@ class GifPickerActivity : LocaleAwareActivity() {
         viewModel.start(site, isMultiSelectEnabled)
 
         // We are intentionally reusing this layout since the UI is very similar.
-        setContentView(R.layout.media_picker_activity)
-
-        initializeToolbar()
-        initializeRecyclerView()
-        initializeSearchView()
-        initializeSearchProgressBar()
-        initializeSelectionBar()
-        initializeEmptyView()
-        initializeRangeLoadErrorEventHandlers()
-        initializePreviewHandlers()
-        initializeDownloadHandlers()
-        initializeStateChangeHandlers()
+        val binding = MediaPickerActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.apply {
+            initializeToolbar()
+            initializeRecyclerView()
+            initializeSearchView()
+            initializeSearchProgressBar()
+            initializeSelectionBar()
+            initializeEmptyView()
+            initializeRangeLoadErrorEventHandlers()
+            initializePreviewHandlers()
+            initializeDownloadHandlers()
+            initializeStateChangeHandlers()
+        }
     }
 
     /**
      * Show the back arrow.
      */
-    private fun initializeToolbar() {
-        setSupportActionBar(toolbar_main)
+    private fun MediaPickerActivityBinding.initializeToolbar() {
+        setSupportActionBar(toolbarMain)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     /**
      * Configure the RecyclerView to use [GifPickerPagedListAdapter] and display the items in a grid
      */
-    private fun initializeRecyclerView() {
+    private fun MediaPickerActivityBinding.initializeRecyclerView() {
         val pagedListAdapter = GifPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
@@ -121,7 +123,7 @@ class GifPickerActivity : LocaleAwareActivity() {
         }
 
         // Update the RecyclerView when new items arrive from the API
-        viewModel.mediaViewModelPagedList.observe(this, Observer {
+        viewModel.mediaViewModelPagedList.observe(this@GifPickerActivity, Observer {
             pagedListAdapter.submitList(it)
         })
     }
@@ -129,12 +131,12 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Configure the search view to execute search when the keyboard's Done button is pressed.
      */
-    private fun initializeSearchView() {
-        search_view.queryHint = getString(R.string.gif_picker_search_hint)
+    private fun MediaPickerActivityBinding.initializeSearchView() {
+        searchView.queryHint = getString(R.string.gif_picker_search_hint)
 
-        search_view.setOnQueryTextListener(object : OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                search_view.clearFocus()
+                searchView.clearFocus()
                 return true
             }
 
@@ -148,8 +150,8 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Show the progress bar in the center of the page if we are performing an initial page load.
      */
-    private fun initializeSearchProgressBar() {
-        viewModel.isPerformingInitialLoad.getDistinct().observe(this, Observer {
+    private fun MediaPickerActivityBinding.initializeSearchProgressBar() {
+        viewModel.isPerformingInitialLoad.getDistinct().observe(this@GifPickerActivity, Observer {
             val isPerformingInitialLoad = it ?: return@Observer
             progress.visibility = if (isPerformingInitialLoad) View.VISIBLE else View.GONE
         })
@@ -158,8 +160,8 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Configure the selection bar and its labels when the [GifPickerViewModel] selected items change
      */
-    private fun initializeSelectionBar() {
-        viewModel.selectionBarUiModel.observe(this, Observer { uiModel ->
+    private fun MediaPickerActivityBinding.initializeSelectionBar() {
+        viewModel.selectionBarUiModel.observe(this@GifPickerActivity, Observer { uiModel ->
             if (uiModel.isMultiselectEnabled) {
                 // Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".
                 //
@@ -168,18 +170,18 @@ class GifPickerActivity : LocaleAwareActivity() {
                 // change to just "Add" and "Preview" too.
                 val selectedCount = uiModel.numberOfSelectedImages
                 if (selectedCount > 0) {
-                    text_preview.text = getString(R.string.preview_count, selectedCount)
-                    text_add.text = getString(R.string.add_count, selectedCount)
+                    textPreview.text = getString(R.string.preview_count, selectedCount)
+                    textAdd.text = getString(R.string.add_count, selectedCount)
                 }
             } else {
                 // When in single selection mode we only show  ADD label
-                text_add.text = getString(R.string.photo_picker_use_gif)
-                text_add.visibility = View.VISIBLE
-                text_preview.visibility = View.GONE
+                textAdd.text = getString(R.string.photo_picker_use_gif)
+                textAdd.visibility = View.VISIBLE
+                textPreview.visibility = View.GONE
             }
 
             val isVisible = uiModel.isVisible
-            val selectionBar: ViewGroup = container_selection_bar
+            val selectionBar: ViewGroup = containerSelectionBar
 
             // Do nothing if the selection bar is already in the visibility state that we want it to be
             if (isVisible && selectionBar.visibility == View.VISIBLE ||
@@ -205,15 +207,15 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Set up showing and hiding of the empty view depending on the search results
      */
-    private fun initializeEmptyView() {
-        val emptyView: ActionableEmptyView = actionable_empty_view
+    private fun MediaPickerActivityBinding.initializeEmptyView() {
+        val emptyView: ActionableEmptyView = actionableEmptyView
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
             bottomImage.setImageResource(R.drawable.img_tenor_100dp)
             bottomImage.contentDescription = getString(R.string.gif_powered_by_tenor)
         }
 
-        viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
+        viewModel.emptyDisplayMode.getDistinct().observe(this@GifPickerActivity, Observer { emptyDisplayMode ->
             when (emptyDisplayMode) {
                 EmptyDisplayMode.HIDDEN -> {
                     emptyView.visibility = View.GONE
@@ -270,8 +272,8 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Set up listener for the Preview button
      */
-    private fun initializePreviewHandlers() {
-        text_preview.setOnClickListener {
+    private fun MediaPickerActivityBinding.initializePreviewHandlers() {
+        textPreview.setOnClickListener {
             val mediaViewModels = viewModel.selectedMediaViewModelList.value?.values?.toList()
             if (mediaViewModels != null && mediaViewModels.isNotEmpty()) {
                 showPreview(mediaViewModels)
@@ -294,10 +296,10 @@ class GifPickerActivity : LocaleAwareActivity() {
     /**
      * Set up reacting to "Add" button presses and processing the result
      */
-    private fun initializeDownloadHandlers() {
-        text_add.setOnClickListener { viewModel.downloadSelected() }
+    private fun MediaPickerActivityBinding.initializeDownloadHandlers() {
+        textAdd.setOnClickListener { viewModel.downloadSelected() }
 
-        viewModel.downloadResult.observe(this, Observer { result ->
+        viewModel.downloadResult.observe(this@GifPickerActivity, Observer { result ->
             if (result?.mediaModels != null) {
                 val mediaLocalIds = result.mediaModels.map { it.id }.toIntArray()
 
@@ -323,29 +325,29 @@ class GifPickerActivity : LocaleAwareActivity() {
      * - [State.DOWNLOADING] or [State.FINISHED]: "Add", "Preview", searching, and selecting are disabled
      * - [State.DOWNLOADING]: The "Add" button is replaced with a progress bar
      */
-    private fun initializeStateChangeHandlers() {
-        viewModel.state.observe(this, Observer { state ->
+    private fun MediaPickerActivityBinding.initializeStateChangeHandlers() {
+        viewModel.state.observe(this@GifPickerActivity, Observer { state ->
             state ?: return@Observer
 
             val searchClearButton =
-                    search_view.findViewById(androidx.appcompat.R.id.search_close_btn) as ImageView
+                    searchView.findViewById(androidx.appcompat.R.id.search_close_btn) as ImageView
             val searchEditText =
-                    search_view.findViewById(androidx.appcompat.R.id.search_src_text)
+                    searchView.findViewById(androidx.appcompat.R.id.search_src_text)
                             as SearchView.SearchAutoComplete
 
             val isIdle = state == State.IDLE
             val isDownloading = state == State.DOWNLOADING
 
             // Disable all the controls if we are not idle
-            text_add.isEnabled = isIdle
-            text_preview.isEnabled = isIdle
+            textAdd.isEnabled = isIdle
+            textPreview.isEnabled = isIdle
             searchClearButton.isEnabled = isIdle
             searchEditText.isEnabled = isIdle
 
             // Show the progress bar instead of the Add text if we are downloading
-            upload_progress.visibility = if (isDownloading) View.VISIBLE else View.GONE
+            uploadProgress.visibility = if (isDownloading) View.VISIBLE else View.GONE
             // The Add text should not be View.GONE because the progress bar relies on its layout to position itself
-            text_add.visibility = if (isDownloading) View.INVISIBLE else View.VISIBLE
+            textAdd.visibility = if (isDownloading) View.INVISIBLE else View.VISIBLE
         })
     }
 

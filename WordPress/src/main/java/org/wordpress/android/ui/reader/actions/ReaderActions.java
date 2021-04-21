@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
 
@@ -44,8 +46,8 @@ public class ReaderActions {
     /*
      * listener when the failure status code is required
      */
-    public interface OnRequestListener {
-        void onSuccess();
+    public interface OnRequestListener<T> {
+        void onSuccess(@Nullable T result);
 
         void onFailure(int statusCode);
     }

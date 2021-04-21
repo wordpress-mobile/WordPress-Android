@@ -7,15 +7,14 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.observeEvent
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -37,6 +37,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private var searchMenuItem: MenuItem? = null
     private var settingsMenuItem: MenuItem? = null
+
+    private var binding: ReaderFragmentLayoutBinding? = null
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -57,15 +59,18 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
-        initToolbar()
-        initViewPager()
-        initViewModel()
+        binding = ReaderFragmentLayoutBinding.bind(view).apply {
+            initToolbar()
+            initViewPager()
+            initViewModel()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         searchMenuItem = null
         settingsMenuItem = null
+        binding = null
     }
 
     override fun onResume() {
@@ -106,78 +111,66 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
-    private fun initToolbar() {
+    private fun ReaderFragmentLayoutBinding.initToolbar() {
         toolbar.title = getString(string.reader_screen_title)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
-    private fun initViewPager() {
-        view_pager.registerOnPageChangeCallback(viewPagerCallback)
+    private fun ReaderFragmentLayoutBinding.initViewPager() {
+        viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderViewModel::class.java)
+    private fun ReaderFragmentLayoutBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
         startObserving()
     }
 
-    private fun startObserving() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+    private fun ReaderFragmentLayoutBinding.startObserving() {
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 when (it) {
                     is ContentUiState -> {
                         updateTabs(it)
                     }
                 }
-                uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
+                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
                 settingsMenuItem?.isVisible = uiState.settingsIconVisible
             }
-        })
+        }
 
-        viewModel.updateTags.observe(viewLifecycleOwner, Observer { updateAcion ->
-            updateAcion?.getContentIfNotHandled()?.let {
-                ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
-            }
-        })
+        viewModel.updateTags.observeEvent(viewLifecycleOwner) {
+            ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
+        }
 
-        viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let { navTarget ->
-                view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
-            }
-        })
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
+            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+        }
 
-        viewModel.showSearch.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.showReaderSearch(context)
-            }
-        })
+        viewModel.showSearch.observeEvent(viewLifecycleOwner) {
+            ReaderActivityLauncher.showReaderSearch(context)
+        }
 
-        viewModel.showSettings.observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.showReaderSubs(context)
-            }
-        })
+        viewModel.showSettings.observeEvent(viewLifecycleOwner) {
+            ReaderActivityLauncher.showReaderSubs(context)
+        }
 
-        viewModel.showReaderInterests.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                showReaderInterests()
-            }
-        })
+        viewModel.showReaderInterests.observeEvent(viewLifecycleOwner) {
+            showReaderInterests()
+        }
 
-        viewModel.closeReaderInterests.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                closeReaderInterests()
-            }
-        })
+        viewModel.closeReaderInterests.observeEvent(viewLifecycleOwner) {
+            closeReaderInterests()
+        }
 
         viewModel.start()
     }
 
-    private fun updateTabs(uiState: ContentUiState) {
-        val adapter = TabsAdapter(this, uiState.readerTagList)
-        view_pager.adapter = adapter
+    private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
+        val adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
+        viewPager.adapter = adapter
 
-        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiState.tabTitles[position]
         }.attach()
     }
@@ -225,6 +218,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        app_bar.liftOnScrollTargetViewId = containerId
+        binding?.appBar?.liftOnScrollTargetViewId = containerId
     }
 }

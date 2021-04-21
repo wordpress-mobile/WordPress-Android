@@ -22,11 +22,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
-import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
+import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends LocaleAwareActivity
-        implements MasterSwitchToolbarListener {
+        implements MainSwitchToolbarListener {
     private TextView mMessageTextView;
     private View mMessageContainer;
 
@@ -39,14 +39,14 @@ public class NotificationsSettingsActivity extends LocaleAwareActivity
         setContentView(R.layout.notifications_settings_activity);
         mFragmentContainer = findViewById(R.id.fragment_container);
 
-        // Get shared preferences for master switch.
+        // Get shared preferences for main switch.
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(NotificationsSettingsActivity.this);
 
         // Set up primary toolbar
         setUpToolbar();
 
-        // Set up master switch
-        setUpMasterSwitch();
+        // Set up main switch
+        setUpMainSwitch();
 
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
@@ -112,24 +112,24 @@ public class NotificationsSettingsActivity extends LocaleAwareActivity
     }
 
     /**
-     * Sets up master switch to disable/enable all notification settings
+     * Sets up main switch to disable/enable all notification settings
      */
-    private void setUpMasterSwitch() {
-        PrefMasterSwitchToolbarView masterSwitchToolBarView = findViewById(R.id.master_switch);
-        masterSwitchToolBarView.setMasterSwitchToolbarListener(this);
+    private void setUpMainSwitch() {
+        PrefMainSwitchToolbarView mainSwitchToolBarView = findViewById(R.id.main_switch);
+        mainSwitchToolBarView.setMainSwitchToolbarListener(this);
 
-        // Set master switch state from shared preferences.
-        boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
-        masterSwitchToolBarView.loadInitialState(isMasterChecked);
-        hideDisabledView(isMasterChecked);
+        // Set main switch state from shared preferences.
+        boolean isMainChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_main), true);
+        mainSwitchToolBarView.loadInitialState(isMainChecked);
+        hideDisabledView(isMainChecked);
     }
 
     @Override
-    public void onMasterSwitchCheckedChanged(
+    public void onMainSwitchCheckedChanged(
             CompoundButton buttonView,
             boolean isChecked
     ) {
-        mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked)
+        mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_main), isChecked)
                           .apply();
 
         hideDisabledView(isChecked);
@@ -142,13 +142,13 @@ public class NotificationsSettingsActivity extends LocaleAwareActivity
     }
 
     /**
-     * Hide view when Notification Settings are disabled by toggling the master switch off.
+     * Hide view when Notification Settings are disabled by toggling the main switch off.
      *
-     * @param isMasterChecked TRUE to hide disabled view, FALSE to show disabled view
+     * @param isMainChecked TRUE to hide disabled view, FALSE to show disabled view
      */
-    protected void hideDisabledView(boolean isMasterChecked) {
+    protected void hideDisabledView(boolean isMainChecked) {
         LinearLayout notificationsDisabledView = findViewById(R.id.notification_settings_disabled_view);
-        notificationsDisabledView.setVisibility(isMasterChecked ? View.INVISIBLE : View.VISIBLE);
-        mFragmentContainer.setVisibility(isMasterChecked ? View.VISIBLE : View.GONE);
+        notificationsDisabledView.setVisibility(isMainChecked ? View.INVISIBLE : View.VISIBLE);
+        mFragmentContainer.setVisibility(isMainChecked ? View.VISIBLE : View.GONE);
     }
 }

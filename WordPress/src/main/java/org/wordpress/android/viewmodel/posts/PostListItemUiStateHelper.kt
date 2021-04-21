@@ -389,6 +389,14 @@ class PostListItemUiStateHelper @Inject constructor(
             )
         }
 
+        if (canShowStats) {
+            buttonTypes.add(BUTTON_STATS)
+        }
+
+        if (canShowCopy) {
+            buttonTypes.add(BUTTON_COPY)
+        }
+
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
@@ -396,14 +404,6 @@ class PostListItemUiStateHelper @Inject constructor(
                 buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
             postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
-        }
-
-        if (canShowStats) {
-            buttonTypes.add(BUTTON_STATS)
-        }
-
-        if (canShowCopy) {
-            buttonTypes.add(BUTTON_COPY)
         }
 
         return buttonTypes

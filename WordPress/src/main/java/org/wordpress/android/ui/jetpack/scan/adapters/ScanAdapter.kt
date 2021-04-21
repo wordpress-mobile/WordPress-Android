@@ -21,14 +21,14 @@ import org.wordpress.android.util.image.ImageManager
 class ScanAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
-) : Adapter<JetpackViewHolder>() {
+) : Adapter<JetpackViewHolder<*>>() {
     private val items = mutableListOf<JetpackListItemState>()
 
     init {
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder<*> {
         return when (viewType) {
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
@@ -44,7 +44,7 @@ class ScanAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: JetpackViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: JetpackViewHolder<*>, position: Int) {
         holder.onBind(items[position])
     }
 

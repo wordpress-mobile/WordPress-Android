@@ -23,7 +23,7 @@ public class SignupFlow {
     public SignupFlow chooseContinueWithWpCom() {
         // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
-        clickOn(R.id.first_button);
+        clickOn(R.id.continue_with_wpcom_button);
         return this;
     }
 
@@ -72,7 +72,7 @@ public class SignupFlow {
         populateTextField(passwordField, password);
 
         // Click continue
-        clickOn(onView(withId(R.id.primary_button)));
+        clickOn(onView(withId(R.id.bottom_button)));
 
         return this;
     }

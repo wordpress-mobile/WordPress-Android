@@ -1,69 +1,48 @@
-<ar>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
-</ar>
-<de-DE>
-16.8:
-Die neuesten Updates für die WordPress Android-App sind da. Wir haben die Funktionalität veröffentlichter Startseiten verbessert und sichergestellt, dass Löschen oder ein Zurücksetzen in Entwurfsform nicht zum Absturz deiner Website führen. Im Cover-Block wird nun das Setzen eines Fokuspunkts unterstützt. Außerdem haben wir die P2-Verwaltung erweitert, sodass du jetzt Einladungs-Links für P2-Rollen generieren, teilen und deaktivieren kannst.
-</de-DE>
 <en-US>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+17.1:
+What’s new?
+
+We improved accessibility in the block editor for those who use a TalkBack screen reader.
+
+To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
+
+You may have noticed the new color palette! We also updated your app icon to match.
 </en-US>
 <es-ES>
-16.8:
-Ya están aquí las últimas actualizaciones de la aplicación Android para WordPress. Hemos mejorado la funcionalidad de las páginas de inicio publicadas, garantizando que borrarlas o volverlas de nuevo a su forma de borrador no romperá tu sitio. Hemos añadido compatibilidad para establecer el punto focal del bloque de fondo. Además, hemos mejorado la gestión de P2, para que puedas generar, compartir y desactivar los enlaces de invitación para los perfiles de P2.
+17.1:
+¿Qué hay de nuevo?
+
+Hemos mejorado la accesibilidad en el editor de bloques para aquellos que usan un lector de pantalla TalkBack.
+
+Para ayudarte a gestionar los comentarios en tu sitio, ahora hay un filtro «Sin respuesta» para que puedas ver los comentarios sin respuesta en un solo lugar.
+
+¡Quizá hayas notado la nueva paleta de color! También hemos actualizado el icono de tu aplicación para que haga juego.
 </es-ES>
-<fr-CA>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
-</fr-CA>
-<fr-FR>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
-</fr-FR>
-<iw-IL>
-16.8:
-העדכונים האחרונים לאפליקציה של WordPress ב-Android כבר כאן. שיפרנו את הפונקציונליות של עמודי בית שפורסמו כדי לוודא שמחיקה שלהם או שחזור שלהם למצב טיוטה לא יהרסו את האתר. הוספנו תמיכה בהגדרה של נקודת מוקד בבלוק הכיסוי. בנוסף, שיפרנו את יכולת הניהול של P2 כדי שתהיה לך אפשרות ליצור, לשתף ולהשבית קישורי הזמנה לתפקידים של P2.
-</iw-IL>
-<id>
-16.8:
-Ini adalah pembaruan paling mutakhir untuk aplikasi Android WordPress. Kami meningkatkan fungsi halaman situs yang diposkan sehingga menjamin bahwa menghapus atau mengembalikannya ke formulir konsep tidak akan merusak situs Anda.  Kami menambahkan dukungan untuk mengatur titik fokus blok Sampul. Selain itu, kami meningkatkan pengelolaan P2 sehingga Anda dapat membuat, membagikan, dan menonaktifkan tautan undangan untuk peran P2.
-</id>
-<it-IT>
-16.8:
-Ecco gli ultimi aggiornamenti all'app per Android di WordPress. Abbiamo migliorato la funzionalità delle homepage pubblicate, assicurando che l'eliminazione o il recupero nel modulo delle bozze non comprometta il tuo sito. Abbiamo aggiunto il supporto per le impostazioni del punto focale del blocco Copertina. Inoltre, abbiamo migliorato la gestione di P2, in modo da poter generare, condividere e disabilitare i link di invito per i ruoli P2.
-</it-IT>
-<ja-JP>
-16.8:
-WordPress Android アプリの最新の更新プログラムはこちらです。 公開ホームページの機能を改善し、削除したり下書きフォームに戻したりしてもサイトが壊れないようにしました。 カバーブロックの焦点を設定するサポートを追加しました。 また、P2権限グループに対する招待リンクを生成、共有、無効化できるように、P2管理を強化しました。
-</ja-JP>
-<ko-KR>
-16.8:
-최근에 WordPress Android 앱을 업데이트했습니다. 발행된 홈페이지를 삭제하거나 임시글 양식으로 되돌려도 사이트가 중단되지 않도록 기능을 개선했습니다. 커버 블록 초점 설정에 대한 지원을 추가했습니다. 또한, P2 역할에 대한 초대 링크를 생성하고, 공유하고, 비활성화할 수 있도록 P2 관리를 개선했습니다.
-</ko-KR>
 <nl-NL>
-16.8:
-De nieuwste updates voor de WordPress Android app zijn hier. We hebben de functionaliteit van gepubliceerde homepages verbeterd, zodat het verwijderen of terugzetten naar conceptvorm je site niet zal vernielen. We hebben ondersteuning toegevoegd voor het instellen van het Cover blok focus punt. Bovendien hebben we het P2 beheer verbeterd, zodat je uitnodigingslinks voor P2 rollen kunt aanmaken, delen en uitschakelen.
+17.1:
+Wat is er nieuw?
+
+We hebben de toegankelijkheid in de blokeditor verbeterd voor degenen die een TalkBack-schermlezer gebruiken.
+
+Om je te helpen bij het beheren van reacties op je site, is er nu een filter 'Niet beantwoord', zodat je niet-beantwoorde reacties op één plek kunt bekijken.
+
+Misschien heb je het nieuwe kleurenpalet opgemerkt! We hebben ook je app-pictogram geüpdatet om overeen te komen.
 </nl-NL>
 <ru-RU>
-16.8:
-Последние обновления приложения WordPress для Android --
-Мы улучшили функциональность опубликованных домашних страниц, гарантируя, что их удаление или возврат к черновику не нарушит работу вашего сайта. Мы добавили поддержку настройки фокуса блока обложки. Кроме того, мы улучшили управление P2, так что вы можете создавать, публиковать и отключать пригласительные ссылки для ролей P2.
+17.1:
+Что нового:
+
+Мы улучшили доступность в редакторе блоков для тех, кто использует программу чтения с экрана TalkBack.
+
+Чтобы помочь вам управлять комментариями на своем сайте, теперь есть фильтр «Без ответа», чтобы вы могли просматривать комментарии, на которые не ответили, в одном месте.
+
+Возможно, вы заметили новую цветовую палитру! Мы также обновили и значок приложения, чтобы он соответствовал ей.
 </ru-RU>
-<sv-SE>
-16.8:
-De senaste uppdateringarna av Android-appen WordPress är här. Vi har förbättrat funktionen för publicerade hemsidor, så att din webbplats inte bryts om du tar bort dem eller återställer dem till utkast. Vi har lagt till stöd för att ställa in fokalpunkt för omslagsblocket. Dessutom förbättrade vi P2-hanteringen så att du kan skapa, dela och inaktivera inbjudningslänkar för P2-roller.
-</sv-SE>
-<tr-TR>
-16.8:
-WordPress Android uygulamasının en son güncellemeleri burada. Yayınlanan ana sayfaların işlevselliğini geliştirerek bunları silmenin veya taslak forma geri döndürmenin sitenizi bozmamasını sağladık. Manşet bloğu odak noktasını ayarlamak için destek ekledik. Ayrıca P2 yönetimini geliştirdik, böylece P2 rolleri için davet bağlantıları oluşturabilir, paylaşabilir ve devre dışı bırakabilirsiniz.
-</tr-TR>
 <zh-CN>
-16.8：
-这是 WordPress Android 应用程序的最新更新。 我们改进了已发布主页的功能，确保将其删除或还原为草稿形式不会破坏您的站点。 我们增加了对设置“封面区块”焦点的支持。 此外，我们还增强了 P2 管理，以便您可以对 P2 角色的邀请链接执行生成、共享和禁用等操作。
+17.1:
+我们对使用TalkBack屏幕阅读器的用户改进了其在区块编辑器中的无障碍。
+
+为了有助于您更加方便的管理您站点上的评论，我们添加了一个 “未回复 ”选项，使您可以在一个位置查看所有未回复的评论。
+
+您可能已经注意到了新的调色板！我们也更新了应用程序的图标以使其相匹配。
 </zh-CN>
-<zh-TW>
-16.8:
-以下是 WordPress Android 應用程式的最新更新。 我們改善了已發表首頁的功能，現在刪除已發表首頁或將其還原到草稿形式不會破壞整個網站。 我們為設定封面區塊焦點新增了支援。 另外，我們增強了 P2 管理，現在你可以產生、分享和停用 P2 角色的邀請連結。
-</zh-TW>

@@ -5,8 +5,8 @@
         <!-- Material theme -->
         <item name="colorPrimary">@color/blue_50</item>
         <item name="colorPrimaryVariant">@color/blue_70</item>
-        <item name="colorSecondary">@color/pink_50</item>
-        <item name="colorSecondaryVariant">@color/pink_70</item>
+        <item name="colorSecondary">@color/blue_50</item>
+        <item name="colorSecondaryVariant">@color/blue_70</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="colorSurface">@android:color/white</item>
         <item name="colorError">@color/red_50</item>
@@ -375,7 +375,7 @@
     </style>
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/pink_30</item>
+        <item name="android:textColor">@color/blue_30</item>
     </style>
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
@@ -586,7 +586,7 @@
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
@@ -1019,7 +1019,9 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="ActionableEmptyStateButton" parent="WordPress.Button.Primary">
+    <style name="ActionableEmptyStateButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Invite.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:layout_marginEnd">
             @dimen/actionable_empty_view_text_margin_horizontal
         </item>

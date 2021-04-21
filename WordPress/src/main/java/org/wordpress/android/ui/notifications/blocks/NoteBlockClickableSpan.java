@@ -89,6 +89,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         return mShouldLink
                && mRangeType != FormattableRangeType.BLOCKQUOTE
                && mRangeType != FormattableRangeType.MATCH
+               && mRangeType != FormattableRangeType.B
                && (mRangeType != FormattableRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
     }
 
