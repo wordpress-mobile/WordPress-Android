@@ -2,6 +2,7 @@ package org.wordpress.android.analytics;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -22,12 +23,13 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
     private static final String APP_SCHEME = "app_scheme";
 
-    private static final String EVENTS_PREFIX = "wpandroid_";
+    private final String mEventsPrefix;
 
     private final TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+    public AnalyticsTrackerNosara(Context context, String eventsPrefix) throws IllegalArgumentException {
         super(context);
+        mEventsPrefix = eventsPrefix;
         mNosaraClient = TracksClient.getClient(context);
     }
 
@@ -534,11 +536,11 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
             String jsonString = propertiesToJSON.toString();
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
