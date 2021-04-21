@@ -220,6 +220,7 @@
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/comments"/>
 
         <!-- Posts activities -->
