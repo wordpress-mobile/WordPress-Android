@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.experiments.AssignmentsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.Companion.EXPERIMENT_ASSIGNMENTS_KEY
-import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform.CALYPSO
@@ -46,7 +45,7 @@ class ExperimentStoreTest {
     fun `fetch assignments emits correct event when successful`() = test {
         whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
 
-        val onAssignmentsFetched = experimentStore.fetchAssignments(FetchAssignmentsPayload(defaultPlatform))
+        val onAssignmentsFetched = experimentStore.fetchAssignments(defaultPlatform)
 
         assertThat(onAssignmentsFetched).isEqualTo(OnAssignmentsFetched(successfulAssignments))
     }
@@ -55,7 +54,7 @@ class ExperimentStoreTest {
     fun `fetch assignments stores result locally when successful`() = test {
         whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
 
-        experimentStore.fetchAssignments(FetchAssignmentsPayload(defaultPlatform))
+        experimentStore.fetchAssignments(defaultPlatform)
 
         verify(sharedPreferences).edit()
         inOrder(sharedPreferencesEditor).apply {

@@ -210,29 +210,30 @@ class ScanRestClient @Inject constructor(
             return buildScanStateErrorPayload(site, ScanStateError(ScanStateErrorType.INVALID_RESPONSE, errorMsg))
         }
         val scanStateModel = ScanStateModel(
-                state = state,
-                reason = response.reason,
-                threats = threatModels,
-                hasCloud = response.hasCloud ?: false,
-                credentials = response.credentials?.map {
-                    Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
-                },
-                mostRecentStatus = response.mostRecentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            duration = it.duration ?: 0,
-                            progress = it.progress ?: 0,
-                            error = it.error ?: false,
-                            isInitial = it.isInitial ?: false
-                    )
-                },
-                currentStatus = response.currentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            progress = it.progress ?: 0,
-                            isInitial = it.isInitial ?: false
-                    )
-                }
+            state = state,
+            reason = response.reason,
+            threats = threatModels,
+            hasCloud = response.hasCloud ?: false,
+            credentials = response.credentials?.map {
+                Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
+            },
+            mostRecentStatus = response.mostRecentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    duration = it.duration ?: 0,
+                    progress = it.progress ?: 0,
+                    error = it.error ?: false,
+                    isInitial = it.isInitial ?: false
+                )
+            },
+            currentStatus = response.currentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    progress = it.progress ?: 0,
+                    isInitial = it.isInitial ?: false
+                )
+            },
+            hasValidCredentials = response.credentials?.firstOrNull()?.stillValid == true
         )
         return FetchedScanStatePayload(scanStateModel, site)
     }

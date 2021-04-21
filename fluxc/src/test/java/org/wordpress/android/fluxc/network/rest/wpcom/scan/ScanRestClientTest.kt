@@ -102,6 +102,7 @@ class ScanRestClientTest {
             requireNotNull(scanStateModel).apply {
                 assertEquals(state, State.fromValue(requireNotNull(scanResponse.state)))
                 assertEquals(hasCloud, requireNotNull(scanResponse.hasCloud))
+                assertEquals(hasValidCredentials, scanResponse.credentials?.firstOrNull()?.stillValid)
                 assertNull(reason)
                 assertNotNull(credentials)
                 assertNotNull(threats)

@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -167,7 +167,18 @@ class ScanStoreTest {
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
         verify(threatSqlUtils).getThreats(siteModel, listOf(CURRENT))
-        Assert.assertEquals(scanStateModel, scanStateFromDb)
+        assertEquals(scanStateModel, scanStateFromDb)
+    }
+
+    @Test
+    fun `get valid credentials status returns corresponding status from the db`() = test {
+        val expectedHasValidCredentials = true
+        val scanStateModel = ScanStateModel(State.IDLE, hasValidCredentials = expectedHasValidCredentials)
+        whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
+
+        val hasValidCredentials = scanStore.hasValidCredentials(siteModel)
+
+        assertEquals(expectedHasValidCredentials, hasValidCredentials)
     }
 
     @Test
