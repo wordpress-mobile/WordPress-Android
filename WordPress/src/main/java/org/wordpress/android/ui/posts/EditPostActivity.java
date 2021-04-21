@@ -2868,6 +2868,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
+    public void updateFeaturedImage(final long mediaId, final boolean imagePicked) {
+        setFeaturedImageId(mediaId, imagePicked);
+    }
+
+    @Override
     public void onAddMediaClicked() {
         if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
