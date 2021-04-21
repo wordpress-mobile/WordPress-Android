@@ -814,6 +814,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Necessary to update image in Post Settings
         setFeaturedImageId(mediaId);
         sendToJSFeaturedImageId(mediaId);
+
+        showNotice(getString(R.string.featured_image_confirmation));
     }
 
     private void removeFeaturedImage(int mediaId) {
@@ -821,6 +823,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Necessary to update image in Post Settings
         setFeaturedImageId(mediaId);
         sendToJSFeaturedImageId(mediaId);
+
+        showNotice(getString(R.string.featured_image_removed));
     }
 
     public void sendToJSFeaturedImageId(int mediaId) {
