@@ -17,6 +17,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var statsLinkHandler: StatsLinkHandler
     @Mock lateinit var startLinkHandler: StartLinkHandler
+    @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
@@ -33,6 +34,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 editorLinkHandler,
                 statsLinkHandler,
                 startLinkHandler,
+                notificationsLinkHandler,
                 deepLinkUriUtils,
                 serverTrackingHandler
         )
@@ -174,6 +176,25 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         whenever(statsLinkHandler.isStatsUrl(uri)).thenReturn(true)
         val expected = NavigateAction.OpenStats
         whenever(statsLinkHandler.buildOpenStatsNavigateAction(uri)).thenReturn(expected)
+
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+
+        val urlHandled = viewModel.handleUrl(uri)
+
+        assertThat(urlHandled).isTrue()
+        assertThat(navigateAction).isEqualTo(expected)
+    }
+
+    @Test
+    fun `opens navigate action from notifications link handler`() {
+        val siteUrl = "site123"
+        val uri = buildUri("wordpress.com", "notifications", siteUrl)
+        whenever(notificationsLinkHandler.isNotificationsUrl(uri)).thenReturn(true)
+        val expected = NavigateAction.OpenNotifications
+        whenever(notificationsLinkHandler.buildNavigateAction()).thenReturn(expected)
 
         var navigateAction: NavigateAction? = null
         viewModel.navigateAction.observeForever {

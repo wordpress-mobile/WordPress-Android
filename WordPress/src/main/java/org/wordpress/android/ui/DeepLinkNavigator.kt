@@ -2,11 +2,13 @@ package org.wordpress.android.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
@@ -48,6 +50,7 @@ class DeepLinkNavigator
                     navigateAction.site,
                     navigateAction.statsTimeframe
             )
+            OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
         }
         activity.finish()
     }
@@ -65,5 +68,6 @@ class DeepLinkNavigator
         object OpenStats : NavigateAction()
         object StartCreateSiteFlow : NavigateAction()
         object ShowSignInFlow : NavigateAction()
+        object OpenNotifications : NavigateAction()
     }
 }

@@ -18,6 +18,7 @@ class DeepLinkingIntentReceiverViewModel
     private val editorLinkHandler: EditorLinkHandler,
     private val statsLinkHandler: StatsLinkHandler,
     private val startLinkHandler: StartLinkHandler,
+    private val notificationsLinkHandler: NotificationsLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler
 ) : ScopedViewModel(uiDispatcher) {
@@ -51,7 +52,8 @@ class DeepLinkingIntentReceiverViewModel
     private fun shouldHandleUrl(uri: UriWrapper): Boolean {
         return isTrackingUrl(uri) ||
                 editorLinkHandler.isEditorUrl(uri) ||
-                statsLinkHandler.isStatsUrl(uri)
+                statsLinkHandler.isStatsUrl(uri) ||
+                notificationsLinkHandler.isNotificationsUrl(uri)
     }
 
     /**
@@ -83,6 +85,7 @@ class DeepLinkingIntentReceiverViewModel
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
+            notificationsLinkHandler.isNotificationsUrl(uri) -> notificationsLinkHandler.buildNavigateAction()
             else -> null
         }?.also {
             // The new URL was build so we need to hit the original `mbar` tracking URL
