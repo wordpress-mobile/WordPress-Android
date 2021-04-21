@@ -68,6 +68,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollecti
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -332,6 +333,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         updateFailedMediaState();
                         updateMediaProgress();
                     }
+                },
+                new OnSetFeaturedImageListener() {
                 },
                 new OnEditorMountListener() {
                     @Override
