@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
