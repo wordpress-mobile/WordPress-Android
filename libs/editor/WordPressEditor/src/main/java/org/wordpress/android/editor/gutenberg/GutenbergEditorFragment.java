@@ -335,6 +335,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 new OnSetFeaturedImageListener() {
+                    @Override
+                    public void onSetFeaturedImageButtonClicked(int mediaId) {
+                        showFeaturedImageConfirmationDialog(mediaId);
+                    }
                 },
                 new OnEditorMountListener() {
                     @Override
@@ -777,6 +781,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    private void showFeaturedImageConfirmationDialog(final int mediaId) {
+    }
     public void sendToJSFeaturedImageId(int mediaId) {
         getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
     }
