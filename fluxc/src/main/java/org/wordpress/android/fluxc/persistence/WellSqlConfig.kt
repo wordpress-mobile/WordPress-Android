@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 146
+        return 147
     }
 
     override fun getDbName(): String {
@@ -1714,6 +1714,12 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "DATE_CREATED INTEGER," +
                                     "EXPIRY_DATE INTEGER)"
                     )
+                }
+                146 -> migrate(version) {
+                    db.execSQL("ALTER TABLE LikeModel ADD PREFERRED_BLOG_ID INTEGER")
+                    db.execSQL("ALTER TABLE LikeModel ADD PREFERRED_BLOG_NAME TEXT")
+                    db.execSQL("ALTER TABLE LikeModel ADD PREFERRED_BLOG_URL TEXT")
+                    db.execSQL("ALTER TABLE LikeModel ADD PREFERRED_BLOG_BLAVATAR_URL TEXT")
                 }
             }
         }
