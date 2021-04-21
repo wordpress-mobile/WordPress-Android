@@ -462,8 +462,7 @@ public class MediaStore extends Store {
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
-    @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
+    @Inject public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
         super(dispatcher);
         mMediaRestClient = restClient;
         mMediaXmlrpcClient = xmlrpcClient;

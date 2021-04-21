@@ -419,8 +419,7 @@ public class PostStore extends Store {
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
-    @Inject
-    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+    @Inject public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
                      PostSqlUtils postSqlUtils) {
         super(dispatcher);
         mPostRestClient = postRestClient;

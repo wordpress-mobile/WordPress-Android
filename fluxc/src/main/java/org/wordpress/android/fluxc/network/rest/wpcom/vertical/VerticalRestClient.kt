@@ -14,17 +14,18 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedSegmentsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 private class FetchSegmentsResponse : ArrayList<VerticalSegmentModel>()
 
 @Singleton
-class VerticalRestClient
-constructor(
+class VerticalRestClient @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

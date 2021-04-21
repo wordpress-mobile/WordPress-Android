@@ -24,11 +24,11 @@ import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
@@ -1251,8 +1251,7 @@ public class SiteStore extends Store {
     private PostSqlUtils mPostSqlUtils;
     private PrivateAtomicCookie mPrivateAtomicCookie;
 
-    @Inject
-    public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
+    @Inject public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
                      SiteXMLRPCClient siteXMLRPCClient, PrivateAtomicCookie privateAtomicCookie) {
         super(dispatcher);
         mSiteRestClient = siteRestClient;
