@@ -783,6 +783,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
     }
+
+    private void setFeaturedImage(int mediaId) {
+        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
+        // Necessary to update image in Post Settings
+        setFeaturedImageId(mediaId);
+        sendToJSFeaturedImageId(mediaId);
+    }
+
+    private void removeFeaturedImage(int mediaId) {
+        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
+        // Necessary to update image in Post Settings
+        setFeaturedImageId(mediaId);
+        sendToJSFeaturedImageId(mediaId);
+    }
+
     public void sendToJSFeaturedImageId(int mediaId) {
         getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
     }
