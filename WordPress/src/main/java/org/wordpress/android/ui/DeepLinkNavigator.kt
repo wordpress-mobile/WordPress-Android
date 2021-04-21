@@ -2,7 +2,6 @@ package org.wordpress.android.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
