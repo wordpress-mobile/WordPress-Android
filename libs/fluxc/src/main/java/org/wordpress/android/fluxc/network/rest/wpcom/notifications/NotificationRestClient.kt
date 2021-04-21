@@ -32,13 +32,15 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
 import java.util.Date
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class NotificationRestClient constructor(
+class NotificationRestClient @Inject constructor(
     private val appContext: Context?,
     private val dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
@@ -108,8 +110,11 @@ class NotificationRestClient constructor(
                     dispatcher.dispatch(NotificationActionBuilder.newUnregisteredDeviceAction(payload))
                 },
                 { wpComError ->
-                    val payload = UnregisterDeviceResponsePayload(DeviceUnregistrationError(
-                            DeviceUnregistrationErrorType.GENERIC_ERROR, wpComError.message))
+                    val payload = UnregisterDeviceResponsePayload(
+                            DeviceUnregistrationError(
+                                    DeviceUnregistrationErrorType.GENERIC_ERROR, wpComError.message
+                            )
+                    )
                     dispatcher.dispatch(NotificationActionBuilder.newUnregisteredDeviceAction(payload))
                 })
         add(request)
@@ -127,7 +132,8 @@ class NotificationRestClient constructor(
         val params = mapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
                 "num_note_items" to NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS.toString(),
-                "fields" to NOTIFICATION_SYNC_FIELDS)
+                "fields" to NOTIFICATION_SYNC_FIELDS
+        )
         val request = WPComGsonRequest.buildGetRequest(url, params, NotificationHashesApiResponse::class.java,
                 { response: NotificationHashesApiResponse? ->
                     // Create a map of remote id to note_hash
@@ -140,7 +146,8 @@ class NotificationRestClient constructor(
                     val payload = FetchNotificationHashesResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message)
+                                networkError.message
+                        )
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationHashesAction(payload))
                 })
@@ -159,7 +166,8 @@ class NotificationRestClient constructor(
         val params = mutableMapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
                 "num_note_items" to NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS.toString(),
-                "fields" to NOTIFICATION_DEFAULT_FIELDS)
+                "fields" to NOTIFICATION_DEFAULT_FIELDS
+        )
 
         remoteNoteIds?.let { if (it.isNotEmpty()) params["ids"] = it.joinToString() }
 
@@ -178,7 +186,8 @@ class NotificationRestClient constructor(
                     val payload = FetchNotificationsResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message)
+                                networkError.message
+                        )
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
                 })
@@ -193,7 +202,8 @@ class NotificationRestClient constructor(
     fun fetchNotification(remoteNoteId: Long) {
         val url = WPCOMREST.notifications.note(remoteNoteId).urlV1_1
         val params = mapOf(
-                "fields" to NOTIFICATION_DEFAULT_FIELDS)
+                "fields" to NOTIFICATION_DEFAULT_FIELDS
+        )
         val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
                 { response ->
                     val notification = response?.notes?.firstOrNull()?.let {
@@ -206,7 +216,8 @@ class NotificationRestClient constructor(
                     val payload = FetchNotificationResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message)
+                                networkError.message
+                        )
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationAction(payload))
                 })
@@ -260,7 +271,8 @@ class NotificationRestClient constructor(
                     val payload = MarkNotificationsReadResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message)
+                                networkError.message
+                        )
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsReadAction(payload))
                 })

@@ -1,9 +1,9 @@
 package org.wordpress.android.fluxc.model
 
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.POSTS
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient.UpdateHomepageResponse
 import javax.inject.Inject
 

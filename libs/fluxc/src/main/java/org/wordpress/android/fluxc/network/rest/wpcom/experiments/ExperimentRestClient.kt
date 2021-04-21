@@ -15,14 +15,16 @@ import org.wordpress.android.fluxc.store.ExperimentStore.ExperimentErrorType.GEN
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsError
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ExperimentRestClient(
+class ExperimentRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

@@ -38,8 +38,7 @@ import dagger.Reusable;
 
 @Reusable
 public class PostSqlUtils {
-    @Inject
-    public PostSqlUtils() {
+    @Inject public PostSqlUtils() {
     }
 
     public synchronized int insertOrUpdatePost(PostModel post, boolean overwriteLocalChanges) {

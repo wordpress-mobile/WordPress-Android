@@ -27,11 +27,11 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPaylo
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;

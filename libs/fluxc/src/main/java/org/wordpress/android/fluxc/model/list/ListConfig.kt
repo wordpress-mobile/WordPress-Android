@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.model.list
 
-import org.wordpress.android.fluxc.store.ListStore
 import androidx.paging.PagedList.Config.Builder
+import org.wordpress.android.fluxc.store.ListStore
 
 private const val DB_PAGE_SIZE = 10
 private const val INITIAL_LOAD_SIZE = 20
