@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
+    <string name="widgets_enabled" translatable="false">true</string>
 
     <!-- account setup -->
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
@@ -2090,6 +2091,10 @@
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
     <string name="contact_fragment_title" translatable="false">@string/contact_support</string>
 
+    <!-- Contact us -->
+    <!--Note: Support ticket subject, only visible to the end users of the Zendesk support portal, doesn't need a translation -->
+    <string name="support_ticket_subject" translatable="false">WordPress for Android Support</string>
+
     <!--My Site-->
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
@@ -2694,6 +2699,8 @@
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_not_a_jetpack_site">The website %1$s is not a Jetpack site.</string>
+    <string name="login_no_jetpack_sites">No Jetpack sites.</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2730,6 +2737,7 @@
     <string name="signup_confirmation_title">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
+    <string name="continue_with_wpcom_no_signup">Log in with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>

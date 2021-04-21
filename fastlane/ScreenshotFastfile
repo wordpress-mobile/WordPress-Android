@@ -97,8 +97,8 @@ platform :android do
 
     screenshot_options = {
       output_directory: RAW_SCREENSHOTS_DIR,
-      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk",
+      app_apk_path: "WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk",
       use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
       reinstall_app: false,
       clear_previous_screenshots: should_clear_previous_screenshots,
@@ -237,7 +237,7 @@ platform :android do
 
     # Clean temporary folder from previous runs
     FileUtils.rm_rf(PROMO_SCREENSHOTS_PROCESSING_DIR)
-    
+
     # Create a copy of the files to work with – this ensures that if we're doing multiple
     # screenshot generation tasks close together, we can keep reusing the same source files
     FileUtils.rm_rf(RAW_SCREENSHOTS_PROCESSING_DIR)
