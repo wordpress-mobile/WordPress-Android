@@ -1,2 +1,0 @@
-17.0:
-Wir freuen uns auf drei Updates für WPAndroid. In der Story-Mediathek gibt es jetzt Zwei-Finger-/Zoom-/Schwenk-Funktionen, die dir mehr Ansichtsoptionen denn je ermöglichen. Den Kommentarfilter findest du nun nicht mehr als Drop-down-Menü sondern als Tabs. Und wir haben die Schaltfläche zum Abbrechen aus den Einstellungsoptionen im Block-Editor entfernt. 

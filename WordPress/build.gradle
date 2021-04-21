@@ -59,9 +59,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-288"
+            versionName "alpha-290"
         }
-        versionCode 1029
+        versionCode 1034
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -78,6 +78,7 @@ android {
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
+        buildConfigField "boolean", "IS_JETPACK_APP", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -87,16 +88,28 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "buildType"
+    flavorDimensions "app", "buildType"
 
     productFlavors {
+        wordpress {
+            dimension "app"
+            applicationId "org.wordpress.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "false"
+        }
+
+        jetpack {
+            dimension "app"
+            applicationId "com.jetpack.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "true"
+        }
+
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.1-rc-3"
+                versionName "17.2-rc-1"
             }
-            versionCode 1028
+            versionCode 1033
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
@@ -104,20 +117,19 @@ android {
         }
 
         zalpha { // alpha version - enable experimental features
-            applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            applicationId "org.wordpress.android.beta"
+            applicationIdSuffix ".beta"
             dimension "buildType"
             buildConfigField "boolean", "LIKES_ENHANCEMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
-            applicationId "org.wordpress.android.prealpha"
+            applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
     }

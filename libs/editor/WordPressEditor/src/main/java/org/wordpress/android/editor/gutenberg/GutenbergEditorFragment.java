@@ -774,6 +774,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    public void sendToJSFeaturedImageId(int mediaId) {
+        getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
+    }
+
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
         // Display 'cancel upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());

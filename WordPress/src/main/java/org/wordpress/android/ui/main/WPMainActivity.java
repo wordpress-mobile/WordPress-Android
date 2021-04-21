@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -127,6 +128,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
@@ -219,6 +221,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -340,7 +343,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    ActivityLauncher.showSignInForResult(this);
+                    if (BuildConfig.IS_JETPACK_APP) {
+                        ActivityLauncher.showSignInForResultJetpackOnly(this);
+                    } else {
+                        ActivityLauncher.showSignInForResult(this);
+                    }
                     finish();
                 }
             }
@@ -376,7 +383,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             ActivityLauncher.newBlogForResult(this);
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.showSignInForResult(this, true);
+            ActivityLauncher.showSignInForResultWpComOnly(this);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -667,7 +674,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.viewCurrentBlogPages(this, mSelectedSiteRepository.getSelectedSite());
                     break;
                 case ARG_WP_COM_SIGN_UP:
-                    ActivityLauncher.showSignInForResult(this, true);
+                    ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
             }
         } else {
@@ -990,7 +997,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
+                    mAnalyticsTrackerWrapper
+                            .trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite(),
+                                    mMySiteImprovementsFeatureConfig);
                 }
                 break;
             case READER:
@@ -1375,7 +1384,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen
-            ActivityLauncher.showSignInForResult(this);
+            if (BuildConfig.IS_JETPACK_APP) {
+                ActivityLauncher.showSignInForResultJetpackOnly(this);
+            } else {
+                ActivityLauncher.showSignInForResult(this);
+            }
         } else {
             SiteModel site = getSelectedSite();
             if (site == null && mSiteStore.hasSite()) {

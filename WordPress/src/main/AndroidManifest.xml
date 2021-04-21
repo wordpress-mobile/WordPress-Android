@@ -100,7 +100,7 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/Theme.LoginFlow.TransparentStatusBar"
+            android:theme="@style/LoginTheme.TransparentStatusBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -120,17 +120,17 @@
         <activity
             android:name=".ui.accounts.LoginEpilogueActivity"
             android:label="@string/login_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/Theme.LoginFlow" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.PostSignupInterstitialActivity"
             android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/Theme.LoginFlow"
+            android:theme="@style/LoginTheme"
             />
 
         <activity
@@ -522,6 +522,7 @@
                     android:scheme="http" >
                 </data>
 
+                <action android:name="org.wordpress.android.action.VIEW_POST" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -594,7 +595,8 @@
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -830,7 +832,8 @@
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
-            android:label="@string/stats_widget_weekly_views_name">
+            android:label="@string/stats_widget_weekly_views_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -841,7 +844,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
-            android:label="@string/stats_widget_all_time_insights_name">
+            android:label="@string/stats_widget_all_time_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -852,7 +856,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
-            android:label="@string/stats_widget_today_insights_name">
+            android:label="@string/stats_widget_today_insights_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -863,7 +868,8 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
-            android:label="@string/stats_widget_minified_name">
+            android:label="@string/stats_widget_minified_name"
+            android:enabled="@string/widgets_enabled">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

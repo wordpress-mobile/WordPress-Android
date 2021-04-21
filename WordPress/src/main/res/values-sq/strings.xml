@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 18:00:04+0000
+Translation-Revision-Date: 2021-04-15 08:31:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Përdor buton ikone</string>
+    <string name="gutenberg_native_search_input_field">Fushë dhëniesh kërkimi.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Buton kërkimi. Teksti i tanishëm i butonit është</string>
+    <string name="gutenberg_native_search_blocks">Kërkon në blloqe</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etiketë për kërkoni në blloqe. Teksti i tanishëm është</string>
+    <string name="gutenberg_native_search_block">Bllok kërkimesh</string>
+    <string name="gutenberg_native_outside">Jashtë</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
+    <string name="gutenberg_native_no_button">Pa buton</string>
+    <string name="gutenberg_native_inside">Brenda</string>
+    <string name="gutenberg_native_hide_search_heading">Fshih kryet e kërkimit</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dy herë </string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dy herë</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dy herë</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Që të ndryshoni njësinë, prekeni dy herë</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Teksti i tanishëm i vendmbajtëses është</string>
+    <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
+    <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
+    <string name="gutenberg_native_button_position">Pozicion butoni</string>
+    <string name="gutenberg_native_button_outside">Buton jashtë</string>
+    <string name="gutenberg_native_button_inside">Buton brenda</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s është %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Ndodhi një gabim teksa merreshin të dhëna pëlqimesh</string>
+    <string name="get_likes_unknown_error">Ndodhi një gabim i panjohur teksa merreshin pëlqimet.</string>
+    <string name="get_likes_no_network_error">S’ka rrjet</string>
+    <string name="comments_empty_list_filtered_unreplied">S’ka komente pa përgjigje</string>
+    <string name="comment_status_unreplied">Pa përgjigje</string>
     <string name="gutenberg_native_table_of_contents">Tryeza e Lëndës</string>
     <string name="gutenberg_native_summary">përmbledhje</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Përmblidheni postimin tuaj me një listë kryesh. Shtoni spiranca HTML për te blloqe Kryesh për t’i lidhur këtu.</string>

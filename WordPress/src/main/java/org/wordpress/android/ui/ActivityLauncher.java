@@ -82,6 +82,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -120,6 +121,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
+import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
@@ -306,6 +308,16 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         context.startActivity(intent);
+    }
+
+    public static void viewPostDeeplinkInNewStack(Context context, Uri uri) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent viewPostIntent = new Intent(ReaderConstants.ACTION_VIEW_POST, uri);
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(viewPostIntent)
+                        .startActivities();
     }
 
     public static void openEditorInNewStack(Context context) {
@@ -1232,14 +1244,26 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        showSignInForResult(activity, false);
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showSignInForResult(Activity activity, boolean isWpComOnly) {
+    public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        if (isWpComOnly) {
-            WPCOM_LOGIN_ONLY.putInto(intent);
+        WPCOM_LOGIN_ONLY.putInto(intent);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void showSignInForResultJetpackOnly(Activity activity) {
+        showSignInForResultJetpackOnly(activity, false);
+    }
+
+    public static void showSignInForResultJetpackOnly(Activity activity, Boolean clearTop) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        if (clearTop) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
+        JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
