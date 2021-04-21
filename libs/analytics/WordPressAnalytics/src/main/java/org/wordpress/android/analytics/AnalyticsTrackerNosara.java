@@ -2,7 +2,6 @@ package org.wordpress.android.analytics;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.automattic.android.tracks.TracksClient;
 
