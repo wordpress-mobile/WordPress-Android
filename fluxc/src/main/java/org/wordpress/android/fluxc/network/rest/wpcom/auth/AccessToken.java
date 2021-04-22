@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.utils.PreferenceUtils;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -15,7 +16,7 @@ public class AccessToken {
     private String mToken;
     private Context mContext;
 
-    public AccessToken(Context appContext) {
+    @Inject public AccessToken(Context appContext) {
         mContext = appContext;
         mToken = getFluxCPreferences().getString(ACCOUNT_TOKEN_PREF_KEY, "");
         if (mToken.isEmpty()) {

@@ -68,14 +68,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
 public class PostRestClient extends BaseWPComRestClient {
     LikesUtilsProvider mLikesUtilsProvider;
 
-    public PostRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                          UserAgent userAgent, LikesUtilsProvider likesUtilsProvider) {
+    @Inject public PostRestClient(Context appContext,
+                          Dispatcher dispatcher,
+                          @Named("regular") RequestQueue requestQueue,
+                          AccessToken accessToken,
+                          UserAgent userAgent,
+                          LikesUtilsProvider likesUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mLikesUtilsProvider = likesUtilsProvider;
     }

@@ -38,16 +38,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
 public class CommentRestClient extends BaseWPComRestClient {
     LikesUtilsProvider mLikesUtilsProvider;
 
-    public CommentRestClient(
+    @Inject public CommentRestClient(
             Context appContext,
             Dispatcher dispatcher,
-            RequestQueue requestQueue,
+            @Named("regular") RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent,
             LikesUtilsProvider likesUtilsProvider
