@@ -18,6 +18,7 @@ class DeepLinkingIntentReceiverViewModel
     private val editorLinkHandler: EditorLinkHandler,
     private val statsLinkHandler: StatsLinkHandler,
     private val startLinkHandler: StartLinkHandler,
+    private val readerLinkHandler: ReaderLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler
 ) : ScopedViewModel(uiDispatcher) {
@@ -33,25 +34,7 @@ class DeepLinkingIntentReceiverViewModel
      * and builds the navigation action based on them
      */
     fun handleUrl(uriWrapper: UriWrapper): Boolean {
-        return if (shouldHandleUrl(uriWrapper)) {
-            _navigateAction.value = Event(buildNavigateAction(uriWrapper))
-            true
-        } else {
-            false
-        }
-    }
-
-    /**
-     * This viewmodel handles the following URLs
-     * `wordpress.com/post/...`
-     * `wordpress.com/stats/...`
-     * `public-api.wordpress.com/mbar/`
-     * In these cases this function returns true
-     */
-    private fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return isTrackingUrl(uri) ||
-                editorLinkHandler.isEditorUrl(uri) ||
-                statsLinkHandler.isStatsUrl(uri)
+        return buildNavigateAction(uriWrapper)?.also { _navigateAction.value = Event(it) } != null
     }
 
     /**
@@ -69,28 +52,25 @@ class DeepLinkingIntentReceiverViewModel
                 uri.pathSegments.firstOrNull() == WP_LOGIN
     }
 
-    private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction {
-        val trackingUrl = isTrackingUrl(uri)
-        val navigateAction = when {
-            trackingUrl || isWpLoginUrl(uri) -> {
-                val redirectUri = getRedirectUri(uri)
-                if (redirectUri != null) {
-                    buildNavigateAction(redirectUri, rootUri)
-                } else {
-                    null
-                }
-            }
+    private fun buildNavigateAction(uri: UriWrapper, rootUri: UriWrapper = uri): NavigateAction? {
+        return when {
+            isTrackingUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
+                    ?.also {
+                        // The new URL was build so we need to hit the original `mbar` tracking URL
+                        serverTrackingHandler.request(uri)
+                    }
+                    ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
+            isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
+            readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
             editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
             else -> null
-        }?.also {
-            // The new URL was build so we need to hit the original `mbar` tracking URL
-            if (trackingUrl) serverTrackingHandler.request(uri)
         }
-        return navigateAction ?: OpenInBrowser(
-                rootUri.copy(REGULAR_TRACKING_PATH)
-        )
+    }
+
+    private fun getRedirectUriAndBuildNavigateAction(uri: UriWrapper, rootUri: UriWrapper): NavigateAction? {
+        return getRedirectUri(uri)?.let { buildNavigateAction(it, rootUri) }
     }
 
     private fun getRedirectUri(uri: UriWrapper): UriWrapper? {

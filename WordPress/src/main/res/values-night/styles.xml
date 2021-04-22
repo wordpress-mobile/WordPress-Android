@@ -2,10 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
-        <item name="colorPrimary">@color/blue_30</item>
-        <item name="colorPrimaryVariant">@color/blue_50</item>
-        <item name="colorSecondary">@color/blue_30</item>
-        <item name="colorSecondaryVariant">@color/blue_50</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="android:colorBackground">@color/background_dark</item>
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>
@@ -22,6 +22,7 @@
         <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/yellow_20</item>
+        <item name="wpColorNavBar">@color/nav_bar</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
@@ -98,12 +99,6 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
     </style>
 
-    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:elevation">0dp</item>
-        <item name="android:background">@drawable/tab_layout_background</item>
-        <item name="android:duplicateParentState">true</item>
-    </style>
-
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">?attr/colorSecondaryVariant</item>
         <item name="tint">?attr/colorOnSurface</item>
@@ -135,11 +130,6 @@
         </item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
-    <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
