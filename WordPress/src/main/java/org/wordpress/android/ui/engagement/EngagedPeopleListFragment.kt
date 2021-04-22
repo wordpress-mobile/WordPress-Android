@@ -17,6 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.engagement.BottomSheetAction.HideBottomSheet
+import org.wordpress.android.ui.engagement.BottomSheetAction.ShowBottomSheet
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewPostInReader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSiteById
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewSit
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestBlogPost
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
+import org.wordpress.android.ui.engagement.UserProfileViewModel.Companion.USER_PROFILE_VM_KEY
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -37,19 +41,20 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class EngagedPeopleListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var contextProvider: ContextProvider
+    @Inject lateinit var resourceProvider: ResourceProvider
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var readerTracker: ReaderTracker
 
     private lateinit var viewModel: EngagedPeopleListViewModel
+    private lateinit var userProfileViewModel: UserProfileViewModel
     private lateinit var recycler: RecyclerView
     private lateinit var loadingView: View
     private lateinit var rootView: View
@@ -59,6 +64,8 @@ class EngagedPeopleListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(EngagedPeopleListViewModel::class.java)
+        userProfileViewModel = ViewModelProvider(this, viewModelFactory)
+                .get(USER_PROFILE_VM_KEY, UserProfileViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -82,6 +89,25 @@ class EngagedPeopleListFragment : Fragment() {
         }
 
         recycler.layoutManager = layoutManager
+
+        userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner, { state ->
+            val fragmentManager = childFragmentManager
+            fragmentManager?.let {
+                var bottomSheet = it.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG) as? UserProfileBottomSheetFragment
+
+                when (state) {
+                    ShowBottomSheet -> {
+                        if (bottomSheet == null) {
+                            bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
+                        }
+                        bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
+                    }
+                    HideBottomSheet -> {
+                        bottomSheet?.apply { this.dismiss() }
+                    }
+                }
+            }
+        })
 
         viewModel.uiState.observe(viewLifecycleOwner, { state ->
             if (!isAdded) return@observe
@@ -144,6 +170,13 @@ class EngagedPeopleListFragment : Fragment() {
                 is PreviewPostInReader -> {
                     ReaderActivityLauncher.showReaderPostDetail(this, event.siteId, event.postId)
                 }
+                is OpenUserProfileBottomSheet -> {
+                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick)
+                }
+            }
+
+            if (event.closeUserProfileIfOpened) {
+                userProfileViewModel.onBottomSheetCancelled()
             }
         }
     }
@@ -195,7 +228,7 @@ class EngagedPeopleListFragment : Fragment() {
     private fun setupAdapter(items: List<EngageItem>) {
         val adapter = recycler.adapter as? EngagedPeopleAdapter ?: EngagedPeopleAdapter(
                 imageManager,
-                contextProvider.getContext()
+                resourceProvider
         ).also {
             recycler.adapter = it
         }
@@ -235,6 +268,8 @@ class EngagedPeopleListFragment : Fragment() {
     companion object {
         private const val KEY_LIST_SCENARIO = "list_scenario"
         private const val KEY_LIST_STATE = "list_state"
+
+        private const val USER_PROFILE_BOTTOM_SHEET_TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
         @JvmStatic
         fun newInstance(listScenario: ListScenario): EngagedPeopleListFragment {

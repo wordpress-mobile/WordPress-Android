@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
@@ -124,6 +125,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var getLikesHandler: GetLikesHandler
     @Mock private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Mock private lateinit var contextProvider: ContextProvider
+    @Mock private lateinit var engagementUtils: EngagementUtils
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -157,7 +159,8 @@ class ReaderPostDetailViewModelTest {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 getLikesHandler,
-                likesEnhancementsFeatureConfig
+                likesEnhancementsFeatureConfig,
+                engagementUtils
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
