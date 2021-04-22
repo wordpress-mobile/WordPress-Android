@@ -18,10 +18,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Unknown
+import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.test

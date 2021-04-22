@@ -39,11 +39,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError;
-import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
@@ -65,17 +60,22 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError;
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartError;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType;
@@ -106,6 +106,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
@@ -145,8 +147,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
-                          AccessToken accessToken, UserAgent userAgent) {
+    @Inject public SiteRestClient(Context appContext,
+                          Dispatcher dispatcher,
+                          @Named("regular") RequestQueue requestQueue,
+                          AppSecrets appSecrets,
+                          AccessToken accessToken,
+                          UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
     }

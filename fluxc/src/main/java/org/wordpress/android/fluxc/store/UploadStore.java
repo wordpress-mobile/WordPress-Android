@@ -80,8 +80,7 @@ public class UploadStore extends Store {
         }
     }
 
-    @Inject
-    public UploadStore(Dispatcher dispatcher) {
+    @Inject public UploadStore(Dispatcher dispatcher) {
         super(dispatcher);
     }
 
