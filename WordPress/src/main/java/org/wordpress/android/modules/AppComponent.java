@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import android.app.Application;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
@@ -229,7 +228,6 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         ApplicationModule.class,
         AppConfigModule.class,
-        ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
         LegacyModule.class,
@@ -661,7 +659,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(RestoreFragment object);
 
     void inject(EngagedPeopleListFragment object);
-  
+
     void inject(SiteSettingsTimezoneBottomSheet object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
