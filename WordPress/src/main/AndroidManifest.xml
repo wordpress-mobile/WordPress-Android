@@ -436,6 +436,16 @@
                     android:pathPattern="/pages/..*"
                     android:scheme="http" />
 
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/notifications/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/notifications/.*"
+                    android:scheme="http" />
+
             </intent-filter>
 
         </activity>

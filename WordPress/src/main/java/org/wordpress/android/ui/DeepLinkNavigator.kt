@@ -8,6 +8,7 @@ import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPo
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
+import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
@@ -50,6 +51,7 @@ class DeepLinkNavigator
                     navigateAction.statsTimeframe
             )
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
+            OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
         }
         activity.finish()
     }
@@ -68,5 +70,6 @@ class DeepLinkNavigator
         object OpenStats : NavigateAction()
         object StartCreateSiteFlow : NavigateAction()
         object ShowSignInFlow : NavigateAction()
+        object OpenNotifications : NavigateAction()
     }
 }
