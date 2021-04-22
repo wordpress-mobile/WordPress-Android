@@ -79,6 +79,7 @@ android {
         buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
+        buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -95,12 +96,14 @@ android {
             dimension "app"
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         }
 
         jetpack {
             dimension "app"
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
         }
 
         vanilla { // used for release and beta
