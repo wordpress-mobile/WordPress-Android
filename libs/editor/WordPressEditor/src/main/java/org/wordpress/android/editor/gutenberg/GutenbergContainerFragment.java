@@ -256,4 +256,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
     }
+
+    public void sendToJSFeaturedImageId(int mediaId) {
+        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
+    }
 }

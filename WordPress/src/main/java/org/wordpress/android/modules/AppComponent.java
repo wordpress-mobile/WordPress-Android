@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import android.app.Application;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
@@ -27,7 +26,9 @@ import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -230,7 +231,6 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         ApplicationModule.class,
         AppConfigModule.class,
-        ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
         LegacyModule.class,
@@ -664,6 +664,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(EngagedPeopleListFragment object);
 
     void inject(SiteSettingsTimezoneBottomSheet object);
+
+    void inject(LoginSiteCheckErrorFragment object);
+
+    void inject(LoginNoSitesErrorFragment object);
 
     void inject(UserProfileBottomSheetFragment object);
 

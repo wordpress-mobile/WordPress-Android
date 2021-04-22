@@ -2255,6 +2255,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
         String postType = mIsPage ? "page" : "post";
+        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
@@ -2281,6 +2282,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 wpcomLocaleSlug,
                 postType,
+                featuredImageId,
                 themeBundle
         );
     }
@@ -2458,6 +2460,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
+            }
         }
     }
 
@@ -2855,6 +2860,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     /**
      * EditorFragmentListener methods
      */
+
+    @Override public void clearFeaturedImage() {
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId(0);
+        }
+    }
 
     @Override
     public void onAddMediaClicked() {
