@@ -40,7 +40,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         val layout = inflater.inflate(R.layout.comment_dialog_fragment, container, false) as ViewGroup
         reply = layout.findViewById(R.id.edit_comment_expand)
         reply.initializeWithPrefix('@')
