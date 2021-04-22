@@ -40,7 +40,6 @@ import static org.wordpress.android.WordPress.getContext;
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
     private static final String DEEP_LINK_HOST_POST = "post";
-    private static final String DEEP_LINK_HOST_STATS = "stats";
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
@@ -213,11 +212,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             case DEEP_LINK_HOST_NOTIFICATIONS:
                 ActivityLauncher.viewNotificationsInNewStack(getContext());
                 break;
-            case DEEP_LINK_HOST_STATS:
-                long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
-                SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
-                ActivityLauncher.viewStatsInNewStack(getContext(), siteModel);
-                break;
             case DEEP_LINK_HOST_READ:
                 ActivityLauncher.viewReaderInNewStack(getContext());
                 break;
@@ -227,8 +221,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private boolean isFromAppBanner(String host) {
         return (host != null
                 && (host.equals(DEEP_LINK_HOST_NOTIFICATIONS)
-                    || host.equals(DEEP_LINK_HOST_READ)
-                    || host.equals(DEEP_LINK_HOST_STATS)));
+                    || host.equals(DEEP_LINK_HOST_READ)));
     }
 
     @Override

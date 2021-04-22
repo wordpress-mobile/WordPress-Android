@@ -18,6 +18,8 @@ class StatsLinkHandler
      * Builds navigate action from URL like:
      * https://wordpress.com/stats/$timeframe/$site
      * where timeframe and site are optional
+     * or
+     * wordpress://stats
      */
     fun buildOpenStatsNavigateAction(uri: UriWrapper): NavigateAction {
         val pathSegments = uri.pathSegments
@@ -43,11 +45,11 @@ class StatsLinkHandler
 
     /**
      * Returns true if the URI should be handled by StatsLinkHandler.
-     * The handled links are `https://wordpress.com/stats/day/$site`
+     * The handled links are `https://wordpress.com/stats/day/$site` and `wordpress://stats`
      */
     fun isStatsUrl(uri: UriWrapper): Boolean {
-        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == STATS_PATH
+        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == STATS_PATH) || uri.host == STATS_PATH
     }
 
     /**
