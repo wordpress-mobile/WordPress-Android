@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-07 19:08:19+0000
+Translation-Revision-Date: 2021-04-20 07:39:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
-    <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
+    <string name="gutenberg_native_transform_block">Transform block…</string>
+    <string name="gutenberg_native_transform_s_to">Transform %s to</string>
+    <string name="gutenberg_native_what_is_alt_text">What is alt text?</string>
+    <string name="gutenberg_native_failed_to_insert_media">Failed to insert media.</string>
+    <string name="like_title_plural">%d Likes</string>
+    <string name="like_faces_singular_text">One blogger likes this.</string>
+    <string name="like_faces_plural_text">%d bloggers like this.</string>
+    <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformed to %2$s</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe the purpose of the image. Leave empty if the image is purely decorative. </string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Failed to insert audio file.</string>
+    <string name="suggestion">Suggestion:</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Enter your server credentials to fix threat.</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Enter your server credentials to fix threats.</string>
+    <string name="like_title_singular">One Like</string>
     <string name="gutenberg_native_search_blocks">Search blocks</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
-    <string name="gutenberg_native_search_input_field">Search input field.</string>
-    <string name="gutenberg_native_use_icon_button">Use icon button</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Double tap to edit button text</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Double tap to edit label text</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Double tap to edit placeholder text</string>
     <string name="gutenberg_native_double_tap_to_change_unit">double tap to change unit</string>
-    <string name="gutenberg_native_hide_search_heading">Hide search heading</string>
-    <string name="gutenberg_native_inside">Inside</string>
-    <string name="gutenberg_native_no_button">No button</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
-    <string name="gutenberg_native_outside">Outside</string>
     <string name="gutenberg_native_search_block">Search block</string>
     <string name="comment_status_unreplied">Unreplied</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
@@ -27,21 +30,15 @@ Language: en_GB
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
-    <string name="gutenberg_native_button_inside">Button inside</string>
-    <string name="gutenberg_native_button_outside">Button outside</string>
-    <string name="gutenberg_native_button_position">Button position</string>
     <string name="gutenberg_native_cancel_search">Cancel search</string>
     <string name="gutenberg_native_clear_search">Clear search</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Current placeholder text is</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Summarise your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
     <string name="gutenberg_native_summary">summary</string>
     <string name="gutenberg_native_table_of_contents">Table of Contents</string>
-    <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="gutenberg_native_document_outline">document outline</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
-    <string name="gutenberg_native_add_button_text">Add button text</string>
     <string name="reader_title_interests">Follow topics</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
@@ -904,6 +901,7 @@ Language: en_GB
     <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_image">ADD IMAGE</string>
     <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
+    <string name="gutenberg_native_add_alt_text">Add alt text</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">The list has loaded with %1$d items.</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
@@ -1456,8 +1454,6 @@ Language: en_GB
     <string name="support_push_notification_title">WordPress</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
-    <string name="activity_log_rewind_site">Restore Site</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>

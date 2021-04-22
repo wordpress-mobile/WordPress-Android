@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-31 12:29:54+0000
+Translation-Revision-Date: 2021-04-20 13:28:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -50,6 +50,7 @@ Language: el_GR
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
+    <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">σύμπτηξη</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
@@ -430,6 +431,9 @@ Language: el_GR
     <string name="notification_settings_category_other">Άλλο</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Όλοι οι ιστότοποι μου</string>
     <string name="notification_settings_category_your_sites">Οι ιστότοποί σας</string>
+    <string name="notification_settings_main_hint_off">Ενεργοποίηση ενημερώσεων</string>
+    <string name="notification_settings_main_hint_on">Απενεργοποίηση ενημερώσεων</string>
+    <string name="notification_settings_main_status_off">Κλείσιμο</string>
     <string name="max_video_resolution">Μέγιστο μέγεθος βίντεο</string>
     <string name="max_thumbnail_px_size">Μέγιστο μέγεθος εικόνας</string>
     <string name="add_media_progress">Προσθήκη πολυμέσων</string>
@@ -446,6 +450,7 @@ Language: el_GR
     <string name="login_site_address_more_help">Χρειάζεστε περισσότερη βοήθεια;</string>
     <string name="login_site_address">Διεύθυνση ιστότοπου</string>
     <string name="login_continue">Συνέχεια</string>
+    <string name="connect_more">Συνδέστε Έναν Άλλο Ιστότοπο</string>
     <string name="next">Επόμενο</string>
     <string name="me_profile_photo">Φωτογραφία προφίλ</string>
     <string name="post_title">Τίτλος</string>
@@ -602,6 +607,7 @@ Language: el_GR
     <string name="signout">Αποσύνδεση</string>
     <string name="sign_in_wpcom">Σύνδεση στο WordPress.com</string>
     <string name="reader_label_global_related_posts">Περισσότερα στο WordPress.com</string>
+    <string name="reader_label_local_related_posts">Περισσότερα σε %s</string>
     <string name="preference_open_device_settings">Άνοιγμα ρυθμίσεων συσκευής</string>
     <string name="invite_invalid_email">%s: Μη έγκυρο email</string>
     <string name="invite_user_blocked_invites">%s: Ο χρήστης δεν δέχεται προσκλήσεις</string>
@@ -649,7 +655,9 @@ Language: el_GR
     <string name="invite_error_invalid_usernames_multiple">Αδυναμία αποστολής: Υπάρχουν μη έγκυρα ονόματα χρήστη ή ηλ. διευθύνσεις</string>
     <string name="invite_error_invalid_usernames_one">Αδυναμία αποστολής: Μη έγκυρο όνομα χρήστη ή ηλ. διεύθυνση</string>
     <string name="invite_error_no_usernames">Παρακαλώ προσθέστε τουλάχιστον ένα όνομα χρήστη</string>
+    <string name="invite_message_title">Προσαρμοσμένο Μήνυμα</string>
     <string name="invite">Πρόσκληση</string>
+    <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
     <string name="my_site_header_external">Εξωτερική</string>
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>
     <string name="label_clear_search_history">Καθαρισμός ιστορικού αναζήτησης</string>
@@ -795,6 +803,7 @@ Language: el_GR
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>
     <string name="site_settings_paging_dialog_header">Σχόλια ανά σελίδα</string>
     <string name="site_settings_close_after_dialog_title">Κλείσιμο σχολιασμού</string>
+    <string name="site_settings_denylist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
     <string name="site_settings_hold_for_moderation_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα παραμένει στην αναμονή προς έγκριση. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\" </string>
     <string name="site_settings_list_editor_input_hint">Εισάγετε μια λέξη ή φράση</string>
     <string name="site_settings_list_editor_no_items_text">Δεν υπάρχουν αντικείμενα</string>
@@ -809,8 +818,10 @@ Language: el_GR
     <string name="site_settings_rp_show_header_title">Προβολή Κεφαλίδας</string>
     <string name="site_settings_rp_switch_summary">Στα Σχετικά Άρθρα εμφανίζεται σχετικό περιεχόμενο από τον ιστότοπό σας κάτω από τα άρθρα σας.</string>
     <string name="site_settings_rp_switch_title">Εμφάνιση Σχετικών Άρθρων</string>
+    <string name="site_settings_denylist_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο σημειώνονται ως ανεπιθύμητα</string>
     <string name="site_settings_moderation_hold_hint">Σχόλια που εμπίπτουν σε ένα φίλτρο τοποθετούνται στην αναμονή προς έγκριση</string>
     <string name="site_settings_multiple_links_hint">Αγνόηση του ορίου συνδέσμου για γνωστούς χρήστες</string>
+    <string name="site_settings_allowlist_hint">Ο συντάκτης του σχολίου πρέπει να έχει προηγουμένως εγκεκριμένο σχόλιο</string>
     <string name="site_settings_user_account_required_hint">Οι χρήστες πρέπει να είναι εγγεγραμμένοι και συνδεδεμένοι για να σχολιάσουν</string>
     <string name="site_settings_identity_required_hint">Ο συντάκτης του σχολίου θα πρέπει να συμπληρώσει όνομα και e-mail</string>
     <string name="site_settings_paging_hint">Εμφάνιση σχολίων σε ομάδες καθορισμένου μεγέθους</string>
@@ -833,6 +844,8 @@ Language: el_GR
     <string name="site_settings_address_hint">Η αλλαγή της διεύθυνσής σας δεν υποστηρίζεται προς το παρόν</string>
     <string name="site_settings_tagline_hint">Μια μικρή περιγραφή ή μια πιασάρικη φράση που περιγράφει το ιστολόγιό σας</string>
     <string name="site_settings_title_hint">Με λίγες λέξεις, εξηγήστε τι αφορά αυτός ο ιστότοπος</string>
+    <string name="site_settings_allowlist_known_summary">Σχόλια από γνωστούς χρήστες</string>
+    <string name="site_settings_allowlist_all_summary">Σχόλια από όλους τους χρήστες</string>
     <string name="site_settings_threading_summary">%d επίπεδα</string>
     <string name="site_settings_privacy_private_summary">Ιδιωτικό</string>
     <string name="site_settings_privacy_hidden_summary">Κρυμμένο</string>
@@ -840,6 +853,7 @@ Language: el_GR
     <string name="site_settings_privacy_public_summary">Δημόσιο</string>
     <string name="site_settings_moderation_hold_title">Αναμονή για έλεγχο</string>
     <string name="site_settings_multiple_links_title">Σύνδεσμοι στα σχόλια</string>
+    <string name="site_settings_allowlist_title">Αυτόματη έγκριση</string>
     <string name="site_settings_paging_title">Σελιδοποίηση</string>
     <string name="site_settings_threading_title">Νήματα</string>
     <string name="site_settings_sort_by_title">Ταξινόμηση κατά</string>
@@ -914,7 +928,9 @@ Language: el_GR
     <string name="reader_discover_attribution_author_and_blog">Δημοσιεύτηκε αρχικά από %1$s στο %2$s</string>
     <string name="reader_short_like_count_multi">%s \"Like\"</string>
     <string name="reader_short_like_count_one">1 \"Like\"</string>
+    <string name="reader_label_follow_count">%,d ακόλουθοι</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
+    <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
     <string name="notifications_push_summary">Ρυθμίσεις για τις ειδοποιήσεις που εμφανίζονται στη συσκευή σας.</string>
     <string name="notifications_email_summary">Ρυθμίσεις για τις ειδοποιήσεις που στέλνονται στο email που είναι συνδεδεμένο με το λογαριασμό σας.</string>
@@ -1026,6 +1042,7 @@ Language: el_GR
     <string name="older_month">Παλαιότερο από ένα μήνα</string>
     <string name="browse_our_faq_button">Περιηγηθείτε στις Συχνές Ερωτήσεις</string>
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
+    <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
     <string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
     <string name="comment_trashed">Το σχόλιο διαγράφηκε</string>
     <string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
@@ -1037,7 +1054,9 @@ Language: el_GR
     <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτόν τον Ιστότοπο</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
+    <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
+    <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
     <string name="reader_label_followed_blog">Παρακολουθούμενος Ιστότοπος</string>
     <string name="reader_toast_err_get_blog_info">Αδυναμία εμφάνισης αυτού του Ιστότοπου</string>
     <string name="reader_toast_err_already_follow_blog">Ακολουθείτε ήδη τον Ιστότοπο</string>
@@ -1117,6 +1136,8 @@ Language: el_GR
     <string name="error_blog_hidden">Αυτό το ιστολόγιο είναι κρυφό και δεν μπόρεσε να φορτωθεί. Ενεργοποιήστε το ξανά στις ρυθμίσεις και δοκιμάστε ξανά.</string>
     <string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
     <string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
+    <string name="reader_toast_err_add_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
+    <string name="reader_toast_err_remove_tag">Αδυναμία αφαίρεσης αυτής της ετικέτας</string>
     <string name="notifications_empty_all">Καμία ειδοποίηση…ακόμα.</string>
     <string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
     <string name="plugin_not_found">Ένα σφάλμα παρουσιάστηκε κατά την πρόσβαση σε αυτό το πρόσθετο</string>
@@ -1145,6 +1166,8 @@ Language: el_GR
     <string name="reader_view_reblog">Αναμετάδοση</string>
     <string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
     <string name="reader_label_added_tag">Προστέθηκε η %s</string>
+    <string name="reader_toast_err_tag_exists">Ακολουθείτε ήδη αυτή την ετικέτα</string>
+    <string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
     <string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>
