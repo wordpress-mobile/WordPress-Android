@@ -39,7 +39,7 @@ class UserProfileViewModel @Inject constructor(
                     },
                     siteUrl = siteUrl,
                     siteId = siteId,
-                    onClick = onClick
+                    onSiteClickListener = onClick
             )
         }
         _onBottomSheetAction.value = Event(ShowBottomSheet)

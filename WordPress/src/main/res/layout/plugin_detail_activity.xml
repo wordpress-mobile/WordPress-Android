@@ -225,8 +225,7 @@
 
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/plugin_state_active"
-                                style="@style/PluginCardViewSecondaryElement"
-                                android:theme="@style/SwitchBlueMedium" />
+                                style="@style/PluginCardViewSecondaryElement" />
 
                         </RelativeLayout>
 
@@ -244,8 +243,7 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
-                            style="@style/PluginCardViewSecondaryElement"
-                            android:theme="@style/SwitchBlueMedium" />
+                            style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
