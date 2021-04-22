@@ -20,8 +20,8 @@ class NotificationsLinkHandler
      * The handled links are `https://wordpress.com/notifications`
      */
     fun isNotificationsUrl(uri: UriWrapper): Boolean {
-        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == NOTIFICATIONS_PATH
+        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == NOTIFICATIONS_PATH) || uri.host == NOTIFICATIONS_PATH
     }
 
     companion object {

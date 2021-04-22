@@ -38,7 +38,6 @@ import static org.wordpress.android.WordPress.getContext;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
-    private static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
     private static final String DEEP_LINK_HOST_POST = "post";
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
@@ -208,20 +207,13 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void handleAppBanner(@NonNull String host) {
-        switch (host) {
-            case DEEP_LINK_HOST_NOTIFICATIONS:
-                ActivityLauncher.viewNotificationsInNewStack(getContext());
-                break;
-            case DEEP_LINK_HOST_READ:
-                ActivityLauncher.viewReaderInNewStack(getContext());
-                break;
+        if (DEEP_LINK_HOST_READ.equals(host)) {
+            ActivityLauncher.viewReaderInNewStack(getContext());
         }
     }
 
     private boolean isFromAppBanner(String host) {
-        return (host != null
-                && (host.equals(DEEP_LINK_HOST_NOTIFICATIONS)
-                    || host.equals(DEEP_LINK_HOST_READ)));
+        return (host != null && host.equals(DEEP_LINK_HOST_READ));
     }
 
     @Override
