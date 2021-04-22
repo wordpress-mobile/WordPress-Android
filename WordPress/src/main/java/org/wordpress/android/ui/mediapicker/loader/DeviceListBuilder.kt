@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
@@ -18,12 +19,15 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class DeviceListBuilder(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val deviceMediaLoader: DeviceMediaLoader,
+    private val mediaUtilsWrapper: MediaUtilsWrapper,
+    private val site: SiteModel?,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val mediaTypes: Set<MediaType>,
     private val pageSize: Int
@@ -98,7 +102,11 @@ class DeviceListBuilder(
         val deviceMediaList = deviceMediaLoader.loadMedia(mediaType, filter, pageSize, lastDateModified)
         val result = deviceMediaList.items.mapNotNull {
             val mimeType = deviceMediaLoader.getMimeType(it.uri)
-            if (MediaUtils.isSupportedMimeType(mimeType)) {
+            if (MediaUtils.isSupportedMimeType(mimeType) && MimeTypes().getAllTypes(
+                            mediaUtilsWrapper.getSitePlanForMimeTypes(
+                                    site
+                            )
+                    ).contains(mimeType)) {
                 MediaItem(LocalUri(it.uri), it.uri.toString(), it.title, mediaType, mimeType, it.dateModified)
             } else {
                 null
@@ -117,7 +125,11 @@ class DeviceListBuilder(
 
         val filteredPage = documentsList.items.mapNotNull { document ->
             val mimeType = deviceMediaLoader.getMimeType(document.uri)
-            if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
+            if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType) && MimeTypes().getAllTypes(
+                            mediaUtilsWrapper.getSitePlanForMimeTypes(
+                                    site
+                            )
+                    ).contains(mimeType)) {
                 MediaItem(
                         LocalUri(document.uri),
                         document.uri.toString(),
@@ -151,12 +163,15 @@ class DeviceListBuilder(
     @Inject constructor(
         private val localeManagerWrapper: LocaleManagerWrapper,
         private val deviceMediaLoader: DeviceMediaLoader,
+        private val mediaUtilsWrapper: MediaUtilsWrapper,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(mediaTypes: Set<MediaType>): DeviceListBuilder {
+        fun build(mediaTypes: Set<MediaType>, site: SiteModel?): DeviceListBuilder {
             return DeviceListBuilder(
                     localeManagerWrapper,
                     deviceMediaLoader,
+                    mediaUtilsWrapper,
+                    site,
                     bgDispatcher,
                     mediaTypes,
                     PAGE_SIZE

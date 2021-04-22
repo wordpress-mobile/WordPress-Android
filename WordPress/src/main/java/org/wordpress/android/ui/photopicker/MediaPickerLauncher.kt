@@ -200,7 +200,8 @@ class MediaPickerLauncher @Inject constructor(
         )
         val intent = MediaPickerActivity.buildIntent(
                 activity,
-                mediaPickerSetup
+                mediaPickerSetup,
+                site
         )
         activity.startActivityForResult(
                 intent,
