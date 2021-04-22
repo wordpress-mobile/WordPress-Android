@@ -53,15 +53,17 @@ import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ActivityLogRestClient(
+class ActivityLogRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     private val timeZoneProvider: TimeZoneProvider,
     dispatcher: Dispatcher,
     appContext: Context?,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) :
@@ -127,12 +129,14 @@ class ActivityLogRestClient(
                 }
             }
             is Error -> {
-                val error = RewindError(NetworkErrorMapper.map(
+                val error = RewindError(
+                        NetworkErrorMapper.map(
                                 response.error,
                                 RewindErrorType.GENERIC_ERROR,
                                 RewindErrorType.INVALID_RESPONSE,
                                 RewindErrorType.AUTHORIZATION_REQUIRED
-                        ), response.error.message)
+                        ), response.error.message
+                )
                 RewindResultPayload(error, rewindId, site)
             }
         }
@@ -155,13 +159,18 @@ class ActivityLogRestClient(
                         response.data.backupPoint,
                         response.data.startedAt,
                         response.data.progress,
-                        site)
+                        site
+                )
             }
             is Error -> {
-                val error = BackupDownloadError(NetworkErrorMapper.map(response.error,
-                        BackupDownloadErrorType.GENERIC_ERROR,
-                        BackupDownloadErrorType.INVALID_RESPONSE,
-                        BackupDownloadErrorType.AUTHORIZATION_REQUIRED), response.error.message)
+                val error = BackupDownloadError(
+                        NetworkErrorMapper.map(
+                                response.error,
+                                BackupDownloadErrorType.GENERIC_ERROR,
+                                BackupDownloadErrorType.INVALID_RESPONSE,
+                                BackupDownloadErrorType.AUTHORIZATION_REQUIRED
+                        ), response.error.message
+                )
                 BackupDownloadResultPayload(error, rewindId, site)
             }
         }
@@ -233,17 +242,21 @@ class ActivityLogRestClient(
                 url,
                 null,
                 request,
-                DismissBackupDownloadResponse::class.java)
+                DismissBackupDownloadResponse::class.java
+        )
         return when (response) {
             is Success -> DismissBackupDownloadResultPayload(
                     site.siteId,
                     response.data.downloadId,
-                    response.data.isDismissed)
+                    response.data.isDismissed
+            )
             is Error -> {
-                val errorType = NetworkErrorMapper.map(response.error,
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
                         DismissBackupDownloadErrorType.GENERIC_ERROR,
                         DismissBackupDownloadErrorType.INVALID_RESPONSE,
-                        DismissBackupDownloadErrorType.AUTHORIZATION_REQUIRED)
+                        DismissBackupDownloadErrorType.AUTHORIZATION_REQUIRED
+                )
                 val error = DismissBackupDownloadError(errorType, response.error.message)
                 DismissBackupDownloadResultPayload(error, site.siteId, downloadId)
             }

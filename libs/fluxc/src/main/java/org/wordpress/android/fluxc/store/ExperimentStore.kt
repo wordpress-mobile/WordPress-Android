@@ -27,9 +27,11 @@ class ExperimentStore @Inject constructor(
     private val gson: Gson by lazy { GsonBuilder().serializeNulls().create() }
 
     suspend fun fetchAssignments(
-        fetchPayload: FetchAssignmentsPayload
+        platform: Platform,
+        experimentNames: List<String>,
+        anonymousId: String? = null
     ) = coroutineEngine.withDefaultContext(API, this, "fetchAssignments") {
-        val fetchedPayload = experimentRestClient.fetchAssignments(fetchPayload.platform, fetchPayload.anonId)
+        val fetchedPayload = experimentRestClient.fetchAssignments(platform, experimentNames, anonymousId)
         if (!fetchedPayload.isError) {
             storeFetchedAssignments(fetchedPayload.assignments)
             OnAssignmentsFetched(assignments = Assignments.fromModel(fetchedPayload.assignments))
@@ -52,11 +54,6 @@ class ExperimentStore @Inject constructor(
     fun clearCachedAssignments() {
         preferenceUtils.getFluxCPreferences().edit().remove(EXPERIMENT_ASSIGNMENTS_KEY).apply()
     }
-
-    data class FetchAssignmentsPayload(
-        val platform: Platform,
-        val anonId: String? = null
-    )
 
     data class FetchedAssignmentsPayload(
         val assignments: AssignmentsModel

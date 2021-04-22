@@ -15,24 +15,30 @@ import org.wordpress.android.fluxc.store.ExperimentStore.ExperimentErrorType.GEN
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsError
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class ExperimentRestClient(
+class ExperimentRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchAssignments(
         platform: Platform,
+        experimentNames: List<String>,
         anonymousId: String? = null,
         version: String = DEFAULT_VERSION
     ): FetchedAssignmentsPayload {
         val url = WPCOMV2.experiments.version(version).assignments.platform(platform.value).url
-        val params = mapOf("anon_id" to anonymousId.orEmpty())
+        val params = mapOf(
+                "experiment_names" to experimentNames.joinToString(),
+                "anon_id" to anonymousId.orEmpty()
+        )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,

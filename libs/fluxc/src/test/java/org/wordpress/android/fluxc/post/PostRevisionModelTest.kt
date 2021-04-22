@@ -2,8 +2,8 @@ package org.wordpress.android.fluxc.post
 
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.revisions.DiffOperations
 import org.wordpress.android.fluxc.model.revisions.Diff
+import org.wordpress.android.fluxc.model.revisions.DiffOperations
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel
 import org.wordpress.android.fluxc.model.revisions.LocalDiffType
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel
