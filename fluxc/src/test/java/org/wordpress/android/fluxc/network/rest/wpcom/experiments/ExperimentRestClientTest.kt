@@ -100,7 +100,7 @@ class ExperimentRestClientTest {
 
         val expectedUrl = "$EXPERIMENTS_ENDPOINT/$DEFAULT_VERSION/assignments/${defaultPlatform.value}/"
         val expectedParams = mapOf(
-                "experiment_names" to "experiment_one, experiment_two, experiment_three",
+                "experiment_names" to "experiment_one,experiment_two,experiment_three",
                 "anon_id" to ""
         )
 

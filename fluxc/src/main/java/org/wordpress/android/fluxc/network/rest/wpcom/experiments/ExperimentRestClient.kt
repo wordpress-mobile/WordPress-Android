@@ -36,7 +36,7 @@ class ExperimentRestClient @Inject constructor(
     ): FetchedAssignmentsPayload {
         val url = WPCOMV2.experiments.version(version).assignments.platform(platform.value).url
         val params = mapOf(
-                "experiment_names" to experimentNames.joinToString(),
+                "experiment_names" to experimentNames.joinToString(","),
                 "anon_id" to anonymousId.orEmpty()
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
