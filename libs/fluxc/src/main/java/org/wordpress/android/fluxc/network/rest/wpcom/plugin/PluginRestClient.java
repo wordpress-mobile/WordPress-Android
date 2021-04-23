@@ -39,11 +39,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton
 public class PluginRestClient extends BaseWPComRestClient {
-    public PluginRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+    @Inject public PluginRestClient(Context appContext, Dispatcher dispatcher,
+                            @Named("regular") RequestQueue requestQueue,
                             AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }

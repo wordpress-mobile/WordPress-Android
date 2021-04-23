@@ -4,8 +4,8 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient.UpdateHomepageResponse
 
 @RunWith(MockitoJUnitRunner::class)
