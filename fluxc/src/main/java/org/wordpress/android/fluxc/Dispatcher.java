@@ -6,13 +6,14 @@ import org.wordpress.android.fluxc.store.Store;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class Dispatcher {
     private final EventBus mBus;
 
-    public Dispatcher() {
+    @Inject public Dispatcher() {
         mBus = EventBus.builder()
                 .logNoSubscriberMessages(true)
                 .sendNoSubscriberEvent(true)

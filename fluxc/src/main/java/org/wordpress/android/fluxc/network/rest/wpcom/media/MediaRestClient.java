@@ -52,6 +52,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import okhttp3.Call;
@@ -86,8 +88,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     // to monitor multiple uploads
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
-    public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                           OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent,
+    @Inject public MediaRestClient(Context appContext,
+                           Dispatcher dispatcher,
+                           @Named("regular") RequestQueue requestQueue,
+                           @Named("regular") OkHttpClient okHttpClient,
+                           AccessToken accessToken,
+                           UserAgent userAgent,
                            MediaResponseUtils mediaResponseUtils) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mOkHttpClient = okHttpClient;

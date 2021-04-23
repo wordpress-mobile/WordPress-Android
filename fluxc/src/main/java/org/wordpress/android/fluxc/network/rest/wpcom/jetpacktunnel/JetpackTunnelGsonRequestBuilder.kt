@@ -14,8 +14,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 @Singleton
-class JetpackTunnelGsonRequestBuilder
-@Inject constructor() {
+class JetpackTunnelGsonRequestBuilder @Inject constructor() {
     /**
      * Creates a new GET request.
      * @param url the request URL
