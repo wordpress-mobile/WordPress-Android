@@ -46,7 +46,7 @@ class FixThreatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `given invalid response, when fix threats is triggered, then RemoteRequestFailure is returned`() = test {
         whenever(scanStore.fixThreats(any())).thenReturn(
-            OnFixThreatsStarted(FixThreatsError(INVALID_RESPONSE), FIX_THREATS)
+                OnFixThreatsStarted(FixThreatsError(INVALID_RESPONSE), FIX_THREATS)
         )
 
         val result = useCase.fixThreats(fakeSiteId, fakeThreatIds)

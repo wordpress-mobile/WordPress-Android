@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/mnu_choose_from_media_library"
-        android:icon="@drawable/ic_my_sites_white_24dp"
+        android:icon="@drawable/ic_wordpress_white_24dp"
         android:title="@string/photo_picker_wordpress_media_library"
         app:showAsAction="ifRoom|collapseActionView"
         app:tint="?attr/wpColorOnSurfaceMedium" />

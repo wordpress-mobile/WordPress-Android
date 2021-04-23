@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-16 09:54:09+0000
+Translation-Revision-Date: 2021-04-16 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Gunakan tombol ikon</string>
+    <string name="gutenberg_native_search_input_field">Kolom input pencarian.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Tombol cari. Teks tombol saat ini adalah</string>
+    <string name="gutenberg_native_search_blocks">Cari blok</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Cari label blok. Teks saat ini adalah</string>
+    <string name="gutenberg_native_search_block">Cari blok</string>
+    <string name="gutenberg_native_outside">Di luar</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Placeholder kustom belum diatur</string>
+    <string name="gutenberg_native_no_button">Tanpa tombol</string>
+    <string name="gutenberg_native_inside">Di dalam</string>
+    <string name="gutenberg_native_hide_search_heading">Sembunyikan judul pencarian</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Ketuk dua kali untuk mengedit teks placeholder</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Ketuk dua kali untuk mengedit teks label</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Ketuk dua kali untuk mengedit teks tombol</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">ketuk dua kali untuk mengubah unit</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Teks placeholder saat ini adalah</string>
+    <string name="gutenberg_native_clear_search">Hapus pencarian</string>
+    <string name="gutenberg_native_cancel_search">Batalkan pencarian</string>
+    <string name="gutenberg_native_button_position">Posisi tombol</string>
+    <string name="gutenberg_native_button_outside">Tombol luar</string>
+    <string name="gutenberg_native_button_inside">Tombol dalam</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s adalah %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Terjadi error saat mengumpulkan data suka</string>
+    <string name="get_likes_unknown_error">Terjadi error yang tidak diketahui saat mengumpulkan suka.</string>
+    <string name="get_likes_no_network_error">Tidak ada jaringan.</string>
+    <string name="comments_empty_list_filtered_unreplied">Tidak ada komentar belum dibalas</string>
+    <string name="comment_status_unreplied">Belum dibalas</string>
+    <string name="gutenberg_native_table_of_contents">Daftar Isi</string>
+    <string name="gutenberg_native_summary">ringkasan</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Rangkum pos Anda dengan daftar heading. Tambahkan anchor HTML ke blok Heading untuk menautkannya ke sini.</string>
+    <string name="gutenberg_native_search_settings">Pengaturan pencarian</string>
+    <string name="gutenberg_native_document_outline">outline dokumen</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
+    <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>
     <string name="reader_title_interests">Ikuti topik</string>
     <string name="stories_intro_main_subtitle">Cara baru untuk membuat dan memposkan konten menarik di situs Anda.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Tutup</string>
@@ -770,7 +805,6 @@ Language: id
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
     <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_gallery_caption_s">Keterangan galeri. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Nilai saat ini %2$s</string>
     <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
     <string name="content_description_person_building_website">Orang membangun situs web</string>
     <string name="post_signup_interstitial_not_right_now">Jangan sekarang</string>
@@ -797,7 +831,6 @@ Language: id
     <string name="enter_credentials_for_site">Login dengan kredensial situs %1$s</string>
     <string name="reader_following_display_name">Mengikuti</string>
     <string name="my_site_bottom_sheet_add_page">Halaman situs</string>
-    <string name="enter_site_credentials_instead">Login dengan kredensial situs.</string>
     <string name="posts_cannot_be_started">Kami saat ini tidak dapat membuka pos. Harap coba lagi nanti</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
@@ -851,7 +884,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Ketuk dua kali untuk memindahkan blok ke atas</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Ketuk dua kali untuk memindahkan blok ke bawah</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Ketuk dua kali untuk menyunting nilai ini</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Ketuk dua kali untuk mengubah nilai menggunakan slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Ketuk dua kali untuk menambahkan blok</string>
     <string name="gutenberg_native_current_value_is_s">Nilai saat ini adalah %s</string>
     <string name="gutenberg_native_choose_from_device">Pilih dari perangkat</string>
@@ -957,7 +989,6 @@ Language: id
     <string name="post_settings_add_to_calendar">Tambahkan ke kalender</string>
     <string name="post_settings_notification">Pemberitahuan</string>
     <string name="post_settings_time_and_date">Tanggal dan Waktu</string>
-    <string name="login_need_help_finding_connected_email">Perlu bantuan untuk menemukan email yang terhubung dengan Anda?</string>
     <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
     <string name="enter_email_for_site">Login dengan WordPress.com untuk terhubung ke %1$s</string>
     <string name="stats_post_views_label">Tampilan</string>
@@ -1135,7 +1166,6 @@ Language: id
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Sunting pos dan halaman baru dengan penyunting blok</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Gunakan Penyunting Blok</string>
     <string name="menu_switch_to_gutenberg_editor">Beralih ke penyunting blok</string>
-    <string name="menu_switch_to_aztec_editor">Beralih ke penyunting klasik</string>
     <string name="exit">keluar</string>
     <string name="quick_start_sites_type_subtitle">%1$d dari %2$d selesai</string>
     <string name="quick_start_sites">Langkah Berikutnya</string>
@@ -1423,14 +1453,12 @@ Language: id
     <string name="comment_read_source_post">Baca pos sumber</string>
     <string name="sites">Situs</string>
     <string name="signup_magic_link_title">Tautan ajaib terkirim</string>
-    <string name="signup_email_screen_title">Pendaftaran email</string>
     <string name="verification_2fa_screen_title">Verifikasi kode</string>
     <string name="selfhosted_site_login_title">Kredensial login</string>
     <string name="magic_link_sent_login_title">Tautan ajaib terkirim</string>
     <string name="magic_link_login_title">Login tautan ajaib</string>
     <string name="site_address_login_title">Login alamat situs</string>
     <string name="email_address_login_title">Login alamat email</string>
-    <string name="alternatively">Atau:</string>
     <string name="reader_empty_saved_posts_description">Ketuk %s untuk menyimpan pos ke dalam daftar Anda.</string>
     <string name="reader_bookmark_snack_title">Pos disimpan</string>
     <string name="reader_bookmark_snack_btn">Lihat Semua</string>
@@ -1467,7 +1495,6 @@ Language: id
     <string name="preference_privacy_settings">Pengaturan privasi</string>
     <string name="preference_collect_information">Kumpulkan informasi</string>
     <string name="post_submitted">Pos telah dikirim</string>
-    <string name="login_email_button_signup">Belum memiliki akun? %1$sDaftar%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Fitur plugin memerlukan situs dalam reputasi yang baik.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Fitur plugin memerlukan langganan domain utama untuk dikaitkan dengan pengguna ini.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Fitur plugin memerlukan hak akses admin.</string>
@@ -1633,11 +1660,8 @@ Language: id
     <string name="username_changer_dismiss_button_positive">Buang</string>
     <string name="username_changer_action">Simpan</string>
     <string name="content_description_add_avatar">Tambahkan avatar</string>
-    <string name="signup_with_google_button">Daftar dengan Google</string>
-    <string name="signup_with_email_button">Daftar dengan Email</string>
     <string name="signup_user_exists">Email sudah ada di WordPress.com.\nLanjutkan dengan login.</string>
     <string name="signup_updating_account">Memperbarui akun…</string>
-    <string name="signup_terms_of_service_text">Dengan mendaftar, berarti Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
     <string name="signup_magic_link_progress">Mengirim email</string>
     <string name="signup_magic_link_error_button_positive">Coba lagi</string>
     <string name="signup_magic_link_error_button_negative">Tutup</string>
@@ -1648,13 +1672,8 @@ Language: id
     <string name="signup_epilogue_error_button_negative">Kembalikan</string>
     <string name="signup_epilogue_error_generic">Ada beberapa masalah saat memperbarui akun. Anda dapat mencoba lagi atau mengembalikan perubahan untuk melanjutkan.</string>
     <string name="signup_epilogue_error_avatar">Ada beberapa masalah saat mengunggah avatar Anda.</string>
-    <string name="signup_email_header">Untuk membuat akun WordPress.com yang baru, masukkan alamat email Anda.</string>
-    <string name="signup_email_error_generic">Ada beberapa masalah saat memeriksa alamat email.</string>
     <string name="signup_magic_link_error">Ada beberapa masalah saat mengirim email. Anda dapat mencoba lagi sekarang atau menutupnya dan mencoba lagi nanti.</string>
     <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan seperti tautan yang baru Anda gunakan, tetapi Anda juga dapat menyiapkan kata sandi.</string>
-    <string name="sign_up">Mendaftar ke WordPress.com</string>
-    <string name="enter_username_instead">Login dengan nama pengguna Anda.</string>
-    <string name="enter_site_address_instead">Login dengan memasukkan alamat situs Anda.</string>
     <string name="plugin_needs_update">Perlu pembaruan</string>
     <string name="plugin_caption_search">Cari Plugin</string>
     <string name="plugin_caption_new">Baru</string>
@@ -1775,7 +1794,6 @@ Language: id
     <string name="login_error_suffix">\nCoba masuk dengan akun lain?</string>
     <string name="login_error_generic">Ada masalah saat menyambungkan ke akun Google.</string>
     <string name="login_error_button">Tutup</string>
-    <string name="login_google_button_suffix">Login dengan Google.</string>
     <string name="enter_wpcom_password_google">Untuk melanjutkan dengan akun Google ini, silakan masukkan kata sandi WordPress.com yang sesuai. Tindakan ini hanya akan ditanyakan satu kali.</string>
     <string name="error_generic_network">Terjadi error jaringan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="post_settings_remove_featured_image">Hapus gambar andalan</string>
@@ -1787,6 +1805,7 @@ Language: id
     <string name="jetpack_disconnect_confirm">Putuskan koneksi</string>
     <string name="jetpack_disconnect_confirmation_message">Apakah Anda yakin ingin memutuskan koneksi Jetpack dari situs?</string>
     <string name="jetpack_disconnect_pref_title">\"Putuskan koneksi dari WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Alamat IP (atau beberapa alamat IP) dapat diberi tanda \"Selalu diizinkan\" agar tidak akan pernah diblokir Jetpack. IPv4 dan IPv6 diterima. Untuk menentukan rentang, masukkan nilai rendah dan nilai tinggi yang dipisahkan oleh tanda hubung. Misalnya: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Memerlukan autentikasi dua langkah</string>
     <string name="jetpack_match_wpcom_via_email_title">Cocokkan akun menggunakan email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Izinkan login WordPress.com</string>
@@ -1867,7 +1886,6 @@ Language: id
     <string name="login_site_address_more_help">Butuh bantuan lebih lanjut?</string>
     <string name="login_site_address_help_content">Alamat situs Anda ditampilkan di bilah bagian atas layar ketika Anda mengunjungi situs di Chrome.</string>
     <string name="login_site_address_help_title">Apa alamat situs saya?</string>
-    <string name="login_site_address_help">Perlu bantuan untuk menemukan alamat situs Anda?</string>
     <string name="login_site_address">Alamat situs</string>
     <string name="enter_site_address">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
     <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
@@ -1879,7 +1897,6 @@ Language: id
     <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
     <string name="login_text_otp">Kirimi saya kode saja</string>
     <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi dari aplikasi Pengautentikasi.</string>
-    <string name="open_mail">Buka email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
@@ -2136,7 +2153,6 @@ Language: id
     <string name="invite_message_title">Pesan khusus</string>
     <string name="invite">Undang</string>
     <string name="invite_names_title">Nama pengguna atau email</string>
-    <string name="send_link">Kirim tautan</string>
     <string name="my_site_header_external">Eksternal</string>
     <string name="invite_people">Undang Orang-orang</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
@@ -2162,7 +2178,6 @@ Language: id
     <string name="checking_email">Memeriksa surat elektronik</string>
     <string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
     <string name="logging_in">Proses masuk</string>
-    <string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
     <string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
     <string name="capture_or_pick_photo">Ambil atau pilih foto</string>
     <string name="export_your_content_message">Pos, halaman, dan pengaturan Anda akan dikirimkan melalui email kepada Anda pada %s.</string>
@@ -2283,6 +2298,7 @@ Language: id
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>
     <string name="site_settings_paging_dialog_header">Komentar per halaman</string>
     <string name="site_settings_close_after_dialog_title">Tutup komentar</string>
+    <string name="site_settings_denylist_description">Ketika sebuah komentar memuat kata-kata ini di dalam konten, nama, URL, email, atau IP-nya, maka akan ditandai sebagai spam. Anda dapat memasukkan sebagian kata, sehingga \"press\" akan cocok dengan \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Masukkan kata atau kalimat</string>
     <string name="site_settings_list_editor_no_items_text">Tidak ada item</string>
@@ -2541,7 +2557,6 @@ Language: id
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
-    <string name="forgot_password">Lupa kata sandi Anda?</string>
     <string name="no_network_message">Tidak ada jaringan yang tersedia</string>
     <string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
     <string name="gallery_error">Item media gagal diambil</string>

@@ -3,16 +3,15 @@ package org.wordpress.android.ui.jetpack.scan.details
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.toolbar_main.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ThreatDetailsActivityBinding
 
 class ThreatDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.threat_details_activity)
-
-        setSupportActionBar(toolbar_main)
+        with(ThreatDetailsActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

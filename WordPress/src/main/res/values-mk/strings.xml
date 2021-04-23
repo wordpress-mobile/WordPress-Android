@@ -55,7 +55,6 @@ Language: mk
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Закажи</string>
     <string name="help">Помош</string>
-    <string name="forgot_password">Ја изгубивте Вашата лозинка?</string>
     <string name="ssl_certificate_error">Невалиден SSl сертификат</string>
     <string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
     <string name="mnu_comment_unspam">Не е спам</string>

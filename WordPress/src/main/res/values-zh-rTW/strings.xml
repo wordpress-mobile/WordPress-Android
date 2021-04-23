@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-16 09:54:10+0000
+Translation-Revision-Date: 2021-04-16 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
+    <string name="gutenberg_native_search_input_field">搜尋意見回饋欄位。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">搜尋按鈕。 目前的按鈕文字是</string>
+    <string name="gutenberg_native_search_blocks">搜尋區塊</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">搜尋區塊標籤。 目前的文字是</string>
+    <string name="gutenberg_native_search_block">搜尋區塊</string>
+    <string name="gutenberg_native_outside">外部</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">未設定自訂預留位置</string>
+    <string name="gutenberg_native_no_button">沒有按鈕</string>
+    <string name="gutenberg_native_inside">內部</string>
+    <string name="gutenberg_native_hide_search_heading">隱藏搜尋標題</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">按兩下以編輯預留位置文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">按兩下以變更單位</string>
+    <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
+    <string name="gutenberg_native_clear_search">清除搜尋</string>
+    <string name="gutenberg_native_cancel_search">取消搜尋</string>
+    <string name="gutenberg_native_button_position">按鈕位置</string>
+    <string name="gutenberg_native_button_outside">按鈕外部</string>
+    <string name="gutenberg_native_button_inside">按鈕內部</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s。%2$s 是 %3$s %4$s。</string>
+    <string name="get_likes_empty_state_title">取得按讚資料時發生錯誤</string>
+    <string name="get_likes_unknown_error">獲得「讚」時發生未知的錯誤。</string>
+    <string name="get_likes_no_network_error">沒有可用的網路。</string>
+    <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
+    <string name="comment_status_unreplied">尚未回覆</string>
+    <string name="gutenberg_native_table_of_contents">目錄</string>
+    <string name="gutenberg_native_summary">摘要</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">列出標題以呈現文章摘要。 將 HTML 錨點新增至標題區塊，藉此連結相應文章內容。</string>
+    <string name="gutenberg_native_document_outline">文件大綱</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
+    <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
     <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
@@ -766,7 +800,6 @@ Language: zh_TW
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
     <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。目前的值是 %2$s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
     <string name="post_signup_interstitial_not_right_now">現在不用</string>
@@ -790,7 +823,6 @@ Language: zh_TW
     <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b>HTTP 驗證&lt;/b>，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_xmlrpc">無法存取你網站上的 &lt;b>XMLRPC 檔案&lt;/b>。你必須聯絡主機商以解決此問題。</string>
     <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">請使用網站憑證登入。</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
     <string name="reader_following_display_name">關注中</string>
@@ -847,7 +879,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_move_the_block_up">按兩下將區塊向上移</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">按兩下將區塊向下移</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">按兩下以編輯此數值</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">按兩下以使用滑桿變更數值</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">按兩下以新增區塊</string>
     <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
     <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
@@ -861,6 +892,7 @@ Language: zh_TW
     <string name="reader_empty_saved_posts_content_description">點選「新增至儲存文章」按鈕即可將文章儲存至你的清單。</string>
     <string name="reader_acessibility_list_loaded">「此清單已載入 %1$d 個項目。」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
+    <string name="notifications_tab_dialog_main_off_message">若關閉此網站的「通知」功能，將會停用網站通知分頁的通知顯示。 你可以開啟網站的「通知」功能，進一步調整想查看的通知類型。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -953,7 +985,6 @@ Language: zh_TW
     <string name="post_settings_add_to_calendar">新增到行事曆</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日期和時間</string>
-    <string name="login_need_help_finding_connected_email">需要協助找出你連結的電子郵件嗎？</string>
     <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
     <string name="enter_email_for_site">透過 WordPress.com 登入以連結至 %1$s</string>
     <string name="stats_post_views_label">瀏覽次數</string>
@@ -1408,14 +1439,12 @@ Language: zh_TW
     <string name="comment_read_source_post">參閱原始文章</string>
     <string name="sites">網站</string>
     <string name="signup_magic_link_title">神奇連結已傳送</string>
-    <string name="signup_email_screen_title">電子郵件註冊</string>
     <string name="verification_2fa_screen_title">代碼驗證</string>
     <string name="selfhosted_site_login_title">登入憑證</string>
     <string name="magic_link_sent_login_title">神奇連結已傳送</string>
     <string name="magic_link_login_title">神奇連結登入</string>
     <string name="site_address_login_title">網站位址登入</string>
     <string name="email_address_login_title">電子郵件地址登入</string>
-    <string name="alternatively">替代作法：</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
     <string name="reader_empty_saved_posts_title">尚未儲存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
@@ -1452,7 +1481,6 @@ Language: zh_TW
     <string name="preference_privacy_settings">隱私權設定</string>
     <string name="preference_collect_information">收集資訊</string>
     <string name="post_submitted">文章已提交。</string>
-    <string name="login_email_button_signup">還沒有帳號？%1$s註冊%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">外掛功能需要該網站具有良好聲譽。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">外掛功能需要主要網域訂閱與此名使用者相關聯。</string>
     <string name="plugin_install_site_ineligible_non_admin_user">外掛功能需要管理員權限。</string>
@@ -1615,11 +1643,8 @@ Language: zh_TW
     <string name="username_changer_dismiss_button_positive">放棄</string>
     <string name="username_changer_action">儲存</string>
     <string name="content_description_add_avatar">新增大頭貼</string>
-    <string name="signup_with_google_button">透過 Google 註冊</string>
-    <string name="signup_with_email_button">透過電子郵件註冊</string>
     <string name="signup_user_exists">電子郵件已存在於 WordPress.com。\n繼續登入。</string>
     <string name="signup_updating_account">正在更新帳號……</string>
-    <string name="signup_terms_of_service_text">註冊即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_magic_link_progress">正在傳送電子郵件</string>
     <string name="signup_magic_link_error_button_positive">重試</string>
     <string name="signup_magic_link_error_button_negative">關閉</string>
@@ -1632,11 +1657,6 @@ Language: zh_TW
     <string name="signup_epilogue_error_button_negative">還原</string>
     <string name="signup_epilogue_error_generic">更新你的帳號時發生錯誤。你可以重試或還原變更並繼續。</string>
     <string name="signup_epilogue_error_avatar">上傳你的大頭貼時發生錯誤。</string>
-    <string name="signup_email_header">若要建立新的 WordPress.com 帳號，請輸入你的電子郵件地址。</string>
-    <string name="signup_email_error_generic">檢查電子郵件地址時發生錯誤。</string>
-    <string name="sign_up">註冊 WordPress.com</string>
-    <string name="enter_username_instead">用你的使用者名稱登入。</string>
-    <string name="enter_site_address_instead">藉由輸入你的網站位址來登入。</string>
     <string name="plugin_needs_update">需要更新</string>
     <string name="plugin_caption_search">搜尋外掛程式</string>
     <string name="plugin_caption_new">新增</string>
@@ -1757,7 +1777,6 @@ Language: zh_TW
     <string name="login_error_suffix">\n要嘗試其他帳號嗎？</string>
     <string name="login_error_generic">連線 Google 帳號時發生一些問題。</string>
     <string name="login_error_button">關閉</string>
-    <string name="login_google_button_suffix">透過 Google 登入。</string>
     <string name="enter_wpcom_password_google">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
     <string name="post_settings_remove_featured_image">移除特色圖片</string>
@@ -1769,6 +1788,7 @@ Language: zh_TW
     <string name="jetpack_disconnect_confirm">中斷連線</string>
     <string name="jetpack_disconnect_confirmation_message">確定要中斷網站與 Jetpack 的連線？</string>
     <string name="jetpack_disconnect_pref_title">「中斷與 WordPress.com 的連線」</string>
+    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要雙步驟驗證</string>
     <string name="jetpack_match_wpcom_via_email_title">使用電子郵件地址比對帳號</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允許登入 WordPress.com</string>
@@ -1812,6 +1832,8 @@ Language: zh_TW
     <string name="notification_settings_category_other">其他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">我所有的網站</string>
     <string name="notification_settings_category_your_sites">你的網站</string>
+    <string name="notification_settings_main_off_message">關閉「通知設定」將停用此應用程式的所有通知，無論類型為何。 開啟「通知設定」之後，你可以調整接收的通知類型。</string>
+    <string name="notification_settings_main_hint_off">啟用通知</string>
     <string name="max_video_resolution">影片大小上限</string>
     <string name="max_thumbnail_px_size">圖片大小上限</string>
     <string name="error_upload_post_media_param">於此文章中上傳媒體時發生錯誤：%s.</string>
@@ -1848,7 +1870,6 @@ Language: zh_TW
     <string name="login_site_address_more_help">需要更多協助嗎？</string>
     <string name="login_site_address_help_content">當你使用 Chrome 造訪自己的網站時，網站位址會顯示在畫面上方的網址列中。</string>
     <string name="login_site_address_help_title">我的網站位址是？</string>
-    <string name="login_site_address_help">需要幫你找網站位址嗎？</string>
     <string name="login_site_address">網站位址</string>
     <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
     <string name="login_continue">繼續</string>
@@ -1858,7 +1879,6 @@ Language: zh_TW
     <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
     <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
     <string name="enter_verification_code">快完成了！請輸入驗證器應用程式上的驗證碼。</string>
-    <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
     <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>
@@ -2114,7 +2134,6 @@ Language: zh_TW
     <string name="invite">邀請</string>
     <string name="invite_people">邀請他人</string>
     <string name="my_site_header_external">外部</string>
-    <string name="send_link">傳送連結</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
     <string name="reader_empty_search_description">在你的語言中找不到與 %s 相關的結果</string>
@@ -2138,7 +2157,6 @@ Language: zh_TW
     <string name="checking_email">正在檢查電子郵件</string>
     <string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
     <string name="logging_in">正在登入</string>
-    <string name="enter_your_password_instead">改為輸入你的密碼</string>
     <string name="web_address_dialog_hint">當你留言時公開顯示。</string>
     <string name="capture_or_pick_photo">拍攝或選取照片</string>
     <string name="plans">方案</string>
@@ -2256,6 +2274,7 @@ Language: zh_TW
     <string name="site_settings_paging_dialog_description">將留言串分為數頁。</string>
     <string name="site_settings_paging_dialog_header">每頁留言數</string>
     <string name="site_settings_close_after_dialog_title">關閉留言功能</string>
+    <string name="site_settings_denylist_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被標記為垃圾留言。 你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_hold_for_moderation_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被送進審核清單。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
     <string name="site_settings_list_editor_input_hint">輸入字詞或片語</string>
     <string name="site_settings_list_editor_no_items_text">無項目</string>
@@ -2272,6 +2291,7 @@ Language: zh_TW
     <string name="site_settings_rp_switch_title">顯示相關文章</string>
     <string name="site_settings_moderation_hold_hint">與篩選條件相符的留言將被送進審核清單</string>
     <string name="site_settings_multiple_links_hint">忽略已知使用者的連結限制</string>
+    <string name="site_settings_allowlist_hint">須有留言經核准的記錄，才可發表留言</string>
     <string name="site_settings_user_account_required_hint">已註冊且登入的使用者才可以發表留言</string>
     <string name="site_settings_identity_required_hint">輸入名稱和電子郵件後才可以發表留言</string>
     <string name="site_settings_paging_hint">按照指定的區塊大小顯示留言</string>
@@ -2511,7 +2531,6 @@ Language: zh_TW
     <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
-    <string name="forgot_password">忘記密碼？</string>
     <string name="help">說明</string>
     <string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
     <string name="email_invalid">輸入有效的電子郵件地址</string>

@@ -7,13 +7,10 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
@@ -24,6 +21,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
 
@@ -31,40 +29,53 @@ import javax.inject.Inject
 class ThreatDetailsListItemsBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val threatItemBuilder: ThreatItemBuilder,
-    private val dateFormatWrapper: DateFormatWrapper
+    private val dateFormatWrapper: DateFormatWrapper,
+    private val resourceProvider: ResourceProvider
 ) {
+    @Suppress("LongParameterList")
     fun buildThreatDetailsListItems(
         threatModel: ThreatModel,
+        scanStateHasValidCredentials: Boolean,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
-        onIgnoreThreatButtonClicked: () -> Unit
-    ) = mutableListOf<JetpackListItemState>().apply {
+        onIgnoreThreatButtonClicked: () -> Unit,
+        onEnterServerCredsMessageClicked: () -> Unit
+    ): List<JetpackListItemState> = mutableListOf<JetpackListItemState>().apply {
         addAll(buildBasicThreatDetailsListItems(threatModel))
         addAll(buildTechnicalDetailsListItems(threatModel))
         addAll(buildFixDetailsListItems(threatModel))
         addAll(
-            buildActionButtons(
-                threatModel,
-                onFixThreatButtonClicked,
-                onGetFreeEstimateButtonClicked,
-                onIgnoreThreatButtonClicked
-            )
+                buildActionButtons(
+                        threatModel,
+                        scanStateHasValidCredentials,
+                        onFixThreatButtonClicked,
+                        onGetFreeEstimateButtonClicked,
+                        onIgnoreThreatButtonClicked
+                )
         )
+        if (shouldShowEnterServerCredsMessage(scanStateHasValidCredentials, threatModel)) {
+            add(buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked))
+        }
     }.toList()
 
+    private fun shouldShowEnterServerCredsMessage(hasValidCredentials: Boolean, threatModel: ThreatModel) =
+            !hasValidCredentials &&
+                    threatModel.baseThreatModel.fixable != null &&
+                    threatModel.baseThreatModel.status != ThreatStatus.FIXED
+
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
-        mutableListOf<JetpackListItemState>().apply {
-            add(buildThreatDetailHeader(threatModel))
-            // show both Fixed and Found rows for threats in Fixed state
-            if (threatModel.baseThreatModel.status == FIXED) {
-                add(buildThreatFoundHeaderItem())
-                add(buildThreatFoundDateSubHeaderItem(threatModel))
+            mutableListOf<JetpackListItemState>().apply {
+                add(buildThreatDetailHeader(threatModel))
+                // show both Fixed and Found rows for threats in Fixed state
+                if (threatModel.baseThreatModel.status == ThreatStatus.FIXED) {
+                    add(buildThreatFoundHeaderItem())
+                    add(buildThreatFoundDateSubHeaderItem(threatModel))
+                }
+                add(buildThreatHeaderItem(threatModel))
+                add(buildThreatSubHeaderItem(threatModel))
+                add(buildProblemHeaderItem())
+                add(buildProblemDescriptionItem(threatModel))
             }
-            add(buildThreatHeaderItem(threatModel))
-            add(buildThreatSubHeaderItem(threatModel))
-            add(buildProblemHeaderItem())
-            add(buildProblemDescriptionItem(threatModel))
-        }
 
     private fun buildTechnicalDetailsListItems(threatModel: ThreatModel): List<JetpackListItemState> {
         var fileName: String? = null
@@ -113,36 +124,42 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
     private fun buildActionButtons(
         threatModel: ThreatModel,
+        hasValidCredentials: Boolean,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
         onIgnoreThreatButtonClicked: () -> Unit
     ) = mutableListOf<JetpackListItemState>().apply {
-        with(threatModel.baseThreatModel) {
-            val isFixable = fixable != null
-            if (status != ThreatStatus.FIXED) {
-                if (isFixable) {
-                    add(buildFixThreatButtonAction(onFixThreatButtonClicked))
-                } else {
-                    add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
-                }
+        val isFixable = threatModel.baseThreatModel.fixable != null
+        if (threatModel.baseThreatModel.status != ThreatStatus.FIXED) {
+            if (isFixable) {
+                add(
+                        buildFixThreatButtonAction(
+                                onFixThreatButtonClicked = onFixThreatButtonClicked,
+                                isEnabled = hasValidCredentials
+                        )
+                )
+            } else {
+                add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
             }
-            if (status == ThreatStatus.CURRENT) {
-                add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
-            }
+        }
+        if (threatModel.baseThreatModel.status == ThreatStatus.CURRENT) {
+            add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
         }
     }
 
     private fun buildThreatDetailHeader(threatModel: ThreatModel) = ThreatDetailHeaderState(
-        icon = threatItemBuilder.buildThreatItemIcon(threatModel),
-        iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
-        header = when (threatModel.baseThreatModel.status) {
-            FIXED -> UiStringRes(R.string.threat_status_fixed)
-            IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
-        },
-        description = when (threatModel.baseThreatModel.status) {
-            FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
-            IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
-        }
+            icon = threatItemBuilder.buildThreatItemIcon(threatModel),
+            iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
+            header = when (threatModel.baseThreatModel.status) {
+                ThreatStatus.FIXED -> UiStringRes(R.string.threat_status_fixed)
+                ThreatStatus.IGNORED, ThreatStatus.CURRENT, ThreatStatus.UNKNOWN ->
+                    UiStringRes(R.string.threat_found_header)
+            },
+            description = when (threatModel.baseThreatModel.status) {
+                ThreatStatus.FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
+                ThreatStatus.IGNORED, ThreatStatus.CURRENT, ThreatStatus.UNKNOWN ->
+                    getThreatFoundString(threatModel.baseThreatModel.firstDetected)
+            }
     )
 
     private fun buildThreatFoundHeaderItem() = HeaderState(text = UiStringRes(R.string.threat_found_header))
@@ -159,16 +176,16 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     }
 
     private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
-        text = threatItemBuilder.buildThreatItemHeader(threatModel)
+            text = threatItemBuilder.buildThreatItemHeader(threatModel)
     )
 
     private fun buildThreatSubHeaderItem(threatModel: ThreatModel) =
-        DescriptionState(threatItemBuilder.buildThreatItemDescription(threatModel))
+            DescriptionState(threatItemBuilder.buildThreatItemDescription(threatModel))
 
     private fun buildProblemHeaderItem() = HeaderState(UiStringRes(R.string.threat_problem_header))
 
     private fun buildProblemDescriptionItem(threatModel: ThreatModel) =
-        DescriptionState(UiStringText(threatModel.baseThreatModel.description))
+            DescriptionState(UiStringText(threatModel.baseThreatModel.description))
 
     private fun buildTechnicalDetailsHeaderItem() = HeaderState(UiStringRes(R.string.threat_technical_details_header))
 
@@ -177,7 +194,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildFileName(fileName: String) = ThreatFileNameState(UiStringText(fileName))
 
     private fun buildThreatContextLines(context: ThreatContext) =
-        ThreatContextLinesItemState(lines = context.lines.map { buildThreatContextLine(it) })
+            ThreatContextLinesItemState(lines = context.lines.map { buildThreatContextLine(it) })
 
     private fun buildThreatContextLine(
         line: ThreatContext.ContextLine
@@ -193,71 +210,91 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         } else R.color.on_surface_emphasis_lowest
 
         return ThreatContextLinesItemState.ThreatContextLineItemState(
-            line = line,
-            lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
-            contentBackgroundColorRes = contentBackgroundColorRes,
-            highlightedBackgroundColorRes = R.color.red_60,
-            highlightedTextColorRes = R.color.white
+                line = line,
+                lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
+                contentBackgroundColorRes = contentBackgroundColorRes,
+                highlightedBackgroundColorRes = R.color.red_60,
+                highlightedTextColorRes = R.color.white
         )
     }
 
     private fun buildDiff(diff: String) = DescriptionState(UiStringText(diff)) // TODO: ashiagr custom diff view?
 
     private fun buildFixTitleHeader(status: ThreatStatus, fixable: Fixable?) = HeaderState(
-        UiStringRes(
-            when (status) {
-                ThreatStatus.FIXED -> R.string.threat_fix_fixed_header
+            UiStringRes(
+                    when (status) {
+                        ThreatStatus.FIXED -> R.string.threat_fix_fixed_header
 
-                ThreatStatus.CURRENT ->
-                    fixable?.let { R.string.threat_fix_current_fixable_header }
-                        ?: R.string.threat_fix_current_not_fixable_header
+                        ThreatStatus.CURRENT ->
+                            fixable?.let { R.string.threat_fix_current_fixable_header }
+                                    ?: R.string.threat_fix_current_not_fixable_header
 
-                ThreatStatus.IGNORED, ThreatStatus.UNKNOWN -> R.string.threat_fix_default_header
-            }
-        )
+                        ThreatStatus.IGNORED, ThreatStatus.UNKNOWN -> R.string.threat_fix_default_header
+                    }
+            )
     )
 
     private fun buildFixDescription(fixable: Fixable?) = fixable?.let { buildFixableThreatDescription(it) }
-        ?: buildNotFixableThreatDescription()
+            ?: buildNotFixableThreatDescription()
 
     fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
-        when (fixable.fixer) {
-            FixType.REPLACE -> UiStringRes(R.string.threat_fix_fixable_replace)
+            when (fixable.fixer) {
+                FixType.REPLACE -> UiStringRes(R.string.threat_fix_fixable_replace)
 
-            FixType.DELETE -> UiStringRes(R.string.threat_fix_fixable_delete)
+                FixType.DELETE -> UiStringRes(R.string.threat_fix_fixable_delete)
 
-            FixType.UPDATE -> fixable.target?.let {
-                UiStringResWithParams(R.string.threat_fix_fixable_update, listOf(UiStringText(it)))
-            } ?: UiStringRes(R.string.threat_fix_fixable_default)
+                FixType.UPDATE -> fixable.target?.let {
+                    UiStringResWithParams(R.string.threat_fix_fixable_update, listOf(UiStringText(it)))
+                } ?: UiStringRes(R.string.threat_fix_fixable_default)
 
-            FixType.EDIT -> UiStringRes(R.string.threat_fix_fixable_edit)
+                FixType.EDIT -> UiStringRes(R.string.threat_fix_fixable_edit)
 
-            FixType.UNKNOWN -> UiStringRes(R.string.threat_fix_fixable_default)
-        }
+                FixType.UNKNOWN -> UiStringRes(R.string.threat_fix_fixable_default)
+            }
     )
 
     private fun buildNotFixableThreatDescription() = DescriptionState(
-        UiStringText(
-            htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
-        )
+            UiStringText(
+                    htmlMessageUtils
+                            .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
+            )
     )
 
-    private fun buildFixThreatButtonAction(onFixThreatButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threat_fix),
-        onClick = onFixThreatButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_fix)
+    private fun buildFixThreatButtonAction(
+        onFixThreatButtonClicked: () -> Unit,
+        isEnabled: Boolean = true
+    ) = ActionButtonState(
+            text = UiStringRes(R.string.threat_fix),
+            onClick = onFixThreatButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_fix),
+            isEnabled = isEnabled
     )
 
     private fun buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threat_get_free_estimate),
-        onClick = onGetFreeEstimateButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_get_free_estimate)
+            text = UiStringRes(R.string.threat_get_free_estimate),
+            onClick = onGetFreeEstimateButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_get_free_estimate)
     )
 
     private fun buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threat_ignore),
-        onClick = onIgnoreThreatButtonClicked,
-        contentDescription = UiStringRes(R.string.threat_ignore),
-        isSecondary = true
+            text = UiStringRes(R.string.threat_ignore),
+            onClick = onIgnoreThreatButtonClicked,
+            contentDescription = UiStringRes(R.string.threat_ignore),
+            isSecondary = true
     )
+
+    private fun buildEnterServerCredsMessageState(onEnterServerCredsMessageClicked: () -> Unit): DescriptionState {
+        val messageResId = R.string.threat_fix_enter_server_creds_message_singular
+        val clickableText = resourceProvider.getString(messageResId)
+
+        val clickableTextsInfo = listOf(
+                ClickableTextInfo(
+                        startIndex = 0,
+                        endIndex = clickableText.length,
+                        onClick = onEnterServerCredsMessageClicked
+                )
+        )
+
+        return DescriptionState(text = UiStringRes(messageResId), clickableTextsInfo = clickableTextsInfo)
+    }
 }

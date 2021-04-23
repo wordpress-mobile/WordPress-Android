@@ -1,159 +1,48 @@
-<ar>
-16.9:
-ما الجديد؟
-
-لن يتوفر المحرر التقليدي Classic Editor قريبًا لإنشاء مقالات جديدة. ستظل قادرًا على تحرير مقالاتك وصفحاتك الحالية في المحرر التقليدي. ولكننا نوصي بالتبديل إلى محرر المكوّنات الآن.
-
-تم إعادة تصميم أداة البدء السريع الخاصة بنا! يظهر هذا الدليل عند إنشاء موقع جديد.
-
-لقد أجرينا أيضًا تحسينات على تجربة تصميم الموقع.
-</ar>
-<de-DE>
-16.9:
-Was gibt's Neues?
-
-Der klassische Editor wird schon bald nicht mehr zum Erstellen neuer Beiträge verfügbar sein. Du kannst deine bestehenden Beiträge und Seiten weiterhin im klassischen Editor bearbeiten, doch wir würden dir empfehlen, jetzt zum neuen Block-Editor zu wechseln. 
- 
- Unser Schnellstart-Tool hat ein neues Design bekommen! Dieser Leitfaden wird angezeigt, wenn du eine neue Website erstellst. 
- 
- Außerdem haben wir Verbesserungen am Website-Design-Erlebnis vorgenommen. 
-</de-DE>
 <en-US>
-16.9:
+17.1:
 What’s new?
 
-The classic editor will soon be unavailable for creating new posts. You will still be able to edit your existing posts and pages in the classic editor, but we recommend that you switch to the block editor now.
+We improved accessibility in the block editor for those who use a TalkBack screen reader.
 
-Our Quick Start tool has been redesigned! This guide appears when you create a new site.
+To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
 
-We’ve also made improvements to the site design experience.
+You may have noticed the new color palette! We also updated your app icon to match.
 </en-US>
 <es-ES>
-16.9:
+17.1:
 ¿Qué hay de nuevo?
 
-El editor clásico pronto no estará disponible para crear nuevas entradas. Continuarás pudiendo editar tus entradas y páginas existentes en el editor clásico, pero te recomendamos que cambies ahora al editor de bloques.
+Hemos mejorado la accesibilidad en el editor de bloques para aquellos que usan un lector de pantalla TalkBack.
 
-¡Nuestra herramienta de inicio rápido ha sido rediseñada! Esta guía aparece cuando creas un nuevo sitio.
+Para ayudarte a gestionar los comentarios en tu sitio, ahora hay un filtro «Sin respuesta» para que puedas ver los comentarios sin respuesta en un solo lugar.
 
-También hemos hecho mejoras en el diseño de la experiencia del sitio.
+¡Quizá hayas notado la nueva paleta de color! También hemos actualizado el icono de tu aplicación para que haga juego.
 </es-ES>
-<fr-CA>
-16.9 :
-Nouveautés
+<nl-NL>
+17.1:
+Wat is er nieuw?
 
-L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
- 
- Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
- 
- Nous avons également amélioré l’expérience de design du site. 
-</fr-CA>
-<fr-FR>
-16.9 :
-Nouveautés
+We hebben de toegankelijkheid in de blokeditor verbeterd voor degenen die een TalkBack-schermlezer gebruiken.
 
-L’éditeur classique ne sera bientôt plus disponible pour créer de nouveaux articles. Vous pourrez toujours modifier vos articles et pages existants dans l’éditeur classique, mais nous vous recommandons de passer à l’éditeur de blocs maintenant. 
- 
- Notre outil Démarrage rapide a été repensé ! Ce guide apparaît lorsque vous créez un nouveau site. 
- 
- Nous avons également amélioré l’expérience de design du site. 
-</fr-FR>
-<iw-IL>
-16.9:
-מה חדש?
+Om je te helpen bij het beheren van reacties op je site, is er nu een filter 'Niet beantwoord', zodat je niet-beantwoorde reacties op één plek kunt bekijken.
 
-בקרוב, העורך הקלאסי לא יהיה זמין ליצירה של פוסטים חדשים. עדיין תהיה לך אפשרות לערוך פוסטים ועמודים קיימים בעורך הקלאסי אבל אנחנו ממליצים לעבור לעורך הבלוקים כעת. 
- 
- עיצבנו מחדש את הכלי להתחלה מהירה! המדריך מופיע כאשר יוצרים אתר חדש. 
- 
- בנוסף, שיפרנו את חוויית העיצוב של האתר. 
-</iw-IL>
-<id>
-16.9:
-Apa yang baru?
-
-Dalam waktu dekat editor klasik tidak akan tersedia lagi untuk pembuatan pos baru. Anda tetap dapat menggunakan editor klasik untuk menyunting pos dan halaman yang sudah ada tetapi kami menyarankan agar Anda segera beralih ke editor blok. 
- 
- Alat Mulai Cepat kami punya desain baru! Panduan ini akan muncul saat Anda membuat situs baru. 
- 
- Kami juga telah melakukan peningkatan untuk pengalaman mendesain situs. 
-</id>
-<it-IT>
-16.9:
-Cosa c'è di nuovo?
-
-L'editor classico presto non sarà più disponibile per la creazione di nuovi articoli. Potrai ancora modificare gli articoli e le pagine esistenti nell'editor classico, ma ti consigliamo di passare ora all'editor a blocchi. 
- 
- Il nostro strumento per la sessione di orientamento è stato riprogettato. Questa guida verrà visualizzata quando crei un nuovo sito. 
- 
- Abbiamo anche apportato miglioramenti all'esperienza di progettazione del sito. 
-</it-IT>
-<ja-JP>
-16.9:
-新着情報
-
-間もなく旧エディターでは新規の投稿を作成できなくなります。 既存の投稿やページは引き続き旧エディターでも編集できますが、これを機にブロックエディターに移行することを推奨をしました。 
- 
- クイックスタートツールのデザインを変更しました。 このガイドは新しいサイトを作成するとき表示されます。 
- 
- サイトデザインの使用環境も改善しました。 
-</ja-JP>
-<ko-KR>
-16.9:
-새로운 기능
-
-구 버전 편집기는 곧 새 글 작성에 사용할 수 없게 됩니다. 구 버전 편집기에서 기존 글과 페이지는 계속 편집할 수 있지만, 지금 블록 편집기로 전환하는 것이 좋습니다. 
- 
- 퀵 스타트 도구를 새롭게 디자인했습니다! 이 가이드는 새 사이트를 만들 때 표시됩니다. 
- 
- 사이트 디자인 환경에도 개선 사항을 적용했습니다. 
-</ko-KR>
+Misschien heb je het nieuwe kleurenpalet opgemerkt! We hebben ook je app-pictogram geüpdatet om overeen te komen.
+</nl-NL>
 <ru-RU>
-16.9:
+17.1:
+Что нового:
 
-Классический редактор скоро станет недоступен для создания новых записей, но это не повлияет на редактирование ваших существующих сообщений и страниц. Мы рекомендуем вам переключиться на редактор блоков, если вы еще этого не сделали.
+Мы улучшили доступность в редакторе блоков для тех, кто использует программу чтения с экрана TalkBack.
 
-Наш инструмент быстрого старта был переработан! Он используется при создании нового сайта.
+Чтобы помочь вам управлять комментариями на своем сайте, теперь есть фильтр «Без ответа», чтобы вы могли просматривать комментарии, на которые не ответили, в одном месте.
 
-Мы также улучшили процесс оформления сайта.
+Возможно, вы заметили новую цветовую палитру! Мы также обновили и значок приложения, чтобы он соответствовал ей.
 </ru-RU>
-<sv-SE>
-16.9:
-Nytt
-
-Snart går det inte att använda den klassiska redigeraren för nya inlägg. Du kommer fortfarande att kunna redigera befintliga inlägg och sidor i den, men vi rekommenderar att du växlar över till blockredigeraren nu.
-
-Vårt snabbstartsverktyg har fått ny design! Den guiden visas när du skapar en ny webbplats.
-
-Vi har även förbättrat tillvägagångssättet för design av webbplatsen.
-</sv-SE>
-<tr-TR>
-16.9:
-Yenilikler
-
-Yakında, yeni yayınlar oluşturmak için artık klasik düzenleyici kullanamayacaksınız. Klasik düzenleyicide mevcut yayınlarınızı ve sayfalarınızı yine de düzenleyebilirsiniz, ancak blok düzenleyiciye geçmenizi öneririz. 
- 
- Hızlı Başlangıç aracımız yeniden tasarlandı. Bu kılavuz, yeni bir site oluşturduğunuzda görünür. 
- 
- Ayrıca site tasarımı deneyiminde de iyileştirmeler yaptık. 
-</tr-TR>
 <zh-CN>
-16.9：
-最新功能
+17.1:
+我们对使用TalkBack屏幕阅读器的用户改进了其在区块编辑器中的无障碍。
 
-经典编辑器很快将无法用于撰写新文章，但这不会影响编辑现有的文章和页面。如果尚未切换到区块编辑器，建议您切换到区块编辑器。
+为了有助于您更加方便的管理您站点上的评论，我们添加了一个 “未回复 ”选项，使您可以在一个位置查看所有未回复的评论。
 
-我们已重新设计快速启动工具！创建新网站时会显示本指南。
-
-我们还改进了网站设计体验。
+您可能已经注意到了新的调色板！我们也更新了应用程序的图标以使其相匹配。
 </zh-CN>
-<zh-TW>
-16.9：
-有哪些最新內容？
-
-近期內即可使用傳統編輯器建立新文章。 屆時你仍可在傳統編輯器中編輯現有的文章和頁面，但我們建議你現在切換至區塊編輯器。 
- 
- 我們的快速入門工具經過重新改版！ 此指南會在你建立新網站時顯示。 
- 
- 我們也改善了網站設計體驗。 
-</zh-TW>

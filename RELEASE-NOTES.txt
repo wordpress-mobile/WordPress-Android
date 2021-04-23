@@ -1,8 +1,26 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.3
+-----
+* [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
+
+
+17.2
+-----
+* [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
+* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
+* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
+* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
+* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
+
 17.1
 -----
-
+* [**] Comments: added an Unreplied comments filter [https://github.com/wordpress-mobile/WordPress-Android/pull/14373]
+* [***] Block Editor: Improved the accessibility of range and step-type block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3255]
+* [**] Updated the app icon to match the new color scheme within the app. [#14391]
+* [**] Colors: Replaced pink with blue as the accent color of the app [https://github.com/wordpress-mobile/WordPress-Android/pull/14376]
+* [*] Colors: Updated color palette to 2.5.0 [https://github.com/wordpress-mobile/WordPress-Android/pull/14370]
+* [*] Colors: Replaced wordpress_blue with blue color [https://github.com/wordpress-mobile/WordPress-Android/pull/14369]
 
 17.0
 -----

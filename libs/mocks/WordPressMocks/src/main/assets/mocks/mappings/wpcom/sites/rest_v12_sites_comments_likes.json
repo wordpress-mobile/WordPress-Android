@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/rest/v1.2/sites/.*/comments/.*/likes",
+    "queryParameters": {
+      "locale": {
+        "matches": "(.*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "found": 0,
+      "i_like": false,
+      "likes": [],
+      "meta": {
+        "links": {
+          "help": "https://public-api.wordpress.com/rest/v1.2/sites/106707880/comments/2/likes/help",
+          "post": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/posts/2",
+          "comment": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/comments/2",
+          "site": "https://public-api.wordpress.com/rest/v1.2/sites/106707880"
+        }
+      }
+    }
+  }
+}

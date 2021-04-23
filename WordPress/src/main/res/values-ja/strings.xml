@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-12 05:30:05+0000
+Translation-Revision-Date: 2021-04-16 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
+    <string name="gutenberg_native_search_input_field">検索入力フィールドです。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">検索ボタンです。 現在のボタンテキストは</string>
+    <string name="gutenberg_native_search_blocks">検索ブロック</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">検索ブロックラベルです。 現在のテキストは</string>
+    <string name="gutenberg_native_search_block">検索ブロック</string>
+    <string name="gutenberg_native_outside">外側</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">カスタムプレースホルダーの設定なし</string>
+    <string name="gutenberg_native_no_button">ボタンなし</string>
+    <string name="gutenberg_native_inside">内側</string>
+    <string name="gutenberg_native_hide_search_heading">検索見出しを非表示</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">ダブルタップしてラベルテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">ダブルタップしてボタンテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
+    <string name="gutenberg_native_current_placeholder_text_is">現在のプレースホルダーテキストは</string>
+    <string name="gutenberg_native_clear_search">検索をクリア</string>
+    <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
+    <string name="gutenberg_native_button_position">ボタンの位置</string>
+    <string name="gutenberg_native_button_outside">ボタンの外側</string>
+    <string name="gutenberg_native_button_inside">ボタンの内側</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
+    <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
+    <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
+    <string name="get_likes_no_network_error">利用可能なネットワークがありません。</string>
+    <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
+    <string name="comment_status_unreplied">未返信</string>
+    <string name="gutenberg_native_table_of_contents">目次</string>
+    <string name="gutenberg_native_summary">要約</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">見出しリストを使って投稿を要約します。ここにリンクするには、見出しブロックに HTML アンカーを追加してください。</string>
+    <string name="gutenberg_native_document_outline">文書アウトライン</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
+    <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
     <string name="reader_title_interests">トピックをフォロー</string>
     <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
@@ -780,7 +814,6 @@ Language: ja_JP
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
     <string name="gutenberg_native_gallery_caption_s">ギャラリーのキャプション。%s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。現在の値は%2$s</string>
     <string name="create_post_page_fab_tooltip">投稿またはページを作成</string>
     <string name="content_description_person_building_website">サイトを構築する人</string>
     <string name="post_signup_interstitial_not_right_now">今はしない</string>
@@ -804,7 +837,6 @@ Language: ja_JP
     <string name="login_discovery_error_http_auth">&lt;b>HTTP 認証&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_discovery_error_xmlrpc">サイトの &lt;b>XMLRPC ファイル&lt;/b>にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b>%1$s&lt;/b> を確認します</string>
-    <string name="enter_site_credentials_instead">サイトのログイン情報でログインします。</string>
     <string name="enter_credentials_for_site">%1$s サイトのアカウント情報でログイン</string>
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
     <string name="reader_following_display_name">フォロー中</string>
@@ -861,7 +893,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_move_the_block_up">ダブルタップしてブロックを上に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">ダブルタップしてブロックを下に移動</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">ダブルタップしてこの値を編集</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">ダブルタップしてスライダーを使用して値を変更</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
@@ -875,6 +906,14 @@ Language: ja_JP
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
     <string name="reader_acessibility_list_loaded">「リストに %1$d 項目が読み込まれました」</string>
     <string name="notifications_tab_dialog_switch_desc">通知</string>
+    <string name="main_switch_default_title_off">オフ</string>
+    <string name="main_switch_default_title_on">オン</string>
+    <string name="notifications_tab_dialog_main_off_message">このサイトの通知をオフにすると、このサイトの通知タブでは通知表示が無効になります。サイトの通知をオンにすると、表示される通知の種類を調整できます。</string>
+    <string name="notifications_tab_dialog_main_off_title">このサイトの通知タブで通知を表示するには、このサイトの通知をオンにしてください。</string>
+    <string name="notifications_tab_dialog_main_hint_off">このサイトの通知タブで通知表示を有効化</string>
+    <string name="notifications_tab_dialog_main_hint_on">このサイトの通知タブで通知表示を無効化</string>
+    <string name="notifications_tab_dialog_main_status_off">このサイトの通知</string>
+    <string name="notifications_tab_dialog_main_status_on">このサイトの通知</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -967,7 +1006,6 @@ Language: ja_JP
     <string name="post_settings_add_to_calendar">カレンダーに追加</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日付と時刻</string>
-    <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
     <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
     <string name="stats_post_views_label">表示数</string>
@@ -1141,7 +1179,6 @@ Language: ja_JP
     <string name="plans_loading_error_no_plans_title">プランの読み込みができません</string>
     <string name="plans_loading_error_network_title">接続がありません</string>
     <string name="menu_switch_to_gutenberg_editor">ブロックエディターに切り替える</string>
-    <string name="menu_switch_to_aztec_editor">旧エディターに切り替える</string>
     <string name="stats_loading_block_error">データの読み込み中に問題が発生しました。ページを更新してもう一度お試しください。</string>
     <string name="stats_loading_error">データは読み込まれていません</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
@@ -1433,14 +1470,12 @@ Language: ja_JP
     <string name="comment_read_source_post">元の投稿を読む</string>
     <string name="sites">サイト</string>
     <string name="signup_magic_link_title">マジックリンクが送信されました</string>
-    <string name="signup_email_screen_title">メール登録</string>
     <string name="verification_2fa_screen_title">コードの認証</string>
     <string name="selfhosted_site_login_title">ログイン情報</string>
     <string name="magic_link_sent_login_title">マジックリンクが送信されました</string>
     <string name="magic_link_login_title">マジックリンクでのログイン</string>
     <string name="site_address_login_title">サイトアドレスでのログイン</string>
     <string name="email_address_login_title">メールアドレスでのログイン</string>
-    <string name="alternatively">もしくは、</string>
     <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
     <string name="reader_empty_saved_posts_title">投稿はまだ保存されていません。</string>
     <string name="reader_bookmark_snack_title">投稿を保存しました</string>
@@ -1477,7 +1512,6 @@ Language: ja_JP
     <string name="preference_privacy_settings">プライバシー設定</string>
     <string name="preference_collect_information">情報を収集</string>
     <string name="post_submitted">投稿を送信しました</string>
-    <string name="login_email_button_signup">アカウントをまだお持ちではありませんか ?%1$s登録%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">プラグイン機能を使うには、サイトが問題のない状態でなければなりません。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">プラグイン機能を使うには、一次ドメインサブスクリプションがこのユーザーに関連付けられている必要があります。</string>
     <string name="plugin_install_site_ineligible_non_admin_user">プラグイン機能を使うには、管理者権限が必要です。</string>
@@ -1643,11 +1677,8 @@ Language: ja_JP
     <string name="username_changer_dismiss_button_positive">破棄</string>
     <string name="username_changer_action">保存</string>
     <string name="content_description_add_avatar">アバターの追加</string>
-    <string name="signup_with_google_button">Google に登録</string>
-    <string name="signup_with_email_button">メールに登録</string>
     <string name="signup_user_exists">WordPress.com にすでにメールがあります。\nログインを処理しています。</string>
     <string name="signup_updating_account">アカウントを更新しています…</string>
-    <string name="signup_terms_of_service_text">登録することで、%1$s利用規約%2$sに合意したことになります。</string>
     <string name="signup_magic_link_progress">メールを送信中</string>
     <string name="signup_magic_link_error_button_positive">再試行</string>
     <string name="signup_magic_link_error_button_negative">閉じる</string>
@@ -1660,11 +1691,6 @@ Language: ja_JP
     <string name="signup_epilogue_error_button_negative">戻す</string>
     <string name="signup_epilogue_error_generic">アカウントの更新中にエラーが発生しました。変更を再試行するか、元に戻して続行できます。</string>
     <string name="signup_epilogue_error_avatar">アバターのアップロード中にエラーが発生しました。</string>
-    <string name="signup_email_header">新しい WordPress.com アカウントを作成するには、メールアドレスを入力してください。</string>
-    <string name="signup_email_error_generic">メールアドレスの確認中にエラーが発生しました。</string>
-    <string name="sign_up">WordPress.com に登録</string>
-    <string name="enter_username_instead">ユーザー名でログインします。</string>
-    <string name="enter_site_address_instead">サイトのアドレスを入力してログインする。</string>
     <string name="plugin_needs_update">更新が必要</string>
     <string name="plugin_caption_search">プラグインの検索</string>
     <string name="plugin_caption_new">新規</string>
@@ -1785,7 +1811,6 @@ Language: ja_JP
     <string name="login_error_suffix">\n別のアカウントを試してみますか ?</string>
     <string name="login_error_generic">Google アカウントへの接続で何らかの問題が発生しました。</string>
     <string name="login_error_button">閉じる</string>
-    <string name="login_google_button_suffix">Google でログインする。</string>
     <string name="enter_wpcom_password_google">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>
@@ -1797,6 +1822,7 @@ Language: ja_JP
     <string name="jetpack_disconnect_confirm">連携解除</string>
     <string name="jetpack_disconnect_confirmation_message">このサイトから Jetpack の接続を解除してもよいですか ?</string>
     <string name="jetpack_disconnect_pref_title">「WordPress.com との連携を解除」</string>
+    <string name="site_settings_jetpack_allowlist_description">単一または一連の IP アドレスをホワイトリストに追加すると、それらが Jetpack にブロックされなくなります。IPv4と IPv6を使用できます。範囲を指定するには、下限値と上限値をダッシュで区切って入力します。例: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">二段階認証が必要</string>
     <string name="jetpack_match_wpcom_via_email_title">メールを使用してアカウントを照合する</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com ログインを許可する</string>
@@ -1841,6 +1867,12 @@ Language: ja_JP
     <string name="notification_settings_category_other">その他</string>
     <string name="notification_settings_item_your_sites_all_your_sites">自分の全サイト</string>
     <string name="notification_settings_category_your_sites">あなたのサイト</string>
+    <string name="notification_settings_main_off_message">通知設定をオフにすると、通知の種類に関係なく、このアプリからの通知がすべて無効になります。通知設定をオンにした後で、受信する通知の種類を調整できます。</string>
+    <string name="notification_settings_main_off_title">この端末で通知を受信するには、通知設定を有効化してください。</string>
+    <string name="notification_settings_main_hint_off">通知を有効化</string>
+    <string name="notification_settings_main_hint_on">通知を無効化</string>
+    <string name="notification_settings_main_status_off">オフ</string>
+    <string name="notification_settings_main_status_on">オン</string>
     <string name="max_video_resolution">最大動画サイズ</string>
     <string name="max_thumbnail_px_size">最大画像サイズ</string>
     <string name="error_upload_post_media_param">投稿内のメディアのアップロード中にエラーが発生しました: %s。</string>
@@ -1877,7 +1909,6 @@ Language: ja_JP
     <string name="login_site_address_more_help">問題が解決しない場合</string>
     <string name="login_site_address_help_content">Chrome でサイトにアクセスすると、画面の上部にあるバーにサイトアドレスが表示されます。</string>
     <string name="login_site_address_help_title">自分のサイトアドレスは ?</string>
-    <string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
     <string name="login_site_address">サイトアドレス</string>
     <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
@@ -1889,7 +1920,6 @@ Language: ja_JP
     <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
     <string name="login_text_otp">代わりに SMS でコードを送信する</string>
     <string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
-    <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
     <string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>
@@ -2148,7 +2178,6 @@ Language: ja_JP
     <string name="invite_names_title">ユーザー名またはメールアドレス</string>
     <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
-    <string name="send_link">リンクを送信</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
     <string name="reader_empty_search_description">お使いの言語で「%s」についての投稿は見つかりませんでした</string>
@@ -2172,7 +2201,6 @@ Language: ja_JP
     <string name="checking_email">メールをチェック</string>
     <string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
-    <string name="enter_your_password_instead">代わりにパスワードを入力</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
     <string name="capture_or_pick_photo">写真を撮影または選択</string>
     <string name="plans">プラン</string>
@@ -2293,6 +2321,7 @@ Language: ja_JP
     <string name="site_settings_paging_dialog_description">コメントスレッドを複数のページに分けます。</string>
     <string name="site_settings_paging_dialog_header">1ページあたりのコメント数</string>
     <string name="site_settings_close_after_dialog_title">コメントを閉じます</string>
+    <string name="site_settings_denylist_description">コメントの本文、名前、URL、メール、IP にこれらの単語のいずれかが含まれている場合、スパムとしてマークされます。語句の一部を入力できます。例えば、\"press\" は \"WordPress\" に一致します。</string>
     <string name="site_settings_hold_for_moderation_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、承認待ちになります。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
     <string name="site_settings_list_editor_input_hint">単語やフレーズを入力してください</string>
     <string name="site_settings_list_editor_no_items_text">項目なし</string>
@@ -2307,8 +2336,10 @@ Language: ja_JP
     <string name="site_settings_rp_show_header_title">ヘッダーを表示</string>
     <string name="site_settings_rp_switch_summary">「関連記事」は投稿の下にサイト内の関連コンテンツを表示します。</string>
     <string name="site_settings_rp_switch_title">関連記事を表示</string>
+    <string name="site_settings_denylist_hint">フィルターに一致するコメントはスパムとしてマークされます</string>
     <string name="site_settings_moderation_hold_hint">フィルターに一致するコメントは承認待ちになります</string>
     <string name="site_settings_multiple_links_hint">既知のユーザーからのリンク制限を無視します</string>
+    <string name="site_settings_allowlist_hint">すでに承認されたコメントの投稿者のコメントを許可し、それ以外のコメントを承認待ちにする</string>
     <string name="site_settings_user_account_required_hint">ユーザー登録してログインしたユーザーのみコメントをつけられるようにする</string>
     <string name="site_settings_identity_required_hint">コメントの際、名前とメールアドレスの入力を必須にする</string>
     <string name="site_settings_paging_hint">コメントを指定したサイズに分けて表示します</string>
@@ -2331,6 +2362,8 @@ Language: ja_JP
     <string name="site_settings_address_hint">アドレスの変更は現在サポートされていません</string>
     <string name="site_settings_tagline_hint">ブログの簡単な説明やブログを表す魅力的なフレーズ</string>
     <string name="site_settings_title_hint">このサイトを短い文章で説明してください</string>
+    <string name="site_settings_allowlist_known_summary">既知のユーザーからのコメント</string>
+    <string name="site_settings_allowlist_all_summary">すべてのユーザーからのコメント</string>
     <string name="site_settings_threading_summary">%d階層</string>
     <string name="site_settings_privacy_private_summary">プライベート</string>
     <string name="site_settings_privacy_hidden_summary">非表示</string>
@@ -2338,6 +2371,7 @@ Language: ja_JP
     <string name="site_settings_delete_site_title">サイトを削除</string>
     <string name="site_settings_moderation_hold_title">承認待ち</string>
     <string name="site_settings_multiple_links_title">コメント内のリンク</string>
+    <string name="site_settings_allowlist_title">自動承認</string>
     <string name="site_settings_paging_title">ページ送り</string>
     <string name="site_settings_threading_title">スレッド化</string>
     <string name="site_settings_sort_by_title">並び替え</string>
@@ -2550,7 +2584,6 @@ Language: ja_JP
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
-    <string name="forgot_password">パスワードを忘れた場合</string>
     <string name="help">ヘルプ</string>
     <string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
     <string name="email_invalid">有効なメールアドレスを入力してください</string>

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-17 09:54:07+0000
+Translation-Revision-Date: 2021-04-16 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">아이콘 버튼 사용</string>
+    <string name="gutenberg_native_search_input_field">입력 필드를 검색합니다.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">검색 버튼입니다. 현재 버튼 텍스트는</string>
+    <string name="gutenberg_native_search_blocks">블록 검색</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">블록 레이블을 검색합니다. 현재 텍스트는</string>
+    <string name="gutenberg_native_search_block">블록 검색</string>
+    <string name="gutenberg_native_outside">외부</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">설정된 사용자 정의 플레이스홀더 없음</string>
+    <string name="gutenberg_native_no_button">버튼 없음</string>
+    <string name="gutenberg_native_inside">내부</string>
+    <string name="gutenberg_native_hide_search_heading">검색 헤딩요소 숨기기</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">두 번 눌러 레이블 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">두 번 눌러 버튼 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">두 번 눌러 단위 변경하기</string>
+    <string name="gutenberg_native_current_placeholder_text_is">현재 플레이스홀더 텍스트는</string>
+    <string name="gutenberg_native_clear_search">검색 지우기</string>
+    <string name="gutenberg_native_cancel_search">검색 취소</string>
+    <string name="gutenberg_native_button_position">버튼 위치</string>
+    <string name="gutenberg_native_button_outside">버튼 외부</string>
+    <string name="gutenberg_native_button_inside">버튼 내부</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s은(는) %3$s %4$s입니다.</string>
+    <string name="get_likes_empty_state_title">좋아요 데이터를 가져오는 중 오류가 발생함</string>
+    <string name="get_likes_unknown_error">좋아요를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
+    <string name="get_likes_no_network_error">사용 가능한 네트워크가 없습니다.</string>
+    <string name="comments_empty_list_filtered_unreplied">응답 없는 댓글 없음</string>
+    <string name="comment_status_unreplied">응답 없음</string>
+    <string name="gutenberg_native_table_of_contents">목차</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">헤딩요소 목록으로 글을 요약하세요. 여기에서 HTML 앵커를 헤딩요소 블록에 추가하여 링크를 설정하세요.</string>
+    <string name="gutenberg_native_document_outline">문서 개요</string>
+    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
+    <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
     <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
     <string name="reader_title_interests">토픽 따르기</string>
     <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
@@ -211,8 +244,8 @@ Language: ko_KR
     <string name="suggestion_none">사용 가능한 %s 제안이 없습니다.</string>
     <string name="suggestion_problem">제안 로드 중 문제가 발생했습니다.</string>
     <string name="suggestion_no_matching">일치하는 %s이(가) 없습니다.</string>
-    <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b>코더블&lt;/b>을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70–120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
     <string name="threat_fix_fixable_replace">젯팩 검사하기는 영향이 있는 파일이나 디렉터리를 교체할 것입니다.</string>
+    <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b>코더블&lt;/b>을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70–120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
     <string name="threat_problem_header">문제가 무엇이었나요?</string>
     <string name="threat_technical_details_header">기술 세부정보</string>
     <string name="threat_file_description">파일에서 발견한  위협:</string>
@@ -761,7 +794,6 @@ Language: ko_KR
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_gallery_caption_s">갤러리 캡션. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s 현재 값은 %2$s입니다.</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>
     <string name="post_signup_interstitial_not_right_now">나중에</string>
@@ -788,7 +820,6 @@ Language: ko_KR
     <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="reader_following_display_name">팔로우 중</string>
     <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
-    <string name="enter_site_credentials_instead">사이트 자격 증명으로 로그인합니다.</string>
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -842,7 +873,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_move_the_block_up">블록을 위로 이동하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">블록을 아래로 이동하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">이 값을 편집하려면 두 번 탭하세요.</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">슬라이더를 사용하여 값을 변경하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">블록을 추가하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_current_value_is_s">현재 값은 %s입니다.</string>
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
@@ -948,7 +978,6 @@ Language: ko_KR
     <string name="post_settings_add_to_calendar">달력에 추가</string>
     <string name="post_settings_notification">알림</string>
     <string name="post_settings_time_and_date">날짜와 시간</string>
-    <string name="login_need_help_finding_connected_email">연결한 이메일을 찾는 데 도움이 필요하신가요?</string>
     <string name="login_invalid_site_url">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
     <string name="enter_email_for_site">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
     <string name="stats_post_views_label">조회수</string>
@@ -1122,7 +1151,6 @@ Language: ko_KR
     <string name="plans_loading_error_no_plans_title">요금제를 로드할 수 없음</string>
     <string name="plans_loading_error_network_title">연결 없음</string>
     <string name="menu_switch_to_gutenberg_editor">블록 편집기로 전환</string>
-    <string name="menu_switch_to_aztec_editor">구 버전 편집기로 전환</string>
     <string name="stats_loading_block_error">데이터 로드 중에 문제가 발생했습니다. 페이지를 새로 고치고 다시 시도하세요.</string>
     <string name="stats_loading_error">데이터가 로드되지 않음</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
@@ -1414,14 +1442,12 @@ Language: ko_KR
     <string name="comment_read_source_post">원글 읽기</string>
     <string name="sites">사이트</string>
     <string name="signup_magic_link_title">매직 링크가 전송됨</string>
-    <string name="signup_email_screen_title">이메일 가입</string>
     <string name="verification_2fa_screen_title">코드 확인</string>
     <string name="selfhosted_site_login_title">로그인 자격 증명</string>
     <string name="magic_link_sent_login_title">매직 링크가 전송됨</string>
     <string name="magic_link_login_title">매직 링크 로그인</string>
     <string name="site_address_login_title">사이트 주소 로그인</string>
     <string name="email_address_login_title">이메일 주소 로그인</string>
-    <string name="alternatively">또는:</string>
     <string name="reader_empty_saved_posts_description">%s을(를) 탭하여 목록에 글을 저장합니다.</string>
     <string name="reader_empty_saved_posts_title">글이 아직 저장되지 않았습니다!</string>
     <string name="reader_bookmark_snack_title">글이 저장됨</string>
@@ -1458,7 +1484,6 @@ Language: ko_KR
     <string name="preference_privacy_settings">개인 정보 설정</string>
     <string name="preference_collect_information">정보 수집</string>
     <string name="post_submitted">글이 제출됨</string>
-    <string name="login_email_button_signup">아직 계정이 없으신가요? %1$s가입하세요.%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">플러그인 기능을 사용하려면 사이트가 양호한 상태여야 합니다.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">플러그인 기능을 사용하려면 이 사용자와 연결된 기본 도메인 구독이 필요합니다.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">플러그인 기능을 사용하려면 관리자 권한이 필요합니다.</string>
@@ -1624,11 +1649,8 @@ Language: ko_KR
     <string name="username_changer_dismiss_button_positive">취소</string>
     <string name="username_changer_action">저장</string>
     <string name="content_description_add_avatar">아바타 추가</string>
-    <string name="signup_with_google_button">Google로 가입</string>
-    <string name="signup_with_email_button">이메일로 가입</string>
     <string name="signup_user_exists">이메일이 이미 워드프레스닷컴에 있습니다.\n로그인을 통해 진행 중입니다.</string>
     <string name="signup_updating_account">계정 업데이트 중…</string>
-    <string name="signup_terms_of_service_text">가입하려면 %1$s서비스 약관%2$s에 동의해야 합니다.</string>
     <string name="signup_magic_link_progress">이메일 전송 중</string>
     <string name="signup_magic_link_error_button_positive">다시 시도</string>
     <string name="signup_magic_link_error_button_negative">닫기</string>
@@ -1640,12 +1662,7 @@ Language: ko_KR
     <string name="signup_epilogue_error_button_negative">되돌리기</string>
     <string name="signup_epilogue_error_generic">계정을 업데이트하는 중에 문제가 발생했습니다. 다시 시도하거나 변경 내용을 되돌려 계속할 수 있습니다.</string>
     <string name="signup_epilogue_error_avatar">아바타를 업데이트하는 중에 문제가 발생했습니다.</string>
-    <string name="signup_email_header">새 워드프레스닷컴 계정을 만들려면 이메일 주소를 입력하세요.</string>
-    <string name="signup_email_error_generic">이메일 주소를 확인하는 중에 문제가 발생했습니다.</string>
     <string name="signup_epilogue_hint_password_detail">방금 사용한 것과 같은 링크로 항상 로그인할 수 있지만, 원하는 경우 비밀번호를 설정할 수도 있습니다.</string>
-    <string name="sign_up">워드프레스닷컴 가입</string>
-    <string name="enter_username_instead">사용자명으로 로그인하세요.</string>
-    <string name="enter_site_address_instead">사이트 주소를 입력하여 로그인하세요.</string>
     <string name="plugin_needs_update">업데이트 필요</string>
     <string name="plugin_caption_search">플러그인 검색</string>
     <string name="plugin_caption_new">신규</string>
@@ -1766,7 +1783,6 @@ Language: ko_KR
     <string name="login_error_suffix">\n다른 계정을 사용해 보세요.</string>
     <string name="login_error_generic">Google 계정과 연결하는 데 문제가 발생했습니다.</string>
     <string name="login_error_button">닫기</string>
-    <string name="login_google_button_suffix">Google로 로그인합니다.</string>
     <string name="enter_wpcom_password_google">이 Google 계정으로 진행하려면 일치하는 워드프레스닷컴 비밀번호를 제공하세요. 이 메시지는 한 번만 표시됩니다.</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
@@ -1778,6 +1794,7 @@ Language: ko_KR
     <string name="jetpack_disconnect_confirm">연결 해제</string>
     <string name="jetpack_disconnect_confirmation_message">사이트에서 젯팩 연결을 해제하시겠어요?</string>
     <string name="jetpack_disconnect_pref_title">\"워드프레스닷컴과 연결 해제\"</string>
+    <string name="site_settings_jetpack_allowlist_description">젯팩에서 차단하지 않도록 IP 주소(또는 여러 주소)를 \"항상 허용됨\"으로 표시할 수 있습니다. IPv4 및 IPv6를 사용할 수 있습니다. 범위를 지정하려면 낮은 값과 높은 값을 대시로 구분하여 입력하세요. 예: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">2단계 인증 필요</string>
     <string name="jetpack_match_wpcom_via_email_title">이메일을 사용하여 계정 일치</string>
     <string name="jetpack_allow_wpcom_sign_in_title">워드프레스닷컴 로그인 허용</string>
@@ -1858,7 +1875,6 @@ Language: ko_KR
     <string name="login_site_address_more_help">더 많은 도움이 필요하세요?</string>
     <string name="login_site_address_help_content">Chrome에서 사이트를 방문할 때 화면 위쪽의 표시줄에 사이트 주소가 표시됩니다.</string>
     <string name="login_site_address_help_title">내 사이트 주소는 무엇인가요?</string>
-    <string name="login_site_address_help">사이트 주소를 찾는 데 도움이 필요하세요?</string>
     <string name="login_site_address">사이트 주소</string>
     <string name="enter_site_address">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
@@ -1870,7 +1886,6 @@ Language: ko_KR
     <string name="requesting_otp">SMS를 통해 확인 코드를 요청 중입니다.</string>
     <string name="login_text_otp">대신 코드를 문자로 받기</string>
     <string name="enter_verification_code">마지막 부분입니다! 인증 앱의 확인 코드를 입력하세요.</string>
-    <string name="open_mail">메일 열기</string>
     <string name="next">다음</string>
     <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
     <string name="image_optimization_promo_desc">이미지 최적화는 빠른 업로드를 위해 이미지를 줄입니다.\n\n사이트 설정에서 언제든지 변경할 수 있습니다.</string>
@@ -2125,7 +2140,6 @@ Language: ko_KR
     <string name="invite_error_invalid_usernames_one">전송하지 못한 항목: 유효하지 않은 사용자명 또는 이메일입니다.</string>
     <string name="invite_error_no_usernames">하나 이상의 사용자명을 추가하세요.</string>
     <string name="invite">초대</string>
-    <string name="send_link">링크 전송</string>
     <string name="my_site_header_external">외부</string>
     <string name="invite_people">사용자 초대</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
@@ -2151,7 +2165,6 @@ Language: ko_KR
     <string name="checking_email">이메일 확인 중</string>
     <string name="magic_link_unavailable_error_message">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
     <string name="logging_in">로그인 중</string>
-    <string name="enter_your_password_instead">비밀번호를 대신 입력하세요.</string>
     <string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
     <string name="capture_or_pick_photo">사진 캡처 또는 선택</string>
     <string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
@@ -2528,7 +2541,6 @@ Language: ko_KR
     <string name="reader_page_followed_tags">팔로우한 토픽</string>
     <string name="reader_hint_add_tag_or_url">URL이나 팔로우할 토픽을 입력하세요</string>
     <string name="help">도우미</string>
-    <string name="forgot_password">패스워드를 잊으셨나요?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>

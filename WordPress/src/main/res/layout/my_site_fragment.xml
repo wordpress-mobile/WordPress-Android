@@ -313,7 +313,7 @@
                                 <ImageView
                                     android:id="@+id/quick_start_grow_icon"
                                     style="@style/QuickStartTypeIcon"
-                                    android:background="@drawable/bg_oval_pink_50_multiple_users_white_40dp_selector"
+                                    android:background="@drawable/bg_oval_blue_50_multiple_users_white_40dp_selector"
                                     android:importantForAccessibility="no" />
 
                                 <com.google.android.material.textview.MaterialTextView
@@ -720,7 +720,7 @@
                             android:id="@+id/my_site_view_admin_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_my_sites_white_24dp" />
+                            android:src="@drawable/ic_wordpress_white_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_view_admin_text_view"

@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-17 13:54:08+0000
+Translation-Revision-Date: 2021-04-16 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
+    <string name="gutenberg_native_search_input_field">Cerca campo di immissione.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Pulsante di ricerca. Il testo del pulsante attuale è</string>
+    <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Cerca etichetta del blocco. Il testo attuale è</string>
+    <string name="gutenberg_native_search_block">Cerca blocco</string>
+    <string name="gutenberg_native_outside">Esterno</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Nessun set di segnaposto personalizzato</string>
+    <string name="gutenberg_native_no_button">Nessun pulsante</string>
+    <string name="gutenberg_native_inside">Interno</string>
+    <string name="gutenberg_native_hide_search_heading">Nascondi titolo della ricerca</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Tocca due volte per modificare il testo del segnaposto</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Tocca due volte per modificare il testo dell\'etichetta</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Tocca due volte per modificare il testo del pulsante</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">tocca due volte per modificare l\'unità</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Il testo del segnaposto attuale è</string>
+    <string name="gutenberg_native_clear_search">Cancella ricerca</string>
+    <string name="gutenberg_native_cancel_search">Annulla ricerca</string>
+    <string name="gutenberg_native_button_position">Posizione pulsante</string>
+    <string name="gutenberg_native_button_outside">Pulsante esterno</string>
+    <string name="gutenberg_native_button_inside">Pulsante interno</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s è %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Si è verificato un errore durante l\'ottenimento dei dati dei Mi piace</string>
+    <string name="get_likes_unknown_error">Si è verificato un errore sconosciuto durante l\'ottenimento dei Mi piace.</string>
+    <string name="get_likes_no_network_error">Nessuna rete disponibile.</string>
+    <string name="comments_empty_list_filtered_unreplied">Nessun commento senza risposta</string>
+    <string name="comment_status_unreplied">Senza risposta</string>
+    <string name="gutenberg_native_table_of_contents">Indice dei contenuti</string>
+    <string name="gutenberg_native_summary">sommario</string>
+    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Riassumi il tuo articolo con una lista di intestazioni. Aggiungi delle ancore HTML ai blocchi Intestazione per collegarle qui.</string>
+    <string name="gutenberg_native_document_outline">Struttura del documento</string>
+    <string name="gutenberg_native_buttongroup">Gruppo pulsante</string>
+    <string name="jetpack_brute_force_allowlist_title">Indirizzi IP sempre consentiti</string>
+    <string name="site_settings_denylist_title">Commenti respinti</string>
     <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>
     <string name="reader_title_interests">Argomenti seguiti</string>
     <string name="stories_intro_main_subtitle">Un nuovo modo per creare e pubblicare contenuti coinvolgenti nel tuo sito.</string>
@@ -780,7 +814,6 @@ Language: it
     <string name="gutenberg_native_move_image_forward">Sposta avanti l\'immagine</string>
     <string name="gutenberg_native_move_image_backward">Sposta indietro l\'immagine</string>
     <string name="gutenberg_native_gallery_caption_s">Didascalia della galleria. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Il valore attuale è %2$s</string>
     <string name="create_post_page_fab_tooltip">Crea un articolo o una pagina</string>
     <string name="content_description_person_building_website">Creatore del sito web</string>
     <string name="post_signup_interstitial_not_right_now">Non adesso</string>
@@ -804,7 +837,6 @@ Language: it
     <string name="login_discovery_error_http_auth">Non siamo stati in grado di accedere al tuo sito perché viene richiesta l\'&lt;b>autenticazione HTTP&lt;/b>. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_discovery_error_xmlrpc">Non siamo stati in grado di accedere al &lt;b>file XMLRPC&lt;/b> sul tuo sito. Dovrai contattare il tuo fornitore di hosting per risolvere questo problema.</string>
     <string name="login_site_credentials_magic_link_label">Ci sei quasi! Dobbiamo solamente verificare il tuo indirizzo e-mail connesso a Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Accedi con le credenziali del sito.</string>
     <string name="enter_credentials_for_site">Accedi con le credenziali del sito %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Pagina del sito</string>
     <string name="reader_following_display_name">Stai seguendo</string>
@@ -861,7 +893,6 @@ Language: it
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Tocca due volte per spostare il blocco in alto</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Tocca due volte per spostare il blocco in basso</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Tocca due volte per modificare questo valore</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Tocca due volte per modificare il valore usando lo slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Tocca due volte per aggiungere un blocco</string>
     <string name="gutenberg_native_current_value_is_s">Il valore attuale è %s</string>
     <string name="gutenberg_native_choose_from_device">Scegli da dispositivo</string>
@@ -875,6 +906,9 @@ Language: it
     <string name="reader_empty_saved_posts_content_description">Tocca il pulsante Aggiungi ad articoli salvati per salvare un articolo nell\'elenco.</string>
     <string name="reader_acessibility_list_loaded">\"L\'elenco è stato caricato con %1$d voci.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifiche</string>
+    <string name="main_switch_default_title_off">Disattivato</string>
+    <string name="notifications_tab_dialog_main_off_message">La disattivazione di Notifiche per questo sito ne comporterà la disattivazione della visualizzazione nella relativa scheda. Puoi regolare il tipo di notifica da vedere dopo aver attivato Notifiche per questo sito.</string>
+    <string name="notifications_tab_dialog_main_off_title">Per vedere le notifiche sulla scheda delle notifiche per questo sito, attiva Notifiche per questo sito.</string>
     <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
     <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>
@@ -967,7 +1001,6 @@ Language: it
     <string name="post_settings_add_to_calendar">Aggiungi a calendario</string>
     <string name="post_settings_notification">Notifica</string>
     <string name="post_settings_time_and_date">Data e ora</string>
-    <string name="login_need_help_finding_connected_email">Ti serve aiuto per trovare l\'e-mail con cui ti sei collegato?</string>
     <string name="login_invalid_site_url">Inserisci un indirizzo di sito Web completo, come esempio.com.</string>
     <string name="enter_email_for_site">Accedi con WordPress.com per collegarti a %1$s</string>
     <string name="stats_post_views_label">Visualizzazioni</string>
@@ -1141,7 +1174,6 @@ Language: it
     <string name="plans_loading_error_no_plans_title">Impossibile caricare i Piani</string>
     <string name="plans_loading_error_network_title">Nessuna connessione</string>
     <string name="menu_switch_to_gutenberg_editor">Passa all\'editor a blocchi</string>
-    <string name="menu_switch_to_aztec_editor">Passa all\'editor classico</string>
     <string name="stats_loading_block_error">Si è verificato un problema con il caricamento dei dati. Aggiorna la pagina per riprovare.</string>
     <string name="stats_loading_error">Dati non caricati</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifica i nuovi articoli e pagine con l’editor a blocchi</string>
@@ -1433,14 +1465,12 @@ Language: it
     <string name="comment_read_source_post">Leggi l\'articolo sorgente</string>
     <string name="sites">Siti</string>
     <string name="signup_magic_link_title">Link inviato</string>
-    <string name="signup_email_screen_title">Registrazione via email</string>
     <string name="verification_2fa_screen_title">Verifica del codice</string>
     <string name="selfhosted_site_login_title">Credenziali di accesso</string>
     <string name="magic_link_sent_login_title">Link inviato</string>
     <string name="magic_link_login_title">Accesso tramite link</string>
     <string name="site_address_login_title">Accesso tramite indirizzo sito</string>
     <string name="email_address_login_title">Accesso tramite indirizzo email</string>
-    <string name="alternatively">In alternativa:</string>
     <string name="reader_empty_saved_posts_description">Tocca %s per salvare un articolo nel tuo elenco.</string>
     <string name="reader_empty_saved_posts_title">Non è stato ancora salvato nessun articolo.</string>
     <string name="reader_bookmark_snack_title">Articolo salvato</string>
@@ -1477,7 +1507,6 @@ Language: it
     <string name="preference_privacy_settings">Impostazioni della privacy</string>
     <string name="preference_collect_information">Raccogli informazioni</string>
     <string name="post_submitted">Articolo inviato</string>
-    <string name="login_email_button_signup">Non hai un account? %1$sRegistrati%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">La funzionalità di plugin richiede che il sito sia in regola.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">La funzionalità di plugin richiede che l\'abbonamento di dominio principale sia associato a questo utente.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">La funzionalità di plugin richiede privilegi di amministratore.</string>
@@ -1643,11 +1672,8 @@ Language: it
     <string name="username_changer_dismiss_button_positive">Annulla</string>
     <string name="username_changer_action">Salva</string>
     <string name="content_description_add_avatar">Aggiungi avatar</string>
-    <string name="signup_with_google_button">Registrati con Google</string>
-    <string name="signup_with_email_button">Registrati con l\'email</string>
     <string name="signup_user_exists">L\'email esiste già su WordPress.com.\nContinuare con l\'accesso.</string>
     <string name="signup_updating_account">Aggiornamento dell\'account…</string>
-    <string name="signup_terms_of_service_text">Registrandoti, accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="signup_magic_link_progress">Invio email in corso</string>
     <string name="signup_magic_link_error_button_positive">Riprova</string>
     <string name="signup_magic_link_error_button_negative">Chiudi</string>
@@ -1660,11 +1686,6 @@ Language: it
     <string name="signup_epilogue_error_button_negative">Riconverti</string>
     <string name="signup_epilogue_error_generic">Si è verificato un errore durante l\'aggiornamento del tuo account. Puoi riprovare o annullare le modifiche per continuare.</string>
     <string name="signup_epilogue_error_avatar">Si è verificato un errore durante l\'aggiornamento del tuo avatar.</string>
-    <string name="signup_email_header">Per creare il tuo nuovo account WordPress.com, inserisci l\'indirizzo email.</string>
-    <string name="signup_email_error_generic">Si è verificato un errore durante il controllo dell\'indirizzo email.</string>
-    <string name="sign_up">Registrati a WordPress.com</string>
-    <string name="enter_username_instead">Accedi con il tuo nome utente.</string>
-    <string name="enter_site_address_instead">Accedi inserendo l\'indirizzo del tuo sito.</string>
     <string name="plugin_needs_update">È necessario l\'aggiornamento</string>
     <string name="plugin_caption_search">Cerca plugin</string>
     <string name="plugin_caption_new">Nuovo</string>
@@ -1785,7 +1806,6 @@ Language: it
     <string name="login_error_suffix">\nPuoi provare un account diverso?</string>
     <string name="login_error_generic">Si sono verificati dei problemi con la connessione con l’account Google.</string>
     <string name="login_error_button">Chiudi</string>
-    <string name="login_google_button_suffix">Accedi con Google.</string>
     <string name="enter_wpcom_password_google">Per procedere con questo account Google, fornisci la password WordPress.com corrispondente. Verrà richiesta solo una volta.</string>
     <string name="error_generic_network">Si è verificato un errore di rete. Controlla la connessione e riprova.</string>
     <string name="post_settings_remove_featured_image">Rimuovi immagine in evidenza</string>
@@ -1797,6 +1817,7 @@ Language: it
     <string name="jetpack_disconnect_confirm">Disconnetti</string>
     <string name="jetpack_disconnect_confirmation_message">Desideri disconnettere Jetpack dal sito?</string>
     <string name="jetpack_disconnect_pref_title">\"Esegui la disconnessione da WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Puoi contrassegnare un indirizzo IP (o una serie di indirizzi) come \"Sempre consentito\" per evitare che venga bloccato da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Richiede l\'Autenticazione a due passaggi</string>
     <string name="jetpack_match_wpcom_via_email_title">Confronta gli account tramite email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Consenti l\'accesso a WordPress.com</string>
@@ -1841,6 +1862,10 @@ Language: it
     <string name="notification_settings_category_other">Altro</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Tutti i miei siti</string>
     <string name="notification_settings_category_your_sites">I tuoi siti</string>
+    <string name="notification_settings_main_off_message">La disattivazione delle impostazioni delle notifiche causerà la disabilitazione di tutte le notifiche da questa applicazione, indipendentemente dal tipo. Puoi regolare il tipo di notifica da ricevere dopo aver attivato le impostazioni delle notifiche.</string>
+    <string name="notification_settings_main_off_title">Per ricevere le notifiche su questo dispositivo, attiva le impostazioni delle notifiche.</string>
+    <string name="notification_settings_main_status_off">Disattivato</string>
+    <string name="notification_settings_main_status_on">Attivo</string>
     <string name="max_video_resolution">Dimensione video massima</string>
     <string name="max_thumbnail_px_size">Dimensione immagine massima</string>
     <string name="error_upload_post_media_param">Si è verificato un errore durante il caricamento dell\'elemento multimediale in questo articolo: %s.</string>
@@ -1877,7 +1902,6 @@ Language: it
     <string name="login_site_address_more_help">Hai bisogno di ulteriore aiuto?</string>
     <string name="login_site_address_help_content">L\'indirizzo del tuo sito viene visualizzato sulla barra degli indirizzi nella parte superiore dello schermo quando visiti il tuo sito su Chrome.</string>
     <string name="login_site_address_help_title">Qual è l\'indirizzo del mio sito?</string>
-    <string name="login_site_address_help">Hai bisogno di aiuto per trovare l\'indirizzo del tuo sito?</string>
     <string name="login_site_address">Indirizzo sito</string>
     <string name="enter_site_address">Immetti l\'indirizzo del sito WordPress che desideri connettere.</string>
     <string name="login_already_logged_in_wpcom">Hai già effettuato l\'accesso a WordPress.com</string>
@@ -1889,7 +1913,6 @@ Language: it
     <string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
     <string name="login_text_otp">Inviami invece un messaggio con un codice</string>
     <string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
-    <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
     <string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
@@ -1915,7 +1938,7 @@ Language: it
     <string name="now">Ora</string>
     <string name="post_settings_password_dialog_hint">Solo chi conosce questa password può visualizzare l\'articolo</string>
     <string name="post_settings_excerpt_dialog_hint">Gli estratti sono riepiloghi opzionali dei tuoi contenuti creati manualmente.</string>
-    <string name="post_settings_slug_dialog_hint">L\'abbreviazione è la versione URL friendly del titolo dell\'articolo.</string>
+    <string name="post_settings_slug_dialog_hint">Lo slug è la versione URL friendly del titolo dell\'articolo.</string>
     <string name="post_settings_post_format">Formato articoli</string>
     <string name="post_settings_tags">Tag</string>
     <string name="post_settings_slug">Slug</string>
@@ -2148,7 +2171,6 @@ Language: it
     <string name="invite_names_title">Nome utente o e-mail</string>
     <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
-    <string name="send_link">Invia link</string>
     <string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
     <string name="reader_empty_search_description">Nessun articolo trovato nella tua lingua riguardante %s</string>
@@ -2172,7 +2194,6 @@ Language: it
     <string name="checking_email">Verifica della email</string>
     <string name="magic_link_unavailable_error_message">Attualmente non disponibile. Inserisci la tua password</string>
     <string name="logging_in">Sto entrando</string>
-    <string name="enter_your_password_instead">Oppure inserisci la tua password</string>
     <string name="web_address_dialog_hint">Mostrato pubblicamente quando si commenta.</string>
     <string name="capture_or_pick_photo">Catturare o selezionare una foto</string>
     <string name="plans">Piani</string>
@@ -2293,6 +2314,7 @@ Language: it
     <string name="site_settings_paging_dialog_description">Suddividi il flusso dei commenti in più pagine.</string>
     <string name="site_settings_paging_dialog_header">Commenti per pagina</string>
     <string name="site_settings_close_after_dialog_title">Chiudi commenti</string>
+    <string name="site_settings_denylist_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'e-mail o nell\'IP, verrà contrassegnato come spam. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'email o nell\'IP, verrà inserito nella coda di moderazione. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Inserisci una parola o una frase</string>
     <string name="site_settings_list_editor_no_items_text">Nessun elemento</string>
@@ -2550,7 +2572,6 @@ Language: it
     <string name="reader_title_blog_preview">Reader del sito</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>
     <string name="ssl_certificate_error">Certificato SSL non valido</string>
-    <string name="forgot_password">Password dimenticata?</string>
     <string name="help">Aiuto</string>
     <string name="username_or_password_incorrect">Il nome utente o la password immessi non sono corretti</string>
     <string name="email_invalid">Inserisci un indirizzo email valido</string>
