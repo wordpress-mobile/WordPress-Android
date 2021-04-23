@@ -80,8 +80,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             if (!urlHandledInViewModel) {
                 if (shouldOpenEditorFromDeepLink(host)) {
                     handleOpenEditorFromDeepLink(uri);
-                } else if (isFromAppBanner(host)) {
-                    handleAppBanner(host);
                 } else if (shouldViewPost(host)) {
                     handleViewPost(uri);
                 } else if (shouldShowPages(uri)) {
@@ -204,16 +202,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ActivityLauncher.viewPagesInNewStack(getContext());
         }
         finish();
-    }
-
-    private void handleAppBanner(@NonNull String host) {
-        if (DEEP_LINK_HOST_READ.equals(host)) {
-            ActivityLauncher.viewReaderInNewStack(getContext());
-        }
-    }
-
-    private boolean isFromAppBanner(String host) {
-        return (host != null && host.equals(DEEP_LINK_HOST_READ));
     }
 
     @Override
