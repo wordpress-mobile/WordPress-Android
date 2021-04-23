@@ -29,16 +29,16 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
 import java.util.HashMap
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class StockMediaRestClient
-@Inject constructor(
+class StockMediaRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     private val mediaResponseUtils: MediaResponseUtils,
     dispatcher: Dispatcher,
     appContext: Context?,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {

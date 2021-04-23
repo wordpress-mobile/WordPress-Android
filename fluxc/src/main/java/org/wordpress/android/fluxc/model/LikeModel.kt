@@ -32,8 +32,17 @@ class LikeModel : Identifiable {
         get() = StringUtils.notNullStr(field)
     @Column var likerAvatarUrl: String? = null
         get() = StringUtils.notNullStr(field)
+    @Column var likerBio: String? = null
+        get() = StringUtils.notNullStr(field)
     @Column var likerSiteId: Long = 0
     @Column var likerSiteUrl: String? = null
+        get() = StringUtils.notNullStr(field)
+    @Column var preferredBlogId: Long = 0
+    @Column var preferredBlogName: String? = null
+        get() = StringUtils.notNullStr(field)
+    @Column var preferredBlogUrl: String? = null
+        get() = StringUtils.notNullStr(field)
+    @Column var preferredBlogBlavatarUrl: String? = null
         get() = StringUtils.notNullStr(field)
 
     override fun setId(id: Int) {

@@ -20,8 +20,8 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
-import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 

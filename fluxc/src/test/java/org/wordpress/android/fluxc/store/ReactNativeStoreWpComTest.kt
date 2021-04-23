@@ -12,8 +12,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
-import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
+import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals

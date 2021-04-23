@@ -10,8 +10,10 @@ import org.wordpress.android.fluxc.persistence.HTTPAuthSqlUtils;
 import java.net.URI;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HTTPAuthManager {
-    public HTTPAuthManager() {}
+    @Inject public HTTPAuthManager() {}
 
     /**
      * Get an HTTPAuthModel containing username and password for the url parameter

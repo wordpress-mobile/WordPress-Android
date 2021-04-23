@@ -11,9 +11,9 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationApiResponse
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils.NotificationModelBuilder
