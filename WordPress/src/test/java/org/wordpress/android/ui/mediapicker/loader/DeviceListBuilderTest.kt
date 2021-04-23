@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -17,13 +18,17 @@ import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.loader.DeviceMediaLoader.DeviceMediaItem
 import org.wordpress.android.ui.mediapicker.loader.DeviceMediaLoader.DeviceMediaList
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
 @InternalCoroutinesApi
 class DeviceListBuilderTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var deviceMediaLoader: DeviceMediaLoader
+    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Mock lateinit var site: SiteModel
     @Mock lateinit var uri1: UriWrapper
     @Mock lateinit var uri2: UriWrapper
     @Mock lateinit var uri3: UriWrapper
@@ -41,6 +46,7 @@ class DeviceListBuilderTest : BaseUnitTest() {
         newestItem = DeviceMediaItem(uri1, "Newest item", 10)
         middleItem = DeviceMediaItem(uri2, "Middle item", 9)
         oldestItem = DeviceMediaItem(uri3, "Oldest item", 8)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
     }
 
     @Test
@@ -106,6 +112,40 @@ class DeviceListBuilderTest : BaseUnitTest() {
             assertThat(this.hasMore).isTrue()
             assertMediaItem(newestItem, position = 0)
             assertMediaItem(middleItem, position = 1)
+        }
+    }
+
+    @Test
+    fun `media - loads media item once isMimeTypeSupportedBySitePlan is true`() = test {
+        setUp(setOf(mediaType))
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem), middleItem.dateModified))
+        setupMedia(mediaType, middleItem.dateModified, DeviceMediaList(listOf(middleItem)))
+
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
+
+        deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+        val result = deviceListBuilder.load(forced = false, loadMore = true, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).hasSize(2)
+        }
+    }
+
+    @Test
+    fun `media - does not load media item once isMimeTypeSupportedBySitePlan is false`() = test {
+        setUp(setOf(mediaType))
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem), middleItem.dateModified))
+        setupMedia(mediaType, middleItem.dateModified, DeviceMediaList(listOf(middleItem)))
+
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(false)
+
+        deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+        val result = deviceListBuilder.load(forced = false, loadMore = true, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).isEmpty()
         }
     }
 
@@ -248,6 +288,8 @@ class DeviceListBuilderTest : BaseUnitTest() {
         deviceListBuilder = DeviceListBuilder(
                 localeManagerWrapper,
                 deviceMediaLoader,
+                mediaUtilsWrapper,
+                site,
                 TEST_DISPATCHER,
                 allowedTypes,
                 pageSize
