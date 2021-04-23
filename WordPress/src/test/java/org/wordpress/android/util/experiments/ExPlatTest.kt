@@ -1,6 +1,7 @@
 package org.wordpress.android.util.experiments
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -42,7 +43,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -51,7 +52,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -60,7 +61,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -69,7 +70,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.forceRefresh()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -85,7 +86,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -94,7 +95,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -103,7 +104,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -112,7 +113,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -121,7 +122,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -146,7 +147,8 @@ class ExPlatTest : BaseUnitTest() {
 
     private suspend fun setupAssignments(cachedAssignments: Assignments?, fetchedAssignments: Assignments) {
         whenever(experimentStore.getCachedAssignments()).thenReturn(cachedAssignments)
-        whenever(experimentStore.fetchAssignments(any())).thenReturn(OnAssignmentsFetched(fetchedAssignments))
+        whenever(experimentStore.fetchAssignments(any(), any(), anyOrNull()))
+                .thenReturn(OnAssignmentsFetched(fetchedAssignments))
     }
 
     private fun buildAssignments(

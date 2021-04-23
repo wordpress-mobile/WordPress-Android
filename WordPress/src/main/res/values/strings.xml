@@ -3537,4 +3537,8 @@
     <string name="backup_download_status_bullet_clock_icon_content_desc" translatable="false">@string/restore_status_bullet_clock_icon_content_desc</string>
     <string name="backup_download_status_bullet_checkmark_icon_content_desc" translatable="false">@string/restore_status_bullet_checkmark_icon_content_desc</string>
 
+    <!-- user profile bottom sheet -->
+    <string name="user_profile_site_section_header">Site</string>
+    <string name="user_profile_untitled_site">(Untitled)</string>
+
 </resources>

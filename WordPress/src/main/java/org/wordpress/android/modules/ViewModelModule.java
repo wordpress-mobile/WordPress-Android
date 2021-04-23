@@ -10,6 +10,7 @@ import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
+import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -489,6 +490,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EngagedPeopleListViewModel.class)
     abstract ViewModel engagedPeopleListViewModel(EngagedPeopleListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserProfileViewModel.class)
+    abstract ViewModel userProfileViewModel(UserProfileViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
