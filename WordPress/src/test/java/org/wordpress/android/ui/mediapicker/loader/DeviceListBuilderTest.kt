@@ -115,33 +115,28 @@ class DeviceListBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `media - loads media item once isMimeTypeSupportedBySitePlan is true`() = test {
+    fun `media - loads first page when isMimeTypeSupportedBySitePlan is true`() = test {
         setUp(setOf(mediaType))
-        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem), middleItem.dateModified))
-        setupMedia(mediaType, middleItem.dateModified, DeviceMediaList(listOf(middleItem)))
-
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem)))
         whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
         whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
 
-        deviceListBuilder.load(forced = false, loadMore = false, filter = null)
-        val result = deviceListBuilder.load(forced = false, loadMore = true, filter = null)
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
 
         (result as MediaLoadingResult.Success).apply {
-            assertThat(this.data).hasSize(2)
+            assertThat(this.data).hasSize(1)
+            assertMediaItem(newestItem)
         }
     }
 
     @Test
-    fun `media - does not load media item once isMimeTypeSupportedBySitePlan is false`() = test {
+    fun `media - loads first page with no results when isMimeTypeSupportedBySitePlan is false`() = test {
         setUp(setOf(mediaType))
-        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem), middleItem.dateModified))
-        setupMedia(mediaType, middleItem.dateModified, DeviceMediaList(listOf(middleItem)))
-
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem)))
         whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
         whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(false)
 
-        deviceListBuilder.load(forced = false, loadMore = false, filter = null)
-        val result = deviceListBuilder.load(forced = false, loadMore = true, filter = null)
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
 
         (result as MediaLoadingResult.Success).apply {
             assertThat(this.data).isEmpty()
