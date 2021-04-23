@@ -1889,6 +1889,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "featured_image_set_clicked_post_settings";
             case FEATURED_IMAGE_PICKED_POST_SETTINGS:
                 return "featured_image_picked_post_settings";
+            case FEATURED_IMAGE_PICKED_GUTENBERG_EDITOR:
+                return "featured_image_picked_gutenberg_editor";
             case FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS:
                 return "featured_image_upload_canceled_post_settings";
             case FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS:
