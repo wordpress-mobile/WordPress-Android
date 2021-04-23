@@ -266,6 +266,35 @@ class DeviceListBuilderTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `document - loads first page when isMimeTypeSupportedBySitePlan is true`() = test {
+        setUp(setOf(DOCUMENT))
+        setupDocuments(null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(documentMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).hasSize(1)
+            assertDocumentItem(newestItem)
+        }
+    }
+
+    @Test
+    fun `document - loads first page with no results when isMimeTypeSupportedBySitePlan is false`() = test {
+        setUp(setOf(DOCUMENT))
+        setupDocuments(null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(documentMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(false)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).isEmpty()
+        }
+    }
+
     private fun setupMedia(type: MediaType, nextTimestamp: Long?, results: DeviceMediaList) {
         whenever(deviceMediaLoader.loadMedia(type, null, pageSize, nextTimestamp)).thenReturn(
                 results
