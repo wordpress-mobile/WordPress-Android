@@ -92,7 +92,7 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 7
-    constructorThreshold: 8
+    constructorThreshold: 7
     ignoreDefaultParameters: false
     ignoreDataClasses: true
     ignoreAnnotated: ['javax.inject.Inject', 'javax.annotation.Generated']
