@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -253,6 +254,10 @@ public class WPMediaUtils {
         } else {
             return Plan.SELF_HOSTED;
         }
+    }
+
+    public static boolean isMimeTypeSupportedBySitePlan(SiteModel site, String mimeType) {
+        return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
     }
 
     public static void launchChooserWithContext(
