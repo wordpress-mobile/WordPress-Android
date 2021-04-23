@@ -1,20 +1,22 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditor
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForPost
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -50,6 +52,7 @@ class DeepLinkNavigator
                     navigateAction.site,
                     navigateAction.statsTimeframe
             )
+            OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
         }
@@ -60,6 +63,7 @@ class DeepLinkNavigator
         data class OpenInBrowser(val uri: UriWrapper) : NavigateAction()
         data class OpenEditorForPost(val site: SiteModel, val postId: Int) : NavigateAction()
         data class OpenEditorForSite(val site: SiteModel) : NavigateAction()
+        object OpenReader : NavigateAction()
         data class OpenInReader(val uri: UriWrapper) : NavigateAction()
         object OpenEditor : NavigateAction()
         data class OpenStatsForSiteAndTimeframe(val site: SiteModel, val statsTimeframe: StatsTimeframe) :

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.ui.deeplinks;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -38,10 +41,7 @@ import static org.wordpress.android.WordPress.getContext;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
-    private static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
     private static final String DEEP_LINK_HOST_POST = "post";
-    private static final String DEEP_LINK_HOST_STATS = "stats";
-    private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
     private static final String PAGES_PATH = "pages";
@@ -82,8 +82,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             if (!urlHandledInViewModel) {
                 if (shouldOpenEditorFromDeepLink(host)) {
                     handleOpenEditorFromDeepLink(uri);
-                } else if (isFromAppBanner(host)) {
-                    handleAppBanner(host);
                 } else if (shouldViewPost(host)) {
                     handleViewPost(uri);
                 } else if (shouldShowPages(uri)) {
@@ -206,29 +204,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ActivityLauncher.viewPagesInNewStack(getContext());
         }
         finish();
-    }
-
-    private void handleAppBanner(@NonNull String host) {
-        switch (host) {
-            case DEEP_LINK_HOST_NOTIFICATIONS:
-                ActivityLauncher.viewNotificationsInNewStack(getContext());
-                break;
-            case DEEP_LINK_HOST_STATS:
-                long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
-                SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
-                ActivityLauncher.viewStatsInNewStack(getContext(), siteModel);
-                break;
-            case DEEP_LINK_HOST_READ:
-                ActivityLauncher.viewReaderInNewStack(getContext());
-                break;
-        }
-    }
-
-    private boolean isFromAppBanner(String host) {
-        return (host != null
-                && (host.equals(DEEP_LINK_HOST_NOTIFICATIONS)
-                    || host.equals(DEEP_LINK_HOST_READ)
-                    || host.equals(DEEP_LINK_HOST_STATS)));
     }
 
     @Override

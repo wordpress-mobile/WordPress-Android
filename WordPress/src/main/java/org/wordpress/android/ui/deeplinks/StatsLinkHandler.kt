@@ -1,11 +1,11 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -18,6 +18,8 @@ class StatsLinkHandler
      * Builds navigate action from URL like:
      * https://wordpress.com/stats/$timeframe/$site
      * where timeframe and site are optional
+     * or
+     * wordpress://stats
      */
     fun buildOpenStatsNavigateAction(uri: UriWrapper): NavigateAction {
         val pathSegments = uri.pathSegments
@@ -43,11 +45,11 @@ class StatsLinkHandler
 
     /**
      * Returns true if the URI should be handled by StatsLinkHandler.
-     * The handled links are `https://wordpress.com/stats/day/$site`
+     * The handled links are `https://wordpress.com/stats/day/$site` and `wordpress://stats`
      */
     fun isStatsUrl(uri: UriWrapper): Boolean {
-        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == STATS_PATH
+        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == STATS_PATH) || uri.host == STATS_PATH
     }
 
     /**

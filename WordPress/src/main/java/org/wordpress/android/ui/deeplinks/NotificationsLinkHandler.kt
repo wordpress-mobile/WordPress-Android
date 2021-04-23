@@ -1,7 +1,7 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -20,8 +20,8 @@ class NotificationsLinkHandler
      * The handled links are `https://wordpress.com/notifications`
      */
     fun isNotificationsUrl(uri: UriWrapper): Boolean {
-        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == NOTIFICATIONS_PATH
+        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == NOTIFICATIONS_PATH) || uri.host == NOTIFICATIONS_PATH
     }
 
     companion object {
