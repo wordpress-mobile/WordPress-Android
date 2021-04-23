@@ -55,4 +55,7 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isFile(mediaUri: Uri): Boolean = MediaUtils.isFile(mediaUri)
 
     fun getSitePlanForMimeTypes(site: SiteModel?): Plan = WPMediaUtils.getSitePlanForMimeTypes(site)
+
+    fun isMimeTypeSupportedBySitePlan(site: SiteModel?, mimeType: String): Boolean =
+            WPMediaUtils.isMimeTypeSupportedBySitePlan(site, mimeType)
 }
