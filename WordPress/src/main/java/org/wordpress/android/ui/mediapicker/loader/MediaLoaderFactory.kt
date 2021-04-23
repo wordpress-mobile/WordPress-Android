@@ -23,7 +23,7 @@ class MediaLoaderFactory
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaLoader {
         return when (mediaPickerSetup.primaryDataSource) {
-            DEVICE -> deviceListBuilderFactory.build(mediaPickerSetup.allowedTypes,siteModel)
+            DEVICE -> deviceListBuilderFactory.build(mediaPickerSetup.allowedTypes, siteModel)
             WP_LIBRARY -> mediaLibraryDataSourceFactory.build(requireNotNull(siteModel) {
                 "Site is necessary when loading WP media library "
             }, mediaPickerSetup.allowedTypes)
