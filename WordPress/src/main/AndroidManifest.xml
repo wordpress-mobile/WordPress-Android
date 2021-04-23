@@ -368,7 +368,7 @@
 
         <!-- Deep Linking Activity -->
         <activity
-            android:name=".ui.DeepLinkingIntentReceiverActivity"
+            android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:excludeFromRecents="true">
             <intent-filter>

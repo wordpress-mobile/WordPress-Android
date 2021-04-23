@@ -1,11 +1,11 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStats
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSite
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject

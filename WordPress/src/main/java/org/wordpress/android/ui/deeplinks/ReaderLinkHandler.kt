@@ -1,9 +1,9 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import android.content.Intent
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenInReader
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper

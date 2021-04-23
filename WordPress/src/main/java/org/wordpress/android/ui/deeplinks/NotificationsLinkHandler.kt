@@ -1,7 +1,7 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 

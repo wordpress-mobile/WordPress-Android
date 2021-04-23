@@ -1,10 +1,10 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.OpenNotifications
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
 
 @RunWith(MockitoJUnitRunner::class)
 class NotificationsLinkHandlerTest {
