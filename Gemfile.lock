@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 84d6883486af2e740d73c807283ca698b544f4be
-  tag: android/translations
+  revision: 4dcdf92c4db82fbf2e2f101a80773cdc3f0eeb9b
+  tag: develop
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.17.0)
+    fastlane-plugin-wpmreleasetoolkit (0.17.1)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
