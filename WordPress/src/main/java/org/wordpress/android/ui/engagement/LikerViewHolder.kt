@@ -50,7 +50,8 @@ class LikerViewHolder(
                                 siteTitle = liker.preferredBlogName,
                                 siteUrl = liker.preferredBlogUrl,
                                 siteId = liker.preferredBlogId
-                        )
+                        ),
+                        liker.source
                 )
             }
         } else {
