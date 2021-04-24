@@ -424,10 +424,8 @@ class ReaderTracker @Inject constructor(
         }
 
         fun isUserProfileSource(source: String): Boolean {
-            return (source == SOURCE_READER_LIKE_LIST_USER_PROFILE
-                    ||
-                    source == SOURCE_NOTIF_LIKE_LIST_USER_PROFILE
-                    ||
+            return (source == SOURCE_READER_LIKE_LIST_USER_PROFILE ||
+                    source == SOURCE_NOTIF_LIKE_LIST_USER_PROFILE ||
                     source == SOURCE_USER_PROFILE_UNKNOWN)
         }
     }

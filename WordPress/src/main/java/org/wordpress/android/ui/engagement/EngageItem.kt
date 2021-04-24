@@ -24,9 +24,7 @@ sealed class EngageItem(val type: EngageItemType) {
         val onGravatarClick: (siteId: Long, siteUrl: String, source: String) -> Unit,
         val blogPreviewSource: String,
 
-        val onHeaderClicked: (siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) -> Unit,
-
-
+        val onHeaderClicked: (siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) -> Unit
     ) : EngageItem(LIKED_ITEM)
 
     data class Liker(

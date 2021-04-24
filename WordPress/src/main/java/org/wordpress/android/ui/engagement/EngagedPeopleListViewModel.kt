@@ -168,8 +168,7 @@ class EngagedPeopleListViewModel @Inject constructor(
 
     private fun buildUiState(updateLikesState: GetLikesState?, listScenario: ListScenario?): EngagedPeopleListUiState {
         val likedItem = listScenario?.headerData?.let {
-            listOf(
-                    LikedItem(
+            listOf(LikedItem(
                             author = it.authorName,
                             postOrCommentText = it.snippetText,
                             authorAvatarUrl = it.authorAvatarUrl,
@@ -186,8 +185,7 @@ class EngagedPeopleListViewModel @Inject constructor(
                                 LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
                             },
                             onHeaderClicked = ::onHeaderClicked
-                    )
-            )
+            ))
         } ?: listOf()
 
         val likers = when (updateLikesState) {

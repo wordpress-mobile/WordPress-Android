@@ -8,7 +8,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -19,6 +18,7 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
+@SuppressWarnings("TooManyFunctions")
 class AnalyticsUtilsWrapper @Inject constructor(
     private val appContext: Context
 ) {
