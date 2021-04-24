@@ -21,9 +21,12 @@ sealed class EngageItem(val type: EngageItemType) {
         val authorPreferredSiteId: Long, // author preferred site id
         val authorPreferredSiteUrl: String, // author preferred site url
 
-        val onGravatarClick: (siteId: Long, siteUrl: String) -> Unit,
+        val onGravatarClick: (siteId: Long, siteUrl: String, source: String) -> Unit,
+        val blogPreviewSource: String,
 
-        val onHeaderClicked: (siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) -> Unit
+        val onHeaderClicked: (siteId: Long, siteUrl: String, postOrCommentId: Long, commentPostId: Long) -> Unit,
+
+
     ) : EngageItem(LIKED_ITEM)
 
     data class Liker(
@@ -38,7 +41,8 @@ sealed class EngageItem(val type: EngageItemType) {
         val preferredBlogName: String,
         val preferredBlogUrl: String,
         val preferredBlogBlavatar: String,
-        val onClick: ((userProfile: UserProfile) -> Unit)? = null
+        val onClick: ((userProfile: UserProfile, source: EngagementNavigationSource?) -> Unit)? = null,
+        val source: EngagementNavigationSource?
     ) : EngageItem(LIKER)
 
     data class NextLikesPageLoader(val isLoading: Boolean, val action: () -> Unit) : EngageItem(NEXT_LIKES_PAGE_LOADER)
