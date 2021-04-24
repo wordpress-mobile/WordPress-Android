@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">아이콘 버튼 사용</string>
-    <string name="gutenberg_native_search_input_field">입력 필드를 검색합니다.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">검색 버튼입니다. 현재 버튼 텍스트는</string>
     <string name="gutenberg_native_search_blocks">블록 검색</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">블록 레이블을 검색합니다. 현재 텍스트는</string>
     <string name="gutenberg_native_search_block">블록 검색</string>
-    <string name="gutenberg_native_outside">외부</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">설정된 사용자 정의 플레이스홀더 없음</string>
-    <string name="gutenberg_native_no_button">버튼 없음</string>
-    <string name="gutenberg_native_inside">내부</string>
-    <string name="gutenberg_native_hide_search_heading">검색 헤딩요소 숨기기</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">두 번 눌러 레이블 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">두 번 눌러 버튼 텍스트 편집하기</string>
     <string name="gutenberg_native_double_tap_to_change_unit">두 번 눌러 단위 변경하기</string>
-    <string name="gutenberg_native_current_placeholder_text_is">현재 플레이스홀더 텍스트는</string>
     <string name="gutenberg_native_clear_search">검색 지우기</string>
     <string name="gutenberg_native_cancel_search">검색 취소</string>
-    <string name="gutenberg_native_button_position">버튼 위치</string>
-    <string name="gutenberg_native_button_outside">버튼 외부</string>
-    <string name="gutenberg_native_button_inside">버튼 내부</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s은(는) %3$s %4$s입니다.</string>
     <string name="get_likes_empty_state_title">좋아요 데이터를 가져오는 중 오류가 발생함</string>
     <string name="get_likes_unknown_error">좋아요를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
@@ -39,7 +23,6 @@ Language: ko_KR
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
-    <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
     <string name="reader_title_interests">토픽 따르기</string>
     <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
@@ -1425,9 +1408,7 @@ Language: ko_KR
     <string name="support_contact_email">연락처 이메일</string>
     <string name="application_log_button">애플리케이션 로그</string>
     <string name="my_tickets">내 티켓</string>
-    <string name="activity_log_rewind_site">사이트 되돌리기</string>
     <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
-    <string name="activity_log_rewind_dialog_message">사이트를 %2$s의 %1$s(으)로 복원하기 원하는게 확실한가요? 이는 만들 때부터 만든 모든 콘텐츠와 옵션을 제거할 것입니다.</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s(으)로 되돌리는 중</string>
     <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">사이트가 성공적으로 복원되었습니다.</string>

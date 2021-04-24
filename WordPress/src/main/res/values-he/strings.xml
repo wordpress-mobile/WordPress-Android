@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">הכפתור \'להשתמש בסמל\'</string>
-    <string name="gutenberg_native_search_input_field">שדה להזנת חיפוש.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">הכפתור \'חיפוש\'. הטקסט הנוכחי של הכפתור הוא</string>
     <string name="gutenberg_native_search_blocks">בלוקים של חיפוש</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">תווית של בלוק החיפוש. הטקסט הנוכחי הוא</string>
     <string name="gutenberg_native_search_block">בלוק החיפוש</string>
-    <string name="gutenberg_native_outside">חיצוני</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">לא הוגדר מציין מיקום מותאם</string>
-    <string name="gutenberg_native_no_button">ללא כפתור</string>
-    <string name="gutenberg_native_inside">פנימי</string>
-    <string name="gutenberg_native_hide_search_heading">להסתיר את כותרת החיפוש</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">יש להקיש פעמיים כדי לערוך את הטקסט של מציין המיקום</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">יש להקיש פעמיים כדי לערוך את הטקסט של התווית</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">יש להקיש פעמיים כדי לערוך את הטקסט של הכפתור</string>
     <string name="gutenberg_native_double_tap_to_change_unit">יש להקיש פעמיים כדי לשנות את היחידה</string>
-    <string name="gutenberg_native_current_placeholder_text_is">הטקסט הנוכחי של מציין מיקום הוא</string>
     <string name="gutenberg_native_clear_search">לנקות את החיפוש</string>
     <string name="gutenberg_native_cancel_search">לבטל חיפוש</string>
-    <string name="gutenberg_native_button_position">מיקום הכפתור</string>
-    <string name="gutenberg_native_button_outside">כפתור בחוץ</string>
-    <string name="gutenberg_native_button_inside">כפתור בפנים</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. ⁦%2$s⁩ הוא ⁦%3$s⁩ %4$s.</string>
     <string name="get_likes_empty_state_title">אירעה שגיאה בהבאת הנתונים של הלייקים</string>
     <string name="get_likes_unknown_error">אירעה שגיאה לא ידועה בהבאת הלייקים.</string>
@@ -40,7 +24,6 @@ Language: he_IL
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
-    <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
     <string name="reader_title_interests">לעקוב אחר נושאים</string>
     <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">ביטול</string>
@@ -1443,10 +1426,8 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
-    <string name="activity_log_rewind_site">לשחזר את האתר</string>
     <string name="activity_log_currently_restoring_message_no_dates">שחזור בתהליך</string>
     <string name="activity_log_currently_restoring_message">משחזר אל ⁦%1$s⁩ %2$s</string>
-    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד ⁦%1$s⁩ בשעה ⁦%2$s⁩? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>

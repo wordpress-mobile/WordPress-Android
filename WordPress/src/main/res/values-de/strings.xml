@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Icon-Button verwenden</string>
-    <string name="gutenberg_native_search_input_field">Eingabefelder suchen</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Button suchen Aktueller Button-Text ist</string>
     <string name="gutenberg_native_search_blocks">Blöcke suchen</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Blocklabel suchen Aktueller Text ist</string>
     <string name="gutenberg_native_search_block">Block suchen</string>
-    <string name="gutenberg_native_outside">Außen</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Kein individueller Platzhalter eingestellt</string>
-    <string name="gutenberg_native_no_button">Kein Button</string>
-    <string name="gutenberg_native_inside">Innen</string>
-    <string name="gutenberg_native_hide_search_heading">Suchüberschriften ausblenden</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Zum Bearbeiten des Platzhaltertexts zweimal tippen</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Zum Bearbeiten des Label-Texts zweimal tippen</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Zum Bearbeiten des Button-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Zum Wechseln der Einheit zweimal tippen</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Aktueller Platzhaltertext ist</string>
     <string name="gutenberg_native_clear_search">Suche löschen</string>
     <string name="gutenberg_native_cancel_search">Suche abbrechen</string>
-    <string name="gutenberg_native_button_position">Button-Position</string>
-    <string name="gutenberg_native_button_outside">Button außen</string>
-    <string name="gutenberg_native_button_inside">Button innen</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s ist %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Beim Abrufen der „Gefällt mir“-Daten ist ein Fehler aufgetreten.</string>
     <string name="get_likes_unknown_error">Beim Abrufen der „Gefällt mir“-Angaben ist ein unbekannter Fehler aufgetreten.</string>
@@ -40,7 +24,6 @@ Language: de
     <string name="gutenberg_native_buttongroup">Schaltflächengruppe</string>
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
-    <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
     <string name="reader_title_interests">Themen folgen</string>
     <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
     <string name="stories_intro_main_subtitle">Eine neue Möglichkeit, ansprechende Inhalte auf deiner Website zu erstellen und zu veröffentlichen.</string>
@@ -1443,9 +1426,7 @@ Language: de
     <string name="application_log_button">Anwendungsprotokoll</string>
     <string name="my_tickets">Meine Tickets</string>
     <string name="activity_log_currently_restoring_message_no_dates">Wiederherstellung in Bearbeitung</string>
-    <string name="activity_log_rewind_site">Website wiederherstellen</string>
     <string name="activity_log_currently_restoring_message">Wird wiederhergestellt auf %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %1$s um %2$s wiederherstellen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
     <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
     <string name="activity_log_button">Aktions-Button für Aktivitätsprotokoll</string>
