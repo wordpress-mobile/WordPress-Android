@@ -45,6 +45,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
+import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
 import org.wordpress.android.ui.engagement.ListScenarioType;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
@@ -1074,12 +1075,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
-    public static void viewLikeListActivity(Activity activity, long siteId, long postId, HeaderData headerData) {
+    public static void viewPostLikesListActivity(
+            Activity activity,
+            long siteId,
+            long postId,
+            HeaderData headerData,
+            EngagementNavigationSource source
+    ) {
         Intent intent = new Intent(activity, EngagedPeopleListActivity.class);
         intent.putExtra(
                 EngagedPeopleListActivity.KEY_LIST_SCENARIO,
                 new ListScenario(
                         ListScenarioType.LOAD_POST_LIKES,
+                        source,
                         siteId,
                         postId,
                         0L,
