@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -39,6 +40,14 @@ class AnalyticsUtilsWrapper @Inject constructor(
         site: SiteModel?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
+
+    fun trackUserProfileShown(source: String) = AnalyticsUtils.trackUserProfileShown(source)
+
+    fun trackUserProfileSiteShown() = AnalyticsUtils.trackUserProfileSiteShown()
+
+    fun trackBlogPreviewedByUrl(source: String) = AnalyticsUtils.trackBlogPreviewedByUrl(source)
+
+    fun trackLikeListOpened(source: String, listType: String) = AnalyticsUtils.trackLikeListOpened(source, listType)
 
     /* READER */
 
