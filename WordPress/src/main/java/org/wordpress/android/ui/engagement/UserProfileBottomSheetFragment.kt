@@ -128,7 +128,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                         siteTitle.text = state.siteTitle
                         siteUrl.text = UrlUtils.getHost(state.siteUrl)
                         siteData.setOnClickListener {
-                            state.onClick?.invoke(
+                            state.onSiteClickListener?.invoke(
                                     state.siteId,
                                     state.siteUrl,
                                     state.blogPreviewSource

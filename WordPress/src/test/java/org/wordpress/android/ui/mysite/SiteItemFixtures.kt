@@ -72,7 +72,7 @@ val COMMENTS_ITEM = ListItem(
         onClick = ListItemInteraction.create(ListItemAction.COMMENTS, SITE_ITEM_ACTION)
 )
 val ADMIN_ITEM = ListItem(
-        R.drawable.ic_my_sites_white_24dp,
+        R.drawable.ic_wordpress_white_24dp,
         UiStringRes(R.string.my_site_btn_view_admin),
         secondaryIcon = R.drawable.ic_external_white_24dp,
         onClick = ListItemInteraction.create(ListItemAction.ADMIN, SITE_ITEM_ACTION)

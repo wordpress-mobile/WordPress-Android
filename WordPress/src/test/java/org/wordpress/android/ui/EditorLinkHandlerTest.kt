@@ -9,12 +9,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
 
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
-    @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var postStore: PostStore
     private lateinit var editorLinkHandler: EditorLinkHandler
     private lateinit var site: SiteModel
@@ -25,7 +23,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        editorLinkHandler = EditorLinkHandler(deepLinkUriUtils, siteStore, postStore)
+        editorLinkHandler = EditorLinkHandler(deepLinkUriUtils, postStore)
         site = SiteModel()
         site.url = siteUrl
         post = PostModel()
@@ -34,10 +32,35 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `handles post URI is true`() {
+        val postUri = buildUri("wordpress.com", "post")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isTrue()
+    }
+
+    @Test
+    fun `does not handle post URI with different host`() {
+        val postUri = buildUri("wordpress.org", "post")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isFalse()
+    }
+
+    @Test
+    fun `does not handle URI with different path`() {
+        val postUri = buildUri("wordpress.com", "stats")
+
+        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+
+        assertThat(isEditorUri).isFalse()
+    }
+
+    @Test
     fun `opens editor when site not found`() {
-        val siteUrl = "site123"
         val uri = buildUri(path1 = "post", path2 = siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf())
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
 
@@ -47,8 +70,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a site site when post missing in URL`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl)
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
 
@@ -58,8 +80,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a post when both site and post exist`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
@@ -70,8 +91,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     @Test
     fun `opens editor for a site site when post not found`() {
         val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
-        whenever(deepLinkUriUtils.extractHostFromSite(site)).thenReturn(siteUrl)
-        whenever(siteStore.getSitesByNameOrUrlMatching(siteUrl)).thenReturn(listOf(site))
+        whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
 
         val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)

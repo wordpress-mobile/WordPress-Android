@@ -45,7 +45,7 @@ class UserProfileViewModel @Inject constructor(
                     },
                     siteUrl = siteUrl,
                     siteId = siteId,
-                    onClick = onClick,
+                    onSiteClickListener = onClick,
                     blogPreviewSource = source?.let {
                         when (it) {
                             LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIF_LIKE_LIST_USER_PROFILE

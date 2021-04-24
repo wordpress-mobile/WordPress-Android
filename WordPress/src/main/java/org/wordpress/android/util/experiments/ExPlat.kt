@@ -5,7 +5,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.store.ExperimentStore
-import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.APPLICATION_SCOPE
@@ -63,7 +62,7 @@ class ExPlat
         return cachedAssignments
     }
 
-    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(FetchAssignmentsPayload(platform)).also {
+    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(platform, emptyList()).also {
         if (it.isError) {
             appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
         } else {
