@@ -10,7 +10,8 @@ import javax.inject.Inject
 class EngagementUtils @Inject constructor() {
     fun likesToEngagedPeople(
         likes: List<LikeModel>,
-        onClick: ((userProfile: UserProfile) -> Unit)? = null
+        onClick: ((userProfile: UserProfile, source: EngagementNavigationSource?) -> Unit)? = null,
+        source: EngagementNavigationSource? = null
     ): List<EngageItem> {
         return likes.map { likeData ->
             Liker(
@@ -25,7 +26,8 @@ class EngagementUtils @Inject constructor() {
                     preferredBlogName = likeData.preferredBlogName!!,
                     preferredBlogUrl = likeData.preferredBlogUrl!!,
                     preferredBlogBlavatar = likeData.preferredBlogBlavatarUrl!!,
-                    onClick = onClick
+                    onClick = onClick,
+                    source = source
             )
         }
     }
