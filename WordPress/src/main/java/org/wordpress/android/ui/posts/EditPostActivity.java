@@ -2971,9 +2971,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
+    public void onPerformFetch(String path, boolean enableCaching, Consumer<String> onResult, Consumer<Bundle> onError) {
         if (mSite != null) {
-            mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
+            mReactNativeRequestHandler.performGetRequest(path, mSite, enableCaching, onResult, onError);
         }
     }
 
