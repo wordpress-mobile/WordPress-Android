@@ -117,8 +117,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     protected void setupLabel(@NonNull TextView label) {
         final boolean isWoo = mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE;
         final int labelResId = isWoo ? R.string.enter_credentials_for_site : R.string.enter_account_info_for_site;
+        final String siteAddress =
+                (mEndpointAddress == null || mEndpointAddress.isEmpty()) ? mInputSiteAddress : mEndpointAddress;
         final String formattedSiteAddress =
-                UrlUtils.getHost(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
+                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(siteAddress)));
         label.setText(getString(labelResId, formattedSiteAddress));
     }
 
