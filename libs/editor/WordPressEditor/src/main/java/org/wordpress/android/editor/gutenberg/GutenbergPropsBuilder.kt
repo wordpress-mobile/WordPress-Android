@@ -18,7 +18,8 @@ data class GutenbergPropsBuilder(
     private val localeSlug: String,
     private val postType: String,
     private val featuredImageId: Int,
-    private val editorTheme: Bundle?
+    private val editorTheme: Bundle?,
+    private val canViewEditorOnboarding: Boolean,
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
             enableContactInfoBlock = enableContactInfoBlock,
@@ -34,6 +35,7 @@ data class GutenbergPropsBuilder(
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
-            htmlModeEnabled = isHtmlModeEnabled
+            htmlModeEnabled = isHtmlModeEnabled,
+            canViewEditorOnboarding = canViewEditorOnboarding
     )
 }

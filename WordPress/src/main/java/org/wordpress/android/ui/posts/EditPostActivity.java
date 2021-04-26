@@ -2272,6 +2272,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
+        int editorOnboardingPhasePercentage = 0;
+        boolean canViewEditorOnboarding = mAccountStore.getAccount().getUserId() % 100 >= (100 - editorOnboardingPhasePercentage);
+
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
@@ -2283,7 +2286,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
-                themeBundle
+                themeBundle,
+                canViewEditorOnboarding
         );
     }
 
