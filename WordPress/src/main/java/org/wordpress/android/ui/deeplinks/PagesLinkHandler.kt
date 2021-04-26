@@ -21,7 +21,7 @@ class PagesLinkHandler
      * Returns StartCreateSiteFlow is user logged in and ShowSignInFlow if user is logged out
      */
     fun buildNavigateAction(uri: UriWrapper): NavigateAction {
-        val targetHost: String = deepLinkUriUtils.extractTargetHost(uri)
+        val targetHost: String = uri.lastPathSegment ?: ""
         val site: SiteModel? = deepLinkUriUtils.hostToSite(targetHost)
         return if (site != null) {
             OpenPagesForSite(site)

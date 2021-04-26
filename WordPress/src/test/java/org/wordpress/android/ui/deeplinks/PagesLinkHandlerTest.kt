@@ -61,6 +61,7 @@ class PagesLinkHandlerTest {
     fun `opens pages screen for a site when URL ends with site URL`() {
         val siteUrl = "example.com"
         val uri = buildUri(path1 = "pages", path2 = siteUrl)
+        whenever(uri.lastPathSegment).thenReturn(siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
         val navigateAction = pagesLinkHandler.buildNavigateAction(uri)
