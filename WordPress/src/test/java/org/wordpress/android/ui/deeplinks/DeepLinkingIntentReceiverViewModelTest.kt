@@ -27,7 +27,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private val startUrl = buildUri("wordpress.com", "start")
     private val postUrl = buildUri("wordpress.com", "post")
-    private val statsUrl = buildUri("wordpress.com", "stats")
 
     @InternalCoroutinesApi
     @Before
