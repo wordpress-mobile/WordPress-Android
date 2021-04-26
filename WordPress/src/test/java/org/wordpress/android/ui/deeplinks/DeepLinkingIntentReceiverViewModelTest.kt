@@ -20,6 +20,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var startLinkHandler: StartLinkHandler
     @Mock lateinit var readerLinkHandler: ReaderLinkHandler
     @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
+    @Mock lateinit var pagesLinkHandler: PagesLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
@@ -37,6 +38,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 statsLinkHandler,
                 startLinkHandler,
                 readerLinkHandler,
+                pagesLinkHandler,
                 notificationsLinkHandler,
                 deepLinkUriUtils,
                 serverTrackingHandler

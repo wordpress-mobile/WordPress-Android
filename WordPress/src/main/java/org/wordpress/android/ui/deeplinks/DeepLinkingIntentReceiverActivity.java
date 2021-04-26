@@ -84,8 +84,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                     handleOpenEditorFromDeepLink(uri);
                 } else if (shouldViewPost(host)) {
                     handleViewPost(uri);
-                } else if (shouldShowPages(uri)) {
-                    handleShowPages(uriWrapper);
                 } else {
                     // not handled
                     finish();
@@ -187,23 +185,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         } else {
             ActivityLauncher.loginForDeeplink(this);
         }
-    }
-
-    private boolean shouldShowPages(@NonNull Uri uri) {
-        // Match: https://wordpress.com/pages/
-        return shouldShow(uri, PAGES_PATH);
-    }
-
-    private void handleShowPages(@NonNull UriWrapper uri) {
-        String targetHost = mDeepLinkUriUtils.extractTargetHost(uri);
-        SiteModel site = mDeepLinkUriUtils.hostToSite(targetHost);
-        if (site != null) {
-            ActivityLauncher.viewPagesInNewStack(getContext(), site);
-        } else {
-            // In other cases, launch pages with the current selected site.
-            ActivityLauncher.viewPagesInNewStack(getContext());
-        }
-        finish();
     }
 
     @Override
