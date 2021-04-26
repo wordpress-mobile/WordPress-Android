@@ -79,9 +79,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             UriWrapper uriWrapper = new UriWrapper(uri);
             boolean urlHandledInViewModel = mViewModel.handleUrl(uriWrapper);
             if (!urlHandledInViewModel) {
-                if (shouldOpenEditorFromDeepLink(host)) {
-                    handleOpenEditorFromDeepLink(uri);
-                } else if (shouldViewPost(host)) {
+                if (shouldViewPost(host)) {
                     handleViewPost(uri);
                 } else {
                     // not handled
@@ -103,69 +101,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ToastUtils.showToast(getContext(), toastMessage);
             return null;
         }));
-    }
-
-    private boolean shouldOpenEditorFromDeepLink(String host) {
-        // Match: wordpress://post/...
-        return host != null && host.equals(DEEP_LINK_HOST_POST);
-    }
-
-    /**
-     * Opens post editor for provided uri. If uri contains a site and a postId
-     * (e.g. wordpress/post?blogId=798&postId=1231), opens the post for editing, if available.
-     * If the uri only contains a site (e.g. wordpress/post?blogId=798 ), opens a new post
-     * editor for that site, if available.
-     * Else opens the new post editor for currently selected site.
-     */
-    private void handleOpenEditorFromDeepLink(@NonNull Uri uri) {
-        String blogId = uri.getQueryParameter("blogId");
-        String postId = uri.getQueryParameter("postId");
-
-        if (blogId == null) {
-            // No blogId provided. Follow default behaviour: open a blank editor with the current selected site
-            ActivityLauncher.openEditorInNewStack(getContext());
-            return;
-        }
-
-        SiteModel site;
-
-        Long siteId = parseAsLongOrNull(blogId);
-        if (siteId != null) {
-            // Blog id is a number so we check for it as site id
-            site = mSiteStore.getSiteBySiteId(siteId);
-        } else {
-            // Blog id is not a number so we check for it as blog name or url
-            List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(blogId);
-            site = matchedSites.isEmpty() ? null : matchedSites.get(0);
-        }
-
-        if (site == null) {
-            // Site not found. Open a blank editor with the current selected site
-            ToastUtils.showToast(getContext(), R.string.blog_not_found);
-            ActivityLauncher.openEditorInNewStack(getContext());
-            return;
-        }
-
-        Long remotePostId = parseAsLongOrNull(postId);
-
-        if (remotePostId == null) {
-            // Open new post editor for given site
-            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
-            return;
-        }
-
-        // Check if post is available for opening
-        PostModel post = mPostStore.getPostByRemotePostId(remotePostId, site);
-
-        if (post == null) {
-            ToastUtils.showToast(getContext(), R.string.post_not_found);
-            // Post not found. Open new post editor for given site.
-            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
-            return;
-        }
-
-        // Open editor with post
-        ActivityLauncher.openEditorForPostInNewStack(getContext(), site, post.getId());
     }
 
     private boolean shouldViewPost(String host) {
