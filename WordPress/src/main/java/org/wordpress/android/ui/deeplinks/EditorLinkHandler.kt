@@ -86,7 +86,12 @@ class EditorLinkHandler
         }
     }
 
-    private fun openEditorForSiteAndPost(hasSiteParam: Boolean, hasPostParam: Boolean, site: SiteModel?, post: PostModel?): NavigateAction {
+    private fun openEditorForSiteAndPost(
+        hasSiteParam: Boolean,
+        hasPostParam: Boolean,
+        site: SiteModel?,
+        post: PostModel?
+    ): NavigateAction {
         return when {
             site == null -> {
                 if (hasSiteParam) {

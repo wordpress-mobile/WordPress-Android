@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 class DeepLinkNavigator
 @Inject constructor() {
+    @Suppress("ComplexMethod")
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
