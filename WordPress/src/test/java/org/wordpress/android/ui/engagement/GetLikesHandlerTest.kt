@@ -65,7 +65,7 @@ class GetLikesHandlerTest {
         )
 
         whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
-                flow { emit( state ) }
+                flow { emit(state) }
         )
 
         setupObservers()
@@ -101,7 +101,7 @@ class GetLikesHandlerTest {
         )
 
         whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams)).thenReturn(
-                flow { emit( state ) }
+                flow { emit(state) }
         )
 
         setupObservers()
