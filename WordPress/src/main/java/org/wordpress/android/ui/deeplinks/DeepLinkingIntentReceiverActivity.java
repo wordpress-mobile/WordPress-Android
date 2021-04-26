@@ -11,8 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -26,8 +24,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
