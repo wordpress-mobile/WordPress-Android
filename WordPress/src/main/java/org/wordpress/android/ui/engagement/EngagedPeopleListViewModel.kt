@@ -9,6 +9,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
+import org.wordpress.android.ui.engagement.EngageItem.NextLikesPageLoader
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.PreviewCommentInReader
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -87,10 +89,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     }
 
     private fun onRefreshData() {
-        listScenario?.let {
-            requestPostOrCommentIfNeeded(it.type, it.siteId, it.postOrCommentId, it.commentPostId)
-            loadRequest(it.type, it.siteId, it.postOrCommentId, it.headerData.numLikes)
-        }
+        loadRequest(listScenario, requestPostOrComment = true, requestNextPage = false)
     }
 
     private fun requestPostOrCommentIfNeeded(
@@ -119,20 +118,44 @@ class EngagedPeopleListViewModel @Inject constructor(
     }
 
     private fun loadRequest(
-        loadRequestType: ListScenarioType,
-        siteId: Long,
-        entityId: Long,
-        numLikes: Int
+        listScenario: ListScenario?,
+        requestPostOrComment: Boolean,
+        requestNextPage: Boolean
     ) {
+        if (listScenario == null) return
+
+        if (requestPostOrComment) {
+            requestPostOrCommentIfNeeded(
+                    listScenario.type,
+                    listScenario.siteId,
+                    listScenario.postOrCommentId,
+                    listScenario.commentPostId
+            )
+        }
+
         getLikesJob?.cancel()
         getLikesJob = launch(bgDispatcher) {
             // TODO: currently API is not sorting the likes as the list in notifications does,
             // use case logic has code to sort based on a list of ids (ideally the available likers ids taken
             // from the notification).
             // Keeping the logic for now, but remove empty listOf and relevant logic when API will sort likes
-            when (loadRequestType) {
-                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(siteId, entityId, numLikes)
-                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(siteId, entityId, numLikes)
+            when (listScenario.type) {
+                LOAD_POST_LIKES -> getLikesHandler.handleGetLikesForPost(
+                        LikeGroupFingerPrint(
+                                listScenario.siteId,
+                                listScenario.postOrCommentId,
+                                listScenario.headerData.numLikes
+                        ),
+                        requestNextPage
+                )
+                LOAD_COMMENT_LIKES -> getLikesHandler.handleGetLikesForComment(
+                        LikeGroupFingerPrint(
+                                listScenario.siteId,
+                                listScenario.postOrCommentId,
+                                listScenario.headerData.numLikes
+                        ),
+                        requestNextPage
+                )
             }
         }
     }
@@ -159,10 +182,14 @@ class EngagedPeopleListViewModel @Inject constructor(
 
         val likers = when (updateLikesState) {
             is LikesData -> {
-                engagementUtils.likesToEngagedPeople(updateLikesState.likes, ::onUserProfileHolderClicked)
+                engagementUtils.likesToEngagedPeople(
+                        updateLikesState.likes, ::onUserProfileHolderClicked
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true)
             }
             is Failure -> {
-                engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes, ::onUserProfileHolderClicked)
+                engagementUtils.likesToEngagedPeople(
+                        updateLikesState.cachedLikes, ::onUserProfileHolderClicked
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false)
             }
             Loading, null -> listOf()
         }
@@ -188,6 +215,16 @@ class EngagedPeopleListViewModel @Inject constructor(
                 emptyStateAction = emptyStateAction,
                 emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
         )
+    }
+
+    private fun appendNextPageLoaderIfNeeded(hasMore: Boolean, isLoading: Boolean): List<EngageItem> {
+        return if (hasMore) {
+            listOf(NextLikesPageLoader(isLoading) {
+                loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
+            })
+        } else {
+            listOf()
+        }
     }
 
     private fun onUserProfileHolderClicked(userProfile: UserProfile) {
