@@ -172,7 +172,9 @@ public class CommentsListFragment extends ViewPagerFragment {
                 mSwipeRefreshLayout,
                 () -> {
                     if (!NetworkUtils.checkConnection(getContext())) {
-                        showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        if (getAdapter().getItemCount() == 0) {
+                            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        }
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
