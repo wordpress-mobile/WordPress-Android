@@ -178,10 +178,14 @@ public class PostStore extends Store {
     public static class FetchPostLikesPayload extends Payload<BaseNetworkError> {
         public final long siteId;
         public final long remotePostId;
+        public final boolean requestNextPage;
+        public final int pageLength;
 
-        public FetchPostLikesPayload(long siteId, long remotePostId) {
+        public FetchPostLikesPayload(long siteId, long remotePostId, boolean requestNextPage, int pageLength) {
             this.siteId = siteId;
             this.remotePostId = remotePostId;
+            this.requestNextPage = requestNextPage;
+            this.pageLength = pageLength;
         }
     }
 
@@ -189,17 +193,34 @@ public class PostStore extends Store {
         @NonNull public final List<LikeModel> likes;
         public final long siteId;
         public final long remotePostId;
+        public final boolean hasMore;
+        public final boolean isRequestNextPage;
 
-        public FetchedPostLikesResponsePayload(@NonNull List<LikeModel> likes, long siteId, long remotePostId) {
+        public FetchedPostLikesResponsePayload(
+                @NonNull List<LikeModel> likes,
+                long siteId,
+                long remotePostId,
+                boolean isRequestNextPage,
+                boolean hasMore
+        ) {
             this.likes = likes;
             this.siteId = siteId;
             this.remotePostId = remotePostId;
+            this.hasMore = hasMore;
+            this.isRequestNextPage = isRequestNextPage;
         }
 
-        public FetchedPostLikesResponsePayload(long siteId, long remotePostId) {
+        public FetchedPostLikesResponsePayload(
+                long siteId,
+                long remotePostId,
+                boolean isRequestNextPage,
+                boolean hasMore
+        ) {
             this.likes = new ArrayList<>();
             this.siteId = siteId;
             this.remotePostId = remotePostId;
+            this.hasMore = hasMore;
+            this.isRequestNextPage = isRequestNextPage;
         }
     }
 
@@ -343,11 +364,13 @@ public class PostStore extends Store {
         public final long siteId;
         public final long postId;
         public List<LikeModel> postLikes = new ArrayList<>();
+        public final boolean hasMore;
 
-        public OnPostLikesChanged(CauseOfOnPostChanged causeOfChange, long siteId, long postId) {
+        public OnPostLikesChanged(CauseOfOnPostChanged causeOfChange, long siteId, long postId, boolean hasMore) {
             this.causeOfChange = causeOfChange;
             this.siteId = siteId;
             this.postId = postId;
+            this.hasMore = hasMore;
         }
     }
 
@@ -740,23 +763,32 @@ public class PostStore extends Store {
     }
 
     private void fetchPostLikes(FetchPostLikesPayload payload) {
-        mPostRestClient.fetchPostLikes(payload.siteId, payload.remotePostId);
+        mPostRestClient.fetchPostLikes(
+                payload.siteId,
+                payload.remotePostId,
+                payload.requestNextPage,
+                payload.pageLength
+        );
     }
 
     private void handleFetchedPostLikes(FetchedPostLikesResponsePayload payload) {
         OnPostLikesChanged event = new OnPostLikesChanged(
                 FetchPostLikes.INSTANCE,
                 payload.siteId,
-                payload.remotePostId
+                payload.remotePostId,
+                payload.hasMore
         );
         if (!payload.isError()) {
             if (payload.likes != null) {
-                mPostSqlUtils.deletePostLikes(payload.siteId, payload.remotePostId);
+                if (!payload.isRequestNextPage) {
+                    mPostSqlUtils.deletePostLikes(payload.siteId, payload.remotePostId);
+                }
 
                 for (LikeModel like : payload.likes) {
                     mPostSqlUtils.insertOrUpdatePostLikes(payload.siteId, payload.remotePostId, like);
                 }
-                event.postLikes.addAll(payload.likes);
+
+                event.postLikes.addAll(mPostSqlUtils.getPostLikesByPostId(payload.siteId, payload.remotePostId));
             }
         } else {
             List<LikeModel> cachedLikes = mPostSqlUtils.getPostLikesByPostId(payload.siteId, payload.remotePostId);

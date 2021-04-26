@@ -36,12 +36,16 @@ public class CommentErrorUtils {
     public static FetchedCommentLikesResponsePayload commentErrorToFetchedCommentLikesPayload(
             BaseNetworkError error,
             long siteId,
-            long commentId
+            long commentId,
+            boolean requestNextPage,
+            boolean hasMore
     ) {
         FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
                 new ArrayList<LikeModel>(),
                 siteId,
-                commentId
+                commentId,
+                requestNextPage,
+                hasMore
         );
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
