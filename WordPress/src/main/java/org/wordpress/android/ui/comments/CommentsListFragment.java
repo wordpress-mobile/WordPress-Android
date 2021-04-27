@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -171,7 +172,9 @@ public class CommentsListFragment extends ViewPagerFragment {
                 mSwipeRefreshLayout,
                 () -> {
                     if (!NetworkUtils.checkConnection(getContext())) {
-                        showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        if (getAdapter().getItemCount() == 0) {
+                            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        }
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
@@ -229,14 +232,19 @@ public class CommentsListFragment extends ViewPagerFragment {
                     emptyViewMessageStringId = R.string.comments_empty_list;
                     break;
             }
+            mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
             mActionableEmptyView.image.setVisibility(View.VISIBLE);
         } else {
+            @DrawableRes int emptyViewIllustrationId = 0;
+            int emptyViewIllustrationVisibility = View.GONE;
             switch (messageType) {
                 case LOADING:
                     emptyViewMessageStringId = R.string.comments_fetching;
                     break;
                 case NETWORK_ERROR:
                     emptyViewMessageStringId = R.string.no_network_message;
+                    emptyViewIllustrationId = R.drawable.img_illustration_cloud_off_152dp;
+                    emptyViewIllustrationVisibility = View.VISIBLE;
                     break;
                 case PERMISSION_ERROR:
                     emptyViewMessageStringId = R.string.error_refresh_unauthorized_comments;
@@ -245,8 +253,8 @@ public class CommentsListFragment extends ViewPagerFragment {
                     emptyViewMessageStringId = R.string.error_refresh_comments;
                     break;
             }
-
-            mActionableEmptyView.image.setVisibility(View.GONE);
+            mActionableEmptyView.image.setImageResource(emptyViewIllustrationId);
+            mActionableEmptyView.image.setVisibility(emptyViewIllustrationVisibility);
         }
         mActionableEmptyView.title.setText(emptyViewMessageStringId);
         mActionableEmptyView.setVisibility(View.VISIBLE);
