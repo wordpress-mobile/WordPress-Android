@@ -177,6 +177,7 @@ class MediaPickerLauncher @Inject constructor(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun showFilePicker(
         activity: Activity,
         site: SiteModel,

@@ -23,6 +23,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class DeviceListBuilder(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val deviceMediaLoader: DeviceMediaLoader,
