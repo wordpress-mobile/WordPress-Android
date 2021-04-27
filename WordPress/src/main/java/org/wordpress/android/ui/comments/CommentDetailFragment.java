@@ -425,16 +425,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         setupSuggestionServiceAndAdapter();
 
-        // reattach listeners to collapsible reply dialog
-        CollapseFullScreenDialogFragment fragment =
-                (CollapseFullScreenDialogFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(
-                        CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
-
-        if (fragment != null && fragment.isAdded()) {
-            fragment.setOnCollapseListener(this);
-            fragment.setOnConfirmListener(this);
-        }
-
         return view;
     }
 
@@ -470,6 +460,17 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
             setNote(mRestoredNoteId);
             mRestoredNoteId = null;
+        }
+
+        // reattach listeners to collapsible reply dialog
+        // we need to to it in onResume to make sure mComment is already intialized
+        CollapseFullScreenDialogFragment fragment =
+                (CollapseFullScreenDialogFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(
+                        CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
+
+        if (fragment != null && fragment.isAdded()) {
+            fragment.setOnCollapseListener(this);
+            fragment.setOnConfirmListener(this);
         }
     }
 
