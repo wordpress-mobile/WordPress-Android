@@ -629,6 +629,24 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
+    # download_translations
+    # -----------------------------------------------------------------------------------
+    # This lane download the string translations from GlotPress
+    # -----------------------------------------------------------------------------------
+    # Usage:
+    # bundle exec fastlane download_translations
+    #####################################################################################
+  lane :download_translations do |options|
+    # Adapt the GP project URL and lint_task as needed if testing a project other than WordPress
+    android_download_translations(
+      res_dir: File.join(ENV['PROJECT_NAME'], 'src', 'main', 'res'),
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      locales: SUPPORTED_LOCALES,
+      lint_task: 'lintVanillaRelease'
+    )
+  end
+
+  #####################################################################################
   # build_for_translation_review
   # -----------------------------------------------------------------------------------
   # This lane builds an app bundle with pending translations
@@ -638,18 +656,18 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds an app bundle"
   lane :build_for_translation_review do | options |
-    cmd_params = ""
-    unless options[:custom_version].nil?
-      UI.message("Building custom version: #{options[:custom_version]}")
-      cmd_params=" -PversionName=\"#{options[:custom_version]}\""
-    end
-
     android_download_translations(
       glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
       status_filter: ['current', 'waiting', 'fuzzy'],
       locales: SUPPORTED_LOCALES,
       lint_task: nil, skip_commit: true
     )
+
+    cmd_params = ""
+    unless options[:custom_version].nil?
+      UI.message("Building custom version: #{options[:custom_version]}")
+      cmd_params=" -PversionName=\"#{options[:custom_version]}\""
+    end
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
