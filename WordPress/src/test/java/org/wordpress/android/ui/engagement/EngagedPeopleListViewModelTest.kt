@@ -88,7 +88,6 @@ class EngagedPeopleListViewModelTest {
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
-
         viewModel = EngagedPeopleListViewModel(
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
@@ -484,7 +483,6 @@ class EngagedPeopleListViewModelTest {
                 whenever(listScenario.commentPostId).thenReturn(postId)
                 whenever(listScenario.headerData).thenReturn(headerData)
                 whenever(listScenario.source).thenReturn(LIKE_NOTIFICATION_LIST)
-
             }
         }
     }

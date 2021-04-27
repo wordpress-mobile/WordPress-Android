@@ -58,7 +58,7 @@ enum class GetLikesTestConfig {
 }
 
 fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
-    return when(testConfig) {
+    return when (testConfig) {
         TEST_CONFIG_1 -> {
             LikesData(
                     getDefaultLikers(10, POST_LIKE, 10, 100),

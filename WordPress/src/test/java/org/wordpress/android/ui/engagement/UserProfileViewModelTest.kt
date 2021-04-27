@@ -71,7 +71,6 @@ class UserProfileViewModelTest {
 
         requireNotNull(sheetAction).let {
             assertThat(it is ShowBottomSheet).isTrue
-
         }
     }
 
@@ -89,7 +88,6 @@ class UserProfileViewModelTest {
 
         requireNotNull(sheetAction).let {
             assertThat(it is HideBottomSheet).isTrue
-
         }
     }
 
