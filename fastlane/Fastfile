@@ -7,7 +7,7 @@ end
 
 # NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
 # of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
-SUPPORTED_LOCALES = [
+ALL_LOCALES = [
   { glotpress: "ar", android: "ar",    google_play: "ar",     promo_config: {} },
   { glotpress: "de", android: "de",    google_play: "de-DE",  promo_config: {} },
   { glotpress: "en-gb", android: "en-rGB", google_play: "en-US",  promo_config: {} },
@@ -30,6 +30,38 @@ SUPPORTED_LOCALES = [
   { glotpress: "vi", android: "vi",    google_play: "vi",     promo_config: {} },
   { glotpress: "zh-cn", android: "zh-rCN", google_play: "zh-CN",  promo_config: {} },
   { glotpress: "zh-tw", android: "zh-rTW", google_play: "zh-TW",  promo_config: {} },
+  { glotpress: "az", android: "az", google_play: "az",  promo_config: {}},
+  { glotpress: "el", android: "el", google_play: "el",  promo_config: {} },
+  { glotpress: "es-mx", android: "es-rMX", google_play: "es-MX",  promo_config: {} },
+  { glotpress: "es-cl", android: "es-rCL", google_play: "es-CL",  promo_config: {} },
+  { glotpress: "gd", android: "gd", google_play: "gd",  promo_config: {} },
+  { glotpress: "hi", android: "hi", google_play: "hi",  promo_config: {} },
+  { glotpress: "hu", android: "hu", google_play: "hu",  promo_config: {} },
+  { glotpress: "nb", android: "nb", google_play: "nb",  promo_config: {} },
+  { glotpress: "pl", android: "pl", google_play: "pl",  promo_config: {} },
+  { glotpress: "th", android: "th", google_play: "th",  promo_config: {} },
+  { glotpress: "uz", android: "uz", google_play: "uz",  promo_config: {} },
+  { glotpress: "zh-tw", android: "zh-rHK", google_play: "zh-rHK",  promo_config: {} },
+  { glotpress: "eu", android: "eu", google_play: "eu",  promo_config: {} },
+  { glotpress: "ro", android: "ro", google_play: "ro",  promo_config: {} },
+  { glotpress: "mk", android: "mk", google_play: "mk",  promo_config: {} },
+  { glotpress: "en-au", android: "en-rAU", google_play: "en-AU",  promo_config: {}},
+  { glotpress: "sr", android: "sr", google_play: "sr",  promo_config: {} },
+  { glotpress: "sk", android: "sk", google_play: "sk",  promo_config: {} },
+  { glotpress: "cy", android: "cy", google_play: "cy",  promo_config: {} },
+  { glotpress: "da", android: "da", google_play: "da",  promo_config: {} },
+  { glotpress: "bg", android: "bg", google_play: "bg",  promo_config: {} },
+  { glotpress: "sq", android: "sq", google_play: "sq",  promo_config: {} },
+  { glotpress: "hr", android: "hr", google_play: "hr",  promo_config: {} },
+  { glotpress: "cs", android: "cs", google_play: "cs",  promo_config: {} },
+  { glotpress: "pt-br", android: "pt-rBR", google_play: "pt-BR",  promo_config: {} },
+  { glotpress: "en-ca", android: "en-rCA", google_play: "en-CA",  promo_config: {} },
+  { glotpress: "ms", android: "ms", google_play: "ms",  promo_config: {} },
+  { glotpress: "es-ve", android: "es-rVE", google_play: "es-VE",  promo_config: {} },
+  { glotpress: "gl", android: "gl", google_play: "gl",  promo_config: {} },
+  { glotpress: "is", android: "is", google_play: "is",  promo_config: {} },
+  { glotpress: "es-co", android: "es-rCO", google_play: "es-CO",  promo_config: {} },
+  { glotpress: "kmr", android: "kmr", google_play: "kmr",  promo_config: {} },
 ].freeze
 
 # Env file paths to load
