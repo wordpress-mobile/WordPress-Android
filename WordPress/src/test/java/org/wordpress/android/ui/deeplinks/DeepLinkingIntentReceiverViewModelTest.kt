@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -6,20 +6,20 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
     @Mock lateinit var statsLinkHandler: StatsLinkHandler
     @Mock lateinit var startLinkHandler: StartLinkHandler
     @Mock lateinit var readerLinkHandler: ReaderLinkHandler
+    @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
@@ -37,6 +37,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 statsLinkHandler,
                 startLinkHandler,
                 readerLinkHandler,
+                notificationsLinkHandler,
                 deepLinkUriUtils,
                 serverTrackingHandler
         )
@@ -191,6 +192,25 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `opens navigate action from notifications link handler`() {
+        val siteUrl = "site123"
+        val uri = buildUri("wordpress.com", "notifications", siteUrl)
+        whenever(notificationsLinkHandler.isNotificationsUrl(uri)).thenReturn(true)
+        val expected = NavigateAction.OpenNotifications
+        whenever(notificationsLinkHandler.buildNavigateAction()).thenReturn(expected)
+
+        var navigateAction: NavigateAction? = null
+        viewModel.navigateAction.observeForever {
+            navigateAction = it?.getContentIfNotHandled()
+        }
+
+        val urlHandled = viewModel.handleUrl(uri)
+
+        assertThat(urlHandled).isTrue()
+        assertThat(navigateAction).isEqualTo(expected)
+    }
+
+    @Test
     fun `view post mbar URL triggers the reader when it can be resolved`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")
         val redirect = buildUri("wordpress.com", "read")
@@ -210,8 +230,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         verify(serverTrackingHandler).request(uri)
     }
 
-    // TODO Fix this test
-    @Ignore("Temporarily ignoring this test as it will be fixed later on")
     @Test
     fun `view post mbar URL triggers the browser when it can't be resolved`() {
         val uri = buildUri("public-api.wordpress.com", "mbar", "redirect_to=...")

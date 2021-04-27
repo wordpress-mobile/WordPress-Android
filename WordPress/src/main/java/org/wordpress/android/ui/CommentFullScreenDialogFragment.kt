@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +54,13 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
                 dialogController.setConfirmEnabled(!TextUtils.isEmpty(s.toString().trim()))
             }
         })
+
+        reply.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
+                dialogController.confirm(saveResult())
+            }
+            false
+        }
 
         viewModel.onKeyboardOpened.observeEvent(viewLifecycleOwner, {
             coroutineScope.launch {

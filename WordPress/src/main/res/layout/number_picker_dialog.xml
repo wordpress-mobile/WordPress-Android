@@ -13,8 +13,7 @@
         android:layout_marginEnd="24dp"
         android:gravity="start"
         android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:theme="@style/SwitchBlueMedium" />
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"

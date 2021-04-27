@@ -1,6 +1,1 @@
-* [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
-* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
-* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
-* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
-* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
-
+This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.

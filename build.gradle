@@ -7,7 +7,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = '1.30.3-beta.3'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = '3116-6fe6de3bfe191c784c6faf2ee677daf537cc6691'
+    ext.gutenbergMobileVersion = '3116-fdcd6bf9e72b3b522ee81069e3029a163ed169dd'
 
     repositories {
         google()
@@ -134,7 +134,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.15.0'
+    fluxCVersion = '1.16.0-beta-3'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'

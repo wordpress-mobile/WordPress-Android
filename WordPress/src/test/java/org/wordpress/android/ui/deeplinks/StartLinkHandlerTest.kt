@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -8,8 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.ShowSignInFlow
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 
 @RunWith(MockitoJUnitRunner::class)
 class StartLinkHandlerTest {

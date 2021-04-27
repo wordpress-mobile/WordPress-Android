@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Gunakan tombol ikon</string>
-    <string name="gutenberg_native_search_input_field">Kolom input pencarian.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Tombol cari. Teks tombol saat ini adalah</string>
     <string name="gutenberg_native_search_blocks">Cari blok</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Cari label blok. Teks saat ini adalah</string>
     <string name="gutenberg_native_search_block">Cari blok</string>
-    <string name="gutenberg_native_outside">Di luar</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Placeholder kustom belum diatur</string>
-    <string name="gutenberg_native_no_button">Tanpa tombol</string>
-    <string name="gutenberg_native_inside">Di dalam</string>
-    <string name="gutenberg_native_hide_search_heading">Sembunyikan judul pencarian</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Ketuk dua kali untuk mengedit teks placeholder</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Ketuk dua kali untuk mengedit teks label</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Ketuk dua kali untuk mengedit teks tombol</string>
     <string name="gutenberg_native_double_tap_to_change_unit">ketuk dua kali untuk mengubah unit</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Teks placeholder saat ini adalah</string>
     <string name="gutenberg_native_clear_search">Hapus pencarian</string>
     <string name="gutenberg_native_cancel_search">Batalkan pencarian</string>
-    <string name="gutenberg_native_button_position">Posisi tombol</string>
-    <string name="gutenberg_native_button_outside">Tombol luar</string>
-    <string name="gutenberg_native_button_inside">Tombol dalam</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s adalah %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Terjadi error saat mengumpulkan data suka</string>
     <string name="get_likes_unknown_error">Terjadi error yang tidak diketahui saat mengumpulkan suka.</string>
@@ -36,7 +20,6 @@ Language: id
     <string name="gutenberg_native_table_of_contents">Daftar Isi</string>
     <string name="gutenberg_native_summary">ringkasan</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Rangkum pos Anda dengan daftar heading. Tambahkan anchor HTML ke blok Heading untuk menautkannya ke sini.</string>
-    <string name="gutenberg_native_search_settings">Pengaturan pencarian</string>
     <string name="gutenberg_native_document_outline">outline dokumen</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
@@ -1436,9 +1419,7 @@ Language: id
     <string name="support_contact_email">Email kontak</string>
     <string name="application_log_button">Log aplikasi</string>
     <string name="my_tickets">Tiket Saya</string>
-    <string name="activity_log_rewind_site">Pulihkan Situs</string>
     <string name="activity_log_currently_restoring_message_no_dates">Pemulihan sedang berlangsung</string>
-    <string name="activity_log_rewind_dialog_message">Anda yakin ingin memulihkan situs kembali ke %1$s pada %2$s? Tindakan ini akan menghapus semua konten dan opsi yang dibuat atau diubah sejak saat itu.</string>
     <string name="activity_log_currently_restoring_message">Memulihkan ke %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sedang memulihkan situs Anda</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Situs Anda berhasil dipulihkan</string>

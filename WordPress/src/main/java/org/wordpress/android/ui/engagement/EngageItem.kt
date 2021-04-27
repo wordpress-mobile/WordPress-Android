@@ -2,6 +2,8 @@ package org.wordpress.android.ui.engagement
 
 import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.LIKED_ITEM
 import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.LIKER
+import org.wordpress.android.ui.engagement.EngageItem.EngageItemType.NEXT_LIKES_PAGE_LOADER
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 
 sealed class EngageItem(val type: EngageItemType) {
     data class LikedItem(
@@ -30,12 +32,20 @@ sealed class EngageItem(val type: EngageItemType) {
         val userSiteId: Long,
         val userSiteUrl: String,
         val userAvatarUrl: String,
-        val remoteId: Long,
-        val onClick: ((siteId: Long, siteUrl: String) -> Unit)? = null
+        val userBio: String,
+        val userId: Long,
+        val preferredBlogId: Long,
+        val preferredBlogName: String,
+        val preferredBlogUrl: String,
+        val preferredBlogBlavatar: String,
+        val onClick: ((userProfile: UserProfile) -> Unit)? = null
     ) : EngageItem(LIKER)
+
+    data class NextLikesPageLoader(val isLoading: Boolean, val action: () -> Unit) : EngageItem(NEXT_LIKES_PAGE_LOADER)
 
     enum class EngageItemType {
         LIKED_ITEM,
-        LIKER
+        LIKER,
+        NEXT_LIKES_PAGE_LOADER
     }
 }

@@ -260,7 +260,7 @@ class WPMainNavigationView @JvmOverloads constructor(
      * show or hide the badge on the 'pageId' icon in the bottom bar
      */
     private fun showBadge(pageId: Int, showBadge: Boolean) {
-        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.badge)
+        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.nav_badge)
 
         val currentVisibility = badgeView?.visibility
         val newVisibility = if (showBadge) View.VISIBLE else View.GONE

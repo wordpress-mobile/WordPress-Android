@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -27,8 +27,17 @@ class StatsLinkHandlerTest {
     }
 
     @Test
-    fun `handles stats URI is true`() {
-        val statsUri = buildUri("wordpress.com", "stats")
+    fun `handles stats URI`() {
+        val statsUri = buildUri(host = "wordpress.com", path1 = "stats")
+
+        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+
+        assertThat(isStatsUri).isTrue()
+    }
+
+    @Test
+    fun `handles stats App link`() {
+        val statsUri = buildUri(host = "stats")
 
         val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
 
@@ -37,7 +46,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `does not handle stats URI with different host`() {
-        val statsUri = buildUri("wordpress.org", "stats")
+        val statsUri = buildUri(host = "wordpress.org", path1 = "stats")
 
         val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
 
@@ -46,7 +55,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `does not handle URI with different path`() {
-        val statsUri = buildUri("wordpress.com", "post")
+        val statsUri = buildUri(host = "wordpress.com", path1 = "post")
 
         val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
 
@@ -56,6 +65,15 @@ class StatsLinkHandlerTest {
     @Test
     fun `opens stats screen from empty URL`() {
         val uri = buildUri(path1 = "stats")
+
+        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+
+        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStats)
+    }
+
+    @Test
+    fun `opens stats screen from app link`() {
+        val uri = buildUri(host = "stats")
 
         val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
 

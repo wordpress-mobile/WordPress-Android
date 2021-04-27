@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -9,7 +9,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
