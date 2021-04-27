@@ -126,7 +126,7 @@ class MimeTypes {
             MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
     )
 
-    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes  + listOf(
+    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes + listOf(
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
