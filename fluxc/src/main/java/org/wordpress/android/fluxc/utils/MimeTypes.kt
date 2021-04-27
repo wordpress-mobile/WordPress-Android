@@ -75,6 +75,8 @@ class MimeTypes {
     )
 
     /*
+     * Free MIME Types
+     *
      * The WordPress supported image types based on https://wordpress.com/support/accepted-filetypes/ are:
      * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .key (Apple Keynote Presentation), .zip (Archive File Format)
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
@@ -88,31 +90,20 @@ class MimeTypes {
      * .odt - missing - "application/vnd.oasis.opendocument.text"
      * .xls - "application/excel", "application/x-excel", "application/x-msexcel", "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+     *
+     * Paid / Self hosted MIME Types
+     *
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
+     *
+     * General comment about each of the properties below.
+     *
+     * wpComFreeDocumentTypes - all MIME types allowed in the free plans.
+     *
+     * wpComPaidAndSelfHostedDocumentTypes - all MIME types allowed for paid plans and self hosted sites.
+     *
+     * documentTypes - all MIME types that are available.
      */
-    private val wpComPaidAndSelfHostedDocumentTypes = listOf(
-            MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
-            MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
-            MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
-            MimeType(
-                    APPLICATION,
-                    listOf(Subtype.POWERPOINT, Subtype.MSPOWERPOINT, Subtype.X_MSPOWERPOINT),
-                    listOf("ppt")
-            ),
-            MimeType(APPLICATION, Subtype.VND_MSPOWERPOINT, listOf("pps")),
-            MimeType(APPLICATION, Subtype.PPTX, listOf("pptx")),
-            MimeType(APPLICATION, Subtype.PPSX, listOf("ppsx")),
-            MimeType(APPLICATION, Subtype.ODT, listOf("odt")),
-            MimeType(
-                    APPLICATION,
-                    listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
-                    listOf("xls")
-            ),
-            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
-            MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
-            MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
-    )
 
     private val wpComFreeDocumentTypes = listOf(
             MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
@@ -133,6 +124,11 @@ class MimeTypes {
                     listOf("xls")
             ),
             MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
+    )
+
+    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes  + listOf(
+            MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
+            MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
 
     private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
