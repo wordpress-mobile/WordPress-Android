@@ -43,6 +43,7 @@ import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
+import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
 import org.wordpress.android.ui.gif.GifPickerActivity;
@@ -670,6 +671,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(LoginNoSitesErrorFragment object);
 
     void inject(UserProfileBottomSheetFragment object);
+
+    void inject(EngagedPeopleListActivity object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

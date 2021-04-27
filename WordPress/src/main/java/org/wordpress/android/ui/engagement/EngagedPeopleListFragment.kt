@@ -28,7 +28,6 @@ import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.Reques
 import org.wordpress.android.ui.engagement.EngagedListServiceRequestEvent.RequestComment
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.UserProfileViewModel.Companion.USER_PROFILE_VM_KEY
-import org.wordpress.android.ui.notifications.NotificationsDetailActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
@@ -40,6 +39,7 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -52,6 +52,7 @@ class EngagedPeopleListFragment : Fragment() {
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var readerTracker: ReaderTracker
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: EngagedPeopleListViewModel
     private lateinit var userProfileViewModel: UserProfileViewModel
@@ -147,17 +148,13 @@ class EngagedPeopleListFragment : Fragment() {
                             event.siteId,
                             // TODO: this can be true if we use this fragment for NOTE_FOLLOW_TYPE notifications
                             false,
-                            if (this is NotificationsDetailActivity) {
-                                ReaderTracker.SOURCE_NOTIFICATION
-                            } else {
-                                ReaderTracker.SOURCE_POST_DETAIL
-                            },
+                            event.source,
                             readerTracker
                     )
                 }
                 is PreviewSiteByUrl -> {
                     val url = event.siteUrl
-                    openUrl(this, url)
+                    openUrl(this, url, event.source)
                 }
                 is PreviewCommentInReader -> {
                     ReaderActivityLauncher.showReaderComments(
@@ -171,7 +168,7 @@ class EngagedPeopleListFragment : Fragment() {
                     ReaderActivityLauncher.showReaderPostDetail(this, event.siteId, event.postId)
                 }
                 is OpenUserProfileBottomSheet -> {
-                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick)
+                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick, event.source)
                 }
             }
 
@@ -217,7 +214,8 @@ class EngagedPeopleListFragment : Fragment() {
         }
     }
 
-    private fun openUrl(context: Context, url: String) {
+    private fun openUrl(context: Context, url: String, source: String) {
+        analyticsUtilsWrapper.trackBlogPreviewedByUrl(source)
         if (WPUrlUtils.isWordPressCom(url)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
         } else {

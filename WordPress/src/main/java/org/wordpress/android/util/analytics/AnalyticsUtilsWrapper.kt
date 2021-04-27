@@ -18,6 +18,7 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
+@SuppressWarnings("TooManyFunctions")
 class AnalyticsUtilsWrapper @Inject constructor(
     private val appContext: Context
 ) {
@@ -39,6 +40,14 @@ class AnalyticsUtilsWrapper @Inject constructor(
         site: SiteModel?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
+
+    fun trackUserProfileShown(source: String) = AnalyticsUtils.trackUserProfileShown(source)
+
+    fun trackUserProfileSiteShown() = AnalyticsUtils.trackUserProfileSiteShown()
+
+    fun trackBlogPreviewedByUrl(source: String) = AnalyticsUtils.trackBlogPreviewedByUrl(source)
+
+    fun trackLikeListOpened(source: String, listType: String) = AnalyticsUtils.trackLikeListOpened(source, listType)
 
     /* READER */
 

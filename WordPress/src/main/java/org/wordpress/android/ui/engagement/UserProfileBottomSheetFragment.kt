@@ -128,7 +128,11 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                         siteTitle.text = state.siteTitle
                         siteUrl.text = UrlUtils.getHost(state.siteUrl)
                         siteData.setOnClickListener {
-                            state.onSiteClickListener?.invoke(state.siteId, state.siteUrl)
+                            state.onSiteClickListener?.invoke(
+                                    state.siteId,
+                                    state.siteUrl,
+                                    state.blogPreviewSource
+                            )
                         }
                         siteSectionHeader.visibility = View.VISIBLE
                         blavatar.visibility = View.VISIBLE
