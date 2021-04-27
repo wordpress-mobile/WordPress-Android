@@ -51,8 +51,6 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
 
