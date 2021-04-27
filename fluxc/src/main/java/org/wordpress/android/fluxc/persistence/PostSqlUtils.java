@@ -428,7 +428,7 @@ public class PostSqlUtils {
                             .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
                             .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
                             .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
-                            .equals(LikeModelTable.REMOTE_LIKE_ID, like.getId())
+                            .equals(LikeModelTable.LIKER_ID, like.getLikerId())
                             .endGroup().endWhere().getAsModel();
 
         if (likeResult.isEmpty()) {
