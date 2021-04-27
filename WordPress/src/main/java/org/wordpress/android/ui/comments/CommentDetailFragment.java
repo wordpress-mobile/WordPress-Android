@@ -425,7 +425,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         setupSuggestionServiceAndAdapter();
 
-        // reattach listeners to
+        // reattach listeners to collapsible reply dialog
         CollapseFullScreenDialogFragment fragment =
                 (CollapseFullScreenDialogFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(
                         CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
