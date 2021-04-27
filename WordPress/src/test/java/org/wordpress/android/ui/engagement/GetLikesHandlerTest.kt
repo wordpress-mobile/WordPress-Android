@@ -78,7 +78,7 @@ class GetLikesHandlerTest {
         )
 
         requireNotNull(likesState).let {
-            assertThat(it).isEqualTo(likesState)
+            assertThat(it).isEqualTo(state)
         }
 
         assertThat(holder).isNull()
@@ -114,7 +114,7 @@ class GetLikesHandlerTest {
         )
 
         requireNotNull(likesState).let {
-            assertThat(it).isEqualTo(likesState)
+            assertThat(it).isEqualTo(state)
         }
 
         requireNotNull(holder).let {
@@ -147,7 +147,7 @@ class GetLikesHandlerTest {
         )
 
         requireNotNull(likesState).let {
-            assertThat(it).isEqualTo(likesState)
+            assertThat(it).isEqualTo(state)
         }
 
         assertThat(holder).isNull()
@@ -182,7 +182,7 @@ class GetLikesHandlerTest {
         )
 
         requireNotNull(likesState).let {
-            assertThat(it).isEqualTo(likesState)
+            assertThat(it).isEqualTo(state)
         }
 
         requireNotNull(holder).let {
