@@ -783,7 +783,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void showFeaturedImageConfirmationDialog(final int mediaId) {
         if (mediaId == 0) {
-            removeFeaturedImage(0);
+            setFeaturedImage(0);
         } else if (mFeaturedImageId == 0) {
             setFeaturedImage(mediaId);
         } else if (mFeaturedImageId != mediaId) {
@@ -815,16 +815,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         setFeaturedImageId(mediaId);
         sendToJSFeaturedImageId(mediaId);
 
-        showNotice(getString(R.string.featured_image_confirmation));
-    }
-
-    private void removeFeaturedImage(int mediaId) {
-        mEditorFragmentListener.updateFeaturedImage(mediaId, false);
-        // Necessary to update image in Post Settings
-        setFeaturedImageId(mediaId);
-        sendToJSFeaturedImageId(mediaId);
-
-        showNotice(getString(R.string.featured_image_removed));
+        if (mediaId == 0) {
+            showNotice(getString(R.string.featured_image_removed));
+        } else {
+            showNotice(getString(R.string.featured_image_confirmation));
+        }
     }
 
     public void sendToJSFeaturedImageId(int mediaId) {
