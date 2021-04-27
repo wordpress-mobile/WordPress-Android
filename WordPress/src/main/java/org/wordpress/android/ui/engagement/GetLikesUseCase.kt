@@ -61,42 +61,51 @@ class GetLikesUseCase @Inject constructor(
     }
 
     suspend fun getLikesForPost(
-        siteId: Long,
-        postId: Long,
-        numLikes: Int
+        fingerPrint: LikeGroupFingerPrint,
+        paginationParams: PaginationParams
     ): Flow<GetLikesState> = flow {
-        getLikes(POST_LIKE, this, siteId, postId, numLikes)
+        getLikes(POST_LIKE, this, fingerPrint, paginationParams)
     }
 
     suspend fun getLikesForComment(
-        siteId: Long,
-        commentId: Long,
-        numLikes: Int
+        fingerPrint: LikeGroupFingerPrint,
+        paginationParams: PaginationParams
     ): Flow<GetLikesState> = flow {
-        getLikes(COMMENT_LIKE, this, siteId, commentId, numLikes)
+        getLikes(COMMENT_LIKE, this, fingerPrint, paginationParams)
     }
 
     private suspend fun getLikes(
         category: LikeCategory,
         flow: FlowCollector<GetLikesState>,
-        siteId: Long,
-        entityId: Long,
-        numLikes: Int
+        fingerPrint: LikeGroupFingerPrint,
+        paginationParams: PaginationParams
     ) {
-        flow.emit(Loading)
-        delay(PROGRESS_DELAY_MS)
+        if (!paginationParams.requestNextPage) {
+            flow.emit(Loading)
+            delay(PROGRESS_DELAY_MS)
+        }
 
         val noNetworkDetected = !networkUtilsWrapper.isNetworkAvailable()
 
         val event = suspendCoroutine<OnChanged<*>> {
-            getLikesContinuations[category.getActionKey(siteId, entityId)] = it
+            getLikesContinuations[category.getActionKey(fingerPrint.siteId, fingerPrint.postOrCommentId)] = it
             when (category) {
                 POST_LIKE -> {
-                    val payload = FetchPostLikesPayload(siteId, entityId)
+                    val payload = FetchPostLikesPayload(
+                            fingerPrint.siteId,
+                            fingerPrint.postOrCommentId,
+                            paginationParams.requestNextPage,
+                            paginationParams.pageLength
+                    )
                     dispatcher.dispatch(PostActionBuilder.newFetchPostLikesAction(payload))
                 }
                 COMMENT_LIKE -> {
-                    val payload = FetchCommentLikesPayload(siteId, entityId)
+                    val payload = FetchCommentLikesPayload(
+                            fingerPrint.siteId,
+                            fingerPrint.postOrCommentId,
+                            paginationParams.requestNextPage,
+                            paginationParams.pageLength
+                    )
                     dispatcher.dispatch(CommentActionBuilder.newFetchCommentLikesAction(payload))
                 }
             }
@@ -108,10 +117,12 @@ class GetLikesUseCase @Inject constructor(
         if (isPostLikeEvent || isCommentLikeEvent) {
             var likes = listOf<LikeModel>()
             var errorMessage: String? = null
+            var hasMore = false
 
             if (event is OnPostLikesChanged) {
                 likes = event.postLikes
                 if (event.isError) errorMessage = event.error.message
+                hasMore = event.hasMore
             }
 
             if (event is OnCommentLikesChanged) {
@@ -119,11 +130,17 @@ class GetLikesUseCase @Inject constructor(
                 if (event.isError) errorMessage = event.error.message
             }
 
+            likes = if (paginationParams.limit > 0) {
+                likes.take(paginationParams.limit)
+            } else {
+                likes
+            }
+
             flow.emit(
                     if (event.isError) {
-                        getFailureState(noNetworkDetected, likes, errorMessage, numLikes)
+                        getFailureState(noNetworkDetected, likes, errorMessage, fingerPrint.expectedNumLikes)
                     } else {
-                        LikesData(likes, numLikes)
+                        LikesData(likes, fingerPrint.expectedNumLikes, hasMore)
                     }
             )
         }
@@ -144,7 +161,8 @@ class GetLikesUseCase @Inject constructor(
                             orderedLikes.isEmpty(),
                             UiStringRes(R.string.no_network_title)
                     ),
-                    expectedNumLikes
+                    expectedNumLikes,
+                    orderedLikes.isNotEmpty()
             )
         } else {
             Failure(
@@ -159,7 +177,8 @@ class GetLikesUseCase @Inject constructor(
                             orderedLikes.isEmpty(),
                             UiStringRes(R.string.get_likes_empty_state_title)
                     ),
-                    expectedNumLikes
+                    expectedNumLikes,
+                    orderedLikes.isNotEmpty()
             )
         }
     }
@@ -197,14 +216,19 @@ class GetLikesUseCase @Inject constructor(
     sealed class GetLikesState {
         object Loading : GetLikesState()
 
-        data class LikesData(val likes: List<LikeModel>, val expectedNumLikes: Int) : GetLikesState()
+        data class LikesData(
+            val likes: List<LikeModel>,
+            val expectedNumLikes: Int,
+            val hasMore: Boolean = false
+        ) : GetLikesState()
 
         data class Failure(
             val failureType: FailureType,
             val error: UiString,
             val cachedLikes: List<LikeModel>,
             val emptyStateData: EmptyStateData,
-            val expectedNumLikes: Int
+            val expectedNumLikes: Int,
+            val hasMore: Boolean
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
@@ -227,6 +251,9 @@ class GetLikesUseCase @Inject constructor(
             return "${this.name}-$siteId-$entityId"
         }
     }
+
+    data class LikeGroupFingerPrint(val siteId: Long, val postOrCommentId: Long, val expectedNumLikes: Int)
+    data class PaginationParams(val requestNextPage: Boolean, val pageLength: Int, val limit: Int)
 
     companion object {
         // Pretty arbitrary amount to allow the loading state to appear to the user

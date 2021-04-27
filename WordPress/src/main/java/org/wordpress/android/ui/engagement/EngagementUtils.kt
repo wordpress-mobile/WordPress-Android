@@ -20,7 +20,7 @@ class EngagementUtils @Inject constructor() {
                     userSiteUrl = likeData.likerSiteUrl!!,
                     userAvatarUrl = likeData.likerAvatarUrl!!,
                     userBio = likeData.likerBio!!,
-                    remoteId = likeData.remoteLikeId,
+                    userId = likeData.likerId,
                     preferredBlogId = likeData.preferredBlogId,
                     preferredBlogName = likeData.preferredBlogName!!,
                     preferredBlogUrl = likeData.preferredBlogUrl!!,

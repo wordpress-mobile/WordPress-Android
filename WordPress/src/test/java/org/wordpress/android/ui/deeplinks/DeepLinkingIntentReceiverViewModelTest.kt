@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -11,8 +11,8 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var editorLinkHandler: EditorLinkHandler
