@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 413bdfd2a22e1f1371a4e2845320afb2b0559667
-  tag: 0.17.1
+  revision: c752fe017bf3529259f87a8ead32a9f31a174c86
+  tag: 0.17.2
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.17.1)
+    fastlane-plugin-wpmreleasetoolkit (0.17.2)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
@@ -184,7 +184,7 @@ GEM
     nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
-    octokit (4.20.0)
+    octokit (4.21.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     oj (3.11.5)
