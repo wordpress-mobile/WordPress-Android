@@ -2594,7 +2594,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
                         int postId = getImmutablePost().getId();
                         mFeaturedImageHelper.trackFeaturedImageEvent(
-                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                                 postId
                         );
                         for (Uri mediaUri : uris) {
