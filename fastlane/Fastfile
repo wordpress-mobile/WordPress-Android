@@ -642,7 +642,7 @@ REPOSITORY_NAME="WordPress-Android"
       res_dir: File.join(ENV['PROJECT_NAME'], 'src', 'main', 'res'),
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
       locales: SUPPORTED_LOCALES,
-      lint_task: 'lintVanillaRelease'
+      lint_task: 'lintWordpressVanillaRelease'
     )
   end
 
