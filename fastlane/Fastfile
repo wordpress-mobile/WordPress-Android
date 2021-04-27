@@ -8,28 +8,28 @@ end
 # NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
 # of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
 SUPPORTED_LOCALES = [
-  { glotpress: "ar",    google_play: "ar",     promo_config: {} },
-  { glotpress: "de",    google_play: "de-DE",  promo_config: {} },
-  { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
-  { glotpress: "es",    google_play: "es-ES",  promo_config: {} },
-  { glotpress: "fr",    google_play: "fr-CA",  promo_config: false },
-  { glotpress: "fr",    google_play: "fr-FR",  promo_config: {} },
-  { glotpress: "he",    google_play: "iw-IL",  promo_config: {} },
-  { glotpress: "id",    google_play: "id",     promo_config: {} },
-  { glotpress: "it",    google_play: "it-IT",  promo_config: {} },
-  { glotpress: "ja",    google_play: "ja-JP",  promo_config: {} },
-  { glotpress: "ko",    google_play: "ko-KR",  promo_config: {} },
-  { glotpress: "nl",    google_play: "nl-NL",  promo_config: {} },
-  { glotpress: "pl",    google_play: "pl-PL",  promo_config: {} },
-  { glotpress: "pt-br", google_play: "pt-BR",  promo_config: {} },
-  { glotpress: "ru",    google_play: "ru-RU",  promo_config: {} },
-  { glotpress: "sr",    google_play: "sr",     promo_config: {} },
-  { glotpress: "sv",    google_play: "sv-SE",  promo_config: {} },
-  { glotpress: "th",    google_play: "th",     promo_config: {} },
-  { glotpress: "tr",    google_play: "tr-TR",  promo_config: {} },
-  { glotpress: "vi",    google_play: "vi",     promo_config: {} },
-  { glotpress: "zh-cn", google_play: "zh-CN",  promo_config: {} },
-  { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {} },
+  { glotpress: "ar", android: "ar",    google_play: "ar",     promo_config: {} },
+  { glotpress: "de", android: "de",    google_play: "de-DE",  promo_config: {} },
+  { glotpress: "en-gb", android: "en-rGB", google_play: "en-US",  promo_config: {} },
+  { glotpress: "es", android: "es",    google_play: "es-ES",  promo_config: {} },
+  { glotpress: "fr", android: "fr-rCA",    google_play: "fr-CA",  promo_config: false },
+  { glotpress: "fr", android: "fr",    google_play: "fr-FR",  promo_config: {} },
+  { glotpress: "he", android: "he",    google_play: "iw-IL",  promo_config: {} },
+  { glotpress: "id", android: "id",    google_play: "id",     promo_config: {} },
+  { glotpress: "it", android: "it",    google_play: "it-IT",  promo_config: {} },
+  { glotpress: "ja", android: "ja",    google_play: "ja-JP",  promo_config: {} },
+  { glotpress: "ko", android: "ko",    google_play: "ko-KR",  promo_config: {} },
+  { glotpress: "nl", android: "nl",    google_play: "nl-NL",  promo_config: {} },
+  { glotpress: "pl", android: "pl",    google_play: "pl-PL",  promo_config: {} },
+  { glotpress: "pt-br", android: "pt-rBR", google_play: "pt-BR",  promo_config: {} },
+  { glotpress: "ru", android: "ru",    google_play: "ru-RU",  promo_config: {} },
+  { glotpress: "sr", android: "sr",    google_play: "sr",     promo_config: {} },
+  { glotpress: "sv", android: "sv",    google_play: "sv-SE",  promo_config: {} },
+  { glotpress: "th", android: "th",    google_play: "th",     promo_config: {} },
+  { glotpress: "tr", android: "tr",    google_play: "tr-TR",  promo_config: {} },
+  { glotpress: "vi", android: "vi",    google_play: "vi",     promo_config: {} },
+  { glotpress: "zh-cn", android: "zh-rCN", google_play: "zh-CN",  promo_config: {} },
+  { glotpress: "zh-tw", android: "zh-rTW", google_play: "zh-TW",  promo_config: {} },
 ].freeze
 
 # Env file paths to load
@@ -644,9 +644,12 @@ REPOSITORY_NAME="WordPress-Android"
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
-    sh("../tools/update-translations.sh review")
-    sh("../tools/update-translations.sh review waiting")
-    sh("../tools/update-translations.sh review fuzzy")
+    android_download_translations(
+      glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
+      status_filter: ['current', 'waiting', 'fuzzy'],
+      locales: SUPPORTED_LOCALES,
+      lint_task: nil, skip_commit: true
+    )
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
