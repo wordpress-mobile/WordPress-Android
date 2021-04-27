@@ -37,9 +37,7 @@ import static org.wordpress.android.WordPress.getContext;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
-    private static final String DEEP_LINK_HOST_POST = "post";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
-    private static final String HOST_WORDPRESS_COM = "wordpress.com";
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -151,23 +149,5 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    // Helper Methods
-    private boolean shouldShow(@NonNull Uri uri, @NonNull String path) {
-        return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
-               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), path));
-    }
-
-    private Long parseAsLongOrNull(String longAsString) {
-        if (longAsString == null || longAsString.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return Long.valueOf(longAsString);
-        } catch (NumberFormatException nfe) {
-            return null;
-        }
     }
 }
