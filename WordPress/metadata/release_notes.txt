@@ -1,4 +1,1 @@
-* [**] Comments: added an Unreplied comments filter [https://github.com/wordpress-mobile/WordPress-Android/pull/14373]
-* [***] Block Editor: Improved the accessibility of range and step-type block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3255]
-* [**] Updated the app icon to match the new color scheme within the app. [#14391]
-
+This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.

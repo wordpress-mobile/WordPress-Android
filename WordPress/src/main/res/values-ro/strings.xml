@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 11:53:46+0000
+Translation-Revision-Date: 2021-04-20 06:40:19+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Legătură la etichetă</string>
+    <string name="gutenberg_native_what_is_alt_text">Ce este textul alternativ?</string>
+    <string name="gutenberg_native_transform_s_to">Transformă %s în</string>
+    <string name="gutenberg_native_transform_block">Transformă blocul…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Inserarea elementului media a eșuat.</string>
+    <string name="like_faces_plural_text">%d blogeri apreciază asta.</string>
+    <string name="like_faces_singular_text">Un bloger apreciază asta.</string>
+    <string name="like_title_plural">%d aprecieri</string>
+    <string name="like_faces_error_loading_message">Eroare la încărcarea datele despre aprecieri. %s.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrie scopul imaginii. Lasă gol dacă imaginea este doar decorativă.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Inserarea fișierului audio a eșuat.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a fost transformat în %2$s</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Pentru a înlătura amenințările, introdu datele de conectare la server.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Pentru a înlătura amenințarea, introdu datele de conectare la server.</string>
+    <string name="suggestion">Sugestie:</string>
+    <string name="like_title_singular">O apreciere</string>
+    <string name="gutenberg_native_search_blocks">Caută blocuri</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">atinge de două ori pentru a schimba unitatea</string>
+    <string name="gutenberg_native_search_block">Bloc Căutare</string>
+    <string name="gutenberg_native_clear_search">Șterge căutarea</string>
+    <string name="gutenberg_native_cancel_search">Anulează căutarea</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s este %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">A apărut o eroare în timpul primirii datelor pentru aprecieri</string>
+    <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri</string>
+    <string name="get_likes_no_network_error">Nu este disponibilă nicio rețea.</string>
+    <string name="comments_empty_list_filtered_unreplied">Niciun comentariu fără răspuns</string>
+    <string name="comment_status_unreplied">Fără răspuns</string>
     <string name="gutenberg_native_table_of_contents">Cuprins</string>
     <string name="gutenberg_native_summary">rezumat</string>
-    <string name="gutenberg_native_search_settings">Setări căutare</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Face un rezumat al articolului folosind o listă de subtitluri. Adaugă ancore HTML la blocurile Subtitlu pentru a le lega aici.</string>
-    <string name="gutenberg_native_post_link">Legătură la articol</string>
     <string name="gutenberg_native_document_outline">schiță document</string>
-    <string name="gutenberg_native_category_link">Legătură la categorie</string>
-    <string name="gutenberg_native_a_link_to_a_url">O legătură la un URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">O legătură la o etichetă.</string>
-    <string name="gutenberg_native_a_link_to_a_post">O legătură la un articol.</string>
-    <string name="gutenberg_native_a_link_to_a_page">O legătură la o pagină.</string>
-    <string name="gutenberg_native_a_link_to_a_category">O legătură la o categorie.</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
-    <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
     <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
     <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
@@ -428,7 +444,6 @@ Language: ro
     <string name="media_uploading_gif_library_photo">Încărcare GIF media</string>
     <string name="gutenberg_native_select_item">Selectează un element</string>
     <string name="gutenberg_native_search_or_type_url">Caută sau tastează URL-ul</string>
-    <string name="gutenberg_native_page_link">Legătură la pagină</string>
     <string name="gutenberg_native_add_this_telephone_link">Adaugă această legătură la telefon</string>
     <string name="gutenberg_native_add_this_link">Adaugă această legătură</string>
     <string name="gutenberg_native_add_this_email_link">Adaugă această legătură la email</string>
@@ -797,7 +812,6 @@ Language: ro
     <string name="gutenberg_native_move_image_forward">Mută imaginea înainte</string>
     <string name="gutenberg_native_move_image_backward">Mută imaginea înapoi</string>
     <string name="gutenberg_native_gallery_caption_s">Text asociat galerie. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Valoarea curentă este %2$s</string>
     <string name="create_post_page_fab_tooltip">Creează un articol sau o pagină</string>
     <string name="content_description_person_building_website">Persoană care construiește un sit web</string>
     <string name="post_signup_interstitial_not_right_now">Nu chiar acum</string>
@@ -824,7 +838,6 @@ Language: ro
     <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale sitului %1$s</string>
     <string name="reader_following_display_name">Urmăresc</string>
     <string name="my_site_bottom_sheet_add_page">Pagină sit</string>
-    <string name="enter_site_credentials_instead">Autentifică-te cu datele de conectare ale sitului.</string>
     <string name="reader_filter_sites_title">Situri</string>
     <string name="reader_save_for_later_display_name">Salvate</string>
     <string name="reader_discover_display_name">Descoperă</string>
@@ -877,7 +890,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_redo_last_change">Atinge de două ori pentru a reface ultima modificare</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Atinge de două ori pentru a muta blocul în jos</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Atinge de două ori pentru a edita această valoare</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Atinge de două ori pentru a modifica valoarea folosind caruselul</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Atinge de două ori pentru a adăuga un bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Atinge de două ori pentru a muta blocul în sus</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
@@ -889,6 +901,7 @@ Language: ro
     <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
+    <string name="gutenberg_native_add_alt_text">Adaugă text alternativ</string>
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
@@ -993,7 +1006,6 @@ Language: ro
     <string name="post_settings_notification">Notificare</string>
     <string name="post_settings_time_and_date">Dată și oră</string>
     <string name="login_invalid_site_url">Te rog introdu adresa completă a sitului web, cum ar fi exemplu.com.</string>
-    <string name="login_need_help_finding_connected_email">Ai nevoie de ajutor pentru a găsi emailul cu care te-ai conectat?</string>
     <string name="site_settings_editor">Editor</string>
     <string name="stats_loading_card">Încarc datele pentru cartușul selectat</string>
     <string name="stats_overview_content_description">%1$s %2$s pentru perioada: %3$s, modificate față de perioada anterioară - %4$s</string>
@@ -1166,7 +1178,6 @@ Language: ro
     <string name="plans_loading_error_no_plans_title">Nu putem încărca planuri</string>
     <string name="plans_loading_error_network_title">Fără conexiune</string>
     <string name="menu_switch_to_gutenberg_editor">Comută la editorul de blocuri</string>
-    <string name="menu_switch_to_aztec_editor">Comută la editorul clasic</string>
     <string name="stats_loading_block_error">A fost o problemă la încărcarea datelor, reîncarcă pagina pentru a încerca din nou.</string>
     <string name="stats_loading_error">Datele nu au fost încărcate</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editează articolele și paginile noi cu editorul de blocuri</string>
@@ -1441,10 +1452,8 @@ Language: ro
     <string name="support_push_notification_message">Mesaj nou de la „Ajutor și suport”</string>
     <string name="application_log_button">Jurnal aplicații</string>
     <string name="my_tickets">Tichetele mele</string>
-    <string name="activity_log_rewind_site">Restaurează situl</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restaurare în curs de desfășurare</string>
     <string name="activity_log_currently_restoring_message">Restaurez la %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">Sigur vrei să-ți restaurezi situl înapoi la %1$s pe %2$s? Această restaurare va înlătura tot conținutul și opțiunile create sau modificate de atunci.</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Situl tău a fost restaurat cu succes</string>
     <string name="activity_log_currently_restoring_title">Acum îți restaurăm situl</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>
@@ -1458,14 +1467,12 @@ Language: ro
     <string name="comment_read_source_post">Citește articolul sursă</string>
     <string name="sites">Situri</string>
     <string name="signup_magic_link_title">Legătura magică a fost trimisă</string>
-    <string name="signup_email_screen_title">Înregistrare prin email</string>
     <string name="magic_link_sent_login_title">Legătura magică a fost trimisă</string>
     <string name="magic_link_login_title">Autentificare prin legătura magică</string>
     <string name="verification_2fa_screen_title">Verificare cod</string>
     <string name="selfhosted_site_login_title">Date de autentificare</string>
     <string name="site_address_login_title">Autentificare prin adresa sitului</string>
     <string name="email_address_login_title">Autentificare prin adresa de email</string>
-    <string name="alternatively">Ca alternativă:</string>
     <string name="reader_remove_bookmark">Înlătură din articole salvate</string>
     <string name="reader_add_bookmark">Adaugă la articole salvate</string>
     <string name="reader_save_for_later_title">Articole salvate</string>
@@ -1503,7 +1510,6 @@ Language: ro
     <string name="privacy_policy_learn_more_caption">Aceste informații ne ajută să ne îmbunătățim produsele, să facem un marketing mai relevant pentru tine, să-ți personalizăm experiența WordPress.com și altele, așa cum am detaliat în politica noastră de confidențialitate.</string>
     <string name="post_submitted">Articol trimis</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca situl să fie în stare bună.</string>
-    <string name="login_email_button_signup">Nu ai un cont? %1$sÎnregistrează-te%2$s</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funcționalitatea modulului necesită ca abonamentul domeniul principal să fie asociat acestui utilizator.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Funcționalitatea modulului necesită privilegii de administrator.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">Modulul nu poate fi instalat pe situri VIP.</string>
@@ -1658,8 +1664,6 @@ Language: ro
     <string name="site_creation_domain_finish_button">Creează situl</string>
     <string name="username_changer_action">Salvează</string>
     <string name="content_description_add_avatar">Adaugă avatar</string>
-    <string name="signup_with_google_button">Înregistrare cu Google</string>
-    <string name="signup_with_email_button">Înregistrare prin email</string>
     <string name="signup_user_exists">Emailul există deja pe WordPress.com.\nContinui autentificarea.</string>
     <string name="username_changer_dismiss_button_positive">Renunță</string>
     <string name="username_changer_dismiss_message">Renunți la schimbarea numelui de utilizator?</string>
@@ -1672,10 +1676,7 @@ Language: ro
     <string name="notification_site_creation_created">Atinge pentru a continua.</string>
     <string name="notification_site_creation_title_success">Sit creat!</string>
     <string name="signup_magic_link_progress">Trimit emailul</string>
-    <string name="signup_terms_of_service_text">Prin înregistrare, ești de acord cu %1$sTermenii noștri de utilizare ai serviciului%2$s.</string>
     <string name="signup_updating_account">Actualizez contul…</string>
-    <string name="signup_email_error_generic">Au fost unele probleme la verificarea adresei de email.</string>
-    <string name="signup_email_header">Pentru a-ți crea un cont WordPress.com nou, te rog introdu adresa ta de email.</string>
     <string name="signup_epilogue_error_avatar">Au fost unele probleme la încărcarea avatarului tău.</string>
     <string name="signup_epilogue_error_generic">Au fost unele probleme la actualizarea contului tău. Poți reîncerca sau reveni la modificările tale pentru a continua.</string>
     <string name="signup_epilogue_error_button_negative">Revenire</string>
@@ -1687,9 +1688,6 @@ Language: ro
     <string name="signup_magic_link_error_button_negative">Închide</string>
     <string name="signup_epilogue_hint_password_detail">Poți să te autentifici mereu cu o legătură, ca cea pe care tocmai ai folosit-o, dar poți, de asemenea, să inițializezi o parolă, dacă preferi.</string>
     <string name="signup_epilogue_hint_display">Nume de afișat</string>
-    <string name="sign_up">Înregistrează-te la WordPress.com</string>
-    <string name="enter_username_instead">Autentifică-te cu numele de utilizator.</string>
-    <string name="enter_site_address_instead">Autentifică-te introducând adresa sitului tău.</string>
     <string name="my_site_create_new_site">Creează un sit nou pentru afacerea, revista ta sau blogul personal; sau conectează o instalare WordPress existentă.</string>
     <string name="my_site_add_new_site">Adaugă sit nou</string>
     <string name="site_settings_like_header">Apreciere</string>
@@ -1810,7 +1808,6 @@ Language: ro
     <string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
     <string name="login_error_suffix">\nPoate încerci un alt cont?</string>
     <string name="login_error_button">Închide</string>
-    <string name="login_google_button_suffix">Autentificare cu Google.</string>
     <string name="enter_wpcom_password_google">Pentru a continua cu acest cont Google, te rog furnizează parola WordPress.com care se potrivește. Aceasta va fi cerută o singură dată.</string>
     <string name="error_generic_network">A apărut o eroare de rețea. Te rog verifică-ți conexiunea și încearcă din nou.</string>
     <string name="post_settings_remove_featured_image">Înlătură imaginea reprezentativă</string>
@@ -1909,7 +1906,6 @@ Language: ro
     <string name="login_site_address_more_help">Ai nevoie de mai mult ajutor?</string>
     <string name="login_site_address_help_content">Adresa sitului tău apare în bara din partea de sus a ecranului când îți vizitezi situl în Chrome.</string>
     <string name="login_site_address_help_title">Care este adresa sitului meu?</string>
-    <string name="login_site_address_help">Ai nevoie de ajutor pentru a-ți găsi adresa sitului?</string>
     <string name="login_site_address">Adresă sit</string>
     <string name="enter_site_address">Introdu adresa sitului WordPress pe care vrei să-l conectezi.</string>
     <string name="login_already_logged_in_wpcom">Autentificat deja în WordPress.com</string>
@@ -1921,7 +1917,6 @@ Language: ro
     <string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
     <string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod</string>
     <string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
-    <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate siturile WordPress.</string>
     <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
@@ -2178,14 +2173,13 @@ Language: ro
     <string name="invite_message_title">Mesaj personalizat</string>
     <string name="invite">Invită</string>
     <string name="invite_names_title">Nume de utilizatori sau emailuri</string>
-    <string name="send_link">Trimite legătura</string>
     <string name="my_site_header_external">Extern</string>
     <string name="invite_people">Invită persoane</string>
     <string name="label_clear_search_history">Șterge istoric căutări</string>
     <string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
     <string name="reader_empty_search_description">Nu s-a găsit niciun rezultat pentru %s în limba ta</string>
     <string name="reader_hint_post_search">Caută în WordPress</string>
-    <string name="reader_title_related_post_detail">Articol similar</string>
+    <string name="reader_title_related_post_detail">Articole similare</string>
     <string name="preview_screen_links_disabled">Legăturile sunt dezactivate pe ecranul de previzualizare</string>
     <string name="send">Trimite</string>
     <string name="person_removed">%1$s înlăturat cu succes</string>
@@ -2204,7 +2198,6 @@ Language: ro
     <string name="checking_email">Verificarea emailului</string>
     <string name="magic_link_unavailable_error_message">În prezent indisponibilă. Te rog să-ți introduci parola</string>
     <string name="logging_in">Autentificare</string>
-    <string name="enter_your_password_instead">Introdu-ți parola în schimb</string>
     <string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
     <string name="capture_or_pick_photo">Selectează sau fă o fotografie</string>
     <string name="export_your_content_message">Articolele, paginile și setările îți vor fi trimise pe email la %s.</string>
@@ -2589,7 +2582,6 @@ Language: ro
     <string name="help">Ajutor</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest sit, această eroare poate să însemne că cineva încearcă să se substituie sitului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
-    <string name="forgot_password">Ai uitat parola?</string>
     <string name="no_network_message">Nu e nicio rețea disponibilă</string>
     <string name="blog_not_found">A apărut o eroare la accesarea blogului</string>
     <string name="mnu_comment_unspam">Nu e spam</string>
@@ -2657,7 +2649,6 @@ Language: ro
     <string name="invalid_site_url_message">Verifică dacă URL-ul de sit introdus e corect</string>
     <string name="sure_to_cancel_edit_comment">Anulezi editarea acestui comentariu?</string>
     <string name="page_settings">Setări pagină</string>
-    <string name="post_settings">Setări articol</string>
     <string name="local_draft">Ciornă locală</string>
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
     <string name="file_not_found">Nu am putut găsit fișierul pentru încărcare. A fost șters sau mutat?</string>
@@ -2668,6 +2659,7 @@ Language: ro
     <string name="select_categories">Selectează categoriile</string>
     <string name="reader_toast_err_remove_tag">Nu pot să înlătur acest subiect</string>
     <string name="reader_toast_err_add_tag">Nu pot să adaug acest subiect</string>
+    <string name="post_settings">Setări articole</string>
     <string name="share_link">Partajează legătura</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>

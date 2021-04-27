@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-30 11:54:09+0000
+Translation-Revision-Date: 2021-04-16 11:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Etiket Bağlantısı</string>
+    <string name="gutenberg_native_search_blocks">Arama blokları</string>
+    <string name="gutenberg_native_search_block">Arama bloğu</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">birimi değiştirmek için iki kez dokunun</string>
+    <string name="gutenberg_native_clear_search">Aramayı temizle</string>
+    <string name="gutenberg_native_cancel_search">Aramayı iptal et</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s, %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Beğeni verileri alınırken bir hata oluştu</string>
+    <string name="get_likes_unknown_error">Beğeniler alınırken bilinmeyen bir hata oluştu.</string>
+    <string name="get_likes_no_network_error">Kullanılabilir ağ yok.</string>
+    <string name="comments_empty_list_filtered_unreplied">Cevaplanmamış yorum yok</string>
+    <string name="comment_status_unreplied">Cevaplanmamış</string>
     <string name="gutenberg_native_table_of_contents">İçerik tablosu</string>
     <string name="gutenberg_native_summary">özet</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Gönderinizi bir başlık listesiyle özetleyin.  HTML bağlantılarını buraya bağlamak için Başlık bloklarına ekleyin.</string>
-    <string name="gutenberg_native_search_settings">Arama Ayarları</string>
-    <string name="gutenberg_native_post_link">Gönderi Bağlantısı</string>
     <string name="gutenberg_native_document_outline">belge taslağı</string>
-    <string name="gutenberg_native_category_link">Kategori Bağlantısı</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
-    <string name="gutenberg_native_a_link_to_a_url">Bir URL bağlantısı.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">Bir etiket bağlantısı.</string>
-    <string name="gutenberg_native_a_link_to_a_post">Bir gönderi bağlantısı.</string>
-    <string name="gutenberg_native_a_link_to_a_page">Bir sayfa bağlantısı.</string>
-    <string name="gutenberg_native_a_link_to_a_category">Bir kategori bağlantısı.</string>
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>
-    <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
     <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
@@ -428,7 +429,6 @@ Language: tr
     <string name="media_uploading_default">Ortam dosyası yükleniyor</string>
     <string name="gutenberg_native_select_item">Öğeyi seç</string>
     <string name="gutenberg_native_search_or_type_url">URL arayın veya yazın</string>
-    <string name="gutenberg_native_page_link">Sayfa Bağlantısı</string>
     <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
     <string name="gutenberg_native_add_this_link">Bu bağlantıyı ekle</string>
     <string name="gutenberg_native_add_this_email_link">Bu e-posta bağlantısını ekle</string>
@@ -797,7 +797,6 @@ Language: tr
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
     <string name="gutenberg_native_gallery_caption_s">Galeri yazısı. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Mevcut değer %2$s</string>
     <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
     <string name="content_description_person_building_website">İnsan yapımı websitesi</string>
     <string name="post_signup_interstitial_not_right_now">Şimdi değil</string>
@@ -821,7 +820,6 @@ Language: tr
     <string name="login_discovery_error_http_auth">&lt;b>HTTP Kimlik Doğrulaması&lt;/b> gerektiğinden sitenize erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_discovery_error_xmlrpc">Sitenizdeki &lt;b>XMLRPC dosyasına&lt;/b> erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_site_credentials_magic_link_label">Çok az kaldı! Sadece Jetpack bağlantılı e-posta adresinizi doğrulamamız gerekiyor&lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Site kimlik bilgileriyle giriş yapın.</string>
     <string name="enter_credentials_for_site">%1$s site kimlik bilginizle giriş yapın</string>
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
     <string name="reader_following_display_name">Takip Ediliyor</string>
@@ -878,7 +876,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Bloğu yukarı taşımak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Bloğu aşağı taşımak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Bu değeri düzenlemek için çift dokunun</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Kaydırıcıyı kullanarak değeri değiştirmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Blok eklemek için çift dokunun</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
@@ -985,7 +982,6 @@ Language: tr
     <string name="post_settings_add_to_calendar">Takvime ekle</string>
     <string name="post_settings_notification">Bildirim</string>
     <string name="post_settings_time_and_date">Tarih ve saat</string>
-    <string name="login_need_help_finding_connected_email">Bağlanırken kullandığınız e-postayı bulmak için yardıma mı ihtiyacınız var?</string>
     <string name="login_invalid_site_url">Lütfen example.com gibi eksiksiz bir web sitesi adresi girin.</string>
     <string name="enter_email_for_site">%1$s ile bağlanmak için WordPress.com hesabınıza giriş yapın</string>
     <string name="stats_post_views_label">Görüntülemeler</string>
@@ -1159,7 +1155,6 @@ Language: tr
     <string name="plans_loading_error_no_plans_title">Paketler Yüklenemiyor</string>
     <string name="plans_loading_error_network_title">Bağlantı yok</string>
     <string name="menu_switch_to_gutenberg_editor">Blok düzenleyicisine geç</string>
-    <string name="menu_switch_to_aztec_editor">Klasik düzenleyiciye geç</string>
     <string name="stats_loading_block_error">Verileriniz yüklenirken bir sorun oluştu, sayfanızı yenileyip tekrar deneyin.</string>
     <string name="stats_loading_error">Veriler yüklenmedi</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni gönderileri ve sayfaları düzenleyin</string>
@@ -1434,8 +1429,6 @@ Language: tr
     <string name="support_contact_email">İletişim e-postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
     <string name="my_tickets">Taleplerim</string>
-    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
-    <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
@@ -1451,14 +1444,12 @@ Language: tr
     <string name="comment_read_source_post">Yazı kaynağını oku</string>
     <string name="sites">Siteler</string>
     <string name="signup_magic_link_title">Sihirli bağlantı gönderildi</string>
-    <string name="signup_email_screen_title">E-posta ile giriş</string>
     <string name="verification_2fa_screen_title">Kod doğrulaması</string>
     <string name="selfhosted_site_login_title">Giriş bilgileri</string>
     <string name="magic_link_sent_login_title">Sihirli bağlantı gönderildi</string>
     <string name="magic_link_login_title">Sihirli bağlantı ile giriş</string>
     <string name="site_address_login_title">Site adresi ile giriş</string>
     <string name="email_address_login_title">E-posta ile giriş</string>
-    <string name="alternatively">Alternatif olarak:</string>
     <string name="reader_empty_saved_posts_description">%s üzerine dokunarak yazıyı listenize kaydedin.</string>
     <string name="reader_empty_saved_posts_title">Henüz hiç yazı kaydedilmedi!</string>
     <string name="reader_bookmark_snack_title">Yazı kaydedildi</string>
@@ -1495,7 +1486,6 @@ Language: tr
     <string name="preference_privacy_settings">Gizlilik ayarları</string>
     <string name="preference_collect_information">Bilgi topla</string>
     <string name="post_submitted">Yazı gönderildi</string>
-    <string name="login_email_button_signup">Hesabınız yok mu? %1$sKaydolun%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Eklenti özelliği sitenin olumlu itibara sahip olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Eklenti özelliği birincil alan adı aboneliğinin bu kullanıcıyla ilişkilendirilmesini gerektirir.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Eklenti özelliği yönetici ayrıcalıkları gerektirir.</string>
@@ -1661,11 +1651,8 @@ Language: tr
     <string name="username_changer_dismiss_button_positive">Vazgeç</string>
     <string name="username_changer_action">Kaydet</string>
     <string name="content_description_add_avatar">Avatar ekle</string>
-    <string name="signup_with_google_button">Google ile üye ol</string>
-    <string name="signup_with_email_button">E-posta ile üye ol</string>
     <string name="signup_user_exists">E-posta WordPress.com’da zaten var.\nOturum açmaya geçiliyor.</string>
     <string name="signup_updating_account">Hesap güncelleniyor…</string>
-    <string name="signup_terms_of_service_text">Kaydolmakla %1$sHizmet Koşulları%2$s\'nı kabul etmiş olursunuz.</string>
     <string name="signup_magic_link_progress">E-posta gönderiliyor</string>
     <string name="signup_magic_link_error_button_positive">Tekrar dene</string>
     <string name="signup_magic_link_error_button_negative">Kapat</string>
@@ -1678,11 +1665,6 @@ Language: tr
     <string name="signup_epilogue_error_button_negative">Eski haline getir</string>
     <string name="signup_epilogue_error_generic">Hesabınız güncellenirken bir sorunla karşılaştık. Yeniden deneyebilir veya devam etmek için değişikliklerinizi geri alabilirsiniz.</string>
     <string name="signup_epilogue_error_avatar">Avatarınız güncellenirken bir sorunla karşılaştık.</string>
-    <string name="signup_email_header">Yeni WordPress.com hesabınızı oluşturmak için lütfen e-posta adresinizi girin.</string>
-    <string name="signup_email_error_generic">E-posta adresinizi kontrol ederken bir sorunla karşılaştık.</string>
-    <string name="sign_up">WordPress.com\'a Kaydolun</string>
-    <string name="enter_username_instead">Kullanıcı adınızla oturum açın.</string>
-    <string name="enter_site_address_instead">Site adresinizi girerek oturum açın.</string>
     <string name="plugin_needs_update">Güncellenmesi gerekiyor</string>
     <string name="plugin_caption_search">Eklentileri ara</string>
     <string name="plugin_caption_new">Yeni</string>
@@ -1803,7 +1785,6 @@ Language: tr
     <string name="login_error_suffix">\nBelki de farklı bir hesap denemelisiniz.</string>
     <string name="login_error_generic">Google hesabı ile bağlantı kurarken bir miktar sorun yaşadık.</string>
     <string name="login_error_button">Kapat</string>
-    <string name="login_google_button_suffix">Google ile giriş yapın.</string>
     <string name="enter_wpcom_password_google">Bu Google hesabıyla devam etmek için lütfen eşleşen WordPress.com parolasını sağlayın. Bu yalnızca bir kez sorulacak.</string>
     <string name="error_generic_network">Bir ağ hatası oluştu. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.</string>
     <string name="post_settings_remove_featured_image">Öne çıkan görseli kaldır</string>
@@ -1897,7 +1878,6 @@ Language: tr
     <string name="login_site_address_more_help">Daha fazla yardım mı gerekiyor?</string>
     <string name="login_site_address_help_content">Sitenize Chrome ile girdiğiniz zaman, sitenizin adresi ekranın üst tarafındaki çubukta gözükür.</string>
     <string name="login_site_address_help_title">Site adresim ne?</string>
-    <string name="login_site_address_help">Site adresinizi bulma konusunda yardıma mı ihtiyacınız var?</string>
     <string name="login_site_address">Site adresi</string>
     <string name="enter_site_address">Bağlanmak istediğiniz WordPress sitesinin adresini girin.</string>
     <string name="login_already_logged_in_wpcom">WordPress.com\'a zaten oturum açılmış</string>
@@ -1909,7 +1889,6 @@ Language: tr
     <string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
     <string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder</string>
     <string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
-    <string name="open_mail">E-postayı aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
     <string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>
@@ -2168,7 +2147,6 @@ Language: tr
     <string name="invite_names_title">Kullanıcı Adları veya E-postalar</string>
     <string name="invite_people">İnsanları davet et</string>
     <string name="my_site_header_external">Harici</string>
-    <string name="send_link">Bağlantı gönder</string>
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
@@ -2192,7 +2170,6 @@ Language: tr
     <string name="checking_email">E-posta kontrol ediliyor</string>
     <string name="magic_link_unavailable_error_message">Şu an uygun değil. Lütfen parolanızı girin</string>
     <string name="logging_in">Giriş yapılıyor</string>
-    <string name="enter_your_password_instead">Bunun yerine parola gir</string>
     <string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
     <string name="capture_or_pick_photo">Fotoğraf seç ya da yakala</string>
     <string name="plans">Planlar</string>
@@ -2571,7 +2548,6 @@ Language: tr
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
-    <string name="forgot_password">Parolanızı mı kaybettiniz?</string>
     <string name="help">Yardım</string>
     <string name="username_or_password_incorrect">Yanlış kullanıcı adı veya parola girdiniz</string>
     <string name="email_invalid">Geçerli bir e-posta adresi girin</string>

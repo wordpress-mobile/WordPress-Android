@@ -234,8 +234,6 @@ Language: sk
     <string name="support_contact_email">Kontaktný email</string>
     <string name="application_log_button">Aplikačný záznam</string>
     <string name="my_tickets">Moje tickety</string>
-    <string name="activity_log_rewind_dialog_message">Naozaj chcete vrátiť svoje stránky späť na %1$s o %2$s? Tým sa odstráni všetok obsah a možnosti, ktoré boli odvtedy vytvorené alebo zmenené.</string>
-    <string name="activity_log_rewind_site">Obnoviť webovú stránku</string>
     <string name="activity_log_currently_restoring_message_no_dates">Prebieha obnovenie</string>
     <string name="activity_log_currently_restoring_message">Obnovovanie na %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Prebieha obnovenie Vašej webovej stránky</string>
@@ -251,14 +249,12 @@ Language: sk
     <string name="comment_read_source_post">článok</string>
     <string name="sites">Webové stránky</string>
     <string name="signup_magic_link_title">Magický odkaz bol odoslaný</string>
-    <string name="signup_email_screen_title">Zaregistrujte sa e-mailom</string>
     <string name="verification_2fa_screen_title">Overenie kódu</string>
     <string name="selfhosted_site_login_title">Prihlasovacie údaje</string>
     <string name="magic_link_sent_login_title">Magický odkaz bol odoslaný</string>
     <string name="magic_link_login_title">Prihlásenie pre magický odkaz</string>
     <string name="site_address_login_title">Prihlásenie cez adresu webovej stránky</string>
     <string name="email_address_login_title">Prihlásenie cez emailovú adresu</string>
-    <string name="alternatively">Alternatívy</string>
     <string name="reader_empty_saved_posts_description">Klepnite na %s pre uloženie článku do Vášho zoznamu</string>
     <string name="reader_empty_saved_posts_title">Žiadne uložené články — zatiaľ!</string>
     <string name="reader_bookmark_snack_title">Článok bol uložený</string>
@@ -295,7 +291,6 @@ Language: sk
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
     <string name="post_submitted">Článok bol odoslaný</string>
-    <string name="login_email_button_signup">Nemáte účet? %1$sZaregistrujte sa%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Vlastnosť pluginu vyžaduje, aby bola webová stránka v dobrom stave.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcia pluginu vyžaduje, aby predplatenie primárnej domény bolo spojené s týmto používateľom.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Funkcia pluginu vyžaduje administrátorské privilégiá.</string>
@@ -461,11 +456,8 @@ Language: sk
     <string name="username_changer_dismiss_button_positive">Zrušiť</string>
     <string name="username_changer_action">Uložiť</string>
     <string name="content_description_add_avatar">Pridať avatar</string>
-    <string name="signup_with_google_button">Zaregistrovať sa cez Google</string>
-    <string name="signup_with_email_button">Zaregistrovať sa emailom</string>
     <string name="signup_user_exists">Tento email už na WordPress.com existuje.\nPrihlasovanie pokračuje.</string>
     <string name="signup_updating_account">Účet sa aktualizuje…</string>
-    <string name="signup_terms_of_service_text">Registráciou vyjadrujete súhlas s našimi %1$s Zmluvnými podmienkami%2$s.</string>
     <string name="signup_magic_link_progress">Posiela sa email</string>
     <string name="signup_magic_link_error_button_positive">Opakovať</string>
     <string name="signup_magic_link_error_button_negative">Zatvoriť</string>
@@ -478,11 +470,6 @@ Language: sk
     <string name="signup_epilogue_error_button_negative">Prejsť späť</string>
     <string name="signup_epilogue_error_generic">Pri aktualizácii vášho účtu sa vyskytli problémy. Môžete to skúsiť znova alebo vrátiť zmeny, aby ste mohli pokračovať.</string>
     <string name="signup_epilogue_error_avatar">Pri nahrávaní vášho avataru sa vyskytli problémy.</string>
-    <string name="signup_email_header">Ak chcete vytvoriť svoj nový účet WordPress.com, zadajte svoju e-mailovú adresu.</string>
-    <string name="signup_email_error_generic">Pri kontrole e-mailovej adresy sa vyskytli problémy.</string>
-    <string name="sign_up">Zaregistrujte sa na WordPress.com</string>
-    <string name="enter_username_instead">Prihláste sa pomocou svojho používateľského mena.</string>
-    <string name="enter_site_address_instead">Prihláste sa zadaním adresy vašej webovej stránky.</string>
     <string name="plugin_needs_update">Potrebná aktualizácia</string>
     <string name="plugin_caption_search">Hľadať pluginy</string>
     <string name="plugin_caption_new">Nový</string>
@@ -603,7 +590,6 @@ Language: sk
     <string name="login_error_suffix">\nMožno skúste iný účet?</string>
     <string name="login_error_generic">Počas pripájania na Google účet došlo k nejakým chybám.</string>
     <string name="login_error_button">Zavrieť</string>
-    <string name="login_google_button_suffix">Prihláste sa pomocou Google.</string>
     <string name="enter_wpcom_password_google">Ak chcete pokračovať s týmto účtom Google, zadajte zodpovedajúce heslo WordPress.com. Toto bude požiadané len raz.</string>
     <string name="error_generic_network">Vyskytla sa chyba siete. Skontrolujte svoje pripojenie a skúste to znova.</string>
     <string name="post_settings_remove_featured_image">Odstráňte vybraný obrázok</string>
@@ -695,7 +681,6 @@ Language: sk
     <string name="login_site_address_more_help">Potrebujete pomoc?</string>
     <string name="login_site_address_help_content">Adresa vašej webovej stránky sa zobrazí v paneli na vrchu obrazovky, keď navštívite vašu stránku v prehliadači Chrome.</string>
     <string name="login_site_address_help_title">Aká je adresa mojej webovej stránky?</string>
-    <string name="login_site_address_help">Potrebujete pomoc pri hľadaní adresy vašej webovej stránky?</string>
     <string name="login_site_address">Adresa webovej stránky</string>
     <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
     <string name="login_continue">Pokračovať</string>
@@ -706,7 +691,6 @@ Language: sk
     <string name="requesting_otp">Vyžaduje sa overenie kódu prostredníctvom SMS.</string>
     <string name="login_text_otp">Radšej mi pošlite kód</string>
     <string name="enter_verification_code">Takmer dokončené! Prosím, zadajte overovací kód z vašej aplikácie Authenticator.</string>
-    <string name="open_mail">Otvoriť e-mail</string>
     <string name="next">Ďalej</string>
     <string name="enter_email_wordpress_com">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
     <string name="image_optimization_promo_desc">Optimalizácia obrázkov zmenší obrázky pre rýchlejšie nahranie.\n\nPokyn môžete kedykoľvek zmeniť v nastaveniach webovej stránky.</string>
@@ -964,7 +948,6 @@ Language: sk
     <string name="invite_names_title">Používateľské mená alebo emaily</string>
     <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
-    <string name="send_link">Poslať odkaz</string>
     <string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
     <string name="reader_empty_search_description">Nenašli sa žiadne výsledky pre %s vo vašom jazyku</string>
@@ -988,7 +971,6 @@ Language: sk
     <string name="checking_email">Kontrola emailu</string>
     <string name="magic_link_unavailable_error_message">Momentálne nedostupné. Prosím vložte vaše heslo</string>
     <string name="logging_in">Prihlasovanie</string>
-    <string name="enter_your_password_instead">Zadajte heslo</string>
     <string name="web_address_dialog_hint">Zobraziť verejne, keď píšete komentáre.</string>
     <string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
     <string name="plans">Paušály</string>
@@ -1363,7 +1345,6 @@ Language: sk
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
-    <string name="forgot_password">Stratili ste heslo?</string>
     <string name="help">Pomocník</string>
     <string name="username_or_password_incorrect">Používateľské meno alebo heslo nie je správne</string>
     <string name="email_invalid">Vložte platnú emailovú adresu</string>

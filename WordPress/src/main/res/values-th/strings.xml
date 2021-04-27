@@ -234,7 +234,6 @@ Language: th
     <string name="schedule_verb">ตารางงาน</string>
     <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
     <string name="help">ช่วยเหลือ</string>
-    <string name="forgot_password">จำรหัสผ่านของคุณไม่ได้?</string>
     <string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
     <string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
     <string name="mnu_comment_unspam">ไม่ใช่สแปม</string>

@@ -466,7 +466,6 @@ Language: gl_ES
     <string name="gutenberg_native_move_image_forward">Mover a imaxe cara adiante</string>
     <string name="gutenberg_native_move_image_backward">Mover a imaxe cara atrás</string>
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. O valor actual é %2$s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
     <string name="content_description_person_building_website">Creador da web</string>
     <string name="post_signup_interstitial_not_right_now">Agora non</string>
@@ -490,7 +489,6 @@ Language: gl_ES
     <string name="login_discovery_error_http_auth">Non puidemos acceder ao teu sitio porque necesita &lt;b>identificación HTTP&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_discovery_error_xmlrpc">Non puidemos acceder no teu sitio ao &lt;b>arquivo XMLRCP&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_site_credentials_magic_link_label">Xa case estamos! Só necesitamos verificar o teu enderezo de correo electrónico conectado a Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Accede coas credenciais do sitio.</string>
     <string name="enter_credentials_for_site">Accede coas credenciais do teu sitio %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Páxina do sitio</string>
     <string name="reader_following_display_name">Seguindo</string>
@@ -546,7 +544,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Toca dúas veces para mover o bloque cara arriba</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dúas veces para mover o bloque cara abaixo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toca dúas veces para editar este valor</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toca dúas veces para cambiar o valor usando o control deslizante</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dúas veces para engadir un bloque</string>
     <string name="gutenberg_native_current_value_is_s">O valor actual é %s</string>
     <string name="gutenberg_native_choose_from_device">Elixir desde o dispositivo</string>
@@ -652,7 +649,6 @@ Language: gl_ES
     <string name="post_settings_add_to_calendar">Engadir ao calendario</string>
     <string name="post_settings_notification">Aviso</string>
     <string name="post_settings_time_and_date">Data e hora</string>
-    <string name="login_need_help_finding_connected_email">Necesitas axuda para encontrar o correo electrónico co que te conectaches?</string>
     <string name="login_invalid_site_url">Por favor, introduce un enderezo completo dunha web, como exemplo.gal.</string>
     <string name="enter_email_for_site">Accede con WordPress.com para conectar con %1$s</string>
     <string name="stats_post_views_label">Visitas</string>
@@ -826,7 +822,6 @@ Language: gl_ES
     <string name="plans_loading_error_no_plans_title">Non se poden cargar os plans</string>
     <string name="plans_loading_error_network_title">Non hai conexión</string>
     <string name="menu_switch_to_gutenberg_editor">Cambiar ao editor de bloques</string>
-    <string name="menu_switch_to_aztec_editor">Cambiar ao editor clásico</string>
     <string name="stats_loading_block_error">Houbo un problema ao cargar os teus datos, recarga a páxina e inténtao de novo.</string>
     <string name="stats_loading_error">Datos non cargados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita as novas entradas e páxinas co editor de bloques</string>
@@ -1098,8 +1093,6 @@ Language: gl_ES
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Rexistro da aplicación</string>
     <string name="my_tickets">Os meus tickets</string>
-    <string name="activity_log_rewind_dialog_message">Queres rebobinar o teu sitio ao %1$s ás %2$s? Isto borrará todo o contido e opcións creadas ou cambiadas desde entón.</string>
-    <string name="activity_log_rewind_site">Restaurar o sitio</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
@@ -1115,14 +1108,12 @@ Language: gl_ES
     <string name="comment_read_source_post">Le a entrada de orixe</string>
     <string name="sites">Sitios</string>
     <string name="signup_magic_link_title">Enviado enlace máxico</string>
-    <string name="signup_email_screen_title">Rexistro por correo electrónico</string>
     <string name="verification_2fa_screen_title">Verificación do código</string>
     <string name="selfhosted_site_login_title">Credenciais de acceso</string>
     <string name="magic_link_sent_login_title">Enviado enlace máxico</string>
     <string name="magic_link_login_title">Acceso por enlace máxico</string>
     <string name="site_address_login_title">Acceso mediante o enderezo do sitio</string>
     <string name="email_address_login_title">Acceso mediante enderezo de correo electrónico</string>
-    <string name="alternatively">Alternativamente:</string>
     <string name="reader_empty_saved_posts_description">Toca %s para gardar unha entrada na túa lista.</string>
     <string name="reader_empty_saved_posts_title">Aínda non hai entradas gardadas!</string>
     <string name="reader_bookmark_snack_title">Entrada gardada</string>
@@ -1159,7 +1150,6 @@ Language: gl_ES
     <string name="preference_privacy_settings">Axustes de privacidade</string>
     <string name="preference_collect_information">Recompilar información</string>
     <string name="post_submitted">Entrada enviada</string>
-    <string name="login_email_button_signup">Non tes unha conta? %1$s Rexístrate %2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Unha característica do plugin require que o sitio estea en bo estado.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Unha característica do plugin necesita que a subscrición do dominio principal estea asociada con este usuario.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Unha característica do plugin necesita privilexios de administrador.</string>
@@ -1325,11 +1315,8 @@ Language: gl_ES
     <string name="username_changer_dismiss_button_positive">Descartar</string>
     <string name="username_changer_action">Gardar</string>
     <string name="content_description_add_avatar">Engadir avatar</string>
-    <string name="signup_with_google_button">Rexistro con Google</string>
-    <string name="signup_with_email_button">Rexistro con correo electrónico</string>
     <string name="signup_user_exists">O correo electrónico xa existe en WordPress.com.\nAcceder.</string>
     <string name="signup_updating_account">Actualizando conta…</string>
-    <string name="signup_terms_of_service_text">Ao rexistrarte aceptas os nosos %1$sTermos do servizo%2$s.</string>
     <string name="signup_magic_link_progress">Enviando correo</string>
     <string name="signup_magic_link_error_button_positive">Reintentar</string>
     <string name="signup_magic_link_error_button_negative">Cerrar</string>
@@ -1342,11 +1329,6 @@ Language: gl_ES
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houbo algún problema ao actualizar a túa conta. Podes reintentalo ou reverter os teus cambios para continuar.</string>
     <string name="signup_epilogue_error_avatar">Houbo algún problema ao subir o teu avatar.</string>
-    <string name="signup_email_header">Para crear a túa nova conta de WordPress.com, por favor, introduce o teu enderezo de correo electrónico.</string>
-    <string name="signup_email_error_generic">Houbo algún problema ao comprobar o enderezo de correo electrónico.</string>
-    <string name="sign_up">Rexistro en WordPress.com</string>
-    <string name="enter_username_instead">Accede co teu nome de usuario.</string>
-    <string name="enter_site_address_instead">Accede introducindo o enderezo do teu sitio.</string>
     <string name="plugin_needs_update">Necesita actualizarse</string>
     <string name="plugin_caption_search">Buscar plugins</string>
     <string name="plugin_caption_new">Novo</string>
@@ -1467,7 +1449,6 @@ Language: gl_ES
     <string name="login_error_suffix">\nQuizais probando con outra conta?</string>
     <string name="login_error_generic">Houbo algún problema ao conectar coa conta de Google.</string>
     <string name="login_error_button">Cerrar</string>
-    <string name="login_google_button_suffix">Acceder con Google.</string>
     <string name="enter_wpcom_password_google">Para seguir con esta conta de Google, por favor, facilita o contrasinal correspondente de WordPress.com. Só se che pedirá unha vez.</string>
     <string name="error_generic_network">Ocorreu un erro na rede. Por favor, revisa a túa conexión e inténtao de novo.</string>
     <string name="post_settings_remove_featured_image">Quitar imaxe destacada</string>
@@ -1559,7 +1540,6 @@ Language: gl_ES
     <string name="login_site_address_more_help">Necesitas máis axuda?</string>
     <string name="login_site_address_help_content">O enderezo do teu sitio aparece na barra da parte superior da pantalla cando visitas o teu sitio en Chrome.</string>
     <string name="login_site_address_help_title">Cal é o enderezo do meu sitio?</string>
-    <string name="login_site_address_help">Necesitas axuda para encontrar o enderezo do teu sitio?</string>
     <string name="login_site_address">Enderezo do sitio</string>
     <string name="enter_site_address">Introduce o enderezo do sitio WordPress co que che gustaría conectar.</string>
     <string name="login_already_logged_in_wpcom">Xa estás conectado a WordPress.com</string>
@@ -1571,7 +1551,6 @@ Language: gl_ES
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un código en texto no seu lugar</string>
     <string name="enter_verification_code">Case o temos! Por favor, introduce un código de verificación desde a túa aplicación Authenticator.</string>
-    <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Seguinte</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>
     <string name="image_optimization_promo_desc">A optimización da imaxe reduce as imaxes para que suban máis rápido.\n\nPodes cambiar isto en calquera momento nos axustes do sitio.</string>
@@ -1829,7 +1808,6 @@ Language: gl_ES
     <string name="invite_names_title">Nomes de usuario ou enderezos de correo electrónico</string>
     <string name="invite_people">Invitar xente</string>
     <string name="my_site_header_external">Externo</string>
-    <string name="send_link">Enviar o enlace</string>
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
     <string name="reader_empty_search_description">Non se atoparon artigos para %s na túa lingua</string>
@@ -1853,7 +1831,6 @@ Language: gl_ES
     <string name="checking_email">Verificando o enderezo de correo electrónico</string>
     <string name="magic_link_unavailable_error_message">Non dispoñible neste momento. Introduce o teu contrasinal.. </string>
     <string name="logging_in">Conectando</string>
-    <string name="enter_your_password_instead">Introduce o teu contrasinal se non</string>
     <string name="web_address_dialog_hint">Móstrase publicamente no teus comentarios.</string>
     <string name="capture_or_pick_photo">Fai ou escolle unha foto</string>
     <string name="plans">Plans</string>
@@ -2231,7 +2208,6 @@ Language: gl_ES
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>
-    <string name="forgot_password">Perdiches o contrasinal?</string>
     <string name="help">Axuda</string>
     <string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
     <string name="email_invalid">Introduce un enderezo de correo electrónico válido</string>

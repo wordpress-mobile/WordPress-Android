@@ -16,7 +16,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +41,7 @@ import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.ViewPagerFragment;
+import org.wordpress.android.ui.comments.CommentListItem.Comment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
@@ -160,7 +160,7 @@ public class CommentsListFragment extends ViewPagerFragment {
         mRecyclerView = view.findViewById(R.id.comments_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
+                new CommentListItemDecoration(view.getContext()));
 
         mRecyclerView.swapAdapter(getAdapter(), true);
 
@@ -292,7 +292,7 @@ public class CommentsListFragment extends ViewPagerFragment {
             CommentAdapter.OnCommentPressedListener pressedListener = new CommentAdapter.OnCommentPressedListener() {
                 @Override
                 public void onCommentPressed(int position, View view) {
-                    CommentModel comment = getAdapter().getItem(position);
+                    CommentModel comment = ((Comment) getAdapter().getItem(position)).getComment();
                     if (comment == null) {
                         return;
                     }

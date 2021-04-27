@@ -22,12 +22,13 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
     private static final String APP_SCHEME = "app_scheme";
 
-    private static final String EVENTS_PREFIX = "wpandroid_";
+    private final String mEventsPrefix;
 
     private final TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+    public AnalyticsTrackerNosara(Context context, String eventsPrefix) throws IllegalArgumentException {
         super(context);
+        mEventsPrefix = eventsPrefix;
         mNosaraClient = TracksClient.getClient(context);
     }
 
@@ -534,11 +535,11 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
             String jsonString = propertiesToJSON.toString();
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
@@ -1542,8 +1543,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
-            case FEATURE_FLAG_SET:
-                return "feature_flag_set";
+            case FEATURE_FLAG_VALUE:
+                return "feature_flag_value";
+            case FEATURE_FLAGS_SYNCED_STATE:
+                return "feature_flags_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:

@@ -2520,6 +2520,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
         setCurrentTag(tag);
     }
 
+    /**
+     * WARNING: Do not replace the static reader tracker with the corresponding instance reader tracker
+     * as this will result into a {@link NullPointerException} crash on specific scenarios.
+     * <p>
+     * This is because this method is also being triggered through the static
+     * {@link ReaderPostListFragment#newInstanceForTag} method, which means that the
+     * {@link ReaderPostListFragment#mReaderTracker} field instance will not be yet available, and
+     * as thus cannot be used, or else it will result in a {@link NullPointerException}.
+     */
     private void trackTagLoaded(@Nullable ReaderTag tag) {
         if (tag == null) {
             return;
@@ -2534,7 +2543,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        mReaderTracker.trackTag(stat, tag.getTagSlug());
+        ReaderTracker.trackTag(stat, tag.getTagSlug());
     }
 
     @Override

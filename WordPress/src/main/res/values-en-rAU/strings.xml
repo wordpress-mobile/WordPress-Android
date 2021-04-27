@@ -100,7 +100,6 @@ Language: en_AU
     <string name="post_notification_off">Off</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">Notification</string>
-    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="stats_post_views_label">Views</string>
@@ -272,7 +271,6 @@ Language: en_AU
     <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
     <string name="plans_loading_error_network_title">No connection</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
-    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
@@ -549,14 +547,12 @@ Language: en_AU
     <string name="comment_read_source_post">Read the source post</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Magic link sent</string>
-    <string name="signup_email_screen_title">Email signup</string>
     <string name="verification_2fa_screen_title">Code verification</string>
     <string name="selfhosted_site_login_title">Login credentials</string>
     <string name="magic_link_sent_login_title">Magic link sent</string>
     <string name="magic_link_login_title">Magic link login</string>
     <string name="site_address_login_title">Site address login</string>
     <string name="email_address_login_title">Email address login</string>
-    <string name="alternatively">Alternatively:</string>
     <string name="reader_empty_saved_posts_description">Tap %s to save a post to your list.</string>
     <string name="reader_empty_saved_posts_title">No posts saved — yet!</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
@@ -593,7 +589,6 @@ Language: en_AU
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="post_submitted">Post submitted</string>
-    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Plugin feature requires admin privileges.</string>
@@ -758,11 +753,8 @@ Language: en_AU
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_action">Save</string>
     <string name="content_description_add_avatar">Add avatar</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_updating_account">Updating account…</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
@@ -774,11 +766,6 @@ Language: en_AU
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
-    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
-    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
-    <string name="sign_up">Sign Up for WordPress.com</string>
-    <string name="enter_username_instead">Log in with your username.</string>
-    <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="plugin_needs_update">Needs update</string>
     <string name="plugin_caption_search">Search Plugins</string>
     <string name="plugin_caption_new">New</string>
@@ -898,7 +885,6 @@ Language: en_AU
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
@@ -989,7 +975,6 @@ Language: en_AU
     <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address">Site address</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
@@ -999,7 +984,6 @@ Language: en_AU
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
-    <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
@@ -1254,7 +1238,6 @@ Language: en_AU
     <string name="invite">Invite</string>
     <string name="invite_people">Invite People</string>
     <string name="my_site_header_external">External</string>
-    <string name="send_link">Send link</string>
     <string name="label_clear_search_history">Clear search history</string>
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
@@ -1278,7 +1261,6 @@ Language: en_AU
     <string name="checking_email">Checking email</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="logging_in">Logging in</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="plans">Plans</string>
@@ -1650,7 +1632,6 @@ Language: en_AU
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
-    <string name="forgot_password">Lost your password?</string>
     <string name="help">Help</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="email_invalid">Enter a valid email address</string>

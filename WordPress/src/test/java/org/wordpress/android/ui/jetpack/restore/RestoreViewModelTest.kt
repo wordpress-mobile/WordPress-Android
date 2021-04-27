@@ -115,13 +115,19 @@ class RestoreViewModelTest : BaseUnitTest() {
                 .thenReturn("plugins")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
                 .thenReturn("uploads")
-        whenever(checkboxSpannableLabel.buildSpannableLabel(
-                R.string.backup_item_roots,
-                R.string.backup_item_roots_hint))
+        whenever(
+                checkboxSpannableLabel.buildSpannableLabel(
+                        R.string.backup_item_roots,
+                        R.string.backup_item_roots_hint
+                )
+        )
                 .thenReturn("roots")
-        whenever(checkboxSpannableLabel.buildSpannableLabel(
-                R.string.backup_item_contents,
-                R.string.backup_item_content_hint))
+        whenever(
+                checkboxSpannableLabel.buildSpannableLabel(
+                        R.string.backup_item_contents,
+                        R.string.backup_item_content_hint
+                )
+        )
                 .thenReturn("contents")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
                 .thenReturn("sqls")

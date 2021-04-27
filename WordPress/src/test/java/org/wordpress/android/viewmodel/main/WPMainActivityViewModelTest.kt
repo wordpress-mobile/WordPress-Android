@@ -40,7 +40,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
-import org.wordpress.android.util.experiments.CreateMenuStoryFirstABExperiment
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
@@ -58,7 +57,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
-    @Mock lateinit var createMenuStoryFirstABExperiment: CreateMenuStoryFirstABExperiment
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -96,7 +94,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 mySiteImprovementsFeatureConfig,
                 quickStartRepository,
-                createMenuStoryFirstABExperiment,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(

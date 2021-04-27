@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -382,12 +383,13 @@ private fun buildZendeskConfig(
     extraTags: List<String>? = null,
     zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): Configuration {
+    val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
             buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
         )
-        .withRequestSubject(ZendeskConstants.ticketSubject)
+        .withRequestSubject(ticketSubject)
         .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
         .config()
 }
@@ -533,7 +535,6 @@ private object ZendeskConstants {
     // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
     const val platformTag = "Android"
     const val sourcePlatform = "mobile_-_android"
-    const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }

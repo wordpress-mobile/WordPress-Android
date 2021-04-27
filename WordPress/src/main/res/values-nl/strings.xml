@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 07:37:46+0000
+Translation-Revision-Date: 2021-04-20 13:30:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">Tag link</string>
+    <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
+    <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
+    <string name="gutenberg_native_transform_block">Transformeer blok…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Media invoegen is mislukt.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Audiobestand invoegen is mislukt.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
+    <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
+    <string name="like_faces_plural_text">%d bloggers vinden dit leuk.</string>
+    <string name="like_faces_singular_text">1 blogger vindt dit leuk.</string>
+    <string name="like_title_plural">%d likes</string>
+    <string name="like_title_singular">1 Like</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Voer je server referenties in om bedreigingen op te lossen.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Voer je server referenties in om de dreiging op te lossen.</string>
+    <string name="suggestion">Suggestie:</string>
+    <string name="gutenberg_native_search_blocks">Blokken zoeken</string>
+    <string name="gutenberg_native_search_block">Zoekblok</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">dubbel tikken om de eenheid te wijzigen</string>
+    <string name="gutenberg_native_clear_search">Zoekopdracht wissen</string>
+    <string name="gutenberg_native_cancel_search">Zoekopdracht annuleren</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
+    <string name="get_likes_empty_state_title">Er is een fout opgetreden tijdens het ophalen van likes gegevens</string>
+    <string name="get_likes_unknown_error">Een onbekende fout vond plaats tijdens het ophalen van likes.</string>
+    <string name="get_likes_no_network_error">Geen netwerk beschikbaar.</string>
+    <string name="comments_empty_list_filtered_unreplied">Geen onbeantwoorde reacties</string>
+    <string name="comment_status_unreplied">Onbeantwoord</string>
     <string name="gutenberg_native_table_of_contents">Inhoudsopgave</string>
     <string name="gutenberg_native_summary">samenvatting</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Vat je bericht samen met een lijst met koppen. Voeg HTML-ankers toe aan heading blokken om ze hier te linken.</string>
-    <string name="gutenberg_native_search_settings">Zoek instellingen</string>
-    <string name="gutenberg_native_post_link">Berichtlink</string>
     <string name="gutenberg_native_document_outline">documentoverzicht</string>
-    <string name="gutenberg_native_category_link">Categorie link</string>
     <string name="gutenberg_native_buttongroup">Knoppen groep</string>
-    <string name="gutenberg_native_a_link_to_a_url">Een link naar een URL.</string>
-    <string name="gutenberg_native_a_link_to_a_tag">Een link naar een tag.</string>
-    <string name="gutenberg_native_a_link_to_a_post">Een link naar een bericht.</string>
-    <string name="gutenberg_native_a_link_to_a_page">Een link naar een pagina.</string>
-    <string name="gutenberg_native_a_link_to_a_category">Een link naar een categorie.</string>
     <string name="jetpack_brute_force_allowlist_title">Altijd toegestane IP-adressen</string>
     <string name="site_settings_denylist_title">Niet toegelaten reacties</string>
-    <string name="gutenberg_native_add_button_text">Voeg knoptekst toe</string>
     <string name="reader_title_interests">Volg onderwerpen</string>
     <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
@@ -428,7 +444,6 @@ Language: nl
     <string name="media_uploading_default">Media aan het uploaden</string>
     <string name="gutenberg_native_select_item">Selecteer item</string>
     <string name="gutenberg_native_search_or_type_url">Zoek of typ URL</string>
-    <string name="gutenberg_native_page_link">Paginalink</string>
     <string name="gutenberg_native_add_this_telephone_link">Voeg deze telefoon link toe</string>
     <string name="gutenberg_native_add_this_link">Voeg deze link toe</string>
     <string name="gutenberg_native_add_this_email_link">Voeg deze e-mail link toe</string>
@@ -797,7 +812,6 @@ Language: nl
     <string name="gutenberg_native_move_image_forward">Afbeelding naar voren verplaatsen</string>
     <string name="gutenberg_native_move_image_backward">Afbeelding naar achteren verplaatsen</string>
     <string name="gutenberg_native_gallery_caption_s">Bijschrift galerij. %s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Huidige waarde is %2$s</string>
     <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
     <string name="content_description_person_building_website">Persoon die de website gebouwd heeft</string>
     <string name="post_signup_interstitial_not_right_now">Niet nu</string>
@@ -821,7 +835,6 @@ Language: nl
     <string name="login_discovery_error_http_auth">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b>HTTP-authenticatie is vereist&lt;/b>. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_xmlrpc">We konden geen toegang krijgen tot het &lt;b>XMLRPC-bestand&lt;/b> op je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_site_credentials_magic_link_label">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b>%1$s&lt;/b>) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
-    <string name="enter_site_credentials_instead">Inloggen met site-referenties.</string>
     <string name="enter_credentials_for_site">Inloggen met je site-referenties voor %1$s.</string>
     <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
     <string name="reader_following_display_name">Volgen</string>
@@ -878,7 +891,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Tik tweemaal om het blok omhoog te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Tik tweemaal om het blok omlaag te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Tik tweemaal om deze waarde te bewerken</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Tik tweemaal om de waarde te wijzigen met behulp van de schuifbalk</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Tik tweemaal om een blok toe te voegen</string>
     <string name="gutenberg_native_current_value_is_s">Huidige waarde is %s</string>
     <string name="gutenberg_native_choose_from_device">Kiezen op apparaat</string>
@@ -886,6 +898,7 @@ Language: nl
     <string name="gutenberg_native_alt_text">Alt. tekst</string>
     <string name="gutenberg_native_add_video">VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_url">URL toevoegen</string>
+    <string name="gutenberg_native_add_alt_text">Alt tekst toevoegen</string>
     <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>
@@ -992,7 +1005,6 @@ Language: nl
     <string name="post_settings_add_to_calendar">Toevoegen aan agenda</string>
     <string name="post_settings_notification">Melding</string>
     <string name="post_settings_time_and_date">Datum en tijd</string>
-    <string name="login_need_help_finding_connected_email">Heb je hulp nodig bij het vinden van de e-mail waarmee je hebt ingelogd?</string>
     <string name="login_invalid_site_url">Voer een compleet websiteadres in, zoals example.com.</string>
     <string name="enter_email_for_site">Log in met WordPress.com om verbinding te maken met %1$s</string>
     <string name="stats_post_views_label">Weergaven</string>
@@ -1166,7 +1178,6 @@ Language: nl
     <string name="plans_loading_error_no_plans_title">Abonnementen kunnen niet worden geladen</string>
     <string name="plans_loading_error_network_title">Geen verbinding</string>
     <string name="menu_switch_to_gutenberg_editor">Overschakelen naar de blok-editor</string>
-    <string name="menu_switch_to_aztec_editor">Overschakelen naar de klassieke editor</string>
     <string name="stats_loading_block_error">Er is een probleem opgetreden bij het laden van je gegevens. Vernieuw je pagina om het opnieuw te proberen.</string>
     <string name="stats_loading_error">Gegevens niet geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bewerk nieuwe berichten en pagina\'s met de blok-editor</string>
@@ -1441,8 +1452,6 @@ Language: nl
     <string name="support_contact_email">E-mail voor contact</string>
     <string name="application_log_button">Toepassingslog</string>
     <string name="my_tickets">Mijn tickets</string>
-    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugzetten naar %1$s op %2$s? Hierdoor wordt alle inhoud opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
-    <string name="activity_log_rewind_site">Site terugzetten</string>
     <string name="activity_log_currently_restoring_message_no_dates">Terugzetten in bewerking</string>
     <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
@@ -1458,14 +1467,12 @@ Language: nl
     <string name="comment_read_source_post">Lees het oorspronkelijke bericht</string>
     <string name="sites">Sites</string>
     <string name="signup_magic_link_title">Magische link verzonden</string>
-    <string name="signup_email_screen_title">Aanmelden via E-mail</string>
     <string name="verification_2fa_screen_title">Code verificatie</string>
     <string name="selfhosted_site_login_title">Login referenties</string>
     <string name="magic_link_sent_login_title">Magische link verzonden</string>
     <string name="magic_link_login_title">Magische link login</string>
     <string name="site_address_login_title">Site adres login</string>
     <string name="email_address_login_title">E-mail adres login</string>
-    <string name="alternatively">Alternatief</string>
     <string name="reader_empty_saved_posts_description">Tik op %s om een bericht op te slaan in je lijst.</string>
     <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
     <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
@@ -1502,7 +1509,6 @@ Language: nl
     <string name="preference_privacy_settings">Privacyinstellingen</string>
     <string name="preference_collect_information">Gegevens verzamelen</string>
     <string name="post_submitted">Bericht geplaatst</string>
-    <string name="login_email_button_signup">Heb je nog geen account? %1$sRegistreren%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Voor deze plugin-functie moet de site in goede staat zijn.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Voor deze plugin-functie moet het abonnement op het primaire domein aan deze gebruiker zijn gekoppeld.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Voor deze plugin-functie zijn beheerdersrechten vereist.</string>
@@ -1668,11 +1674,8 @@ Language: nl
     <string name="username_changer_dismiss_button_positive">Negeren</string>
     <string name="username_changer_action">Opslaan</string>
     <string name="content_description_add_avatar">Voeg avatar toe </string>
-    <string name="signup_with_google_button">Meld je aan met Google</string>
-    <string name="signup_with_email_button">Meld je aan met e-mail</string>
     <string name="signup_user_exists">E-mailadres bestaat al op WordPress.com\nDoorgaan met inloggen. </string>
     <string name="signup_updating_account">Updating account…</string>
-    <string name="signup_terms_of_service_text">Als je je registreert, ga je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
     <string name="signup_magic_link_progress">E-mail versturen</string>
     <string name="signup_magic_link_error_button_positive">Probeer opnieuw</string>
     <string name="signup_magic_link_error_button_negative">Sluit</string>
@@ -1685,11 +1688,6 @@ Language: nl
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
     <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van jouw account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan. </string>
     <string name="signup_epilogue_error_avatar">Er waren problemen met het uploaden van je avatar.</string>
-    <string name="signup_email_header">Om je nieuwe WordPress.com account aan te maken, vul je alstublieft je email adres in. </string>
-    <string name="signup_email_error_generic">Er waren wat problemen met het controleren van je e-mailadres </string>
-    <string name="sign_up">Meld je aan voor WordPress.com</string>
-    <string name="enter_username_instead">Log in met je gebruikersnaam.</string>
-    <string name="enter_site_address_instead">Meld je aan door je site adres in te vullen. </string>
     <string name="plugin_needs_update">Update nodig </string>
     <string name="plugin_caption_search">Zoek plugins</string>
     <string name="plugin_caption_new">Nieuw</string>
@@ -1810,7 +1808,6 @@ Language: nl
     <string name="login_error_suffix">\nMisschien een ander account proberen?</string>
     <string name="login_error_generic">Er kon geen verbinding worden gemaakt met het Google-account.</string>
     <string name="login_error_button">Sluit</string>
-    <string name="login_google_button_suffix">Log in met Google.</string>
     <string name="enter_wpcom_password_google">Om door te gaan met dit Google-account moet je eerst het wachtwoord van WordPress.com opgeven. Je hoeft dit slechts één keer in te vullen.</string>
     <string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>
@@ -1909,7 +1906,6 @@ Language: nl
     <string name="login_site_address_more_help">Meer hulp nodig?</string>
     <string name="login_site_address_help_content">Het adres van je site wordt aan de bovenzijde van je scherm weergegeven wanneer je je site in Chrome bekijkt.</string>
     <string name="login_site_address_help_title">Wat is mijn site-adres?</string>
-    <string name="login_site_address_help">Hulp nodig bij het vinden van je site-adres?</string>
     <string name="login_site_address">Site-adres</string>
     <string name="enter_site_address">Vul het adres van de WordPress site in die je wilt verbinden.</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
@@ -1921,7 +1917,6 @@ Language: nl
     <string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
     <string name="login_text_otp">Sms  mij een code in plaats daarvan</string>
     <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
-    <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
     <string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
     <string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
@@ -2180,7 +2175,6 @@ Language: nl
     <string name="invite_names_title">Gebruikersnamen of e-mails</string>
     <string name="invite_people">Mensen uitnodigen</string>
     <string name="my_site_header_external">Extern</string>
-    <string name="send_link">Stuur link</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal.</string>
@@ -2204,7 +2198,6 @@ Language: nl
     <string name="checking_email">E-mail wordt gecontroleerd</string>
     <string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
     <string name="logging_in">Inloggen</string>
-    <string name="enter_your_password_instead">Voer je wachtwoord in</string>
     <string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
     <string name="capture_or_pick_photo">Neem of selecteer foto</string>
     <string name="plans">Plans</string>
@@ -2588,7 +2581,6 @@ Language: nl
     <string name="reader_title_blog_preview">Reader site</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
-    <string name="forgot_password">Wachtwoord vergeten?</string>
     <string name="help">Help</string>
     <string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
     <string name="email_invalid">Voer een geldig e-mailadres in</string>

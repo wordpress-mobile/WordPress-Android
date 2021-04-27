@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 00:23:34+0000
+Translation-Revision-Date: 2021-04-20 07:37:45+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="gutenberg_native_tag_link">タグリンク</string>
+    <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
+    <string name="gutenberg_native_transform_s_to">%sを変換:</string>
+    <string name="gutenberg_native_transform_block">ブロックを変換…</string>
+    <string name="gutenberg_native_failed_to_insert_media">メディアの挿入に失敗しました。</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">音声ファイルの挿入に失敗しました。</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">画像の目的を説明してください。画像が純粋に装飾的なものの場合は、空のままにします。</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$sを%2$sに変換しました</string>
+    <string name="like_faces_error_loading_message">「いいね」データの読み込みに失敗しました。%s。</string>
+    <string name="like_faces_plural_text">%d人のブロガーが「いいね」をつけました。</string>
+    <string name="like_faces_singular_text">1人のブロガーが「いいね」をつけました。</string>
+    <string name="like_title_plural">%d個の「いいね」</string>
+    <string name="like_title_singular">1個の「いいね」</string>
+    <string name="threat_fix_enter_server_creds_message_plural">脅威を修正するにはサーバーの認証情報を入力してください。</string>
+    <string name="threat_fix_enter_server_creds_message_singular">脅威を修正するにはサーバーの認証情報を入力してください。</string>
+    <string name="suggestion">提案:</string>
+    <string name="gutenberg_native_search_blocks">検索ブロック</string>
+    <string name="gutenberg_native_search_block">検索ブロック</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
+    <string name="gutenberg_native_clear_search">検索をクリア</string>
+    <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
+    <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
+    <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
+    <string name="get_likes_no_network_error">利用可能なネットワークがありません。</string>
+    <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
+    <string name="comment_status_unreplied">未返信</string>
     <string name="gutenberg_native_table_of_contents">目次</string>
     <string name="gutenberg_native_summary">要約</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">見出しリストを使って投稿を要約します。ここにリンクするには、見出しブロックに HTML アンカーを追加してください。</string>
-    <string name="gutenberg_native_search_settings">検索設定</string>
-    <string name="gutenberg_native_post_link">投稿リンク</string>
     <string name="gutenberg_native_document_outline">文書アウトライン</string>
-    <string name="gutenberg_native_category_link">カテゴリーリンク</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
-    <string name="gutenberg_native_a_link_to_a_url">URL へのリンク。</string>
-    <string name="gutenberg_native_a_link_to_a_tag">タグへのリンク。</string>
-    <string name="gutenberg_native_a_link_to_a_post">投稿へのリンク。</string>
-    <string name="gutenberg_native_a_link_to_a_page">固定ページへのリンク。</string>
-    <string name="gutenberg_native_a_link_to_a_category">カテゴリーへのリンク。</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
-    <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
     <string name="reader_title_interests">トピックをフォロー</string>
     <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
@@ -428,7 +444,6 @@ Language: ja_JP
     <string name="media_uploading_default">メディアをアップロード中</string>
     <string name="gutenberg_native_select_item">項目を選択</string>
     <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
-    <string name="gutenberg_native_page_link">ページリンク</string>
     <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
     <string name="gutenberg_native_add_this_link">このリンクを追加</string>
     <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
@@ -797,7 +812,6 @@ Language: ja_JP
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
     <string name="gutenberg_native_gallery_caption_s">ギャラリーのキャプション。%s</string>
-    <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s。現在の値は%2$s</string>
     <string name="create_post_page_fab_tooltip">投稿またはページを作成</string>
     <string name="content_description_person_building_website">サイトを構築する人</string>
     <string name="post_signup_interstitial_not_right_now">今はしない</string>
@@ -821,7 +835,6 @@ Language: ja_JP
     <string name="login_discovery_error_http_auth">&lt;b>HTTP 認証&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_discovery_error_xmlrpc">サイトの &lt;b>XMLRPC ファイル&lt;/b>にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b>%1$s&lt;/b> を確認します</string>
-    <string name="enter_site_credentials_instead">サイトのログイン情報でログインします。</string>
     <string name="enter_credentials_for_site">%1$s サイトのアカウント情報でログイン</string>
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
     <string name="reader_following_display_name">フォロー中</string>
@@ -878,7 +891,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_move_the_block_up">ダブルタップしてブロックを上に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">ダブルタップしてブロックを下に移動</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">ダブルタップしてこの値を編集</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">ダブルタップしてスライダーを使用して値を変更</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
@@ -886,6 +898,7 @@ Language: ja_JP
     <string name="gutenberg_native_alt_text">代替テキスト</string>
     <string name="gutenberg_native_add_video">動画を追加</string>
     <string name="gutenberg_native_add_url">URL を追加</string>
+    <string name="gutenberg_native_add_alt_text">代替テキストを追加</string>
     <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
     <string name="gutenberg_native_add_image">画像を追加</string>
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
@@ -992,7 +1005,6 @@ Language: ja_JP
     <string name="post_settings_add_to_calendar">カレンダーに追加</string>
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日付と時刻</string>
-    <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
     <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
     <string name="stats_post_views_label">表示数</string>
@@ -1166,7 +1178,6 @@ Language: ja_JP
     <string name="plans_loading_error_no_plans_title">プランの読み込みができません</string>
     <string name="plans_loading_error_network_title">接続がありません</string>
     <string name="menu_switch_to_gutenberg_editor">ブロックエディターに切り替える</string>
-    <string name="menu_switch_to_aztec_editor">旧エディターに切り替える</string>
     <string name="stats_loading_block_error">データの読み込み中に問題が発生しました。ページを更新してもう一度お試しください。</string>
     <string name="stats_loading_error">データは読み込まれていません</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
@@ -1441,8 +1452,6 @@ Language: ja_JP
     <string name="support_contact_email">連絡先メールアドレス</string>
     <string name="application_log_button">アプリケーションログ</string>
     <string name="my_tickets">自分のチケット</string>
-    <string name="activity_log_rewind_dialog_message">%2$s の %1$s にサイトを復元しますか ? この操作により、作成したすべてのコンテンツとオプション、および作成後に行ったすべての変更が削除されます。</string>
-    <string name="activity_log_rewind_site">サイトを復元</string>
     <string name="activity_log_currently_restoring_message_no_dates">復元中です</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s に復元中です</string>
     <string name="activity_log_currently_restoring_title">現在サイトを復元中です</string>
@@ -1458,14 +1467,12 @@ Language: ja_JP
     <string name="comment_read_source_post">元の投稿を読む</string>
     <string name="sites">サイト</string>
     <string name="signup_magic_link_title">マジックリンクが送信されました</string>
-    <string name="signup_email_screen_title">メール登録</string>
     <string name="verification_2fa_screen_title">コードの認証</string>
     <string name="selfhosted_site_login_title">ログイン情報</string>
     <string name="magic_link_sent_login_title">マジックリンクが送信されました</string>
     <string name="magic_link_login_title">マジックリンクでのログイン</string>
     <string name="site_address_login_title">サイトアドレスでのログイン</string>
     <string name="email_address_login_title">メールアドレスでのログイン</string>
-    <string name="alternatively">もしくは、</string>
     <string name="reader_empty_saved_posts_description">%s をタップし、投稿をリストに保存します。</string>
     <string name="reader_empty_saved_posts_title">投稿はまだ保存されていません。</string>
     <string name="reader_bookmark_snack_title">投稿を保存しました</string>
@@ -1502,7 +1509,6 @@ Language: ja_JP
     <string name="preference_privacy_settings">プライバシー設定</string>
     <string name="preference_collect_information">情報を収集</string>
     <string name="post_submitted">投稿を送信しました</string>
-    <string name="login_email_button_signup">アカウントをまだお持ちではありませんか ?%1$s登録%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">プラグイン機能を使うには、サイトが問題のない状態でなければなりません。</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">プラグイン機能を使うには、一次ドメインサブスクリプションがこのユーザーに関連付けられている必要があります。</string>
     <string name="plugin_install_site_ineligible_non_admin_user">プラグイン機能を使うには、管理者権限が必要です。</string>
@@ -1668,11 +1674,8 @@ Language: ja_JP
     <string name="username_changer_dismiss_button_positive">破棄</string>
     <string name="username_changer_action">保存</string>
     <string name="content_description_add_avatar">アバターの追加</string>
-    <string name="signup_with_google_button">Google に登録</string>
-    <string name="signup_with_email_button">メールに登録</string>
     <string name="signup_user_exists">WordPress.com にすでにメールがあります。\nログインを処理しています。</string>
     <string name="signup_updating_account">アカウントを更新しています…</string>
-    <string name="signup_terms_of_service_text">登録することで、%1$s利用規約%2$sに合意したことになります。</string>
     <string name="signup_magic_link_progress">メールを送信中</string>
     <string name="signup_magic_link_error_button_positive">再試行</string>
     <string name="signup_magic_link_error_button_negative">閉じる</string>
@@ -1685,11 +1688,6 @@ Language: ja_JP
     <string name="signup_epilogue_error_button_negative">戻す</string>
     <string name="signup_epilogue_error_generic">アカウントの更新中にエラーが発生しました。変更を再試行するか、元に戻して続行できます。</string>
     <string name="signup_epilogue_error_avatar">アバターのアップロード中にエラーが発生しました。</string>
-    <string name="signup_email_header">新しい WordPress.com アカウントを作成するには、メールアドレスを入力してください。</string>
-    <string name="signup_email_error_generic">メールアドレスの確認中にエラーが発生しました。</string>
-    <string name="sign_up">WordPress.com に登録</string>
-    <string name="enter_username_instead">ユーザー名でログインします。</string>
-    <string name="enter_site_address_instead">サイトのアドレスを入力してログインする。</string>
     <string name="plugin_needs_update">更新が必要</string>
     <string name="plugin_caption_search">プラグインの検索</string>
     <string name="plugin_caption_new">新規</string>
@@ -1810,7 +1808,6 @@ Language: ja_JP
     <string name="login_error_suffix">\n別のアカウントを試してみますか ?</string>
     <string name="login_error_generic">Google アカウントへの接続で何らかの問題が発生しました。</string>
     <string name="login_error_button">閉じる</string>
-    <string name="login_google_button_suffix">Google でログインする。</string>
     <string name="enter_wpcom_password_google">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>
@@ -1909,7 +1906,6 @@ Language: ja_JP
     <string name="login_site_address_more_help">問題が解決しない場合</string>
     <string name="login_site_address_help_content">Chrome でサイトにアクセスすると、画面の上部にあるバーにサイトアドレスが表示されます。</string>
     <string name="login_site_address_help_title">自分のサイトアドレスは ?</string>
-    <string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
     <string name="login_site_address">サイトアドレス</string>
     <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
@@ -1921,7 +1917,6 @@ Language: ja_JP
     <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
     <string name="login_text_otp">代わりに SMS でコードを送信する</string>
     <string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
-    <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
     <string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>
@@ -2180,7 +2175,6 @@ Language: ja_JP
     <string name="invite_names_title">ユーザー名またはメールアドレス</string>
     <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
-    <string name="send_link">リンクを送信</string>
     <string name="label_clear_search_history">検索履歴の削除</string>
     <string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
     <string name="reader_empty_search_description">お使いの言語で「%s」についての投稿は見つかりませんでした</string>
@@ -2204,7 +2198,6 @@ Language: ja_JP
     <string name="checking_email">メールをチェック</string>
     <string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
     <string name="logging_in">ログインしています</string>
-    <string name="enter_your_password_instead">代わりにパスワードを入力</string>
     <string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
     <string name="capture_or_pick_photo">写真を撮影または選択</string>
     <string name="plans">プラン</string>
@@ -2588,7 +2581,6 @@ Language: ja_JP
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
-    <string name="forgot_password">パスワードを忘れた場合</string>
     <string name="help">ヘルプ</string>
     <string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
     <string name="email_invalid">有効なメールアドレスを入力してください</string>

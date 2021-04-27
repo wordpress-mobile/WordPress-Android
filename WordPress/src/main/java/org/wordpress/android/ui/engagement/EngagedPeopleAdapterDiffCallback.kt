@@ -3,6 +3,7 @@ package org.wordpress.android.ui.engagement
 import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
+import org.wordpress.android.ui.engagement.EngageItem.NextLikesPageLoader
 
 class EngagedPeopleAdapterDiffCallback(
     private val oldItems: List<EngageItem>,
@@ -21,7 +22,8 @@ class EngagedPeopleAdapterDiffCallback(
         val newItem = newItems[newItemPosition]
         return when {
             oldItem is LikedItem && newItem is LikedItem -> oldItem.author == newItem.author
-            oldItem is Liker && newItem is Liker -> oldItem.remoteId == newItem.remoteId
+            oldItem is Liker && newItem is Liker -> oldItem.userId == newItem.userId
+            oldItem is NextLikesPageLoader && newItem is NextLikesPageLoader -> true
             else -> false
         }
     }

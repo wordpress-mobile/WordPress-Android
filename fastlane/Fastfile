@@ -80,6 +80,10 @@ REPOSITORY_NAME="WordPress-Android"
 
     android_bump_version_release()
     new_version = android_get_app_version()
+
+    # need to get prs list before version update to frozen tag
+    get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
+
     extract_release_notes_for_version(version: new_version,
       release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path:release_notes_path)
@@ -92,7 +96,6 @@ REPOSITORY_NAME="WordPress-Android"
     localize_libs()
     send_strings_for_translation()
     ensure_git_status_clean()
-    get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
   #####################################################################################
@@ -574,7 +577,7 @@ REPOSITORY_NAME="WordPress-Android"
 ########################################################################
   desc "Get a list of pull request from `start_tag` to the current state"
   lane :get_pullrequests_list do | options |
-    get_prs_list(repository:GHHELPER_REPO, report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
+    get_prs_list(repository:GHHELPER_REPO, milestone:"#{options[:milestone]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
   #####################################################################################
