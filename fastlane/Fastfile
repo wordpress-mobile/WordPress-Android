@@ -515,7 +515,7 @@ REPOSITORY_NAME="WordPress-Android"
       source_locale: "en-US",
       download_path: download_path)
 
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
 
