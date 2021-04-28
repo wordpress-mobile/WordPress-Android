@@ -238,7 +238,7 @@ class ReaderPostDetailViewModelTest {
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
         val context = mock<Context>()
-        whenever(context.getString(anyInt(),anyInt())).thenReturn("10 bloggers like this.")
+        whenever(context.getString(anyInt(), anyInt())).thenReturn("10 bloggers like this.")
         whenever(contextProvider.getContext()).thenReturn(context)
     }
 
@@ -829,28 +829,28 @@ class ReaderPostDetailViewModelTest {
 
     @Test
     fun `ui state shows empty state on failure and no cached data`() {
-       val likesState = getGetLikesState(TEST_CONFIG_5) as Failure
-       val likers = listOf<Liker>()
+        val likesState = getGetLikesState(TEST_CONFIG_5) as Failure
+        val likers = listOf<Liker>()
 
-       getLikesState.value = likesState
-       whenever(engagementUtils.likesToEngagedPeople(anyList(), eq(null), eq(null))).thenReturn(likers)
-       val post = mock<ReaderPost>()
-       whenever(post.isWP).thenReturn(true)
-       viewModel.post = post
-       val likeObserver = init().likesUiState
+        getLikesState.value = likesState
+        whenever(engagementUtils.likesToEngagedPeople(anyList(), eq(null), eq(null))).thenReturn(likers)
+        val post = mock<ReaderPost>()
+        whenever(post.isWP).thenReturn(true)
+        viewModel.post = post
+        val likeObserver = init().likesUiState
 
-       getLikesState.value = likesState
+        getLikesState.value = likesState
 
-       assertThat(likeObserver).isNotEmpty
-       with(likeObserver.first()) {
-           assertThat(showLikeFacesTrain).isTrue
-           assertThat(showLoading).isFalse
-           assertThat(engageItemsList).isEqualTo(likers)
-           assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
-           assertThat(showEmptyState).isTrue
-           assertThat(emptyStateTitle is UiStringRes).isTrue
-           assertThat(likersFacesText).isNull()
-       }
+        assertThat(likeObserver).isNotEmpty
+        with(likeObserver.first()) {
+            assertThat(showLikeFacesTrain).isTrue
+            assertThat(showLoading).isFalse
+            assertThat(engageItemsList).isEqualTo(likers)
+            assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
+            assertThat(showEmptyState).isTrue
+            assertThat(emptyStateTitle is UiStringRes).isTrue
+            assertThat(likersFacesText).isNull()
+        }
     }
 
     @Test
