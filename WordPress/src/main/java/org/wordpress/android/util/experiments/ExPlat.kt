@@ -2,8 +2,10 @@ package org.wordpress.android.util.experiments
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -25,6 +27,8 @@ class ExPlat
 ) {
     private val platform = Platform.WORDPRESS_ANDROID
     private val activeVariations = mutableMapOf<String, Variation>()
+
+    private var experimentNames = emptyList<String>()
 
     fun refreshIfNeeded() {
         refresh(refreshStrategy = IF_STALE)
@@ -49,13 +53,22 @@ class ExPlat
      * is stale and [shouldRefreshIfStale] is `true`, then new [Assignments] are fetched and their
      * variations are going to be returned by this method on the next session.
      */
-    internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean) =
-            activeVariations.getOrPut(experiment.name) {
+    internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean): Variation {
+        if (!experimentNames.contains(experiment.name)) {
+            val message = "ExPlat: experiment not found: \"${experiment.name}\"! " +
+                    "Make sure to include it when calling ExPlat::start."
+            appLog.e(T.API, message)
+            if (BuildConfig.DEBUG) throw IllegalArgumentException(message) else return Control
+        }
+        return activeVariations.getOrPut(experiment.name) {
             getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
         }
+    }
 
     private fun refresh(refreshStrategy: RefreshStrategy) {
-        getAssignments(refreshStrategy)
+        if (experimentNames.isNotEmpty()) {
+            getAssignments(refreshStrategy)
+        }
     }
 
     private fun getAssignments(refreshStrategy: RefreshStrategy): Assignments {
@@ -66,7 +79,7 @@ class ExPlat
         return cachedAssignments
     }
 
-    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(platform, emptyList()).also {
+    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(platform, experimentNames).also {
         if (it.isError) {
             appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
         } else {
