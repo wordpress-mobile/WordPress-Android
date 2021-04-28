@@ -29,7 +29,7 @@ class DeepLinkingIntentReceiverViewModel
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
-        private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
