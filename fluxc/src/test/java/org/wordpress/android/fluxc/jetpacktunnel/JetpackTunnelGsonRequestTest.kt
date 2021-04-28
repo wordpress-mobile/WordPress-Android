@@ -35,8 +35,9 @@ class JetpackTunnelGsonRequestTest {
         // Verify that the request was built and wrapped as expected
         assertEquals(WPCOMREST.jetpack_blogs.site(DUMMY_SITE_ID).rest_api.urlV1_1, UrlUtils.removeQuery(request?.url))
         val parsedUri = Uri.parse(request?.url)
-        assertEquals(2, parsedUri.queryParameterNames.size)
-        assertEquals("/&_method=get&context=view", parsedUri.getQueryParameter("path"))
+        assertEquals(3, parsedUri.queryParameterNames.size)
+        assertEquals("/&_method=get", parsedUri.getQueryParameter("path"))
+        assertEquals("{\"context\":\"view\"}", parsedUri.getQueryParameter("query"))
         assertEquals("true", parsedUri.getQueryParameter("json"))
 
         // The wrapped GET request should have no body
@@ -134,8 +135,9 @@ class JetpackTunnelGsonRequestTest {
         assertEquals(0, parsedUri.queryParameterNames.size)
         val body = String(request?.body!!)
         val generatedBody = gson.fromJson(body, HashMap<String, String>()::class.java)
-        assertEquals(2, generatedBody.size)
-        assertEquals("/wp/v2/posts/6&_method=delete&force=true", generatedBody["path"])
+        assertEquals(3, generatedBody.size)
+        assertEquals("{\"force\":\"true\"}", generatedBody["body"])
+        assertEquals("/wp/v2/posts/6&_method=delete", generatedBody["path"])
         assertEquals("true", generatedBody["json"])
     }
 }
