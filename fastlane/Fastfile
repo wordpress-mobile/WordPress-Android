@@ -707,7 +707,6 @@ REPOSITORY_NAME="WordPress-Android"
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
-    android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end
 
