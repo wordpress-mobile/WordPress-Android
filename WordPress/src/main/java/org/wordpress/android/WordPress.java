@@ -123,6 +123,7 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -366,7 +367,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
 
-        mExPlat.forceRefresh();
+        mExPlat.start(Collections.emptySet());
     }
 
     protected void initWorkManager() {
