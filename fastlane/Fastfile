@@ -664,12 +664,12 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
-    # download_translations
-    # -----------------------------------------------------------------------------------
-    # This lane download the string translations from GlotPress
-    # -----------------------------------------------------------------------------------
-    # Usage:
-    # bundle exec fastlane download_translations
+  # download_translations
+  # -----------------------------------------------------------------------------------
+  # This lane download the string translations from GlotPress
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_translations
     #####################################################################################
   lane :download_translations do |options|
     # Adapt the GP project URL and lint_task as needed if testing a project other than WordPress
