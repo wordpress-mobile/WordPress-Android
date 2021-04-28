@@ -139,17 +139,16 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
 
         if (VERSION.SDK_INT >= VERSION_CODES.Q && isStoryPost) {
-            activity?.let { fragmentActivity ->
-                fragmentActivity.window?.decorView?.rootWindowInsets?.let { windowInsets ->
+                activity?.window?.decorView?.rootWindowInsets?.let { windowInsets ->
                     val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
-                    if (navBarModeHelper.getNavigationMode(fragmentActivity)
+                    if (navBarModeHelper.getNavigationMode(requireActivity())
                                     ?.equals(NavigationMode.NAV_BAR_MODE_GESTURAL) == true) {
                         param.setMargins(
                                 0,
                                 0,
                                 0,
                                 windowInsets.systemGestureInsets.bottom + dpToPx(
-                                        fragmentActivity,
+                                        requireActivity(),
                                         STATUS_BAR_HEIGHT_IN_DP
                                 )
                         )
@@ -157,7 +156,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                         param.setMargins(0, 0, 0, windowInsets.systemWindowInsetBottom)
                     }
                     prepublishingContentFragment.layoutParams = param
-                }
             }
         }
     }
