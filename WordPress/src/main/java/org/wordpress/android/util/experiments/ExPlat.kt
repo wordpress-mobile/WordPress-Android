@@ -30,6 +30,12 @@ class ExPlat
 
     private var experimentNames = emptyList<String>()
 
+    fun start(experiments: Set<Experiment>) {
+        experimentNames = experiments.map { it.name }
+        appLog.d(T.API, "ExPlat: starting with $experimentNames")
+        forceRefresh()
+    }
+
     fun refreshIfNeeded() {
         refresh(refreshStrategy = IF_STALE)
     }
