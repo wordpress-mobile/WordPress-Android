@@ -28,15 +28,21 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.DisplayUtils.dpToPx
 import org.wordpress.android.util.KeyboardResizeViewUtil
+import org.wordpress.android.util.NavigationBarInteractionModeHelper
+import org.wordpress.android.util.NavigationBarInteractionModeHelper.NavigationMode
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+
+const val STATUS_BAR_HEIGHT_IN_DP = 25
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject internal lateinit var navBarModeHelper: NavigationBarInteractionModeHelper
     private lateinit var viewModel: PrepublishingViewModel
     private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
@@ -124,10 +130,25 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
      */
     private fun PostPrepublishingBottomSheetBinding.addWindowInsetToFragmentContainer() {
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-            activity?.window?.decorView?.rootWindowInsets?.systemWindowInsetBottom?.let { bottomInset ->
-                val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
-                param.setMargins(0, 0, 0, bottomInset)
-                prepublishingContentFragment.layoutParams = param
+            activity?.let { fragmentActivity ->
+                fragmentActivity.window?.decorView?.rootWindowInsets?.let { windowInsets ->
+                    val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
+                    if (navBarModeHelper.getNavigationMode(fragmentActivity)
+                                    ?.equals(NavigationMode.NAV_BAR_MODE_GESTURAL) == true) {
+                        param.setMargins(
+                                0,
+                                0,
+                                0,
+                                windowInsets.systemGestureInsets.bottom + dpToPx(
+                                        fragmentActivity,
+                                        STATUS_BAR_HEIGHT_IN_DP
+                                )
+                        )
+                    } else {
+                        param.setMargins(0, 0, 0, windowInsets.systemWindowInsetBottom)
+                    }
+                    prepublishingContentFragment.layoutParams = param
+                }
             }
         }
     }
