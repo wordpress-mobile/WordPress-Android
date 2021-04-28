@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
-class ReaderLinkHandlerTest: BaseUnitTest() {
+class ReaderLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var intentUtils: IntentUtils
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var readerLinkHandler: ReaderLinkHandler
