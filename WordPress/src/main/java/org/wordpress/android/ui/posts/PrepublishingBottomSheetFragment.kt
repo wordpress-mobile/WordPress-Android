@@ -126,7 +126,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     /**
      * On Android 10, the bottom sheet is not above the window inset so that leads to the publish button being cut
-     * off. To fix this, we add the bottom inset as the margin bottom of the fragment container.
+     * off. To fix this, we add the bottom inset as the margin bottom of the fragment container. When the Navigation
+     * Mode is changed to Gesture Mode, the bottom inset does not incorporate the height of the status bar
+     * ( or the total area that should represent a view above the bounds of navigation area.) so currently it is being
+     * added dynamically. This solution will be improved as soon as the Android team releases an update to the insets
+     * API. 
      */
     private fun PostPrepublishingBottomSheetBinding.addWindowInsetToFragmentContainer() {
         if (VERSION.SDK_INT >= VERSION_CODES.Q) {
