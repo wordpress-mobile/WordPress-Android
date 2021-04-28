@@ -27,11 +27,11 @@ class ExPlat
     private val activeVariations = mutableMapOf<String, Variation>()
 
     fun refreshIfNeeded() {
-        getAssignments(refreshStrategy = IF_STALE)
+        refresh(refreshStrategy = IF_STALE)
     }
 
     fun forceRefresh() {
-        getAssignments(refreshStrategy = ALWAYS)
+        refresh(refreshStrategy = ALWAYS)
     }
 
     fun clear() {
@@ -51,8 +51,12 @@ class ExPlat
      */
     internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean) =
             activeVariations.getOrPut(experiment.name) {
-                getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
-            }
+            getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
+        }
+
+    private fun refresh(refreshStrategy: RefreshStrategy) {
+        getAssignments(refreshStrategy)
+    }
 
     private fun getAssignments(refreshStrategy: RefreshStrategy): Assignments {
         val cachedAssignments = experimentStore.getCachedAssignments() ?: Assignments()
