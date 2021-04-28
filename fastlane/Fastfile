@@ -511,7 +511,7 @@ REPOSITORY_NAME="WordPress-Android"
     download_path=Dir.pwd + "/metadata/android"
     gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
       target_files: files,
-      locales: RELEASE_NOTES_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      locales: RELEASE_NOTES_LOCALES,
       source_locale: "en-US",
       download_path: download_path)
 
