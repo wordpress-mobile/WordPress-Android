@@ -58,6 +58,9 @@ class ExPlat
      * is returned from the cached [Assignments] and then set as active. If the cached [Assignments]
      * is stale and [shouldRefreshIfStale] is `true`, then new [Assignments] are fetched and their
      * variations are going to be returned by this method on the next session.
+     *
+     * If the provided [Experiment] was not included in [ExPlat.start], then [Control] is returned.
+     * If [BuildConfig.DEBUG] is `true`, an [IllegalArgumentException] is thrown instead.
      */
     internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean): Variation {
         if (!experimentNames.contains(experiment.name)) {
