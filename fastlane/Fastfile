@@ -623,7 +623,6 @@ REPOSITORY_NAME="WordPress-Android"
       sh("cp -v #{bundle_path} #{build_dir}#{name} | tee -a #{logfile_path}")
       UI.message("Bundle ready: #{name}")
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
-      extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")
     end
     "#{build_dir}#{name}"
   end
@@ -704,33 +703,6 @@ REPOSITORY_NAME="WordPress-Android"
         File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
       end
     end
-  end
-
-  private_lane :extract_universal_apk do | options |
-    bundle_path=options[:bundle_path]
-    apk_path=options[:apk_path]
-    temp_dir = Dir.mktmpdir()
-
-    command = ""
-    if is_ci
-      command << "bundletool build-apks --bundle=\"#{bundle_path}\" \\
-      --output=\"#{temp_dir}/universal.apks\" \\
-      --mode=universal"
-    else
-      command = "source ./tools/gradle-functions.sh"
-      command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
-      --output=\"#{temp_dir}/universal.apks\" \\
-      --mode=universal \\
-      --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
-      --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
-      --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
-      --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
-    end
-    sh(command)
-
-    sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
-    FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)
-    FileUtils.rm_rf("#{temp_dir}")
   end
 
   private_lane :create_gh_release do | options |
