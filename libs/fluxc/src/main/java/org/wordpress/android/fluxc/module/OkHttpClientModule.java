@@ -23,17 +23,10 @@ import dagger.multibindings.Multibinds;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.OkHttpClient.Builder;
 import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
-public abstract class DebugOkHttpClientModule {
-    // These allow a library client to use this module without contributing any interceptors
-    @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
-
-    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
-
-
+public abstract class OkHttpClientModule {
     @Provides
     @Named("no-redirects")
     public static OkHttpClient provideNoRedirectsOkHttpClientBuilder(
@@ -62,6 +55,10 @@ public abstract class DebugOkHttpClientModule {
         return builder.build();
     }
 
+    @Multibinds abstract @Named("interceptors") Set<Interceptor> interceptorSet();
+
+    @Multibinds abstract @Named("network-interceptors") Set<Interceptor> networkInterceptorSet();
+
     @Singleton
     @Provides
     @Named("regular")
@@ -69,21 +66,20 @@ public abstract class DebugOkHttpClientModule {
             final CookieJar cookieJar,
             @Named("interceptors") Set<Interceptor> interceptors,
             @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
-        final OkHttpClient.Builder builder = new Builder().cookieJar(cookieJar)
-                                                          .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT,
-                                                                  TimeUnit.MILLISECONDS)
-                                                          .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT,
-                                                                  TimeUnit.MILLISECONDS)
-                                                          .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT,
-                                                                  TimeUnit.MILLISECONDS);
-        for (final Interceptor interceptor : interceptors) {
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        for (Interceptor interceptor : interceptors) {
             builder.addInterceptor(interceptor);
         }
 
-        for (final Interceptor networkInterceptor : networkInterceptors) {
+        for (Interceptor networkInterceptor : networkInterceptors) {
             builder.addNetworkInterceptor(networkInterceptor);
         }
 
-        return builder.build();
+        return builder.cookieJar(cookieJar)
+                      .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                      .build();
     }
 }
