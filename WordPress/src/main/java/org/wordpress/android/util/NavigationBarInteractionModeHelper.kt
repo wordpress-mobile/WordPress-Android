@@ -7,6 +7,10 @@ import javax.inject.Inject
 /**
  * Inspired by the System Navigation screen in Android 10's Settings. This functionality is found by going to:
  * Settings -> Accessibility -> System navigation
+ *
+ * For the source of code of how the System navigation UI works, see :
+ * https://android.googlesource.com/platform/packages/apps/Settings/+/refs/heads/android10-mainline-release/src/com/
+ * android/settings/gestures/SystemNavigationPreferenceController.java
  */
 class NavigationBarInteractionModeHelper @Inject constructor() {
     fun getNavigationMode(context: Context): NavigationMode? {
