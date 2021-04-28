@@ -30,39 +30,41 @@ ALL_LOCALES = [
   { glotpress: "vi", android: "vi",    google_play: "vi",     promo_config: {} },
   { glotpress: "zh-cn", android: "zh-rCN", google_play: "zh-CN",  promo_config: {} },
   { glotpress: "zh-tw", android: "zh-rTW", google_play: "zh-TW",  promo_config: {} },
-  { glotpress: "az", android: "az", google_play: "az",  promo_config: {}},
-  { glotpress: "el", android: "el", google_play: "el",  promo_config: {} },
-  { glotpress: "es-mx", android: "es-rMX", google_play: "es-MX",  promo_config: {} },
-  { glotpress: "es-cl", android: "es-rCL", google_play: "es-CL",  promo_config: {} },
-  { glotpress: "gd", android: "gd", google_play: "gd",  promo_config: {} },
-  { glotpress: "hi", android: "hi", google_play: "hi",  promo_config: {} },
-  { glotpress: "hu", android: "hu", google_play: "hu",  promo_config: {} },
-  { glotpress: "nb", android: "nb", google_play: "nb",  promo_config: {} },
-  { glotpress: "pl", android: "pl", google_play: "pl",  promo_config: {} },
-  { glotpress: "th", android: "th", google_play: "th",  promo_config: {} },
-  { glotpress: "uz", android: "uz", google_play: "uz",  promo_config: {} },
-  { glotpress: "zh-tw", android: "zh-rHK", google_play: "zh-rHK",  promo_config: {} },
-  { glotpress: "eu", android: "eu", google_play: "eu",  promo_config: {} },
-  { glotpress: "ro", android: "ro", google_play: "ro",  promo_config: {} },
-  { glotpress: "mk", android: "mk", google_play: "mk",  promo_config: {} },
-  { glotpress: "en-au", android: "en-rAU", google_play: "en-AU",  promo_config: {}},
-  { glotpress: "sr", android: "sr", google_play: "sr",  promo_config: {} },
-  { glotpress: "sk", android: "sk", google_play: "sk",  promo_config: {} },
-  { glotpress: "cy", android: "cy", google_play: "cy",  promo_config: {} },
-  { glotpress: "da", android: "da", google_play: "da",  promo_config: {} },
-  { glotpress: "bg", android: "bg", google_play: "bg",  promo_config: {} },
-  { glotpress: "sq", android: "sq", google_play: "sq",  promo_config: {} },
-  { glotpress: "hr", android: "hr", google_play: "hr",  promo_config: {} },
-  { glotpress: "cs", android: "cs", google_play: "cs",  promo_config: {} },
-  { glotpress: "pt-br", android: "pt-rBR", google_play: "pt-BR",  promo_config: {} },
-  { glotpress: "en-ca", android: "en-rCA", google_play: "en-CA",  promo_config: {} },
-  { glotpress: "ms", android: "ms", google_play: "ms",  promo_config: {} },
-  { glotpress: "es-ve", android: "es-rVE", google_play: "es-VE",  promo_config: {} },
-  { glotpress: "gl", android: "gl", google_play: "gl",  promo_config: {} },
-  { glotpress: "is", android: "is", google_play: "is",  promo_config: {} },
-  { glotpress: "es-co", android: "es-rCO", google_play: "es-CO",  promo_config: {} },
-  { glotpress: "kmr", android: "kmr", google_play: "kmr",  promo_config: {} },
+  { glotpress: "az", android: "az", promo_config: false},
+  { glotpress: "el", android: "el", promo_config: false},
+  { glotpress: "es-mx", android: "es-rMX", promo_config: false},
+  { glotpress: "es-cl", android: "es-rCL", promo_config: false},
+  { glotpress: "gd", android: "gd", promo_config: false},
+  { glotpress: "hi", android: "hi", promo_config: false },
+  { glotpress: "hu", android: "hu", promo_config: false},
+  { glotpress: "nb", android: "nb", promo_config: false},
+  { glotpress: "pl", android: "pl", promo_config: false},
+  { glotpress: "th", android: "th", promo_config: false},
+  { glotpress: "uz", android: "uz", promo_config: false},
+  { glotpress: "zh-tw", android: "zh-rHK", promo_config: false},
+  { glotpress: "eu", android: "eu", promo_config: false},
+  { glotpress: "ro", android: "ro", promo_config: false},
+  { glotpress: "mk", android: "mk", promo_config: false},
+  { glotpress: "en-au", android: "en-rAU",, promo_config: false},
+  { glotpress: "sr", android: "sr", promo_config: false},
+  { glotpress: "sk", android: "sk", promo_config: false},
+  { glotpress: "cy", android: "cy", promo_config: false},
+  { glotpress: "da", android: "da", promo_config: false },
+  { glotpress: "bg", android: "bg", promo_config: false },
+  { glotpress: "sq", android: "sq", promo_config: false},
+  { glotpress: "hr", android: "hr", promo_config: false},
+  { glotpress: "cs", android: "cs", promo_config: false},
+  { glotpress: "pt-br", android: "pt-rBR", promo_config: false},
+  { glotpress: "en-ca", android: "en-rCA", promo_config: false },
+  { glotpress: "ms", android: "ms",, promo_config: false},
+  { glotpress: "es-ve", android: "es-rVE",, promo_config: false},
+  { glotpress: "gl", android: "gl", promo_config: false},
+  { glotpress: "is", android: "is"},
+  { glotpress: "es-co", android: "es-rCO", promo_config: false },
+  { glotpress: "kmr", android: "kmr", promo_config: false},
 ].freeze
+
+RELEASE_NOTES_LOCALES = ALL_LOCALES.reject { |h| h[:google_play].nil? }.map { |h| [h[:glotpress], h[:google_play]] }
 
 # Env file paths to load
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
@@ -87,7 +89,6 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
-ENV["validate_translations"]="lintVanillaRelease"
 REPOSITORY_NAME="WordPress-Android"
 
 ########################################################################
@@ -509,11 +510,11 @@ REPOSITORY_NAME="WordPress-Android"
     download_path=Dir.pwd + "/metadata/android"
     gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
       target_files: files,
-      locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      locales: RELEASE_NOTES_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
       source_locale: "en-US",
       download_path: download_path)
 
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
     sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
 
@@ -673,7 +674,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_download_translations(
       res_dir: File.join(ENV['PROJECT_NAME'], 'src', 'main', 'res'),
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-      locales: SUPPORTED_LOCALES,
+      locales: ALL_LOCALES,
       lint_task: 'lintWordpressVanillaRelease'
     )
   end
@@ -688,10 +689,14 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds an app bundle"
   lane :build_for_translation_review do | options |
+
+  translator_locales = %w[de es fr id it ja ko nl ru sv zh-cn zh-tw tr he pt ar pl th sr vi]
+  translator_locales_map = ALL_LOCALES.select { translator_locales.include?(h[:glotpress]) }
+
     android_download_translations(
       glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
       status_filter: ['current', 'waiting', 'fuzzy'],
-      locales: SUPPORTED_LOCALES,
+      locales: translator_locales_map,
       lint_task: nil, skip_commit: true
     )
 
