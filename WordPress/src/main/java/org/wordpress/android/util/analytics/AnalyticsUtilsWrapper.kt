@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
@@ -66,4 +67,7 @@ class AnalyticsUtilsWrapper @Inject constructor(
     fun trackRailcarRender(
         railcarJson: String
     ) = AnalyticsUtils.trackRailcarRender(railcarJson)
+
+    fun trackWithBlogPostDetails(stat: Stat, blogId: Long, postId: Long) =
+            AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
 }
