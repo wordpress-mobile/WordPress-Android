@@ -36,7 +36,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-const val STATUS_BAR_HEIGHT_IN_DP = 25
+const val STATUS_BAR_HEIGHT_IN_DP = 24
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
