@@ -690,8 +690,8 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds an app bundle"
   lane :build_for_translation_review do | options |
 
-  translator_locales = %w[de es fr id it ja ko nl ru sv zh-cn zh-tw tr he pt ar pl th sr vi]
-  translator_locales_map = ALL_LOCALES.select { translator_locales.include?(h[:glotpress]) }
+    translator_locales = %w[de es fr id it ja ko nl ru sv zh-cn zh-tw tr he pt ar pl th sr vi]
+    translator_locales_map = ALL_LOCALES.select { translator_locales.include?(h[:glotpress]) }
 
     android_download_translations(
       glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
