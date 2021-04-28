@@ -1236,7 +1236,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (prompts == null) return;
         final ViewGroup parentView = findViewById(prompts.getParentContainerId());
         final View targetView = findViewById(prompts.getFocusedContainerId());
-        if (parentView != null) {
+        if (parentView != null && targetView != null) {
             int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
             int horizontalOffset;
             int verticalOffset;
