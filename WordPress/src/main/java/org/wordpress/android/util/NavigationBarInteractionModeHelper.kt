@@ -17,7 +17,8 @@ class NavigationBarInteractionModeHelper @Inject constructor() {
         } catch (exception: NotFoundException) {
             AppLog.e(
                     AppLog.T.UTILS,
-                    String.format("getNavigationMode is not working on this device. The resource identifiers for the navigation modes cannot be found. " + exception.message)
+                    String.format("getNavigationMode is not working on this device. The resource identifiers for the " +
+                            "navigation modes cannot be found. " + exception.message)
             )
         }
         return null
