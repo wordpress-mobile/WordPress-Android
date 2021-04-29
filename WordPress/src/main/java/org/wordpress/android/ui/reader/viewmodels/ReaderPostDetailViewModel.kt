@@ -522,14 +522,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
-        val showLikeFacesTrain = post?.let {
+        val showLikeFacesTrainContainer = post?.let {
             it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = showLikeFacesTrain,
+                showLikeFacesTrainContainer = showLikeFacesTrainContainer,
                 showLoading = showLoading,
-                engageItemsList = if (showLikeFacesTrain) likers else listOf(),
+                engageItemsList = if (showLikeFacesTrainContainer) likers else listOf(),
                 numLikes = post?.let { numLikes } ?: 0,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,
