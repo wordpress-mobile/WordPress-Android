@@ -116,33 +116,83 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         switchTabTriggered = false
     }
 
+    /* FAB VISIBILITY */
+
     @Test
     fun `when page changed to my site, then fab is visible`() {
         startViewModelWithDefaultParameters()
+
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
         assertThat(fabUiState?.isFabVisible).isTrue
     }
 
     @Test
     fun `when page changed away from my site, then fab is hidden`() {
         startViewModelWithDefaultParameters()
+
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
         assertThat(fabUiState?.isFabVisible).isFalse
     }
 
     @Test
+    fun `when my site page is resumed, then fab is visible`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isTrue
+    }
+
+    @Test
+    fun `when non my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabVisible).isFalse
+    }
+
+    /* FAB TOOLTIP VISIBILITY */
+
+    @Test
     fun `when page changed to my site, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
+
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
         assertThat(fabUiState?.isFabTooltipVisible).isTrue
     }
 
     @Test
     fun `when page changed away from my site, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
+
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
         assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
+
+    @Test
+    fun `when my site page is resumed, then fab tooltip is visible`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isTrue
+    }
+
+    @Test
+    fun `when non my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
+
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
+    }
+
+    /* FAB TOOLTIP DISABLED */
 
     @Test
     fun `fab tooltip disabled when tapped`() {
