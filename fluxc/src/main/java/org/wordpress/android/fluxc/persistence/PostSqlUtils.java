@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -29,10 +30,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
 
 import dagger.Reusable;
 
@@ -403,16 +407,49 @@ public class PostSqlUtils {
         return localPostIds;
     }
 
-    public int deletePostLikes(long siteId, long remotePostId) {
-        return WellSql.delete(LikeModel.class)
-                      .where()
-                      .beginGroup()
-                      .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
-                      .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                      .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
-                      .endGroup()
-                      .endWhere()
-                      .execute();
+    public int deletePostLikesAndPurgeExpired(long siteId, long remotePostId) {
+        int numDeleted = WellSql.delete(LikeModel.class)
+                                .where()
+                                .beginGroup()
+                                .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                                .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                                .equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
+                                .endGroup()
+                                .endWhere()
+                                .execute();
+
+        SQLiteDatabase db = WellSql.giveMeWritableDb();
+        db.beginTransaction();
+        try {
+            List<LikeModel> likeResult = WellSql.select(LikeModel.class)
+                                                .columns(LikeModelTable.REMOTE_SITE_ID, LikeModelTable.REMOTE_ITEM_ID)
+                                                .where().beginGroup()
+                                                .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                                                .not().equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                                                .not().equals(LikeModelTable.REMOTE_ITEM_ID, remotePostId)
+                                                .lessThen(LikeModelTable.TIMESTAMP_FETCHED,
+                                                        (new Date().getTime()) - TIMESTAMP_THRESHOLD)
+                                                .endGroup().endWhere()
+                                                .getAsModel();
+
+            for (LikeModel likeModel : likeResult) {
+                numDeleted += WellSql.delete(LikeModel.class)
+                                     .where()
+                                     .beginGroup()
+                                     .equals(LikeModelTable.TYPE, LikeType.POST_LIKE.getTypeName())
+                                     .equals(LikeModelTable.REMOTE_SITE_ID, likeModel.getRemoteSiteId())
+                                     .equals(LikeModelTable.REMOTE_ITEM_ID, likeModel.getRemoteItemId())
+                                     .endGroup()
+                                     .endWhere()
+                                     .execute();
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return numDeleted;
     }
 
     public int insertOrUpdatePostLikes(long siteId, long remotePostId, LikeModel like) {
