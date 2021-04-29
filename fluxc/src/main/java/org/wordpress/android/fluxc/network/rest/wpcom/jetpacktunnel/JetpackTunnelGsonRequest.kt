@@ -202,7 +202,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param wpApiEndpoint the WP-API request endpoint (e.g. /wp/v2/posts/)
      * @param siteId the WordPress.com site ID
-     * @param params the parameters to append to the request URL
+     * @param params the parameters of the request, those will be put in the tunnelled request body
      * @param type the Type defining the expected response
      * @param listener the success listener
      * @param errorListener the error listener
