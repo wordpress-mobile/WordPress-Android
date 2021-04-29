@@ -80,7 +80,6 @@ android {
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
-        buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -90,7 +89,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "buildType"
+    flavorDimensions "app", "buildType"
 
     productFlavors {
         wordpress {
@@ -98,7 +97,6 @@ android {
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
-            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         }
 
         jetpack {
@@ -106,7 +104,6 @@ android {
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
-            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
         }
 
         vanilla { // used for release and beta
@@ -123,20 +120,19 @@ android {
         }
 
         zalpha { // alpha version - enable experimental features
-            applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            applicationId "org.wordpress.android.beta"
+            applicationIdSuffix ".beta"
             dimension "buildType"
             buildConfigField "boolean", "LIKES_ENHANCEMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
-            applicationId "org.wordpress.android.prealpha"
+            applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
     }
@@ -250,7 +246,7 @@ dependencies {
     })
 
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.5'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -374,10 +370,6 @@ dependencies {
 
     compileOnly project(path:':libs:WordPressAnnotations')
     kapt project(':libs:WordPressProcessors')
-
-    // Encrypted Logging
-    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
-    implementation "net.java.dev.jna:jna:4.5.1@aar"
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
