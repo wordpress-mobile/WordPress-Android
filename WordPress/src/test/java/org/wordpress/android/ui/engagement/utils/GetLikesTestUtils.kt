@@ -59,6 +59,7 @@ enum class GetLikesTestConfig {
 
 fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
     return when (testConfig) {
+        // Like Data available for post and fetched from API; no more data available
         TEST_CONFIG_1 -> {
             LikesData(
                     getDefaultLikers(10, POST_LIKE, 10, 100),
@@ -66,6 +67,7 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
                     false
             )
         }
+        // Like Data available for post and fetched from API, more data available
         TEST_CONFIG_2 -> {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
@@ -73,6 +75,7 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
                     true
             )
         }
+        // Like Data available for comment and fetched from API, no more data available
         TEST_CONFIG_3 -> {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
@@ -80,6 +83,7 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
                     false
             )
         }
+        // Like Data available for comment and fetched from API, more data available
         TEST_CONFIG_4 -> {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
@@ -87,6 +91,7 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
                     true
             )
         }
+        // Failure getting like data from API, and no cached data available
         TEST_CONFIG_5 -> {
             val cachedData = listOf<LikeModel>()
             Failure(
