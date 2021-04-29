@@ -289,7 +289,7 @@ class CommentSqlUtilsTest {
         val siteId = 100L
         val commentId = 1000L
 
-        val localLike = createLike(100L, 1000L)
+        val localLike = createLike(siteId, commentId)
 
         CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, localLike)
 
