@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -9,12 +8,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
@@ -51,11 +48,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
-class EngagedPeopleListViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class EngagedPeopleListViewModelTest : BaseUnitTest() {
     @Mock lateinit var getLikesHandler: GetLikesHandler
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper

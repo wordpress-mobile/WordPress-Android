@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.engagement
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.engagement.BottomSheetAction.HideBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetAction.ShowBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
@@ -20,11 +17,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@RunWith(MockitoJUnitRunner::class)
-class UserProfileViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class UserProfileViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 

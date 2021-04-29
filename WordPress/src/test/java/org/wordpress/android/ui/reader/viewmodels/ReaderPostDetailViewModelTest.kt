@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -14,9 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
@@ -24,7 +21,7 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -111,11 +108,7 @@ private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
 private const val INTERCEPTED_URI = "intercepted uri"
 
 @InternalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
-class ReaderPostDetailViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderPostDetailViewModel
 
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
