@@ -343,7 +343,7 @@ class CommentSqlUtilsTest {
         val siteId = 100L
         val commentId = 1000L
 
-        val sitePostList = listOf(
+        val siteCommentList = listOf(
                 Triple(101L, 1000L, Date().time),
                 Triple(101L, 1001L, Date().time - LikeModel.TIMESTAMP_THRESHOLD / 2),
                 Triple(101L, 1002L, Date().time - LikeModel.TIMESTAMP_THRESHOLD * 2),
@@ -354,7 +354,7 @@ class CommentSqlUtilsTest {
 
         val likeList = mutableListOf<LikeModel>()
 
-        for (sitePostTriple: Triple<Long, Long, Long> in sitePostList) {
+        for (sitePostTriple: Triple<Long, Long, Long> in siteCommentList) {
             likeList.add(createLike(sitePostTriple.first, sitePostTriple.second, sitePostTriple.third))
         }
 
@@ -364,7 +364,7 @@ class CommentSqlUtilsTest {
 
         CommentSqlUtils.purgeCommentLikes(siteId, commentId)
 
-        sitePostList.forEachIndexed { index, element ->
+        siteCommentList.forEachIndexed { index, element ->
             Assertions.assertThat(CommentSqlUtils.getCommentLikesByCommentId(element.first, element.second))
                     .hasSize(expectedSizeList[index])
         }
