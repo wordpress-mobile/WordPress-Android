@@ -356,7 +356,6 @@ class PostListItemUiStateHelper @Inject constructor(
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
-        val canMovePostToDraft = postStatus == PUBLISHED || postStatus == TRASHED
         val buttonTypes = ArrayList<PostListButtonType>()
 
         if (postStatus != TRASHED) {
@@ -399,9 +398,7 @@ class PostListItemUiStateHelper @Inject constructor(
             buttonTypes.add(BUTTON_COPY)
         }
 
-        if (canMovePostToDraft) {
-            buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
-        }
+        buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
@@ -412,6 +409,14 @@ class PostListItemUiStateHelper @Inject constructor(
         }
 
         return buttonTypes
+    }
+
+    private fun MutableList<PostListButtonType>.addMoveToDraftActionIfAvailable(postStatus: PostStatus) {
+        val canMovePostToDraft = postStatus == PUBLISHED || postStatus == TRASHED
+
+        if (canMovePostToDraft) {
+            add(BUTTON_MOVE_TO_DRAFT)
+        }
     }
 
     private fun createDefaultViewActions(
