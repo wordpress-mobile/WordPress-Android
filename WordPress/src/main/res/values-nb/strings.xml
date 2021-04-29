@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-30 18:19:15+0000
+Translation-Revision-Date: 2021-04-20 12:28:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="like_faces_singular_text">1 blogger liker dette.</string>
+    <string name="like_title_plural">%d likinger</string>
+    <string name="like_title_singular">1 liking</string>
+    <string name="suggestion">Forslag:</string>
+    <string name="activity_log_backup_download_notice_download_action">Last ned</string>
+    <string name="disable">Slå av</string>
+    <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
+    <string name="quick_start_list_enable_sharing_title">Slå på deling</string>
+    <string name="restore_warning_action_button">Bekreft</string>
+    <string name="gutenberg_native_uploading">Laster opp…</string>
+    <string name="restore_complete_visit_site_action_button">Besøk nettstedet</string>
+    <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_warning_header">Advarsel</string>
+    <string name="restore">Gjenopprett</string>
+    <string name="backup_download_complete_failed_action_button">Utført</string>
+    <string name="web_preview_tablet">Nettbrett</string>
+    <string name="web_preview_mobile">Mobil</string>
+    <string name="quick_start_card_menu_remove">Ikke vis igjen</string>
+    <string name="quick_start_card_menu_pin">Fest dette</string>
+    <string name="scan_history_ignored_threats_tab">Ignorert</string>
+    <string name="scan_history_no_threats_found">Ingen elementer funnet</string>
+    <string name="scan_history_fixed_threats_tab">Rettet</string>
+    <string name="scan_history_all_threats_tab">Alle</string>
+    <string name="backup_download_complete_download_action_button">Last ned</string>
+    <string name="suggestion_user">bruker</string>
+    <string name="threat_item_header_threat_found">Trusel funnet</string>
+    <string name="threats_fix_all">Rett alle</string>
+    <string name="scan_in_few_seconds">noen sekunder siden</string>
+    <string name="scan_in_minutes_ago">%s minutt(er) siden</string>
+    <string name="scan_in_hours_ago">%s time(r) siden</string>
+    <string name="scan_this_site">dette nettstedet</string>
+    <string name="backup">Sikkerhetskopi</string>
+    <string name="backup_item_sqls">Nettstedsdatabase</string>
+    <string name="backup_item_roots_hint">(inkluderer wp-config.php og filer som ikke tilhører WordPress)</string>
     <string name="backup_item_media_uploads">Media-opplastinger</string>
     <string name="backup_item_plugins">WordPress-utvidelser</string>
     <string name="backup_item_themes">WordPress-temaer</string>
@@ -18,12 +52,15 @@ Language: nb_NO
     <string name="gutenberg_native_choose_file">Velg fil</string>
     <string name="activity_log_item_menu_download_backup_label">Last  ned sikkerhetskopi</string>
     <string name="activity_log_item_menu_restore_label">Gjenopprett til dette tidspunktet</string>
+    <string name="activity_log_activity_type_filter_label">Aktivitetstype</string>
+    <string name="activity_log_date_range_filter_label">Datointervall</string>
     <string name="activity_log_activity_type_filter_header">Filtrer på aktivitetstype</string>
     <string name="dialog_confirm_copy_local_copy_button">Kopier versjonen fra denne appen</string>
     <string name="dialog_confirm_copy_local_edit_button">Rediger innlegget først</string>
     <string name="button_copy">Dupliser</string>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Tøm</string>
     <string name="activity_log_activity_type_filter_apply">Bruk</string>
@@ -205,6 +242,8 @@ Language: nb_NO
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Avbryt</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
+    <string name="reader_label_choose_your_interests">Velg dine emner</string>
+    <string name="reader_choose_interests_content_description">Velg dine emner</string>
     <string name="reader_btn_done">Utført</string>
     <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
     <string name="post_status_post_published">Publisert</string>
@@ -214,9 +253,11 @@ Language: nb_NO
     <string name="status_and_visibility">Status og synlighet</string>
     <string name="update_now">Oppdater nå</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
+    <string name="gutenberg_native_move_to_top">Flytt til toppen</string>
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
+    <string name="suggestion_invalid">%s er ikke en gyldig %s</string>
     <string name="site_settings_select_page">Velg side</string>
     <string name="site_settings_posts_page">Innleggsside</string>
     <string name="site_settings_static_homepage">Statisk hjemmeside</string>
@@ -311,6 +352,7 @@ Language: nb_NO
     <string name="gutenberg_native_show_post_content">Vis innhold av innlegg</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
+    <string name="gutenberg_native_link_settings">Lenkeinnstillinger</string>
     <string name="gutenberg_native_excerpt_length_words">Lengde på utdrag (ord)</string>
     <string name="gutenberg_native_customize">TILPASS</string>
     <string name="gutenberg_native_add_paragraph_block">Legg til avsnittsblokk</string>
@@ -395,6 +437,7 @@ Language: nb_NO
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">Vi kan ikke åpne innlegget akkurat nå. Vennligst prøv igjen senere</string>
     <string name="site_cannot_be_loaded">Vi kan ikke laste data for ditt nettsted akkurat nå. Vennligst prøv igjen senere.</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
@@ -443,12 +486,21 @@ Language: nb_NO
     <string name="gutenberg_native_alt_text">Alt-tekst</string>
     <string name="gutenberg_native_add_video">LEGG TIL VIDEO</string>
     <string name="gutenberg_native_add_url">Legg til URL</string>
+    <string name="gutenberg_native_add_alt_text">Legg til alt-tekst</string>
     <string name="gutenberg_native_add_image_or_video">LEGG TIL BILDE ELLER VIDEO</string>
     <string name="gutenberg_native_add_image">LEGG TIL BILDE</string>
     <string name="gutenberg_native_add_block_here">LEGG TIL BLOKK HER</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
     <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>
+    <string name="main_switch_default_title_off">Av</string>
+    <string name="main_switch_default_title_on">På</string>
+    <string name="notifications_tab_dialog_main_off_message">Å skru av varslinger for dette nettstedet vil deaktivere visning av varslinger på varslingsfanen for dette nettstedet. Du kan finjustere hva slags varslinger du vil se etter å ha skrudd på varslinger dette nettstedet.</string>
+    <string name="notifications_tab_dialog_main_off_title">For å se varslinger på varslingsfanen for dette nettstedet, skru på varslinger for dette nettstedet.</string>
+    <string name="notifications_tab_dialog_main_hint_off">Slå på visning av varslinger på varslingsfanen for dette nettstedet</string>
+    <string name="notifications_tab_dialog_main_hint_on">Slå av visning av varslinger  på varslingsfanen for dette nettstedet</string>
+    <string name="notifications_tab_dialog_main_status_off">Varslinger for dette nettstedet</string>
+    <string name="notifications_tab_dialog_main_status_on">Varslinger for dette nettstedet</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -718,6 +770,8 @@ Language: nb_NO
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
     <string name="exit">gå ut</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
+    <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
+    <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
@@ -916,6 +970,7 @@ Language: nb_NO
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
     <string name="quick_start_dialog_need_help_button_negative">Nei takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
     <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som inspirerer deg og følg dem for å få oppdateringer når de publiserer.</string>
     <string name="quick_start_button_positive">Gå</string>
@@ -981,8 +1036,11 @@ Language: nb_NO
     <string name="support_contact_email">Epost for kontakt</string>
     <string name="application_log_button">Appllikasjonslogg</string>
     <string name="my_tickets">Mine saker</string>
+    <string name="activity_log_currently_restoring_message">Tilbakestiller til %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ditt nettsted tilbakestilles nå</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ditt nettsted er tilbakestilt</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Ditt nettsted er gjenopprettet\nGjenopprettet til %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Ditt nettsted gjenopprettes\nGjenoppretter til %1$s %2$s</string>
     <string name="activity_log_button">Handlingsknapp for aktivitetslogg</string>
     <string name="plugin_auto_managed">Automatisk behandlet</string>
     <string name="reader_save_posts_locally_dialog_message">Lagre dette innlegget og kom tilbake for å lese det når som helst. Det vil bare bli lagret på denne enheten — lagrede innlegg synkroniseres ikke til andre enheter.</string>
@@ -1322,6 +1380,7 @@ Language: nb_NO
     <string name="jetpack_disconnect_confirm">Koble fra</string>
     <string name="jetpack_disconnect_confirmation_message">Er du sikker på at du vil frakoble Jetpack fra denne siden?</string>
     <string name="jetpack_disconnect_pref_title">«Koble ut fra WordPress.com»</string>
+    <string name="site_settings_jetpack_allowlist_description">Du angi en IP-adresse (eller serier av IP-adresser) som \"Alltid tillatte\" for å hindre dem fra å noensinne bli blokkert av Jetpack. IPv6 og IPv4 er mulige. For å bestemme en rekkevidde, skriv inn minimumsverdien og maksverdien, adskilt av en bindestrek. Eksempel: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Krev to-trinnsautentisering</string>
     <string name="jetpack_match_wpcom_via_email_title">Samsvar kontoer gjennom E-post</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillat WordPress.com-innlogging</string>
@@ -1366,6 +1425,12 @@ Language: nb_NO
     <string name="notification_settings_category_other">Annet</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Alle mine nettsteder</string>
     <string name="notification_settings_category_your_sites">Nettstedene dine</string>
+    <string name="notification_settings_main_off_message">Å skru av varslingssinnstillinger vil slå av alle varslinger fra denne appen, uansett type. Du kan finjustere hvilke varslinger du vil motta, etter at du har skrudd på varslingssinnstillinger.</string>
+    <string name="notification_settings_main_off_title">For å motta varslinger på denne enheten, skru på varslingssinnstillinger</string>
+    <string name="notification_settings_main_hint_off">Aktiver varslinger</string>
+    <string name="notification_settings_main_hint_on">Slå av varslinger</string>
+    <string name="notification_settings_main_status_off">Av</string>
+    <string name="notification_settings_main_status_on">På</string>
     <string name="max_video_resolution">Maks videostørrelse</string>
     <string name="max_thumbnail_px_size">Maks bildestørrelse</string>
     <string name="error_upload_post_media_param">Det var en feil under opplastning av mediene i dette innlegget: %s.</string>
@@ -1618,6 +1683,7 @@ Language: nb_NO
     <string name="signout">Logg av</string>
     <string name="sign_in_wpcom">Logg inn til WordPress.com</string>
     <string name="reader_label_global_related_posts">Mere på WordPress.com</string>
+    <string name="reader_label_local_related_posts">Mer fra %s</string>
     <string name="preference_open_device_settings">Åpne enhetsinnstillingene</string>
     <string name="invite_invalid_email">%s: Ugyldig E-post</string>
     <string name="invite_user_blocked_invites">%s: Brukeren har blokkert invitasjoner</string>
@@ -1665,7 +1731,9 @@ Language: nb_NO
     <string name="invite_error_invalid_usernames_multiple">Kan ikke sende: Det er ugyldige brukernavn eller E-poster</string>
     <string name="invite_error_invalid_usernames_one">Kan ikke sende: Et brukernavn eller en E-postadresse er ugyldig</string>
     <string name="invite_error_no_usernames">Vennligst legg til minst ett brukernavn</string>
+    <string name="invite_message_title">Tilpasset melding</string>
     <string name="invite">Inviter</string>
+    <string name="invite_names_title">Brukernavn eller e-poster</string>
     <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
     <string name="label_clear_search_history">Slett søkehistorien</string>
@@ -1811,6 +1879,7 @@ Language: nb_NO
     <string name="site_settings_paging_dialog_description">Bryt kommentarfelter opp i flere sider.</string>
     <string name="site_settings_paging_dialog_header">Kommentarer per side</string>
     <string name="site_settings_close_after_dialog_title">Lukk kommentering</string>
+    <string name="site_settings_denylist_description">Når en kommentar inneholder noen av disse ordene i sitt innhold, navn, nettadresse, e-post eller IP, vil det bli merket som spam. Du kan skrive inn delvise ord, som betyr at \"press\" vil samsvare med \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Når en kommentar inneholder noen av disse ordene i sitt innhold, navn, nettadresse, E-post eller IP, vil det bli holdt tilbake i modereringskøen. Du kan skrive inn delvise ord, som betyr at «press» vil samsvare med «WordPress».</string>
     <string name="site_settings_list_editor_input_hint">Skriv inn et ord eller en frase</string>
     <string name="site_settings_list_editor_no_items_text">Ingen gjenstander</string>
@@ -1825,8 +1894,10 @@ Language: nb_NO
     <string name="site_settings_rp_show_header_title">Vis overskriften</string>
     <string name="site_settings_rp_switch_summary">«Relaterte innlegg» viser relevant innhold fra nettstedet ditt under innleggene dine.</string>
     <string name="site_settings_rp_switch_title">Vis relaterte innlegg</string>
+    <string name="site_settings_denylist_hint">Kommentarer som samsvarer med et filter, blir markert som spam</string>
     <string name="site_settings_moderation_hold_hint">Kommentarer som samsvarer med et filter, blir plassert i modereringskøen</string>
     <string name="site_settings_multiple_links_hint">Ignorerer lenkebegrensingen for kjente brukere</string>
+    <string name="site_settings_allowlist_hint">Kommentarforfatteren må ha en tidligere godkjent kommentar</string>
     <string name="site_settings_user_account_required_hint">Brukere må være registrert og logget inn for å kommentere</string>
     <string name="site_settings_identity_required_hint">Kommentarforfatteren må fylle ut navn og E-post</string>
     <string name="site_settings_paging_hint">Vis kommentarer i klumper av en bestemt størrelse</string>
@@ -1849,6 +1920,8 @@ Language: nb_NO
     <string name="site_settings_address_hint">Å endre adressen din er ikke støttet for øyeblikket</string>
     <string name="site_settings_tagline_hint">En kort forklaring eller fengende frase som skal beskrive bloggen din</string>
     <string name="site_settings_title_hint">Med noen få ord, forklar hva denne siden handler om</string>
+    <string name="site_settings_allowlist_known_summary">Kommentarer fra kjente brukere</string>
+    <string name="site_settings_allowlist_all_summary">Kommentarer fra alle brukere</string>
     <string name="site_settings_threading_summary">%d nivåer</string>
     <string name="site_settings_privacy_private_summary">Privat</string>
     <string name="site_settings_privacy_hidden_summary">Skjult</string>
@@ -1856,6 +1929,7 @@ Language: nb_NO
     <string name="site_settings_delete_site_title">Slett siden</string>
     <string name="site_settings_moderation_hold_title">Hold tilbake for moderering</string>
     <string name="site_settings_multiple_links_title">Lenker i kommentarer</string>
+    <string name="site_settings_allowlist_title">Godkjenn automatisk</string>
     <string name="site_settings_paging_title">Sideføring</string>
     <string name="site_settings_threading_title">Trådføring</string>
     <string name="site_settings_sort_by_title">Sorter etter</string>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-24 14:12:27+0000
+Translation-Revision-Date: 2021-04-20 13:09:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
-    <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
     <string name="reader_title_interests">Seguir temáticas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
@@ -630,6 +629,7 @@ Language: es_MX
     <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
+    <string name="gutenberg_native_add_alt_text">Añadir el texto alternativo</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón \"Añadir a las entradas guardadas\" para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">\"La lista se ha cargado con %1$d elementos.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notificaciones</string>

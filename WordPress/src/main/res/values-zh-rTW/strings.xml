@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
-    <string name="gutenberg_native_search_input_field">搜尋意見回饋欄位。</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">搜尋按鈕。 目前的按鈕文字是</string>
     <string name="gutenberg_native_search_blocks">搜尋區塊</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">搜尋區塊標籤。 目前的文字是</string>
     <string name="gutenberg_native_search_block">搜尋區塊</string>
-    <string name="gutenberg_native_outside">外部</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">未設定自訂預留位置</string>
-    <string name="gutenberg_native_no_button">沒有按鈕</string>
-    <string name="gutenberg_native_inside">內部</string>
-    <string name="gutenberg_native_hide_search_heading">隱藏搜尋標題</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">按兩下以編輯預留位置文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
     <string name="gutenberg_native_double_tap_to_change_unit">按兩下以變更單位</string>
-    <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
     <string name="gutenberg_native_clear_search">清除搜尋</string>
     <string name="gutenberg_native_cancel_search">取消搜尋</string>
-    <string name="gutenberg_native_button_position">按鈕位置</string>
-    <string name="gutenberg_native_button_outside">按鈕外部</string>
-    <string name="gutenberg_native_button_inside">按鈕內部</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s。%2$s 是 %3$s %4$s。</string>
     <string name="get_likes_empty_state_title">取得按讚資料時發生錯誤</string>
     <string name="get_likes_unknown_error">獲得「讚」時發生未知的錯誤。</string>
@@ -40,7 +24,6 @@ Language: zh_TW
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
-    <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
     <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
@@ -1425,7 +1408,6 @@ Language: zh_TW
     <string name="support_contact_email">聯絡電子郵件</string>
     <string name="application_log_button">應用程式記錄檔</string>
     <string name="my_tickets">我的票證</string>
-    <string name="activity_log_rewind_dialog_message">確定要將你的網站還原至 %1$s %2$s？ 這將移除在該時間點之後建立或變更的全部內容和選項。</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
     <string name="activity_log_rewind_finished_snackbar_message">已成功還原你的網站\n(還原至 %1$s %2$s)</string>

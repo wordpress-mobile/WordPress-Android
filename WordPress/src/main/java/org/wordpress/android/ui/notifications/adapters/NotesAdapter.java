@@ -304,7 +304,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning_dark);
         } else if (isUnread) {
-            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_primary);
+            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_note_avatar_badge);
         } else {
             noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_neutral_20);
         }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
@@ -322,37 +323,45 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         if (!accountStore.hasAccessToken()) {
             return
         }
+        val titleResId: Int
+        var descriptionResId = 0
+        var buttonResId = 0
         when (tabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> showEmptyView(
-                    R.string.notifications_empty_all,
-                    R.string.notifications_empty_action_all,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_COMMENT -> showEmptyView(
-                    R.string.notifications_empty_comments,
-                    R.string.notifications_empty_action_comments,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> showEmptyView(
-                    R.string.notifications_empty_followers,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_LIKE -> showEmptyView(
-                    R.string.notifications_empty_likes,
-                    R.string.notifications_empty_action_followers_likes,
-                    R.string.notifications_empty_view_reader
-            )
-            NotificationsListFragment.TAB_POSITION_UNREAD -> if (selectedSite == null) {
-                showEmptyView(R.string.notifications_empty_unread)
-            } else {
-                showEmptyView(
-                        R.string.notifications_empty_unread,
-                        R.string.notifications_empty_action_unread,
-                        R.string.posts_empty_list_button
-                )
+            NotificationsListFragment.TAB_POSITION_ALL -> {
+                titleResId = R.string.notifications_empty_all
+                descriptionResId = R.string.notifications_empty_action_all
+                buttonResId = R.string.notifications_empty_view_reader
             }
-            else -> showEmptyView(R.string.notifications_empty_list)
+            NotificationsListFragment.TAB_POSITION_COMMENT -> {
+                titleResId = R.string.notifications_empty_comments
+                descriptionResId = R.string.notifications_empty_action_comments
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_FOLLOW -> {
+                titleResId = R.string.notifications_empty_followers
+                descriptionResId = R.string.notifications_empty_action_followers_likes
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_LIKE -> {
+                titleResId = R.string.notifications_empty_likes
+                descriptionResId = R.string.notifications_empty_action_followers_likes
+                buttonResId = R.string.notifications_empty_view_reader
+            }
+            NotificationsListFragment.TAB_POSITION_UNREAD -> {
+                if (selectedSite == null) {
+                    titleResId = R.string.notifications_empty_unread
+                } else {
+                    titleResId = R.string.notifications_empty_unread
+                    descriptionResId = R.string.notifications_empty_action_unread
+                    buttonResId = R.string.posts_empty_list_button
+                }
+            }
+            else -> titleResId = R.string.notifications_empty_list
+        }
+        if (BuildConfig.IS_JETPACK_APP) {
+            showEmptyView(titleResId)
+        } else {
+            showEmptyView(titleResId, descriptionResId, buttonResId)
         }
         actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }

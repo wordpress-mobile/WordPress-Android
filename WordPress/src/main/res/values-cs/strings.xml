@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-08 20:35:00+0000
+Translation-Revision-Date: 2021-04-21 20:17:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Použijte ikonu tlačítka</string>
-    <string name="gutenberg_native_search_input_field">Vyhledejte vstupní pole.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Tlačítko hledat. Aktuální text tlačítka je</string>
+    <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
+    <string name="gutenberg_native_transform_s_to">Změnit %s na</string>
+    <string name="gutenberg_native_transform_block">Změnit blok…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Vložení média se nezdařilo.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Vložení zvukového souboru se nezdařilo.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Popište účel obrázku. Pokud je obrázek čistě dekorativní, ponechte toto pole prázdné.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s změnit na %2$s</string>
+    <string name="like_faces_error_loading_message">Chyba při načítání podobných dat. %s.</string>
+    <string name="like_faces_plural_text">%d blogerům se to líbí.</string>
+    <string name="like_faces_singular_text">1 blogerovi se to líbí.</string>
+    <string name="like_title_plural">%d to se mi líbí</string>
+    <string name="like_title_singular">1 to se mi libí</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Chcete-li opravit hrozby, zadejte pověření serveru.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Chcete-li opravit hrozbu, zadejte pověření serveru.</string>
+    <string name="suggestion">Doporučení:</string>
     <string name="gutenberg_native_search_blocks">Hledat bloky</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Vyhledat štítek bloku. Aktuální text je</string>
     <string name="gutenberg_native_search_block">Hledat blok</string>
-    <string name="gutenberg_native_outside">Vně</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Není nastaven žádný vlastní zástupný symbol</string>
-    <string name="gutenberg_native_no_button">Žádné tlačítko</string>
-    <string name="gutenberg_native_inside">Uvnitř</string>
-    <string name="gutenberg_native_hide_search_heading">Skrýt nadpis vyhledávání</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dvojitým klepnutím upravíte zástupný text</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dvojitým klepnutím upravíte text štítku</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dvojitým klepnutím upravíte text tlačítka</string>
     <string name="gutenberg_native_double_tap_to_change_unit">dvojitým klepnutím změníte jednotku</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Aktuální zástupný text je</string>
     <string name="gutenberg_native_clear_search">Vymazat vyhledávání</string>
     <string name="gutenberg_native_cancel_search">Zrušit vyhledávání</string>
-    <string name="gutenberg_native_button_position">Poloha tlačítka</string>
-    <string name="gutenberg_native_button_outside">Tlačítko venku</string>
-    <string name="gutenberg_native_button_inside">Tlačítko uvnitř</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Při získávání údajů o lajcích došlo k chybě</string>
     <string name="get_likes_unknown_error">Při získávání lajků došlo k neznámé chybě.</string>
@@ -36,12 +35,10 @@ Language: cs_CZ
     <string name="gutenberg_native_table_of_contents">Tabulka obsahu</string>
     <string name="gutenberg_native_summary">souhrn</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Shrňte svůj příspěvek se seznamem nadpisů. Přidejte HTML kotvy do nadpisových bloků a propojte je zde.</string>
-    <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
     <string name="gutenberg_native_document_outline">osnova dokumentu</string>
     <string name="gutenberg_native_buttongroup">Skupina tlačítek</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
-    <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
     <string name="reader_title_interests">Sledujte témata</string>
     <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
@@ -901,6 +898,7 @@ Language: cs_CZ
     <string name="gutenberg_native_alt_text">Alternativní text</string>
     <string name="gutenberg_native_add_video">PŘIDAT VIDEO</string>
     <string name="gutenberg_native_add_url">Přidat URL</string>
+    <string name="gutenberg_native_add_alt_text">Přidejte alternativní text</string>
     <string name="gutenberg_native_add_image_or_video">PŘIDAT OBRÁZEK NEBO VIDEO</string>
     <string name="gutenberg_native_add_image">PŘIDAT OBRÁZEK</string>
     <string name="gutenberg_native_add_block_here">PŘIDAT BLOK TADY</string>
@@ -1454,8 +1452,6 @@ Language: cs_CZ
     <string name="support_contact_email">Kontaktní e-mail</string>
     <string name="application_log_button">Aplikační log</string>
     <string name="my_tickets">Moje konverzace</string>
-    <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %1$s na %2$s? Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
-    <string name="activity_log_rewind_site">Obnovit web</string>
     <string name="activity_log_currently_restoring_message_no_dates">Probíhá obnovení</string>
     <string name="activity_log_currently_restoring_message">Obnovování k %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Obnovuji stránku</string>

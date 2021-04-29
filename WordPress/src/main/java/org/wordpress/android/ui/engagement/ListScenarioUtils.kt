@@ -58,6 +58,7 @@ class ListScenarioUtils @Inject constructor(
 
         return ListScenario(
                 type = if (note.isPostLikeType) LOAD_POST_LIKES else LOAD_COMMENT_LIKES,
+                source = EngagementNavigationSource.LIKE_NOTIFICATION_LIST,
                 siteId = note.siteId.toLong(),
                 postOrCommentId = if (note.isPostLikeType) note.postId.toLong() else note.commentId,
                 commentPostId = if (note.isCommentLikeType) note.postId.toLong() else 0L,

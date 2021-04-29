@@ -6,27 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Simge düğmesini kullan</string>
-    <string name="gutenberg_native_search_input_field">Arama giriş alanı.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Arama düğmesi. Geçerli düğme metni</string>
     <string name="gutenberg_native_search_blocks">Arama blokları</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Arama bloğu etiketi. Mevcut metin</string>
     <string name="gutenberg_native_search_block">Arama bloğu</string>
-    <string name="gutenberg_native_outside">Dışarıda</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Özel yer tutucu ayarlanmadı</string>
-    <string name="gutenberg_native_no_button">Düğme yok</string>
-    <string name="gutenberg_native_inside">İçeride</string>
-    <string name="gutenberg_native_hide_search_heading">Arama başlığını gizle</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Yer tutucu metni düzenlemek için iki kez dokunun</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Etiket metnini düzenlemek için iki kez dokunun</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Düğme metnini düzenlemek için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_change_unit">birimi değiştirmek için iki kez dokunun</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Mevcut yer tutucu metin</string>
     <string name="gutenberg_native_clear_search">Aramayı temizle</string>
     <string name="gutenberg_native_cancel_search">Aramayı iptal et</string>
-    <string name="gutenberg_native_button_position">Düğme konumu</string>
-    <string name="gutenberg_native_button_outside">Düğme dışı</string>
-    <string name="gutenberg_native_button_inside">Düğme içi</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s, %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Beğeni verileri alınırken bir hata oluştu</string>
     <string name="get_likes_unknown_error">Beğeniler alınırken bilinmeyen bir hata oluştu.</string>
@@ -36,12 +20,10 @@ Language: tr
     <string name="gutenberg_native_table_of_contents">İçerik tablosu</string>
     <string name="gutenberg_native_summary">özet</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Gönderinizi bir başlık listesiyle özetleyin.  HTML bağlantılarını buraya bağlamak için Başlık bloklarına ekleyin.</string>
-    <string name="gutenberg_native_search_settings">Arama ayarları</string>
     <string name="gutenberg_native_document_outline">belge taslağı</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>
-    <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
     <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
@@ -1447,8 +1429,6 @@ Language: tr
     <string name="support_contact_email">İletişim e-postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
     <string name="my_tickets">Taleplerim</string>
-    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
-    <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
     <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
