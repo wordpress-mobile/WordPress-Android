@@ -323,7 +323,7 @@ class CommentSqlUtilsTest {
     }
 
     @Test
-    fun `purgeCommentLikes deletes currently fetched data`() {
+    fun `deleteCommentLikesAndPurgeExpired deletes currently fetched data`() {
         val siteId = 100L
         val commentId = 1000L
 
@@ -333,13 +333,13 @@ class CommentSqlUtilsTest {
         var postLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
         Assertions.assertThat(postLikes).hasSize(1)
 
-        CommentSqlUtils.purgeCommentLikes(siteId, commentId)
+        CommentSqlUtils.deleteCommentLikesAndPurgeExpired(siteId, commentId)
         postLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
         Assertions.assertThat(postLikes).isEmpty()
     }
 
     @Test
-    fun `purgeCommentLikes delete data older than threshold`() {
+    fun `deleteCommentLikesAndPurgeExpired delete data older than threshold`() {
         val siteId = 100L
         val commentId = 1000L
 
@@ -362,7 +362,7 @@ class CommentSqlUtilsTest {
             CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, like)
         }
 
-        CommentSqlUtils.purgeCommentLikes(siteId, commentId)
+        CommentSqlUtils.deleteCommentLikesAndPurgeExpired(siteId, commentId)
 
         siteCommentList.forEachIndexed { index, element ->
             Assertions.assertThat(CommentSqlUtils.getCommentLikesByCommentId(element.first, element.second))
