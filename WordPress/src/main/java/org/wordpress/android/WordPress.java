@@ -117,16 +117,17 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
+import org.wordpress.android.util.experiments.Experiment;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -184,6 +185,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
     @Inject ExPlat mExPlat;
+    @Inject Set<Experiment> mExperiments;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -367,7 +369,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
 
-        mExPlat.start(Collections.emptySet());
+        mExPlat.start(mExperiments);
     }
 
     protected void initWorkManager() {
