@@ -407,7 +407,7 @@ public class PostSqlUtils {
         return localPostIds;
     }
 
-    public int purgePostLikes(long siteId, long remotePostId) {
+    public int deletePostLikesAndPurgeExpired(long siteId, long remotePostId) {
         int numDeleted = WellSql.delete(LikeModel.class)
                                 .where()
                                 .beginGroup()

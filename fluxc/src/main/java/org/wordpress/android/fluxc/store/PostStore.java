@@ -781,7 +781,7 @@ public class PostStore extends Store {
         if (!payload.isError()) {
             if (payload.likes != null) {
                 if (!payload.isRequestNextPage) {
-                    mPostSqlUtils.purgePostLikes(payload.siteId, payload.remotePostId);
+                    mPostSqlUtils.deletePostLikesAndPurgeExpired(payload.siteId, payload.remotePostId);
                 }
 
                 for (LikeModel like : payload.likes) {

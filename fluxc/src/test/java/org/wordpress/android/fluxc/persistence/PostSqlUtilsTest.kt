@@ -137,7 +137,7 @@ class PostSqlUtilsTest {
     }
 
     @Test
-    fun `purgePostLikes deletes currently fetched data`() {
+    fun `deletePostLikesAndPurgeExpired deletes currently fetched data`() {
         val siteId = 100L
         val postId = 1000L
 
@@ -147,13 +147,13 @@ class PostSqlUtilsTest {
         var postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
         assertThat(postLikes).hasSize(1)
 
-        postSqlUtils.purgePostLikes(siteId, postId)
+        postSqlUtils.deletePostLikesAndPurgeExpired(siteId, postId)
         postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
         assertThat(postLikes).isEmpty()
     }
 
     @Test
-    fun `purgePostLikes delete data older than threshold`() {
+    fun `deletePostLikesAndPurgeExpired delete data older than threshold`() {
         val siteId = 100L
         val postId = 1000L
 
@@ -176,7 +176,7 @@ class PostSqlUtilsTest {
             postSqlUtils.insertOrUpdatePostLikes(siteId, postId, like)
         }
 
-        postSqlUtils.purgePostLikes(siteId, postId)
+        postSqlUtils.deletePostLikesAndPurgeExpired(siteId, postId)
 
         sitePostList.forEachIndexed { index, element ->
             assertThat(
