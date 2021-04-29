@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.wellsql.generated.CommentModelTable;
 import com.wellsql.generated.LikeModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
@@ -17,7 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+
+import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
 
 public class CommentSqlUtils {
     public static int insertOrUpdateComment(CommentModel comment) {
@@ -224,16 +229,49 @@ public class CommentSqlUtils {
         return (int) getCommentsQueryForSite(site, statuses).count();
     }
 
-    public static int deleteCommentLikes(long siteId, long remoteCommentId) {
-        return WellSql.delete(LikeModel.class)
-                      .where()
-                      .beginGroup()
-                      .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
-                      .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                      .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
-                      .endGroup()
-                      .endWhere()
-                      .execute();
+    public static int purgeCommentLikes(long siteId, long remoteCommentId) {
+        int numDeleted = WellSql.delete(LikeModel.class)
+                                .where()
+                                .beginGroup()
+                                .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                                .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                                .equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                                .endGroup()
+                                .endWhere()
+                                .execute();
+
+        SQLiteDatabase db = WellSql.giveMeWritableDb();
+        db.beginTransaction();
+        try {
+            List<LikeModel> likeResult = WellSql.select(LikeModel.class)
+                                                .columns(LikeModelTable.REMOTE_SITE_ID, LikeModelTable.REMOTE_ITEM_ID)
+                                                .where().beginGroup()
+                                                .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                                                .not().equals(LikeModelTable.REMOTE_SITE_ID, siteId)
+                                                .not().equals(LikeModelTable.REMOTE_ITEM_ID, remoteCommentId)
+                                                .lessThen(LikeModelTable.TIMESTAMP_FETCHED,
+                                                        (new Date().getTime()) - TIMESTAMP_THRESHOLD)
+                                                .endGroup().endWhere()
+                                                .getAsModel();
+
+            for (LikeModel likeModel : likeResult) {
+                numDeleted += WellSql.delete(LikeModel.class)
+                                     .where()
+                                     .beginGroup()
+                                     .equals(LikeModelTable.TYPE, LikeType.COMMENT_LIKE.getTypeName())
+                                     .equals(LikeModelTable.REMOTE_SITE_ID, likeModel.getRemoteSiteId())
+                                     .equals(LikeModelTable.REMOTE_ITEM_ID, likeModel.getRemoteItemId())
+                                     .endGroup()
+                                     .endWhere()
+                                     .execute();
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return numDeleted;
     }
 
     public static int insertOrUpdateCommentLikes(long siteId, long remoteCommentId, LikeModel like) {
