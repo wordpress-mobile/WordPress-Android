@@ -9,11 +9,15 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.wordpress.android.fluxc.model.LikeModel
+import org.wordpress.android.fluxc.model.LikeModel.Companion.TIMESTAMP_THRESHOLD
+import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel
+import java.util.Date
 import kotlin.test.assertNull
 
 @Config(manifest = Config.NONE)
@@ -94,6 +98,96 @@ class PostSqlUtilsTest {
         assertThat(postsWithSameRemotePostId).hasSize(1)
     }
 
+    @Test
+    fun `insertOrUpdatePostLikes insert a new like`() {
+        val siteId = 100L
+        val postId = 1000L
+
+        val localLike = createLike(siteId, postId)
+
+        postSqlUtils.insertOrUpdatePostLikes(siteId, postId, localLike)
+
+        val postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
+        assertThat(postLikes).hasSize(1)
+        assertThat(postLikes[0].isEqual(localLike)).isTrue
+    }
+
+    @Test
+    fun `insertOrUpdatePostLikes update a changed like`() {
+        val siteId = 100L
+        val postId = 1000L
+
+        val localLike = createLike(siteId, postId)
+        val localLikeChanged = createLike(siteId, postId).apply {
+            likerSiteUrl = "https://likerSiteUrl.wordpress.com"
+        }
+
+        postSqlUtils.insertOrUpdatePostLikes(siteId, postId, localLike)
+
+        var postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
+        assertThat(postLikes).hasSize(1)
+        assertThat(postLikes[0].isEqual(localLike)).isTrue
+
+        postSqlUtils.insertOrUpdatePostLikes(siteId, postId, localLikeChanged)
+
+        postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
+        assertThat(postLikes).hasSize(1)
+        assertThat(postLikes[0].isEqual(localLike)).isFalse
+        assertThat(postLikes[0].isEqual(localLikeChanged)).isTrue
+    }
+
+    @Test
+    fun `deletePostLikesAndPurgeExpired deletes currently fetched data`() {
+        val siteId = 100L
+        val postId = 1000L
+
+        val localLike = createLike(siteId, postId)
+
+        postSqlUtils.insertOrUpdatePostLikes(siteId, postId, localLike)
+        var postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
+        assertThat(postLikes).hasSize(1)
+
+        postSqlUtils.deletePostLikesAndPurgeExpired(siteId, postId)
+        postLikes = postSqlUtils.getPostLikesByPostId(siteId, postId)
+        assertThat(postLikes).isEmpty()
+    }
+
+    @Test
+    fun `deletePostLikesAndPurgeExpired delete data older than threshold`() {
+        val siteId = 100L
+        val postId = 1000L
+
+        val sitePostList = listOf(
+                Triple(101L, 1000L, Date().time),
+                Triple(101L, 1001L, Date().time - TIMESTAMP_THRESHOLD / 2),
+                Triple(101L, 1002L, Date().time - TIMESTAMP_THRESHOLD * 2),
+                Triple(101L, 1003L, Date().time - TIMESTAMP_THRESHOLD * 2)
+        )
+
+        val expectedSizeList = listOf(1, 1, 0, 0)
+
+        val likeList = mutableListOf<LikeModel>()
+
+        for (sitePostTriple: Triple<Long, Long, Long> in sitePostList) {
+            likeList.add(createLike(sitePostTriple.first, sitePostTriple.second, sitePostTriple.third))
+        }
+
+        for (like: LikeModel in likeList) {
+            postSqlUtils.insertOrUpdatePostLikes(siteId, postId, like)
+        }
+
+        postSqlUtils.deletePostLikesAndPurgeExpired(siteId, postId)
+
+        sitePostList.forEachIndexed { index, element ->
+            assertThat(
+                    postSqlUtils.getPostLikesByPostId(
+                            element.first,
+                            element.second
+                    )
+            ).hasSize(expectedSizeList[index])
+        }
+    }
+
     private fun createPost(localSiteId: Int, localId: Int, remoteId: Long) = PostModel().apply {
         setId(localId)
         setRemotePostId(remoteId)
@@ -103,5 +197,24 @@ class PostSqlUtilsTest {
 
     private fun createSite() = SiteModel().apply {
         id = 100
+    }
+
+    private fun createLike(siteId: Long, postId: Long, timeStamp: Long = Date().time) = LikeModel().apply {
+        type = POST_LIKE.typeName
+        remoteSiteId = siteId
+        remoteItemId = postId
+        likerId = 2000L
+        likerName = "likerName"
+        likerLogin = "likerLogin"
+        likerAvatarUrl = "likerAvatarUrl"
+        likerBio = "likerBio"
+        likerSiteId = 3000L
+        likerSiteUrl = "likerSiteUrl"
+        preferredBlogId = 4000L
+        preferredBlogName = "preferredBlogName"
+        preferredBlogUrl = "preferredBlogUrl"
+        preferredBlogBlavatarUrl = "preferredBlogBlavatarUrl"
+        dateLiked = "2020-04-04 11:22:34"
+        timestampFetched = timeStamp
     }
 }
