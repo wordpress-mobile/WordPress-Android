@@ -71,23 +71,23 @@ public class GutenbergContainerFragment extends Fragment {
                                           onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
                                   boolean isDarkMode) {
-            mWPAndroidGlueCode.attachToContainer(
-                    viewGroup,
-                    onMediaLibraryButtonListener,
-                    onReattachQueryListener,
-                    onStorySavingReattachQueryListener,
-                    onEditorMountListener,
-                    onEditorAutosaveListener,
-                    onAuthHeaderRequestedListener,
-                    fetchExecutor,
-                    onImageFullscreenPreviewListener,
-                    onMediaEditorListener,
-                    onGutenbergDidRequestUnsupportedBlockFallbackListener,
-                    onGutenbergDidSendButtonPressedActionListener,
-                    showSuggestionsUtil,
-                    onMediaFilesCollectionBasedBlockEditorListener,
-                    onFPPTooltipShownEventListener,
-                    isDarkMode);
+//            mWPAndroidGlueCode.attachToContainer(
+//                    viewGroup,
+//                    onMediaLibraryButtonListener,
+//                    onReattachQueryListener,
+//                    onStorySavingReattachQueryListener,
+//                    onEditorMountListener,
+//                    onEditorAutosaveListener,
+//                    onAuthHeaderRequestedListener,
+//                    fetchExecutor,
+//                    onImageFullscreenPreviewListener,
+//                    onMediaEditorListener,
+//                    onGutenbergDidRequestUnsupportedBlockFallbackListener,
+//                    onGutenbergDidSendButtonPressedActionListener,
+//                    showSuggestionsUtil,
+//                    onMediaFilesCollectionBasedBlockEditorListener,
+//                    onFPPTooltipShownEventListener,
+//                    isDarkMode);
     }
 
     @Override
@@ -258,6 +258,6 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void sendToJSFeaturedImageId(int mediaId) {
-        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
+//        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
     }
 }

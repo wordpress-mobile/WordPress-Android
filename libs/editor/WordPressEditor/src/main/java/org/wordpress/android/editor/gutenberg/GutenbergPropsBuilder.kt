@@ -30,7 +30,7 @@ data class GutenbergPropsBuilder(
             enableAudioBlock = enableAudioBlock,
             localeSlug = localeSlug,
             postType = postType,
-            featuredImageId = featuredImageId,
+//            featuredImageId = featuredImageId,
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
