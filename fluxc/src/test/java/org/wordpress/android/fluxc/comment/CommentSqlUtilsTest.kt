@@ -323,7 +323,7 @@ class CommentSqlUtilsTest {
     }
 
     @Test
-    fun `purgePostLikes deletes currently fetched data`() {
+    fun `purgeCommentLikes deletes currently fetched data`() {
         val siteId = 100L
         val commentId = 1000L
 
