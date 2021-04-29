@@ -3,8 +3,10 @@ package org.wordpress.android.util.experiments
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,9 +34,13 @@ class ExPlatTest : BaseUnitTest() {
     private lateinit var dummyExperiment: Experiment
 
     @Before
-    fun setUp() {
+    fun setUp() = test {
         exPlat = ExPlat(experimentStore, appLog, testScope())
         dummyExperiment = object : Experiment("dummy", exPlat) {}
+
+        setupAssignments(cachedAssignments = null, fetchedAssignments = buildAssignments())
+        exPlat.start(setOf(dummyExperiment))
+        reset(experimentStore)
     }
 
     @Test
@@ -143,6 +149,49 @@ class ExPlatTest : BaseUnitTest() {
 
         val secondVariation = exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
         assertThat(secondVariation).isEqualTo(controlVariation)
+    }
+
+    @Test
+    fun `start fetches assignments if experiments is not empty`() = test {
+        exPlat.start(setOf(dummyExperiment))
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `start does not interact with store if experiments is empty`() = test {
+        exPlat.start(emptySet())
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `refreshIfNeeded does not interact with store if experiments is empty`() = test {
+        exPlat.start(emptySet())
+        exPlat.refreshIfNeeded()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `forceRefresh does not interact with store if experiments is empty`() = test {
+        exPlat.start(emptySet())
+        exPlat.forceRefresh()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `getVariation does not interact with store if experiments is empty`() = test {
+        exPlat.start(emptySet())
+
+        try {
+            exPlat.getVariation(dummyExperiment, false)
+        } catch (e: IllegalArgumentException) {
+            // Do nothing.
+        } finally {
+            verifyZeroInteractions(experimentStore)
+        }
     }
 
     private suspend fun setupAssignments(cachedAssignments: Assignments?, fetchedAssignments: Assignments) {
