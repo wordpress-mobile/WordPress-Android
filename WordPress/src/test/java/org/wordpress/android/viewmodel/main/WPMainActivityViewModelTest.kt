@@ -117,31 +117,31 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fab visible when asked`() {
+    fun `when page changed to my site, then fab is visible`() {
         startViewModelWithDefaultParameters()
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabVisible).isTrue()
+        assertThat(fabUiState?.isFabVisible).isTrue
     }
 
     @Test
-    fun `fab hidden when asked`() {
+    fun `when page changed away from my site, then fab is hidden`() {
         startViewModelWithDefaultParameters()
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabVisible).isFalse()
+        assertThat(fabUiState?.isFabVisible).isFalse
     }
 
     @Test
-    fun `fab tooltip visible when asked`() {
+    fun `when page changed to my site, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabTooltipVisible).isTrue()
+        assertThat(fabUiState?.isFabTooltipVisible).isTrue
     }
 
     @Test
-    fun `fab tooltip hidden when asked`() {
+    fun `when page changed away from my site, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
