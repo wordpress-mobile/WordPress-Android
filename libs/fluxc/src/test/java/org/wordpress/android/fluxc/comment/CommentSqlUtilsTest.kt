@@ -15,9 +15,7 @@ import org.wordpress.android.fluxc.model.CommentStatus.ALL
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.model.LikeModel
-import org.wordpress.android.fluxc.model.LikeModel.Companion
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
-import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig

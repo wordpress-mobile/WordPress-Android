@@ -74,7 +74,7 @@ class LikeModel : Identifiable {
         preferredBlogBlavatarUrl == otherLike.preferredBlogBlavatarUrl &&
         dateLiked == otherLike.dateLiked
     }
-    
+
     companion object {
         const val TIMESTAMP_THRESHOLD = 7 * 24 * 60 * 60 * 1000L // 7 days in milliseconds
     }
