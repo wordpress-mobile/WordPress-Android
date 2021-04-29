@@ -79,7 +79,7 @@ platform :android do
       should_clear_previous_screenshots = false
     end
 
-    locales = SUPPORTED_LOCALES
+    locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
       .map { |hsh| hsh[:google_play] }
 
@@ -141,7 +141,7 @@ platform :android do
       "enhanced_app_store_screenshot_7" => {desc: "play_store_screenshot_7.html"},
     }
 
-    locales = SUPPORTED_LOCALES
+    locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
       .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
 
@@ -266,7 +266,7 @@ platform :android do
       File.rename( entry, newfilename.downcase )
     end
 
-    locales = SUPPORTED_LOCALES
+    locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
       .map { |hsh| hsh[:google_play] }
 
