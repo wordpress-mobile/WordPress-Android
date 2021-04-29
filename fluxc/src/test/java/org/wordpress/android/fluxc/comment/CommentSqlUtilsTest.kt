@@ -389,10 +389,10 @@ class CommentSqlUtilsTest {
         return commentModels
     }
 
-    private fun createLike(siteId: Long, postId: Long, timeStamp: Long = Date().time) = LikeModel().apply {
+    private fun createLike(siteId: Long, commentId: Long, timeStamp: Long = Date().time) = LikeModel().apply {
         type = COMMENT_LIKE.typeName
         remoteSiteId = siteId
-        remoteItemId = postId
+        remoteItemId = commentId
         likerId = 2000L
         likerName = "likerName"
         likerLogin = "likerLogin"
