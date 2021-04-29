@@ -594,7 +594,7 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             if (payload.likes != null) {
                 if (!payload.isRequestNextPage) {
-                    CommentSqlUtils.deleteCommentLikes(payload.siteId, payload.commentRemoteId);
+                    CommentSqlUtils.purgeCommentLikes(payload.siteId, payload.commentRemoteId);
                 }
 
                 for (LikeModel like : payload.likes) {
