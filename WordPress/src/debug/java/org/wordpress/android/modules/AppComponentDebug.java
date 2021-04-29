@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import android.app.Application;
 
 import org.wordpress.android.fluxc.module.DebugOkHttpClientModule;
-import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
@@ -21,7 +20,6 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         ApplicationModule.class,
         AppConfigModule.class,
-        ReleaseBaseModule.class,
         DebugOkHttpClientModule.class,
         InterceptorModule.class,
         ReleaseNetworkModule.class,

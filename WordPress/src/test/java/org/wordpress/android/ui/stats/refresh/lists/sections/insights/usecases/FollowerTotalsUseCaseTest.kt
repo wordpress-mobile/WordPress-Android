@@ -101,7 +101,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
 
     private fun assertItem(item: ListItemWithIcon) {
         when (item.icon) {
-            R.drawable.ic_my_sites_white_24dp -> {
+            R.drawable.ic_wordpress_white_24dp -> {
                 assertThat(item.value).isEqualTo(3.toString())
             }
             R.drawable.ic_mail_white_24dp -> {

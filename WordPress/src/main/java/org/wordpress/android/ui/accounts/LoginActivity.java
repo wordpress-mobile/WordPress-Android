@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
@@ -50,12 +51,16 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSitesError;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
@@ -82,6 +87,8 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
+
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -117,12 +124,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private boolean mIsSiteLoginAvailableFromPrologue;
 
     private LoginMode mLoginMode;
+    private LoginViewModel mViewModel;
 
     @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
+    @Inject protected ViewModelProvider.Factory mViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +154,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case FULL:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     mIsSignupFromLoginEnabled = true;
+                    loginFromPrologue();
+                    break;
+                case JETPACK_LOGIN_ONLY:
+                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
+                    mIsSignupFromLoginEnabled = false;
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
@@ -173,6 +187,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mUnifiedLoginTracker.setSource(Source.SHARE);
                     checkSmartLockPasswordAndStartLogin();
                     break;
+                case WOO_LOGIN_MODE:
+                    break;
             }
         } else {
             mSmartLockHelperState = SmartLockHelperState.valueOf(
@@ -191,6 +207,22 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
         }
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
+
+        // initObservers
+        mViewModel.getNavigationEvents().observe(this, event -> {
+            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
+            if (loginEvent instanceof ShowSiteAddressError) {
+                showSiteAddressError((ShowSiteAddressError) loginEvent);
+            } else {
+                showNoJetpackSitesError((ShowNoJetpackSitesError) loginEvent);
+            }
+        });
     }
 
     private void loginFromPrologue() {
@@ -203,7 +235,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
         outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
@@ -273,6 +304,15 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
+            case JETPACK_LOGIN_ONLY:
+                if (!mSiteStore.hasSite()) {
+                    handleNoJetpackSites();
+                } else {
+                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
+                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
                 if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
@@ -313,6 +353,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 finish();
+                break;
+            case WOO_LOGIN_MODE:
                 break;
         }
     }
@@ -904,6 +946,25 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
-        // Not used in WordPress app
+        mViewModel.onHandleSiteAddressError(siteInfo);
+    }
+
+    public void handleNoJetpackSites() {
+        // hide keyboard if you can
+        hideKeyboard(this);
+        mViewModel.onHandleNoJetpackSites();
+    }
+
+
+    private void showSiteAddressError(ShowSiteAddressError event) {
+        LoginSiteCheckErrorFragment fragment =
+                LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl(), event.getErrorMessage());
+        slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
+    }
+
+    private void showNoJetpackSitesError(ShowNoJetpackSitesError event) {
+        LoginNoSitesErrorFragment fragment =
+                LoginNoSitesErrorFragment.Companion.newInstance(event.getErrorMessage());
+        slideInFragment(fragment, false, LoginNoSitesErrorFragment.TAG);
     }
 }
