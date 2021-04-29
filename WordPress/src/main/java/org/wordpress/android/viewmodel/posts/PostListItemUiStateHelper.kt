@@ -61,6 +61,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
+
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
@@ -355,6 +356,7 @@ class PostListItemUiStateHelper @Inject constructor(
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
+        val canMovePostToDraft = postStatus == PUBLISHED || postStatus == TRASHED
         val buttonTypes = ArrayList<PostListButtonType>()
 
         if (postStatus != TRASHED) {
@@ -397,10 +399,13 @@ class PostListItemUiStateHelper @Inject constructor(
             buttonTypes.add(BUTTON_COPY)
         }
 
+        if (canMovePostToDraft) {
+            buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
+        }
+
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
-                buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
                 buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
             postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
