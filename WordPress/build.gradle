@@ -78,6 +78,12 @@ android {
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
+<<<<<<< HEAD
+=======
+        buildConfigField "boolean", "IS_JETPACK_APP", "false"
+        buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
+        buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+>>>>>>> 38088adc955965b8b0a195f7473af026b394e176
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -90,6 +96,22 @@ android {
     flavorDimensions "buildType"
 
     productFlavors {
+        wordpress {
+            dimension "app"
+            applicationId "org.wordpress.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "false"
+            buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+        }
+
+        jetpack {
+            dimension "app"
+            applicationId "com.jetpack.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "true"
+            buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+        }
+
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
@@ -231,7 +253,7 @@ dependencies {
     })
 
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.firebase:firebase-messaging:20.1.5'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
