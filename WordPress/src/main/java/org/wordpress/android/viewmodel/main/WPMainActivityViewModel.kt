@@ -216,8 +216,8 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(showFab: Boolean, site: SiteModel?) {
-        setMainFabUiState(showFab, site)
+    fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
+        setMainFabUiState(isOnMySitePageWithValidSite, site)
     }
 
     fun onTooltipTapped(site: SiteModel?) {
@@ -235,8 +235,8 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMySite.value = Event(Unit)
     }
 
-    fun onResume(site: SiteModel?, showFab: Boolean) {
-        setMainFabUiState(showFab, site)
+    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
+        setMainFabUiState(isOnMySitePageWithValidSite, site)
 
         launch {
             val currentVersionCode = buildConfigWrapper.getAppVersionCode()
