@@ -118,6 +118,14 @@ class WPMainActivityViewModel @Inject constructor(
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
 
+        actionsList.add(
+                CreateAction(
+                        actionType = NO_ACTION,
+                        iconRes = 0,
+                        labelRes = R.string.my_site_bottom_sheet_title,
+                        onClickAction = null
+                )
+        )
         if (SiteUtils.supportsStoriesFeature(site)) {
             actionsList.add(
                     CreateAction(
@@ -128,14 +136,6 @@ class WPMainActivityViewModel @Inject constructor(
                     )
             )
         }
-        actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
-        )
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_POST,
