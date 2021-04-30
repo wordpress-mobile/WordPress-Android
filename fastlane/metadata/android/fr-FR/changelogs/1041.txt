@@ -1,0 +1,2 @@
+17.2 :
+Un nouveau bloc est disponible dans cette version : les coordonnées Jetpack. Ce bloc est la solution idéale pour afficher sur votre site une adresse ayant un format correct. Nous avons également simplifié l’ajout massif de texte alternatif à un bloc d’image et l’utilisation de TalkBack dans les blocs de colonnes. Les menus s’affichent mieux dans les langues qui se lisent de droite à gauche et il est plus facile de définir le fuseau horaire de votre site.

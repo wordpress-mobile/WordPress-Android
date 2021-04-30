@@ -1,48 +1,68 @@
+<ar>
+17.2:
+يقدم هذا الإصدار مكوّن جديد - معلومات الاتصال Jetpack contact info. إنه مثالي لعرض عنوان منسّق بشكل جيد على موقعك. لقد سهلنا أيضًا إضافة الكثير من النص البديل إلى مكوّن صورة، واستخدام TalkBack مع مكوّن الأعمدة، وعرض القوائم بشكل أفضل باللغات التي تُكتب من اليمين إلى اليسار RTL، وتعيين المنطقة الزمنية لموقعك.
+</ar>
+<de-DE>
+17.2:
+In dieser Version wird ein neuer Block vorgestellt – Jetpack Kontaktinfo. Er eignet sich hervorragend, um formatierte Adressen auf deiner Website sauber anzuzeigen. Außerdem haben wir es einfacher gemacht, dem Bildblock extra viel Alt-Text hinzuzufügen und TalkBack mit dem Spaltenblock zu verwenden. Zudem können Menüs jetzt einfacher in Rechts-nach-Links-Sprachen angesehen werden und deine Website kann mit Leichtigkeit deiner Zeitzone angepasst werden.
+</de-DE>
 <en-US>
-17.1:
-What’s new?
-
-We improved accessibility in the block editor for those who use a TalkBack screen reader.
-
-To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
-
-You may have noticed the new color palette! We also updated your app icon to match.
+17.2:
+This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.
 </en-US>
 <es-ES>
-17.1:
-¿Qué hay de nuevo?
-
-Hemos mejorado la accesibilidad en el editor de bloques para aquellos que usan un lector de pantalla TalkBack.
-
-Para ayudarte a gestionar los comentarios en tu sitio, ahora hay un filtro «Sin respuesta» para que puedas ver los comentarios sin respuesta en un solo lugar.
-
-¡Quizá hayas notado la nueva paleta de color! También hemos actualizado el icono de tu aplicación para que haga juego.
+17.2:
+Esta versión introduce un nuevo bloque: Información de contacto de Jetpack. Es perfecto para mostrar una dirección bien formada en tu sitio. También hemos hecho más fácil añadir mucho texto alternativo a un bloque de imagen, el uso de TalkBack con el bloque de columnas, ver mejor los menús en los idiomas de derecha a izquierda y establecer la zona horaria de tu sitio.
 </es-ES>
+<fr-CA>
+17.2 :
+Un nouveau bloc est disponible dans cette version : les coordonnées Jetpack. Ce bloc est la solution idéale pour afficher sur votre site une adresse ayant un format correct. Nous avons également simplifié l’ajout massif de texte alternatif à un bloc d’image et l’utilisation de TalkBack dans les blocs de colonnes. Les menus s’affichent mieux dans les langues qui se lisent de droite à gauche et il est plus facile de définir le fuseau horaire de votre site.
+</fr-CA>
+<fr-FR>
+17.2 :
+Un nouveau bloc est disponible dans cette version : les coordonnées Jetpack. Ce bloc est la solution idéale pour afficher sur votre site une adresse ayant un format correct. Nous avons également simplifié l’ajout massif de texte alternatif à un bloc d’image et l’utilisation de TalkBack dans les blocs de colonnes. Les menus s’affichent mieux dans les langues qui se lisent de droite à gauche et il est plus facile de définir le fuseau horaire de votre site.
+</fr-FR>
+<iw-IL>
+17.2:
+בגרסה הזאת אנחנו מציגים בלוק חדש – 'פרטי הקשר' של Jetpack. הבלוק מומלץ להצגת כתובת בצורה יפה באתר שלך. בנוסף, קל יותר עכשיו להוסיף המון טקסט חלופי בבלוק תמונה, להשתמש ב-TalkBack בבלוק הטורים, להציג את התפריטים בצורה טובה יותר בשפות שנקראות מימין לשמאל ולהגדיר את אזור הזמן של האתר.
+</iw-IL>
+<id>
+17.2:
+Versi ini memperkenalkan blok baru – info kontak Jetpack. Ini sangat sempurna untuk menampilkan alamat terformat rapi di situs Anda. Kami juga mempermudah penambahan banyak teks alt ke blok gambar, penggunaan TalkBack dengan blok kolom, penampilan menu yang lebih baik dalam bahasa dengan penulisan dari kanan ke kiri, dan pengaturan zona waktu situs Anda.
+</id>
+<it-IT>
+17.2:
+Questa versione introduce un nuovo blocco: Informazioni di contatto di Jetpack. È perfetto per la visualizzazione di un indirizzo formattato in modo corretto sul tuo sito. Abbiamo anche semplificato l'aggiunta di molto testo alternativo a un blocco Immagine, l'uso di TalkBack con il blocco Colonne, la migliore visualizzazione dei menu nelle lingue da destra a sinistra e l'impostazione del fuso orario del sito.
+</it-IT>
+<ja-JP>
+17.2:
+今回のバージョンでは Jetpack 連絡先情報という新しいブロックが導入されています。 形式が適切に整えられた住所をサイトに表示するのに最適なブロックです。 また、画像ブロックに多数の代替テキストを簡単に追加できるようにしました。列ブロックに TalkBack を使用し、右から左に書く言語でもメニューが適切に表示されるようになり、さらにサイトのタイムゾーンを設定できるようになりました。
+</ja-JP>
+<ko-KR>
+17.2:
+이 버전에서는 젯팩 연락처라는 새 블록이 도입됩니다. 멋지게 형식을 지정한 사이트의 주소가 완벽하게 표시됩니다. 또한, 더 쉽게 많은 대체 텍스트를 이미지 블록에 추가하고, 열 블록에서 TalkBack을 사용하고, 오른쪽에서 왼쪽으로 쓰는 언어의 메뉴를 더 잘 보고, 사이트 시간대를 설정하도록 만들었습니다.
+</ko-KR>
 <nl-NL>
-17.1:
-Wat is er nieuw?
-
-We hebben de toegankelijkheid in de blokeditor verbeterd voor degenen die een TalkBack-schermlezer gebruiken.
-
-Om je te helpen bij het beheren van reacties op je site, is er nu een filter 'Niet beantwoord', zodat je niet-beantwoorde reacties op één plek kunt bekijken.
-
-Misschien heb je het nieuwe kleurenpalet opgemerkt! We hebben ook je app-pictogram geüpdatet om overeen te komen.
+17.2:
+Deze versie introduceert een nieuw blok – Jetpack contact info. Het is perfect voor het tonen van een mooi geformatteerd adres op je site. We hebben het ook eenvoudiger gemaakt om een hoop alt tekst aan een afbeeldingsblok toe te voegen, gebruik van TalkBack met het kolommen blok, menu's beter bekijken in talen die van rechts naar links schrijven, en je tijdzone in te stellen
 </nl-NL>
 <ru-RU>
-17.1:
-Что нового:
-
-Мы улучшили доступность в редакторе блоков для тех, кто использует программу чтения с экрана TalkBack.
-
-Чтобы помочь вам управлять комментариями на своем сайте, теперь есть фильтр «Без ответа», чтобы вы могли просматривать комментарии, на которые не ответили, в одном месте.
-
-Возможно, вы заметили новую цветовую палитру! Мы также обновили и значок приложения, чтобы он соответствовал ей.
+17.2:
+В этой версии появился новый блок - контактная информация Jetpack. Он идеально подходит для отображения красиво отформатированного адреса на вашем сайте. Мы также упростили добавление длинного alt текста в блок изображения, использование TalkBack с блоком столбцов, улучшение просмотра меню на языках с письмом справа налево и установку часового пояса вашего сайта.
 </ru-RU>
+<sv-SE>
+17.2:
+Med denna version lanseras ett nytt block – Jetpack kontaktinformation, som är perfekt för att visa en snyggt formaterad adress på webbplatsen. Det har också blivit enklare att lägga in en lång alt-text i ett bildblock, använda TalkBack med kolumnblocket, hantera menyerna i språk som skrivs från höger till vänster och att ange webbplatsens tidszon.
+</sv-SE>
+<tr-TR>
+17,2:
+Bu sürümde yeni bir blok sunuyoruz - Jetpack iletişim bilgisi. Sitenizde güzel biçimlendirilmiş bir adres görüntülemek için mükemmeldir. Ayrıca bir resim blokuna çok sayıda alternatif metin eklemeyi, TalkBack'i sütun blokuyla kullanmayı, menüleri sağdan sola türünden dillerde daha iyi görüntülemeyi ve sitenizin saat dilimini ayarlamayı kolaylaştırdık.
+</tr-TR>
 <zh-CN>
-17.1:
-我们对使用TalkBack屏幕阅读器的用户改进了其在区块编辑器中的无障碍。
-
-为了有助于您更加方便的管理您站点上的评论，我们添加了一个 “未回复 ”选项，使您可以在一个位置查看所有未回复的评论。
-
-您可能已经注意到了新的调色板！我们也更新了应用程序的图标以使其相匹配。
+17.2:
+此版本引入了一个新的区块- Jetpack联系信息。可以在您的网站上显示格式化良好的地址。我们还使其更容易为图像区块添加了alt文字，让TalkBack支持列区块的操作，使其在从右到左的语言中更好地查看菜单，并能设置您的站点时区。
 </zh-CN>
+<zh-TW>
+17.2:
+此版本推出新的區塊 – Jetpack 聯絡資訊。 該區塊能在你的網站以正確格式顯示地址。 我們也改善了幾項操作：現在在圖片區塊新增大量替代文字、在欄位區塊使用 TalkBack，或是設定網站時區都變得簡單；從右至左語言的選單則顯示得更清楚。
+</zh-TW>
