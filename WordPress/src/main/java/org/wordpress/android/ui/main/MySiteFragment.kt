@@ -20,7 +20,10 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
+import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -59,6 +62,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -1166,6 +1170,42 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                         requireActivity().findViewById(R.id.coordinator), false,
                         event.mediaModelList, site, event.successMessage
                 )
+            }
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: StorySaveResult) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (!event.isSuccess()) {
+            // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
+            val errorText = String.format(
+                    getString(R.string.story_saving_snackbar_finished_with_error),
+                    getStoryAtIndex(event.storyIndex).title
+            )
+            val snackbarMessage = buildSnackbarErrorMessage(
+                    requireActivity(),
+                    allErrorsInResult(event.frameSaveResult).size,
+                    errorText
+            )
+
+            uploadUtilsWrapper.showSnackbarError(
+                    requireActivity().findViewById<View>(R.id.coordinator),
+                    snackbarMessage,
+                    R.string.story_saving_failed_quick_action_manage
+            ) {
+                // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                // is meant to be used for tracking purposes. Use it!
+                // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+
+                storiesTrackerHelper.trackStorySaveResultEvent(
+                        event,
+                        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+
+                )
+                ActivityLauncher.viewStories(requireActivity(), selectedSite, event)
             }
         }
     }
