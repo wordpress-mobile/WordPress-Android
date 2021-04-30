@@ -1188,7 +1188,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     allErrorsInResult(event.frameSaveResult).size,
                     errorText
             )
-
             uploadUtilsWrapper.showSnackbarError(
                     requireActivity().findViewById<View>(R.id.coordinator),
                     snackbarMessage,
