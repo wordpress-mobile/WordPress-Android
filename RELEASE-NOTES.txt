@@ -3,6 +3,7 @@
 17.3
 -----
 * [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
+* [**] Likes Enhancements: the full list of people who liked a post or comment is now shown in notifications and reader post detail. A user profile bottom sheet shows info about a liker. []
 
 
 17.2
