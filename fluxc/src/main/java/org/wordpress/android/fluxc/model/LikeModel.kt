@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.util.StringUtils
+import java.util.Date
 
 @Table
 class LikeModel : Identifiable {
@@ -46,6 +47,7 @@ class LikeModel : Identifiable {
         get() = StringUtils.notNullStr(field)
     @Column var dateLiked: String? = null
         get() = StringUtils.notNullStr(field)
+    @Column var timestampFetched: Long = Date().time
 
     override fun setId(id: Int) {
         this.id = id
@@ -53,5 +55,27 @@ class LikeModel : Identifiable {
 
     override fun getId(): Int {
         return this.id
+    }
+
+    fun isEqual(otherLike: LikeModel): Boolean {
+        return type == otherLike.type &&
+        remoteSiteId == otherLike.remoteSiteId &&
+        remoteItemId == otherLike.remoteItemId &&
+        likerId == otherLike.likerId &&
+        likerName == otherLike.likerName &&
+        likerLogin == otherLike.likerLogin &&
+        likerAvatarUrl == otherLike.likerAvatarUrl &&
+        likerBio == otherLike.likerBio &&
+        likerSiteId == otherLike.likerSiteId &&
+        likerSiteUrl == otherLike.likerSiteUrl &&
+        preferredBlogId == otherLike.preferredBlogId &&
+        preferredBlogName == otherLike.preferredBlogName &&
+        preferredBlogUrl == otherLike.preferredBlogUrl &&
+        preferredBlogBlavatarUrl == otherLike.preferredBlogBlavatarUrl &&
+        dateLiked == otherLike.dateLiked
+    }
+
+    companion object {
+        const val TIMESTAMP_THRESHOLD = 7 * 24 * 60 * 60 * 1000L // 7 days in milliseconds
     }
 }
