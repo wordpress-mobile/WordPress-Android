@@ -14,3 +14,21 @@ fun buildUri(host: String? = null, path1: String? = null, path2: String? = null,
     }
     return uri
 }
+
+fun buildUri(
+    host: String? = null,
+    queryParam1: Pair<String, String>? = null,
+    queryParam2: Pair<String, String>? = null
+): UriWrapper {
+    val uri = mock<UriWrapper>()
+    if (host != null) {
+        whenever(uri.host).thenReturn(host)
+    }
+    if (queryParam1 != null) {
+        whenever(uri.getQueryParameter(queryParam1.first)).thenReturn(queryParam1.second)
+    }
+    if (queryParam2 != null) {
+        whenever(uri.getQueryParameter(queryParam2.first)).thenReturn(queryParam2.second)
+    }
+    return uri
+}

@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-21 20:02:25+0000
+Translation-Revision-Date: 2021-04-22 19:37:13+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
     <string name="gutenberg_native_what_is_alt_text">ماهو النص البديل؟</string>
+    <string name="gutenberg_native_transform_block">تحويل مكوّن…</string>
+    <string name="gutenberg_native_transform_s_to">تحويل %s إلى</string>
     <string name="gutenberg_native_failed_to_insert_media">فشل في إدراج وسائط.</string>
     <string name="like_title_plural">%d إعجابات</string>
     <string name="like_faces_singular_text">مدوّن واحد معجب بهذا.</string>
     <string name="like_faces_plural_text">%d مدوِّنون معجبون بهذا.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">فشل في إدراج ملف صوتي.</string>
+    <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">تم تحويل %1$s إلى %2$s</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">وصف الغرض من الصورة. اتركه فارغًا إذا كانت الصورة زخرفية أو عنصر تزيين بشكل عام. </string>
     <string name="suggestion">اقتراح:</string>
     <string name="like_title_singular">إعجاب واحد</string>
+    <string name="threat_fix_enter_server_creds_message_singular">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديد.</string>
+    <string name="threat_fix_enter_server_creds_message_plural">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديدات.</string>
     <string name="gutenberg_native_search_blocks">البحث في المكوّنات</string>
     <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
     <string name="gutenberg_native_search_block">مكوّن بحث</string>
