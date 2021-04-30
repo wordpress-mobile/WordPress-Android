@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Point
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -36,7 +37,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-const val STATUS_BAR_HEIGHT_IN_DP = 24
+const val STATUS_BAR_HEIGHT_IN_DP = 25
+const val MIN_SCREEN_HEIGHT_IN_PX = 2160
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
@@ -138,7 +140,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             "arguments can't be null."
         }
 
-        if (VERSION.SDK_INT >= VERSION_CODES.Q && isStoryPost) {
+        // only add window inset to really large screens. 
+        val size = Point()
+        activity?.windowManager?.defaultDisplay?.getRealSize(size)
+        val height: Int = size.y
+
+        if (VERSION.SDK_INT >= VERSION_CODES.Q && isStoryPost && height > MIN_SCREEN_HEIGHT_IN_PX) {
                 activity?.window?.decorView?.rootWindowInsets?.let { windowInsets ->
                     val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
                     if (navBarModeHelper.getNavigationMode(requireActivity())
