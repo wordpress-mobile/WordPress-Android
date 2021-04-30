@@ -125,7 +125,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:ellipsize="end"
-            android:importantForAccessibility="no"
             android:maxLines="5"
             android:textAlignment="viewStart"
             android:lineSpacingMultiplier="1.2"
