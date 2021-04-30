@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-16 10:54:08+0000
+Translation-Revision-Date: 2021-04-30 15:54:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_what_is_alt_text">替代文字是什麼？</string>
+    <string name="gutenberg_native_transform_s_to">將 %s 轉換為</string>
+    <string name="gutenberg_native_transform_block">轉換區塊…</string>
+    <string name="gutenberg_native_failed_to_insert_media">無法插入媒體。</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">無法插入音訊檔案。</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">說明圖片用途。 如果圖片只是為了裝飾，請保留空白。 </string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s 已轉換為 %2$s</string>
+    <string name="like_faces_error_loading_message">載入讚資料時發生錯誤。%s。</string>
+    <string name="like_faces_plural_text">%d 位部落客說這個讚。</string>
+    <string name="like_faces_singular_text">1 位部落客說這個讚。</string>
+    <string name="like_title_plural">%d 按讚數</string>
+    <string name="like_title_singular">1 個讚</string>
+    <string name="threat_fix_enter_server_creds_message_plural">輸入你的伺服器憑證以修正威脅。</string>
+    <string name="threat_fix_enter_server_creds_message_singular">輸入你的伺服器憑證以修正威脅。</string>
+    <string name="suggestion">建議：</string>
     <string name="gutenberg_native_search_blocks">搜尋區塊</string>
     <string name="gutenberg_native_search_block">搜尋區塊</string>
     <string name="gutenberg_native_double_tap_to_change_unit">按兩下以變更單位</string>
@@ -139,6 +154,7 @@ Language: zh_TW
     <string name="restore_complete_visit_site_action_button">造訪網站</string>
     <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
     <string name="restore_complete_header">你的網站已經還原</string>
+    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_icon_content_description">還原網站圖示</string>
     <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
     <string name="restore_progress_header">目前正在還原網站</string>
@@ -211,6 +227,7 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_footnote">無須等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
@@ -428,6 +445,7 @@ Language: zh_TW
     <string name="typeface_label_libre_baskerville">傳統編輯器</string>
     <string name="typeface_label_nunito">休閒</string>
     <string name="toast_capture_operation_permission_needed">你需要授予應用程式錄音權限，才能錄製影片</string>
+    <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">已選取 %s</string>
     <string name="login_get_link_by_email">透過電子郵件取得登入連結</string>
     <string name="email_not_registered_wpcom">很抱歉，我們找不到與此電子郵件地址連結的 WordPress.com 帳號。</string>
@@ -869,6 +887,7 @@ Language: zh_TW
     <string name="gutenberg_native_alt_text">替代文字</string>
     <string name="gutenberg_native_add_video">新增視訊</string>
     <string name="gutenberg_native_add_url">新增網址</string>
+    <string name="gutenberg_native_add_alt_text">新增替代文字</string>
     <string name="gutenberg_native_add_image_or_video">新增圖片或視訊</string>
     <string name="gutenberg_native_add_image">新增圖片</string>
     <string name="gutenberg_native_add_block_here">在此新增區塊</string>
