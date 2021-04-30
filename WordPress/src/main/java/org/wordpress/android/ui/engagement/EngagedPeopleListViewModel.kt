@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.engagement
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -275,7 +276,8 @@ class EngagedPeopleListViewModel @Inject constructor(
         )
     }
 
-    override fun onCleared() {
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public override fun onCleared() {
         super.onCleared()
         getLikesJob?.cancel()
         getLikesHandler.clear()

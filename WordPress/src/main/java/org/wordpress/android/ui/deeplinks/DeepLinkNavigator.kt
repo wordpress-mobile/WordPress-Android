@@ -10,6 +10,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenE
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenNotifications
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPages
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenPagesForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
@@ -23,6 +25,7 @@ import javax.inject.Inject
 
 class DeepLinkNavigator
 @Inject constructor() {
+    @Suppress("ComplexMethod")
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
@@ -55,6 +58,8 @@ class DeepLinkNavigator
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             OpenNotifications -> ActivityLauncher.viewNotificationsInNewStack(activity)
+            is OpenPagesForSite -> ActivityLauncher.viewPagesInNewStack(activity, navigateAction.site)
+            OpenPages -> ActivityLauncher.viewPagesInNewStack(activity)
         }
         activity.finish()
     }
@@ -75,5 +80,7 @@ class DeepLinkNavigator
         object StartCreateSiteFlow : NavigateAction()
         object ShowSignInFlow : NavigateAction()
         object OpenNotifications : NavigateAction()
+        data class OpenPagesForSite(val site: SiteModel) : NavigateAction()
+        object OpenPages : NavigateAction()
     }
 }
