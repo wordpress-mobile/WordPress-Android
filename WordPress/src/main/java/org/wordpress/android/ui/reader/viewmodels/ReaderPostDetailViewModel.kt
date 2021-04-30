@@ -219,6 +219,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: CurrentUserInListRequirement = DONT_CARE) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
+        if (readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) return
         val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 
         if (isLikeDataChanged) {
