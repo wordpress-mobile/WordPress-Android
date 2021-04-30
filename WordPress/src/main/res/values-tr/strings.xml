@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-16 11:54:11+0000
+Translation-Revision-Date: 2021-04-28 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_what_is_alt_text">Alternatif metin nedir?</string>
+    <string name="gutenberg_native_transform_s_to">%s öğesini şuna dönüştür:</string>
+    <string name="gutenberg_native_transform_block">Bloku dönüştür…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Medya eklenemedi.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Ses dosyası eklenemedi.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Görselin amacını açıklayın. Görsel tamamen dekoratif amaçlıysa boş bırakın. </string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s, %2$s olarak dönüştürüldü</string>
+    <string name="like_faces_error_loading_message">Beğeni verileri yüklenirken hata oluştu. %s.</string>
+    <string name="like_faces_plural_text">%d blog yazarı bunu beğendi.</string>
+    <string name="like_faces_singular_text">1 blog yazarı bunu beğendi.</string>
+    <string name="like_title_plural">%d Beğenilenler</string>
+    <string name="like_title_singular">1 beğeni</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Tehditleri gidermek için sunucu kimlik bilgilerinizi girin.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Tehdidi gidermek için sunucu kimlik bilgilerinizi girin.</string>
+    <string name="suggestion">Öneri:</string>
     <string name="gutenberg_native_search_blocks">Arama blokları</string>
     <string name="gutenberg_native_search_block">Arama bloğu</string>
     <string name="gutenberg_native_double_tap_to_change_unit">birimi değiştirmek için iki kez dokunun</string>
@@ -883,6 +898,7 @@ Language: tr
     <string name="gutenberg_native_alt_text">Alternatif metin</string>
     <string name="gutenberg_native_add_video">VİDEO EKLE</string>
     <string name="gutenberg_native_add_url">URL ekle</string>
+    <string name="gutenberg_native_add_alt_text">Alternatif metin ekle</string>
     <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
     <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>

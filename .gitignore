@@ -91,3 +91,9 @@ WordPress/debug.keystore
 WordPress/*.jks
 
 local-builds.gradle
+
+# Currently, the configure tool stores the encrypted files under
+# .configure-files. Everything in that folder without a .enc extension should
+# be ignored.
+.configure-files/*
+!.configure-files/*.enc

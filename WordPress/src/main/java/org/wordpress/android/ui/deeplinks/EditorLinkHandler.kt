@@ -26,12 +26,24 @@ class EditorLinkHandler
      * Builds navigate action from URL like:
      * https://wordpress.com/post/siteNameOrUrl/postId
      * where siteNameOrUrl and postID are optional
+     * or App links like wordpress://post?blogId=798&postId=1231
      */
     fun buildOpenEditorNavigateAction(uri: UriWrapper): NavigateAction {
-        val pathSegments = uri.pathSegments
-        val targetSite = pathSegments.getOrNull(1)?.toSite()
-        val targetPost = pathSegments.getOrNull(2)?.toPost(targetSite)
-        return openEditorForSiteAndPost(targetSite, targetPost)
+        var hasSiteParam = false
+        var hasPostParam = false
+        val (targetSite, targetPost) = if (uri.host == POST_PATH) {
+            // Handles wordpress://post?blogId=798&postId=1231
+            val targetSite = uri.getQueryParameter(BLOG_ID).also { hasSiteParam = it != null }?.blogIdToSite()
+            val targetPost = uri.getQueryParameter(POST_ID).also { hasPostParam = it != null }?.toPost(targetSite)
+            targetSite to targetPost
+        } else {
+            // Handles https://wordpress.com/post/siteNameOrUrl/postId
+            val pathSegments = uri.pathSegments
+            val targetSite = pathSegments.getOrNull(1).also { hasSiteParam = it != null }?.hostNameToSite()
+            val targetPost = pathSegments.getOrNull(2).also { hasPostParam = it != null }?.toPost(targetSite)
+            targetSite to targetPost
+        }
+        return openEditorForSiteAndPost(hasSiteParam, hasPostParam, targetSite, targetPost)
     }
 
     /**
@@ -39,15 +51,22 @@ class EditorLinkHandler
      * The handled links are `wordpress.com/post...1
      */
     fun isEditorUrl(uri: UriWrapper): Boolean {
-        return uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == POST_PATH
+        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == POST_PATH) || uri.host == POST_PATH
+    }
+
+    /**
+     * Converts BlogID if long or Site URL for other cases to a SiteModel
+     */
+    private fun String.blogIdToSite(): SiteModel? {
+        return deepLinkUriUtils.blogIdToSite(this) ?: this.hostNameToSite()
     }
 
     /**
      * Converts HOST name of a site to SiteModel. It finds the Site in the current local sites and matches the name
      * to the host.
      */
-    private fun String.toSite(): SiteModel? {
+    private fun String.hostNameToSite(): SiteModel? {
         return deepLinkUriUtils.hostToSite(this)
     }
 
@@ -67,15 +86,26 @@ class EditorLinkHandler
         }
     }
 
-    private fun openEditorForSiteAndPost(site: SiteModel?, post: PostModel?): NavigateAction {
+    private fun openEditorForSiteAndPost(
+        hasSiteParam: Boolean,
+        hasPostParam: Boolean,
+        site: SiteModel?,
+        post: PostModel?
+    ): NavigateAction {
         return when {
             site == null -> {
-                // Site not found, or host of site doesn't match the host in url
-                _toast.value = Event(R.string.blog_not_found)
+                if (hasSiteParam) {
+                    // Site not found, or host of site doesn't match the host in url
+                    _toast.value = Event(R.string.blog_not_found)
+                }
                 // Open a new post editor with current selected site
                 OpenEditor
             }
             post == null -> {
+                if (hasPostParam) {
+                    // Post not found. Open new post editor for given site.
+                    _toast.value = Event(R.string.post_not_found)
+                }
                 // Open new post editor for given site
                 OpenEditorForSite(site)
             }
@@ -85,5 +115,7 @@ class EditorLinkHandler
 
     companion object {
         private const val POST_PATH = "post"
+        private const val BLOG_ID = "blogId"
+        private const val POST_ID = "postId"
     }
 }

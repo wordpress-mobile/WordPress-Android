@@ -15,22 +15,19 @@ class DeepLinkUriUtils
     fun getUriFromQueryParameter(uri: UriWrapper, key: String) =
             uri.getQueryParameter(key)?.let { uriUtilsWrapper.parse(it) }
 
-    fun extractTargetHost(uri: UriWrapper): String {
-        return uri.lastPathSegment ?: ""
-    }
-
-    private fun extractSiteModelFromTargetHost(host: String): SiteModel? {
-        return siteStore.getSitesByNameOrUrlMatching(host).firstOrNull()
+    private fun extractSiteModelFromTargetHost(host: String): List<SiteModel> {
+        return siteStore.getSitesByNameOrUrlMatching(host)
     }
 
     fun hostToSite(siteUrl: String): SiteModel? {
-        val site = extractSiteModelFromTargetHost(siteUrl)
-        val host = extractHostFromSite(site)
-        // Check if a site is available with given targetHost
-        return if (site != null && host != null && host == siteUrl) {
-            site
-        } else {
-            null
+        return extractSiteModelFromTargetHost(siteUrl).find { site ->
+            // Check if a site is available with given targetHost
+            val host = extractHostFromSite(site)
+            host != null && host == siteUrl
         }
+    }
+
+    fun blogIdToSite(blogId: String): SiteModel? {
+        return blogId.toLongOrNull()?.let { siteStore.getSiteBySiteId(it) }
     }
 }

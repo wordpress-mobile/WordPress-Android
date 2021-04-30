@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,6 +45,8 @@ import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -88,7 +91,8 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 import kotlin.Unit;
 
-public class ReaderCommentListActivity extends LocaleAwareActivity {
+public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,
+        OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
@@ -290,22 +294,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
                     new Builder(ReaderCommentListActivity.this)
                             .setTitle(R.string.comment)
-                            .setOnCollapseListener(result -> {
-                                if (result != null) {
-                                    mEditComment.setText(result.getString(RESULT_REPLY));
-                                    mEditComment.setSelection(
-                                            result.getInt(RESULT_SELECTION_START),
-                                            result.getInt(RESULT_SELECTION_END)
-                                    );
-                                    mEditComment.requestFocus();
-                                }
-                            })
-                            .setOnConfirmListener(result -> {
-                                if (result != null) {
-                                    mEditComment.setText(result.getString(RESULT_REPLY));
-                                    submitComment();
-                                }
-                            })
+                            .setOnCollapseListener(this)
+                            .setOnConfirmListener(this)
                             .setContent(CommentFullScreenDialogFragment.class, bundle)
                             .setAction(R.string.send)
                             .setHideActivityBar(true)
@@ -323,6 +313,37 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+
+        // reattach listeners to collapsible reply dialog
+        CollapseFullScreenDialogFragment fragment =
+                (CollapseFullScreenDialogFragment) getSupportFragmentManager().findFragmentByTag(
+                        CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null && fragment.isAdded()) {
+            fragment.setOnCollapseListener(this);
+            fragment.setOnConfirmListener(this);
+        }
+    }
+
+
+    @Override
+    public void onCollapse(@Nullable Bundle result) {
+        if (result != null) {
+            mEditComment.setText(result.getString(RESULT_REPLY));
+            mEditComment.setSelection(
+                    result.getInt(RESULT_SELECTION_START),
+                    result.getInt(RESULT_SELECTION_END)
+            );
+            mEditComment.requestFocus();
+        }
+    }
+
+    @Override
+    public void onConfirm(@Nullable Bundle result) {
+        if (result != null) {
+            mEditComment.setText(result.getString(RESULT_REPLY));
+            submitComment();
+        }
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {

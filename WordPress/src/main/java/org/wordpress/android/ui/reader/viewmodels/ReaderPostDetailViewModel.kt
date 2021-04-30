@@ -24,6 +24,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
@@ -213,7 +214,16 @@ class ReaderPostDetailViewModel @Inject constructor(
             lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
             getLikesJob?.cancel()
             getLikesJob = launch(bgDispatcher) {
-                getLikesHandler.handleGetLikesForPost(post.blogId, post.postId, post.numLikes)
+                getLikesHandler.handleGetLikesForPost(
+                        LikeGroupFingerPrint(
+                                post.blogId,
+                                post.postId,
+                                post.numLikes
+                        ),
+                        requestNextPage = false,
+                        pageLength = MAX_NUM_LIKES_FACES,
+                        limit = MAX_NUM_LIKES_FACES
+                )
             }
         }
     }
@@ -545,17 +555,16 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun getLikersEssentials(updateLikesState: GetLikesState?): Pair<List<EngageItem>, Int> {
-        // TODOD: remove this take when using pagination (limit the call to needed elements only)
         return when (updateLikesState) {
             is LikesData -> {
                 Pair(
-                        engagementUtils.likesToEngagedPeople(updateLikesState.likes).take(MAX_NUM_LIKES_FACES),
+                        engagementUtils.likesToEngagedPeople(updateLikesState.likes),
                         updateLikesState.expectedNumLikes
                 )
             }
             is Failure -> {
                 Pair(
-                        engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes).take(MAX_NUM_LIKES_FACES),
+                        engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes),
                         updateLikesState.expectedNumLikes
                 )
             }
