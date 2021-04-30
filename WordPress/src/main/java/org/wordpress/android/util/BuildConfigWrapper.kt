@@ -13,4 +13,6 @@ class BuildConfigWrapper @Inject constructor() {
     }
 
     fun isManualFeatureConfigEnabled(): Boolean = BuildConfig.ENABLE_FEATURE_CONFIGURATION
+
+    val isJetpackApp = BuildConfig.IS_JETPACK_APP
 }
