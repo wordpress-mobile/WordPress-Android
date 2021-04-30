@@ -34,11 +34,14 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
 
-            it.title = if (listScenario.headerData.numLikes == 1) {
+            val titleText = if (listScenario.headerData.numLikes == 1) {
                 getString(R.string.like_title_singular)
             } else {
                 getString(R.string.like_title_plural, listScenario.headerData.numLikes)
             }
+            it.title = titleText
+            // Important for talkback accessibility
+            title = getString(R.string.likes_list_screen_title, titleText)
         }
 
         val fm = supportFragmentManager
