@@ -17,7 +17,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.POST_LIKE
 import org.wordpress.android.test
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -65,7 +65,7 @@ class GetLikesHandlerTest {
                 hasMore = false
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DON_T_CARE)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
                 flow { emit(state) }
         )
 
@@ -101,7 +101,7 @@ class GetLikesHandlerTest {
                 hasMore = false
         )
 
-        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DON_T_CARE)).thenReturn(
+        whenever(getLikesUseCase.getLikesForPost(fingerPrint, paginationParams, DONT_CARE)).thenReturn(
                 flow { emit(state) }
         )
 
