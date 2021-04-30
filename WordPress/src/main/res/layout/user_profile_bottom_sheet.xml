@@ -141,7 +141,6 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:ellipsize="end"
-            android:importantForAccessibility="no"
             android:includeFontPadding="true"
             android:text="@string/user_profile_site_section_header"
             android:textAlignment="viewStart"
