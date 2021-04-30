@@ -11,14 +11,14 @@ import java.util.HashMap
 import javax.inject.Inject
 
 class LikesUtilsProvider @Inject constructor() {
-    fun getPageOffsetParams(type: LikeType, siteId: Long, remoteItemtId: Long): Map<String, String?>? {
+    fun getPageOffsetParams(type: LikeType, siteId: Long, remoteItemId: Long): Map<String, String?>? {
         val oldestDateLiked = WellSql.select(LikeModel::class.java)
                 .columns(LikeModelTable.DATE_LIKED)
                 .limit(1)
                 .where().beginGroup()
                 .equals(LikeModelTable.TYPE, type.typeName)
                 .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemtId)
+                .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemId)
                 .endGroup().endWhere()
                 .orderBy(LikeModelTable.DATE_LIKED, SelectQuery.ORDER_ASCENDING)
                 .asModel
@@ -33,15 +33,15 @@ class LikesUtilsProvider @Inject constructor() {
                     .beginGroup()
                     .equals(LikeModelTable.TYPE, type.typeName)
                     .equals(LikeModelTable.REMOTE_SITE_ID, siteId)
-                    .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemtId)
+                    .equals(LikeModelTable.REMOTE_ITEM_ID, remoteItemId)
                     .equals(LikeModelTable.DATE_LIKED, oldestDateLiked[0].dateLiked)
                     .endGroup()
                     .endWhere()
                     .asModel
 
             oldestLikers?.let {
-                val excludeParams = oldestLikers.joinToString(separator = "&exclude[]=") {
-                    liker -> "${liker.likerId}"
+                val excludeParams = oldestLikers.joinToString(separator = "&exclude[]=") { liker ->
+                    "${liker.likerId}"
                 }
 
                 if (excludeParams.isNotBlank()) {
