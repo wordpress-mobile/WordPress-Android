@@ -100,8 +100,8 @@ class EngagedPeopleListFragment : Fragment() {
                     ShowBottomSheet -> {
                         if (bottomSheet == null) {
                             bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
+                            bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                         }
-                        bottomSheet.show(fragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                     }
                     HideBottomSheet -> {
                         bottomSheet?.apply { this.dismiss() }
