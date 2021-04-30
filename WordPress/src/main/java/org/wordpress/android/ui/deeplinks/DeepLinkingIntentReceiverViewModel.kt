@@ -19,6 +19,7 @@ class DeepLinkingIntentReceiverViewModel
     private val statsLinkHandler: StatsLinkHandler,
     private val startLinkHandler: StartLinkHandler,
     private val readerLinkHandler: ReaderLinkHandler,
+    private val pagesLinkHandler: PagesLinkHandler,
     private val notificationsLinkHandler: NotificationsLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val serverTrackingHandler: ServerTrackingHandler
@@ -67,6 +68,7 @@ class DeepLinkingIntentReceiverViewModel
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
             notificationsLinkHandler.isNotificationsUrl(uri) -> notificationsLinkHandler.buildNavigateAction()
+            pagesLinkHandler.isPagesUrl(uri) -> pagesLinkHandler.buildNavigateAction(uri)
             else -> null
         }
     }
