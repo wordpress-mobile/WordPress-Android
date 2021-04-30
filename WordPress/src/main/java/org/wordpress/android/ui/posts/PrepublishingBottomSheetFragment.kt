@@ -38,7 +38,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 const val STATUS_BAR_HEIGHT_IN_DP = 25
-const val MIN_SCREEN_HEIGHT_IN_PX = 2160
+const val MIN_SCREEN_HEIGHT_IN_PX = 2200
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
@@ -140,29 +140,28 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             "arguments can't be null."
         }
 
-        // only add window inset to really large screens. 
+        // only add window inset to really large screens.
         val size = Point()
         activity?.windowManager?.defaultDisplay?.getRealSize(size)
         val height: Int = size.y
-
         if (VERSION.SDK_INT >= VERSION_CODES.Q && isStoryPost && height > MIN_SCREEN_HEIGHT_IN_PX) {
-                activity?.window?.decorView?.rootWindowInsets?.let { windowInsets ->
-                    val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
-                    if (navBarModeHelper.getNavigationMode(requireActivity())
-                                    ?.equals(NavigationMode.NAV_BAR_MODE_GESTURAL) == true) {
-                        param.setMargins(
-                                0,
-                                0,
-                                0,
-                                windowInsets.systemGestureInsets.bottom + dpToPx(
-                                        requireActivity(),
-                                        STATUS_BAR_HEIGHT_IN_DP
-                                )
-                        )
-                    } else {
-                        param.setMargins(0, 0, 0, windowInsets.systemWindowInsetBottom)
-                    }
-                    prepublishingContentFragment.layoutParams = param
+            activity?.window?.decorView?.rootWindowInsets?.let { windowInsets ->
+                val param = prepublishingContentFragment.layoutParams as ViewGroup.MarginLayoutParams
+                if (navBarModeHelper.getNavigationMode(requireActivity())
+                                ?.equals(NavigationMode.NAV_BAR_MODE_GESTURAL) == true) {
+                    param.setMargins(
+                            0,
+                            0,
+                            0,
+                            windowInsets.systemGestureInsets.bottom + dpToPx(
+                                    requireActivity(),
+                                    STATUS_BAR_HEIGHT_IN_DP
+                            )
+                    )
+                } else {
+                    param.setMargins(0, 0, 0, windowInsets.systemWindowInsetBottom)
+                }
+                prepublishingContentFragment.layoutParams = param
             }
         }
     }
