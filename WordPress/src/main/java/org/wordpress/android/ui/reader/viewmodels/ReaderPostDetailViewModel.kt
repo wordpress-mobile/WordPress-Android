@@ -20,10 +20,10 @@ import org.wordpress.android.ui.engagement.EngageItem
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_BE_THERE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_NOT_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -217,7 +217,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: BeInListRequirement = DON_T_CARE) {
+    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: CurrentUserInListRequirement = DONT_CARE) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 

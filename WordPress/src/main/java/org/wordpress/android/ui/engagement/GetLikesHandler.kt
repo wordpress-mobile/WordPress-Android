@@ -6,8 +6,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -35,7 +35,7 @@ class GetLikesHandler @Inject constructor(
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT,
         limit: Int = LIKES_RESULT_NO_LIMITS,
-        expectingToBeThere: BeInListRequirement = DON_T_CARE
+        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
     ) {
         getLikesUseCase.getLikesForPost(
                 fingerPrint,

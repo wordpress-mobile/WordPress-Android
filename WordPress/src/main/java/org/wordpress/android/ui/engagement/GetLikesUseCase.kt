@@ -21,9 +21,9 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostLikesPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostLikesChanged
 import org.wordpress.android.fluxc.store.Store.OnChanged
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_BE_THERE
-import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_NOT_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -68,7 +68,7 @@ class GetLikesUseCase @Inject constructor(
     suspend fun getLikesForPost(
         fingerPrint: LikeGroupFingerPrint,
         paginationParams: PaginationParams,
-        expectingToBeThere: BeInListRequirement
+        expectingToBeThere: CurrentUserInListRequirement
     ): Flow<GetLikesState> = flow {
         getLikes(POST_LIKE, this, fingerPrint, paginationParams, expectingToBeThere)
     }
@@ -86,7 +86,7 @@ class GetLikesUseCase @Inject constructor(
         flow: FlowCollector<GetLikesState>,
         fingerPrint: LikeGroupFingerPrint,
         paginationParams: PaginationParams,
-        expectingToBeThere: BeInListRequirement = DON_T_CARE
+        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
     ) {
         if (!paginationParams.requestNextPage) {
             flow.emit(Loading)
@@ -142,19 +142,19 @@ class GetLikesUseCase @Inject constructor(
     }
 
     private fun shouldRetry(
-        expectingToBeThere: BeInListRequirement,
+        expectingToBeThere: CurrentUserInListRequirement,
         retry: Int,
         result: OnChanged<*>,
         likes: List<LikeModel>
     ): Boolean {
-        val shouldCheck = expectingToBeThere != DON_T_CARE &&
+        val shouldCheck = expectingToBeThere != DONT_CARE &&
                 retry < NUM_RETRY &&
                 !result.isError &&
                 accountStore.hasAccessToken()
 
         return if (shouldCheck) {
             when (expectingToBeThere) {
-                DON_T_CARE -> {
+                DONT_CARE -> {
                     false
                 }
                 REQUIRE_TO_BE_THERE -> {
@@ -308,8 +308,8 @@ class GetLikesUseCase @Inject constructor(
     data class LikeGroupFingerPrint(val siteId: Long, val postOrCommentId: Long, val expectedNumLikes: Int)
     data class PaginationParams(val requestNextPage: Boolean, val pageLength: Int, val limit: Int)
 
-    enum class BeInListRequirement {
-        DON_T_CARE,
+    enum class CurrentUserInListRequirement {
+        DONT_CARE,
         REQUIRE_TO_BE_THERE,
         REQUIRE_TO_NOT_BE_THERE
     }
