@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -32,7 +34,8 @@ class GetLikesHandler @Inject constructor(
         fingerPrint: LikeGroupFingerPrint,
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT,
-        limit: Int = LIKES_RESULT_NO_LIMITS
+        limit: Int = LIKES_RESULT_NO_LIMITS,
+        expectingToBeThere: BeInListRequirement = DON_T_CARE
     ) {
         getLikesUseCase.getLikesForPost(
                 fingerPrint,
@@ -40,7 +43,8 @@ class GetLikesHandler @Inject constructor(
                         requestNextPage,
                         pageLength,
                         limit
-                )
+                ),
+                expectingToBeThere
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
@@ -70,7 +74,9 @@ class GetLikesHandler @Inject constructor(
     private fun manageState(state: GetLikesState) {
         when (state) {
             Loading,
-            is LikesData -> _likesStatusUpdate.postValue(state)
+            is LikesData -> {
+                _likesStatusUpdate.postValue(state)
+            }
             is Failure -> {
                 _likesStatusUpdate.postValue(state)
                 if (state.failureType != NO_NETWORK || !state.emptyStateData.showEmptyState) {

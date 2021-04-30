@@ -20,6 +20,10 @@ import org.wordpress.android.ui.engagement.EngageItem
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.DON_T_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.BeInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -174,7 +178,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
-                        onRefreshLikersData(post)
+                        onRefreshLikersData(
+                                post,
+                                if (post.isLikedByCurrentUser) {
+                                    REQUIRE_TO_BE_THERE
+                                } else {
+                                    REQUIRE_TO_NOT_BE_THERE
+                                }
+                        )
                     }
                     updatePostActions(post)
                 }
@@ -206,7 +217,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshLikersData(post: ReaderPost) {
+    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: BeInListRequirement = DON_T_CARE) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
         val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 
@@ -222,7 +233,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                         ),
                         requestNextPage = false,
                         pageLength = MAX_NUM_LIKES_FACES,
-                        limit = MAX_NUM_LIKES_FACES
+                        limit = MAX_NUM_LIKES_FACES,
+                        expectingToBeThere = expectingToBeThere
                 )
             }
         }
