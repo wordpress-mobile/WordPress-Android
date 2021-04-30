@@ -810,7 +810,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLikeFacesTrain).isTrue
+            assertThat(showLikeFacesTrainContainer).isTrue
             assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(likers)
             assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
@@ -836,7 +836,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLikeFacesTrain).isTrue
+            assertThat(showLikeFacesTrainContainer).isTrue
             assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(likers)
             assertThat(numLikes).isEqualTo(likesState.expectedNumLikes)
