@@ -34,6 +34,7 @@ import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
@@ -791,7 +792,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         getLikesState.value = likesState
         init()
         viewModel.onRefreshLikersData(viewModel.post!!)
-        verify(getLikesHandler, times(1)).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt(), anyInt())
+        verify(
+                getLikesHandler,
+                times(1)
+        ).handleGetLikesForPost(anyOrNull(), anyBoolean(), anyInt(), anyInt(), eq(DONT_CARE))
     }
 
     @Test
