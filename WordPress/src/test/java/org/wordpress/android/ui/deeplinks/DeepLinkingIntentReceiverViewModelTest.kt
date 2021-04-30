@@ -20,13 +20,13 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var startLinkHandler: StartLinkHandler
     @Mock lateinit var readerLinkHandler: ReaderLinkHandler
     @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
+    @Mock lateinit var pagesLinkHandler: PagesLinkHandler
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private val startUrl = buildUri("wordpress.com", "start")
     private val postUrl = buildUri("wordpress.com", "post")
-    private val statsUrl = buildUri("wordpress.com", "stats")
 
     @InternalCoroutinesApi
     @Before
@@ -37,6 +37,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 statsLinkHandler,
                 startLinkHandler,
                 readerLinkHandler,
+                pagesLinkHandler,
                 notificationsLinkHandler,
                 deepLinkUriUtils,
                 serverTrackingHandler

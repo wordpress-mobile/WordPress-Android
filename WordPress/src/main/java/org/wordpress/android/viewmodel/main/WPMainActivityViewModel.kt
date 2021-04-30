@@ -216,7 +216,8 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(showFab: Boolean, site: SiteModel?) {
+    fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
+        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
     }
 
@@ -235,7 +236,8 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMySite.value = Event(Unit)
     }
 
-    fun onResume(site: SiteModel?, showFab: Boolean) {
+    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
+        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
 
         launch {
