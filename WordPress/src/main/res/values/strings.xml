@@ -3537,7 +3537,11 @@
     <string name="backup_download_status_bullet_clock_icon_content_desc" translatable="false">@string/restore_status_bullet_clock_icon_content_desc</string>
     <string name="backup_download_status_bullet_checkmark_icon_content_desc" translatable="false">@string/restore_status_bullet_checkmark_icon_content_desc</string>
 
+    <!-- likes -->
+    <string name="likes_list_screen_title">Likes list %s</string>
+
     <!-- user profile bottom sheet -->
+    <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
 

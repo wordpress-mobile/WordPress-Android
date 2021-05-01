@@ -126,6 +126,16 @@ class WPMainActivityViewModel @Inject constructor(
                         onClickAction = null
                 )
         )
+        if (SiteUtils.supportsStoriesFeature(site)) {
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_STORY,
+                            iconRes = R.drawable.ic_story_icon_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_story,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
+        }
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_POST,
@@ -140,16 +150,6 @@ class WPMainActivityViewModel @Inject constructor(
                             actionType = CREATE_NEW_PAGE,
                             iconRes = R.drawable.ic_pages_white_24dp,
                             labelRes = R.string.my_site_bottom_sheet_add_page,
-                            onClickAction = ::onCreateActionClicked
-                    )
-            )
-        }
-        if (SiteUtils.supportsStoriesFeature(site)) {
-            actionsList.add(
-                    CreateAction(
-                            actionType = CREATE_NEW_STORY,
-                            iconRes = R.drawable.ic_story_icon_24dp,
-                            labelRes = R.string.my_site_bottom_sheet_add_story,
                             onClickAction = ::onCreateActionClicked
                     )
             )
