@@ -255,9 +255,9 @@ class EngagedPeopleListViewModel @Inject constructor(
             analyticsUtilsWrapper.trackUserProfileSiteShown()
         }
 
-        if (siteId == 0L && siteUrl.isNotEmpty()) {
+        if (siteId <= 0L && siteUrl.isNotEmpty()) {
             _onNavigationEvent.value = Event(PreviewSiteByUrl(siteUrl, source))
-        } else if (siteId != 0L) {
+        } else if (siteId > 0L) {
             _onNavigationEvent.value = Event(PreviewSiteById(siteId, source))
         }
     }
