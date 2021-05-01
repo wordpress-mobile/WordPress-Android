@@ -8,7 +8,6 @@ import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
-import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
@@ -18,13 +17,18 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngageItem
-import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
+import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_BE_THERE
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.REQUIRE_TO_NOT_BE_THERE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
-import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
+import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
@@ -90,7 +94,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val getLikesHandler: GetLikesHandler,
-    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
+    private val likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig,
+    private val engagementUtils: EngagementUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -173,7 +178,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
-                        onRefreshLikersData(post)
+                        onRefreshLikersData(
+                                post,
+                                if (post.isLikedByCurrentUser) {
+                                    REQUIRE_TO_BE_THERE
+                                } else {
+                                    REQUIRE_TO_NOT_BE_THERE
+                                }
+                        )
                     }
                     updatePostActions(post)
                 }
@@ -205,15 +217,26 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshLikersData(post: ReaderPost) {
+    fun onRefreshLikersData(post: ReaderPost, expectingToBeThere: CurrentUserInListRequirement = DONT_CARE) {
         if (!likesEnhancementsFeatureConfig.isEnabled()) return
+        if (readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) return
         val isLikeDataChanged = lastRenderedLikesData?.isMatchingPost(post) ?: true
 
         if (isLikeDataChanged) {
             lastRenderedLikesData = RenderedLikesData(post.blogId, post.postId, post.numLikes)
             getLikesJob?.cancel()
             getLikesJob = launch(bgDispatcher) {
-                getLikesHandler.handleGetLikesForPost(post.blogId, post.postId, post.numLikes)
+                getLikesHandler.handleGetLikesForPost(
+                        LikeGroupFingerPrint(
+                                post.blogId,
+                                post.postId,
+                                post.numLikes
+                        ),
+                        requestNextPage = false,
+                        pageLength = MAX_NUM_LIKES_FACES,
+                        limit = MAX_NUM_LIKES_FACES,
+                        expectingToBeThere = expectingToBeThere
+                )
             }
         }
     }
@@ -512,14 +535,14 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
         }
 
-        val showLikeFacesTrain = post?.let {
+        val showLikeFacesTrainContainer = post?.let {
             it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
         } ?: false
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = showLikeFacesTrain,
+                showLikeFacesTrainContainer = showLikeFacesTrainContainer,
                 showLoading = showLoading,
-                engageItemsList = if (showLikeFacesTrain) likers else listOf(),
+                engageItemsList = if (showLikeFacesTrainContainer) likers else listOf(),
                 numLikes = post?.let { numLikes } ?: 0,
                 showEmptyState = showEmptyState,
                 emptyStateTitle = emptyStateTitle,
@@ -547,26 +570,18 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun getLikersEssentials(updateLikesState: GetLikesState?): Pair<List<EngageItem>, Int> {
         return when (updateLikesState) {
             is LikesData -> {
-                Pair(likesToEngagedPeople(updateLikesState.likes), updateLikesState.expectedNumLikes)
+                Pair(
+                        engagementUtils.likesToEngagedPeople(updateLikesState.likes),
+                        updateLikesState.expectedNumLikes
+                )
             }
             is Failure -> {
-                Pair(likesToEngagedPeople(updateLikesState.cachedLikes), updateLikesState.expectedNumLikes)
+                Pair(
+                        engagementUtils.likesToEngagedPeople(updateLikesState.cachedLikes),
+                        updateLikesState.expectedNumLikes
+                )
             }
             Loading, null -> Pair(listOf(), 0)
-        }
-    }
-
-    private fun likesToEngagedPeople(likes: List<LikeModel>): List<EngageItem> {
-        // TODO: remove this take when using pagination (limit the call to needed elements only)
-        return likes.take(MAX_NUM_LIKES_FACES).map { likeData ->
-            Liker(
-                    name = likeData.likerName!!,
-                    login = likeData.likerLogin!!,
-                    userSiteId = likeData.likerSiteId,
-                    userSiteUrl = likeData.likerSiteUrl!!,
-                    userAvatarUrl = likeData.likerAvatarUrl!!,
-                    remoteId = likeData.remoteLikeId
-            )
         }
     }
 

@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -106,6 +107,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -178,6 +180,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
+    public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
@@ -340,7 +343,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    ActivityLauncher.showSignInForResult(this);
+                    if (BuildConfig.IS_JETPACK_APP) {
+                        ActivityLauncher.showSignInForResultJetpackOnly(this);
+                    } else {
+                        ActivityLauncher.showSignInForResult(this);
+                    }
                     finish();
                 }
             }
@@ -376,7 +383,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             ActivityLauncher.newBlogForResult(this);
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.showSignInForResult(this, true);
+            ActivityLauncher.showSignInForResultWpComOnly(this);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -653,7 +660,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    ActivityLauncher.viewBlogStats(this, mSelectedSiteRepository.getSelectedSite());
+                    if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
+                        ActivityLauncher.viewBlogStatsForTimeframe(this, mSelectedSiteRepository.getSelectedSite(),
+                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
+                    } else {
+                        ActivityLauncher.viewBlogStats(this, mSelectedSiteRepository.getSelectedSite());
+                    }
                     break;
                 case ARG_PAGES:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -662,7 +674,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.viewCurrentBlogPages(this, mSelectedSiteRepository.getSelectedSite());
                     break;
                 case ARG_WP_COM_SIGN_UP:
-                    ActivityLauncher.showSignInForResult(this, true);
+                    ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
             }
         } else {
@@ -1230,14 +1242,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int verticalOffset;
             switch (activeTask) {
                 case FOLLOW_SITE:
-                    horizontalOffset = targetView.getWidth() / 2 - size + getResources()
-                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                    horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                     verticalOffset = 0;
                     break;
                 case PUBLISH_POST:
                     horizontalOffset = getResources()
                             .getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
-                    verticalOffset = (targetView.getHeight() - size) / 2;
+                    verticalOffset = targetView != null ? ((targetView.getHeight() - size) / 2) : 0;
                     break;
                 default:
                     horizontalOffset = 0;
@@ -1372,7 +1384,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen
-            ActivityLauncher.showSignInForResult(this);
+            if (BuildConfig.IS_JETPACK_APP) {
+                ActivityLauncher.showSignInForResultJetpackOnly(this);
+            } else {
+                ActivityLauncher.showSignInForResult(this);
+            }
         } else {
             SiteModel site = getSelectedSite();
             if (site == null && mSiteStore.hasSite()) {

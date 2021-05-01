@@ -21,23 +21,6 @@
     <color name="placeholder">#1AFFFFFF</color>
     <color name="p2_author_bg_stroke">#1E1E1E</color>
 
-    <!-- Stats -->
-
-    <color name="stats_activity_very_low">@color/gray_80</color>
-    <color name="stats_activity_low">@color/blue_70</color>
-    <color name="stats_activity_medium">@color/blue_50</color>
-    <color name="stats_activity_high">@color/blue_30</color>
-    <color name="stats_activity_very_high">@color/blue_10</color>
-    <color name="stats_value_bar_color">@color/gray_60</color>
-    <color name="stats_bar_chart_bottom">@color/blue_30</color>
-    <color name="stats_bar_chart_top">@color/blue_60</color>
-    <color name="stats_bar_chart_accent_top">@color/pink_60</color>
-    <color name="stats_bar_chart_accent_bottom">@color/pink_30</color>
-    <color name="stats_bar_chart_gridline">@color/gray_80</color>
-    <color name="stats_map_activity_low">@color/blue_80</color>
-    <color name="stats_map_activity_high">@color/blue_30</color>
-    <color name="stats_map_activity_empty">@color/gray_80</color>
-
     <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
     <color name="login_prologue_background_circle_purple">@color/green_60</color>

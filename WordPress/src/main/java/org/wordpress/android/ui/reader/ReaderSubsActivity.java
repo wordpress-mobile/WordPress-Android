@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
 import android.widget.EditText;
@@ -543,6 +544,13 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         @Override
         public int getCount() {
             return mFragments.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object ret = super.instantiateItem(container, position);
+            mFragments.set(position, (Fragment) ret);
+            return ret;
         }
 
         private void refreshFollowedTagFragment() {

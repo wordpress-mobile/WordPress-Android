@@ -40,15 +40,16 @@ class LikedItemViewHolder(
 
         imageManager.loadIntoCircle(this.avatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl)
 
-        if (
-                !TextUtils.isEmpty(likedItem.authorPreferredSiteUrl) &&
-                likedItem.authorPreferredSiteId > 0 && likedItem.authorUserId > 0
-        ) {
+        if (!TextUtils.isEmpty(likedItem.authorPreferredSiteUrl) || likedItem.authorPreferredSiteId > 0) {
             with(this.avatar) {
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                 contentDescription = this.context.getString(string.profile_picture, authorName)
                 setOnClickListener {
-                    likedItem.onGravatarClick.invoke(likedItem.authorPreferredSiteId, likedItem.authorPreferredSiteUrl)
+                    likedItem.onGravatarClick.invoke(
+                            likedItem.authorPreferredSiteId,
+                            likedItem.authorPreferredSiteUrl,
+                            likedItem.blogPreviewSource
+                    )
                 }
                 setBackgroundResource(
                         this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
