@@ -69,17 +69,18 @@ class StoryComposerViewModel @Inject constructor(
     private val _trackEditorCreatedPost = MutableLiveData<Event<Unit>>()
     val trackEditorCreatedPost: LiveData<Event<Unit>> = _trackEditorCreatedPost
 
+    @Suppress("LongParameterList")
     fun start(
         site: SiteModel,
         editPostRepository: EditPostRepository,
         postId: LocalId,
         postEditorAnalyticsSession: PostEditorAnalyticsSession?,
         notificationType: NotificationType?,
-        storySaveResult: StorySaveResult?
+        originalStorySaveResult: StorySaveResult?
     ): Boolean {
         this.editPostRepository = editPostRepository
         this.site = site
-        this.originalIntentStorySaveResult = storySaveResult
+        this.originalIntentStorySaveResult = originalStorySaveResult
 
         notificationType?.let {
             systemNotificationsTracker.trackTappedNotification(it)
