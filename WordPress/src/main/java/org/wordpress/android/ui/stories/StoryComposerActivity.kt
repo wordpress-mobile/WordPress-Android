@@ -139,8 +139,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // convert our WPAndroid KEY_LAUNCHED_FROM_GUTENBERG flag into Stories general purpose EDIT_MODE flag
         intent.putExtra(KEY_STORY_EDIT_MODE, intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false))
         setMediaPickerProvider(this)
-        super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        super.onCreate(savedInstanceState)
         setSnackbarProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
