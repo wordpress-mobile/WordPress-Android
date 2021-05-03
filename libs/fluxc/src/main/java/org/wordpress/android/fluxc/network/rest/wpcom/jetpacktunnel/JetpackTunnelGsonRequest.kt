@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import java.lang.reflect.Type
-import java.net.URLEncoder
 
 /**
  * A request making a WP-API call to a Jetpack site via the WordPress.com /jetpack-blogs/$site/rest-api/ tunnel.
@@ -20,11 +19,12 @@ import java.net.URLEncoder
  *
  * Example request:
  * https://public-api.wordpress.com/rest/v1.1/jetpack-blogs/$siteId/rest-api/
- * ?path=%2Fwp%2Fv2%2Fposts%2F%26_method%3Dget%26status%3Ddraft&json=true
+ * ?path=%2Fwp%2Fv2%2Fposts%2F%26json%3Dtrue%26_method%3Dget&query=%7B%22status%22%3A%22draft%22%7D
  *
  * Broken down, the GET parameters are:
- * path=/wp/v2/posts/&_method=get&status=draft
+ * path=/wp/v2/posts/&_method=get
  * json=true
+ * query={"status":"draft"}
  *
  * The path parameter is sent HTML-encoded so that it's discernible from the other arguments by WordPress.com.
  * In this example, this would become a GET request to {JSON endpoint root}/wp/v2/posts/?status=draft.
@@ -62,17 +62,18 @@ import java.net.URLEncoder
  *
  * ## DELETE
  *
- * DELETE requests are also made as POST requests to /jetpack-blogs/$siteId/rest-api/, but with no `body` parameter.
- * Instead, any arguments intended for the WP-API endpoint are added to the `path` parameter.
+ * DELETE requests are also made as POST requests to /jetpack-blogs/$siteId/rest-api/.
+ * Any arguments intended for the WP-API endpoint are added to the `body` parameter.
  *
  * Example request:
  * https://public-api.wordpress.com/rest/v1.1/jetpack-blogs/$siteId/rest-api/
  *
  * Body (Form URL-Encoded):
- * path=%2Fwp%2Fv2%2Fposts%2F123456%2F%26_method%3Ddelete%26force%3Dtrue&json=true
+ * path=%2Fwp%2Fv2%2Fposts%2F123456%2F%26_method%3Ddelete%26&body=%7B%22force%22%3A%22true%22%7De&json=true
  *
  * Broken down, the POST parameters are:
- * path=/wp/v2/posts/123456&_method=delete&force=true
+ * path=/wp/v2/posts/123456&_method=delete
+ * body={"force":"true"}
  * json=true
  *
  * # Responses
@@ -201,7 +202,7 @@ object JetpackTunnelGsonRequest {
      *
      * @param wpApiEndpoint the WP-API request endpoint (e.g. /wp/v2/posts/)
      * @param siteId the WordPress.com site ID
-     * @param params the parameters to append to the request URL
+     * @param params the parameters of the request, those will be put in the tunnelled request body
      * @param type the Type defining the expected response
      * @param listener the success listener
      * @param errorListener the error listener
@@ -216,7 +217,7 @@ object JetpackTunnelGsonRequest {
         listener: (T?) -> Unit,
         errorListener: WPComErrorListener
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
-        val wrappedBody = createTunnelBody(method = "delete", params = params, path = wpApiEndpoint)
+        val wrappedBody = createTunnelBody(method = "delete", body = params, path = wpApiEndpoint)
         return buildWrappedPostRequest(siteId, wrappedBody, type, listener, errorListener)
     }
 
@@ -240,8 +241,11 @@ object JetpackTunnelGsonRequest {
     private fun createTunnelParams(params: Map<String, String>, path: String): MutableMap<String, String> {
         val finalParams = mutableMapOf<String, String>()
         with(finalParams) {
-            put("path", buildRestApiPath(path, params, "get"))
+            put("path", "$path&_method=get")
             put("json", "true")
+            if (params.isNotEmpty()) {
+                put("query", gson.toJson(params))
+            }
         }
         return finalParams
     }
@@ -249,27 +253,16 @@ object JetpackTunnelGsonRequest {
     private fun createTunnelBody(
         method: String,
         body: Map<String, Any> = mapOf(),
-        params: Map<String, String> = mapOf(),
         path: String
     ): MutableMap<String, Any> {
         val finalBody = mutableMapOf<String, Any>()
         with(finalBody) {
-            put("path", buildRestApiPath(path, params, method))
+            put("path", "$path&_method=$method")
             put("json", "true")
             if (body.isNotEmpty()) {
                 put("body", gson.toJson(body))
             }
         }
         return finalBody
-    }
-
-    private fun buildRestApiPath(path: String, params: Map<String, String>, method: String): String {
-        var result = "$path&_method=$method"
-        if (params.isNotEmpty()) {
-            for (param in params) {
-                result += "&" + URLEncoder.encode(param.key, "UTF-8") + "=" + URLEncoder.encode(param.value, "UTF-8")
-            }
-        }
-        return result
     }
 }
