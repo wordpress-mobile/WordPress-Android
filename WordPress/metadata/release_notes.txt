@@ -1,1 +1,9 @@
-This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.
+* [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
+* [***]  Block Editor: New Block: Search Block [#https://github.com/wordpress-mobile/gutenberg-mobile/pull/3210]
+* [**]  Block Editor: The media upload options of the Image, Video and Gallery block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2700]
+* [*] Block Editor: Image block: Add a "featured" banner [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3371]
+* [**]  Block Editor: The media upload options of the File and Audio block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3399]
+* [*]  Block Editor: Remove visual feedback from non-interactive bottom-sheet cell sections [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3404]
+* [**] Likes Enhancements: the full list of people who liked a post or comment is now shown in notifications and reader post detail. A user profile bottom sheet shows info about a liker. [https://github.com/wordpress-mobile/WordPress-Android/pull/14563]
+
+
