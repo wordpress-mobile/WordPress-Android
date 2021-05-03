@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -62,6 +63,8 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val vmKey = requireArguments().getString(USER_PROFILE_VIEW_MODEL_KEY)!!
+
+        ViewCompat.setAccessibilityPaneTitle(view, getString(R.string.user_profile_bottom_sheet_description))
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(vmKey, UserProfileViewModel::class.java)
@@ -128,7 +131,11 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                         siteTitle.text = state.siteTitle
                         siteUrl.text = UrlUtils.getHost(state.siteUrl)
                         siteData.setOnClickListener {
-                            state.onSiteClickListener?.invoke(state.siteId, state.siteUrl)
+                            state.onSiteClickListener?.invoke(
+                                    state.siteId,
+                                    state.siteUrl,
+                                    state.blogPreviewSource
+                            )
                         }
                         siteSectionHeader.visibility = View.VISIBLE
                         blavatar.visibility = View.VISIBLE

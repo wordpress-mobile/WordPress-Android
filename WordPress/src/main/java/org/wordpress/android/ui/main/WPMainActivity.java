@@ -1242,14 +1242,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int verticalOffset;
             switch (activeTask) {
                 case FOLLOW_SITE:
-                    horizontalOffset = targetView.getWidth() / 2 - size + getResources()
-                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                    horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                     verticalOffset = 0;
                     break;
                 case PUBLISH_POST:
                     horizontalOffset = getResources()
                             .getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
-                    verticalOffset = (targetView.getHeight() - size) / 2;
+                    verticalOffset = targetView != null ? ((targetView.getHeight() - size) / 2) : 0;
                     break;
                 default:
                     horizontalOffset = 0;
