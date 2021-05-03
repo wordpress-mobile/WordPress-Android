@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
