@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+    android:layout_marginBottom="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_medium_large"
     tools:ignore="RtlSymmetry">
 
@@ -15,6 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/content_margin_site_row_start"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
+        android:layout_marginBottom="@dimen/margin_extra_medium_large"
         app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +73,6 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/my_site_blavatar_sz"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/switch_site"
         app:layout_constraintStart_toEndOf="@id/blavatar_container"
