@@ -207,7 +207,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
@@ -259,6 +259,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
+        mAppConfig.init();
 
         // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
         mCrashLogging.start(getContext());

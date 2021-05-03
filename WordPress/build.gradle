@@ -59,9 +59,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-289"
+            versionName "alpha-292"
         }
-        versionCode 1031
+        versionCode 1038
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -73,15 +73,14 @@ android {
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
-        buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
-        buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
-        buildConfigField "boolean", "SCAN_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
-        buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
-        buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
+        buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
         buildConfigField "boolean", "LIKES_ENHANCEMENTS", "false"
+        buildConfigField "boolean", "IS_JETPACK_APP", "false"
+        buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
+        buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -91,36 +90,51 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "buildType"
+    flavorDimensions "app", "buildType"
 
     productFlavors {
+        wordpress {
+            dimension "app"
+            applicationId "org.wordpress.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "false"
+            buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+        }
+
+        jetpack {
+            dimension "app"
+            applicationId "com.jetpack.android"
+            buildConfigField "boolean", "IS_JETPACK_APP", "true"
+            buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
+            buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+        }
+
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.1"
+                versionName "17.2"
             }
-            versionCode 1032
+            versionCode 1041
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
+            buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
         }
 
         zalpha { // alpha version - enable experimental features
-            applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            applicationId "org.wordpress.android.beta"
+            applicationIdSuffix ".beta"
             dimension "buildType"
-            buildConfigField "boolean", "LIKES_ENHANCEMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
-            applicationId "org.wordpress.android.prealpha"
+            applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
     }
@@ -196,6 +210,9 @@ dependencies {
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
     implementation "androidx.core:core:$coreVersion"
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 
@@ -231,7 +248,7 @@ dependencies {
     })
 
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.firebase:firebase-messaging:20.1.5'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -355,10 +372,6 @@ dependencies {
 
     compileOnly project(path:':libs:WordPressAnnotations')
     kapt project(':libs:WordPressProcessors')
-
-    // Encrypted Logging
-    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
-    implementation "net.java.dev.jna:jna:4.5.1@aar"
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'

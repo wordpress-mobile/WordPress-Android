@@ -31,31 +31,31 @@ class ThreatItemBuilder @Inject constructor(
         onThreatItemClicked: ((threatId: Long) -> Unit)? = null,
         isFixing: Boolean = false
     ) = ThreatItemState(
-        threatId = threatModel.baseThreatModel.id,
-        isFixing = isFixing,
-        firstDetectedDate = getDateString(threatModel.baseThreatModel.firstDetected),
-        header = buildThreatItemHeader(threatModel),
-        subHeader = buildThreatItemSubHeader(threatModel),
-        subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
-        icon = buildThreatItemIcon(threatModel),
-        iconBackground = buildThreatItemIconBackground(threatModel),
-        onClick = { onThreatItemClicked?.let { onThreatItemClicked(threatModel.baseThreatModel.id) } }
+            threatId = threatModel.baseThreatModel.id,
+            isFixing = isFixing,
+            firstDetectedDate = getDateString(threatModel.baseThreatModel.firstDetected),
+            header = buildThreatItemHeader(threatModel),
+            subHeader = buildThreatItemSubHeader(threatModel),
+            subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
+            icon = buildThreatItemIcon(threatModel),
+            iconBackground = buildThreatItemIconBackground(threatModel),
+            onClick = { onThreatItemClicked?.let { onThreatItemClicked(threatModel.baseThreatModel.id) } }
     )
 
     fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringResWithParams(
-            R.string.threat_item_header_infected_core_file,
-            listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
+                R.string.threat_item_header_infected_core_file,
+                listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
         )
 
         is DatabaseThreatModel -> UiStringResWithParams(
-            R.string.threat_item_header_database_threat,
-            listOf(UiStringText("${threatModel.rows?.size ?: 0}"))
+                R.string.threat_item_header_database_threat,
+                listOf(UiStringText("${threatModel.rows?.size ?: 0}"))
         )
 
         is FileThreatModel -> UiStringResWithParams(
-            R.string.threat_item_header_file_malicious_code_pattern,
-            listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
+                R.string.threat_item_header_file_malicious_code_pattern,
+                listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
         )
 
         is VulnerableExtensionThreatModel -> {
@@ -63,15 +63,15 @@ class ThreatItemBuilder @Inject constructor(
             val version = threatModel.extension.version ?: ""
             when (threatModel.extension.type) {
                 ExtensionType.PLUGIN -> UiStringResWithParams(
-                    R.string.threat_item_header_vulnerable_plugin,
-                    listOf(UiStringText(slug), UiStringText(version))
+                        R.string.threat_item_header_vulnerable_plugin,
+                        listOf(UiStringText(slug), UiStringText(version))
                 )
                 ExtensionType.THEME -> UiStringResWithParams(
-                    R.string.threat_item_header_vulnerable_theme,
-                    listOf(UiStringText(slug), UiStringText(version))
+                        R.string.threat_item_header_vulnerable_theme,
+                        listOf(UiStringText(slug), UiStringText(version))
                 )
                 ExtensionType.UNKNOWN -> throw IllegalArgumentException(
-                    "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
+                        "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
                 )
             }
         }
@@ -83,8 +83,8 @@ class ThreatItemBuilder @Inject constructor(
         return when (threatModel.baseThreatModel.status) {
             FIXED -> {
                 UiStringResWithParams(
-                    R.string.threat_item_sub_header_status_fixed_on,
-                    listOf(getDateString(threatModel.baseThreatModel.fixedOn))
+                        R.string.threat_item_sub_header_status_fixed_on,
+                        listOf(getDateString(threatModel.baseThreatModel.fixedOn))
                 )
             }
             IGNORED -> {
@@ -97,11 +97,11 @@ class ThreatItemBuilder @Inject constructor(
     }
 
     private fun buildThreatItemSubHeaderColor(threatModel: ThreatModel) =
-        if (threatModel.baseThreatModel.status == FIXED) {
-            R.attr.wpColorSuccess
-        } else {
-            R.attr.colorOnSurface
-        }
+            if (threatModel.baseThreatModel.status == FIXED) {
+                R.attr.wpColorSuccess
+            } else {
+                R.attr.colorOnSurface
+            }
 
     fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {
         return when (threatModel) {

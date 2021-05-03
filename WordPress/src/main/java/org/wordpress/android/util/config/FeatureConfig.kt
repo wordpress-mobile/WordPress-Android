@@ -18,4 +18,6 @@ open class FeatureConfig(
         return appConfig.isEnabled(this)
     }
     open fun name() = remoteField ?: this.javaClass.name
+
+    fun featureState() = appConfig.featureState(this)
 }

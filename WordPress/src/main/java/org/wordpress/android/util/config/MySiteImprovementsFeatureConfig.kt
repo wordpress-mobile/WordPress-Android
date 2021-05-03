@@ -1,7 +1,7 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_SET
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_FLAG_VALUE
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.util.UriWrapper
@@ -50,7 +50,7 @@ class MySiteImprovementsFeatureConfig
         }
         if (cachedEnabledValue != isEnabled || cachedSource != source) {
             analyticsTracker.track(
-                    FEATURE_FLAG_SET,
+                    FEATURE_FLAG_VALUE,
                     mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to isEnabled, "source" to source.name)
             )
             cachedEnabledValue = isEnabled

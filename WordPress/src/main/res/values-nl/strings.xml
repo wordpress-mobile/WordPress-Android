@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-07 19:35:41+0000
+Translation-Revision-Date: 2021-04-20 13:30:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Gebruik pictogram knop</string>
-    <string name="gutenberg_native_search_input_field">Zoeken invoerveld.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Zoekknop. Huidige knoptekst is.</string>
+    <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
+    <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
+    <string name="gutenberg_native_transform_block">Transformeer blok…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Media invoegen is mislukt.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Audiobestand invoegen is mislukt.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
+    <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
+    <string name="like_faces_plural_text">%d bloggers vinden dit leuk.</string>
+    <string name="like_faces_singular_text">1 blogger vindt dit leuk.</string>
+    <string name="like_title_plural">%d likes</string>
+    <string name="like_title_singular">1 Like</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Voer je server referenties in om bedreigingen op te lossen.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Voer je server referenties in om de dreiging op te lossen.</string>
+    <string name="suggestion">Suggestie:</string>
     <string name="gutenberg_native_search_blocks">Blokken zoeken</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Zoekblok label. Huidige tekst is</string>
     <string name="gutenberg_native_search_block">Zoekblok</string>
-    <string name="gutenberg_native_outside">Buiten</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Geen aangepaste plaatshouder set</string>
-    <string name="gutenberg_native_no_button">Geen knop</string>
-    <string name="gutenberg_native_inside">Binnen</string>
-    <string name="gutenberg_native_hide_search_heading">Verberg zoek heading</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbel tikken om de plaatshouder tekst te bewerken</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dubbel tikken om de labeltekst te bewerken</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dubbel tikken om de knoptekst te bewerken</string>
     <string name="gutenberg_native_double_tap_to_change_unit">dubbel tikken om de eenheid te wijzigen</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Huidige plaatshouder tekst is</string>
     <string name="gutenberg_native_clear_search">Zoekopdracht wissen</string>
     <string name="gutenberg_native_cancel_search">Zoekopdracht annuleren</string>
-    <string name="gutenberg_native_button_position">Knop positie</string>
-    <string name="gutenberg_native_button_outside">Knop buiten</string>
-    <string name="gutenberg_native_button_inside">Knop binnen</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Er is een fout opgetreden tijdens het ophalen van likes gegevens</string>
     <string name="get_likes_unknown_error">Een onbekende fout vond plaats tijdens het ophalen van likes.</string>
@@ -36,12 +35,10 @@ Language: nl
     <string name="gutenberg_native_table_of_contents">Inhoudsopgave</string>
     <string name="gutenberg_native_summary">samenvatting</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Vat je bericht samen met een lijst met koppen. Voeg HTML-ankers toe aan heading blokken om ze hier te linken.</string>
-    <string name="gutenberg_native_search_settings">Instellingen voor zoeken</string>
     <string name="gutenberg_native_document_outline">documentoverzicht</string>
     <string name="gutenberg_native_buttongroup">Knoppen groep</string>
     <string name="jetpack_brute_force_allowlist_title">Altijd toegestane IP-adressen</string>
     <string name="site_settings_denylist_title">Niet toegelaten reacties</string>
-    <string name="gutenberg_native_add_button_text">Voeg knoptekst toe</string>
     <string name="reader_title_interests">Volg onderwerpen</string>
     <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
@@ -901,6 +898,7 @@ Language: nl
     <string name="gutenberg_native_alt_text">Alt. tekst</string>
     <string name="gutenberg_native_add_video">VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_url">URL toevoegen</string>
+    <string name="gutenberg_native_add_alt_text">Alt tekst toevoegen</string>
     <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>
@@ -1454,8 +1452,6 @@ Language: nl
     <string name="support_contact_email">E-mail voor contact</string>
     <string name="application_log_button">Toepassingslog</string>
     <string name="my_tickets">Mijn tickets</string>
-    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugzetten naar %1$s op %2$s? Hierdoor wordt alle inhoud opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
-    <string name="activity_log_rewind_site">Site terugzetten</string>
     <string name="activity_log_currently_restoring_message_no_dates">Terugzetten in bewerking</string>
     <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>

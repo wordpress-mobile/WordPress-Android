@@ -209,6 +209,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -399,6 +400,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
+    @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2253,6 +2255,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
         String postType = mIsPage ? "page" : "post";
+        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
@@ -2270,6 +2273,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
         return new GutenbergPropsBuilder(
+                mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
@@ -2278,6 +2282,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 wpcomLocaleSlug,
                 postType,
+                featuredImageId,
                 themeBundle
         );
     }
@@ -2455,6 +2460,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
+            }
         }
     }
 
@@ -2852,6 +2860,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     /**
      * EditorFragmentListener methods
      */
+
+    @Override public void clearFeaturedImage() {
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId(0);
+        }
+    }
 
     @Override
     public void onAddMediaClicked() {

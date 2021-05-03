@@ -68,21 +68,18 @@ class SiteStoriesHandler
                     Event(
                             SnackbarMessageHolder(
                                     UiStringText(snackbarMessage),
-                                    UiStringRes(R.string.story_saving_failed_quick_action_manage)
-                            ) {
-                                val selectedSite = selectedSiteRepository.getSelectedSite()
-                                        ?: return@SnackbarMessageHolder
-                                _onNavigation.postValue(Event(OpenStories(selectedSite, event)))
-                                // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
-                                // is meant to be used for tracking purposes. Use it!
-                                // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-                                //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-                                //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
-                                storiesTrackerHelper.trackStorySaveResultEvent(
-                                        event,
-                                        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
-                                )
-                            }
+                                    UiStringRes(R.string.story_saving_failed_quick_action_manage),
+                                    buttonAction = {
+                                        val selectedSite = selectedSiteRepository.getSelectedSite()
+                                                ?: return@SnackbarMessageHolder
+                                        _onNavigation.postValue(Event(OpenStories(selectedSite, event)))
+                                        storiesTrackerHelper.trackStorySaveResultEvent(
+                                                event,
+                                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+                                        )
+                                    },
+                                    onDismissAction = { }
+                            )
                     )
             )
         }

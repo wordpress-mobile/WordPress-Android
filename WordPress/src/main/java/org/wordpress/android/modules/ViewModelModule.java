@@ -3,10 +3,14 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.accounts.LoginViewModel;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
+import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -31,6 +35,7 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
@@ -487,5 +492,30 @@ abstract class ViewModelModule {
     abstract ViewModel engagedPeopleListViewModel(EngagedPeopleListViewModel viewModel);
 
     @Binds
+    @IntoMap
+    @ViewModelKey(UserProfileViewModel.class)
+    abstract ViewModel userProfileViewModel(UserProfileViewModel viewModel);
+
+    @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteSettingsTimezoneViewModel.class)
+    abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginNoSitesErrorViewModel.class)
+    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel.class)
+    abstract ViewModel loginViewModel(LoginViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
+    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
 }

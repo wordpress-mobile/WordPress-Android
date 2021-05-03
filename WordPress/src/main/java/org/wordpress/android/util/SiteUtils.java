@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -15,6 +16,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -33,6 +36,7 @@ public class SiteUtils {
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
+    public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
@@ -345,6 +349,10 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION));
     }
 
+    public static boolean supportsContactInfoFeature(SiteModel site) {
+        return site != null & (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
+    }
+
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
         return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
@@ -370,13 +378,15 @@ public class SiteUtils {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
     }
 
-    // TODO: Inline this method when legacy MySiteFragment is removed
-    public static boolean isScanEnabled(boolean scanFeatureFlagEnabled, boolean scanPurchased, SiteModel site) {
-        return scanFeatureFlagEnabled && scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
+    // TODO: Inline this method when the legacy 'MySiteFragment' class is removed.
+    public static boolean isScanEnabled(boolean scanPurchased, SiteModel site) {
+        return scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
     }
 
-    // TODO: Inline this method when legacy MySiteFragment is removed
-    public static boolean isBackupEnabled(boolean backupFeatureFlagEnabled, boolean backupPurchased) {
-        return backupFeatureFlagEnabled && backupPurchased;
+    @NonNull
+    public static FetchSitesPayload getFetchSitesPayload() {
+        ArrayList<SiteFilter> siteFilters = new ArrayList<>();
+        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
+        return new FetchSitesPayload(siteFilters);
     }
 }

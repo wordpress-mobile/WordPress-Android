@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-16 11:54:09+0000
+Translation-Revision-Date: 2021-04-23 23:25:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
-    <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
+    <string name="gutenberg_native_transform_block">Omvandla block …</string>
+    <string name="gutenberg_native_transform_s_to">Omvandla %s till</string>
+    <string name="gutenberg_native_what_is_alt_text">Vad är alternativ text?</string>
+    <string name="gutenberg_native_failed_to_insert_media">Misslyckades att infoga media.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Misslyckades att infoga ljudfil.</string>
+    <string name="like_title_plural">%d gillamarkeringar</string>
+    <string name="like_faces_singular_text">En bloggare gillar detta.</string>
+    <string name="like_faces_plural_text">%d bloggare gillar detta.</string>
+    <string name="like_faces_error_loading_message">Fel vid hämtning av info om gillamarkeringar. %s.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s har omvandats till %2$s</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beskriv bildens syfte. Lämna tomt om bilden endast har dekorativ funktion.</string>
+    <string name="suggestion">Förslag:</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Ange inloggningsuppgifterna till din server för att avhjälpa hotet.</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Ange inloggningsuppgifterna till din server för att avhjälpa hot.</string>
+    <string name="like_title_singular">1 gillamarkering</string>
     <string name="gutenberg_native_search_blocks">Sök block</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
     <string name="gutenberg_native_search_block">Sök block</string>
-    <string name="gutenberg_native_outside">Utanför</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Ingen anpassad platshållare angiven</string>
-    <string name="gutenberg_native_no_button">Ingen knapp</string>
-    <string name="gutenberg_native_inside">Inuti</string>
-    <string name="gutenberg_native_hide_search_heading">Dölj sökrubrik</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbelklicka för att redigera platshållartexten</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dubbelklicka för att redigera etikettexten</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dubbelklicka för att redigera knapptexten</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Dubbelklicka för att ändra enhet</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Den nuvarande platshållartexten är</string>
     <string name="gutenberg_native_clear_search">Rensa sökning</string>
     <string name="gutenberg_native_cancel_search">Avbryt sök</string>
-    <string name="gutenberg_native_button_position">Knapposition</string>
-    <string name="gutenberg_native_button_outside">Knapp utanför</string>
-    <string name="gutenberg_native_button_inside">Knapp inuti</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s är %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ett fel uppstod vid hämtningen av data för gilla-markeringar</string>
     <string name="get_likes_unknown_error">Ett okänt fel uppstod vid hämtningen av gilla-markeringar</string>
     <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
     <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
     <string name="comment_status_unreplied">Obesvarat</string>
-    <string name="gutenberg_native_search_settings">Sökinställningar</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Sammanfatta ditt inlägg med en rubriklista. Lägg in HTML-länkmål till rubrikblock för att länka till dem härifrån.</string>
     <string name="gutenberg_native_summary">sammanfattning</string>
     <string name="gutenberg_native_table_of_contents">Innehållsförteckning</string>
@@ -41,7 +39,6 @@ Language: sv_SE
     <string name="gutenberg_native_document_outline">dokumentöversikt</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
-    <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
     <string name="reader_title_interests">Följ ämnen</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
@@ -904,6 +901,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_video">LÄGG TILL VIDEO</string>
     <string name="gutenberg_native_alt_text">Alt-text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ett okänt fel har inträffatt. Försök igen.</string>
+    <string name="gutenberg_native_add_alt_text">Lägg till alt-text</string>
     <string name="reader_acessibility_list_loaded">”Listan har lästs in med %1$d objekt.”</string>
     <string name="reader_empty_saved_posts_content_description">Tryck på knappen ”Lägg till i sparade inlägg” för att lägga till inlägget i din lista.</string>
     <string name="notifications_tab_dialog_switch_desc">Aviseringar</string>
@@ -1445,7 +1443,6 @@ Language: sv_SE
     <string name="button_discard">Kasta</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="activity_log_currently_restoring_message_no_dates">Återställning pågår</string>
-    <string name="activity_log_rewind_site">Återställ webbplats</string>
     <string name="my_tickets">Mina ärenden</string>
     <string name="application_log_button">Logg för applikationen</string>
     <string name="support_contact_email">E-postadress för kontakt</string>
@@ -1457,7 +1454,6 @@ Language: sv_SE
     <string name="support_identity_input_dialog_email_label">E-post</string>
     <string name="notification_channel_transient_title">Tillfälligt</string>
     <string name="activity_log_currently_restoring_message">Återställer till %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">Är du säker på att du vill återställa din webbplats till %1$s kl. %2$s? Detta kommer att ta bort allt innehåll och alla alternativ som skapats eller ändrats sedan dess.</string>
     <string name="activity_log_button">Åtgärdsknapp för akitivitetslogg</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Din webbplats har återställts</string>
     <string name="activity_log_currently_restoring_title">Din webbplats återställs just nu</string>

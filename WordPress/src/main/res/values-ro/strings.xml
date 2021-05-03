@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-08 15:17:06+0000
+Translation-Revision-Date: 2021-04-20 06:40:19+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Folosește butonul icon</string>
-    <string name="gutenberg_native_search_input_field">Câmp de intrare pentru căutare.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Butonul Căutare. Textul actual al butonului este</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Etichetă buton Căutare. Textul actual este</string>
+    <string name="gutenberg_native_what_is_alt_text">Ce este textul alternativ?</string>
+    <string name="gutenberg_native_transform_s_to">Transformă %s în</string>
+    <string name="gutenberg_native_transform_block">Transformă blocul…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Inserarea elementului media a eșuat.</string>
+    <string name="like_faces_plural_text">%d blogeri apreciază asta.</string>
+    <string name="like_faces_singular_text">Un bloger apreciază asta.</string>
+    <string name="like_title_plural">%d aprecieri</string>
+    <string name="like_faces_error_loading_message">Eroare la încărcarea datele despre aprecieri. %s.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrie scopul imaginii. Lasă gol dacă imaginea este doar decorativă.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Inserarea fișierului audio a eșuat.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a fost transformat în %2$s</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Pentru a înlătura amenințările, introdu datele de conectare la server.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Pentru a înlătura amenințarea, introdu datele de conectare la server.</string>
+    <string name="suggestion">Sugestie:</string>
+    <string name="like_title_singular">O apreciere</string>
     <string name="gutenberg_native_search_blocks">Caută blocuri</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Atinge de două ori pentru a edita textul butonului</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Atinge de două ori pentru a edita textul etichetei</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Atinge de două ori pentru a edita textul substituentului</string>
-    <string name="gutenberg_native_no_button">Niciun buton</string>
-    <string name="gutenberg_native_inside">În interior</string>
-    <string name="gutenberg_native_hide_search_heading">Ascunde subtitlul de căutare</string>
     <string name="gutenberg_native_double_tap_to_change_unit">atinge de două ori pentru a schimba unitatea</string>
-    <string name="gutenberg_native_outside">În exterior</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Nu este setat niciun substituent personalizat</string>
     <string name="gutenberg_native_search_block">Bloc Căutare</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Textul actual pentru substituent este</string>
     <string name="gutenberg_native_clear_search">Șterge căutarea</string>
     <string name="gutenberg_native_cancel_search">Anulează căutarea</string>
-    <string name="gutenberg_native_button_position">Poziție buton</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s este %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">A apărut o eroare în timpul primirii datelor pentru aprecieri</string>
     <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri</string>
     <string name="get_likes_no_network_error">Nu este disponibilă nicio rețea.</string>
     <string name="comments_empty_list_filtered_unreplied">Niciun comentariu fără răspuns</string>
     <string name="comment_status_unreplied">Fără răspuns</string>
-    <string name="gutenberg_native_button_outside">Buton în exterior</string>
-    <string name="gutenberg_native_button_inside">Buton în interior</string>
     <string name="gutenberg_native_table_of_contents">Cuprins</string>
     <string name="gutenberg_native_summary">rezumat</string>
-    <string name="gutenberg_native_search_settings">Setări căutare</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Face un rezumat al articolului folosind o listă de subtitluri. Adaugă ancore HTML la blocurile Subtitlu pentru a le lega aici.</string>
     <string name="gutenberg_native_document_outline">schiță document</string>
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
-    <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
     <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
     <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
@@ -904,6 +901,7 @@ Language: ro
     <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
+    <string name="gutenberg_native_add_alt_text">Adaugă text alternativ</string>
     <string name="reader_acessibility_list_loaded">„Lista a fost încărcată și are %1$d elemente.”</string>
     <string name="reader_empty_saved_posts_content_description">Pentru a salva un articol în listă atinge butonul Adaugă în articole salvate.</string>
     <string name="notifications_tab_dialog_switch_desc">Notificări</string>
@@ -1454,10 +1452,8 @@ Language: ro
     <string name="support_push_notification_message">Mesaj nou de la „Ajutor și suport”</string>
     <string name="application_log_button">Jurnal aplicații</string>
     <string name="my_tickets">Tichetele mele</string>
-    <string name="activity_log_rewind_site">Restaurează situl</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restaurare în curs de desfășurare</string>
     <string name="activity_log_currently_restoring_message">Restaurez la %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">Sigur vrei să-ți restaurezi situl înapoi la %1$s pe %2$s? Această restaurare va înlătura tot conținutul și opțiunile create sau modificate de atunci.</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Situl tău a fost restaurat cu succes</string>
     <string name="activity_log_currently_restoring_title">Acum îți restaurăm situl</string>
     <string name="activity_log_button">Buton acțiune jurnal de activități</string>

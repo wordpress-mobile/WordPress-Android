@@ -1,7 +1,1 @@
-What’s new?
-
-We improved accessibility in the block editor for those who use a TalkBack screen reader.
-
-To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.
-
-You may have noticed the new color palette! We also updated your app icon to match.
+This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.

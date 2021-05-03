@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -111,6 +112,19 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
         viewModel.start(site)
         Assertions.assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_story_fab_tooltip)
+    }
+
+    @Test
+    fun `bottom sheet actions are sorted in the correct order`() {
+        viewModel.start(site)
+
+        val expectedOrder = listOf(
+                NO_ACTION,
+                CREATE_NEW_STORY,
+                CREATE_NEW_POST
+        )
+
+        Assertions.assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
     private fun getCreateAction(actionType: ActionType) =

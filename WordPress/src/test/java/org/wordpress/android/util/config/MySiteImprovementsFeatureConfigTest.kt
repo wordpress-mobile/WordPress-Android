@@ -50,7 +50,7 @@ class MySiteImprovementsFeatureConfigTest {
 
         assertThat(enabled).isTrue()
         verify(analyticsTracker).track(
-                Stat.FEATURE_FLAG_SET,
+                Stat.FEATURE_FLAG_VALUE,
                 mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to true, "source" to "TOKEN")
         )
     }
@@ -64,7 +64,7 @@ class MySiteImprovementsFeatureConfigTest {
 
         assertThat(enabled).isFalse()
         verify(analyticsTracker).track(
-                Stat.FEATURE_FLAG_SET,
+                Stat.FEATURE_FLAG_VALUE,
                 mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to false, "source" to "TOKEN")
         )
     }
@@ -77,7 +77,7 @@ class MySiteImprovementsFeatureConfigTest {
 
         assertThat(enabled).isTrue()
         verify(analyticsTracker).track(
-                Stat.FEATURE_FLAG_SET,
+                Stat.FEATURE_FLAG_VALUE,
                 mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to true, "source" to "DEFAULT")
         )
     }
@@ -117,7 +117,7 @@ class MySiteImprovementsFeatureConfigTest {
         whenever(uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER)).thenReturn(evenToken)
         mySiteImprovementsFeatureConfig.initFromUri(uri)
         verify(analyticsTracker).track(
-                Stat.FEATURE_FLAG_SET,
+                Stat.FEATURE_FLAG_VALUE,
                 mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to true, "source" to "TOKEN")
         )
 
@@ -133,7 +133,7 @@ class MySiteImprovementsFeatureConfigTest {
         whenever(uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER)).thenReturn(oddToken)
         mySiteImprovementsFeatureConfig.initFromUri(uri)
         verify(analyticsTracker).track(
-                Stat.FEATURE_FLAG_SET,
+                Stat.FEATURE_FLAG_VALUE,
                 mapOf(MY_SITE_IMPROVEMENTS_REMOTE_FIELD to false, "source" to "TOKEN")
         )
 

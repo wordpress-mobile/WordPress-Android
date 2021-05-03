@@ -6,16 +6,23 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ListScenario(
     val type: ListScenarioType,
+    val source: EngagementNavigationSource,
     val siteId: Long,
     val postOrCommentId: Long,
     val commentPostId: Long = 0,
     val commentSiteUrl: String,
-    val headerData: HeaderData?
+    val headerData: HeaderData
 ) : Parcelable
 
-enum class ListScenarioType {
-    LOAD_POST_LIKES,
-    LOAD_COMMENT_LIKES
+enum class ListScenarioType(val typeDescription: String) {
+    LOAD_POST_LIKES("post"),
+    LOAD_COMMENT_LIKES("comment");
+
+    companion object {
+        fun getSourceDescription(type: ListScenarioType?): String {
+            return type?.typeDescription ?: "unknown"
+        }
+    }
 }
 
 @Parcelize
@@ -25,7 +32,8 @@ data class HeaderData constructor(
     val authorAvatarUrl: String,
     val authorUserId: Long,
     val authorPreferredSiteId: Long,
-    val authorPreferredSiteUrl: String
+    val authorPreferredSiteUrl: String,
+    val numLikes: Int = 0
 ) : Parcelable
 
 sealed class AuthorName : Parcelable {
