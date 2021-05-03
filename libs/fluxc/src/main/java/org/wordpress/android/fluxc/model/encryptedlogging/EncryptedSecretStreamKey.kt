@@ -1,8 +1,8 @@
 package org.wordpress.android.fluxc.model.encryptedlogging
 
-import com.goterl.lazycode.lazysodium.interfaces.Box
-import com.goterl.lazycode.lazysodium.interfaces.SecretStream
-import com.goterl.lazycode.lazysodium.utils.KeyPair
+import com.goterl.lazysodium.interfaces.Box
+import com.goterl.lazysodium.interfaces.SecretStream
+import com.goterl.lazysodium.utils.KeyPair
 
 /**
  * A class representing an Encrypted Secret Stream Key.
