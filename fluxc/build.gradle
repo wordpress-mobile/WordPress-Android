@@ -104,8 +104,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
 
     // Encrypted Logging
-    api "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
-    api "net.java.dev.jna:jna:4.5.1@aar"
+    api "com.goterl:lazysodium-android:5.0.2@aar"
+    api "net.java.dev.jna:jna:5.5.0@aar"
 }
 
 version = android.defaultConfig.versionName
