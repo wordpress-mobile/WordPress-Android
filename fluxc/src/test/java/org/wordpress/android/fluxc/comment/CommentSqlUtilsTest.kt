@@ -14,10 +14,13 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.ALL
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
+import org.wordpress.android.fluxc.model.LikeModel
+import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import java.util.ArrayList
+import java.util.Date
 
 @RunWith(RobolectricTestRunner::class)
 class CommentSqlUtilsTest {
@@ -29,7 +32,13 @@ class CommentSqlUtilsTest {
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
-        val config: WellSqlConfig = SingleStoreWellSqlConfigForTests(appContext, CommentModel::class.java)
+        val config: WellSqlConfig = SingleStoreWellSqlConfigForTests(
+                appContext,
+                listOf(
+                    CommentModel::class.java,
+                    LikeModel::class.java
+                )
+        )
         WellSql.init(config)
         config.reset()
     }
@@ -275,6 +284,92 @@ class CommentSqlUtilsTest {
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 48L }).isNull()
     }
 
+    @Test
+    fun `insertOrUpdateCommentLikes insert a new like`() {
+        val siteId = 100L
+        val commentId = 1000L
+
+        val localLike = createLike(siteId, commentId)
+
+        CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, localLike)
+
+        val commentLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
+        Assertions.assertThat(commentLikes).hasSize(1)
+        Assertions.assertThat(commentLikes[0].isEqual(localLike)).isTrue
+    }
+
+    @Test
+    fun `insertOrUpdateCommentLikes update a changed like`() {
+        val siteId = 100L
+        val commentId = 1000L
+
+        val localLike = createLike(siteId, commentId)
+        val localLikeChanged = createLike(siteId, commentId).apply {
+            likerSiteUrl = "https://likerSiteUrl.wordpress.com"
+        }
+
+        CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, localLike)
+
+        var commentLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
+        Assertions.assertThat(commentLikes).hasSize(1)
+        Assertions.assertThat(commentLikes[0].isEqual(localLike)).isTrue
+
+        CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, localLikeChanged)
+
+        commentLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
+        Assertions.assertThat(commentLikes).hasSize(1)
+        Assertions.assertThat(commentLikes[0].isEqual(localLike)).isFalse
+        Assertions.assertThat(commentLikes[0].isEqual(localLikeChanged)).isTrue
+    }
+
+    @Test
+    fun `deleteCommentLikesAndPurgeExpired deletes currently fetched data`() {
+        val siteId = 100L
+        val commentId = 1000L
+
+        val localLike = createLike(siteId, commentId)
+
+        CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, localLike)
+        var postLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
+        Assertions.assertThat(postLikes).hasSize(1)
+
+        CommentSqlUtils.deleteCommentLikesAndPurgeExpired(siteId, commentId)
+        postLikes = CommentSqlUtils.getCommentLikesByCommentId(siteId, commentId)
+        Assertions.assertThat(postLikes).isEmpty()
+    }
+
+    @Test
+    fun `deleteCommentLikesAndPurgeExpired delete data older than threshold`() {
+        val siteId = 100L
+        val commentId = 1000L
+
+        val siteCommentList = listOf(
+                Triple(101L, 1000L, Date().time),
+                Triple(101L, 1001L, Date().time - LikeModel.TIMESTAMP_THRESHOLD / 2),
+                Triple(101L, 1002L, Date().time - LikeModel.TIMESTAMP_THRESHOLD * 2),
+                Triple(101L, 1003L, Date().time - LikeModel.TIMESTAMP_THRESHOLD * 2)
+        )
+
+        val expectedSizeList = listOf(1, 1, 0, 0)
+
+        val likeList = mutableListOf<LikeModel>()
+
+        for (sitePostTriple: Triple<Long, Long, Long> in siteCommentList) {
+            likeList.add(createLike(sitePostTriple.first, sitePostTriple.second, sitePostTriple.third))
+        }
+
+        for (like: LikeModel in likeList) {
+            CommentSqlUtils.insertOrUpdateCommentLikes(siteId, commentId, like)
+        }
+
+        CommentSqlUtils.deleteCommentLikesAndPurgeExpired(siteId, commentId)
+
+        siteCommentList.forEachIndexed { index, element ->
+            Assertions.assertThat(CommentSqlUtils.getCommentLikesByCommentId(element.first, element.second))
+                    .hasSize(expectedSizeList[index])
+        }
+    }
+
     private fun generateCommentModels(num: Int, status: CommentStatus, startId: Int = 1): ArrayList<CommentModel> {
         val commentModels = ArrayList<CommentModel>()
         for (i in 0 until num) {
@@ -292,5 +387,24 @@ class CommentSqlUtilsTest {
         }
         commentModels.reverse() // we usually receive comments starting from more recent
         return commentModels
+    }
+
+    private fun createLike(siteId: Long, commentId: Long, timeStamp: Long = Date().time) = LikeModel().apply {
+        type = COMMENT_LIKE.typeName
+        remoteSiteId = siteId
+        remoteItemId = commentId
+        likerId = 2000L
+        likerName = "likerName"
+        likerLogin = "likerLogin"
+        likerAvatarUrl = "likerAvatarUrl"
+        likerBio = "likerBio"
+        likerSiteId = 3000L
+        likerSiteUrl = "likerSiteUrl"
+        preferredBlogId = 4000L
+        preferredBlogName = "preferredBlogName"
+        preferredBlogUrl = "preferredBlogUrl"
+        preferredBlogBlavatarUrl = "preferredBlogBlavatarUrl"
+        dateLiked = "2020-04-04 11:22:34"
+        timestampFetched = timeStamp
     }
 }
