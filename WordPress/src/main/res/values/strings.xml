@@ -1867,7 +1867,6 @@
     <string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
-    <string name="jetpack_tagline">Site security and performance from your pocket</string>
 
     <!--
       reader strings

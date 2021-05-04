@@ -19,7 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -58,9 +57,8 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.JetpackLoginPrologueFragment;
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -228,11 +226,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            showFragment(new JetpackLoginPrologueFragment(), JetpackLoginPrologueFragment.TAG);
-        } else {
-            showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
-        }
+        showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);

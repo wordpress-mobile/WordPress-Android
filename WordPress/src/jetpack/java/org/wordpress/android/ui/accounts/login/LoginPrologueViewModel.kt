@@ -15,15 +15,15 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click.CONTINUE_WITH
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click.LOGIN_WITH_SITE_ADDRESS
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
-import org.wordpress.android.ui.accounts.login.JetpackLoginPrologueViewModel.ButtonUiState.ContinueWithWpcomButtonState
-import org.wordpress.android.ui.accounts.login.JetpackLoginPrologueViewModel.ButtonUiState.EnterYourSiteAddressButtonState
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.ButtonUiState.ContinueWithWpcomButtonState
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.ButtonUiState.EnterYourSiteAddressButtonState
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class JetpackLoginPrologueViewModel @Inject constructor(
+class LoginPrologueViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher

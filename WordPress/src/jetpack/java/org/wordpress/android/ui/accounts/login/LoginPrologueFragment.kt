@@ -14,9 +14,9 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowLoginViaSiteA
 import org.wordpress.android.util.WPActivityUtils
 import javax.inject.Inject
 
-class JetpackLoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
+class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: JetpackLoginPrologueViewModel
+    private lateinit var viewModel: LoginPrologueViewModel
     private lateinit var loginPrologueListener: LoginPrologueListener
 
     override fun onAttach(context: Context) {
@@ -39,8 +39,8 @@ class JetpackLoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_sc
     }
 
     private fun JetpackLoginPrologueScreenBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@JetpackLoginPrologueFragment, viewModelFactory).get(
-                JetpackLoginPrologueViewModel::class.java
+        viewModel = ViewModelProvider(this@LoginPrologueFragment, viewModelFactory).get(
+                LoginPrologueViewModel::class.java
         )
         initObservers()
         viewModel.start()

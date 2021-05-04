@@ -24,10 +24,9 @@ import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.login.JetpackLoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
-import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
@@ -628,8 +627,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PhotoPickerFragment object);
 
     void inject(LoginPrologueFragment object);
-
-    void inject(JetpackLoginPrologueFragment object);
 
     void inject(ReaderDiscoverLogic object);
 
