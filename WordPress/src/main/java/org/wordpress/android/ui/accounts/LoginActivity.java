@@ -51,7 +51,7 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSitesError;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
@@ -220,7 +220,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             if (loginEvent instanceof ShowSiteAddressError) {
                 showSiteAddressError((ShowSiteAddressError) loginEvent);
             } else {
-                showNoJetpackSitesError((ShowNoJetpackSitesError) loginEvent);
+                showNoJetpackSitesError();
             }
         });
     }
@@ -962,9 +962,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
     }
 
-    private void showNoJetpackSitesError(ShowNoJetpackSitesError event) {
+    private void showNoJetpackSitesError() {
         LoginNoSitesErrorFragment fragment =
-                LoginNoSitesErrorFragment.Companion.newInstance(event.getErrorMessage());
+                LoginNoSitesErrorFragment.Companion.newInstance();
         slideInFragment(fragment, false, LoginNoSitesErrorFragment.TAG);
     }
 }

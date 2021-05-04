@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.FragmentLoginNoSitesErrorBinding
+import org.wordpress.android.databinding.FragmentLoginNoSitesEmptyViewBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
@@ -21,17 +21,12 @@ import org.wordpress.android.util.image.ImageType.USER
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_error) {
+class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_empty_view) {
     companion object {
         const val TAG = "LoginNoSitesErrorFragment"
-        const val ARG_ERROR_MESSAGE = "ERROR-MESSAGE"
 
-        fun newInstance(errorMsg: String): LoginNoSitesErrorFragment {
-            val fragment = LoginNoSitesErrorFragment()
-            val args = Bundle()
-            args.putString(ARG_ERROR_MESSAGE, errorMsg)
-            fragment.arguments = args
-            return fragment
+        fun newInstance(): LoginNoSitesErrorFragment {
+            return LoginNoSitesErrorFragment()
         }
     }
 
@@ -39,23 +34,13 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null
-    private var errorMsg: String? = null
     private lateinit var viewModel: LoginNoSitesErrorViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            errorMsg = it.getString(ARG_ERROR_MESSAGE, null)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initBackPressHandler()
-        with(FragmentLoginNoSitesErrorBinding.bind(view)) {
-            initErrorMessageViews()
+        with(FragmentLoginNoSitesEmptyViewBinding.bind(view)) {
             initContentViews()
             initViewModel()
         }
@@ -65,16 +50,12 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    private fun FragmentLoginNoSitesErrorBinding.initErrorMessageViews() {
-        loginErrorMessageText.text = errorMsg
-    }
-
-    private fun FragmentLoginNoSitesErrorBinding.initContentViews() {
+    private fun FragmentLoginNoSitesEmptyViewBinding.initContentViews() {
         buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsClicked() }
         buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountClicked() }
     }
 
-    private fun FragmentLoginNoSitesErrorBinding.initViewModel() {
+    private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel() {
         viewModel = ViewModelProvider(this@LoginNoSitesErrorFragment, viewModelFactory)
                 .get(LoginNoSitesErrorViewModel::class.java)
 
@@ -83,7 +64,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         viewModel.start(requireActivity().application as WordPress)
     }
 
-    private fun FragmentLoginNoSitesErrorBinding.initObservers() {
+    private fun FragmentLoginNoSitesEmptyViewBinding.initObservers() {
         viewModel.navigationEvents.observe(viewLifecycleOwner, { events ->
             events.getContentIfNotHandled()?.let {
                 when (it) {
@@ -108,7 +89,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         })
     }
 
-    private fun FragmentLoginNoSitesErrorBinding.loadGravatar(avatarUrl: String) =
+    private fun FragmentLoginNoSitesEmptyViewBinding.loadGravatar(avatarUrl: String) =
             meGravatarLoader.load(
                     false,
                     meGravatarLoader.constructGravatarUrl(avatarUrl),
@@ -118,10 +99,10 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
                     null
             )
 
-    private fun FragmentLoginNoSitesErrorBinding.setUserName(value: String) =
+    private fun FragmentLoginNoSitesEmptyViewBinding.setUserName(value: String) =
             uiHelpers.setTextOrHide(textUsername, value)
 
-    private fun FragmentLoginNoSitesErrorBinding.setDisplayName(value: String) =
+    private fun FragmentLoginNoSitesEmptyViewBinding.setDisplayName(value: String) =
             uiHelpers.setTextOrHide(textDisplayname, value)
 
     private fun showSignInForResultJetpackOnly() {

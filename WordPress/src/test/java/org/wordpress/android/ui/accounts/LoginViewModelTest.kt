@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSitesError
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -31,7 +31,7 @@ class LoginViewModelTest : BaseUnitTest() {
 
         viewModel.onHandleNoJetpackSites()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSitesError::class.java)
+        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSites::class.java)
     }
 
     @Test
@@ -53,7 +53,7 @@ class LoginViewModelTest : BaseUnitTest() {
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onHandleNoJetpackSites()
-        val navigationEvent = navigationEvents.last() as ShowNoJetpackSitesError
+        val navigationEvent = navigationEvents.last() as ShowNoJetpackSites
 
         Assertions.assertThat(navigationEvent.errorMessage == errorMessage)
     }
