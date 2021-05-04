@@ -30,7 +30,13 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
-        initSystemBars(view)
+
+        // setting up a full screen flags for the decor view of this fragment,
+        // that will work with transparent status bar
+        WPActivityUtils.showFullScreen(view)
+
+        updateSystemBars(showDarkStatusAndNavBarInLightMode = true)
+
         with(JetpackLoginPrologueScreenBinding.bind(view)) { initViewModel() }
     }
 
@@ -89,23 +95,13 @@ class LoginPrologueFragment : Fragment(R.layout.jetpack_login_prologue_screen) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        resetSystemBars()
+        updateSystemBars(showDarkStatusAndNavBarInLightMode = false)
     }
 
-    private fun initSystemBars(view: View) {
-        // setting up a full screen flags for the decor view of this fragment,
-        // that will work with transparent status bar
-        WPActivityUtils.showFullScreen(view)
+    private fun updateSystemBars(showDarkStatusAndNavBarInLightMode: Boolean) {
         activity?.let {
-            WPActivityUtils.setLightStatusBar(it.window, false)
-            WPActivityUtils.setLightNavigationBar(it.window, false)
-        }
-    }
-
-    private fun resetSystemBars() {
-        activity?.let {
-            WPActivityUtils.setLightStatusBar(it.window, true)
-            WPActivityUtils.setLightNavigationBar(it.window, true)
+            WPActivityUtils.setLightStatusBar(it.window, !showDarkStatusAndNavBarInLightMode)
+            WPActivityUtils.setLightNavigationBar(it.window, !showDarkStatusAndNavBarInLightMode)
         }
     }
 
