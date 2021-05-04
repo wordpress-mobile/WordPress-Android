@@ -13,20 +13,20 @@ import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.NoUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.ShowUser
+import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageType.USER
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_empty_view) {
+class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_view) {
     companion object {
         const val TAG = "LoginNoSitesErrorFragment"
 
-        fun newInstance(): LoginNoSitesErrorFragment {
-            return LoginNoSitesErrorFragment()
+        fun newInstance(): LoginNoSitesFragment {
+            return LoginNoSitesFragment()
         }
     }
 
@@ -34,7 +34,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_empt
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null
-    private lateinit var viewModel: LoginNoSitesErrorViewModel
+    private lateinit var viewModel: LoginNoSitesViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +56,8 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_empt
     }
 
     private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@LoginNoSitesErrorFragment, viewModelFactory)
-                .get(LoginNoSitesErrorViewModel::class.java)
+        viewModel = ViewModelProvider(this@LoginNoSitesFragment, viewModelFactory)
+                .get(LoginNoSitesViewModel::class.java)
 
         initObservers()
 

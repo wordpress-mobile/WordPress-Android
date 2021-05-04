@@ -9,20 +9,23 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 
 @InternalCoroutinesApi
-class LoginNoSitesErrorViewModelTest : BaseUnitTest() {
+class LoginNoSitesViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var wordPress: WordPress
-    private lateinit var viewModel: LoginNoSitesErrorViewModel
+    @Mock lateinit var accountStore: AccountStore
+    private lateinit var viewModel: LoginNoSitesViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginNoSitesErrorViewModel(
+        viewModel = LoginNoSitesViewModel(
                 unifiedLoginTracker,
+                accountStore,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

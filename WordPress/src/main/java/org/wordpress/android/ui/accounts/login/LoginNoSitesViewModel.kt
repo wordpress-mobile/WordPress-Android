@@ -13,14 +13,14 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.NoUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.ShowUser
+import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class LoginNoSitesErrorViewModel @Inject constructor(
+class LoginNoSitesViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     private val accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,

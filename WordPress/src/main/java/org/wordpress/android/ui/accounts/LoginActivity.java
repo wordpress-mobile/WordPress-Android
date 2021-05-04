@@ -51,13 +51,12 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorFragment;
+import org.wordpress.android.ui.accounts.login.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginSiteCheckErrorFragment;
@@ -220,7 +219,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             if (loginEvent instanceof ShowSiteAddressError) {
                 showSiteAddressError((ShowSiteAddressError) loginEvent);
             } else {
-                showNoJetpackSitesError();
+                showNoJetpackSites();
             }
         });
     }
@@ -962,9 +961,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
     }
 
-    private void showNoJetpackSitesError() {
-        LoginNoSitesErrorFragment fragment =
-                LoginNoSitesErrorFragment.Companion.newInstance();
-        slideInFragment(fragment, false, LoginNoSitesErrorFragment.TAG);
+    private void showNoJetpackSites() {
+        LoginNoSitesFragment fragment =
+                LoginNoSitesFragment.Companion.newInstance();
+        slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }
