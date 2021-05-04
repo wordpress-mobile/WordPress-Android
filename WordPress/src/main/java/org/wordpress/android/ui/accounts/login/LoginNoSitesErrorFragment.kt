@@ -11,7 +11,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FragmentLoginNoSitesErrorBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.LoginNoSitesErrorViewModel.State.ShowUser
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageType.USER
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -30,6 +36,8 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
     }
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var uiHelpers: UiHelpers
     private var loginListener: LoginListener? = null
     private var errorMsg: String? = null
     private lateinit var viewModel: LoginNoSitesErrorViewModel
@@ -47,7 +55,8 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         initDagger()
         initBackPressHandler()
         with(FragmentLoginNoSitesErrorBinding.bind(view)) {
-            initErrorMessageView()
+            initErrorMessageViews()
+            initContentViews()
             initViewModel()
         }
     }
@@ -56,8 +65,13 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    private fun FragmentLoginNoSitesErrorBinding.initErrorMessageView() {
+    private fun FragmentLoginNoSitesErrorBinding.initErrorMessageViews() {
         loginErrorMessageText.text = errorMsg
+    }
+
+    private fun FragmentLoginNoSitesErrorBinding.initContentViews() {
+        buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsClicked() }
+        buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountClicked() }
     }
 
     private fun FragmentLoginNoSitesErrorBinding.initViewModel() {
@@ -74,15 +88,48 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
             events.getContentIfNotHandled()?.let {
                 when (it) {
                     is ShowSignInForResultJetpackOnly -> showSignInForResultJetpackOnly()
+                    is ShowInstructions -> showInstructions(it.url)
                     else -> { // no op
                     }
                 }
             }
         })
+
+        viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+            when (val state = uiModel.state) {
+                is ShowUser -> {
+                    loadGravatar(state.accountAvatarUrl)
+                    setUserName(state.userName)
+                    setDisplayName(state.displayName)
+                    loginEmptyViewUserSection.visibility = View.VISIBLE
+                }
+                is NoUser -> loginEmptyViewUserSection.visibility = View.GONE
+            }
+        })
     }
+
+    private fun FragmentLoginNoSitesErrorBinding.loadGravatar(avatarUrl: String) =
+            meGravatarLoader.load(
+                    false,
+                    meGravatarLoader.constructGravatarUrl(avatarUrl),
+                    null,
+                    imageAvatar,
+                    USER,
+                    null
+            )
+
+    private fun FragmentLoginNoSitesErrorBinding.setUserName(value: String) =
+            uiHelpers.setTextOrHide(textUsername, value)
+
+    private fun FragmentLoginNoSitesErrorBinding.setDisplayName(value: String) =
+            uiHelpers.setTextOrHide(textDisplayname, value)
 
     private fun showSignInForResultJetpackOnly() {
         ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)
+    }
+
+    private fun showInstructions(url: String) {
+        ActivityLauncher.openUrlExternal(requireContext(), url)
     }
 
     override fun onAttach(context: Context) {
