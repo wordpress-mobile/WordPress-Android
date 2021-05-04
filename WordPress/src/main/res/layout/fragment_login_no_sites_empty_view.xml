@@ -21,7 +21,8 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:constraint_referenced_ids="image_avatar,text_username, text_displayname" />
+            app:constraint_referenced_ids="image_avatar,text_username, text_displayname"
+            tools:visibility="visible"/>
 
         <ImageView
             android:id="@+id/image_avatar"
@@ -36,23 +37,23 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_username"
-            style="@style/Login.EmptyView.TextView.Body1"
+            style="@style/Login.EmptyView.TextView.Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/login_empty_view_illustration"
             app:layout_constraintStart_toStartOf="@+id/text_displayname"
             app:layout_constraintTop_toBottomOf="@+id/text_displayname"
-            tools:text="\@droidtester2018" />
+            tools:text="\@droidtester2021" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_displayname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/Login.EmptyView.TextAppearance.Headline"
             app:layout_constraintBottom_toTopOf="@+id/text_username"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_avatar"
-            tools:text="droidtester2018" />
+            tools:text="Droid Tester"
+            style="@style/Login.EmptyView.TextView.DisplayName" />
 
         <ImageView
             android:id="@+id/login_empty_view_illustration"
