@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -18,12 +19,15 @@ import org.wordpress.android.ui.mediapicker.loader.DeviceMediaLoader.DeviceMedia
 import org.wordpress.android.ui.mediapicker.loader.DeviceMediaLoader.DeviceMediaList
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
 @InternalCoroutinesApi
 class DeviceListBuilderTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var deviceMediaLoader: DeviceMediaLoader
+    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Mock lateinit var site: SiteModel
     @Mock lateinit var uri1: UriWrapper
     @Mock lateinit var uri2: UriWrapper
     @Mock lateinit var uri3: UriWrapper
@@ -41,6 +45,7 @@ class DeviceListBuilderTest : BaseUnitTest() {
         newestItem = DeviceMediaItem(uri1, "Newest item", 10)
         middleItem = DeviceMediaItem(uri2, "Middle item", 9)
         oldestItem = DeviceMediaItem(uri3, "Oldest item", 8)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
     }
 
     @Test
@@ -106,6 +111,35 @@ class DeviceListBuilderTest : BaseUnitTest() {
             assertThat(this.hasMore).isTrue()
             assertMediaItem(newestItem, position = 0)
             assertMediaItem(middleItem, position = 1)
+        }
+    }
+
+    @Test
+    fun `media - loads first page when isMimeTypeSupportedBySitePlan is true`() = test {
+        setUp(setOf(mediaType))
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).hasSize(1)
+            assertMediaItem(newestItem)
+        }
+    }
+
+    @Test
+    fun `media - loads first page with no results when isMimeTypeSupportedBySitePlan is false`() = test {
+        setUp(setOf(mediaType))
+        setupMedia(mediaType, null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(mediaMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(false)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).isEmpty()
         }
     }
 
@@ -232,6 +266,35 @@ class DeviceListBuilderTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `document - loads first page when isMimeTypeSupportedBySitePlan is true`() = test {
+        setUp(setOf(DOCUMENT))
+        setupDocuments(null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(documentMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(true)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).hasSize(1)
+            assertDocumentItem(newestItem)
+        }
+    }
+
+    @Test
+    fun `document - loads first page with no results when isMimeTypeSupportedBySitePlan is false`() = test {
+        setUp(setOf(DOCUMENT))
+        setupDocuments(null, DeviceMediaList(listOf(newestItem)))
+        whenever(deviceMediaLoader.getMimeType(any())).thenReturn(documentMimeType)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(any(), any())).thenReturn(false)
+
+        val result = deviceListBuilder.load(forced = false, loadMore = false, filter = null)
+
+        (result as MediaLoadingResult.Success).apply {
+            assertThat(this.data).isEmpty()
+        }
+    }
+
     private fun setupMedia(type: MediaType, nextTimestamp: Long?, results: DeviceMediaList) {
         whenever(deviceMediaLoader.loadMedia(type, null, pageSize, nextTimestamp)).thenReturn(
                 results
@@ -248,6 +311,8 @@ class DeviceListBuilderTest : BaseUnitTest() {
         deviceListBuilder = DeviceListBuilder(
                 localeManagerWrapper,
                 deviceMediaLoader,
+                mediaUtilsWrapper,
+                site,
                 TEST_DISPATCHER,
                 allowedTypes,
                 pageSize
