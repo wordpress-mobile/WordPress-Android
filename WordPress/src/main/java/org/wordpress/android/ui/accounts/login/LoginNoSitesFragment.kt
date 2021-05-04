@@ -42,7 +42,7 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         initBackPressHandler()
         with(FragmentLoginNoSitesEmptyViewBinding.bind(view)) {
             initContentViews()
-            initViewModel()
+            initViewModel(savedInstanceState)
         }
     }
 
@@ -55,13 +55,16 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountClicked() }
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel() {
+    private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@LoginNoSitesFragment, viewModelFactory)
                 .get(LoginNoSitesViewModel::class.java)
 
         initObservers()
 
-        viewModel.start(requireActivity().application as WordPress)
+        viewModel.start(
+                application = requireActivity().application as WordPress,
+                savedInstanceState = savedInstanceState
+        )
     }
 
     private fun FragmentLoginNoSitesEmptyViewBinding.initObservers() {
@@ -111,6 +114,11 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
 
     private fun showInstructions(url: String) {
         ActivityLauncher.openUrlExternal(requireContext(), url)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        viewModel.writeToBundle(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onAttach(context: Context) {

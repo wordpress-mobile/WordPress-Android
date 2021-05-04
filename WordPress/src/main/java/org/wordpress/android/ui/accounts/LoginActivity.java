@@ -51,6 +51,7 @@ import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
@@ -218,8 +219,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
             if (loginEvent instanceof ShowSiteAddressError) {
                 showSiteAddressError((ShowSiteAddressError) loginEvent);
-            } else {
+            } else if (loginEvent instanceof ShowNoJetpackSites) {
                 showNoJetpackSites();
+            } else {
+                // NO OP
             }
         });
     }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,8 +18,11 @@ import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUse
 import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
+
+const val KEY_STATE = "key_state"
 
 class LoginNoSitesViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
@@ -33,27 +37,37 @@ class LoginNoSitesViewModel @Inject constructor(
     val uiModel: LiveData<UiModel> = _uiModel
 
     private var isStarted = false
-    fun start(application: WordPress) {
+
+    fun start(application: WordPress, savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
 
-        init()
+        init(savedInstanceState)
 
         signOutWordPress(application)
     }
 
-    private fun init() {
-        val state =
-                accountStore.account?.let {
-                    ShowUser(
-                            it.avatarUrl.orEmpty(),
-                            it.userName,
-                            it.displayName
-                    )
-                } ?: NoUser
-
+    private fun init(savedInstanceState: Bundle?) {
+        val state = if (savedInstanceState != null) {
+            buildStateFromSavedInstanceState(savedInstanceState)
+        } else {
+            buildStateFromAccountStore()
+        }
         _uiModel.postValue(UiModel(state = state))
     }
+
+
+    private fun buildStateFromSavedInstanceState(savedInstanceState: Bundle) =
+            savedInstanceState.getSerializable(KEY_STATE) as State
+
+    private fun buildStateFromAccountStore() =
+            accountStore.account?.let {
+                ShowUser(
+                        it.avatarUrl.orEmpty(),
+                        it.userName,
+                        it.displayName
+                )
+            } ?: NoUser
 
     private fun signOutWordPress(application: WordPress) {
         launch {
@@ -80,11 +94,15 @@ class LoginNoSitesViewModel @Inject constructor(
         _navigationEvents.postValue(Event(ShowSignInForResultJetpackOnly))
     }
 
+    fun writeToBundle(outState: Bundle) {
+        requireNotNull(outState.putSerializable(KEY_STATE, uiModel.value?.state))
+    }
+
     data class UiModel(
         val state: State
     )
 
-    sealed class State {
+    sealed class State : Serializable {
         object NoUser : State()
         data class ShowUser(
             val accountAvatarUrl: String,
