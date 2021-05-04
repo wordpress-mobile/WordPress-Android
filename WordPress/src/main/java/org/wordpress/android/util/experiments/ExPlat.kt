@@ -1,5 +1,6 @@
 package org.wordpress.android.util.experiments
 
+import dagger.Lazy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
@@ -21,20 +22,14 @@ import javax.inject.Singleton
 @Singleton
 class ExPlat
 @Inject constructor(
+    private val experiments: Lazy<Set<Experiment>>,
     private val experimentStore: ExperimentStore,
     private val appLog: AppLogWrapper,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
     private val platform = Platform.WORDPRESS_ANDROID
     private val activeVariations = mutableMapOf<String, Variation>()
-
-    private var experimentNames = emptyList<String>()
-
-    fun start(experiments: Set<Experiment>) {
-        experimentNames = experiments.map { it.name }
-        appLog.d(T.API, "ExPlat: starting with $experimentNames")
-        forceRefresh()
-    }
+    private val experimentNames by lazy { experiments.get().map { it.name } }
 
     fun refreshIfNeeded() {
         refresh(refreshStrategy = IF_STALE)

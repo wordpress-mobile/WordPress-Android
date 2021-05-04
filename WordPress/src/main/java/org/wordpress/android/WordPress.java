@@ -185,7 +185,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
     @Inject ExPlat mExPlat;
-    @Inject Set<Experiment> mExperiments;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -369,7 +368,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
 
-        mExPlat.start(mExperiments);
+        mExPlat.forceRefresh();
     }
 
     protected void initWorkManager() {
