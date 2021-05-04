@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
-  "branch": "trunk",
-  "pinned_hash": "6af74d8dbe176d58d75509b7ed1c43f844e93ce3",
+  "branch": "update-wpandroid-release-signing-file-locations",
+  "pinned_hash": "7c6db77d2264241762e08ec78b30162f94b6e700",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
