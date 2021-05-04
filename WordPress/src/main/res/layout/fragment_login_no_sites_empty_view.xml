@@ -40,6 +40,7 @@
             style="@style/Login.EmptyView.TextView.Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_extra_medium_large"
             app:layout_constraintBottom_toTopOf="@+id/login_empty_view_illustration"
             app:layout_constraintStart_toStartOf="@+id/text_displayname"
             app:layout_constraintTop_toBottomOf="@+id/text_displayname"
@@ -53,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_avatar"
             tools:text="Droid Tester"
-            style="@style/Login.EmptyView.TextView.DisplayName" />
+            style="@style/Login.EmptyView.TextView.DisplayName"/>
 
         <ImageView
             android:id="@+id/login_empty_view_illustration"
