@@ -935,6 +935,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
+
+        if (mShowGutenbergEditor) {
+            AppPrefs.setHasLaunchedGutenbergEditor(true);
+        }
     }
 
     @Override
@@ -2273,7 +2277,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
         int editorOnboardingPhasePercentage = 0;
-        boolean canViewEditorOnboarding = mAccountStore.getAccount().getUserId() % 100 >= (100 - editorOnboardingPhasePercentage);
+        boolean canViewEditorOnboarding = mAccountStore.getAccount().getUserId() % 100 >=
+                                          (100 - editorOnboardingPhasePercentage) &&
+                                          !AppPrefs.hasLaunchedGutenbergEditor();
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
