@@ -60,7 +60,7 @@ class ExPlat
     internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean): Variation {
         if (!experimentNames.contains(experiment.name)) {
             val message = "ExPlat: experiment not found: \"${experiment.name}\"! " +
-                    "Make sure to include it when calling ExPlat::start."
+                    "Make sure to include it in the set provided via constructor."
             appLog.e(T.API, message)
             if (BuildConfig.DEBUG) throw IllegalArgumentException(message) else return Control
         }
