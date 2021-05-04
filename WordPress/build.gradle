@@ -82,6 +82,8 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+        // Used for development of editor onboarding, may be remove once finished
+        buildConfigField "boolean", "ENABLE_EDITOR_ONBOARDING", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -137,6 +139,8 @@ android {
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
             applicationIdSuffix ".prealpha"
             dimension "buildType"
+            // Used for development of editor onboarding, may be remove once finished
+            buildConfigField "boolean", "ENABLE_EDITOR_ONBOARDING", "true"
         }
     }
 
