@@ -56,7 +56,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
 
     private fun initErrorMessageView(view: View) {
         val binding = FragmentLoginNoSitesErrorBinding.bind(view)
-        binding.loginErrorMsg.text = errorMsg
+        binding.loginErrorMessageText.text = errorMsg
     }
 
     private fun initViewModel() {

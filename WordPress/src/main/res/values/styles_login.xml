@@ -7,4 +7,19 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
     </style>
     <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme" />
+
+    <style name="Login.EmptyView.TextView.Body1" parent="android:Widget.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+    </style>
+
+    <style name="Login.EmptyView.TextAppearance.Headline" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">@dimen/login_empty_view_headline_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="lineHeight">@dimen/login_empty_view_headline_line_height</item>
+    </style>
+
+    <style name="Login.EmptyView.TextView.Subtitle1" parent="android:Widget.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:gravity">center_vertical|start</item>
+    </style>
 </resources>
