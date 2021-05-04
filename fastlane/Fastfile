@@ -312,7 +312,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "WordPress", flavor:"vanilla", buildType: "release")
 
     upload_build_to_play_store(version: version, track: "production")
 
@@ -349,7 +349,6 @@ REPOSITORY_NAME="WordPress-Android"
   # build_alpha
   # -----------------------------------------------------------------------------------
   # This lane builds the app it for internal testing and optionally uploads it
-  # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
   #
@@ -365,7 +364,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, flavor:"zalpha", buildType: "release")
+    build_bundle(version: version, app:"WordPress", flavor:"zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "alpha")
@@ -396,7 +395,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "WordPress", flavor:"vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "beta")
@@ -629,13 +628,13 @@ REPOSITORY_NAME="WordPress-Android"
     version=options[:version]
     name="wpandroid-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
-    aab_file="org.wordpress.android-#{options[:flavor]}-#{options[:buildType]}.aab"
+    aab_file="org.wordpress.android-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab"
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{options[:flavor]}Release/#{aab_file}"
+    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}Release/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -648,10 +647,10 @@ REPOSITORY_NAME="WordPress-Android"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
+      sh("./gradlew lint#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
