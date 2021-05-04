@@ -61,7 +61,7 @@
             android:contentDescription="@string/login_no_jetpack_sites"
             android:gravity="center_horizontal"
             android:padding="@dimen/margin_extra_large"
-            android:src="@drawable/img_illustration_login_empty_view"
+            android:src="@drawable/img_jetpack_empty_state"
             app:layout_constraintBottom_toTopOf="@+id/login_error_message_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
