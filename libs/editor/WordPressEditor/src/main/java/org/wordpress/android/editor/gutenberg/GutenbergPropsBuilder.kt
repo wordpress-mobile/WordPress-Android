@@ -19,7 +19,7 @@ data class GutenbergPropsBuilder(
     private val postType: String,
     private val featuredImageId: Int,
     private val editorTheme: Bundle?,
-    private val canViewEditorOnboarding: Boolean,
+    private val canViewEditorOnboarding: Boolean
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
             enableContactInfoBlock = enableContactInfoBlock,
