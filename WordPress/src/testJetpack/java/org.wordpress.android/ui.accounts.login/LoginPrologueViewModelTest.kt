@@ -12,19 +12,19 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowEmailLoginScreen
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowLoginViaSiteAddressScreen
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.accounts.login.JetpackLoginPrologueViewModel.UiState
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel.UiState
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
-class JetpackLoginPrologueViewModelTest : BaseUnitTest() {
+class LoginPrologueViewModelTest : BaseUnitTest() {
     @Mock lateinit var unifiedLoginTracker: UnifiedLoginTracker
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    private lateinit var viewModel: JetpackLoginPrologueViewModel
+    private lateinit var viewModel: LoginPrologueViewModel
 
     @Before
     fun setUp() {
-        viewModel = JetpackLoginPrologueViewModel(unifiedLoginTracker, analyticsTrackerWrapper, TEST_DISPATCHER)
+        viewModel = LoginPrologueViewModel(unifiedLoginTracker, analyticsTrackerWrapper, TEST_DISPATCHER)
     }
 
     @Test
