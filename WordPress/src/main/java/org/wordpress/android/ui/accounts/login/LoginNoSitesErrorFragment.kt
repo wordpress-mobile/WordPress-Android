@@ -45,21 +45,22 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
-        initErrorMessageView(view)
-        initViewModel()
         initBackPressHandler()
+        with(FragmentLoginNoSitesErrorBinding.bind(view)) {
+            initErrorMessageView()
+            initViewModel()
+        }
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    private fun initErrorMessageView(view: View) {
-        val binding = FragmentLoginNoSitesErrorBinding.bind(view)
-        binding.loginErrorMessageText.text = errorMsg
+    private fun FragmentLoginNoSitesErrorBinding.initErrorMessageView() {
+        loginErrorMessageText.text = errorMsg
     }
 
-    private fun initViewModel() {
+    private fun FragmentLoginNoSitesErrorBinding.initViewModel() {
         viewModel = ViewModelProvider(this@LoginNoSitesErrorFragment, viewModelFactory)
                 .get(LoginNoSitesErrorViewModel::class.java)
 
@@ -68,8 +69,7 @@ class LoginNoSitesErrorFragment : Fragment(R.layout.fragment_login_no_sites_erro
         viewModel.start(requireActivity().application as WordPress)
     }
 
-    private fun initObservers() {
-        // initObservers
+    private fun FragmentLoginNoSitesErrorBinding.initObservers() {
         viewModel.navigationEvents.observe(viewLifecycleOwner, { events ->
             events.getContentIfNotHandled()?.let {
                 when (it) {
