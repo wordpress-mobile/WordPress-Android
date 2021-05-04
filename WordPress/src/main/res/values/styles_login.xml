@@ -17,9 +17,4 @@
         <item name="android:textStyle">normal</item>
         <item name="lineHeight">@dimen/login_empty_view_headline_line_height</item>
     </style>
-
-    <style name="Login.EmptyView.TextView.Subtitle1" parent="android:Widget.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:gravity">center_vertical|start</item>
-    </style>
 </resources>

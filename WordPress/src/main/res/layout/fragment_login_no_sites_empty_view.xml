@@ -69,14 +69,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/login_error_message_title"
-            style="@style/Login.EmptyView.TextView.Subtitle1"
+            style="@style/ActionableEmptyStateTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="@dimen/login_empty_view_line_spacing"
             android:text="@string/login_no_jetpack_sites"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/login_error_message_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,13 +83,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/login_error_message_text"
-            style="@style/Login.EmptyView.TextView.Subtitle1"
+            style="@style/ActionableEmptyStateSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="@dimen/login_empty_view_line_spacing"
             android:text="@string/login_no_jetpack_sites_error_message"
-            android:textStyle="bold"
             android:paddingBottom="@dimen/margin_extra_large"
             app:layout_constraintBottom_toTopOf="@+id/button_primary"
             app:layout_constraintEnd_toEndOf="parent"

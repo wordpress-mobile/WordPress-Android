@@ -2700,7 +2700,7 @@
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_not_a_jetpack_site">The website %1$s is not a Jetpack site.</string>
-    <string name="login_no_jetpack_sites">No Jetpack sites.</string>
+    <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="login_empty_view_avatar_content_description">Your profile photo</string>
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your Wordpress account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
