@@ -524,5 +524,4 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginSiteCheckErrorViewModel.class)
     abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
-
 }
