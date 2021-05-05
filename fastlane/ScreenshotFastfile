@@ -41,7 +41,7 @@ platform :android do
   #####################################################################################
   desc "Build and capture screenshots"
   lane :screenshots do |options|
-    gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
+    gradle(task: "assembleWordPressVanillaDebug assembleWordPressVanillaDebugAndroidTest")
     take_screenshots(options)
   end
 
@@ -86,7 +86,7 @@ platform :android do
     # Allow creating screenshots for just one locale
     if options[:locale] != nil
       locales.keep_if { |locale|
-        locale.casecmp(options[:locale]) == 0
+        locale != nil && locale.casecmp(options[:locale]) == 0
       }
 
       # Don't clear, because we might just be fixing one locale
