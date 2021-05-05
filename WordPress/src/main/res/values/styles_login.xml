@@ -21,10 +21,4 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
     </style>
-
-    <style name="Login.EmptyView.TextAppearance.Headline" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="android:textSize">@dimen/login_empty_view_headline_text_size</item>
-        <item name="android:textStyle">normal</item>
-        <item name="lineHeight">@dimen/login_empty_view_headline_line_height</item>
-    </style>
 </resources>
