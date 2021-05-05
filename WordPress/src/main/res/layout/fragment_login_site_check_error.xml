@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:gravity="center|center_horizontal|center_vertical">
+        android:layout_marginTop="@dimen/margin_extra_extra_large">
 
         <ImageView
             android:id="@+id/login_empty_view_illustration"
@@ -22,13 +21,13 @@
             android:gravity="center_horizontal"
             android:padding="@dimen/margin_extra_large"
             android:src="@drawable/img_jetpack_empty_state"
-            app:layout_constraintBottom_toTopOf="@+id/login_empty_view_message_title"
+            app:layout_constraintBottom_toTopOf="@+id/login_empty_view_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/login_empty_view_message_title"
+            android:id="@+id/login_empty_view_message"
             style="@style/ActionableEmptyStateTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +50,7 @@
             app:layout_constraintBottom_toTopOf="@+id/button_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_empty_view_message_title" />
+            app:layout_constraintTop_toBottomOf="@+id/login_empty_view_message" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_secondary"

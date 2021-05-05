@@ -23,7 +23,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val KEY_STATE = "key_state"
-const val INSTRUCTIONS_URL = "https://jetpack.com/support/getting-started-with-jetpack/"
 
 class LoginNoSitesViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
@@ -78,7 +77,7 @@ class LoginNoSitesViewModel @Inject constructor(
     }
 
     fun onSeeInstructionsPressed() {
-        _navigationEvents.postValue(Event(ShowInstructions(INSTRUCTIONS_URL)))
+        _navigationEvents.postValue(Event(ShowInstructions()))
     }
 
     fun onTryAnotherAccountPressed() {
