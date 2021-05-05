@@ -12,7 +12,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class LoginSiteCheckErrorViewModel  @Inject constructor(
+class LoginSiteCheckErrorViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
@@ -29,6 +29,10 @@ class LoginSiteCheckErrorViewModel  @Inject constructor(
     }
 
     fun onTryAnotherAccountPressed() {
+        _navigationEvents.postValue(Event(ShowSignInForResultJetpackOnly))
+    }
+
+    fun onBackPressed() {
         _navigationEvents.postValue(Event(ShowSignInForResultJetpackOnly))
     }
 }

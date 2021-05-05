@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_error) {
     companion object {
         const val TAG = "LoginSiteCheckErrorFragment"
@@ -115,5 +117,17 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
         super.onResume()
 
         unifiedLoginTracker.track(step = Step.NOT_A_JETPACK_SITE)
+    }
+
+    private fun initBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(
+                        true
+                ) {
+                    override fun handleOnBackPressed() {
+                        viewModel.onBackPressed()
+                    }
+                })
     }
 }
