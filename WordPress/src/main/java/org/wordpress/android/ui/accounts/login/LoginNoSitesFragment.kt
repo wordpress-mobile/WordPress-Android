@@ -51,8 +51,8 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
     }
 
     private fun FragmentLoginNoSitesEmptyViewBinding.initContentViews() {
-        buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsClicked() }
-        buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountClicked() }
+        buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsPressed() }
+        buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountPressed() }
     }
 
     private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel(savedInstanceState: Bundle?) {

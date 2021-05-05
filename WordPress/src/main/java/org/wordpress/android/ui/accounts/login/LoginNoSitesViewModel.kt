@@ -77,12 +77,12 @@ class LoginNoSitesViewModel @Inject constructor(
         }
     }
 
-    fun onSeeInstructionsClicked() {
+    fun onSeeInstructionsPressed() {
         // todo: annmarie - get the correct URL from strings
         _navigationEvents.postValue(Event(ShowInstructions("https://jetpack.com/support/getting-started-with-jetpack/")))
     }
 
-    fun onTryAnotherAccountClicked() {
+    fun onTryAnotherAccountPressed() {
         _navigationEvents.postValue(Event(ShowSignInForResultJetpackOnly))
     }
 

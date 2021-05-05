@@ -46,19 +46,6 @@ class LoginViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no jetpack sites, then error message in navigation matches expected message`() {
-        val errorMessage = "No Jetpack sites."
-        whenever(resourceProvider.getString(R.string.login_no_jetpack_sites)).thenReturn(errorMessage)
-
-        val navigationEvents = initObservers().navigationEvents
-
-        viewModel.onHandleNoJetpackSites()
-        val navigationEvent = navigationEvents.last() as ShowNoJetpackSites
-
-        Assertions.assertThat(navigationEvent.errorMessage == errorMessage)
-    }
-
-    @Test
     fun `given site is not jetpack, then error message in navigation matches expected message`() {
         val errorMessage = "Not a jetpack site"
         val url = "nojetpack.wordpress.com"
