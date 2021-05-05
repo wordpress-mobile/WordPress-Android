@@ -664,5 +664,4 @@
     <dimen name="login_empty_view_avatar_height">72dp</dimen>
     <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
     <dimen name="login_empty_view_line_spacing">2sp</dimen>
-    <dimen name="login_empty_view_headline_line_height">24dp</dimen>
 </resources>
