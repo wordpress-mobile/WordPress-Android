@@ -41,9 +41,6 @@ public class LoginMagicLinkInterceptActivity extends LocaleAwareActivity {
         intent.setAction(mAction);
         intent.setData(mUri);
 
-        if (mUri != null) {
-            mMySiteImprovementsFeatureConfig.initFromUri(new UriWrapper(mUri));
-        }
         if (hasMagicLinkLoginIntent()) {
             intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_LOGIN, true);
 
