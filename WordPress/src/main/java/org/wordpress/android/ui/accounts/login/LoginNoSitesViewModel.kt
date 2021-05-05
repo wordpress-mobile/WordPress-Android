@@ -17,16 +17,20 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
 import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
 const val KEY_STATE = "key_state"
+const val INSTRUCTIONS_URL = "https://jetpack.com/support/getting-started-with-jetpack/"
+
 
 class LoginNoSitesViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     private val accountStore: AccountStore,
+    private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -78,8 +82,7 @@ class LoginNoSitesViewModel @Inject constructor(
     }
 
     fun onSeeInstructionsPressed() {
-        // todo: annmarie - get the correct URL from strings
-        _navigationEvents.postValue(Event(ShowInstructions("https://jetpack.com/support/getting-started-with-jetpack/")))
+        _navigationEvents.postValue(Event(ShowInstructions(INSTRUCTIONS_URL)))
     }
 
     fun onTryAnotherAccountPressed() {
