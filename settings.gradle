@@ -22,7 +22,7 @@ include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
-gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
+gradle.ext.wputilsS3Path = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
 
@@ -54,7 +54,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localWPUtilsPath) {
             dependencySubstitution {
                 println "Substituting wputils with the local build"
-                substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
+                substitute module("$gradle.ext.wputilsS3Path") with project(':WordPressUtils')
             }
         }
     }
