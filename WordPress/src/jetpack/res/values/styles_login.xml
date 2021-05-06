@@ -33,6 +33,6 @@
     <style name="Widget.LoginFlow.CardView.BottomBar.Prologue" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">0dp</item>
         <item name="cardElevation">0dp</item>
-        <item name="cardBackgroundColor">@color/transparent</item>
+        <item name="cardBackgroundColor">@color/wordpress_blue_90</item>
     </style>
 </resources>
