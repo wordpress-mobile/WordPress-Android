@@ -63,7 +63,7 @@ class CommentsActivity : LocaleAwareActivity(),
     private lateinit var appBar: AppBarLayout
     private lateinit var site: SiteModel
 
-    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, UNREPLIED, SPAM, TRASH)
+    private val commentListFilters = listOf(ALL, UNAPPROVED, UNREPLIED, APPROVED, TRASH, SPAM)
 
     private var disabledTabsOpacity: Float = 0F
 
