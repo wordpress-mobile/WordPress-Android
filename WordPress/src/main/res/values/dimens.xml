@@ -634,7 +634,6 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
-    <dimen name="login_prologue_tagline_start_end_padding">40dp</dimen>
 
     <!-- edit text with chips view -->
     <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
