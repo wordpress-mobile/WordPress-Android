@@ -1,0 +1,2 @@
+17.2:
+Versi ini memperkenalkan blok baru – info kontak Jetpack. Ini sangat sempurna untuk menampilkan alamat terformat rapi di situs Anda. Kami juga mempermudah penambahan banyak teks alt ke blok gambar, penggunaan TalkBack dengan blok kolom, penampilan menu yang lebih baik dalam bahasa dengan penulisan dari kanan ke kiri, dan pengaturan zona waktu situs Anda.
