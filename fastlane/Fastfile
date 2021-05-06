@@ -626,16 +626,20 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds an app bundle"
   lane :build_bundle do | options |
     # Create the file names
-    version=options[:version]
-    name="wpandroid-#{version["name"]}.aab"
+    version=android_get_release_version()
+    #TODO: change this to prefux and use wpandroid vs jpandroid
+    name="#{options[:app]}-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
-    aab_file="org.wordpress.android-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
+
+    # org.wordpress.android
+    # com.jetpack.android
+    aab_file="#{options[:packageName]}-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}Release/#{aab_file}"
+    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}#{options[:buildType]}/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -648,10 +652,10 @@ REPOSITORY_NAME="WordPress-Android"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
+      sh("./gradlew lint#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
