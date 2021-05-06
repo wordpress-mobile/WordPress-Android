@@ -192,6 +192,10 @@ public class WPScreenshotTest extends BaseTest {
 
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
+        if (isElementDisplayed(R.id.button_negative)) {
+            clickOn(R.id.button_negative);
+        }
+
         setNightModeAndWait(true);
 
         takeScreenshot("3-build-an-audience");
