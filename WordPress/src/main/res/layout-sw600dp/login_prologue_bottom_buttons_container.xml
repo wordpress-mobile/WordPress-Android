@@ -13,7 +13,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_with_wpcom_button"
-        style="@style/Widget.LoginFlow.Button.Primary"
+        style="@style/Widget.LoginFlow.Button.Primary.Prologue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_small"
@@ -21,7 +21,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/enter_your_site_address_button"
-        style="@style/Widget.LoginFlow.Button.Secondary"
+        style="@style/Widget.LoginFlow.Button.Secondary.Prologue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
