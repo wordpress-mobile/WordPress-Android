@@ -1740,6 +1740,17 @@ open class WellSqlConfig : DefaultWellConfig {
                             "PREFERRED_BLOG_NAME TEXT,PREFERRED_BLOG_URL TEXT,PREFERRED_BLOG_BLAVATAR_URL TEXT," +
                             "DATE_LIKED TEXT,TIMESTAMP_FETCHED INTEGER)")
                 }
+                149 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCRefunds")
+                    db.execSQL(
+                            "CREATE TABLE WCRefunds (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "ORDER_ID INTEGER," +
+                                    "REFUND_ID INTEGER," +
+                                    "DATA TEXT NOT NULL)"
+                    )
+                }
             }
         }
         db.setTransactionSuccessful()
