@@ -9,7 +9,6 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 
 import javax.inject.Inject;
