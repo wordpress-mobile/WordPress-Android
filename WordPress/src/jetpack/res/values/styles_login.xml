@@ -29,4 +29,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- Cards -->
+    <style name="Widget.LoginFlow.CardView.BottomBar.Prologue" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@color/transparent</item>
+    </style>
 </resources>

@@ -52,7 +52,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_buttons"
-        style="@style/Widget.LoginFlow.CardView.BottomBar"
+        style="@style/Widget.LoginFlow.CardView.BottomBar.Prologue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp"
