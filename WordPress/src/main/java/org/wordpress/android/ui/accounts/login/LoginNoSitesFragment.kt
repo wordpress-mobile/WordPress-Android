@@ -10,6 +10,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FragmentLoginNoSitesEmptyViewBinding
 import org.wordpress.android.login.LoginListener
+import org.wordpress.android.login.util.AvatarHelper
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
@@ -17,13 +19,12 @@ import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUse
 import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageType.USER
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_view) {
     companion object {
-        const val TAG = "LoginNoSitesErrorFragment"
+        const val TAG = "LoginNoSitesFragment"
 
         fun newInstance(): LoginNoSitesFragment {
             return LoginNoSitesFragment()
@@ -92,15 +93,14 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         })
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.loadGravatar(avatarUrl: String) =
-            meGravatarLoader.load(
-                    false,
-                    meGravatarLoader.constructGravatarUrl(avatarUrl),
-                    null,
-                    imageAvatar,
-                    USER,
-                    null
-            )
+    private fun FragmentLoginNoSitesEmptyViewBinding.loadGravatar(avatarUrl: String) {
+        val url = meGravatarLoader.constructGravatarUrl(avatarUrl)
+        AvatarHelper.loadAvatarFromUrl(this@LoginNoSitesFragment, url, imageAvatar, object : AvatarRequestListener {
+            override fun onRequestFinished() {
+                // no op
+            }
+        })
+    }
 
     private fun FragmentLoginNoSitesEmptyViewBinding.setUserName(value: String) =
             uiHelpers.setTextOrHide(textUsername, value)
