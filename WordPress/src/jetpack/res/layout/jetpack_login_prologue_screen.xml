@@ -31,7 +31,7 @@
         android:layout_height="40dp"
         android:contentDescription="@null"
         android:src="@drawable/img_jetpack_horizontal_white"
-        app:layout_constraintBottom_toTopOf="@id/bottom_buttons"
+        app:layout_constraintBottom_toTopOf="@id/app_tagline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,9 @@
         android:layout_marginEnd="@dimen/login_prologue_tagline_start_end_padding"
         android:layout_marginStart="@dimen/login_prologue_tagline_start_end_padding"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:text="@string/app_tagline"
+        app:layout_constraintBottom_toTopOf="@id/bottom_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_logo" />
