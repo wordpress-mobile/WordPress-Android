@@ -15,6 +15,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -22,13 +23,11 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
     companion object {
         const val TAG = "LoginSiteCheckErrorFragment"
         const val ARG_SITE_ADDRESS = "SITE-ADDRESS"
-        const val ARG_ERROR_MESSAGE = "ERROR-MESSAGE"
 
-        fun newInstance(siteAddress: String, errorMsg: String): LoginSiteCheckErrorFragment {
+        fun newInstance(siteAddress: String): LoginSiteCheckErrorFragment {
             val fragment = LoginSiteCheckErrorFragment()
             val args = Bundle()
             args.putString(ARG_SITE_ADDRESS, siteAddress)
-            args.putString(ARG_ERROR_MESSAGE, errorMsg)
             fragment.arguments = args
             return fragment
         }
@@ -36,9 +35,9 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
+    @Inject lateinit var htmlMessageUtils: HtmlMessageUtils
     private var loginListener: LoginListener? = null
     private var siteAddress: String? = null
-    private var errorMsg: String? = null
     private lateinit var viewModel: LoginSiteCheckErrorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,6 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
 
         arguments?.let {
             siteAddress = it.getString(ARG_SITE_ADDRESS, null)
-            errorMsg = it.getString(ARG_ERROR_MESSAGE, null)
         }
     }
 
@@ -72,7 +70,11 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
     }
 
     private fun FragmentLoginSiteCheckErrorBinding.initErrorMessageView() {
-        loginEmptyViewMessage.text = errorMsg
+        loginEmptyViewMessage.text =
+                htmlMessageUtils
+                        .getHtmlMessageFromStringFormatResId(
+                                R.string.login_not_a_jetpack_site,
+                        "<b>$siteAddress</b>")
     }
 
     private fun FragmentLoginSiteCheckErrorBinding.initButtons() {

@@ -959,14 +959,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
 
     private void showSiteAddressError(ShowSiteAddressError event) {
-        LoginSiteCheckErrorFragment fragment =
-                LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl(), event.getErrorMessage());
+        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
         slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
     }
 
     private void showNoJetpackSites() {
-        LoginNoSitesFragment fragment =
-                LoginNoSitesFragment.Companion.newInstance();
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
         slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }
