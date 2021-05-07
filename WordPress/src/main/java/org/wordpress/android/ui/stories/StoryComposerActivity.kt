@@ -128,6 +128,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         protected const val FRAGMENT_ANNOUNCEMENT_DIALOG = "story_announcement_dialog"
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
+        const val STATE_KEY_ORIGINAL_STORY_SAVE_RESULT = "stateKeyOriginalSaveResult"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val KEY_LAUNCHED_FROM_GUTENBERG = "key_launched_from_gutenberg"
         const val KEY_ALL_UNFLATTENED_LOADED_SLIDES = "key_all_unflattened_laoded_slides"
@@ -159,10 +160,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private fun initViewModel(savedInstanceState: Bundle?) {
         var localPostId = 0
         var notificationType: NotificationType? = null
+        var originalStorySaveResult: StorySaveResult? = null
 
         if (savedInstanceState == null) {
             localPostId = getBackingPostIdFromIntent()
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            originalStorySaveResult = intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
                 notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
@@ -171,6 +174,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 localPostId = savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)
+            }
+            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)) {
+                originalStorySaveResult =
+                        savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
             }
         }
 
@@ -186,7 +193,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     editPostRepository,
                     LocalId(localPostId),
                     postEditorAnalyticsSession,
-                    notificationType
+                    notificationType,
+                    originalStorySaveResult
             )
 
             // Ensure we have a valid post
@@ -461,9 +469,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onStoryDiscarded() {
         val launchedFromGutenberg = intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)
-        viewModel.onStoryDiscarded(!launchedFromGutenberg)
+        val storyDiscardedFromRetry = viewModel.onStoryDiscarded(!launchedFromGutenberg)
 
-        if (launchedFromGutenberg) {
+        if (launchedFromGutenberg || storyDiscardedFromRetry) {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
