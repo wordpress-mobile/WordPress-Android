@@ -62,6 +62,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private val site: SiteModel by lazy { siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()) }
 
+    override val useCachedData: Boolean = true
+
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
@@ -80,12 +82,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    override fun fetchLayouts() {
+    override fun fetchLayouts(preferCache: Boolean) {
         if (!networkUtils.isNetworkAvailable()) {
             setErrorState()
             return
         }
-        updateUiState(Loading)
+        if (!preferCache) {
+            updateUiState(Loading)
+        }
         launch {
             val payload = FetchBlockLayoutsPayload(
                     site,
@@ -93,7 +97,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     thumbDimensionProvider.previewWidth.toFloat(),
                     thumbDimensionProvider.previewHeight.toFloat(),
                     thumbDimensionProvider.scale.toFloat(),
-                    BuildConfig.DEBUG
+                    BuildConfig.DEBUG,
+                    preferCache
             )
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }

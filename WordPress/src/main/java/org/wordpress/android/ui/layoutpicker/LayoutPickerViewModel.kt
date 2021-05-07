@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -59,7 +58,9 @@ abstract class LayoutPickerViewModel(
     val isLoading: Boolean
         get() = _uiState.value === LayoutPickerUiState.Loading
 
-    abstract fun fetchLayouts()
+    abstract val useCachedData: Boolean
+
+    abstract fun fetchLayouts(preferCache: Boolean = false)
 
     open fun onPreviewChooseTapped() = onDismissPreview()
 
@@ -293,26 +294,32 @@ abstract class LayoutPickerViewModel(
         val selectedCategories = (savedInstanceState.getSerializable(SELECTED_CATEGORIES) as? List<*>)
                 ?.filterIsInstance<String>() ?: listOf()
         val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
+        resetState(selected, ArrayList(selectedCategories.toMutableList()), previewMode)
         if (layouts == null || categories == null || layouts.isEmpty()) {
-            fetchLayouts()
+            fetchLayouts(preferCache = useCachedData)
             return
         }
+        handleResponse(layouts, categories)
+    }
+
+    private fun resetState(selected: String?, selectedCategories: ArrayList<String>, previewMode: String) {
         val state = uiState.value as? Content ?: Content()
         updateUiState(
                 state.copy(
                         selectedLayoutSlug = selected,
-                        selectedCategoriesSlugs = ArrayList(selectedCategories.toMutableList())
+                        selectedCategoriesSlugs = selectedCategories
                 )
         )
         _previewMode.value = valueOf(previewMode)
         updateButtonsUiState()
-        handleResponse(layouts, categories)
     }
 
     fun writeToBundle(outState: Bundle) {
         (uiState.value as? Content)?.let {
-            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
-            outState.putParcelableArrayList(FETCHED_CATEGORIES, ArrayList(categories))
+            if (!useCachedData) {
+                outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
+                outState.putParcelableArrayList(FETCHED_CATEGORIES, ArrayList(categories))
+            }
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
             outState.putString(PREVIEW_MODE, selectedPreviewMode().name)
