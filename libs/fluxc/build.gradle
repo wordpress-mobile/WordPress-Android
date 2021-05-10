@@ -1,9 +1,21 @@
-plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.android.extensions"
-    id "org.jetbrains.kotlin.kapt"
-    id "com.github.dcendents.android-maven"
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.github.dcendents.android-maven'
+
+repositories {
+    jcenter()
 }
 
 android {
@@ -51,13 +63,15 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
 
     implementation "androidx.exifinterface:exifinterface:1.0.0"
 
     // WordPress libs
-    implementation('org.wordpress:utils:1.30.3-beta.1') {
+    implementation ('org.wordpress:utils:1.30.3-beta.1') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
