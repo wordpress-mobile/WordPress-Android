@@ -1093,8 +1093,6 @@ Language: gl_ES
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Rexistro da aplicación</string>
     <string name="my_tickets">Os meus tickets</string>
-    <string name="activity_log_rewind_dialog_message">Queres rebobinar o teu sitio ao %1$s ás %2$s? Isto borrará todo o contido e opcións creadas ou cambiadas desde entón.</string>
-    <string name="activity_log_rewind_site">Restaurar o sitio</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>

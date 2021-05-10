@@ -48,7 +48,11 @@ class LikedItemViewHolder(
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                 contentDescription = this.context.getString(string.profile_picture, authorName)
                 setOnClickListener {
-                    likedItem.onGravatarClick.invoke(likedItem.authorPreferredSiteId, likedItem.authorPreferredSiteUrl)
+                    likedItem.onGravatarClick.invoke(
+                            likedItem.authorPreferredSiteId,
+                            likedItem.authorPreferredSiteUrl,
+                            likedItem.blogPreviewSource
+                    )
                 }
                 setBackgroundResource(
                         this.context.getDrawableResIdFromAttribute(R.attr.selectableItemBackgroundBorderless)
