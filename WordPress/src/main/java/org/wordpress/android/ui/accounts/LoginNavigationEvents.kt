@@ -5,4 +5,6 @@ sealed class LoginNavigationEvents {
     object ShowNoJetpackSites : LoginNavigationEvents()
     object ShowSignInForResultJetpackOnly : LoginNavigationEvents()
     data class ShowInstructions(val url: String) : LoginNavigationEvents()
+    object ShowEmailLoginScreen : LoginNavigationEvents()
+    object ShowLoginViaSiteAddressScreen : LoginNavigationEvents()
 }
