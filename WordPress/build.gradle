@@ -96,6 +96,11 @@ android {
     productFlavors {
         wordpress {
             dimension "app"
+            // Only set the release version if one isn't provided
+            if (!project.hasProperty("versionName")) {
+                versionName "17.3-rc-1"
+            }
+            versionCode 1042
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -104,6 +109,11 @@ android {
 
         jetpack {
             dimension "app"
+            // Only set the release version if one isn't provided
+            if (!project.hasProperty("versionName")) {
+                versionName "0.01"
+            }
+            versionCode 1
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
@@ -112,11 +122,6 @@ android {
 
         vanilla { // used for release and beta
             dimension "buildType"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName "17.3-rc-1"
-            }
-            versionCode 1042
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
