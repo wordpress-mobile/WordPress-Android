@@ -99,6 +99,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -129,6 +130,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -197,7 +199,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartRepository,
                 quickStartItemBuilder,
                 currentAvatarSource,
-                dynamicCardsSource
+                dynamicCardsSource,
+                buildConfigWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -954,6 +957,17 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(quickStartRepository).refresh()
+    }
+
+    @Test
+    fun `given build is Jetpack, then quick action block is not built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        initSelectedSite()
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNull()
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
