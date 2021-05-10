@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -205,17 +206,19 @@ class MySiteViewModel
                             activeTask == UPLOAD_SITE_ICON
                     )
             )
-            siteItems.add(
-                    QuickActionsBlock(
-                            ListItemInteraction.create(this::quickActionStatsClick),
-                            ListItemInteraction.create(this::quickActionPagesClick),
-                            ListItemInteraction.create(this::quickActionPostsClick),
-                            ListItemInteraction.create(this::quickActionMediaClick),
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                            activeTask == CHECK_STATS,
-                            activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
-                    )
-            )
+            if (!BuildConfig.IS_JETPACK_APP) {
+                siteItems.add(
+                        QuickActionsBlock(
+                                ListItemInteraction.create(this::quickActionStatsClick),
+                                ListItemInteraction.create(this::quickActionPagesClick),
+                                ListItemInteraction.create(this::quickActionPostsClick),
+                                ListItemInteraction.create(this::quickActionMediaClick),
+                                site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                                activeTask == CHECK_STATS,
+                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
+                        )
+                )
+            }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
