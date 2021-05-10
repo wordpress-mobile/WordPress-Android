@@ -92,13 +92,11 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onChooseTapped() {
-        (uiState.value as? Content)?.let { state ->
-            getLayout(state.selectedLayoutSlug)?.let { layout ->
-                val template = layout.slug
-                analyticsTracker.trackSiteDesignSelected(template)
-                _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
-                return
-            }
+        selectedLayout?.let { layout ->
+            val template = layout.slug
+            analyticsTracker.trackSiteDesignSelected(template)
+            _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
+            return
         }
         analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error choosing design")
         updateUiState(Error(toast = R.string.hpp_choose_error))

@@ -65,6 +65,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     override val useCachedData: Boolean = true
 
+    override val selectedLayout: LayoutModel?
+        get() = (uiState.value as? Content)?.let { state ->
+            state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+        }
+
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
@@ -104,9 +109,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
-
-    override fun getLayout(slug: String?): LayoutModel? =
-            slug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
@@ -166,12 +168,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Triggers the creation of a new page
      */
     private fun createPage() {
-        (uiState.value as? Content)?.let { state ->
-            getLayout(state.selectedLayoutSlug)?.let { layout ->
-                val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
-                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
-                return
-            }
+        selectedLayout?.let { layout ->
+            val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
+            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
+            return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
     }
