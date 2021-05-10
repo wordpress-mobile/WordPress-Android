@@ -60,7 +60,7 @@ class MediaLoaderFactoryTest {
                 defaultSearchView = false,
                 title = string.wp_media_title
         )
-        whenever(deviceListBuilderFactory.build(setOf())).thenReturn(deviceListBuilder)
+        whenever(deviceListBuilderFactory.build(setOf(), site)).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
         assertThat(mediaLoader).isEqualTo(
