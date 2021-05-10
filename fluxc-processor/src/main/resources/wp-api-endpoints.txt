@@ -11,3 +11,6 @@
 /comments/<id>/
 
 /settings/
+
+/users/
+/users/me/
