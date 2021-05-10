@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="LoginTheme" parent="Theme.LoginFlow">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
     </style>
+
     <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme" />
 
     <style name="Login.EmptyView.TextView.Username" parent="android:Widget.TextView">
@@ -21,4 +23,9 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <!-- Login Prologue -->
+    <style name="Widget.LoginFlow.Prologue" parent=""/>
+    <style name="Widget.LoginFlow.Button.Primary.Prologue" parent="Widget.LoginFlow.Button.Primary"/>
+    <style name="Widget.LoginFlow.Button.Secondary.Prologue" parent="Widget.LoginFlow.Button.Secondary"/>
 </resources>
