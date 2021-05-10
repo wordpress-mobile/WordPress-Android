@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.layoutpicker.LayoutModel
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
@@ -104,6 +105,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
     }
 
+    override fun getLayout(slug: String?): LayoutModel? =
+            slug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
@@ -163,7 +167,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+            getLayout(state.selectedLayoutSlug)?.let { layout ->
                 val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
                 _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
                 return

@@ -218,6 +218,8 @@ abstract class LayoutPickerViewModel(
         _onThumbnailModeButtonPressed.call()
     }
 
+    open fun getLayout(slug: String?): LayoutModel? = layouts.firstOrNull { it.slug == slug }
+
     /**
      * Retries data fetching
      */
@@ -226,7 +228,7 @@ abstract class LayoutPickerViewModel(
     fun onPreviewLoading() {
         if (networkUtils.isNetworkAvailable()) {
             (uiState.value as? Content)?.let { state ->
-                layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                getLayout(state.selectedLayoutSlug)?.let { layout ->
                     _previewState.value = PreviewUiState.Loading(layout.demoUrl)
                     layoutPickerTracker.trackPreviewLoading(layout.slug, selectedPreviewMode().key)
                 }
@@ -239,7 +241,7 @@ abstract class LayoutPickerViewModel(
 
     fun onPreviewLoaded() {
         (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+            getLayout(state.selectedLayoutSlug)?.let { layout ->
                 _previewState.value = PreviewUiState.Loaded
                 layoutPickerTracker.trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
             }
@@ -258,7 +260,7 @@ abstract class LayoutPickerViewModel(
 
     fun onPreviewTapped() {
         (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+            getLayout(state.selectedLayoutSlug)?.let { layout ->
                 val template = layout.slug
                 layoutPickerTracker.trackPreviewViewed(template, selectedPreviewMode().key)
                 _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)

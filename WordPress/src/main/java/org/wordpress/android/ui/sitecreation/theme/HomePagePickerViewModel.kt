@@ -93,7 +93,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onChooseTapped() {
         (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+            getLayout(state.selectedLayoutSlug)?.let { layout ->
                 val template = layout.slug
                 analyticsTracker.trackSiteDesignSelected(template)
                 _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
