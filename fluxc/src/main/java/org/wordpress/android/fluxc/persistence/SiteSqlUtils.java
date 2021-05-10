@@ -308,24 +308,39 @@ public class SiteSqlUtils {
                        .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
                        .endWhere().getAsModel();
         for (GutenbergLayoutModel layout : layouts) {
-            List<GutenbergLayoutCategoriesModel> connections = WellSql.select(GutenbergLayoutCategoriesModel.class)
-                   .where()
-                   .equals(GutenbergLayoutCategoriesModelTable.SITE_ID, site.getId())
-                   .equals(GutenbergLayoutCategoriesModelTable.LAYOUT_ID, layout.getId())
-                   .endWhere().getAsModel();
-            ArrayList<GutenbergLayoutCategoryModel> categories = new ArrayList<>();
-            for (GutenbergLayoutCategoriesModel connection : connections) {
-                categories.addAll(WellSql.select(GutenbergLayoutCategoryModel.class)
-                       .where()
-                       .equals(GutenbergLayoutCategoriesModelTable.ID, connection.getCategoryId())
-                       .endWhere().getAsModel());
-            }
-            blockLayouts.add(GutenbergLayoutModelKt.transform(layout, categories));
+            blockLayouts.add(getGutenbergLayout(site, layout));
         }
         return blockLayouts;
     }
 
-    public static @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
+    public static @Nullable GutenbergLayout getBlockLayout(@NonNull SiteModel site, @NonNull String slug) {
+        GutenbergLayoutModel layoutModel = getGutenbergLayoutModel(site, slug);
+        if (layoutModel != null) {
+            return getGutenbergLayout(site, layoutModel);
+        }
+        return null;
+    }
+
+    private static GutenbergLayout getGutenbergLayout(@NonNull SiteModel site, @NonNull GutenbergLayoutModel layout) {
+        List<GutenbergLayoutCategoriesModel> connections = WellSql.select(GutenbergLayoutCategoriesModel.class)
+                                                                  .where()
+                                                                  .equals(GutenbergLayoutCategoriesModelTable.SITE_ID,
+                                                                          site.getId())
+                                                                  .equals(GutenbergLayoutCategoriesModelTable.LAYOUT_ID,
+                                                                          layout.getId())
+                                                                  .endWhere().getAsModel();
+        ArrayList<GutenbergLayoutCategoryModel> categories = new ArrayList<>();
+        for (GutenbergLayoutCategoriesModel connection : connections) {
+            categories.addAll(WellSql.select(GutenbergLayoutCategoryModel.class)
+                                     .where()
+                                     .equals(GutenbergLayoutCategoriesModelTable.ID, connection.getCategoryId())
+                                     .endWhere().getAsModel());
+        }
+        return GutenbergLayoutModelKt.transform(layout, categories);
+    }
+
+    private static @Nullable GutenbergLayoutModel getGutenbergLayoutModel(@NonNull SiteModel site,
+                                                                          @NonNull String slug) {
         List<GutenbergLayoutModel> layouts =
                 WellSql.select(GutenbergLayoutModel.class)
                        .where()
@@ -333,7 +348,15 @@ public class SiteSqlUtils {
                        .equals(GutenbergLayoutModelTable.SLUG, slug)
                        .endWhere().getAsModel();
         if (layouts.size() == 1) {
-            return layouts.get(0).getContent();
+            return layouts.get(0);
+        }
+        return null;
+    }
+
+    public static @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
+        GutenbergLayoutModel layout = getGutenbergLayoutModel(site, slug);
+        if (layout != null) {
+            return layout.getContent();
         }
         return null;
     }
