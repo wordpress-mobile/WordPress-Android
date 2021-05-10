@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.model.encryptedlogging
 
-import com.goterl.lazycode.lazysodium.LazySodiumAndroid
-import com.goterl.lazycode.lazysodium.SodiumAndroid
+import com.goterl.lazysodium.LazySodiumAndroid
+import com.goterl.lazysodium.SodiumAndroid
 
 /**
  * Convenience helpers for Encrypted Logging
