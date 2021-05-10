@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -141,6 +140,7 @@ import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.AppLog.T.EDITOR
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
@@ -213,6 +213,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -428,7 +429,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupQuickActionsIfNecessary() {
-        if (BuildConfig.IS_JETPACK_APP) {
+        if (buildConfigWrapper.isJetpackApp) {
             quickActionButtonsContainer.visibility = View.GONE
             return
         }

@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -102,6 +101,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -143,7 +143,8 @@ class MySiteViewModel
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
-    private val dynamicCardsSource: DynamicCardsSource
+    private val dynamicCardsSource: DynamicCardsSource,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -206,7 +207,7 @@ class MySiteViewModel
                             activeTask == UPLOAD_SITE_ICON
                     )
             )
-            if (!BuildConfig.IS_JETPACK_APP) {
+            if (!buildConfigWrapper.isJetpackApp) {
                 siteItems.add(
                         QuickActionsBlock(
                                 ListItemInteraction.create(this::quickActionStatsClick),
