@@ -43,6 +43,7 @@
 /payment_gateways/<gateway_id>#String
 
 /payments/connection_tokens
+/payments/orders/<id>/capture_terminal_payment
 
 /taxes
 /taxes/classes/

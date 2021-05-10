@@ -5,8 +5,19 @@ import org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION
 import org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO
 import org.wordpress.android.fluxc.utils.MimeType.Type.IMAGE
 import org.wordpress.android.fluxc.utils.MimeType.Type.VIDEO
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.NO_PLAN_SPECIFIED
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.SELF_HOSTED
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.WP_COM_FREE
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.WP_COM_PAID
 
 class MimeTypes {
+    enum class Plan {
+        NO_PLAN_SPECIFIED,
+        SELF_HOSTED,
+        WP_COM_FREE,
+        WP_COM_PAID
+    }
+
     /*
      * The WordPress supported audio types based on https://wordpress.com/support/accepted-filetypes/ are:
      * .mp3, .m4a, .ogg, .wav
@@ -64,6 +75,8 @@ class MimeTypes {
     )
 
     /*
+     * Free MIME Types
+     *
      * The WordPress supported image types based on https://wordpress.com/support/accepted-filetypes/ are:
      * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .key (Apple Keynote Presentation), .zip (Archive File Format)
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
@@ -77,10 +90,22 @@ class MimeTypes {
      * .odt - missing - "application/vnd.oasis.opendocument.text"
      * .xls - "application/excel", "application/x-excel", "application/x-msexcel", "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+     *
+     * Paid / Self hosted MIME Types
+     *
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
+     *
+     * General comment about each of the properties below.
+     *
+     * wpComFreeDocumentTypes - all MIME types allowed in the free plans.
+     *
+     * wpComPaidAndSelfHostedDocumentTypes - all MIME types allowed for paid plans and self hosted sites.
+     *
+     * documentTypes - all MIME types that are available.
      */
-    private val documentTypes = listOf(
+
+    private val wpComFreeDocumentTypes = listOf(
             MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
             MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
             MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
@@ -98,10 +123,15 @@ class MimeTypes {
                     listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
                     listOf("xls")
             ),
-            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
+            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
+    )
+
+    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes + listOf(
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
+
+    private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
 
     fun isAudioType(type: String?): Boolean {
         return isExpectedMimeType(audioTypes, type)
@@ -135,8 +165,11 @@ class MimeTypes {
         return isSupportedMimeType(documentTypes, type)
     }
 
-    fun getAllTypes(): Array<String> {
-        return (audioTypes.toStrings() + videoTypes.toStrings() + imageTypes.toStrings() + documentTypes.toStrings())
+    fun getAllTypes(plan: Plan = NO_PLAN_SPECIFIED): Array<String> {
+        return (getAudioMimeTypesOnly(plan).toStrings() + videoTypes.toStrings() +
+                imageTypes.toStrings() + getDocumentMimeTypesOnly(
+                plan
+        ).toStrings())
                 .toSet()
                 .toTypedArray()
     }
@@ -159,10 +192,21 @@ class MimeTypes {
                 .toTypedArray()
     }
 
-    fun getAudioTypesOnly(): Array<String> {
-        return (audioTypes.toStrings())
-                .toSet()
-                .toTypedArray()
+    fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
+            (getAudioMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
+
+    private fun getAudioMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
+        return when (plan) {
+            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> audioTypes
+            WP_COM_FREE -> listOf()
+        }
+    }
+
+    private fun getDocumentMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
+        return when (plan) {
+            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> wpComPaidAndSelfHostedDocumentTypes
+            WP_COM_FREE -> wpComFreeDocumentTypes
+        }
     }
 
     private fun List<MimeType>.toStrings(): List<String> {
