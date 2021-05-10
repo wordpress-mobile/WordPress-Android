@@ -2737,7 +2737,6 @@
     <string name="signup_confirmation_title">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
-    <string name="continue_with_wpcom_no_signup">Log in with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
