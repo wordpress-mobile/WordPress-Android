@@ -2063,6 +2063,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_download_file_notice_download_tapped";
             case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
                 return "activity_log_download_file_notice_dismissed_tapped";
+            case USER_PROFILE_SHEET_SHOWN:
+                return "user_profile_sheet_shown";
+            case USER_PROFILE_SHEET_SITE_SHOWN:
+                return "user_profile_sheet_site_shown";
+            case BLOG_URL_PREVIEWED:
+                return "blog_url_previewed";
+            case LIKE_LIST_OPENED:
+                return "like_list_opened";
         }
         return null;
     }

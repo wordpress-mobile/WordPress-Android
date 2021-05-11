@@ -64,20 +64,19 @@ class PostListCreateMenuViewModel @Inject constructor(
         )
         actionsList.add(
                 CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
-
-        actionsList.add(
-                CreateAction(
                         actionType = CREATE_NEW_STORY,
                         iconRes = R.drawable.ic_story_icon_24dp,
                         labelRes = R.string.my_site_bottom_sheet_add_story,
                         onClickAction = ::onCreateActionClicked
 
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_POST,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
+                        onClickAction = ::onCreateActionClicked
                 )
         )
 

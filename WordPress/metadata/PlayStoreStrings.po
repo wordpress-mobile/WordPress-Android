@@ -11,22 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_173"
+msgid ""
+"17.3:\n"
+"What’s new?\n"
+"\n"
+"With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.\n"
+"\n"
+"Other improvements include more user information about your Likes, as well as an updated Comments screen.\n"
+msgstr ""
+
 msgctxt "release_note_172"
 msgid ""
 "17.2:\n"
 "This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.\n"
-msgstr ""
-
-msgctxt "release_note_171"
-msgid ""
-"17.1:\n"
-"What’s new?\n"
-"\n"
-"We improved accessibility in the block editor for those who use a TalkBack screen reader.\n"
-"\n"
-"To help you manage comments on your site, there’s now an “Unreplied” filter so you can view unreplied comments in one place.\n"
-"\n"
-"You may have noticed the new color palette! We also updated your app icon to match.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
@@ -18,6 +19,7 @@ import javax.inject.Inject
  * Main purpose of this wrapper is to make testing easier.
  */
 @Reusable
+@SuppressWarnings("TooManyFunctions")
 class AnalyticsUtilsWrapper @Inject constructor(
     private val appContext: Context
 ) {
@@ -39,6 +41,14 @@ class AnalyticsUtilsWrapper @Inject constructor(
         site: SiteModel?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
+
+    fun trackUserProfileShown(source: String) = AnalyticsUtils.trackUserProfileShown(source)
+
+    fun trackUserProfileSiteShown() = AnalyticsUtils.trackUserProfileSiteShown()
+
+    fun trackBlogPreviewedByUrl(source: String) = AnalyticsUtils.trackBlogPreviewedByUrl(source)
+
+    fun trackLikeListOpened(source: String, listType: String) = AnalyticsUtils.trackLikeListOpened(source, listType)
 
     /* READER */
 
@@ -66,4 +76,7 @@ class AnalyticsUtilsWrapper @Inject constructor(
     fun trackRailcarRender(
         railcarJson: String
     ) = AnalyticsUtils.trackRailcarRender(railcarJson)
+
+    fun trackWithBlogPostDetails(stat: Stat, blogId: Long, postId: Long) =
+            AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
 }

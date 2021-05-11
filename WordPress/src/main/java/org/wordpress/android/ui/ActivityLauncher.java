@@ -45,7 +45,9 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
+import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
+import org.wordpress.android.ui.engagement.ListScenario;
 import org.wordpress.android.ui.engagement.ListScenarioType;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -61,7 +63,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.engagement.ListScenario;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -82,6 +83,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -314,6 +316,25 @@ public class ActivityLauncher {
         Intent mainActivityIntent = getMainActivityInNewStack(context)
                 .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         Intent viewPostIntent = new Intent(ReaderConstants.ACTION_VIEW_POST, uri);
+        TaskStackBuilder.create(context)
+                        .addNextIntent(mainActivityIntent)
+                        .addNextIntent(viewPostIntent)
+                        .startActivities();
+    }
+
+    public static void viewReaderPostDetailInNewStack(Context context, long blogId, long postId, Uri uri) {
+        Intent mainActivityIntent = getMainActivityInNewStack(context)
+                .putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        Intent viewPostIntent = ReaderActivityLauncher.buildReaderPostDetailIntent(
+                context,
+                false,
+                blogId,
+                postId,
+                null,
+                0,
+                false,
+                uri.toString()
+        );
         TaskStackBuilder.create(context)
                         .addNextIntent(mainActivityIntent)
                         .addNextIntent(viewPostIntent)
@@ -916,7 +937,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);
-        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED, true);
         intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
         intent.putExtra(KEY_STORY_INDEX, storyIndex);
         intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
@@ -1126,12 +1147,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
-    public static void viewLikeListActivity(Activity activity, long siteId, long postId, HeaderData headerData) {
+    public static void viewPostLikesListActivity(
+            Activity activity,
+            long siteId,
+            long postId,
+            HeaderData headerData,
+            EngagementNavigationSource source
+    ) {
         Intent intent = new Intent(activity, EngagedPeopleListActivity.class);
         intent.putExtra(
                 EngagedPeopleListActivity.KEY_LIST_SCENARIO,
                 new ListScenario(
                         ListScenarioType.LOAD_POST_LIKES,
+                        source,
                         siteId,
                         postId,
                         0L,

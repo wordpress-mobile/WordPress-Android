@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-16 09:54:10+0000
+Translation-Revision-Date: 2021-04-29 16:55:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_what_is_alt_text">Cos\'è il testo alternativo?</string>
+    <string name="gutenberg_native_transform_s_to">Trasforma %s in</string>
+    <string name="gutenberg_native_transform_block">Trasforma il blocco…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Impossibile inserire file multimediali.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Impossibile inserire il file audio.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrivi lo scopo dell\'immagine. Lascia vuoto, se l\'immagine è semplicemente decorativa. </string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s trasformato in %2$s</string>
+    <string name="like_faces_error_loading_message">Errore durante il caricamento di dati simili. %s.</string>
+    <string name="like_faces_plural_text">Piace a %d blogger.</string>
+    <string name="like_faces_singular_text">Piace a un blogger.</string>
+    <string name="like_title_plural">%d Mi piace</string>
+    <string name="suggestion">Suggerimento:</string>
+    <string name="like_title_singular">1 Mi piace</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Inserisci le tue credenziali del server per risolvere le minacce.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Inserisci le tue credenziali del server per risolvere la minaccia.</string>
     <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
     <string name="gutenberg_native_search_block">Cerca blocco</string>
     <string name="gutenberg_native_double_tap_to_change_unit">tocca due volte per modificare l\'unità</string>
@@ -886,11 +901,17 @@ Language: it
     <string name="gutenberg_native_add_image">AGGIUNGI IMMAGINE</string>
     <string name="gutenberg_native_add_block_here">AGGIUNGI BLOCCO QUI</string>
     <string name="gutenberg_native_alt_text">Testo Alt</string>
+    <string name="gutenberg_native_add_alt_text">Aggiungi testo alternativo</string>
     <string name="reader_empty_saved_posts_content_description">Tocca il pulsante Aggiungi ad articoli salvati per salvare un articolo nell\'elenco.</string>
     <string name="reader_acessibility_list_loaded">\"L\'elenco è stato caricato con %1$d voci.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifiche</string>
     <string name="main_switch_default_title_off">Disattivato</string>
     <string name="notifications_tab_dialog_main_off_message">La disattivazione di Notifiche per questo sito ne comporterà la disattivazione della visualizzazione nella relativa scheda. Puoi regolare il tipo di notifica da vedere dopo aver attivato Notifiche per questo sito.</string>
+    <string name="main_switch_default_title_on">On</string>
+    <string name="notifications_tab_dialog_main_hint_off">Abilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_main_hint_on">Disabilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_main_status_off">Notifiche per questo sito</string>
+    <string name="notifications_tab_dialog_main_status_on">Notifiche per questo sito</string>
     <string name="notifications_tab_dialog_main_off_title">Per vedere le notifiche sulla scheda delle notifiche per questo sito, attiva Notifiche per questo sito.</string>
     <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
@@ -1845,6 +1866,8 @@ Language: it
     <string name="notification_settings_category_your_sites">I tuoi siti</string>
     <string name="notification_settings_main_off_message">La disattivazione delle impostazioni delle notifiche causerà la disabilitazione di tutte le notifiche da questa applicazione, indipendentemente dal tipo. Puoi regolare il tipo di notifica da ricevere dopo aver attivato le impostazioni delle notifiche.</string>
     <string name="notification_settings_main_off_title">Per ricevere le notifiche su questo dispositivo, attiva le impostazioni delle notifiche.</string>
+    <string name="notification_settings_main_hint_off">Attiva notifiche</string>
+    <string name="notification_settings_main_hint_on">Disabilita notifiche</string>
     <string name="notification_settings_main_status_off">Disattivato</string>
     <string name="max_video_resolution">Dimensione video massima</string>
     <string name="notification_settings_main_status_on">Attivo</string>
@@ -2310,8 +2333,10 @@ Language: it
     <string name="site_settings_rp_show_header_title">Mostra l\'intestazione</string>
     <string name="site_settings_rp_switch_summary">Articoli correlati visualizza contenuti pertinenti del tuo sito sotto i tuoi articoli.</string>
     <string name="site_settings_rp_switch_title">Mostra gli articoli correlati</string>
+    <string name="site_settings_denylist_hint">I commenti che corrispondono a un filtro vengono contrassegnati come spam</string>
     <string name="site_settings_moderation_hold_hint">I commenti che corrispondono a un filtro vengono inseriti nella coda di moderazione</string>
     <string name="site_settings_multiple_links_hint">Ignora limite di link da utenti conosciuti</string>
+    <string name="site_settings_allowlist_hint">L\'autore del commento deve avere un commento già approvato in precedenza</string>
     <string name="site_settings_user_account_required_hint">Gli utenti devono essere registrati ed aver effettuato l\'accesso per poter inviare commenti</string>
     <string name="site_settings_identity_required_hint">L\'autore del commento deve inserire nome e indirizzo email</string>
     <string name="site_settings_paging_hint">Visualizza commenti in parti di dimensioni specifiche</string>
@@ -2334,6 +2359,8 @@ Language: it
     <string name="site_settings_address_hint">La modifica dell\'indirizzo non è attualmente supportata</string>
     <string name="site_settings_tagline_hint">Una breve descrizione o una frase accattivante per descrivere il tuo blog</string>
     <string name="site_settings_title_hint">Spiega in poche parole l\'argomento del sito</string>
+    <string name="site_settings_allowlist_known_summary">Commenti da utenti conosciuti</string>
+    <string name="site_settings_allowlist_all_summary">Commenti da tutti gli utenti</string>
     <string name="site_settings_threading_summary">%d livelli</string>
     <string name="site_settings_privacy_private_summary">Privato</string>
     <string name="site_settings_privacy_hidden_summary">Nascosto</string>
@@ -2341,6 +2368,7 @@ Language: it
     <string name="site_settings_privacy_public_summary">Pubblico</string>
     <string name="site_settings_moderation_hold_title">Sottoponi a moderazione</string>
     <string name="site_settings_multiple_links_title">Link nei commenti</string>
+    <string name="site_settings_allowlist_title">Approva automaticamente</string>
     <string name="site_settings_paging_title">Paginazione</string>
     <string name="site_settings_threading_title">Flusso</string>
     <string name="site_settings_sort_by_title">Ordina per</string>
