@@ -960,7 +960,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given build is Jetpack, then quick action block is not built`() {
+    fun `when build is Jetpack, then quick action block is not built`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         initSelectedSite()
@@ -968,6 +968,17 @@ class MySiteViewModelTest : BaseUnitTest() {
         val quickActionsBlock = findQuickActionsBlock()
 
         assertThat(quickActionsBlock).isNull()
+    }
+
+    @Test
+    fun `when build is WordPress, then quick action block is built`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        initSelectedSite()
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNotNull
     }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
