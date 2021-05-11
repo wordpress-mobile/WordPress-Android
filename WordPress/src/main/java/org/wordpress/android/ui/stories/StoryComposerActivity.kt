@@ -480,8 +480,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (launchedFromGutenberg || storyDiscardedFromRetry) {
             setResult(Activity.RESULT_CANCELED)
-            finish()
         }
+        finish()
     }
 
     override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
