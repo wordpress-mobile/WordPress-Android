@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login
+package org.wordpress.android.ui.accounts.login.jetpack
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
