@@ -179,19 +179,22 @@ public class SiteStore extends Store {
         @Nullable public Float previewHeight;
         @Nullable public Float scale;
         @Nullable public Boolean isBeta;
+        @Nullable public Boolean preferCache;
 
         public FetchBlockLayoutsPayload(@NonNull SiteModel site,
                                         @Nullable List<String> supportedBlocks,
                                         @Nullable Float previewWidth,
                                         @Nullable Float previewHeight,
                                         @Nullable Float scale,
-                                        @Nullable Boolean isBeta) {
+                                        @Nullable Boolean isBeta,
+                                        @Nullable Boolean preferCache) {
             this.site = site;
             this.supportedBlocks = supportedBlocks;
             this.previewWidth = previewWidth;
             this.previewHeight = previewHeight;
             this.scale = scale;
             this.isBeta = isBeta;
+            this.preferCache = preferCache;
         }
     }
 
@@ -1549,6 +1552,17 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getBlockLayoutContent(site, slug);
     }
 
+    /**
+     * Gets the cached page layout
+     *
+     * @param site the current site
+     * @param slug the slug of the layout
+     * @return the layout or null if the layout is not cached
+     */
+    public @Nullable GutenbergLayout getBlockLayout(@NonNull SiteModel site, @NonNull String slug) {
+        return SiteSqlUtils.getBlockLayout(site, slug);
+    }
+
     public List<PostFormatModel> getPostFormats(SiteModel site) {
         return SiteSqlUtils.getPostFormats(site);
     }
@@ -1966,6 +1980,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchBlockLayouts(FetchBlockLayoutsPayload payload) {
+        if (payload.preferCache != null && payload.preferCache && cachedLayoutsRetrieved(payload.site)) return;
         if (payload.site.isUsingWpComRestApi()) {
             mSiteRestClient
                     .fetchWpComBlockLayouts(payload.site, payload.supportedBlocks,
@@ -2242,17 +2257,29 @@ public class SiteStore extends Store {
     private void handleFetchedBlockLayouts(FetchedBlockLayoutsResponsePayload payload) {
         if (payload.isError()) {
             // Return cached layouts on error
-            List<GutenbergLayout> layouts = SiteSqlUtils.getBlockLayouts(payload.site);
-            List<GutenbergLayoutCategory> categories = SiteSqlUtils.getBlockLayoutCategories(payload.site);
-            if (!layouts.isEmpty() && !categories.isEmpty()) {
-                emitChange(new OnBlockLayoutsFetched(layouts, categories, null));
-            } else {
+            if (!cachedLayoutsRetrieved(payload.site)) {
                 emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
             }
         } else {
             SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories, payload.layouts);
             emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
         }
+    }
+
+    /**
+     * Emits a new [OnBlockLayoutsFetched] event with cached layouts for a given site
+     *
+     * @param site the site for which the cached layouts should be retrieved
+     * @return true if cached layouts were retrieved successfully
+     */
+    private boolean cachedLayoutsRetrieved(SiteModel site) {
+        List<GutenbergLayout> layouts = SiteSqlUtils.getBlockLayouts(site);
+        List<GutenbergLayoutCategory> categories = SiteSqlUtils.getBlockLayoutCategories(site);
+        if (!layouts.isEmpty() && !categories.isEmpty()) {
+            emitChange(new OnBlockLayoutsFetched(layouts, categories, null));
+            return true;
+        }
+        return false;
     }
 
     // Automated Transfers
