@@ -52,6 +52,7 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
         super.onViewCreated(view, savedInstanceState)
 
         initDagger()
+        initBackPressHandler()
         initViewModel()
         with(FragmentLoginSiteCheckErrorBinding.bind(view)) {
             initErrorMessageView()
@@ -70,11 +71,10 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
     }
 
     private fun FragmentLoginSiteCheckErrorBinding.initErrorMessageView() {
-        loginEmptyViewMessage.text =
-                htmlMessageUtils
-                        .getHtmlMessageFromStringFormatResId(
-                                R.string.login_not_a_jetpack_site,
-                        "<b>$siteAddress</b>")
+        loginEmptyViewMessage.text = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                R.string.login_not_a_jetpack_site,
+                "<b>$siteAddress</b>"
+        )
     }
 
     private fun FragmentLoginSiteCheckErrorBinding.initButtons() {
