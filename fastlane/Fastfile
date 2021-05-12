@@ -443,7 +443,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX:WP_PREFIX)
+    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "internal", app: options[:app])
@@ -470,8 +470,8 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do | options |
 
-    prefix = options[:app].downcase == "jetpack" ? JP_PREFIX:WP_PREFIX
-    package_name = options[:app].downcase == "jetpack" ? JP_PACKAGE_NAME:WP_PACKAGE_NAME
+    prefix = options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
+    package_name = options[:app].downcase == "jetpack" ? JP_PACKAGE_NAME : WP_PACKAGE_NAME
     aab_file_path = bundle_file_path(prefix, android_get_release_version(app: options[:app]))
 
     if File.exists? aab_file_path then
@@ -760,6 +760,10 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
+  end
+
+  lane :testing_jetpack_changes do |options|
+    android_bump_version_beta(app: options[:app])
   end
 
   #####################################################################################
