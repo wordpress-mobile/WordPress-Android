@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -133,7 +134,8 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
     private void finishAndGoBackToSource() {
         if (mSource == JetpackConnectionSource.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
+            mDispatcher.dispatch(SiteActionBuilder
+                    .newFetchSitesAction(SiteUtils.getFetchSitesPayload(BuildConfig.IS_JETPACK_APP)));
             ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);
         }
         finish();

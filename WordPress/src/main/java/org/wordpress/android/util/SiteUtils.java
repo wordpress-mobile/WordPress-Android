@@ -385,9 +385,9 @@ public class SiteUtils {
     }
 
     @NonNull
-    public static FetchSitesPayload getFetchSitesPayload() {
+    public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackApp) {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        if (BuildConfig.IS_JETPACK_APP) siteFilters.addAll(Arrays.asList(SiteFilter.JETPACK, SiteFilter.ATOMIC));
+        if (isJetpackApp) siteFilters.addAll(Arrays.asList(SiteFilter.JETPACK, SiteFilter.ATOMIC));
         return new FetchSitesPayload(siteFilters);
     }
 }

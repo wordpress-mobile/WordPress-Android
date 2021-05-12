@@ -355,7 +355,8 @@ public class SitePickerActivity extends LocaleAwareActivity
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
+                    mDispatcher.dispatch(SiteActionBuilder
+                            .newFetchSitesAction(SiteUtils.getFetchSitesPayload(BuildConfig.IS_JETPACK_APP)));
                 }
         );
     }

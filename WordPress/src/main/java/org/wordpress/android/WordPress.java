@@ -207,7 +207,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
+                mDispatcher.dispatch(SiteActionBuilder
+                        .newFetchSitesAction(SiteUtils.getFetchSitesPayload(BuildConfig.IS_JETPACK_APP)));
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
             }
             return true;
