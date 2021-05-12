@@ -41,6 +41,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    override val useCachedData: Boolean = false
+
     sealed class DesignSelectionAction(val template: String) {
         object Skip : DesignSelectionAction(defaultTemplateSlug)
         class Choose(template: String) : DesignSelectionAction(template)
@@ -63,7 +65,7 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
-    override fun fetchLayouts() {
+    override fun fetchLayouts(preferCache: Boolean) {
         if (!networkUtils.isNetworkAvailable()) {
             analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Retry error")
             updateUiState(Error(toast = R.string.hpp_retry_error))
@@ -90,13 +92,11 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onChooseTapped() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                val template = layout.slug
-                analyticsTracker.trackSiteDesignSelected(template)
-                _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
-                return
-            }
+        selectedLayout?.let { layout ->
+            val template = layout.slug
+            analyticsTracker.trackSiteDesignSelected(template)
+            _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
+            return
         }
         analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error choosing design")
         updateUiState(Error(toast = R.string.hpp_choose_error))
