@@ -2279,7 +2279,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         int editorOnboardingPhasePercentage = 0;
         boolean canViewEditorOnboarding = (
                 mAccountStore.getAccount().getUserId() % 100 >= (100 - editorOnboardingPhasePercentage)
-                || BuildConfig.ENABLE_EDITOR_ONBOARDING) && !AppPrefs.hasLaunchedGutenbergEditor();
+                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
