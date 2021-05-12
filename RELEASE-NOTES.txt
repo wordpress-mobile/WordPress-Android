@@ -2,6 +2,7 @@
 
 17.4
 -----
+* [***] Block Editor: New Block: Reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3490]
 
 
 17.3
