@@ -2963,11 +2963,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+        mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection, getSite());
     }
 
     @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection, getSite());
     }
 
     @Override public void onPerformFetch(

@@ -67,7 +67,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
 
     data class EngagedPeopleListUiState(
-        val showLikeFacesTrain: Boolean,
+        val showLikeFacesTrainContainer: Boolean,
         val numLikes: Int = 0,
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
@@ -220,7 +220,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrain = false,
+                showLikeFacesTrainContainer = false,
                 showLoading = updateLikesState is Loading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
@@ -255,9 +255,9 @@ class EngagedPeopleListViewModel @Inject constructor(
             analyticsUtilsWrapper.trackUserProfileSiteShown()
         }
 
-        if (siteId == 0L && siteUrl.isNotEmpty()) {
+        if (siteId <= 0L && siteUrl.isNotEmpty()) {
             _onNavigationEvent.value = Event(PreviewSiteByUrl(siteUrl, source))
-        } else if (siteId != 0L) {
+        } else if (siteId > 0L) {
             _onNavigationEvent.value = Event(PreviewSiteById(siteId, source))
         }
     }

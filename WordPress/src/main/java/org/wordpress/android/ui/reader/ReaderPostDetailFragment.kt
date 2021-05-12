@@ -350,7 +350,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLikeFacesTrain(view: View) {
-        likeFacesTrain = view.findViewById(R.id.liker_faces)
+        likeFacesTrain = view.findViewById(R.id.liker_faces_container)
         facesBlock = view.findViewById(R.id.faces_block)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
         likeNumBloggers = view.findViewById(R.id.num_bloggers)
@@ -479,7 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading, state.likersFacesText)
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
-            likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
+            likeFacesTrain.visibility = if (state.showLikeFacesTrainContainer) View.VISIBLE else View.GONE
 
             if (state.showEmptyState) {
                 uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="LoginTheme" parent="Theme.LoginFlow">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
     </style>
+
     <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme" />
+
+    <!-- Login Prologue -->
+    <style name="Widget.LoginFlow.Prologue" parent=""/>
+    <style name="Widget.LoginFlow.Button.Primary.Prologue" parent="Widget.LoginFlow.Button.Primary"/>
+    <style name="Widget.LoginFlow.Button.Secondary.Prologue" parent="Widget.LoginFlow.Button.Secondary"/>
+
 </resources>

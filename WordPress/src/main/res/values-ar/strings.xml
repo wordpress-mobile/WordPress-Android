@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-22 19:37:13+0000
+Translation-Revision-Date: 2021-04-28 23:36:55+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -1810,7 +1810,7 @@ Language: ar
     <string name="login_error_button">إغلاق</string>
     <string name="enter_wpcom_password_google">للمتابعة باستخدام حساب Google هذا، يرجى إدخال كلمة مرور متطابقة في WordPress.com. ستتم المطالبة بها لمرة واحدة.</string>
     <string name="error_generic_network">حدثت مشكلة في الشبكة. يرجى التحقق من اتصالك والمحاولة لاحقًا.</string>
-    <string name="post_settings_remove_featured_image">إزالة صورة مميزة</string>
+    <string name="post_settings_remove_featured_image">إزالة الصورة البارزة</string>
     <string name="post_settings_choose_featured_image">اختيار صورة مميزة</string>
     <string name="login_log_in_for_share_intent">سجّل الدخول إلى WordPress.com لمشاركة المحتوى.</string>
     <string name="enter_site_address_share_intent">أدخل عنوان موقع ووردبريس الذي تود مشاركة المحتوى معه.</string>
@@ -2276,7 +2276,7 @@ Language: ar
     <string name="web_address">عنوان موقع ويب</string>
     <string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
     <string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
-    <string name="post_settings_set_featured_image">تعيين صورة مميزة</string>
+    <string name="post_settings_set_featured_image">تعيين صورة بارزة</string>
     <string name="post_settings_featured_image">الصورة المميزة</string>
     <string name="email_address">عنوان البريد الإلكتروني</string>
     <string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>

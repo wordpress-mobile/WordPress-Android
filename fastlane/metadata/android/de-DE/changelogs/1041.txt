@@ -1,0 +1,2 @@
+17.2:
+In dieser Version wird ein neuer Block vorgestellt – Jetpack Kontaktinfo. Er eignet sich hervorragend, um formatierte Adressen auf deiner Website sauber anzuzeigen. Außerdem haben wir es einfacher gemacht, dem Bildblock extra viel Alt-Text hinzuzufügen und TalkBack mit dem Spaltenblock zu verwenden. Zudem können Menüs jetzt einfacher in Rechts-nach-Links-Sprachen angesehen werden und deine Website kann mit Leichtigkeit deiner Zeitzone angepasst werden.

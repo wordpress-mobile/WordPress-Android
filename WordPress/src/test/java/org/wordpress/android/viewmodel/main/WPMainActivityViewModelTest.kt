@@ -29,6 +29,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.QuickStartRepository
@@ -626,6 +627,20 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 listOf(invisibleFollowSiteFocusPointInfo),
                 listOf(visibleFollowSiteFocusPointInfo)
         )
+    }
+
+    @Test
+    fun `bottom sheet actions are sorted in the correct order`() {
+        startViewModelWithDefaultParameters()
+
+        val expectedOrder = listOf(
+                NO_ACTION,
+                CREATE_NEW_STORY,
+                CREATE_NEW_POST,
+                CREATE_NEW_PAGE
+        )
+
+        assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
     private fun startViewModelWithDefaultParameters(isJetpackApp: Boolean = false) {
