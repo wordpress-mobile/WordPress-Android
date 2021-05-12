@@ -6,6 +6,7 @@
 
 17.3
 -----
+* [**] Added transform block capability [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3321]
 * [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
 * [***]  Block Editor: New Block: Search Block [#https://github.com/wordpress-mobile/gutenberg-mobile/pull/3210]
 * [**]  Block Editor: The media upload options of the Image, Video and Gallery block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2700]
