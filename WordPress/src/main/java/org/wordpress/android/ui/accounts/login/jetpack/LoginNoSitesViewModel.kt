@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login
+package org.wordpress.android.ui.accounts.login.jetpack
 
 import android.os.Bundle
 import androidx.lifecycle.LiveData
@@ -14,8 +14,8 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.Serializable

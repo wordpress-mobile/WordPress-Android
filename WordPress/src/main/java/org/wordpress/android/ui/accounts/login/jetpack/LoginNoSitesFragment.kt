@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login
+package org.wordpress.android.ui.accounts.login.jetpack
 
 import android.content.Context
 import android.os.Bundle
@@ -15,8 +15,8 @@ import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
