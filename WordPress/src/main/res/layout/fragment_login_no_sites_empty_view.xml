@@ -20,7 +20,7 @@
             android:layout_height="@dimen/login_empty_view_avatar_height"
             android:layout_marginBottom="@dimen/login_empty_view_avatar_margin_bottom"
             android:contentDescription="@string/login_empty_view_avatar_content_description"
-            app:layout_constraintBottom_toTopOf="@+id/text_display_name"
+            app:layout_constraintBottom_toTopOf="@+id/text_displayname"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/ic_user_white_24dp" />
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="image_avatar,text_username, text_display_name"
+            app:constraint_referenced_ids="image_avatar,text_username, text_displayname"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
@@ -102,7 +102,7 @@
             app:layout_constraintTop_toBottomOf="@+id/login_error_message_title" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/text_display_name"
+            android:id="@+id/text_displayname"
             style="@style/Login.EmptyView.TextView.DisplayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,8 +118,8 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/margin_extra_medium_large"
             app:layout_constraintBottom_toTopOf="@+id/login_empty_view_illustration"
-            app:layout_constraintStart_toStartOf="@+id/text_display_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_display_name"
+            app:layout_constraintStart_toStartOf="@+id/text_displayname"
+            app:layout_constraintTop_toBottomOf="@+id/text_displayname"
             tools:text="\@droidtester2021" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
