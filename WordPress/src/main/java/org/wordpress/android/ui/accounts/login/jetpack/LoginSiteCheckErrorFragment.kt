@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.FragmentLoginSiteCheckErrorBinding
+import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
@@ -19,7 +19,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_error) {
+class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginSiteCheckErrorFragment"
         const val ARG_SITE_ADDRESS = "SITE-ADDRESS"
@@ -54,9 +54,9 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
         initDagger()
         initBackPressHandler()
         initViewModel()
-        with(FragmentLoginSiteCheckErrorBinding.bind(view)) {
+        with(JetpackLoginEmptyViewBinding.bind(view)) {
             initErrorMessageView()
-            initButtons()
+            initClickListeners()
         }
         initObservers()
     }
@@ -70,16 +70,16 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.fragment_login_site_check_
                 .get(LoginSiteCheckErrorViewModel::class.java)
     }
 
-    private fun FragmentLoginSiteCheckErrorBinding.initErrorMessageView() {
-        loginEmptyViewMessage.text = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+    private fun JetpackLoginEmptyViewBinding.initErrorMessageView() {
+        loginErrorMessageText.text = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                 R.string.login_not_a_jetpack_site,
                 "<b>$siteAddress</b>"
         )
     }
 
-    private fun FragmentLoginSiteCheckErrorBinding.initButtons() {
-        buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsPressed() }
-        buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountPressed() }
+    private fun JetpackLoginEmptyViewBinding.initClickListeners() {
+        bottomButtonsContainer.buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsPressed() }
+        bottomButtonsContainer.buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountPressed() }
     }
 
     private fun initObservers() {
