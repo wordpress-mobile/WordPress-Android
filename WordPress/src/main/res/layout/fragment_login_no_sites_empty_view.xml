@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:gravity="center|center_horizontal|center_vertical">
+        android:layout_marginTop="@dimen/margin_extra_extra_large">
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/login_empty_view_user_section"
