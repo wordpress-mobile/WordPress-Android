@@ -31,7 +31,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when see instructions pressed, then ShowInstructions navigation event is posted`() {
+    fun `when see instructions pressed, then a show instructions navigation event is posted`() {
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.start()
@@ -41,7 +41,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when choose another account is pressed, then ShowSignInForResultJetpackOnly navigation event is posted`() {
+    fun `when choose another account is pressed, then a sign in navigation event is posted`() {
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.start()
@@ -51,7 +51,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given on back pressed, then ShowSignInForResultJetpackOnly navigation event is posted`() {
+    fun `given on back pressed, then show sign in navigation event is posted`() {
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.start()
