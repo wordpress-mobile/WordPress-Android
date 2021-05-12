@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -37,7 +37,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onSeeInstructionsPressed()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowInstructions::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowInstructions::class.java)
     }
 
     @Test
@@ -47,7 +47,7 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onTryAnotherAccountPressed()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowSignInForResultJetpackOnly::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowSignInForResultJetpackOnly::class.java)
     }
 
     @Test
@@ -57,6 +57,6 @@ class LoginSiteCheckErrorViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onBackPressed()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowSignInForResultJetpackOnly::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowSignInForResultJetpackOnly::class.java)
     }
 }
