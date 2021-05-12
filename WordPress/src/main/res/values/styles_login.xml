@@ -10,9 +10,22 @@
 
     <style name="LoginTheme.TransparentStatusBar" parent="LoginTheme" />
 
+    <style name="Login.EmptyView.TextView.Username" parent="android:Widget.TextView">
+        <item name="android:textSize">@null</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="Login.EmptyView.TextView.DisplayName" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- Login Prologue -->
     <style name="Widget.LoginFlow.Prologue" parent=""/>
     <style name="Widget.LoginFlow.Button.Primary.Prologue" parent="Widget.LoginFlow.Button.Primary"/>
     <style name="Widget.LoginFlow.Button.Secondary.Prologue" parent="Widget.LoginFlow.Button.Secondary"/>
-
 </resources>
