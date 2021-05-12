@@ -106,7 +106,7 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
             uiHelpers.setTextOrHide(textUsername, value)
 
     private fun FragmentLoginNoSitesEmptyViewBinding.setDisplayName(value: String) =
-            uiHelpers.setTextOrHide(textDisplayname, value)
+            uiHelpers.setTextOrHide(textDisplayName, value)
 
     private fun showSignInForResultJetpackOnly() {
         ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)
