@@ -221,7 +221,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 showSiteAddressError((ShowSiteAddressError) loginEvent);
             } else if (loginEvent instanceof ShowNoJetpackSites) {
                 showNoJetpackSites();
-            } 
+            }
         });
     }
 
