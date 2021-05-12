@@ -424,6 +424,37 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
+  # build_internal
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app it for restricted internal testing and optionally uploads it
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_internal [app:<name of app>] [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
+  #
+  # Example:
+  # bundle exec fastlane build_internal
+  # bundle exec fastlane build_internal skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_internal create_release:true
+  #####################################################################################
+  desc "Builds and updates for internal testing"
+  lane :build_internal do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
+    android_build_preflight() unless (options[:skip_prechecks])
+
+    # Create the file names
+    version=android_get_release_version()
+    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX:WP_PREFIX)
+
+    if (options[:upload_to_play_store]) then
+       upload_build_to_play_store(version: version, track: "internal", app: options[:app])
+    end
+
+    if (options[:create_release])
+      create_gh_release(version: version, prerelease: true)
+    end
+  end
+
+  #####################################################################################
   # upload_build_to_play_store
   # -----------------------------------------------------------------------------------
   # This lane uploads the build to Play Store for the given version to the given track
@@ -439,17 +470,13 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do | options |
 
-    prefix = WP_PREFIX
-    package_name = WP_PACKAGE_NAME
-    if (options[:app] == "jetpack")
-      prefix = JP_PREFIX
-      package_name = JP_PACKAGE_NAME
-    end
-    aab_file_path = bundle_file_path(options[:prefix], android_get_release_version(app: options[:app]))
+    prefix = options[:app].downcase == "jetpack" ? JP_PREFIX:WP_PREFIX
+    package_name = options[:app].downcase == "jetpack" ? JP_PACKAGE_NAME:WP_PACKAGE_NAME
+    aab_file_path = bundle_file_path(prefix, android_get_release_version(app: options[:app]))
 
     if File.exists? aab_file_path then
       upload_to_play_store(
-        package_name: "#{options[:package_name]}",
+        package_name: package_name,
         aab: aab_file_path,
         track: options[:track],
         release_status: 'draft',

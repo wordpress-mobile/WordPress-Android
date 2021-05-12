@@ -50,6 +50,9 @@ android {
         dexInProcess = true
     }
 
+    def versionProperties = new Properties()
+    file("version.properties").withInputStream { versionProperties.load(it) }
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -60,9 +63,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-293"
+            versionName versionProperties.getProperty("wordpress.alphaVersionName")
         }
-        versionCode 1043
+        versionCode versionProperties.getProperty("wordpress.alphaVersionCode").toInteger()
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -93,14 +96,15 @@ android {
 
     flavorDimensions "app", "buildType"
 
+
     productFlavors {
         wordpress {
             dimension "app"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.3-rc-1"
+                versionName versionProperties.getProperty("wordpress.versionName")
             }
-            versionCode 1042
+            versionCode versionProperties.getProperty("wordpress.versionCode").toInteger()
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -111,9 +115,9 @@ android {
             dimension "app"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "0.01"
+                versionName versionProperties.getProperty("jetpack.versionName")
             }
-            versionCode 1
+            versionCode versionProperties.getProperty("jetpack.versionCode").toInteger()
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
@@ -322,7 +326,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -460,11 +464,40 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     ]
 }
 
-task printVersionName {
+task printWordPressVersionName {
     doLast {
-        println android.productFlavors.vanilla.versionName
+        println android.productFlavors.wordpress.versionName
     }
 }
+
+task printWordPressVersionCode {
+    doLast {
+        println android.productFlavors.wordpress.versionCode
+    }
+}
+
+task printJetpackVersionName {
+    doLast {
+        println android.productFlavors.jetpack.versionName
+    }
+}
+
+task printJetpackVersionCode {
+    doLast {
+        println android.productFlavors.jetpack.versionCode
+    }
+}
+
+
+task "updateVersionProperties" {
+    doLast {
+        ant.propertyfile(
+                file: "version.properties") {
+            entry( key: "$key", value: "$value")
+        }
+    }
+}
+
 
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
