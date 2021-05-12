@@ -51,7 +51,7 @@ android {
     }
 
     def versionProperties = new Properties()
-    file("version.properties").withInputStream { versionProperties.load(it) }
+    file("../version.properties").withInputStream { versionProperties.load(it) }
 
     compileSdkVersion rootProject.compileSdkVersion
 
@@ -63,9 +63,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName versionProperties.getProperty("wordpress.alphaVersionName")
+            versionName versionProperties.getProperty("wordpress.alpha.versionNam")
         }
-        versionCode versionProperties.getProperty("wordpress.alphaVersionCode").toInteger()
+        versionCode 2
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -466,13 +466,13 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 
 task printWordPressVersionName {
     doLast {
-        println android.productFlavors.wordpress.versionName
+        println android.productFlavors.wordpress.versionName-rc-1
     }
 }
 
 task printWordPressVersionCode {
     doLast {
-        println android.productFlavors.wordpress.versionCode
+        println 1
     }
 }
 
@@ -492,7 +492,7 @@ task printJetpackVersionCode {
 task "updateVersionProperties" {
     doLast {
         ant.propertyfile(
-                file: "version.properties") {
+                file: "../version.properties") {
             entry( key: "$key", value: "$value")
         }
     }
