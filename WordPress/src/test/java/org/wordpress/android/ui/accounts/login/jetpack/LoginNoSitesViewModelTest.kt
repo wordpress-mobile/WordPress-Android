@@ -19,8 +19,6 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.accounts.login.jetpack.KEY_STATE
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.UiModel
