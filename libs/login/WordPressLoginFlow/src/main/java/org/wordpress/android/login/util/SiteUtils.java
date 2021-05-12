@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SiteUtils {
@@ -50,7 +51,7 @@ public class SiteUtils {
     @NonNull
     public static FetchSitesPayload getFetchSitesPayload(boolean isJetpackAppLogin) {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        if (isJetpackAppLogin) siteFilters.add(SiteFilter.JETPACK);
+        if (isJetpackAppLogin) siteFilters.addAll(Arrays.asList(SiteFilter.JETPACK, SiteFilter.ATOMIC));
         return new FetchSitesPayload(siteFilters);
     }
 }

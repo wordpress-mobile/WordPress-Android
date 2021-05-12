@@ -29,6 +29,7 @@ import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SiteUtils {
@@ -386,7 +387,7 @@ public class SiteUtils {
     @NonNull
     public static FetchSitesPayload getFetchSitesPayload() {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
+        if (BuildConfig.IS_JETPACK_APP) siteFilters.addAll(Arrays.asList(SiteFilter.JETPACK, SiteFilter.ATOMIC));
         return new FetchSitesPayload(siteFilters);
     }
 }
