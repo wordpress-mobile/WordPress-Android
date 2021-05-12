@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login
+package org.wordpress.android.ui.accounts.login.jetpack
 
 import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
@@ -19,9 +19,11 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.NoUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.State.ShowUser
-import org.wordpress.android.ui.accounts.login.LoginNoSitesViewModel.UiModel
+import org.wordpress.android.ui.accounts.login.jetpack.KEY_STATE
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.NoUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.UiModel
 
 private const val USERNAME = "username"
 private const val DISPLAY_NAME = "display_name"
