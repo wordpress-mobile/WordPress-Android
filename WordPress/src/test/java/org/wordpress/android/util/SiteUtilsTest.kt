@@ -5,6 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
@@ -197,6 +198,33 @@ class SiteUtilsTest {
 
         val circularSiteImage = SiteUtils.getSiteImageType(false, CIRCULAR)
         assertThat(circularSiteImage).isEqualTo(BLAVATAR_CIRCULAR)
+    }
+
+    @Test
+    fun `given jetpack app, when sites are fetched, then jetpack and atomic sites are included in the filters`() {
+        val isJetpackApp = true
+
+        val payload = SiteUtils.getFetchSitesPayload(isJetpackApp)
+
+        assertThat(payload.filters).isEqualTo(listOf(SiteFilter.JETPACK, SiteFilter.ATOMIC))
+    }
+
+    @Test
+    fun `given jetpack app, when sites are fetched, then wpcom sites are not included in the filters`() {
+        val isJetpackApp = true
+
+        val payload = SiteUtils.getFetchSitesPayload(isJetpackApp)
+
+        assertThat(payload.filters).doesNotContain(SiteFilter.WPCOM)
+    }
+
+    @Test
+    fun `given wordpress app, when sites are fetched, then no sites are filtered out`() {
+        val isJetpackApp = false
+
+        val payload = SiteUtils.getFetchSitesPayload(isJetpackApp)
+
+        assertThat(payload.filters).isEmpty()
     }
 
     private fun initJetpackSite(): SiteModel {
