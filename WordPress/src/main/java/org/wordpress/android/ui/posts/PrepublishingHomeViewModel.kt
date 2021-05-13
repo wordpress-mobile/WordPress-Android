@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -157,8 +156,9 @@ class PrepublishingHomeViewModel @Inject constructor(
             ))
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
-                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
-                _onSubmitButtonClicked.postValue(Event(publishPost))
+                launch(bgDispatcher) {
+                    waitForStoryTitleJobAndSubmit(publishPost)
+                }
             })
         }.toList()
 
@@ -174,6 +174,12 @@ class PrepublishingHomeViewModel @Inject constructor(
             storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
             updateStoryPostTitleUseCase.updateStoryTitle(storyTitle, editPostRepository)
         }
+    }
+
+    private suspend fun waitForStoryTitleJobAndSubmit(publishPost: PublishPost) {
+        updateStoryTitleJob?.join()
+        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
+        _onSubmitButtonClicked.postValue(Event(publishPost))
     }
 
     override fun onCleared() {
