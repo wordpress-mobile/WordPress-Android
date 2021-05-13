@@ -133,8 +133,9 @@ class PrepublishingHomeViewModel @Inject constructor(
                         editPostRepository,
                         site
                 )
-                if (categoryString.isNotEmpty())
+                if (categoryString.isNotEmpty()) {
                     UiStringText(categoryString)
+                }
             } else {
                 UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
