@@ -184,19 +184,19 @@ jobs:
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
       - run:
-          name: Build Zalpha
+          name: Build WordPress Zalpha
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_alpha app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - run:
-          name: Build Vanilla
+          name: Build WordPress Vanilla
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_beta app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             else
-              bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - android/save-gradle-cache
