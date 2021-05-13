@@ -142,7 +142,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMediaPickerProvider(this)
         (application as WordPress).component().inject(this)
         initSite(savedInstanceState)
-        super.onCreate(savedInstanceState)
         setSnackbarProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
@@ -153,9 +152,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)
-        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
 
         initViewModel(savedInstanceState)
+        super.onCreate(savedInstanceState)
+
+        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
     }
 
     private fun initSite(savedInstanceState: Bundle?) {
