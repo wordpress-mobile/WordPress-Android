@@ -1,7 +1,9 @@
-PATH
-  remote: /Users/javondavis/projects/release-toolkit
+GIT
+  remote: https://github.com/wordpress-mobile/release-toolkit
+  revision: 89194c3bd0ce48e4f7e66e1583317bea8a5999be
+  branch: update/jetpack
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.18.2)
+    fastlane-plugin-wpmreleasetoolkit (0.18.1)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
