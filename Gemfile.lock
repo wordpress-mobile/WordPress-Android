@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 89194c3bd0ce48e4f7e66e1583317bea8a5999be
+  revision: d1e095e937b0ea253661ba0ffcd91939289e0a47
   branch: update/jetpack
   specs:
     fastlane-plugin-wpmreleasetoolkit (0.18.1)
@@ -65,14 +65,18 @@ GEM
     dotenv (2.7.6)
     emoji_regex (3.2.2)
     excon (0.79.0)
-    faraday (1.3.0)
+    faraday (1.4.1)
+      faraday-excon (~> 1.1)
       faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
       multipart-post (>= 1.2, < 3)
-      ruby2_keywords
+      ruby2_keywords (>= 0.0.4)
     faraday-cookie_jar (0.0.7)
       faraday (>= 0.8.0)
       http-cookie (~> 1.0.0)
+    faraday-excon (1.1.0)
     faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.1.0)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
     fastimage (2.2.3)
@@ -175,7 +179,7 @@ GEM
     memoist (0.16.2)
     mini_magick (4.11.0)
     mini_mime (1.0.2)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.1)
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.0.0)
