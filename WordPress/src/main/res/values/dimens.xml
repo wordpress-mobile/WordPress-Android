@@ -659,4 +659,9 @@
     <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
     <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
 
+    <!-- Login empty views-->
+    <dimen name="login_empty_view_avatar_width">72dp</dimen>
+    <dimen name="login_empty_view_avatar_height">72dp</dimen>
+    <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
+    <dimen name="login_empty_view_line_spacing">2sp</dimen>
 </resources>
