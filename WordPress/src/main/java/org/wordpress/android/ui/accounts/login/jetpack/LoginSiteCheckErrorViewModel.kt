@@ -1,47 +1,35 @@
-package org.wordpress.android.ui.accounts.login
+package org.wordpress.android.ui.accounts.login.jetpack
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import org.wordpress.android.WordPress
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.accounts.LoginNavigationEvents
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker
-import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class LoginNoSitesErrorViewModel @Inject constructor(
-    private val unifiedLoginTracker: UnifiedLoginTracker,
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
+class LoginSiteCheckErrorViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
 
     private var isStarted = false
-    fun start(application: WordPress) {
+    fun start() {
         if (isStarted) return
         isStarted = true
-
-        signOutWordPress(application)
     }
 
-    private fun signOutWordPress(application: WordPress) {
-        launch {
-            withContext(bgDispatcher) {
-                application.wordPressComSignOut()
-            }
-        }
+    fun onSeeInstructionsPressed() {
+        _navigationEvents.postValue(Event(ShowInstructions()))
     }
 
-    fun onFragmentResume() {
-        unifiedLoginTracker.track(step = Step.NO_JETPACK_SITES)
+    fun onTryAnotherAccountPressed() {
+        _navigationEvents.postValue(Event(ShowSignInForResultJetpackOnly))
     }
 
     fun onBackPressed() {

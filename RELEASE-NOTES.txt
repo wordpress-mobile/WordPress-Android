@@ -18,6 +18,7 @@
 
 17.2
 -----
+* [**] Added transform block capability [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3321]
 * [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
 * [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
 * [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]

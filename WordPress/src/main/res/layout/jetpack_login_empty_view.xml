@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/user_cardView"
+            style="@style/Widget.EmptyView.CardView.BottomBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/login_empty_view_illustration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <include
+                android:id="@+id/user_container"
+                layout="@layout/jetpack_login_include_user_container" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/login_empty_view_illustration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/login_no_jetpack_sites"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/margin_extra_large"
+            android:src="@drawable/img_jetpack_empty_state"
+            app:layout_constraintBottom_toTopOf="@+id/login_error_message_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/login_error_message_title"
+            style="@style/Login.EmptyView.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_empty_view_illustration"
+            tools:text="@string/login_no_jetpack_sites" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/login_error_message_text"
+            style="@style/Login.EmptyView.SubTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_error_message_title"
+            tools:text="@string/login_no_jetpack_sites_error_message" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/bottom_buttons_cardView"
+            style="@style/Widget.EmptyView.CardView.BottomBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_error_message_text">
+
+            <include
+                android:id="@+id/bottom_buttons_container"
+                layout="@layout/jetpack_login_include_empty_buttons_container" />
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
