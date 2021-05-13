@@ -1781,7 +1781,8 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "LOCAL_SITE_ID INTEGER," +
                                     "STYLESHEET TEXT," +
                                     "VERSION TEXT," +
-                                    "RAW_GLOBAL_STYLES_BASE_STYLES TEXT," +
+                                    "RAW_STYLES TEXT," +
+                                    "RAW_FEATURES TEXT," +
                                     "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
                     )
                 }
