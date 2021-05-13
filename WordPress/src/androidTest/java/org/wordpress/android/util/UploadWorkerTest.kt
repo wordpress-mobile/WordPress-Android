@@ -38,7 +38,7 @@ class UploadWorkerTest {
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests
                 .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(UploadWorker.Factory(uploadStarter, siteStore))
+                .setWorkerFactory(WorkerFactory(uploadStarter, siteStore))
                 .build()
 
         // Initialize WorkManager for instrumentation tests.
