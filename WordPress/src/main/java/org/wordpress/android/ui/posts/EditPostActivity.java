@@ -298,6 +298,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PUBLISH_SETTINGS = 2;
     private static final int PAGE_HISTORY = 3;
+    private static final int EDITOR_ONBOARDING_PHASE_PERCENTAGE = 0;
 
     private AztecImageLoader mAztecImageLoader;
 
@@ -934,6 +935,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
+        }
+
+        if (mShowGutenbergEditor) {
+            AppPrefs.setHasLaunchedGutenbergEditor(true);
         }
     }
 
@@ -2272,6 +2277,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
+        boolean canViewEditorOnboarding = (
+                mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
+                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
+
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
@@ -2283,7 +2292,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
-                themeBundle
+                themeBundle,
+                canViewEditorOnboarding
         );
     }
 
