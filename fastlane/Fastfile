@@ -120,8 +120,8 @@ REPOSITORY_NAME="WordPress-Android"
   lane :code_freeze do | options |
     old_version = android_codefreeze_prechecks(options)
 
-    android_bump_version_release(options[:app])
-    new_version = android_get_app_version(options[:app])
+    android_bump_version_release(app: options[:app])
+    new_version = android_get_app_version(app: options[:app])
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -155,7 +155,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Creates a new release branch from the current develop"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
-    new_version = android_get_app_version(options[:app])
+    new_version = android_get_app_version(app: options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -224,8 +224,8 @@ REPOSITORY_NAME="WordPress-Android"
     android_betabuild_prechecks(options)
     send_strings_for_translation()
     android_update_metadata(options)
-    android_bump_version_beta(options[:app])
-    new_version = android_get_app_version(options[:app])
+    android_bump_version_beta(app: options[:app])
+    new_version = android_get_app_version(app: options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -259,7 +259,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane finalize_hotfix_release
   desc "Finalizes a hotfix release by tagging the build"
   lane :finalize_hotfix_release do | options |
-    new_version = android_get_app_version(options[:app])
+    new_version = android_get_app_version(app: options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -281,8 +281,8 @@ REPOSITORY_NAME="WordPress-Android"
     configure_apply(force: is_ci)
     hotfix = android_current_branch_is_hotfix
     android_update_metadata(options) unless hotfix
-    android_bump_version_final_release(options[:app]) unless hotfix
-    version = android_get_release_version(options[:app])
+    android_bump_version_final_release(app: options[:app]) unless hotfix
+    version = android_get_release_version(app: options[:app])
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
 
     # Wrap up
@@ -411,7 +411,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    version=android_get_release_version()
+    version=android_get_release_version(app: options[:app])
     build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
@@ -442,7 +442,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    version=android_get_release_version()
+    version=android_get_release_version(app: options[:app])
     build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "internal", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
