@@ -63,9 +63,10 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName versionProperties.getProperty("wordpress.alpha.versionNam")
+            versionName versionProperties.getProperty("wordpress.alpha.versionName")
         }
-        versionCode 2
+
+        versionCode versionProperties.getProperty("wordpress.alpha.versionCode").toInteger()
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
