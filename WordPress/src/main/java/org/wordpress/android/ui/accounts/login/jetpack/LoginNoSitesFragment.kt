@@ -100,10 +100,9 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     }
 
     private fun JetpackLoginEmptyViewBinding.loadGravatar(avatarUrl: String) {
-        val url = meGravatarLoader.constructGravatarUrl(avatarUrl)
         AvatarHelper.loadAvatarFromUrl(
                 this@LoginNoSitesFragment,
-                url,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
                 userContainer.imageAvatar,
                 object : AvatarRequestListener {
                     override fun onRequestFinished() {
