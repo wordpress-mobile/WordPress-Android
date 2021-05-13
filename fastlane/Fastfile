@@ -98,7 +98,6 @@ Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
-ENV["HAS_ALPHA_VERSION"]="true"
 REPOSITORY_NAME="WordPress-Android"
 
 ########################################################################
@@ -121,8 +120,8 @@ REPOSITORY_NAME="WordPress-Android"
   lane :code_freeze do | options |
     old_version = android_codefreeze_prechecks(options)
 
-    android_bump_version_release()
-    new_version = android_get_app_version()
+    android_bump_version_release(options[:app])
+    new_version = android_get_app_version(options[:app])
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -156,7 +155,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Creates a new release branch from the current develop"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
-    new_version = android_get_app_version()
+    new_version = android_get_app_version(options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -225,8 +224,8 @@ REPOSITORY_NAME="WordPress-Android"
     android_betabuild_prechecks(options)
     send_strings_for_translation()
     android_update_metadata(options)
-    android_bump_version_beta()
-    new_version = android_get_app_version()
+    android_bump_version_beta(options[:app])
+    new_version = android_get_app_version(options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -245,7 +244,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Creates a new hotfix branch from the given tag"
   lane :new_hotfix_release do | options |
     prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
-    android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
+    android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code], app: options[:app])
   end
 
   #####################################################################################
@@ -260,7 +259,7 @@ REPOSITORY_NAME="WordPress-Android"
   # bundle exec fastlane finalize_hotfix_release
   desc "Finalizes a hotfix release by tagging the build"
   lane :finalize_hotfix_release do | options |
-    new_version = android_get_app_version()
+    new_version = android_get_app_version(options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
 
@@ -282,8 +281,8 @@ REPOSITORY_NAME="WordPress-Android"
     configure_apply(force: is_ci)
     hotfix = android_current_branch_is_hotfix
     android_update_metadata(options) unless hotfix
-    android_bump_version_final_release() unless hotfix
-    version = android_get_release_version()
+    android_bump_version_final_release(options[:app]) unless hotfix
+    version = android_get_release_version(options[:app])
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
 
     # Wrap up
@@ -355,10 +354,11 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
-      final: false)
+      final: false,
+      app: options[:app])
     android_build_preflight() unless (options[:skip_prechecks])
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
   end
 
   #####################################################################################
@@ -376,12 +376,12 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true, app: options[:app]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, app:"wordpress", flavor:"Zalpha", buildType: "release", prefix: "wpandroid")
+    build_bundle(version: version, app:options[:app], flavor:"Zalpha", buildType: "release", prefix: options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "alpha")
@@ -407,12 +407,12 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true, app: options[:app]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release", prefix:"wpandroid")
+    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "beta")
@@ -438,12 +438,12 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for internal testing"
   lane :build_internal do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
+    android_build_prechecks(skip_confirm: options[:skip_confirm], app: options[:app]) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "release", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
+    build_bundle(version: version, app: options[:app], flavor:"Vanilla", buildType: "internal", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "internal", app: options[:app])
@@ -760,10 +760,6 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
-  end
-
-  lane :testing_jetpack_changes do |options|
-    android_bump_version_beta(app: options[:app])
   end
 
   #####################################################################################
