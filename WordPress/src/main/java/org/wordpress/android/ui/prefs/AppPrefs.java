@@ -247,6 +247,9 @@ public class AppPrefs {
 
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
+
+        // Used to indicate whether or not the device running out of storage warning shoudl be shown
+        SHOULD_SHOW_STORAGE_WARNING,
     }
 
     private static SharedPreferences prefs() {
@@ -1184,6 +1187,14 @@ public class AppPrefs {
 
     public static boolean shouldShowStoriesIntro() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
+    }
+
+    public static void setShouldShowStorageWarning(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
+    }
+
+    public static boolean shouldShowStorageWarning() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {
