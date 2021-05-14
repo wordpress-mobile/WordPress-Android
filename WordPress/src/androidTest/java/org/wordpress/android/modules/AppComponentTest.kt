@@ -14,25 +14,29 @@ import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.Suggesti
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-    ApplicationModule::class,
-    AppConfigModule::class,
-    OkHttpClientModule::class,
-    InterceptorModuleTest::class,
-    ReleaseNetworkModule::class,
-    LegacyModule::class,
-    ReleaseToolsModule::class,
-    AndroidSupportInjectionModule::class,
-    ViewModelModule::class,
-    StatsModule::class,
-    TrackerTestModule::class,
-    // Login flow library
-    LoginAnalyticsModule::class,
-    LoginFragmentModule::class,
-    LoginServiceModule::class,
-    SupportModule::class,
-    ThreadModule::class,
-    SuggestionSourceModule::class])
+@Component(
+        modules = [
+            ApplicationModule::class,
+            AppConfigModule::class,
+            OkHttpClientModule::class,
+            InterceptorModuleTest::class,
+            ReleaseNetworkModule::class,
+            LegacyModule::class,
+            ReleaseToolsModule::class,
+            AndroidSupportInjectionModule::class,
+            ViewModelModule::class,
+            StatsModule::class,
+            TrackerTestModule::class,
+            // Login flow library
+            LoginAnalyticsModule::class,
+            LoginFragmentModule::class,
+            LoginServiceModule::class,
+            SupportModule::class,
+            ThreadModule::class,
+            SuggestionSourceModule::class,
+            ExperimentModule::class
+        ]
+)
 interface AppComponentTest : AppComponent {
     @Component.Builder
     interface Builder : AppComponent.Builder {
