@@ -771,7 +771,7 @@ Language: zh_CN
     <string name="threat_fix_fixable_update">Jetpack Scan 将更新至较新的版本 (%s)。</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan 将删除受影响的文件或目录。</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan 将替换受影响的文件或目录。</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan 无法自动修复此威胁。\n 我们建议您手动解决威胁：确保 WordPress、主题和所有插件都是最新的，并从您的站点中删除有问题的代码、主题或插件。 \n \n\n 如果您需要更多帮助来解决此威胁，建议您使用 &lt;b&gt;Codeable&lt;/b&gt; - 一个由经过严格审查的 WordPress 专家组成的值得信赖的自由职业者市场。\n 他们已组建一个安全专家小组来帮助开展这些项目。 价格从 70-120 美元/小时不等，您可以免费估价，无需租用。</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan 无法自动修复此威胁。\n 我们建议您手动解决威胁：确保 WordPress、主题和所有插件都是最新的，并从您的站点中删除有问题的代码、主题或插件。 \n \n\n 如果您需要更多帮助来解决此威胁，建议您使用 &lt;b&gt;Codeable&lt;/b&gt; - 一个由经过严格审查的 WordPress 专家组成的值得信赖的自由职业者市场。\n 他们已组建一个安全专家小组来帮助开展这些项目。 价格从 70&#8211;120 美元/小时不等，您可以免费估价，无需租用。</string>
     <string name="threat_fix_current_not_fixable_header">解决威胁</string>
     <string name="threat_fix_fixed_header">Jetpack 如何修复该问题？</string>
     <string name="threat_fix_default_header">我们将如何解决？</string>

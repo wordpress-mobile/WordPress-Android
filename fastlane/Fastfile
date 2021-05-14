@@ -273,7 +273,6 @@ REPOSITORY_NAME="WordPress-Android"
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
     hotfix = android_current_branch_is_hotfix
-    android_update_metadata(options) unless hotfix
     android_bump_version_final_release() unless hotfix
     version = android_get_release_version()
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix

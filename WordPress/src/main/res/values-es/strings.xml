@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-11 09:54:07+0000
+Translation-Revision-Date: 2021-05-14 08:49:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
@@ -254,8 +254,8 @@ Language: es
     <string name="gutenberg_native_insert_poetry_use_special_spacing_formats_or_quote_song_lyrics">Inserta poesía. Utiliza formatos de espaciado especiales. O cita letras de canciones.</string>
     <string name="gutenberg_native_insert_row_after">Insertar una fila debajo</string>
     <string name="gutenberg_native_insert_row_before">Insertar una fila encima</string>
-    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">Inserta una tabla &#8212; perfecto para compartir gráficos y datos.</string>
     <string name="gutenberg_native_insert_additional_custom_elements_with_a_wordpress_shortcode">Inserta elementos personalizados adicionales con un shortcode de WordPress.</string>
+    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">Inserta una tabla — perfecto para compartir gráficos y datos.</string>
     <string name="gutenberg_native_in_quoting_others_we_cite_ourselves">Al citar a otros, nos citamos a nosotros mismos.</string>
     <string name="gutenberg_native_indent">Aumentar margen</string>
     <string name="gutenberg_native_indent_list_item">Añadir sangría al elemento de la lista</string>
