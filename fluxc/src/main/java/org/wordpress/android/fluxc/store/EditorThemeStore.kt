@@ -22,7 +22,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-private const val GSS_REQUEST_PATH = "/wp-block-editor/v1/settings?context = site-editor"
+private const val GSS_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
 private const val GSS_LIMIT_VERSION = "5.8"
 
 @Singleton
