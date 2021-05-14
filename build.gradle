@@ -7,7 +7,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = '1.30.3-beta.3'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = '3377-7a663bd858df616c98657d4c4a95b41294ad4c77'
+    ext.gutenbergMobileVersion = '3377-b3c5048e6159f745b446b0ff40c428cab8a747ec'
 
     repositories {
         google()
