@@ -184,7 +184,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS = "show_stats";
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
-    public static final String ARG_SOURCE_PUSH_ID = "source_push_id";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -368,10 +367,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-
-        if (getIntent().hasExtra(ARG_SOURCE_PUSH_ID)) {
-            mLocalPushScheduler.cancelNotification(getIntent().getIntExtra(ARG_SOURCE_PUSH_ID, -1));
-        }
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.

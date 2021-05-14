@@ -16,6 +16,6 @@ class LocalPushHandlerFactory
 
     interface LocalPushHandler {
         fun shouldShowNotification(): Boolean
-        fun buildIntent(context: Context, id: Int): Intent
+        fun buildIntent(context: Context): Intent
     }
 }

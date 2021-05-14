@@ -4,6 +4,8 @@ import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ListenableWorker
@@ -35,7 +37,7 @@ class LocalPushScheduleWorker(
             val pendingIntent = PendingIntent.getActivity(
                     context,
                     0,
-                    handler.buildIntent(context, id),
+                    handler.buildIntent(context),
                     PendingIntent.FLAG_CANCEL_CURRENT
             )
             val builder = NotificationCompat.Builder(
@@ -46,7 +48,14 @@ class LocalPushScheduleWorker(
                     .setSmallIcon(icon)
                     .setContentTitle(context.getString(title))
                     .setContentText(context.getString(text))
+                    .addAction(R.drawable.ic_story_icon_24dp, context.getString(R.string.cancel),
+                            pendingIntent)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                    .setAutoCancel(true)
+                    .setColorized(true)
+                    .setColor(ContextCompat.getColor(context, R.color.blue_50))
+                    .setLargeIcon(ContextCompat.getDrawable(context, icon)?.toBitmap(100, 100))
 
             with(NotificationManagerCompat.from(context)) {
                 notify(id, builder.build())
