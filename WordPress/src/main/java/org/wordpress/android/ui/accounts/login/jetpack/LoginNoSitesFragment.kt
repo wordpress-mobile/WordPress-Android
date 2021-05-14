@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.FragmentLoginNoSitesEmptyViewBinding
+import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
 import org.wordpress.android.login.LoginListener
 import org.wordpress.android.login.util.AvatarHelper
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
@@ -22,7 +22,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_view) {
+class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     companion object {
         const val TAG = "LoginNoSitesFragment"
 
@@ -41,8 +41,9 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initBackPressHandler()
-        with(FragmentLoginNoSitesEmptyViewBinding.bind(view)) {
+        with(JetpackLoginEmptyViewBinding.bind(view)) {
             initContentViews()
+            initClickListeners()
             initViewModel(savedInstanceState)
         }
     }
@@ -51,12 +52,17 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.initContentViews() {
-        buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsPressed() }
-        buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountPressed() }
+    private fun JetpackLoginEmptyViewBinding.initContentViews() {
+        uiHelpers.setTextOrHide(loginErrorMessageTitle, R.string.login_no_jetpack_sites)
+        uiHelpers.setTextOrHide(loginErrorMessageText, R.string.login_no_jetpack_sites_error_message)
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.initViewModel(savedInstanceState: Bundle?) {
+    private fun JetpackLoginEmptyViewBinding.initClickListeners() {
+        bottomButtonsContainer.buttonPrimary.setOnClickListener { viewModel.onSeeInstructionsPressed() }
+        bottomButtonsContainer.buttonSecondary.setOnClickListener { viewModel.onTryAnotherAccountPressed() }
+    }
+
+    private fun JetpackLoginEmptyViewBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@LoginNoSitesFragment, viewModelFactory)
                 .get(LoginNoSitesViewModel::class.java)
 
@@ -68,7 +74,7 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
         )
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.initObservers() {
+    private fun JetpackLoginEmptyViewBinding.initObservers() {
         viewModel.navigationEvents.observe(viewLifecycleOwner, { events ->
             events.getContentIfNotHandled()?.let {
                 when (it) {
@@ -86,27 +92,30 @@ class LoginNoSitesFragment : Fragment(R.layout.fragment_login_no_sites_empty_vie
                     loadGravatar(state.accountAvatarUrl)
                     setUserName(state.userName)
                     setDisplayName(state.displayName)
-                    loginEmptyViewUserSection.visibility = View.VISIBLE
+                    userCardView.visibility = View.VISIBLE
                 }
-                is NoUser -> loginEmptyViewUserSection.visibility = View.GONE
+                is NoUser -> userCardView.visibility = View.GONE
             }
         })
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.loadGravatar(avatarUrl: String) {
-        val url = meGravatarLoader.constructGravatarUrl(avatarUrl)
-        AvatarHelper.loadAvatarFromUrl(this@LoginNoSitesFragment, url, imageAvatar, object : AvatarRequestListener {
-            override fun onRequestFinished() {
-                // no op
-            }
-        })
+    private fun JetpackLoginEmptyViewBinding.loadGravatar(avatarUrl: String) {
+        AvatarHelper.loadAvatarFromUrl(
+                this@LoginNoSitesFragment,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                userContainer.imageAvatar,
+                object : AvatarRequestListener {
+                    override fun onRequestFinished() {
+                        // no op
+                    }
+                })
     }
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.setUserName(value: String) =
-            uiHelpers.setTextOrHide(textUsername, value)
+    private fun JetpackLoginEmptyViewBinding.setUserName(value: String) =
+            uiHelpers.setTextOrHide(userContainer.textUsername, value)
 
-    private fun FragmentLoginNoSitesEmptyViewBinding.setDisplayName(value: String) =
-            uiHelpers.setTextOrHide(textDisplayName, value)
+    private fun JetpackLoginEmptyViewBinding.setDisplayName(value: String) =
+            uiHelpers.setTextOrHide(userContainer.textDisplayName, value)
 
     private fun showSignInForResultJetpackOnly() {
         ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)

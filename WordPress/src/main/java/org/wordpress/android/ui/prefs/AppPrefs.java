@@ -248,6 +248,9 @@ public class AppPrefs {
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
 
+        // Used to determine if editor onboarding features should be displayed
+        HAS_LAUNCHED_GUTENBERG_EDITOR,
+
         // Used to indicate whether or not the device running out of storage warning shoudl be shown
         SHOULD_SHOW_STORAGE_WARNING,
     }
@@ -1189,13 +1192,21 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
+    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
+        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
+    }
+
+    public static boolean hasLaunchedGutenbergEditor() {
+        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
+    }
+  
     public static void setShouldShowStorageWarning(boolean shouldShow) {
         setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
     }
 
     public static boolean shouldShowStorageWarning() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
-    }
+    }  
 
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
