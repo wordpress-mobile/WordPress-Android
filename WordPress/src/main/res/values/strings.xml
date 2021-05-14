@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources [
+    <!ENTITY site_settings_jetpack_allowlist_description_param "12.12.12.1–12.12.12.100">
+    ]>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
@@ -832,7 +835,7 @@
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_denylist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="site_settings_jetpack_allowlist_description">You may mark an IP address (or series of addresses) as \"Always allowed\", preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">You may mark an IP address (or series of addresses) as \"Always allowed\", preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: &site_settings_jetpack_allowlist_description_param;</string>
 
     <!-- Dialogs -->
     <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
