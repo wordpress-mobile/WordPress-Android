@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts
 
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +29,7 @@ class LoginViewModelTest : BaseUnitTest() {
 
         viewModel.onHandleNoJetpackSites()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSites::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSites::class.java)
     }
 
     @Test
@@ -41,7 +40,7 @@ class LoginViewModelTest : BaseUnitTest() {
         val connectSiteInfoPayload = getConnectSiteInfoPayload(url)
         viewModel.onHandleSiteAddressError(connectSiteInfoPayload)
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowSiteAddressError::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowSiteAddressError::class.java)
     }
 
     @Test
