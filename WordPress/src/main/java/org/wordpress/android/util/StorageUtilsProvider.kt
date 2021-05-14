@@ -14,8 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class StorageUtilsProvider @Inject constructor(
-    private val contextProvider: ContextProvider,
-
+    private val contextProvider: ContextProvider
 ) {
     // Add more sources here for tracking purposes if using this class from other places than the editor
     enum class Source(val description: String) {
@@ -41,7 +40,7 @@ class StorageUtilsProvider @Inject constructor(
                             } else {
                                 context.getString(android.R.string.ok)
                             },
-                            dontShowAgainLabel = context.getString(string.storage_utils_dialog_dont_show_button),
+                            dontShowAgainLabel = context.getString(string.storage_utils_dialog_dont_show_button)
                     ),
                     isInternalStorageSettingsResolved = isInternalStorageSettingsResolved,
                     source = source.description
