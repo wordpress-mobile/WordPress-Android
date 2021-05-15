@@ -353,6 +353,10 @@ public class SiteUtils {
         return site != null & (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
     }
 
+    public static boolean supportsLayoutGridFeature(SiteModel site) {
+        return site != null & (site.isWPCom() || site.isWPComAtomic());
+    }
+
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
         return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
