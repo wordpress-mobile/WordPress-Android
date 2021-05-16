@@ -496,7 +496,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private void showMagicLinkRequestScreen(String email, boolean verifyEmail, boolean allowPassword,
                                             boolean forceRequestAtStart) {
-        AuthEmailPayloadScheme scheme = AuthEmailPayloadScheme.WORDPRESS;
+        AuthEmailPayloadScheme scheme = mViewModel.getMagicLinkScheme();
         String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
         LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
                 .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail, allowPassword,
@@ -957,14 +957,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
 
     private void showSiteAddressError(ShowSiteAddressError event) {
-        LoginSiteCheckErrorFragment fragment =
-                LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl(), event.getErrorMessage());
+        LoginSiteCheckErrorFragment fragment = LoginSiteCheckErrorFragment.Companion.newInstance(event.getUrl());
         slideInFragment(fragment, true, LoginSiteCheckErrorFragment.TAG);
     }
 
     private void showNoJetpackSites() {
-        LoginNoSitesFragment fragment =
-                LoginNoSitesFragment.Companion.newInstance();
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
         slideInFragment(fragment, false, LoginNoSitesFragment.TAG);
     }
 }
