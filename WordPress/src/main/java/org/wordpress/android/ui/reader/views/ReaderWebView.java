@@ -193,13 +193,18 @@ public class ReaderWebView extends WPWebView {
     }
 
     /***
-     * isValidInstagramImageClick checks if this is an embedded instragram situation.
-     * If so, we want to ignore image click so that the iframe src gets handled
-     * The additional URL grab is an additional check for the instagram.com host
+     * Checks if the tapped image is a child of an anchor tag we want to respect.
+     * If so, we want to ignore the image click so that the wrapping src gets handled.
+     * The additional URL grab is an additional check for the appropriate host or URL structure.
+     *
+     * Cases:
+     * 1. Instagram
+     * 2. The Story block
+     *
      * @param hr - the HitTestResult
-     * @return true if is instagram or false otherwise
+     * @return true if the image click should be ignored and deferred to the parent anchor tag
      */
-    private boolean isValidInstagramImageClick(HitTestResult hr) {
+    private boolean isValidEmbeddedImageClick(HitTestResult hr) {
         // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
         if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
             Handler handler = new Handler();
@@ -211,7 +216,7 @@ public class ReaderWebView extends WPWebView {
                 return false;
             }
 
-            return url.contains("ig_embed");
+            return url.contains("ig_embed") || url.contains("wp-story");
         } else {
             return false;
         }
@@ -228,7 +233,7 @@ public class ReaderWebView extends WPWebView {
             if (hr != null) {
                 if (isValidClickedUrl(hr.getExtra())) {
                     if (UrlUtils.isImageUrl(hr.getExtra())) {
-                        if (isValidInstagramImageClick(hr)) {
+                        if (isValidEmbeddedImageClick(hr)) {
                             return super.onTouchEvent(event);
                         } else {
                             return mUrlClickListener.onImageUrlClick(
