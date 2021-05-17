@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 149
+        return 150
     }
 
     override fun getDbName(): String {
@@ -1750,6 +1750,10 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "REFUND_ID INTEGER," +
                                     "DATA TEXT NOT NULL)"
                     )
+                    db.execSQL("DROP TABLE IF EXISTS MediaUploadModel")
+                    db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER," +
+                            "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,ERROR_SUB_TYPE TEXT," +
+                            "FOREIGN KEY(_id) REFERENCES MediaModel(_id) ON DELETE CASCADE)")
                 }
             }
         }
