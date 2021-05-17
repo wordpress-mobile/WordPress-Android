@@ -311,11 +311,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-<<<<<<< HEAD
     build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release")
-=======
-    build_bundle(version: version, app: "wordpress", flavor:"vanilla", buildType: "release")
->>>>>>> 78352e4a1c8dad5e1a16f95be14404ce537664cf
 
     upload_build_to_play_store(version: version, track: "production")
 
