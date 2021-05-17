@@ -92,6 +92,8 @@ dependencies {
     // Encrypted Logging
     api "com.goterl:lazysodium-android:5.0.2@aar"
     api "net.java.dev.jna:jna:5.5.0@aar"
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
 }
 
 version = android.defaultConfig.versionName
