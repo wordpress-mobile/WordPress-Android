@@ -407,6 +407,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
