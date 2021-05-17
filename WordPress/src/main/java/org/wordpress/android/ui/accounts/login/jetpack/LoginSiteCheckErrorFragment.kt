@@ -96,7 +96,7 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
     }
 
     private fun showSignInForResultJetpackOnly() {
-        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)
+        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
     }
 
     private fun showInstructions(url: String) {
