@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -483,7 +483,7 @@ Language: es_CL
     <string name="plugin_caption_featured">Destacado</string>
     <string name="version_with_name_param">Versión %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="permissions_denied_message">Parece que ha desactivado los permisos requeridos para esta función. &lt;br/>&lt;br/>Para cambiar esto, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está habilitado.</string>
+    <string name="permissions_denied_message">Parece que ha desactivado los permisos requeridos para esta función. &lt;br/&gt;&lt;br/&gt;Para cambiar esto, edita tus permisos y asegúrate de que &lt;strong&gt;%s&lt;/strong&gt; está habilitado.</string>
     <string name="sharing_disabled">Módulo de uso inhabilitado</string>
     <string name="sharing_disabled_description">No puedes acceder a tu configuración de uso compartido porque tu módulo compartido de Jetpack está deshabilitado.</string>
     <string name="notification_sound_has_invalid_path">El sonido elegido tiene una ruta de acceso no válida. Por favor, elija otro.</string>
