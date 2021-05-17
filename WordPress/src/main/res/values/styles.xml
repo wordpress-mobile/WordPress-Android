@@ -486,6 +486,13 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
+    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:ellipsize">end</item>
+        <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
+    </style>
+
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

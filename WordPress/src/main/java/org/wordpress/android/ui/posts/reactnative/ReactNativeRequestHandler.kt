@@ -26,11 +26,12 @@ class ReactNativeRequestHandler @Inject constructor(
     fun performGetRequest(
         pathWithParams: String,
         mSite: SiteModel,
+        enableCaching: Boolean,
         onSuccess: Consumer<String>,
         onError: Consumer<Bundle>
     ) {
         launch {
-            val response = reactNativeStore.executeRequest(mSite, pathWithParams)
+            val response = reactNativeStore.executeRequest(mSite, pathWithParams, enableCaching)
             handleResponse(response, onSuccess::accept, onError::accept)
         }
     }

@@ -1,14 +1,9 @@
-<!-- This asset is a copy of ic_plans_white_24dp from WordPress. It is the jetpack grid icon -->
-<vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:height="24dp"
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
-    android:viewportHeight="24.0"
-    android:viewportWidth="24.0"
-    tools:ignore="UnusedResources">
-
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
     <path
         android:fillColor="@android:color/white"
-        android:pathData="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1 12H6l5-10v10zm2 6V10h5l-5 10z" />
+        android:pathData="M22,9L12,1 2,9v2h2v10h5v-4c0,-1.657 1.343,-3 3,-3s3,1.343 3,3v4h5V11h2V9z"/>
 </vector>

@@ -13,7 +13,7 @@ class CommentListItemDiffCallback(
         val newItem = newList[newItemPosition]
 
         return when {
-            oldItem is SubHeader && newItem is SubHeader -> oldItem.label == newItem.label
+            oldItem is SubHeader && newItem is SubHeader -> oldItem.id == newItem.id
             oldItem is Comment && newItem is Comment -> {
                 oldItem.comment.remoteCommentId == newItem.comment.remoteCommentId
             }
