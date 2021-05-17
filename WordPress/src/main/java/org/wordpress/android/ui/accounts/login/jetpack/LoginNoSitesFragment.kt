@@ -118,7 +118,7 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
             uiHelpers.setTextOrHide(userContainer.textDisplayName, value)
 
     private fun showSignInForResultJetpackOnly() {
-        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity(), true)
+        ActivityLauncher.showSignInForResultJetpackOnly(requireActivity())
     }
 
     private fun showInstructions(url: String) {

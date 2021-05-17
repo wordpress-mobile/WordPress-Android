@@ -1,22 +1,26 @@
 package org.wordpress.android.ui.accounts
 
-import org.assertj.core.api.Assertions
+import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSiteAddressError
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class LoginViewModelTest : BaseUnitTest() {
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: LoginViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginViewModel()
+        viewModel = LoginViewModel(buildConfigWrapper)
     }
 
     @Test
@@ -25,7 +29,7 @@ class LoginViewModelTest : BaseUnitTest() {
 
         viewModel.onHandleNoJetpackSites()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSites::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowNoJetpackSites::class.java)
     }
 
     @Test
@@ -36,7 +40,25 @@ class LoginViewModelTest : BaseUnitTest() {
         val connectSiteInfoPayload = getConnectSiteInfoPayload(url)
         viewModel.onHandleSiteAddressError(connectSiteInfoPayload)
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(ShowSiteAddressError::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(ShowSiteAddressError::class.java)
+    }
+
+    @Test
+    fun `given jetpack app, when magic link scheme is requested, then jetpack scheme is returned`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        val scheme = viewModel.getMagicLinkScheme()
+
+        assertThat(scheme).isEqualTo(AuthEmailPayloadScheme.JETPACK)
+    }
+
+    @Test
+    fun `given wordpress app, when magic link scheme is requested, then wordpress scheme is returned`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+
+        val scheme = viewModel.getMagicLinkScheme()
+
+        assertThat(scheme).isEqualTo(AuthEmailPayloadScheme.WORDPRESS)
     }
 
     private fun getConnectSiteInfoPayload(url: String): ConnectSiteInfoPayload =
