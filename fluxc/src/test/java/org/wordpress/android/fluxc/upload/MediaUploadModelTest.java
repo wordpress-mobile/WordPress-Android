@@ -92,5 +92,4 @@ public class MediaUploadModelTest {
 
         assertFalse(mediaUploadModel2.equals(mediaUploadModel1));
     }
-
 }
