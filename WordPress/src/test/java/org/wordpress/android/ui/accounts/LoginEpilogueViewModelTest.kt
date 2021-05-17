@@ -9,22 +9,24 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 
 class LoginEpilogueViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: LoginEpilogueViewModel
 
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var siteStore: SiteStore
 
     @Before
     fun setUp() {
-        viewModel = LoginEpilogueViewModel(appPrefsWrapper, siteStore)
+        viewModel = LoginEpilogueViewModel(appPrefsWrapper, buildConfigWrapper, siteStore)
     }
 
-    /* Post Signup Interstitial Screen */
+    /* WordPress app - Post Signup Interstitial Screen */
     @Test
-    fun `given no sites, when continued from epilogue first time, then signup interstitial shown`() {
-        init(hasSite = false, postSignupInterstitialShownEarlier = false)
+    fun `given wp app with no sites, when continued from epilogue first time, then signup interstitial shown`() {
+        init(isJetpackApp = false, hasSite = false, postSignupInterstitialShownEarlier = false)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
@@ -34,8 +36,8 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no sites, when continued from epilogue next time, then signup interstitial not shown`() {
-        init(hasSite = false, postSignupInterstitialShownEarlier = true)
+    fun `given wp app with no sites, when continued from epilogue next time, then signup interstitial not shown`() {
+        init(isJetpackApp = false, hasSite = false, postSignupInterstitialShownEarlier = true)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
@@ -46,8 +48,8 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given sites present, when continued from epilogue, then signup interstitial not shown`() {
-        init(hasSite = true)
+    fun `given wp app with sites, when continued from epilogue, then signup interstitial not shown`() {
+        init(isJetpackApp = false, hasSite = true)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
@@ -57,10 +59,10 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         ).isEmpty()
     }
 
-    /* Eplilogue Screen Close */
+    /* WordPress app - Eplilogue Screen Close */
     @Test
-    fun `given no sites, when continued from epilogue, then epilogue closes with ok result`() {
-        init(hasSite = false)
+    fun `given wp app with no sites, when continued from epilogue, then epilogue closes with ok result`() {
+        init(isJetpackApp = false, hasSite = false)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
@@ -70,8 +72,8 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given sites present, when continued from epilogue, then screen closes with ok result`() {
-        init(hasSite = true)
+    fun `given wp app with sites present, when continued from epilogue, then epilogue closes with ok result`() {
+        init(isJetpackApp = false, hasSite = true)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
@@ -79,9 +81,7 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
     }
 
-    private data class Observers(
-        val navigationEvents: List<LoginNavigationEvents>,
-    )
+    private data class Observers(val navigationEvents: List<LoginNavigationEvents>)
 
     private fun initObservers(): Observers {
         val navigationEvents = mutableListOf<LoginNavigationEvents>()
@@ -91,9 +91,11 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     fun init(
+        isJetpackApp: Boolean,
         hasSite: Boolean = false,
         postSignupInterstitialShownEarlier: Boolean = false
     ) {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
         whenever(siteStore.hasSite()).thenReturn(hasSite)
         whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(!postSignupInterstitialShownEarlier)
     }
