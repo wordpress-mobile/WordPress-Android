@@ -107,7 +107,11 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
         if (TextUtils.isEmpty(getErrorType())) {
             return null;
         }
-        return new MediaError(MediaErrorType.fromString(getErrorType()), getErrorMessage(), MediaErrorSubType.getSubTypeFromString(getErrorSubType()));
+        return new MediaError(
+                MediaErrorType.fromString(getErrorType()),
+                getErrorMessage(),
+                MediaErrorSubType.getSubTypeFromString(getErrorSubType())
+        );
     }
 
     public void setMediaError(@Nullable MediaError mediaError) {
