@@ -72,8 +72,30 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wp app with sites present, when continued from epilogue, then epilogue closes with ok result`() {
+    fun `given wp app with sites, when continued from epilogue, then epilogue closes with ok result`() {
         init(isJetpackApp = false, hasSite = true)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onContinue()
+
+        assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+    }
+
+    /* Jetpack app - No Jetpack Sites Screen */
+    @Test
+    fun `given jetpack app with no sites, when continued from epilogue, then no jetpack sites is shown`() {
+        init(isJetpackApp = true, hasSite = false)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onContinue()
+
+        assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
+    }
+
+    /* Jetpack app - Eplilogue Screen Close */
+    @Test
+    fun `given jetpack app with sites, when continued from epilogue, then screen closes with ok result`() {
+        init(isJetpackApp = true, hasSite = true)
         val navigationEvents = initObservers().navigationEvents
 
         viewModel.onContinue()
