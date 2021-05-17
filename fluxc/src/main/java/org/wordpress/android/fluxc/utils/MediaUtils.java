@@ -7,6 +7,7 @@ import androidx.exifinterface.media.ExifInterface;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -66,6 +67,10 @@ public class MediaUtils {
 
     public static String getMediaValidationError(@NonNull MediaModel media) {
         return BaseUploadRequestBody.hasRequiredData(media);
+    }
+
+    public static MalformedMediaArgSubType getMediaValidationErrorType(@NonNull MediaModel media) {
+        return BaseUploadRequestBody.checkMediaArg(media);
     }
 
     /**

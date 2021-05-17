@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
@@ -44,6 +45,7 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
     // Serialization of a MediaError
     @Column private String mErrorType;
     @Column private String mErrorMessage;
+    @Column private String mErrorSubType;
 
     public MediaUploadModel() {}
 
@@ -93,22 +95,32 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
         mErrorMessage = errorMessage;
     }
 
+    public @Nullable String getErrorSubType() {
+        return mErrorSubType;
+    }
+
+    public void setErrorSubType(@Nullable String errorSubType) {
+        mErrorSubType = errorSubType;
+    }
+
     public @Nullable MediaError getMediaError() {
         if (TextUtils.isEmpty(getErrorType())) {
             return null;
         }
-        return new MediaError(MediaErrorType.fromString(getErrorType()), getErrorMessage());
+        return new MediaError(MediaErrorType.fromString(getErrorType()), getErrorMessage(), MediaErrorSubType.getSubTypeFromString(getErrorSubType()));
     }
 
     public void setMediaError(@Nullable MediaError mediaError) {
         if (mediaError == null) {
             setErrorType(null);
             setErrorMessage(null);
+            setErrorSubType(null);
             return;
         }
 
         setErrorType(mediaError.type.toString());
         setErrorMessage(mediaError.message);
+        setErrorSubType(mediaError.mErrorSubType != null ? mediaError.mErrorSubType.toString() : null);
     }
 
     @Override
@@ -122,6 +134,7 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
                 && getUploadState() == otherMedia.getUploadState()
                 && Float.compare(getProgress(), otherMedia.getProgress()) == 0
                 && StringUtils.equals(getErrorType(), otherMedia.getErrorType())
-                && StringUtils.equals(getErrorMessage(), otherMedia.getErrorMessage());
+                && StringUtils.equals(getErrorMessage(), otherMedia.getErrorMessage())
+               && StringUtils.equals(getErrorSubType(), otherMedia.getErrorSubType());
     }
 }
