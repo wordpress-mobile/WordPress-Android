@@ -71,6 +71,8 @@ public class AnalyticsUtils {
     private static final String SITE_TYPE_KEY = "site_type";
     private static final String COMMENT_ACTION_SOURCE = "source";
     private static final String SOURCE_KEY = "source";
+    private static final String URL_KEY = "url";
+    private static final String SOURCE_INFO_KEY = "source_info";
     private static final String LIST_TYPE_KEY = "list_type";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
@@ -423,6 +425,30 @@ public class AnalyticsUtils {
         properties.put(INTENT_ACTION, action);
         properties.put(INTENT_HOST, host);
         properties.put(INTENT_DATA, data != null ? data.toString() : null);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Track when app launched via deep-linking
+     *
+     * @param stat   The Stat to bump
+     * @param action The Intent action the app was started with
+     * @param host   The host if applicable
+     * @param source The source of deeplink (EMAIL, LINK or BANNER)
+     * @param url    The deeplink URL stripped of sensitive data
+     * @param sourceInfo    Any additional source info
+     */
+    public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, String host, String source,
+                                             String url, @Nullable String sourceInfo) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(INTENT_ACTION, action);
+        properties.put(INTENT_HOST, host);
+        properties.put(SOURCE_KEY, source);
+        properties.put(URL_KEY, url);
+        if (sourceInfo != null) {
+            properties.put(SOURCE_INFO_KEY, sourceInfo);
+        }
 
         AnalyticsTracker.track(stat, properties);
     }

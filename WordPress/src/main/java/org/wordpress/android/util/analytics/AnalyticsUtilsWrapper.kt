@@ -9,6 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.ui.deeplinks.DeepLinkModel
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -72,6 +73,20 @@ class AnalyticsUtilsWrapper @Inject constructor(
         host: String,
         data: Uri?
     ) = AnalyticsUtils.trackWithDeepLinkData(stat, action, host, data)
+
+    fun trackWithDeepLinkData(
+        stat: AnalyticsTracker.Stat,
+        action: String,
+        host: String,
+        deepLinkTrackingData: DeepLinkModel.TrackingData
+    ) = AnalyticsUtils.trackWithDeepLinkData(
+            stat,
+            action,
+            host,
+            deepLinkTrackingData.source.value,
+            deepLinkTrackingData.url,
+            deepLinkTrackingData.sourceInfo
+    )
 
     fun trackRailcarRender(
         railcarJson: String
