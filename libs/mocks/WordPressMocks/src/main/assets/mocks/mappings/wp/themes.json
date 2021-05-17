@@ -1,0 +1,118 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/wp/v2/sites/181851495/themes/",
+        "queryParameters": {
+            "status": {
+                "equalTo": "active"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": [{
+            "stylesheet": "pub\/friendly-business",
+            "template": "pub\/twentynineteen",
+            "requires_php": "",
+            "requires_wp": "WordPress 4.9.6",
+            "textdomain": "friendly-business",
+            "version": "1.4.2",
+            "screenshot": "https:\/\/s0.wp.com\/wp-content\/themes\/pub\/friendly-business\/screenshot.png",
+            "author": {
+                "raw": "Automattic",
+                "rendered": "<a href=\"https:\/\/wordpress.org\/\">Automattic<\/a>"
+            },
+            "author_uri": {
+                "raw": "https:\/\/wordpress.org\/",
+                "rendered": "https:\/\/wordpress.org\/"
+            },
+            "description": {
+                "raw": "Simple, approachable, with bold, handsome typography, Friendly Business conveys quality and sustainability, which makes it especially good fit for education, agriculture and family-run businesses.",
+                "rendered": "Simple, approachable, with bold, handsome typography, Friendly Business conveys quality and sustainability, which makes it especially good fit for education, agriculture and family-run businesses."
+            },
+            "name": {
+                "raw": "Friendly Business",
+                "rendered": "Friendly Business"
+            },
+            "tags": {
+                "raw": ["One Column", "flexible-header", "Accessibility Ready", "Custom Colors", "custom-menu", "Custom Logo", "Editor Style", "Featured Images", "Footer Widgets", "RTL Language Support", "Sticky Post", "threaded-comments", "Translation Ready"],
+                "rendered": "One Column, flexible-header, Accessibility Ready, Custom Colors, custom-menu, Custom Logo, Editor Style, Featured Images, Footer Widgets, RTL Language Support, Sticky Post, threaded-comments, Translation Ready"
+            },
+            "theme_uri": {
+                "raw": "https:\/\/github.com\/automattic\/themes",
+                "rendered": "https:\/\/github.com\/automattic\/themes"
+            },
+            "status": "active",
+            "theme_supports": {
+                "align-wide": true,
+                "automatic-feed-links": true,
+                "custom-background": false,
+                "custom-header": false,
+                "custom-logo": {
+                    "width": 180,
+                    "height": 180,
+                    "flex-width": true,
+                    "flex-height": false,
+                    "header-text": ["site-title"],
+                    "unlink-homepage-logo": false
+                },
+                "customize-selective-refresh-widgets": true,
+                "dark-editor-style": false,
+                "disable-custom-colors": false,
+                "disable-custom-font-sizes": false,
+                "disable-custom-gradients": false,
+                "editor-color-palette": [{
+                    "name": "Primary",
+                    "slug": "primary",
+                    "color": "#20603c"
+                }, {
+                    "name": "Secondary",
+                    "slug": "secondary",
+                    "color": "#133a24"
+                }, {
+                    "name": "Dark Gray",
+                    "slug": "dark-gray",
+                    "color": "#3c2323"
+                }, {
+                    "name": "Light Gray",
+                    "slug": "light-gray",
+                    "color": "#0d1b24"
+                }, {
+                    "name": "White",
+                    "slug": "white",
+                    "color": "#ffffff"
+                }],
+                "editor-font-sizes": [{
+                    "name": "Small",
+                    "size": 19.5,
+                    "slug": "small"
+                }, {
+                    "name": "Normal",
+                    "size": 22,
+                    "slug": "normal"
+                }, {
+                    "name": "Large",
+                    "size": 36.5,
+                    "slug": "large"
+                }, {
+                    "name": "Huge",
+                    "size": 49.5,
+                    "slug": "huge"
+                }],
+                "editor-gradient-presets": false,
+                "editor-styles": true,
+                "html5": ["search-form", "comment-form", "comment-list", "gallery", "caption", "script", "style", "navigation-widgets"],
+                "formats": ["standard"],
+                "post-thumbnails": true,
+                "responsive-embeds": true,
+                "title-tag": false,
+                "wp-block-styles": true
+            },
+            "_links": {
+            }
+        }]
+    }
+}

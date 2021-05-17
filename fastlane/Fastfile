@@ -216,7 +216,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :new_beta_release do | options |
     android_betabuild_prechecks(options)
     send_strings_for_translation()
-    android_update_metadata(options)
+    download_translations(options)
     android_bump_version_beta()
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
@@ -273,8 +273,8 @@ REPOSITORY_NAME="WordPress-Android"
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
     hotfix = android_current_branch_is_hotfix
-    android_update_metadata(options) unless hotfix
     android_bump_version_final_release() unless hotfix
+    download_translations(options) unless hotfix
     version = android_get_release_version()
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
 
@@ -312,7 +312,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release")
 
     upload_build_to_play_store(version: version, track: "production")
 
@@ -365,7 +365,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, flavor:"zalpha", buildType: "release")
+    build_bundle(version: version, app:"wordpress", flavor:"Zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "alpha")
@@ -396,7 +396,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "beta")
@@ -629,13 +629,13 @@ REPOSITORY_NAME="WordPress-Android"
     version=options[:version]
     name="wpandroid-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
-    aab_file="org.wordpress.android-#{options[:flavor]}-#{options[:buildType]}.aab"
+    aab_file="org.wordpress.android-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{options[:flavor]}Release/#{aab_file}"
+    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}Release/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -648,10 +648,10 @@ REPOSITORY_NAME="WordPress-Android"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
+      sh("./gradlew lint#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 

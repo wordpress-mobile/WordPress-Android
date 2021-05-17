@@ -14,10 +14,11 @@ buildscript {
 repositories {
     google()
     jcenter()
+    mavenCentral()
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://www.jitpack.io" }
-    maven { url "http://dl.bintray.com/terl/lazysodium-maven" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
 apply plugin: 'com.android.application'
@@ -59,9 +60,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-292"
+            versionName "alpha-293"
         }
-        versionCode 1038
+        versionCode 1043
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -81,6 +82,8 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+
+        manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -99,6 +102,8 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
 
         jetpack {
@@ -107,15 +112,17 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
 
         vanilla { // used for release and beta
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.2"
+                versionName "17.3"
             }
-            versionCode 1041
+            versionCode 1044
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"

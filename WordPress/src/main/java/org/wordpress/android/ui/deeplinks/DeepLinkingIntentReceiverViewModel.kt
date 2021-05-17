@@ -3,10 +3,15 @@ package org.wordpress.android.ui.deeplinks
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -22,11 +27,31 @@ class DeepLinkingIntentReceiverViewModel
     private val pagesLinkHandler: PagesLinkHandler,
     private val notificationsLinkHandler: NotificationsLinkHandler,
     private val deepLinkUriUtils: DeepLinkUriUtils,
-    private val serverTrackingHandler: ServerTrackingHandler
+    private val accountStore: AccountStore,
+    private val serverTrackingHandler: ServerTrackingHandler,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
+    private val _finish = MutableLiveData<Event<Unit>>()
+    val finish = _finish as LiveData<Event<Unit>>
     val toast = editorLinkHandler.toast
+    var cachedUri: UriWrapper? = null
+
+    fun start(action: String?, uri: UriWrapper?) {
+        if (action != null) {
+            analyticsUtilsWrapper.trackWithDeepLinkData(DEEP_LINKED, action, uri?.host ?: "", uri?.uri)
+        }
+        if (uri == null || !handleUrl(uri)) {
+            _finish.value = Event(Unit)
+        }
+    }
+
+    fun onSuccessfulLogin() {
+        cachedUri?.let {
+            handleUrl(it)
+        }
+    }
 
     /**
      * Handles the following URLs
@@ -35,8 +60,15 @@ class DeepLinkingIntentReceiverViewModel
      * `public-api.wordpress.com/mbar`
      * and builds the navigation action based on them
      */
-    fun handleUrl(uriWrapper: UriWrapper): Boolean {
-        return buildNavigateAction(uriWrapper)?.also { _navigateAction.value = Event(it) } != null
+    private fun handleUrl(uriWrapper: UriWrapper): Boolean {
+        cachedUri = uriWrapper
+        return buildNavigateAction(uriWrapper)?.also {
+            if (accountStore.hasAccessToken() || it is OpenInBrowser || it is ShowSignInFlow) {
+                _navigateAction.value = Event(it)
+            } else {
+                _navigateAction.value = Event(LoginForResult)
+            }
+        } != null
     }
 
     /**
@@ -83,6 +115,7 @@ class DeepLinkingIntentReceiverViewModel
 
     override fun onCleared() {
         serverTrackingHandler.clear()
+        cachedUri = null
         super.onCleared()
     }
 
