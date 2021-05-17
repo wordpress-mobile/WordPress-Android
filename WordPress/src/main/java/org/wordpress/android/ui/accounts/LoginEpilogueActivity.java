@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -25,6 +26,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject LoginEpilogueViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,12 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
             addPostLoginFragment(doLoginUpdate, showAndReturn, oldSitesIds);
         }
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginEpilogueViewModel.class);
     }
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
