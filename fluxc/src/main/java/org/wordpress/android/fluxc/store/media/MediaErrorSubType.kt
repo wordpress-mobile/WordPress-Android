@@ -43,7 +43,7 @@ sealed class MediaErrorSubType {
             return "${MalformedMediaArgSubType::class.java.simpleName}@$type"
         }
 
-        companion object : GetByString{
+        companion object : GetByString {
             override fun fromString(name: String?): MediaErrorSubType? {
                 return name?.takeIf { it.startsWith(MalformedMediaArgSubType::class.java.simpleName) }?.let {
                     val targetSubType: String? = it.split("@").lastOrNull()
