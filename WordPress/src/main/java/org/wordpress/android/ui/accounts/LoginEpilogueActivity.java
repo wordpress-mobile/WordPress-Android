@@ -11,9 +11,10 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 
 import java.util.ArrayList;
 
@@ -47,10 +48,22 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         }
 
         initViewModel();
+        initObservers();
     }
 
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginEpilogueViewModel.class);
+    }
+
+    private void initObservers() {
+        mViewModel.getNavigationEvents().observe(this, event -> {
+            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
+            if (loginEvent instanceof ShowPostSignupInterstitialScreen) {
+                showPostSignupInterstitialScreen();
+            } else if (loginEvent instanceof CloseWithResultOk) {
+                closeWithResultOk();
+            }
+        });
     }
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
@@ -74,10 +87,14 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Override
     public void onContinue() {
-        if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
-            ActivityLauncher.showPostSignupInterstitial(this);
-        }
+        mViewModel.onContinue();
+    }
 
+    private void showPostSignupInterstitialScreen() {
+        ActivityLauncher.showPostSignupInterstitial(this);
+    }
+
+    private void closeWithResultOk() {
         setResult(RESULT_OK);
         finish();
     }
