@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,9 +13,11 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 
 import java.util.ArrayList;
 
@@ -62,6 +65,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                 showPostSignupInterstitialScreen();
             } else if (loginEvent instanceof CloseWithResultOk) {
                 closeWithResultOk();
+            } else if (loginEvent instanceof ShowNoJetpackSites) {
+                showNoJetpackSites();
             }
         });
     }
@@ -97,5 +102,21 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     private void closeWithResultOk() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    private void showNoJetpackSites() {
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
+        showFragment(fragment, LoginNoSitesFragment.TAG, true);
+    }
+
+    private void showFragment(Fragment fragment, String tag, boolean applySlideAnimation) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (applySlideAnimation) {
+            fragmentTransaction
+                    .setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        }
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
+        fragmentTransaction.commit();
     }
 }
