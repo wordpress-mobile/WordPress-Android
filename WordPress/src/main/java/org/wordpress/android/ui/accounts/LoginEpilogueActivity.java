@@ -73,10 +73,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(doLoginUpdate, showAndReturn,
-                                                                                        oldSitesIds);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
-        fragmentTransaction.commit();
+                oldSitesIds);
+        showFragment(loginEpilogueFragment, LoginEpilogueFragment.TAG, false);
     }
 
     @Override
