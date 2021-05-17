@@ -5,10 +5,6 @@ Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
-
-<!DOCTYPE resources [
-    <!ENTITY site_settings_jetpack_allowlist_description_param "12.12.12.1–12.12.12.100">
-    ]>
 <resources>
     <string name="gutenberg_native_size">Storlek</string>
     <string name="gutenberg_native_post_link">Inläggslänk</string>
@@ -259,7 +255,7 @@ Language: sv_SE
     <string name="gutenberg_native_insert_column_after">Infoga kolumn efter</string>
     <string name="gutenberg_native_insert_an_image_to_make_a_visual_statement">Lägg in en bild för att berätta visuellt.</string>
     <string name="gutenberg_native_insert_additional_custom_elements_with_a_wordpress_shortcode">Lägg in andra anpassade element med hjälp av en WordPress-kortkod.</string>
-    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">Infoga en tabell &#8212; perfekt för delning av diagram och data.</string>
+    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">Infoga en tabell –– perfekt för delning av diagram och data.</string>
     <string name="gutenberg_native_insert_a_table_for_sharing_data">Infoga en tabell för att dela data.</string>
     <string name="gutenberg_native_indent_list_item">Sänk listobjektet en nivå</string>
     <string name="gutenberg_native_indent">Indrag</string>
@@ -2349,7 +2345,7 @@ Language: sv_SE
     <string name="jetpack_disconnect_confirm">Koppla bort</string>
     <string name="jetpack_disconnect_confirmation_message">Är du säker på att du vill koppla bort Jetpack från denna webbplats?</string>
     <string name="jetpack_disconnect_pref_title">”Koppla bort från WordPress.com”</string>
-    <string name="site_settings_jetpack_allowlist_description">Du kan vitlista en IP-adress eller ett IP-adressintervall så att de aldrig blockeras av Jetpack. Man kan lägga in både IPv4- och IPv6-adresser. Ange ett intervall genom att skriva in det lägsta och det högsta värdet med bindestreck mellan dem. Exempel: &site_settings_jetpack_allowlist_description_param;</string>
+    <string name="site_settings_jetpack_allowlist_description">Du kan vitlista en IP-adress eller ett IP-adressintervall så att de aldrig blockeras av Jetpack. Man kan lägga in både IPv4- och IPv6-adresser. Ange ett intervall genom att skriva in det lägsta och det högsta värdet med bindestreck mellan dem. Exempel: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Kräv tvåstegsautentisering</string>
     <string name="jetpack_match_wpcom_via_email_title">Koppla samman konton via e-postadressen</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillåt inloggning via WordPress.com</string>
