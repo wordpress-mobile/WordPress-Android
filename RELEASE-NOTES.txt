@@ -6,7 +6,9 @@
 
 17.4
 -----
-
+* [*] Stories: Improved reliability of retrying slides that failed to upload. [https://github.com/wordpress-mobile/WordPress-Android/pull/14579]
+* [*] Stories: Adding story block from block editor now opens media picker first. [https://github.com/wordpress-mobile/WordPress-Android/pull/14588]
+* [*] Stories: Fixed story preview rendering in the Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/14656]
 
 17.3
 -----
