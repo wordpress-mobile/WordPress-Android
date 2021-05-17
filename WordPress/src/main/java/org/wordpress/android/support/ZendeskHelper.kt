@@ -110,45 +110,6 @@ class ZendeskHelper(
     }
 
     /**
-     * This function shows the Zendesk Help Center. It doesn't require a valid identity. If the support identity is
-     * available it'll be used and the "New Ticket" button will be available, if not, it'll work with an anonymous
-     * identity. The configuration will only be passed in if the identity is available, as it's only required if
-     * the user contacts us through it.
-     */
-    fun showZendeskHelpCenter(
-        context: Context,
-        origin: Origin?,
-        selectedSite: SiteModel?,
-        extraTags: List<String>? = null
-    ) {
-        require(isZendeskEnabled) {
-            zendeskNeedsToBeEnabledError
-        }
-        val isIdentitySet = isIdentitySet()
-        val builder = HelpCenterActivity.builder()
-                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withContactUsButtonVisible(isIdentitySet)
-                .withLabelNames(ZendeskConstants.articleLabel)
-                .withShowConversationsMenuButton(isIdentitySet)
-        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-        if (isIdentitySet) {
-            builder.show(
-                context,
-                buildZendeskConfig(
-                    context,
-                    siteStore.sites,
-                    origin,
-                    selectedSite,
-                    extraTags,
-                    zendeskPlanFieldHelper
-                )
-            )
-        } else {
-            builder.show(context)
-        }
-    }
-
-    /**
      * This function creates a new ticket. It'll force a valid identity, so if the user doesn't have one set, a dialog
      * will be shown where the user will need to enter an email and a name. If they cancel the dialog, the ticket
      * creation will be canceled as well. A Zendesk configuration is passed in as it's required for ticket creation.
@@ -522,17 +483,15 @@ private val wpcomPushNotificationDeviceToken: String?
     }
 
 private object ZendeskConstants {
-    const val articleLabel = "Android"
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
-    const val mobileCategoryId = 360000041586
     const val networkWifi = "WiFi"
     const val networkWWAN = "Mobile"
     const val networkTypeLabel = "Network Type:"
     const val networkCarrierLabel = "Carrier:"
     const val networkCountryCodeLabel = "Country Code:"
     const val noneValue = "none"
-    // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
+    // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
     const val sourcePlatform = "mobile_-_android"
     const val wpComTag = "wpcom"
