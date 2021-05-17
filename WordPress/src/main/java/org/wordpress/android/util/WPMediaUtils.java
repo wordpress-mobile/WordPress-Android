@@ -225,7 +225,10 @@ public class WPMediaUtils {
         return null;
     }
 
-    private static @Nullable String getMalformedMediaArgErrorMessage(final Context context, @Nullable final MediaErrorSubType errorSubType) {
+    private static @Nullable String getMalformedMediaArgErrorMessage(
+            final Context context,
+            @Nullable final MediaErrorSubType errorSubType
+    ) {
         if (!(errorSubType instanceof MalformedMediaArgSubType)) return null;
 
         String errorMessage = null;
