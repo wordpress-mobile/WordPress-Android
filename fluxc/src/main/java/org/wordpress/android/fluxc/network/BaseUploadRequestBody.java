@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
 import java.io.File;
@@ -41,29 +43,33 @@ public abstract class BaseUploadRequestBody extends RequestBody {
      * @return null if {@code media} is valid, otherwise a string describing why it's invalid
      */
     public static String hasRequiredData(MediaModel media) {
-        if (media == null) return "media cannot be null";
+        return checkMediaArg(media).getType().getErrorLogDescription();
+    }
+
+    public static MalformedMediaArgSubType checkMediaArg(MediaModel media) {
+        if (media == null) return new MalformedMediaArgSubType(Type.MEDIA_WAS_NULL);
 
         // validate MIME type is recognized
         String mimeType = media.getMimeType();
         if (!MediaUtils.isSupportedMimeType(mimeType)) {
-            return "media must define a valid MIME type";
+            return new MalformedMediaArgSubType(Type.UNSUPPORTED_MIME_TYPE);
         }
 
         // verify file path is defined
         String filePath = media.getFilePath();
         if (TextUtils.isEmpty(filePath)) {
-            return "media must define a local file path";
+            return new MalformedMediaArgSubType(Type.NOT_VALID_LOCAL_FILE_PATH);
         }
 
         // verify file exists and is not a directory
         File file = new File(filePath);
         if (!file.exists()) {
-            return "local file path for media does not exist";
+            return new MalformedMediaArgSubType(Type.MEDIA_FILE_NOT_FOUND_LOCALLY);
         } else if (file.isDirectory()) {
-            return "supplied file path is a directory, a file is required";
+            return new MalformedMediaArgSubType(Type.DIRECTORY_PATH_SUPPLIED_FILE_NEEDED);
         }
 
-        return null;
+        return new MalformedMediaArgSubType(Type.NO_ERROR);
     }
 
     private final MediaModel mMedia;
