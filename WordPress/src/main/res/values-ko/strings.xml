@@ -53,8 +53,8 @@ Language: ko_KR
     <string name="gutenberg_native_upload_a_file_or_pick_one_from_your_media_library">파일을 업로드하거나 사용자 미디어 라이브러리에서 파일을 선택하세요.</string>
     <string name="gutenberg_native_untitled_template_part">제목이 없는 템플릿 일부</string>
     <string name="gutenberg_native_unordered">비정렬</string>
-    <string name="gutenberg_native_two_columns_two_thirds_one_third_split">2컬럼; 2/3 &#8211; 1/3 간격</string>
-    <string name="gutenberg_native_two_columns_one_third_two_thirds_split">2컬럼; 1/3 &#8211; 2/3 간격</string>
+    <string name="gutenberg_native_two_columns_two_thirds_one_third_split">2컬럼; 2/3 – 1/3 간격</string>
+    <string name="gutenberg_native_two_columns_one_third_two_thirds_split">2컬럼; 1/3 – 2/3 간격</string>
     <string name="gutenberg_native_two_columns_equal_split">2컬럼; 같은 간격</string>
     <string name="gutenberg_native_two">둘입니다.</string>
     <string name="gutenberg_native_tracks_can_be_subtitles_captions_chapters_or_descriptions_they_he">트랙은 부제목, 캡션, 챕터 또는 설명일 수 있습니다. 더 광범위한 사용자에게 접근할 수 있는 콘텐츠를 만들도록 돕습니다.</string>
@@ -255,7 +255,7 @@ Language: ko_KR
     <string name="gutenberg_native_insert_column_after">뒤에 컬럼 삽입하기</string>
     <string name="gutenberg_native_insert_an_image_to_make_a_visual_statement">시각적 설명이 되도록 이미지를 삽입합니다.</string>
     <string name="gutenberg_native_insert_additional_custom_elements_with_a_wordpress_shortcode">워드프레스 쇼트코드로 추가 사용자 정의 요소를 삽입합니다.</string>
-    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">태이블을 추가하세요 &#8212; 차트와 대이터 공유에 최고입니다.</string>
+    <string name="gutenberg_native_insert_a_table_perfect_for_sharing_charts_and_data">태이블을 추가하세요 –– 차트와 대이터 공유에 최고입니다.</string>
     <string name="gutenberg_native_insert_a_table_for_sharing_data">대이터 공유용 태이블을 삽입합니다.</string>
     <string name="gutenberg_native_indent_list_item">목록 항목 들여쓰기</string>
     <string name="gutenberg_native_indent">들여쓰기</string>
@@ -763,7 +763,7 @@ Language: ko_KR
     <string name="threat_fix_fixable_update">젯팩 검사하기를 새 버전(%s)으로 업데이트할 것입니다.</string>
     <string name="threat_fix_fixable_delete">젯팩 검사하기가 영향이 있는 파일이나 디렉터리를 지울 것입니다.</string>
     <string name="threat_fix_fixable_replace">젯팩 검사하기는 영향이 있는 파일이나 디렉터리를 교체할 것입니다.</string>
-    <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b&gt;코더블&lt;/b&gt;을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70&#8211;120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
+    <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b&gt;코더블&lt;/b&gt;을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70–120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
     <string name="threat_fix_current_not_fixable_header">위협 해결하는 중</string>
     <string name="threat_fix_fixed_header">젯팩을 어떻게 고쳤을까요?</string>
     <string name="threat_fix_default_header">어떻게 고칠까요?</string>
