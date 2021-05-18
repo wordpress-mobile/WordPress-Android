@@ -20,7 +20,9 @@ class StorageUtilsViewModel @Inject constructor(
     private val _checkStorageWarning = MutableLiveData<Event<Unit>>()
     val checkStorageWarning: LiveData<Event<Unit>> = _checkStorageWarning
 
-    fun onStorageWarningInit() {
+    fun start(isFirstStart: Boolean) {
+        if (!isFirstStart) return
+
         launch(bgDispatcher) {
             delay(DIALOG_CHECK_DELAY)
             _checkStorageWarning.postValue(Event(Unit))

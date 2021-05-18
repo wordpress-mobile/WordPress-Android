@@ -704,9 +704,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
 
-        if (savedInstanceState == null) {
-            mStorageUtilsViewModel.onStorageWarningInit();
-        }
+        // The check on savedInstanceState should allow to show the dialog only on first start
+        // (even in cases when the VM could be re-created like when activity is destroyed in the background)
+        mStorageUtilsViewModel.start(savedInstanceState == null);
     }
 
     private void presentNewPageNoticeIfNeeded() {
