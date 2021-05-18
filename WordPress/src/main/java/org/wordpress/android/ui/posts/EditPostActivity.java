@@ -2288,7 +2288,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
-                !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
+                true, //!isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
