@@ -33,12 +33,19 @@ class StorageUtilsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onStorageWarningInit emits checkStorageWarning event`() {
+    fun `view model emits checkStorageWarning event when it is the first start`() {
         viewModel.checkStorageWarning.observeForever(checkStorageWarningObserver)
+        viewModel.start(true)
 
-        viewModel.onStorageWarningInit()
+        verify(checkStorageWarningObserver, times(1)).onChanged(anyOrNull())
+    }
 
-        verify(checkStorageWarningObserver).onChanged(anyOrNull())
+    @Test
+    fun `view model does not emit checkStorageWarning event when it is not the first start`() {
+        viewModel.checkStorageWarning.observeForever(checkStorageWarningObserver)
+        viewModel.start(false)
+
+        verify(checkStorageWarningObserver, times(0)).onChanged(anyOrNull())
     }
 
     @Test
