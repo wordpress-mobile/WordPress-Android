@@ -24,6 +24,9 @@ class StorageUtilsViewModel @Inject constructor(
         if (!isFirstStart) return
 
         launch(bgDispatcher) {
+            // This delay is inserted to mitigate a possible visual glitch with dialog and keyboard that appears when
+            // opening the editor randomly overlapping on each other. Some more information available on this comment
+            // https://github.com/wordpress-mobile/WordPress-Android/pull/14642#discussion_r634264494
             delay(DIALOG_CHECK_DELAY)
             _checkStorageWarning.postValue(Event(Unit))
         }
