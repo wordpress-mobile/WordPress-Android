@@ -102,10 +102,11 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     @Test
     fun `create site mbar URL triggers the Site Creation flow`() {
-        val wpLoginUri = initWpLoginUri(initStartUrl())
+        val startUrl = initStartUrl()
+        val wpLoginUri = initWpLoginUri(startUrl)
         val uri = initTrackingUri(wpLoginUri)
 
-        whenever(startLinkHandler.buildNavigateAction()).thenReturn(StartCreateSiteFlow)
+        whenever(startLinkHandler.buildNavigateAction(startUrl)).thenReturn(StartCreateSiteFlow)
 
         viewModel.start(null, uri)
 
@@ -305,7 +306,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     private fun initStartUrl(): UriWrapper {
         val uri = mock<UriWrapper>()
-        whenever(startLinkHandler.isStartUrl(uri)).thenReturn(true)
+        whenever(startLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         return uri
     }
 

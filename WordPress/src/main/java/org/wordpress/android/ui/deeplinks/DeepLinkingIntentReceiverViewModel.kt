@@ -98,7 +98,7 @@ class DeepLinkingIntentReceiverViewModel
             readerLinkHandler.shouldHandleUrl(uri) -> readerLinkHandler.buildNavigateAction(uri)
             editorLinkHandler.shouldHandleUrl(uri) -> editorLinkHandler.buildNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
-            startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
+            startLinkHandler.shouldHandleUrl(uri) -> startLinkHandler.buildNavigateAction(uri)
             notificationsLinkHandler.shouldHandleUrl(uri) -> notificationsLinkHandler.buildNavigateAction(uri)
             pagesLinkHandler.isPagesUrl(uri) -> pagesLinkHandler.buildNavigateAction(uri)
             else -> null

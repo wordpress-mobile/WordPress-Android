@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.deeplinks
 
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,7 +26,7 @@ class StartLinkHandlerTest {
     fun `handles start URI is true`() {
         val startUri = buildUri("wordpress.com", "start")
 
-        val isStartUri = startLinkHandler.isStartUrl(startUri)
+        val isStartUri = startLinkHandler.shouldHandleUrl(startUri)
 
         assertThat(isStartUri).isTrue()
     }
@@ -34,7 +35,7 @@ class StartLinkHandlerTest {
     fun `does not handle start URI with different host`() {
         val startUri = buildUri("wordpress.org", "start")
 
-        val isStartUri = startLinkHandler.isStartUrl(startUri)
+        val isStartUri = startLinkHandler.shouldHandleUrl(startUri)
 
         assertThat(isStartUri).isFalse()
     }
@@ -43,7 +44,7 @@ class StartLinkHandlerTest {
     fun `does not handle URI with different path`() {
         val startUri = buildUri("wordpress.com", "stop")
 
-        val isStartUri = startLinkHandler.isStartUrl(startUri)
+        val isStartUri = startLinkHandler.shouldHandleUrl(startUri)
 
         assertThat(isStartUri).isFalse()
     }
@@ -52,7 +53,7 @@ class StartLinkHandlerTest {
     fun `returns site creation flow action when user logged in`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
-        val navigateAction = startLinkHandler.buildNavigateAction()
+        val navigateAction = startLinkHandler.buildNavigateAction(mock())
 
         assertThat(navigateAction).isEqualTo(StartCreateSiteFlow)
     }
@@ -61,8 +62,17 @@ class StartLinkHandlerTest {
     fun `returns sign in action when user not logged in`() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
 
-        val navigateAction = startLinkHandler.buildNavigateAction()
+        val navigateAction = startLinkHandler.buildNavigateAction(mock())
 
         assertThat(navigateAction).isEqualTo(ShowSignInFlow)
+    }
+
+    @Test
+    fun `builds URL for tracking`() {
+        val startUri = buildUri("wordpress.com", "start")
+
+        val strippedUrl = startLinkHandler.stripUrl(startUri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/start")
     }
 }
