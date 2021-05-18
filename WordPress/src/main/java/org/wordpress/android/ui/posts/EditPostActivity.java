@@ -199,6 +199,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StorageUtilsProvider.Source;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -214,6 +215,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -404,6 +406,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
+    private StorageUtilsViewModel mStorageUtilsViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -482,6 +485,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
+        mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -699,6 +703,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
 
         mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
+
+        // The check on savedInstanceState should allow to show the dialog only on first start
+        // (even in cases when the VM could be re-created like when activity is destroyed in the background)
+        mStorageUtilsViewModel.start(savedInstanceState == null);
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -855,6 +863,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
+        mStorageUtilsViewModel.getCheckStorageWarning().observe(this, event ->
+                event.applyIfNotHandled(unit -> {
+                    mStorageUtilsViewModel.onStorageWarningCheck(getSupportFragmentManager(), Source.EDITOR);
+                    return null;
+                })
+        );
     }
 
     private void initializePostObject() {

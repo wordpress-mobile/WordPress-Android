@@ -91,6 +91,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -536,4 +537,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginSiteCheckErrorViewModel.class)
     abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
 }

@@ -782,7 +782,11 @@ public final class AnalyticsTracker {
         USER_PROFILE_SHEET_SHOWN,
         USER_PROFILE_SHEET_SITE_SHOWN,
         BLOG_URL_PREVIEWED,
-        LIKE_LIST_OPENED
+        LIKE_LIST_OPENED,
+        STORAGE_WARNING_SHOWN,
+        STORAGE_WARNING_ACKNOWLEDGED,
+        STORAGE_WARNING_CANCELED,
+        STORAGE_WARNING_DONT_SHOW_AGAIN
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

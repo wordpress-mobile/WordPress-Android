@@ -4099,4 +4099,9 @@
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
 
+    <!-- Storage Utils Provider -->
+    <string name="storage_utils_dialog_title">Insufficient device storage</string>
+    <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="storage_utils_dialog_ok_button">View Storage</string>
+    <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 </resources>
