@@ -17,5 +17,5 @@ interface DeepLinkHandler {
     /**
      * Strips all uri sensitive params for tracking purposes
      */
-    fun stripUrl(uri: UriWrapper): String
+    fun stripUrl(uri: UriWrapper): String?
 }

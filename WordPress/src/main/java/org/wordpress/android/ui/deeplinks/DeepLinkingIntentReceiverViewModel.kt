@@ -95,7 +95,7 @@ class DeepLinkingIntentReceiverViewModel
                     }
                     ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
-            readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+            readerLinkHandler.shouldHandleUrl(uri) -> readerLinkHandler.buildNavigateAction(uri)
             editorLinkHandler.shouldHandleUrl(uri) -> editorLinkHandler.buildNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
@@ -117,6 +117,7 @@ class DeepLinkingIntentReceiverViewModel
 
     companion object {
         const val HOST_WORDPRESS_COM = "wordpress.com"
+        const val APPLINK_SCHEME = "wordpress://"
         private const val REGULAR_TRACKING_PATH = "bar"
     }
 

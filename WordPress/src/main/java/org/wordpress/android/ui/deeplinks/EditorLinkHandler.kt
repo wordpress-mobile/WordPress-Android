@@ -10,6 +10,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import java.lang.StringBuilder
@@ -60,7 +61,7 @@ class EditorLinkHandler
         return if (uri.host == POST_PATH) {
             // Transforms wordpress://post?blogId=798&postId=1231 to wordpress://post?blogId=blogId&postId=postId
             buildString {
-                append("wordpress://$POST_PATH")
+                append("$APPLINK_SCHEME$POST_PATH")
                 val hasBlogIdParameter = uri.getQueryParameter(BLOG_ID) != null
                 val hasPostIdParameter = uri.getQueryParameter(POST_ID) != null
                 if (hasBlogIdParameter || hasPostIdParameter) {

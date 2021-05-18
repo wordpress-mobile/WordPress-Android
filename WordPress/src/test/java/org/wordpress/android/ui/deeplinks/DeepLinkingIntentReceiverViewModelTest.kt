@@ -206,8 +206,8 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val expectedAction = NavigateAction.OpenInReader(redirect)
 
         whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
-        whenever(readerLinkHandler.isReaderUrl(redirect)).thenReturn(true)
-        whenever(readerLinkHandler.buildOpenInReaderNavigateAction(redirect)).thenReturn(expectedAction)
+        whenever(readerLinkHandler.shouldHandleUrl(redirect)).thenReturn(true)
+        whenever(readerLinkHandler.buildNavigateAction(redirect)).thenReturn(expectedAction)
 
         viewModel.start(null, uri)
 
@@ -223,7 +223,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val expectedAction = NavigateAction.OpenInBrowser(barUri)
 
         whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
-        whenever(readerLinkHandler.isReaderUrl(redirect)).thenReturn(false)
+        whenever(readerLinkHandler.shouldHandleUrl(redirect)).thenReturn(false)
         whenever(uri.copy("bar")).thenReturn(barUri)
 
         viewModel.start(null, uri)

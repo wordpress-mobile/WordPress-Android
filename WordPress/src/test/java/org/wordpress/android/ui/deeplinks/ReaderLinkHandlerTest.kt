@@ -29,7 +29,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `handles URI with host == read`() {
         val uri = buildUri(host = "read")
 
-        val isReaderUri = readerLinkHandler.isReaderUrl(uri)
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isReaderUri).isTrue()
     }
@@ -38,7 +38,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `handles URI with host == viewpost`() {
         val uri = buildUri(host = "viewpost")
 
-        val isReaderUri = readerLinkHandler.isReaderUrl(uri)
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isReaderUri).isTrue()
     }
@@ -48,7 +48,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val uri = buildUri(host = "reader")
         whenever(intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)).thenReturn(true)
 
-        val isReaderUri = readerLinkHandler.isReaderUrl(uri)
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isReaderUri).isTrue()
     }
@@ -58,7 +58,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val uri = buildUri(host = "reader")
         whenever(intentUtils.canResolveWith(ReaderConstants.ACTION_VIEW_POST, uri)).thenReturn(false)
 
-        val isReaderUri = readerLinkHandler.isReaderUrl(uri)
+        val isReaderUri = readerLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isReaderUri).isFalse()
     }
@@ -67,7 +67,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `URI with read host opens reader`() {
         val uri = buildUri(host = "read")
 
-        val navigateAction = readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(OpenReader)
     }
@@ -76,7 +76,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `URI with viewpost host without query params opens reader`() {
         val uri = buildUri(host = "viewpost")
 
-        val navigateAction = readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(OpenReader)
     }
@@ -89,7 +89,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
                 queryParam2 = "postId" to "cba"
         )
 
-        val navigateAction = readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(OpenReader)
     }
@@ -104,7 +104,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
                 queryParam2 = "postId" to postId.toString()
         )
 
-        val navigateAction = readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(ViewPostInReader(blogId, postId, uri))
         verify(analyticsUtilsWrapper).trackWithBlogPostDetails(READER_VIEWPOST_INTERCEPTED, blogId, postId)
@@ -114,8 +114,53 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `opens URI in reader when host is neither read nor viewpost`() {
         val uri = buildUri(host = "openInReader")
 
-        val navigateAction = readerLinkHandler.buildOpenInReaderNavigateAction(uri)
+        val navigateAction = readerLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(OpenInReader(uri))
+    }
+
+    @Test
+    fun `correctly strips READ applink`() {
+        val uri = buildUri(host = "read")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://read")
+    }
+
+    @Test
+    fun `correctly strips VIEWPOST applink with all params`() {
+        val uri = buildUri(
+                host = "viewpost",
+                queryParam1 = "blogId" to "123",
+                queryParam2 = "postId" to "321"
+        )
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://viewpost?blogId=blogId&postId=postId")
+    }
+
+    @Test
+    fun `correctly strips VIEWPOST applink with blog ID param`() {
+        val uri = buildUri(
+                host = "viewpost",
+                queryParam1 = "blogId" to "123"
+        )
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://viewpost?blogId=blogId")
+    }
+
+    @Test
+    fun `correctly strips VIEWPOST applink without params`() {
+        val uri = buildUri(
+                host = "viewpost"
+        )
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://viewpost")
     }
 }
