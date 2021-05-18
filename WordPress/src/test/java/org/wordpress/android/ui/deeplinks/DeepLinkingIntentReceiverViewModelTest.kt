@@ -130,7 +130,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val postUrl = initPostUrl()
         val uri = initTrackingUri(postUrl)
         val expectedAction = OpenEditor
-        whenever(editorLinkHandler.buildOpenEditorNavigateAction(postUrl)).thenReturn(expectedAction)
+        whenever(editorLinkHandler.buildNavigateAction(postUrl)).thenReturn(expectedAction)
 
         viewModel.start(null, uri)
 
@@ -277,9 +277,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     private fun initEditorLinkHandler(): Pair<UriWrapper, OpenEditor> {
         val uri = buildUri("wordpress.com")
-        whenever(editorLinkHandler.isEditorUrl(uri)).thenReturn(true)
+        whenever(editorLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         val expected = OpenEditor
-        whenever(editorLinkHandler.buildOpenEditorNavigateAction(uri)).thenReturn(expected)
+        whenever(editorLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
         return Pair(uri, expected)
     }
 
@@ -311,7 +311,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
     private fun initPostUrl(): UriWrapper {
         val uri = mock<UriWrapper>()
-        whenever(editorLinkHandler.isEditorUrl(uri)).thenReturn(true)
+        whenever(editorLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         return uri
     }
 }

@@ -96,7 +96,7 @@ class DeepLinkingIntentReceiverViewModel
                     ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
             readerLinkHandler.isReaderUrl(uri) -> readerLinkHandler.buildOpenInReaderNavigateAction(uri)
-            editorLinkHandler.isEditorUrl(uri) -> editorLinkHandler.buildOpenEditorNavigateAction(uri)
+            editorLinkHandler.shouldHandleUrl(uri) -> editorLinkHandler.buildNavigateAction(uri)
             statsLinkHandler.isStatsUrl(uri) -> statsLinkHandler.buildOpenStatsNavigateAction(uri)
             startLinkHandler.isStartUrl(uri) -> startLinkHandler.buildNavigateAction()
             notificationsLinkHandler.shouldHandleUrl(uri) -> notificationsLinkHandler.buildNavigateAction(uri)
