@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
@@ -510,6 +511,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginNoSitesViewModel.class)
     abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
 
     @Binds
     @IntoMap
