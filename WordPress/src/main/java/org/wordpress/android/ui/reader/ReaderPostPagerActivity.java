@@ -39,6 +39,8 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.deeplinks.DeepLinkModel.Source;
+import org.wordpress.android.ui.deeplinks.DeepLinkModel.TrackingData;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -59,6 +61,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtilsWrapper;
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -131,6 +134,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
+    @Inject AnalyticsUtilsWrapper mAnalyticsUtilsWrapper;
     @Inject ReaderPostTableWrapper mReaderPostTableWrapper;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
@@ -238,9 +242,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
 
         if (uri == null) {
+            mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
             Intent intent = new Intent(this, WPLaunchActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -260,30 +264,43 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
         // with the first segment being 'read'.
         if (segments != null) {
+            // Builds stripped URI for tracking purposes
+            StringBuilder uriBuilder = new StringBuilder();
+            uriBuilder.append("wordpress.com");
             if (segments.get(0).equals("read")) {
+                uriBuilder.append("/read");
                 if (segments.size() > 2) {
                     blogIdentifier = segments.get(2);
 
                     if (segments.get(1).equals("blogs")) {
+                        uriBuilder.append("/blogs/feedId");
                         interceptType = InterceptType.READER_BLOG;
                     } else if (segments.get(1).equals("feeds")) {
+                        uriBuilder.append("/feeds/feedId");
                         interceptType = InterceptType.READER_FEED;
                         mIsFeed = true;
                     }
                 }
 
                 if (segments.size() > 4 && segments.get(3).equals("posts")) {
+                    uriBuilder.append("/posts/feedItemId");
                     postIdentifier = segments.get(4);
                 }
 
                 parseFragment(uri);
-
+                mAnalyticsUtilsWrapper
+                        .trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, new TrackingData(
+                                Source.LINK,
+                                uriBuilder.toString(),
+                                null
+                                ));
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             } else if (segments.size() >= 4) {
                 blogIdentifier = uri.getHost();
                 try {
                     postIdentifier = URLEncoder.encode(segments.get(3), "UTF-8");
+                    uriBuilder.append("/YYYY/MM/DD/postId");
                 } catch (UnsupportedEncodingException e) {
                     AppLog.e(AppLog.T.READER, e);
                     ToastUtils.showToast(this, R.string.error_generic);
@@ -293,6 +310,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 detectLike(uri);
 
                 interceptType = InterceptType.WPCOM_POST_SLUG;
+                mAnalyticsUtilsWrapper
+                        .trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, new TrackingData(
+                                Source.LINK,
+                                uriBuilder.toString(),
+                                null
+                        ));
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             }
