@@ -7,7 +7,6 @@ import org.wordpress.android.ui.deeplinks.DeepLinkModel.Source.LINK
 import org.wordpress.android.ui.deeplinks.DeepLinkModel.TrackingData
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
