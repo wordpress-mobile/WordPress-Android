@@ -29,6 +29,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -56,6 +57,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -213,7 +215,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected boolean isJetpackAppLogin() {
-        return mDoLoginUpdate && BuildConfig.IS_JETPACK_APP;
+        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
     }
 
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
