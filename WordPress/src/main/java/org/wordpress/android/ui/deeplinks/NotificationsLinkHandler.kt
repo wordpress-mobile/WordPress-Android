@@ -6,12 +6,12 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 class NotificationsLinkHandler
-@Inject constructor() {
+@Inject constructor(): DeepLinkHandler {
     /**
      * Builds navigate action from URL like:
      * https://wordpress.com/notifcations
      */
-    fun buildNavigateAction(): NavigateAction {
+    override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
         return OpenNotifications
     }
 
@@ -19,9 +19,13 @@ class NotificationsLinkHandler
      * Returns true if the URI should be handled by NotificationsLinkHandler.
      * The handled links are `https://wordpress.com/notifications`
      */
-    fun isNotificationsUrl(uri: UriWrapper): Boolean {
+    override fun shouldHandleUrl(uri: UriWrapper): Boolean {
         return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == NOTIFICATIONS_PATH) || uri.host == NOTIFICATIONS_PATH
+    }
+
+    override fun stripUrl(uri: UriWrapper): String {
+        return uri.host + "/" + uri.pathSegments.firstOrNull()
     }
 
     companion object {

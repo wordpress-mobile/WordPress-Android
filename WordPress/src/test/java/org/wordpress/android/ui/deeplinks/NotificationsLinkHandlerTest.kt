@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.deeplinks
 
+import com.nhaarman.mockitokotlin2.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +15,7 @@ class NotificationsLinkHandlerTest {
     fun `handles WPCom notifications URL`() {
         val uri = buildUri(host = "wordpress.com", path1 = "notifications")
 
-        val isHandled = notificationsLinkHandler.isNotificationsUrl(uri)
+        val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isHandled).isTrue()
     }
@@ -23,7 +24,7 @@ class NotificationsLinkHandlerTest {
     fun `handles notifications app link`() {
         val uri = buildUri(host = "notifications")
 
-        val isHandled = notificationsLinkHandler.isNotificationsUrl(uri)
+        val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isHandled).isTrue()
     }
@@ -32,7 +33,7 @@ class NotificationsLinkHandlerTest {
     fun `does not handle WPCom non-notifications URL`() {
         val uri = buildUri(host = "wordpress.com", path1 = "stats")
 
-        val isHandled = notificationsLinkHandler.isNotificationsUrl(uri)
+        val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isHandled).isFalse()
     }
@@ -41,15 +42,24 @@ class NotificationsLinkHandlerTest {
     fun `does not handle non-WPCom notifications URL`() {
         val uri = buildUri(host = "wordpress.org", path1 = "notifications")
 
-        val isHandled = notificationsLinkHandler.isNotificationsUrl(uri)
+        val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
         assertThat(isHandled).isFalse()
     }
 
     @Test
     fun `builds notifications navigate action`() {
-        val navigateAction = notificationsLinkHandler.buildNavigateAction()
+        val navigateAction = notificationsLinkHandler.buildNavigateAction(mock())
 
         assertThat(navigateAction).isEqualTo(OpenNotifications)
+    }
+
+    @Test
+    fun `strip url returns notifications url`() {
+        val uri = buildUri(host = "wordpress.com", path1 = "notifications")
+
+        val strippedUrl = notificationsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/notifications")
     }
 }

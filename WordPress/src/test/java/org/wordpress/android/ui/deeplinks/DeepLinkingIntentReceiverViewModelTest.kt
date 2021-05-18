@@ -190,9 +190,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Test
     fun `opens navigate action from notifications link handler`() {
         val uri = buildUri("wordpress.com")
-        whenever(notificationsLinkHandler.isNotificationsUrl(uri)).thenReturn(true)
+        whenever(notificationsLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         val expected = NavigateAction.OpenNotifications
-        whenever(notificationsLinkHandler.buildNavigateAction()).thenReturn(expected)
+        whenever(notificationsLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
 
         viewModel.start(null, uri)
 
