@@ -4,8 +4,9 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
+import javax.inject.Inject
 
-class UpdateFeaturedImageUseCase {
+class UpdateFeaturedImageUseCase @Inject constructor() {
     fun updateFeaturedImage(
         featuredImageId: Long,
         editPostRepository: EditPostRepository,
