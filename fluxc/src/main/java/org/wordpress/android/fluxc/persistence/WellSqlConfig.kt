@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 149
+        return 151
     }
 
     override fun getDbName(): String {
@@ -1749,6 +1749,19 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "ORDER_ID INTEGER," +
                                     "REFUND_ID INTEGER," +
                                     "DATA TEXT NOT NULL)"
+                    )
+                }
+                150 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCUserModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_USER_ID INTEGER," +
+                                    "FIRST_NAME TEXT," +
+                                    "LAST_NAME TEXT," +
+                                    "USERNAME TEXT," +
+                                    "EMAIL TEXT," +
+                                    "ROLES TEXT)"
                     )
                 }
             }
