@@ -179,9 +179,9 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Test
     fun `opens navigate action from stats link handler`() {
         val uri = buildUri("wordpress.com")
-        whenever(statsLinkHandler.isStatsUrl(uri)).thenReturn(true)
+        whenever(statsLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         val expected = NavigateAction.OpenStats
-        whenever(statsLinkHandler.buildOpenStatsNavigateAction(uri)).thenReturn(expected)
+        whenever(statsLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
 
         viewModel.start(null, uri)
 

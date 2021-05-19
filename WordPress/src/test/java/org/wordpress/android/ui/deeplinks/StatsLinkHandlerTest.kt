@@ -30,7 +30,7 @@ class StatsLinkHandlerTest {
     fun `handles stats URI`() {
         val statsUri = buildUri(host = "wordpress.com", path1 = "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isTrue()
     }
@@ -39,7 +39,7 @@ class StatsLinkHandlerTest {
     fun `handles stats App link`() {
         val statsUri = buildUri(host = "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isTrue()
     }
@@ -48,7 +48,7 @@ class StatsLinkHandlerTest {
     fun `does not handle stats URI with different host`() {
         val statsUri = buildUri(host = "wordpress.org", path1 = "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isFalse()
     }
@@ -57,7 +57,7 @@ class StatsLinkHandlerTest {
     fun `does not handle URI with different path`() {
         val statsUri = buildUri(host = "wordpress.com", path1 = "post")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isFalse()
     }
@@ -66,18 +66,18 @@ class StatsLinkHandlerTest {
     fun `opens stats screen from empty URL`() {
         val uri = buildUri(path1 = "stats")
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStats)
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStats)
     }
 
     @Test
     fun `opens stats screen from app link`() {
         val uri = buildUri(host = "stats")
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStats)
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStats)
     }
 
     @Test
@@ -86,9 +86,9 @@ class StatsLinkHandlerTest {
         val uri = buildUri(path1 = "stats", path2 = siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
     }
 
     @Test
@@ -105,9 +105,9 @@ class StatsLinkHandlerTest {
             val uri = buildUri(path1 = "stats", path2 = key, path3 = siteUrl)
             whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-            val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+            val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-            assertThat(buildOpenStatsNavigateAction).isEqualTo(
+            assertThat(buildNavigateAction).isEqualTo(
                     NavigateAction.OpenStatsForSiteAndTimeframe(
                             site,
                             timeframe
@@ -122,8 +122,44 @@ class StatsLinkHandlerTest {
         val uri = buildUri(path1 = "stats", path2 = "invalid", path3 = siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+    }
+
+    @Test
+    fun `strips applink with all params`() {
+        val uri = buildUri("stats", path1 = "day", path2 = "example.com")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://stats/day/siteUrl")
+    }
+
+    @Test
+    fun `strips applink without params`() {
+        val uri = buildUri("stats")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://stats")
+    }
+
+    @Test
+    fun `strips deeplink with all params`() {
+        val uri = buildUri("wordpress.com", path1 = "stats", path2 = "day", path3 = "example.com")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/stats/day/siteUrl")
+    }
+
+    @Test
+    fun `strips deeplink without params`() {
+        val uri = buildUri("wordpress.com", path1 = "stats")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/stats")
     }
 }
