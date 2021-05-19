@@ -2302,7 +2302,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
-                mLayoutGridBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
+                mLayoutGridBlockFeatureConfig.isEnabled() && SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
