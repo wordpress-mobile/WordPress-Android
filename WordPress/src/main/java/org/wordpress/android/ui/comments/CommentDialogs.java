@@ -13,6 +13,7 @@ import org.wordpress.android.R;
  * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
  * this class, please ping develric or klymyam
  */
+@Deprecated
 class CommentDialogs {
     static final int ID_COMMENT_DLG_APPROVING = 100;
     static final int ID_COMMENT_DLG_DISAPPROVING = 101;

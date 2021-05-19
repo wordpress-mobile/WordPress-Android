@@ -13,6 +13,7 @@ class SiteItemsBuilder
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
+    @Suppress("LongParameterList")
     fun buildSiteItems(
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,

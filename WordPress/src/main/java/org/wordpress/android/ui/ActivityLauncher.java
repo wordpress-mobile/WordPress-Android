@@ -616,7 +616,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, UnifiedCommentsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {

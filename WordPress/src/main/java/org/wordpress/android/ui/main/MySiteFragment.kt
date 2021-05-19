@@ -611,7 +611,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             showSiteIconProgressBar(it == true)
         })
 
-        rowUnifiedComments.visibility = if (unifiedCommentsFeatureConfig.isEnabled()) View.VISIBLE else View.GONE
+        rowUnifiedComments.visibility = if (unifiedCommentsFeatureConfig.isEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

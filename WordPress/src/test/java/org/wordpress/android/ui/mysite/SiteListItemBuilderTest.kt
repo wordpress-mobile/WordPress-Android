@@ -443,7 +443,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `unified comments not built if the feature flag is not enabled`() {
+    fun `unified comments item not built if the feature flag is not enabled`() {
         val isUnifiedCommentFeatureAvailable = false
 
         val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
