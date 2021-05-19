@@ -1761,7 +1761,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "LAST_NAME TEXT," +
                                     "USERNAME TEXT," +
                                     "EMAIL TEXT," +
-                                    "ROLE TEXT)"
+                                    "ROLES TEXT)"
                     )
                 }
             }
