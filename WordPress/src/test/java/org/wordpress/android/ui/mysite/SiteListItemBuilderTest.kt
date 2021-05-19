@@ -430,6 +430,30 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Test
+    fun `unified comments item built if is the feature flag is enabled`() {
+        val isUnifiedCommentFeatureAvailable = true
+
+        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
+                SITE_ITEM_ACTION,
+                isUnifiedCommentFeatureAvailable
+        )
+
+        assertThat(item).isEqualTo(UNIFIED_COMMENTS_ITEM)
+    }
+
+    @Test
+    fun `unified comments not built if the feature flag is not enabled`() {
+        val isUnifiedCommentFeatureAvailable = false
+
+        val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
+                SITE_ITEM_ACTION,
+                isUnifiedCommentFeatureAvailable
+        )
+
+        assertThat(item).isNull()
+    }
+
     private fun setupSiteSettings(canManageOptions: Boolean = false, isAccessedViaWPComRest: Boolean = true) {
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isAccessedViaWPComRest)
