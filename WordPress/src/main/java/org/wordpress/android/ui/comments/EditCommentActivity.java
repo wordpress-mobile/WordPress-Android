@@ -45,6 +45,12 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
+ * this class, please ping develric or klymyam
+ */
+@Deprecated
 public class EditCommentActivity extends LocaleAwareActivity {
     static final String KEY_COMMENT = "KEY_COMMENT";
     static final String KEY_NOTE_ID = "KEY_NOTE_ID";

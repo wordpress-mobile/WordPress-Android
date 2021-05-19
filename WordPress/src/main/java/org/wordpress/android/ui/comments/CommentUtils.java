@@ -13,6 +13,12 @@ import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
+ * this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images

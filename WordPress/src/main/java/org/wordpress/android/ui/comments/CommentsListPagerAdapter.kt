@@ -6,6 +6,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria
 import java.lang.ref.WeakReference
 
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you want to add any" +
+        " features or modify this class, please ping develric or klymyam")
 class CommentsListPagerAdapter(
     private val pages: List<CommentStatusCriteria>,
     fragmentActivity: FragmentActivity

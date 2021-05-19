@@ -44,6 +44,12 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
+ * this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentsDetailActivity extends LocaleAwareActivity
         implements CommentAdapter.OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {

@@ -53,6 +53,12 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
+ * this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentsListFragment extends ViewPagerFragment {
     static final int COMMENTS_PER_PAGE = 30;
     static final int MAX_COMMENTS_IN_RESPONSE = 100;
