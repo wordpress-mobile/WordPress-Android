@@ -2108,6 +2108,7 @@
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
+    <string name="my_site_btn_unified_comments" translatable="false">Unified Comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
