@@ -113,6 +113,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
+    private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
+
     private boolean mHtmlModeEnabled;
 
     private Handler mInvalidateOptionsHandler;
@@ -789,26 +791,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
-    private void showFeaturedImageConfirmationDialog(final int mediaId) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(R.string.replace_current_title);
-        builder.setMessage(R.string.replace_current_description);
-        builder.setPositiveButton(R.string.replace_current_confirmation,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        setFeaturedImage(mediaId);
-                    }
-                });
+    public void showFeaturedImageConfirmationDialog(final int mediaId) {
+        GutenbergDialogFragment dialog = new GutenbergDialogFragment();
+        dialog.initialize(
+                TAG_REPLACE_FEATURED_DIALOG,
+                getString(R.string.replace_current_title),
+                getString(R.string.replace_current_description),
+                getString(R.string.replace_current_confirmation),
+                getString(R.string.replace_current_cancel),
+                mediaId
+        );
 
-        builder.setNegativeButton(R.string.replace_current_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        dialog.show(getChildFragmentManager(), TAG_REPLACE_FEATURED_DIALOG);
     }
 
     private void setFeaturedImage(int mediaId) {
