@@ -1,10 +1,13 @@
 package org.wordpress.android.util.experiments
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +28,7 @@ import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ExPlatTest : BaseUnitTest() {
+    @Mock lateinit var experiments: Lazy<Set<Experiment>>
     @Mock lateinit var experimentStore: ExperimentStore
     @Mock lateinit var appLog: AppLogWrapper
     private lateinit var exPlat: ExPlat
@@ -32,8 +36,10 @@ class ExPlatTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        exPlat = ExPlat(experimentStore, appLog, testScope())
+        exPlat = ExPlat(experiments, experimentStore, appLog, testScope())
         dummyExperiment = object : Experiment("dummy", exPlat) {}
+
+        setupExperiments(setOf(dummyExperiment))
     }
 
     @Test
@@ -42,7 +48,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -51,7 +57,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -60,7 +66,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.refreshIfNeeded()
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -69,7 +75,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.forceRefresh()
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -85,7 +91,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -94,7 +100,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, times(1)).fetchAssignments(any())
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -103,7 +109,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -112,7 +118,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -121,7 +127,7 @@ class ExPlatTest : BaseUnitTest() {
 
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
 
-        verify(experimentStore, never()).fetchAssignments(any())
+        verify(experimentStore, never()).fetchAssignments(any(), any(), anyOrNull())
     }
 
     @Test
@@ -144,9 +150,54 @@ class ExPlatTest : BaseUnitTest() {
         assertThat(secondVariation).isEqualTo(controlVariation)
     }
 
+    @Test
+    fun `forceRefresh fetches assignments if experiments is not empty`() = test {
+        setupExperiments(setOf(dummyExperiment))
+
+        exPlat.forceRefresh()
+
+        verify(experimentStore, times(1)).fetchAssignments(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `forceRefresh does not interact with store if experiments is empty`() = test {
+        setupExperiments(emptySet())
+
+        exPlat.forceRefresh()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `refreshIfNeeded does not interact with store if experiments is empty`() = test {
+        setupExperiments(emptySet())
+
+        exPlat.refreshIfNeeded()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `getVariation does not interact with store if experiments is empty`() = test {
+        setupExperiments(emptySet())
+
+        try {
+            exPlat.getVariation(dummyExperiment, false)
+        } catch (e: IllegalArgumentException) {
+            // Do nothing.
+        } finally {
+            verifyZeroInteractions(experimentStore)
+        }
+    }
+
+    private fun setupExperiments(experiments: Set<Experiment>) {
+        whenever(this.experiments.get()).thenReturn(experiments)
+    }
+
     private suspend fun setupAssignments(cachedAssignments: Assignments?, fetchedAssignments: Assignments) {
         whenever(experimentStore.getCachedAssignments()).thenReturn(cachedAssignments)
-        whenever(experimentStore.fetchAssignments(any())).thenReturn(OnAssignmentsFetched(fetchedAssignments))
+        whenever(experimentStore.fetchAssignments(any(), any(), anyOrNull()))
+                .thenReturn(OnAssignmentsFetched(fetchedAssignments))
     }
 
     private fun buildAssignments(

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-10 20:47:16+0000
+Translation-Revision-Date: 2021-04-28 23:36:55+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">استخدام زر الأيقونة</string>
+    <string name="gutenberg_native_what_is_alt_text">ماهو النص البديل؟</string>
+    <string name="gutenberg_native_transform_block">تحويل مكوّن…</string>
+    <string name="gutenberg_native_transform_s_to">تحويل %s إلى</string>
+    <string name="gutenberg_native_failed_to_insert_media">فشل في إدراج وسائط.</string>
+    <string name="like_title_plural">%d إعجابات</string>
+    <string name="like_faces_singular_text">مدوّن واحد معجب بهذا.</string>
+    <string name="like_faces_plural_text">%d مدوِّنون معجبون بهذا.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">فشل في إدراج ملف صوتي.</string>
+    <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">تم تحويل %1$s إلى %2$s</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">وصف الغرض من الصورة. اتركه فارغًا إذا كانت الصورة زخرفية أو عنصر تزيين بشكل عام. </string>
+    <string name="suggestion">اقتراح:</string>
+    <string name="like_title_singular">إعجاب واحد</string>
+    <string name="threat_fix_enter_server_creds_message_singular">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديد.</string>
+    <string name="threat_fix_enter_server_creds_message_plural">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديدات.</string>
     <string name="gutenberg_native_search_blocks">البحث في المكوّنات</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">زر البحث. نص الزر الحالي هو</string>
-    <string name="gutenberg_native_search_input_field">حقل إدخال البحث.</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">تسمية مكون البحث. النص الحالي هو</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">لم يتم تعيين عنصر نائب مخصص</string>
-    <string name="gutenberg_native_hide_search_heading">إخفاء عنوان البحث</string>
     <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">أنقر نقرًا مزدوجًا لتحرير زر الكتابة</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
-    <string name="gutenberg_native_no_button">بدون زر</string>
     <string name="gutenberg_native_search_block">مكوّن بحث</string>
-    <string name="gutenberg_native_inside">داخلي</string>
-    <string name="gutenberg_native_outside">خارجي</string>
     <string name="gutenberg_native_clear_search">مسح البحث</string>
     <string name="gutenberg_native_cancel_search">إلغاء البحث</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
-    <string name="gutenberg_native_current_placeholder_text_is">نص العنصر النائب الحالي هو</string>
-    <string name="gutenberg_native_button_position">موضع الزر</string>
-    <string name="gutenberg_native_button_outside">زر خارجي</string>
-    <string name="gutenberg_native_button_inside">زر داخلي</string>
     <string name="get_likes_empty_state_title">حدث خطأ أثناء الحصول على بيانات الإعجابات</string>
     <string name="get_likes_unknown_error">حدث خطأ غير معروف أثناء الحصول على الإعجابات.</string>
     <string name="comments_empty_list_filtered_unreplied">لا توجد تعليقات لم يتم الرد عليها</string>
@@ -36,12 +35,10 @@ Language: ar
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">تلخيص مقالتك بقائمة من العناوين. أضف روابط القفز HTML إلى مكوّنات العناوين لربطها هنا.</string>
     <string name="gutenberg_native_summary">ملخّص (موجز)</string>
     <string name="gutenberg_native_table_of_contents">جدول المحتويات</string>
-    <string name="gutenberg_native_search_settings">إعدادات البحث</string>
     <string name="gutenberg_native_buttongroup">مجموعة أزرار</string>
     <string name="gutenberg_native_document_outline">ملخص عناوين المستند</string>
     <string name="site_settings_denylist_title">التعليقات غير المسموح بها</string>
     <string name="jetpack_brute_force_allowlist_title">عناوين IP المسموح بها دائمًا</string>
-    <string name="gutenberg_native_add_button_text">إضافة نصّ للزر</string>
     <string name="reader_title_interests">متابعة المواضيع</string>
     <string name="activity_log_backup_download_notice_download_action">تنزيل</string>
     <string name="activity_log_backup_download_notice_dismiss_action">تجاهل</string>
@@ -904,6 +901,7 @@ Language: ar
     <string name="gutenberg_native_alt_text">النص البديل</string>
     <string name="gutenberg_native_add_block_here">إضافة مكوّن هنا</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">حدث خطأ غير معروف. يُرجى المحاولة مرة أخرى.</string>
+    <string name="gutenberg_native_add_alt_text">إضافة نصّ بديل للرابط</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="main_switch_default_title_off">إيقاف التشغيل</string>
@@ -1454,9 +1452,7 @@ Language: ar
     <string name="application_log_button">سجل التطبيق</string>
     <string name="my_tickets">تذاكري</string>
     <string name="support_push_notification_title">ووردبريس</string>
-    <string name="activity_log_rewind_dialog_message">هل تريد بالتأكيد استعادة موقعك مرة أخرى إلى %1$s في %2$s؟ سيؤدي هذا الإجراء إلى حذف كل المحتوى والخيارات التي تم إنشاؤها أو تم تغييرها من ذلك الحين.</string>
     <string name="activity_log_currently_restoring_message">الاستعادة إلى %1$s %2$s</string>
-    <string name="activity_log_rewind_site">استعادة الموقع</string>
     <string name="activity_log_currently_restoring_message_no_dates">الاستعادة قيد التقدّم</string>
     <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
@@ -1814,7 +1810,7 @@ Language: ar
     <string name="login_error_button">إغلاق</string>
     <string name="enter_wpcom_password_google">للمتابعة باستخدام حساب Google هذا، يرجى إدخال كلمة مرور متطابقة في WordPress.com. ستتم المطالبة بها لمرة واحدة.</string>
     <string name="error_generic_network">حدثت مشكلة في الشبكة. يرجى التحقق من اتصالك والمحاولة لاحقًا.</string>
-    <string name="post_settings_remove_featured_image">إزالة صورة مميزة</string>
+    <string name="post_settings_remove_featured_image">إزالة الصورة البارزة</string>
     <string name="post_settings_choose_featured_image">اختيار صورة مميزة</string>
     <string name="login_log_in_for_share_intent">سجّل الدخول إلى WordPress.com لمشاركة المحتوى.</string>
     <string name="enter_site_address_share_intent">أدخل عنوان موقع ووردبريس الذي تود مشاركة المحتوى معه.</string>
@@ -2280,7 +2276,7 @@ Language: ar
     <string name="web_address">عنوان موقع ويب</string>
     <string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
     <string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
-    <string name="post_settings_set_featured_image">تعيين صورة مميزة</string>
+    <string name="post_settings_set_featured_image">تعيين صورة بارزة</string>
     <string name="post_settings_featured_image">الصورة المميزة</string>
     <string name="email_address">عنوان البريد الإلكتروني</string>
     <string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>

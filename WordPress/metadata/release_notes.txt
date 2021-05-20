@@ -1,6 +1,5 @@
-* [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
-* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
-* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
-* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
-* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
+What’s new?
 
+With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+
+Other improvements include more user information about your Likes, as well as an updated Comments screen.

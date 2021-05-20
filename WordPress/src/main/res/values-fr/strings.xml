@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-16 09:54:08+0000
+Translation-Revision-Date: 2021-04-29 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Utiliser le bouton d’icône</string>
-    <string name="gutenberg_native_search_input_field">Champ de saisie de recherche.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Bouton de recherche. Le texte actuel du bouton est</string>
+    <string name="gutenberg_native_what_is_alt_text">Qu’est-ce que le texte alternatif ?</string>
+    <string name="gutenberg_native_transform_s_to">Transformer %s en</string>
+    <string name="gutenberg_native_transform_block">Transformer le bloc…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Échec d’insertion du média.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Échec d’insertion du fichier audio</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Décrivez le rôle de cette image. Ne rien remplir si l’image est purement décorative. </string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a été transformé en %2$s</string>
+    <string name="like_faces_error_loading_message">Erreur lors du chargement des données. %s.</string>
+    <string name="like_faces_plural_text">%d blogueurs aiment ceci.</string>
+    <string name="like_faces_singular_text">Un blogueur aime ceci.</string>
+    <string name="like_title_plural">%d mentions J\'aime</string>
+    <string name="like_title_singular">1 mention J\'aime</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Entrez les identifiants de votre serveur pour résoudre les menaces.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Entrez les identifiants de votre serveur pour résoudre la menace.</string>
+    <string name="suggestion">Suggestion :</string>
     <string name="gutenberg_native_search_blocks">Rechercher des blocs</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Rechercher une étiquette de bloc. Le texte actuel est</string>
     <string name="gutenberg_native_search_block">Rechercher un bloc</string>
-    <string name="gutenberg_native_outside">Extérieur</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Aucun texte indicatif personnalisé défini</string>
-    <string name="gutenberg_native_no_button">Aucun bouton</string>
-    <string name="gutenberg_native_inside">Intérieur</string>
-    <string name="gutenberg_native_hide_search_heading">Masquer le titre de recherche</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Appuyer deux fois pour modifier le texte indicatif</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Appuyer deux fois pour modifier le texte de l’étiquette</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Appuyer deux fois pour modifier le texte du bouton</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Appuyer deux fois pour modifier l’unité</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Le texte indicatif actuel est</string>
     <string name="gutenberg_native_clear_search">Supprimer la recherche</string>
     <string name="gutenberg_native_cancel_search">Annuler la recherche</string>
-    <string name="gutenberg_native_button_position">Position du bouton</string>
-    <string name="gutenberg_native_button_outside">Extérieur du bouton</string>
-    <string name="gutenberg_native_button_inside">Intérieur du bouton</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s est %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Une erreur est survenue lors de l’obtention des données sur les mentions J’aime</string>
     <string name="get_likes_unknown_error">Une erreur inconnue est survenue lors de l’obtention des mentions J’aime.</string>
@@ -40,7 +39,6 @@ Language: fr
     <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">Adresses IP toujours autorisées</string>
     <string name="site_settings_denylist_title">Commentaires rejetés</string>
-    <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>
     <string name="reader_title_interests">Suivre des sujets</string>
     <string name="stories_intro_main_subtitle">Une nouvelle façon de publier du contenu attrayant sur votre site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignorer</string>
@@ -847,6 +845,7 @@ Language: fr
     <string name="gutenberg_native_alt_text">Texte alternatif</string>
     <string name="gutenberg_native_add_video">AJOUTER UNE VIDÉO</string>
     <string name="gutenberg_native_add_url">Ajouter une URL</string>
+    <string name="gutenberg_native_add_alt_text">Ajouter du texte alternatif</string>
     <string name="gutenberg_native_add_image_or_video">AJOUTER UNE IMAGE OU UNE VIDÉO</string>
     <string name="gutenberg_native_add_image">AJOUTER UNE IMAGE</string>
     <string name="gutenberg_native_add_block_here">AJOUTER UN BLOC ICI</string>
@@ -1398,8 +1397,6 @@ Language: fr
     <string name="support_contact_email">E-mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
-    <string name="activity_log_rewind_dialog_message">Confirmez-vous vouloir rétablir votre site au %1$s sur %2$s ? Cela supprimera tout le contenu et les options créés ou modifiés jusqu’à maintenant.</string>
-    <string name="activity_log_rewind_site">Rétablir le site</string>
     <string name="activity_log_currently_restoring_message_no_dates">Rétablissement en cours</string>
     <string name="activity_log_currently_restoring_message">Rétablissement vers %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>

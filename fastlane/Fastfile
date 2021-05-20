@@ -7,30 +7,66 @@ end
 
 # NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
 # of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
-SUPPORTED_LOCALES = [
-  { glotpress: "ar",    google_play: "ar",     promo_config: {} },
-  { glotpress: "de",    google_play: "de-DE",  promo_config: {} },
-  { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
-  { glotpress: "es",    google_play: "es-ES",  promo_config: {} },
-  { glotpress: "fr",    google_play: "fr-CA",  promo_config: false },
-  { glotpress: "fr",    google_play: "fr-FR",  promo_config: {} },
-  { glotpress: "he",    google_play: "iw-IL",  promo_config: {} },
-  { glotpress: "id",    google_play: "id",     promo_config: {} },
-  { glotpress: "it",    google_play: "it-IT",  promo_config: {} },
-  { glotpress: "ja",    google_play: "ja-JP",  promo_config: {} },
-  { glotpress: "ko",    google_play: "ko-KR",  promo_config: {} },
-  { glotpress: "nl",    google_play: "nl-NL",  promo_config: {} },
-  { glotpress: "pl",    google_play: "pl-PL",  promo_config: {} },
-  { glotpress: "pt-br", google_play: "pt-BR",  promo_config: {} },
-  { glotpress: "ru",    google_play: "ru-RU",  promo_config: {} },
-  { glotpress: "sr",    google_play: "sr",     promo_config: {} },
-  { glotpress: "sv",    google_play: "sv-SE",  promo_config: {} },
-  { glotpress: "th",    google_play: "th",     promo_config: {} },
-  { glotpress: "tr",    google_play: "tr-TR",  promo_config: {} },
-  { glotpress: "vi",    google_play: "vi",     promo_config: {} },
-  { glotpress: "zh-cn", google_play: "zh-CN",  promo_config: {} },
-  { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {} },
+ALL_LOCALES = [
+  # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
+  { glotpress: "ar", android: "ar",    google_play: "ar",     promo_config: {} },
+  { glotpress: "de", android: "de",    google_play: "de-DE",  promo_config: {} },
+  { glotpress: "en-gb", android: "en-rGB", google_play: "en-US",  promo_config: {} },
+  { glotpress: "es", android: "es",    google_play: "es-ES",  promo_config: {} },
+  { glotpress: "fr", android: "fr-rCA",    google_play: "fr-CA",  promo_config: false },
+  { glotpress: "fr", android: "fr",    google_play: "fr-FR",  promo_config: {} },
+  { glotpress: "he", android: "he",    google_play: "iw-IL",  promo_config: {} },
+  { glotpress: "id", android: "id",    google_play: "id",     promo_config: {} },
+  { glotpress: "it", android: "it",    google_play: "it-IT",  promo_config: {} },
+  { glotpress: "ja", android: "ja",    google_play: "ja-JP",  promo_config: {} },
+  { glotpress: "ko", android: "ko",    google_play: "ko-KR",  promo_config: {} },
+  { glotpress: "nl", android: "nl",    google_play: "nl-NL",  promo_config: {} },
+  { glotpress: "pl", android: "pl",    google_play: "pl-PL",  promo_config: {} },
+  { glotpress: "pt-br", android: "pt-rBR", google_play: "pt-BR",  promo_config: {} },
+  { glotpress: "ru", android: "ru",    google_play: "ru-RU",  promo_config: {} },
+  { glotpress: "sr", android: "sr",    google_play: "sr",     promo_config: {} },
+  { glotpress: "sv", android: "sv",    google_play: "sv-SE",  promo_config: {} },
+  { glotpress: "th", android: "th",    google_play: "th",     promo_config: {} },
+  { glotpress: "tr", android: "tr",    google_play: "tr-TR",  promo_config: {} },
+  { glotpress: "vi", android: "vi",    google_play: "vi",     promo_config: {} },
+  { glotpress: "zh-cn", android: "zh-rCN", google_play: "zh-CN",  promo_config: {} },
+  { glotpress: "zh-tw", android: "zh-rTW", google_play: "zh-TW",  promo_config: {} },
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
+  { glotpress: "az", android: "az", promo_config: false},
+  { glotpress: "el", android: "el", promo_config: false},
+  { glotpress: "es-mx", android: "es-rMX", promo_config: false},
+  { glotpress: "es-cl", android: "es-rCL", promo_config: false},
+  { glotpress: "gd", android: "gd", promo_config: false},
+  { glotpress: "hi", android: "hi", promo_config: false },
+  { glotpress: "hu", android: "hu", promo_config: false},
+  { glotpress: "nb", android: "nb", promo_config: false},
+  { glotpress: "pl", android: "pl", promo_config: false},
+  { glotpress: "th", android: "th", promo_config: false},
+  { glotpress: "uz", android: "uz", promo_config: false},
+  { glotpress: "zh-tw", android: "zh-rHK", promo_config: false},
+  { glotpress: "eu", android: "eu", promo_config: false},
+  { glotpress: "ro", android: "ro", promo_config: false},
+  { glotpress: "mk", android: "mk", promo_config: false},
+  { glotpress: "en-au", android: "en-rAU", promo_config: false},
+  { glotpress: "sr", android: "sr", promo_config: false},
+  { glotpress: "sk", android: "sk", promo_config: false},
+  { glotpress: "cy", android: "cy", promo_config: false},
+  { glotpress: "da", android: "da", promo_config: false },
+  { glotpress: "bg", android: "bg", promo_config: false },
+  { glotpress: "sq", android: "sq", promo_config: false},
+  { glotpress: "hr", android: "hr", promo_config: false},
+  { glotpress: "cs", android: "cs", promo_config: false},
+  { glotpress: "pt-br", android: "pt-rBR", promo_config: false},
+  { glotpress: "en-ca", android: "en-rCA", promo_config: false },
+  { glotpress: "ms", android: "ms", promo_config: false},
+  { glotpress: "es-ve", android: "es-rVE", promo_config: false},
+  { glotpress: "gl", android: "gl", promo_config: false},
+  { glotpress: "is", android: "is"},
+  { glotpress: "es-co", android: "es-rCO", promo_config: false },
+  { glotpress: "kmr", android: "kmr", promo_config: false},
 ].freeze
+
+RELEASE_NOTES_LOCALES = ALL_LOCALES.reject { |h| h[:google_play].nil? }.map { |h| [h[:glotpress], h[:google_play]] }
 
 # Env file paths to load
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
@@ -55,7 +91,6 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
-ENV["validate_translations"]="lintVanillaRelease"
 REPOSITORY_NAME="WordPress-Android"
 
 ########################################################################
@@ -277,7 +312,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "wordpress", flavor:"vanilla", buildType: "release")
 
     upload_build_to_play_store(version: version, track: "production")
 
@@ -330,7 +365,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, flavor:"zalpha", buildType: "release")
+    build_bundle(version: version, app:"wordpress", flavor:"Zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "alpha")
@@ -361,7 +396,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"vanilla", buildType: "release")
+    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "beta")
@@ -477,11 +512,11 @@ REPOSITORY_NAME="WordPress-Android"
     download_path=Dir.pwd + "/metadata/android"
     gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
       target_files: files,
-      locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
+      locales: RELEASE_NOTES_LOCALES,
       source_locale: "en-US",
       download_path: download_path)
 
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
 
@@ -594,13 +629,13 @@ REPOSITORY_NAME="WordPress-Android"
     version=options[:version]
     name="wpandroid-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
-    aab_file="org.wordpress.android-#{options[:flavor]}-#{options[:buildType]}.aab"
+    aab_file="org.wordpress.android-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{options[:flavor]}Release/#{aab_file}"
+    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}Release/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -613,19 +648,36 @@ REPOSITORY_NAME="WordPress-Android"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
+      sh("./gradlew lint#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}Release >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
       sh("cp -v #{bundle_path} #{build_dir}#{name} | tee -a #{logfile_path}")
       UI.message("Bundle ready: #{name}")
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
-      extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")
     end
     "#{build_dir}#{name}"
+  end
+
+  #####################################################################################
+  # download_translations
+  # -----------------------------------------------------------------------------------
+  # This lane download the string translations from GlotPress
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_translations
+  #####################################################################################
+  lane :download_translations do |options|
+    # Adapt the GP project URL and lint_task as needed if testing a project other than WordPress
+    android_download_translations(
+      res_dir: File.join(ENV['PROJECT_NAME'], 'src', 'main', 'res'),
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      locales: ALL_LOCALES,
+      lint_task: 'lintWordpressVanillaRelease'
+    )
   end
 
   #####################################################################################
@@ -638,17 +690,23 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds an app bundle"
   lane :build_for_translation_review do | options |
+
+    translator_locales = %w[de es fr id it ja ko nl ru sv zh-cn zh-tw tr he pt ar pl th sr vi]
+    translator_locales_map = ALL_LOCALES.select { translator_locales.include?(h[:glotpress]) }
+
+    android_download_translations(
+      glotpress_url: 'https://translate.wordpress.com/projects/wporg/apps/android',
+      status_filter: ['current', 'waiting', 'fuzzy'],
+      locales: translator_locales_map,
+      lint_task: nil, skip_commit: true
+    )
+
     cmd_params = ""
     unless options[:custom_version].nil?
       UI.message("Building custom version: #{options[:custom_version]}")
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
-    sh("../tools/update-translations.sh review")
-    sh("../tools/update-translations.sh review waiting")
-    sh("../tools/update-translations.sh review fuzzy")
-
-    android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end
 
@@ -704,33 +762,6 @@ REPOSITORY_NAME="WordPress-Android"
         File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
       end
     end
-  end
-
-  private_lane :extract_universal_apk do | options |
-    bundle_path=options[:bundle_path]
-    apk_path=options[:apk_path]
-    temp_dir = Dir.mktmpdir()
-
-    command = ""
-    if is_ci
-      command << "bundletool build-apks --bundle=\"#{bundle_path}\" \\
-      --output=\"#{temp_dir}/universal.apks\" \\
-      --mode=universal"
-    else
-      command = "source ./tools/gradle-functions.sh"
-      command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
-      --output=\"#{temp_dir}/universal.apks\" \\
-      --mode=universal \\
-      --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
-      --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
-      --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
-      --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
-    end
-    sh(command)
-
-    sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
-    FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)
-    FileUtils.rm_rf("#{temp_dir}")
   end
 
   private_lane :create_gh_release do | options |

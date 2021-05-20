@@ -64,6 +64,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.engagement.EngageItem
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
+import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -349,7 +350,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLikeFacesTrain(view: View) {
-        likeFacesTrain = view.findViewById(R.id.liker_faces)
+        likeFacesTrain = view.findViewById(R.id.liker_faces_container)
         facesBlock = view.findViewById(R.id.faces_block)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
         likeNumBloggers = view.findViewById(R.id.num_bloggers)
@@ -478,7 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading, state.likersFacesText)
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
-            likeFacesTrain.visibility = if (state.showLikeFacesTrain) View.VISIBLE else View.GONE
+            likeFacesTrain.visibility = if (state.showLikeFacesTrainContainer) View.VISIBLE else View.GONE
 
             if (state.showEmptyState) {
                 uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
@@ -611,7 +612,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
-                ActivityLauncher.viewLikeListActivity(activity, this.siteId, this.postId, this.headerData)
+                ActivityLauncher.viewPostLikesListActivity(
+                        activity,
+                        this.siteId,
+                        this.postId,
+                        this.headerData,
+                        EngagementNavigationSource.LIKE_READER_LIST
+                )
             }
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,

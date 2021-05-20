@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-04-08 15:40:30+0000
+Translation-Revision-Date: 2021-04-20 10:46:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
-    <string name="gutenberg_native_search_input_field">Campo de introducción de búsqueda.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Botón de búsqueda. El texto actual del botón es</string>
+    <string name="gutenberg_native_what_is_alt_text">¿Qué es el texto alt?</string>
+    <string name="gutenberg_native_transform_s_to">Transformar %s a</string>
+    <string name="gutenberg_native_transform_block">Transformar bloque…</string>
+    <string name="gutenberg_native_failed_to_insert_media">Fallo al insertar los medios.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Fallo al insertar el archivo de audio.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe el propósito de la imagen. Déjalo vacío si la imagen es puramente decorativa.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformado a %2$s</string>
+    <string name="like_faces_error_loading_message">Error al cargar los datos de me gusta. %s</string>
+    <string name="like_faces_plural_text">A %d blogueros les gusta esto.</string>
+    <string name="like_faces_singular_text">A 1 bloguero le gusta esto.</string>
+    <string name="like_title_plural">%d me gusta</string>
+    <string name="like_title_singular">1 me gusta</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Introduce las credenciales de tu servidor para corregir las amenazas.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Introduce las credenciales de tu servidor para corregir la amenaza.</string>
+    <string name="suggestion">Sugerencia:</string>
     <string name="gutenberg_native_search_blocks">Bloques de búsqueda</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta del bloque de búsqueda. El texto actual es</string>
     <string name="gutenberg_native_search_block">Bloque de búsqueda</string>
-    <string name="gutenberg_native_outside">Fuera</string>
-    <string name="gutenberg_native_inside">Dentro</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">No se ha establecido ningún marcador de posición personalizado</string>
-    <string name="gutenberg_native_no_button">Sin botón</string>
-    <string name="gutenberg_native_hide_search_heading">Ocultar el encabezado de búsqueda</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Doble toque para editar el texto del marcador de posición</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Doble toque para editar el texto de la etiqueta</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Doble toque para editar el texto del botón</string>
     <string name="gutenberg_native_double_tap_to_change_unit">doble-toque para cambiar la unidad</string>
-    <string name="gutenberg_native_current_placeholder_text_is">El texto de marcador de posición actual es</string>
     <string name="gutenberg_native_clear_search">Vaciar la búsqueda</string>
     <string name="gutenberg_native_cancel_search">Cancelar la búsqueda</string>
-    <string name="gutenberg_native_button_position">Posición del botón</string>
-    <string name="gutenberg_native_button_outside">Botón exterior</string>
-    <string name="gutenberg_native_button_inside">Botón interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocurrió un error al obtener los datos de los me gusta</string>
     <string name="get_likes_unknown_error">Ocurrió un error al obtener los me gusta.</string>
@@ -36,12 +35,10 @@ Language: es
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Resume tu entrada con una lista de encabezados. Añade anclas HTML a los bloques de encabezados para enlazarlos aquí.</string>
     <string name="gutenberg_native_summary">resumen</string>
     <string name="gutenberg_native_table_of_contents">Tabla de contenidos</string>
-    <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
     <string name="gutenberg_native_buttongroup">Grupo de botones</string>
     <string name="gutenberg_native_document_outline">esquema del documento</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
-    <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
     <string name="reader_title_interests">Seguir temas</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
@@ -904,6 +901,7 @@ Language: es
     <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
     <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
+    <string name="gutenberg_native_add_alt_text">Añadir el texto alternativo</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón «Añadir a las entradas guardadas» para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">La lista se ha cargado con %1$d elementos.</string>
     <string name="notifications_tab_dialog_switch_desc">Avisos</string>
@@ -1455,9 +1453,7 @@ Language: es
     <string name="my_tickets">Mis tickets</string>
     <string name="support_push_notification_message">Nuevo mensaje de «Ayuda y soporte»</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
-    <string name="activity_log_rewind_site">Restaurar el sitio</string>
     <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">¿Seguro que quieres restaurar tu sitio al %1$s a las %2$s? Esto eliminará todo el contenido y las opciones creadas o cambiadas desde entonces.</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>

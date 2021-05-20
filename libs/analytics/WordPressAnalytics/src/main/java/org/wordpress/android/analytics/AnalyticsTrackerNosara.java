@@ -22,12 +22,13 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
     private static final String APP_SCHEME = "app_scheme";
 
-    private static final String EVENTS_PREFIX = "wpandroid_";
+    private final String mEventsPrefix;
 
     private final TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+    public AnalyticsTrackerNosara(Context context, String eventsPrefix) throws IllegalArgumentException {
         super(context);
+        mEventsPrefix = eventsPrefix;
         mNosaraClient = TracksClient.getClient(context);
     }
 
@@ -534,11 +535,11 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
             String jsonString = propertiesToJSON.toString();
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
@@ -2064,6 +2065,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_download_file_notice_download_tapped";
             case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
                 return "activity_log_download_file_notice_dismissed_tapped";
+            case USER_PROFILE_SHEET_SHOWN:
+                return "user_profile_sheet_shown";
+            case USER_PROFILE_SHEET_SITE_SHOWN:
+                return "user_profile_sheet_site_shown";
+            case BLOG_URL_PREVIEWED:
+                return "blog_url_previewed";
+            case LIKE_LIST_OPENED:
+                return "like_list_opened";
         }
         return null;
     }

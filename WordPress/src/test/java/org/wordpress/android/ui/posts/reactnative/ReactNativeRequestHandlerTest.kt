@@ -62,7 +62,7 @@ class ReactNativeRequestHandlerTest {
         val fetchResponse = ReactNativeFetchResponse.Success(successfulResponseJson)
         whenever(reactNativeStore.executeRequest(site, pathWithParams)).thenReturn(fetchResponse)
 
-        subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
+        subject.performGetRequest(pathWithParams, site, true, successHandler, errorHandler)
 
         assertTrue(calledSuccess)
     }
@@ -87,7 +87,7 @@ class ReactNativeRequestHandlerTest {
         val fetchResponse = getFetchResponseError(errorMessage, statusCode)
         whenever(reactNativeStore.executeRequest(site, pathWithParams)).thenReturn(fetchResponse)
 
-        subject.performGetRequest(pathWithParams, site, successHandler, errorHandler)
+        subject.performGetRequest(pathWithParams, site, true, successHandler, errorHandler)
 
         assertTrue(calledError)
     }

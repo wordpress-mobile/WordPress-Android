@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
@@ -48,6 +49,16 @@ public class ReaderActivityLauncher {
                                             int commentId,
                                             boolean isRelatedPost,
                                             String interceptedUri) {
+        Intent intent =
+                buildReaderPostDetailIntent(context, isFeed, blogId, postId, directOperation, commentId, isRelatedPost,
+                        interceptedUri);
+        context.startActivity(intent);
+    }
+
+    @NotNull
+    public static Intent buildReaderPostDetailIntent(Context context, boolean isFeed, long blogId, long postId,
+                                                      DirectOperation directOperation, int commentId,
+                                                      boolean isRelatedPost, String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
@@ -57,7 +68,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        context.startActivity(intent);
+        return intent;
     }
 
     /*

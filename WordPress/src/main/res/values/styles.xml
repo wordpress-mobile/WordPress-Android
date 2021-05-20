@@ -18,7 +18,7 @@
         <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorControlActivated">@color/primary_30</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
 
         <item name="toolbarIconNormalColor">@color/grey_darken_20</item>
         <item name="toolbarIconHighlightColor">@color/almost_black</item>
@@ -486,6 +486,13 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
+    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:ellipsize">end</item>
+        <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
+    </style>
+
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -776,11 +783,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-    </style>
-
-
-    <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/primary_40</item>
     </style>
 
     <!--Post Settings Styles-->
