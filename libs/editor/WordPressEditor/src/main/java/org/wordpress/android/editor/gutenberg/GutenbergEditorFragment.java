@@ -1382,6 +1382,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onPositiveClicked(@NotNull String instanceTag, int mediaId) {
+        switch (instanceTag) {
+            case TAG_REPLACE_FEATURED_DIALOG:
+                setFeaturedImage(mediaId);
+                break;
+        }
     }
 
     @Override
