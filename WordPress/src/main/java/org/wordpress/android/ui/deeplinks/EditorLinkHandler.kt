@@ -10,6 +10,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
@@ -83,9 +84,9 @@ class EditorLinkHandler
             buildString {
                 append("${DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM}/$POST_PATH/")
                 if (uri.pathSegments.size > 2) {
-                    append("siteNameOrUrl/$POST_ID")
+                    append("${DeepLinkingIntentReceiverViewModel.SITE_DOMAIN}/$POST_ID")
                 } else if (uri.pathSegments.size > 1) {
-                    append("siteNameOrUrl")
+                    append(DeepLinkingIntentReceiverViewModel.SITE_DOMAIN)
                 }
             }
         }

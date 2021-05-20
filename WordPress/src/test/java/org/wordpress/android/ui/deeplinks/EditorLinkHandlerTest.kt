@@ -123,7 +123,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
         val strippedUri = editorLinkHandler.stripUrl(uri)
 
-        assertThat(strippedUri).isEqualTo("wordpress.com/post/siteNameOrUrl/postId")
+        assertThat(strippedUri).isEqualTo("wordpress.com/post/domain/postId")
     }
 
     @Test
@@ -132,7 +132,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
         val strippedUri = editorLinkHandler.stripUrl(uri)
 
-        assertThat(strippedUri).isEqualTo("wordpress.com/post/siteNameOrUrl")
+        assertThat(strippedUri).isEqualTo("wordpress.com/post/domain")
     }
 
     @Test

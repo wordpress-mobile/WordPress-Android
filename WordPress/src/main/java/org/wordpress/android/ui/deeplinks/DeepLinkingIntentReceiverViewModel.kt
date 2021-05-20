@@ -100,7 +100,7 @@ class DeepLinkingIntentReceiverViewModel
             statsLinkHandler.shouldHandleUrl(uri) -> statsLinkHandler.buildNavigateAction(uri)
             startLinkHandler.shouldHandleUrl(uri) -> startLinkHandler.buildNavigateAction(uri)
             notificationsLinkHandler.shouldHandleUrl(uri) -> notificationsLinkHandler.buildNavigateAction(uri)
-            pagesLinkHandler.isPagesUrl(uri) -> pagesLinkHandler.buildNavigateAction(uri)
+            pagesLinkHandler.shouldHandleUrl(uri) -> pagesLinkHandler.buildNavigateAction(uri)
             else -> null
         }
     }
@@ -118,6 +118,7 @@ class DeepLinkingIntentReceiverViewModel
     companion object {
         const val HOST_WORDPRESS_COM = "wordpress.com"
         const val APPLINK_SCHEME = "wordpress://"
+        const val SITE_DOMAIN = "domain"
         private const val REGULAR_TRACKING_PATH = "bar"
     }
 

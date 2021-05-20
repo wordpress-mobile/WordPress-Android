@@ -133,7 +133,7 @@ class StatsLinkHandlerTest {
 
         val strippedUrl = statsLinkHandler.stripUrl(uri)
 
-        assertThat(strippedUrl).isEqualTo("wordpress://stats/day/siteUrl")
+        assertThat(strippedUrl).isEqualTo("wordpress://stats/day/domain")
     }
 
     @Test
@@ -151,7 +151,7 @@ class StatsLinkHandlerTest {
 
         val strippedUrl = statsLinkHandler.stripUrl(uri)
 
-        assertThat(strippedUrl).isEqualTo("wordpress.com/stats/day/siteUrl")
+        assertThat(strippedUrl).isEqualTo("wordpress.com/stats/day/domain")
     }
 
     @Test

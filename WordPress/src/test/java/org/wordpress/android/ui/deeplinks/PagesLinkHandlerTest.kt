@@ -25,7 +25,7 @@ class PagesLinkHandlerTest {
     fun `handles pages URI`() {
         val pagesUri = buildUri(host = "wordpress.com", path1 = "pages")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isTrue()
     }
@@ -34,7 +34,7 @@ class PagesLinkHandlerTest {
     fun `does not handle pages URI with different host`() {
         val pagesUri = buildUri(host = "wordpress.org", path1 = "pages")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isFalse()
     }
@@ -43,7 +43,7 @@ class PagesLinkHandlerTest {
     fun `does not handle URI with different path`() {
         val pagesUri = buildUri(host = "wordpress.com", path1 = "post")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isFalse()
     }
