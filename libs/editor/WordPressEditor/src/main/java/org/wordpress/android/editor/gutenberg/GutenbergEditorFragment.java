@@ -1391,5 +1391,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onNegativeClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_REPLACE_FEATURED_DIALOG:
+                // Dismiss dialog with no action.
+                break;
+        }
     }
 }
