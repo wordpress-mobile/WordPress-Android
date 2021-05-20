@@ -10,6 +10,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -25,6 +27,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.PUBLISH
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.SAVE
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
+import org.wordpress.android.ui.stories.StoryComposerActivity.Companion.STATE_KEY_ORIGINAL_STORY_SAVE_RESULT
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -48,15 +51,16 @@ class StoryComposerViewModel @Inject constructor(
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
+    private var originalIntentStorySaveResult: StorySaveResult? = null
 
     private val _mediaFilesUris = MutableLiveData<List<Uri>>()
     val mediaFilesUris: LiveData<List<Uri>> = _mediaFilesUris
 
-    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
-    val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
+    private val _openPrepublishingBottomSheet = SingleLiveEvent<Event<Unit>>()
+    val openPrepublishingBottomSheet = _openPrepublishingBottomSheet
 
-    private val _submitButtonClicked = MutableLiveData<Event<Unit>>()
-    val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
+    private val _submitButtonClicked = SingleLiveEvent<Event<Unit>>()
+    val submitButtonClicked = _submitButtonClicked
 
     init {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
@@ -65,15 +69,18 @@ class StoryComposerViewModel @Inject constructor(
     private val _trackEditorCreatedPost = MutableLiveData<Event<Unit>>()
     val trackEditorCreatedPost: LiveData<Event<Unit>> = _trackEditorCreatedPost
 
+    @Suppress("LongParameterList")
     fun start(
         site: SiteModel,
         editPostRepository: EditPostRepository,
         postId: LocalId,
         postEditorAnalyticsSession: PostEditorAnalyticsSession?,
-        notificationType: NotificationType?
+        notificationType: NotificationType?,
+        originalStorySaveResult: StorySaveResult?
     ): Boolean {
         this.editPostRepository = editPostRepository
         this.site = site
+        this.originalIntentStorySaveResult = originalStorySaveResult
 
         notificationType?.let {
             systemNotificationsTracker.trackTappedNotification(it)
@@ -124,18 +131,25 @@ class StoryComposerViewModel @Inject constructor(
         outState.putSerializable(WordPress.SITE, site)
         outState.putInt(StoryComposerActivity.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
         outState.putSerializable(StoryComposerActivity.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        outState.putParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT, originalIntentStorySaveResult)
     }
 
     fun onStorySaved() {
         postEditorAnalyticsSession?.setOutcome(SAVE)
     }
 
-    fun onStoryDiscarded(deleteDiscardedPost: Boolean) {
+    // returns true if user is discarding a Story out of a save retry (error handling state)
+    // returns false otherwise
+    fun onStoryDiscarded(deleteDiscardedPost: Boolean): Boolean {
         if (deleteDiscardedPost) {
             // delete empty post from database
             dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
         }
         postEditorAnalyticsSession?.setOutcome(CANCEL)
+
+        originalIntentStorySaveResult?.let {
+            return (!it.isSuccess() || it.isRetry)
+        } ?: return false
     }
 
     private fun updateStoryPostWithChanges() {

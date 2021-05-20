@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
@@ -16,6 +15,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.layoutpicker.LayoutModel
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
@@ -61,6 +61,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
+    private val site: SiteModel by lazy { siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()) }
+
+    override val useCachedData: Boolean = true
+
+    override val selectedLayout: LayoutModel?
+        get() = (uiState.value as? Content)?.let { state ->
+            state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+        }
+
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
@@ -79,22 +88,23 @@ class ModalLayoutPickerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    override fun fetchLayouts() {
+    override fun fetchLayouts(preferCache: Boolean) {
         if (!networkUtils.isNetworkAvailable()) {
             setErrorState()
             return
         }
-        updateUiState(Loading)
+        if (!preferCache) {
+            updateUiState(Loading)
+        }
         launch {
-            val siteId = appPrefsWrapper.getSelectedSite()
-            val site = siteStore.getSiteByLocalId(siteId)
             val payload = FetchBlockLayoutsPayload(
                     site,
                     supportedBlocksProvider.fromAssets().supported,
                     thumbDimensionProvider.previewWidth.toFloat(),
                     thumbDimensionProvider.previewHeight.toFloat(),
                     thumbDimensionProvider.scale.toFloat(),
-                    BuildConfig.DEBUG
+                    BuildConfig.DEBUG,
+                    preferCache
             )
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
@@ -122,11 +132,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * at this point the only requirement is to have the block editor enabled
      * @return true if the Modal Layout Picker can be shown
      */
-    fun canShowModalLayoutPicker(): Boolean {
-        val siteId = appPrefsWrapper.getSelectedSite()
-        val site = siteStore.getSiteByLocalId(siteId)
-        return SiteUtils.isBlockEditorDefaultForNewPost(site)
-    }
+    fun canShowModalLayoutPicker() = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
     /**
      * Triggers the create page flow and shows the MLP
@@ -162,11 +168,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Triggers the creation of a new page
      */
     private fun createPage() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.content, layout.title)
-                return
-            }
+        selectedLayout?.let { layout ->
+            val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
+            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
+            return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
     }

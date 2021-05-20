@@ -51,7 +51,6 @@ import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
@@ -75,13 +74,13 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
@@ -129,6 +128,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         protected const val FRAGMENT_ANNOUNCEMENT_DIALOG = "story_announcement_dialog"
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
+        const val STATE_KEY_ORIGINAL_STORY_SAVE_RESULT = "stateKeyOriginalSaveResult"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val KEY_LAUNCHED_FROM_GUTENBERG = "key_launched_from_gutenberg"
         const val KEY_ALL_UNFLATTENED_LOADED_SLIDES = "key_all_unflattened_laoded_slides"
@@ -140,8 +140,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // convert our WPAndroid KEY_LAUNCHED_FROM_GUTENBERG flag into Stories general purpose EDIT_MODE flag
         intent.putExtra(KEY_STORY_EDIT_MODE, intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false))
         setMediaPickerProvider(this)
-        super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        initSite(savedInstanceState)
         setSnackbarProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
@@ -152,26 +152,40 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)
-        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
 
         initViewModel(savedInstanceState)
+        super.onCreate(savedInstanceState)
+
+        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
+    }
+
+    private fun initSite(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
         var localPostId = 0
         var notificationType: NotificationType? = null
+        var originalStorySaveResult: StorySaveResult? = null
 
         if (savedInstanceState == null) {
             localPostId = getBackingPostIdFromIntent()
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            originalStorySaveResult = intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
                 notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             }
         } else {
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 localPostId = savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)
+            }
+            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)) {
+                originalStorySaveResult =
+                        savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
             }
         }
 
@@ -187,7 +201,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     editPostRepository,
                     LocalId(localPostId),
                     postEditorAnalyticsSession,
-                    notificationType
+                    notificationType,
+                    originalStorySaveResult
             )
 
             // Ensure we have a valid post
@@ -203,7 +218,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun setupViewModelObservers() {
-        viewModel.mediaFilesUris.observe(this, Observer { uriList ->
+        viewModel.mediaFilesUris.observe(this, { uriList ->
             val filteredList = uriList.filterNot { MediaUtils.isGif(it.toString()) }
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
@@ -229,30 +244,24 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         })
 
-        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
-                openPrepublishingBottomSheet()
-            }
+        viewModel.openPrepublishingBottomSheet.observeEvent(this, {
+            analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
+            openPrepublishingBottomSheet()
         })
 
-        viewModel.submitButtonClicked.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
-                processStorySaving()
-            }
+        viewModel.submitButtonClicked.observeEvent(this, {
+            analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
+            processStorySaving()
         })
 
-        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                site?.let {
-                    analyticsUtilsWrapper.trackEditorCreatedPost(
-                            intent.action,
-                            intent,
-                            it,
-                            editPostRepository.getPost()
-                    )
-                }
+        viewModel.trackEditorCreatedPost.observeEvent(this, {
+            site?.let {
+                analyticsUtilsWrapper.trackEditorCreatedPost(
+                        intent.action,
+                        intent,
+                        it,
+                        editPostRepository.getPost()
+                )
             }
         })
     }
@@ -327,6 +336,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+        requestCodes.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED =
+                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
@@ -382,18 +393,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        storyEditorMedia.snackBarMessage.observe(this,
-                { event: Event<SnackbarMessageHolder?> ->
-                    event.getContentIfNotHandled()?.let { messageHolder ->
-                        findViewById<View>(R.id.compose_loop_frame_layout)?.let {
-                            WPSnackbar
-                                    .make(
-                                            it,
-                                            uiHelpers.getTextOfUiString(this, messageHolder.message),
-                                            Snackbar.LENGTH_SHORT
-                                    )
-                                    .show()
-                        }
+        storyEditorMedia.snackBarMessage.observeEvent(this,
+                { messageHolder ->
+                    findViewById<View>(R.id.compose_loop_frame_layout)?.let {
+                        WPSnackbar
+                                .make(
+                                        it,
+                                        uiHelpers.getTextOfUiString(this, messageHolder.message),
+                                        Snackbar.LENGTH_SHORT
+                                )
+                                .show()
                     }
                 }
         )
@@ -468,12 +477,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onStoryDiscarded() {
         val launchedFromGutenberg = intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)
-        viewModel.onStoryDiscarded(!launchedFromGutenberg)
+        val storyDiscardedFromRetry = viewModel.onStoryDiscarded(!launchedFromGutenberg)
 
-        if (launchedFromGutenberg) {
+        if (launchedFromGutenberg || storyDiscardedFromRetry) {
             setResult(Activity.RESULT_CANCELED)
-            finish()
         }
+        finish()
     }
 
     override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
@@ -610,14 +619,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
         return saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
-                        temporaryId = tempId,
-                        url = if (frame.source is FileBackgroundSource) {
-                            (frame.source as FileBackgroundSource).file.toString()
-                        } else {
-                            (frame.source as UriBackgroundSource).contentUri.toString()
-                        },
-                        isVideo = (frame.frameItemType is VIDEO)
-                )
+                temporaryId = tempId,
+                url = if (frame.source is FileBackgroundSource) {
+                    (frame.source as FileBackgroundSource).file.toString()
+                } else {
+                    (frame.source as UriBackgroundSource).contentUri.toString()
+                },
+                isVideo = (frame.frameItemType is VIDEO)
+        )
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

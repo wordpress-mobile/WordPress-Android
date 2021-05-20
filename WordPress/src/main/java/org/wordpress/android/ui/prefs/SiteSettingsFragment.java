@@ -53,6 +53,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
@@ -114,7 +116,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         Preference.OnPreferenceClickListener,
         AdapterView.OnItemLongClickListener,
         Dialog.OnDismissListener,
-        SiteSettingsInterface.SiteSettingsListener {
+        SiteSettingsInterface.SiteSettingsListener,
+        SiteSettingsTimezoneBottomSheet.TimezoneSelectionCallback {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
@@ -143,6 +146,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
 
+    private static final String TIMEZONE_BOTTOM_SHEET_TAG = "timezone-dialog-tag";
+
     /**
      * Request code used when creating the {@link RelatedPostsDialog}.
      */
@@ -155,7 +160,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int DATE_FORMAT_REQUEST_CODE = 7;
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
-    private static final int TIMEZONE_REQUEST_CODE = 10;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
@@ -441,11 +445,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                         onPreferenceChange(mPostsPerPagePref, numPosts);
                     }
                     break;
-                case TIMEZONE_REQUEST_CODE:
-                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
-                    mSiteSettings.setTimezone(timezone);
-                    onPreferenceChange(mTimezonePref, timezone);
-                    break;
             }
         } else {
             if (requestCode == DELETE_SITE_REQUEST_CODE) {
@@ -492,6 +491,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (savedInstanceState != null) {
             setupMorePreferenceScreen();
             setupJetpackSecurityScreen();
+
+            SiteSettingsTimezoneBottomSheet bottomSheet =
+                    (SiteSettingsTimezoneBottomSheet) ((AppCompatActivity) getActivity())
+                            .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setTimezoneSettingCallback(this);
+            }
         }
     }
 
@@ -539,7 +545,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
-            showTimezoneDialog();
+            setupTimezoneBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -1000,6 +1006,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
         }
+
+        // Simple WPCom Sites now always default to Gutenberg Editor
+        if (SiteUtils.alwaysDefaultToGutenberg(mSite)) {
+            removeEditorPreferences();
+        }
     }
 
     private void updateHomepageSummary() {
@@ -1138,10 +1149,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         dialog.show(getFragmentManager(), "format-dialog-tag");
     }
 
-    private void showTimezoneDialog() {
-        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
-        dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
-        dialog.show(getFragmentManager(), "timezone-dialog-tag");
+    private void setupTimezoneBottomSheet() {
+        if (mTimezonePref == null || !isAdded()) {
+            return;
+        }
+
+        SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
+        bottomSheet.setTimezoneSettingCallback(this);
+        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
     }
 
     private void showHomepageSettings() {
@@ -1888,6 +1903,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_jetpack_performance_settings);
     }
 
+    private void removeEditorPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
+                R.string.pref_key_gutenberg_default_for_new_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_site_editor);
+    }
+
     private Preference getChangePref(int id) {
         return WPPrefUtils.getPrefAndSetChangeListener(this, id, this);
     }
@@ -1975,6 +1997,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
             updateHomepageSummary();
         }
+    }
+
+    // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
+    // can't use neither setTargetFragment nor onActivityResult before re-writing this!
+    @Override
+    public void onSelectTimezone(@NotNull String timezone) {
+        mSiteSettings.setTimezone(timezone);
+        onPreferenceChange(mTimezonePref, timezone);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

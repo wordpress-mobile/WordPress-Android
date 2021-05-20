@@ -9,7 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString
 
-abstract class JetpackListItemState(open val type: ViewType) {
+open class JetpackListItemState(open val type: ViewType) {
     open fun longId(): Long = hashCode().toLong()
 
     data class IconState(
@@ -21,7 +21,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
     ) : JetpackListItemState(ViewType.ICON)
 
     data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-        JetpackListItemState(ViewType.HEADER)
+            JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(
         val text: UiString?,

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2019-12-08 17:50:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -70,7 +70,6 @@ Language: eu_ES
     <string name="invite_error_no_usernames">Mesedez, gehitu gutxienez erabiltzaile-izen bat</string>
     <string name="invite">Gonbidatu</string>
     <string name="my_site_header_external">Kanpokoak</string>
-    <string name="send_link">Bidali esteka</string>
     <string name="invite_people">Gonbidatu jendea</string>
     <string name="label_clear_search_history">Garbitu bilaketen historia</string>
     <string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
@@ -83,7 +82,6 @@ Language: eu_ES
     <string name="error_refreshing_gravatar">Errorea zure Gravatarra birkargatzean</string>
     <string name="checking_email">E-posta egiaztatzen</string>
     <string name="logging_in">Saioa hasten</string>
-    <string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
     <string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
     <string name="plan">Plana</string>
     <string name="plans">Planak</string>
@@ -156,16 +154,12 @@ Language: eu_ES
     <string name="site_settings_language_hint">Blog honen hizkuntza nagusia</string>
     <string name="site_settings_tagline_hint">Deskripzio labur bat edo esaldi burutsu bat zure bloga deskribatzeko</string>
     <string name="site_settings_title_hint">Azaldu hitz gutxitan gune hau zertaz doan</string>
-    <string name="site_settings_whitelist_known_summary">Erabiltzaile ezagunen iruzkinak</string>
-    <string name="site_settings_whitelist_all_summary">Erabiltzaile guztien iruzkinak</string>
     <string name="site_settings_privacy_private_summary">Pribatua</string>
     <string name="site_settings_privacy_hidden_summary">Ezkutua</string>
     <string name="site_settings_delete_site_title">Ezabatu gunea</string>
     <string name="site_settings_privacy_public_summary">Publikoa</string>
-    <string name="site_settings_blacklist_title">Zerrenda beltza</string>
     <string name="site_settings_moderation_hold_title">Moderatzeko gelditu</string>
     <string name="site_settings_multiple_links_title">Estekak iruzkinetan</string>
-    <string name="site_settings_whitelist_title">Automatikoki onartu</string>
     <string name="site_settings_threading_title">Hariztaketa</string>
     <string name="site_settings_paging_title">Orrikatzea</string>
     <string name="site_settings_allow_comments_title">Baimendu iruzkinak</string>
@@ -301,7 +295,6 @@ Language: eu_ES
     <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
-    <string name="forgot_password">Pasahitza galdu duzu?</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
     <string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
     <string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>

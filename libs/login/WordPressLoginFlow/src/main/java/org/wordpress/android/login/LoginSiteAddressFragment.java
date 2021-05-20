@@ -86,13 +86,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
-        switch (mLoginListener.getLoginMode()) {
-            case SHARE_INTENT:
-                label.setText(R.string.enter_site_address_share_intent);
-                break;
-            default:
-                label.setText(R.string.enter_site_address);
-                break;
+        if (mLoginListener.getLoginMode() == LoginMode.SHARE_INTENT) {
+            label.setText(R.string.enter_site_address_share_intent);
+        } else {
+            label.setText(R.string.enter_site_address);
         }
     }
 
@@ -117,9 +114,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 discover();
             }
@@ -163,7 +159,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mLoginSiteAddressValidator.getIsValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override public void onChanged(Boolean enabled) {
-                getPrimaryButton().setEnabled(enabled);
+                getBottomButton().setEnabled(enabled);
             }
         });
         mLoginSiteAddressValidator.getErrorMessageResId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
@@ -217,7 +213,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void onEditorCommit() {
-        if (getPrimaryButton().isEnabled()) {
+        if (getBottomButton().isEnabled()) {
             discover();
         }
     }
@@ -384,6 +380,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                 handleConnectSiteInfoForWoo(event.info, hasJetpack);
+            } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY) {
+                handleConnectSiteInfoForJetpack(event.info);
             } else {
                 handleConnectSiteInfoForWordPress(event.info);
             }
@@ -430,6 +428,16 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                 // Start the discovery process
                 initiateDiscovery();
             }
+        }
+    }
+
+    private void handleConnectSiteInfoForJetpack(ConnectSiteInfoPayload siteInfo) {
+        endProgressIfNeeded();
+
+        if (siteInfo.hasJetpack && siteInfo.isJetpackConnected && siteInfo.isJetpackActive) {
+            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
+        } else {
+            mLoginListener.handleSiteAddressError(siteInfo);
         }
     }
 

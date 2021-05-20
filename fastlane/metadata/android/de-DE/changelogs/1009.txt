@@ -1,2 +1,0 @@
-16.8:
-Die neuesten Updates für die WordPress Android-App sind da. Wir haben die Funktionalität veröffentlichter Startseiten verbessert und sichergestellt, dass Löschen oder ein Zurücksetzen in Entwurfsform nicht zum Absturz deiner Website führen. Im Cover-Block wird nun das Setzen eines Fokuspunkts unterstützt. Außerdem haben wir die P2-Verwaltung erweitert, sodass du jetzt Einladungs-Links für P2-Rollen generieren, teilen und deaktivieren kannst.

@@ -54,22 +54,20 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
-import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,12 +89,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
-    private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
     public static final String ARG_STORY_BLOCK_ID = "story_block_id";
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
+    public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -124,7 +122,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     GutenbergContainerFragment mRetainedGutenbergContainerFragment;
 
     private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
-    private Set<String> mFailedMediaIds = new HashSet<>();
+    private HashSet<String> mFailedMediaIds = new HashSet<>();
     private ConcurrentHashMap<String, Date> mCancelledMediaIds = new ConcurrentHashMap<>();
 
     private boolean mIsNewPost;
@@ -144,7 +142,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String content,
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
-                                                      boolean tenorEnabled,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
                                                       int storyBlockEditRequestCode) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
@@ -153,7 +150,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
-        args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         fragment.setArguments(args);
@@ -200,6 +196,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
             mExternallyEditedBlockOriginalHash = savedInstanceState.getString(
                     ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH);
+            mFailedMediaIds = (HashSet<String>) savedInstanceState.getSerializable(ARG_FAILED_MEDIAS);
         }
     }
 
@@ -359,21 +356,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 mEditorFragmentListener::onPerformFetch,
                 mEditorImagePreviewListener::onImagePreviewRequested,
                 mEditorEditMediaListener::onMediaEditorRequested,
-                new OnLogGutenbergUserEventListener() {
-                    @Override
-                    public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
-                        switch (event) {
-                            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplatePreviewTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                            case EDITOR_SESSION_TEMPLATE_APPLY:
-                                mEditorFragmentListener.onGutenbergEditorSessionTemplateApplyTracked((String)
-                                        properties.get(USER_EVENT_KEY_TEMPLATE));
-                                break;
-                        }
-                    }
-                },
                 new OnGutenbergDidRequestUnsupportedBlockFallbackListener() {
                     @Override
                     public void gutenbergDidRequestUnsupportedBlockFallback(UnsupportedBlock unsupportedBlock) {
@@ -608,7 +590,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
                 arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
         boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
-        boolean supportGifs = arguments.getBoolean(ARG_TENOR_ENABLED, false);
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
@@ -617,11 +598,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
             otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
         }
-        if (supportGifs) {
-            int gifMediaResourceId =
-                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
-            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
-        }
+        int gifMediaResourceId =
+                getResources().getIdentifier("photo_picker_gif", "string", packageName);
+        otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
 
         return otherMediaOptions;
     }
@@ -795,6 +774,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
+    public void sendToJSFeaturedImageId(int mediaId) {
+        getGutenbergContainerFragment().sendToJSFeaturedImageId(mediaId);
+    }
+
     private void showCancelMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
         // Display 'cancel upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -898,6 +881,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putString(ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH, mExternallyEditedBlockOriginalHash);
+        outState.putSerializable(ARG_FAILED_MEDIAS, mFailedMediaIds);
     }
 
     @Override

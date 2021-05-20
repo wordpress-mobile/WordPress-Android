@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -242,15 +244,20 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
-    public static void launchFileLibrary(Activity activity, boolean multiSelect, int requestCode) {
-        switch (requestCode) {
-            case RequestCodes.FILE_LIBRARY:
-                activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect), requestCode);
-                break;
-            case RequestCodes.AUDIO_LIBRARY:
-                activity.startActivityForResult(prepareAudioLibraryIntent(activity, multiSelect), requestCode);
-                break;
+    public static Plan getSitePlanForMimeTypes(SiteModel site) {
+        if (site.isWPCom()) {
+            if (SiteUtils.onFreePlan(site)) {
+                return Plan.WP_COM_FREE;
+            } else {
+                return Plan.WP_COM_PAID;
+            }
+        } else {
+            return Plan.SELF_HOSTED;
         }
+    }
+
+    public static boolean isMimeTypeSupportedBySitePlan(SiteModel site, String mimeType) {
+        return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
     }
 
     public static void launchChooserWithContext(
@@ -276,16 +283,6 @@ public class WPMediaUtils {
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
         return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
                 new MimeTypes().getVideoAndImageTypesOnly(), R.string.pick_media);
-    }
-
-    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_OPEN_DOCUMENT, "*/*",
-                new MimeTypes().getAllTypes(), R.string.pick_file);
-    }
-
-    private static Intent prepareAudioLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
-                new MimeTypes().getAudioTypesOnly(), R.string.pick_audio);
     }
 
     private static Intent prepareIntent(Context context, boolean multiSelect, String action, String intentType,
@@ -327,7 +324,6 @@ public class WPMediaUtils {
                 preparePictureLibraryIntent(activity, multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
-
 
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);

@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScr
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
@@ -52,12 +55,17 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             }
         })
 
-        viewModel.onKeyboardOpened.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                coroutineScope.launch {
-                    val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
-                }
+        reply.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
+                dialogController.confirm(saveResult())
+            }
+            false
+        }
+
+        viewModel.onKeyboardOpened.observeEvent(viewLifecycleOwner, {
+            coroutineScope.launch {
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
             }
         })
 

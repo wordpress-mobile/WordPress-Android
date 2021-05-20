@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -36,6 +39,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private val ignoreThreatUseCase: IgnoreThreatUseCase,
     private val fixThreatsUseCase: FixThreatsUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val scanStore: ScanStore,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
@@ -66,7 +70,8 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun getData(threatId: Long) {
         viewModelScope.launch {
             threatModel = requireNotNull(getThreatModelUseCase.get(threatId))
-            updateUiState(buildContentUiState(threatModel))
+            val scanStateHasValidCredentials = scanStore.hasValidCredentials(site)
+            updateUiState(buildContentUiState(threatModel, scanStateHasValidCredentials))
         }
     }
 
@@ -99,7 +104,7 @@ class ThreatDetailsViewModel @Inject constructor(
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
                 is IgnoreThreatState.Success -> updateNavigationEvent(
-                    ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
+                        ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
                 )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
@@ -120,34 +125,39 @@ class ThreatDetailsViewModel @Inject constructor(
         scanTracker.trackOnFixThreatButtonClicked(threatModel.baseThreatModel.signature)
         val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
         updateNavigationEvent(
-            OpenThreatActionDialog(
-                title = UiStringRes(R.string.threat_fix),
-                message = requireNotNull(builder.buildFixableThreatDescription(fixable).text),
-                okButtonAction = this@ThreatDetailsViewModel::fixThreat
-            )
+                OpenThreatActionDialog(
+                        title = UiStringRes(R.string.threat_fix),
+                        message = requireNotNull(builder.buildFixableThreatDescription(fixable).text),
+                        okButtonAction = this@ThreatDetailsViewModel::fixThreat
+                )
         )
     }
 
     private fun onIgnoreThreatButtonClicked() {
         scanTracker.trackOnIgnoreThreatButtonClicked(threatModel.baseThreatModel.signature)
+        val siteName = site.name ?: resourceProvider.getString(R.string.scan_this_site)
         updateNavigationEvent(
-            OpenThreatActionDialog(
-                title = UiStringRes(R.string.threat_ignore),
-                message = UiStringText(
-                    htmlMessageUtils
-                        .getHtmlMessageFromStringFormatResId(
-                            R.string.threat_ignore_warning,
-                            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
-                        )
-                ),
-                okButtonAction = this@ThreatDetailsViewModel::ignoreThreat
-            )
+                OpenThreatActionDialog(
+                        title = UiStringRes(R.string.threat_ignore),
+                        message = UiStringText(
+                                htmlMessageUtils
+                                        .getHtmlMessageFromStringFormatResId(
+                                                R.string.threat_ignore_warning,
+                                                "<b>$siteName</b>"
+                                        )
+                        ),
+                        okButtonAction = this@ThreatDetailsViewModel::ignoreThreat
+                )
         )
     }
 
     private fun onGetFreeEstimateButtonClicked() {
         scanTracker.trackOnGetFreeEstimateButtonClicked()
         updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
+    }
+
+    private fun onEnterServerCredsMessageClicked() {
+        updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
     }
 
     private fun updateThreatActionButtons(isEnabled: Boolean) {
@@ -175,13 +185,15 @@ class ThreatDetailsViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(model: ThreatModel) = Content(
-        builder.buildThreatDetailsListItems(
-            model,
-            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
-            this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
-        )
+    private fun buildContentUiState(model: ThreatModel, scanStateHasValidCredentials: Boolean) = Content(
+            builder.buildThreatDetailsListItems(
+                    model,
+                    scanStateHasValidCredentials,
+                    this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+                    this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
+                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
+                    this@ThreatDetailsViewModel::onEnterServerCredsMessageClicked
+            )
     )
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed

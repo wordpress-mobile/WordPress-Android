@@ -147,7 +147,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     private void updatePrimaryButtonEnabledStatus() {
         String currentPassword = mPasswordInput.getEditText().getText().toString();
-        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty());
+        getBottomButton().setEnabled(!currentPassword.trim().isEmpty());
     }
 
     @Override
@@ -220,9 +220,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(View.GONE);
-        primaryButton.setOnClickListener(new OnClickListener() {
+    protected void setupBottomButton(Button button) {
+        button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
@@ -279,8 +278,15 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
-        LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
-                                                    mIsSocialLogin);
+        LoginWpcomService.loginWithEmailAndPassword(
+                getContext(),
+                mEmailAddress,
+                mRequestedPassword,
+                mIdToken,
+                mService,
+                mIsSocialLogin,
+                mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY
+        );
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 

@@ -33,7 +33,7 @@ class FetchDomainsUseCase @Inject constructor(
 
     suspend fun fetchDomains(
         query: String,
-        segmentId: Long?,
+        segmentId: Long? = null,
         includeVendorDot: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR,
         includeDotBlog: Boolean = false,
         size: Int = FETCH_DOMAINS_SIZE

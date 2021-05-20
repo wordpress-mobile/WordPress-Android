@@ -1,69 +1,134 @@
 <ar>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+17.3:
+ما الجديد؟
+
+باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+
+تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
 </ar>
 <de-DE>
-16.8:
-Die neuesten Updates für die WordPress Android-App sind da. Wir haben die Funktionalität veröffentlichter Startseiten verbessert und sichergestellt, dass Löschen oder ein Zurücksetzen in Entwurfsform nicht zum Absturz deiner Website führen. Im Cover-Block wird nun das Setzen eines Fokuspunkts unterstützt. Außerdem haben wir die P2-Verwaltung erweitert, sodass du jetzt Einladungs-Links für P2-Rollen generieren, teilen und deaktivieren kannst.
+17.3:
+Was gibt's Neues?
+
+Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+
+Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
 </de-DE>
 <en-US>
-16.8:
-The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+17.3:
+What’s new?
+
+With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+
+Other improvements include more user information about your Likes, as well as an updated Comments screen.
 </en-US>
 <es-ES>
-16.8:
-Ya están aquí las últimas actualizaciones de la aplicación Android para WordPress. Hemos mejorado la funcionalidad de las páginas de inicio publicadas, garantizando que borrarlas o volverlas de nuevo a su forma de borrador no romperá tu sitio. Hemos añadido compatibilidad para establecer el punto focal del bloque de fondo. Además, hemos mejorado la gestión de P2, para que puedas generar, compartir y desactivar los enlaces de invitación para los perfiles de P2.
+17.3:
+Novedades
+
+Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
+
+Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
 </es-ES>
 <fr-CA>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-CA>
 <fr-FR>
-16,8 :
-Les dernières mises à jour de l’application WordPress pour Android sont disponibles. Nous avons amélioré la fonctionnalité des pages d’accueil publiées afin que leur modification ne mettre pas votre site hors service. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-FR>
 <iw-IL>
-16.8:
-העדכונים האחרונים לאפליקציה של WordPress ב-Android כבר כאן. שיפרנו את הפונקציונליות של עמודי בית שפורסמו כדי לוודא שמחיקה שלהם או שחזור שלהם למצב טיוטה לא יהרסו את האתר. הוספנו תמיכה בהגדרה של נקודת מוקד בבלוק הכיסוי. בנוסף, שיפרנו את יכולת הניהול של P2 כדי שתהיה לך אפשרות ליצור, לשתף ולהשבית קישורי הזמנה לתפקידים של P2.
+17.3:
+מה חדש?
+
+עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+
+שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
 </iw-IL>
 <id>
-16.8:
-Ini adalah pembaruan paling mutakhir untuk aplikasi Android WordPress. Kami meningkatkan fungsi halaman situs yang diposkan sehingga menjamin bahwa menghapus atau mengembalikannya ke formulir konsep tidak akan merusak situs Anda.  Kami menambahkan dukungan untuk mengatur titik fokus blok Sampul. Selain itu, kami meningkatkan pengelolaan P2 sehingga Anda dapat membuat, membagikan, dan menonaktifkan tautan undangan untuk peran P2.
+17.3:
+Apa yang baru?
+
+Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+
+Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
 </id>
 <it-IT>
-16.8:
-Ecco gli ultimi aggiornamenti all'app per Android di WordPress. Abbiamo migliorato la funzionalità delle homepage pubblicate, assicurando che l'eliminazione o il recupero nel modulo delle bozze non comprometta il tuo sito. Abbiamo aggiunto il supporto per le impostazioni del punto focale del blocco Copertina. Inoltre, abbiamo migliorato la gestione di P2, in modo da poter generare, condividere e disabilitare i link di invito per i ruoli P2.
+17.3:
+Cosa c'è di nuovo?
+
+Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
+
+Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
 </it-IT>
 <ja-JP>
-16.8:
-WordPress Android アプリの最新の更新プログラムはこちらです。 公開ホームページの機能を改善し、削除したり下書きフォームに戻したりしてもサイトが壊れないようにしました。 カバーブロックの焦点を設定するサポートを追加しました。 また、P2権限グループに対する招待リンクを生成、共有、無効化できるように、P2管理を強化しました。
+17.3:
+新着情報
+
+新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+
+その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
 </ja-JP>
 <ko-KR>
-16.8:
-최근에 WordPress Android 앱을 업데이트했습니다. 발행된 홈페이지를 삭제하거나 임시글 양식으로 되돌려도 사이트가 중단되지 않도록 기능을 개선했습니다. 커버 블록 초점 설정에 대한 지원을 추가했습니다. 또한, P2 역할에 대한 초대 링크를 생성하고, 공유하고, 비활성화할 수 있도록 P2 관리를 개선했습니다.
+17.3:
+새로운 기능
+
+새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+
+기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
 </ko-KR>
 <nl-NL>
-16.8:
-De nieuwste updates voor de WordPress Android app zijn hier. We hebben de functionaliteit van gepubliceerde homepages verbeterd, zodat het verwijderen of terugzetten naar conceptvorm je site niet zal vernielen. We hebben ondersteuning toegevoegd voor het instellen van het Cover blok focus punt. Bovendien hebben we het P2 beheer verbeterd, zodat je uitnodigingslinks voor P2 rollen kunt aanmaken, delen en uitschakelen.
+17.3:
+Wat is er nieuw?
+
+Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+
+Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
 </nl-NL>
 <ru-RU>
-16.8:
-Последние обновления приложения WordPress для Android --
-Мы улучшили функциональность опубликованных домашних страниц, гарантируя, что их удаление или возврат к черновику не нарушит работу вашего сайта. Мы добавили поддержку настройки фокуса блока обложки. Кроме того, мы улучшили управление P2, так что вы можете создавать, публиковать и отключать пригласительные ссылки для ролей P2.
+17,3:
+Что нового?
+
+С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+
+Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
 </ru-RU>
 <sv-SE>
-16.8:
-De senaste uppdateringarna av Android-appen WordPress är här. Vi har förbättrat funktionen för publicerade hemsidor, så att din webbplats inte bryts om du tar bort dem eller återställer dem till utkast. Vi har lagt till stöd för att ställa in fokalpunkt för omslagsblocket. Dessutom förbättrade vi P2-hanteringen så att du kan skapa, dela och inaktivera inbjudningslänkar för P2-roller.
+17.3:
+Vad är nytt?
+
+Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+
+Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
 </sv-SE>
 <tr-TR>
-16.8:
-WordPress Android uygulamasının en son güncellemeleri burada. Yayınlanan ana sayfaların işlevselliğini geliştirerek bunları silmenin veya taslak forma geri döndürmenin sitenizi bozmamasını sağladık. Manşet bloğu odak noktasını ayarlamak için destek ekledik. Ayrıca P2 yönetimini geliştirdik, böylece P2 rolleri için davet bağlantıları oluşturabilir, paylaşabilir ve devre dışı bırakabilirsiniz.
+17.3:
+Yenilikler
+
+Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+
+Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
 </tr-TR>
 <zh-CN>
-16.8：
-这是 WordPress Android 应用程序的最新更新。 我们改进了已发布主页的功能，确保将其删除或还原为草稿形式不会破坏您的站点。 我们增加了对设置“封面区块”焦点的支持。 此外，我们还增强了 P2 管理，以便您可以对 P2 角色的邀请链接执行生成、共享和禁用等操作。
+17.3：
+通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+
+其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
 </zh-CN>
 <zh-TW>
-16.8:
-以下是 WordPress Android 應用程式的最新更新。 我們改善了已發表首頁的功能，現在刪除已發表首頁或將其還原到草稿形式不會破壞整個網站。 我們為設定封面區塊焦點新增了支援。 另外，我們增強了 P2 管理，現在你可以產生、分享和停用 P2 角色的邀請連結。
+17.3:
+新功能
+
+現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+
+其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
 </zh-TW>

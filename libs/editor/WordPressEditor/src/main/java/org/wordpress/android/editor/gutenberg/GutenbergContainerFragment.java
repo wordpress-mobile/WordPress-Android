@@ -23,7 +23,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
@@ -63,7 +62,6 @@ public class GutenbergContainerFragment extends Fragment {
                                   RequestExecutor fetchExecutor,
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
-                                  OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   OnGutenbergDidSendButtonPressedActionListener
@@ -84,7 +82,6 @@ public class GutenbergContainerFragment extends Fragment {
                     fetchExecutor,
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
-                    onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
@@ -113,7 +110,6 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext(),
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
-                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,
@@ -259,5 +255,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
+    }
+
+    public void sendToJSFeaturedImageId(int mediaId) {
+        mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
     }
 }

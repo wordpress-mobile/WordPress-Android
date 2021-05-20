@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
@@ -128,6 +129,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("video/mpeg")).thenReturn("mpg")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("application/pdf")).thenReturn("pdf")
+        whenever(mediaUtilsWrapper.getSitePlanForMimeTypes(site)).thenReturn(MimeTypes.Plan.NO_PLAN_SPECIFIED)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 

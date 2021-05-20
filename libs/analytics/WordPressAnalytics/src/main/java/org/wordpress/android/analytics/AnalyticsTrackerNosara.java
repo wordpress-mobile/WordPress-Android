@@ -22,12 +22,13 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
     private static final String APP_SCHEME = "app_scheme";
 
-    private static final String EVENTS_PREFIX = "wpandroid_";
+    private final String mEventsPrefix;
 
     private final TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+    public AnalyticsTrackerNosara(Context context, String eventsPrefix) throws IllegalArgumentException {
         super(context);
+        mEventsPrefix = eventsPrefix;
         mNosaraClient = TracksClient.getClient(context);
     }
 
@@ -534,11 +535,11 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, propertiesToJSON, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
             String jsonString = propertiesToJSON.toString();
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
         } else {
-            mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
+            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
             AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
         }
     }
@@ -790,10 +791,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
                 return "editor_photo_added";
-            case EDITOR_ADDED_FILE_VIA_LIBRARY:
-                return "editor_file_added";
-            case EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY:
-                return "editor_audio_file_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
@@ -1546,8 +1543,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_allowlisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
-            case FEATURE_FLAG_SET:
-                return "feature_flag_set";
+            case FEATURE_FLAG_VALUE:
+                return "feature_flag_value";
+            case FEATURE_FLAGS_SYNCED_STATE:
+                return "feature_flags_synced_state";
             case EXPERIMENT_VARIANT_SET:
                 return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
@@ -2018,6 +2017,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
             case READER_POST_MARKED_AS_SEEN:
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
@@ -2062,6 +2063,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_download_file_notice_download_tapped";
             case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
                 return "activity_log_download_file_notice_dismissed_tapped";
+            case USER_PROFILE_SHEET_SHOWN:
+                return "user_profile_sheet_shown";
+            case USER_PROFILE_SHEET_SITE_SHOWN:
+                return "user_profile_sheet_site_shown";
+            case BLOG_URL_PREVIEWED:
+                return "blog_url_previewed";
+            case LIKE_LIST_OPENED:
+                return "like_list_opened";
+            case STORAGE_WARNING_SHOWN:
+                return "storage_warning_shown";
+            case STORAGE_WARNING_ACKNOWLEDGED:
+                return "storage_warning_acknowledged";
+            case STORAGE_WARNING_CANCELED:
+                return "storage_warning_canceled";
+            case STORAGE_WARNING_DONT_SHOW_AGAIN:
+                return "storage_warning_dont_show_again";
         }
         return null;
     }

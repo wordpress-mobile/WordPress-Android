@@ -18,7 +18,6 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -82,9 +81,6 @@ public class AppPrefs {
 
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
-
-        // index of the last active status type in Comments activity
-        COMMENTS_STATUS_TYPE_INDEX,
 
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
@@ -251,6 +247,12 @@ public class AppPrefs {
 
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
+
+        // Used to determine if editor onboarding features should be displayed
+        HAS_LAUNCHED_GUTENBERG_EDITOR,
+
+        // Used to indicate whether or not the device running out of storage warning should be shown
+        SHOULD_SHOW_STORAGE_WARNING,
     }
 
     private static SharedPreferences prefs() {
@@ -409,26 +411,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static CommentStatusCriteria getCommentsStatusFilter() {
-        int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
-        CommentStatusCriteria[] commentStatusValues = CommentStatusCriteria.values();
-        if (commentStatusValues.length < idx) {
-            return commentStatusValues[0];
-        } else {
-            return commentStatusValues[idx];
-        }
-    }
-
-    public static void setCommentsStatusFilter(CommentStatusCriteria commentStatus) {
-        if (commentStatus != null) {
-            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
-                   .apply();
-        }
     }
 
     public static PeopleListFilter getPeopleListFilter() {
@@ -1208,6 +1190,22 @@ public class AppPrefs {
 
     public static boolean shouldShowStoriesIntro() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
+    }
+
+    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
+        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
+    }
+
+    public static boolean hasLaunchedGutenbergEditor() {
+        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
+    }
+
+    public static void setShouldShowStorageWarning(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
+    }
+
+    public static boolean shouldShowStorageWarning() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {

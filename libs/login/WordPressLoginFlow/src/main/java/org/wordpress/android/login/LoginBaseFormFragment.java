@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,8 +37,10 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -51,8 +52,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
 
-    private Button mPrimaryButton;
-    private Button mSecondaryButton;
+    private Button mBottomButton;
     private ProgressDialog mProgressDialog;
 
     protected LoginListenerType mLoginListener;
@@ -69,7 +69,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupLabel(@NonNull TextView label);
     protected abstract void setupContent(ViewGroup rootView);
-    protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
+    protected abstract void setupBottomButton(Button button);
     protected abstract @StringRes int getProgressBarText();
 
     protected boolean listenForLogin() {
@@ -84,8 +84,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return mInProgress;
     }
 
-    protected Button getPrimaryButton() {
-        return mPrimaryButton;
+    protected Button getBottomButton() {
+        return mBottomButton;
     }
 
     protected abstract void onHelp();
@@ -108,24 +108,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
-
         setupLabel((TextView) rootView.findViewById(R.id.label));
-
         setupContent(rootView);
-
-        mPrimaryButton = (Button) rootView.findViewById(R.id.primary_button);
-        mSecondaryButton = (Button) rootView.findViewById(R.id.secondary_button);
-        setupBottomButtons(mSecondaryButton, mPrimaryButton);
-
-        // Set the primary button width to match_parent if the secondary button doesn't exist or isn't visible.
-        // This can be removed after we get rid of the unified flow feature flag.
-        if ((mSecondaryButton == null || mSecondaryButton.getVisibility() == View.GONE)
-            && (mPrimaryButton != null && mPrimaryButton.getVisibility() == View.VISIBLE)) {
-            final LayoutParams layoutParams = mPrimaryButton.getLayoutParams();
-            layoutParams.width = LayoutParams.MATCH_PARENT;
-            mPrimaryButton.setLayoutParams(layoutParams);
-        }
-
+        mBottomButton = rootView.findViewById(R.id.bottom_button);
+        setupBottomButton(mBottomButton);
         return rootView;
     }
 
@@ -233,8 +219,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     @Override public void onDestroyView() {
-        mPrimaryButton = null;
-        mSecondaryButton = null;
+        mBottomButton = null;
 
         if (mProgressDialog != null) {
             mProgressDialog.setOnCancelListener(null);
@@ -254,11 +239,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress(boolean cancellable) {
-        mPrimaryButton.setEnabled(false);
-
-        if (mSecondaryButton != null) {
-            mSecondaryButton.setEnabled(false);
-        }
+        mBottomButton.setEnabled(false);
 
         mProgressDialog =
                 ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
@@ -286,12 +267,8 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mProgressDialog.setOnCancelListener(null);
             mProgressDialog = null;
         }
-        if (mPrimaryButton != null) {
-            mPrimaryButton.setEnabled(true);
-        }
-
-        if (mSecondaryButton != null) {
-            mSecondaryButton.setEnabled(true);
+        if (mBottomButton != null) {
+            mBottomButton.setEnabled(true);
         }
     }
 
@@ -357,9 +334,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(isJetpackAppLogin());
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
             mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
+    }
+
+    protected boolean isJetpackAppLogin() {
+        return (mLoginListener instanceof LoginListener)
+               && ((LoginListener) mLoginListener).getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY;
     }
 
     @SuppressWarnings("unused")

@@ -7,8 +7,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -101,6 +101,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -142,7 +143,8 @@ class MySiteViewModel
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
-    private val dynamicCardsSource: DynamicCardsSource
+    private val dynamicCardsSource: DynamicCardsSource,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -172,7 +174,7 @@ class MySiteViewModel
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            this,
+            viewModelScope,
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,
@@ -205,17 +207,19 @@ class MySiteViewModel
                             activeTask == UPLOAD_SITE_ICON
                     )
             )
-            siteItems.add(
-                    QuickActionsBlock(
-                            ListItemInteraction.create(this::quickActionStatsClick),
-                            ListItemInteraction.create(this::quickActionPagesClick),
-                            ListItemInteraction.create(this::quickActionPostsClick),
-                            ListItemInteraction.create(this::quickActionMediaClick),
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                            activeTask == CHECK_STATS,
-                            activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
-                    )
-            )
+            if (!buildConfigWrapper.isJetpackApp) {
+                siteItems.add(
+                        QuickActionsBlock(
+                                ListItemInteraction.create(this::quickActionStatsClick),
+                                ListItemInteraction.create(this::quickActionPagesClick),
+                                ListItemInteraction.create(this::quickActionPostsClick),
+                                ListItemInteraction.create(this::quickActionMediaClick),
+                                site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                                activeTask == CHECK_STATS,
+                                activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
+                        )
+                )
+            }
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))

@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ScanActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 
@@ -18,12 +18,14 @@ class ScanActivity : AppCompatActivity() {
             it.onNewIntent(intent)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(ScanActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
 
-        setContentView(R.layout.scan_activity)
-
-        setSupportActionBar(toolbar_main)
+            setSupportActionBar(toolbarMain)
+        }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

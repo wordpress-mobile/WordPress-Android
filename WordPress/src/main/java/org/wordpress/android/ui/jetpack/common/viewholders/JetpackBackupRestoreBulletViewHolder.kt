@@ -2,9 +2,7 @@ package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import kotlinx.android.synthetic.main.jetpack_backup_restore_list_bullet_item.*
-import kotlinx.android.synthetic.main.jetpack_backup_restore_list_bullet_item.icon
-import org.wordpress.android.R
+import org.wordpress.android.databinding.JetpackBackupRestoreListBulletItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.BulletState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -15,10 +13,13 @@ class JetpackBackupRestoreBulletViewHolder(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
-) : JetpackViewHolder(R.layout.jetpack_backup_restore_list_bullet_item, parent) {
-    override fun onBind(itemUiState: JetpackListItemState) {
+) : JetpackViewHolder<JetpackBackupRestoreListBulletItemBinding>(
+        parent,
+        JetpackBackupRestoreListBulletItemBinding::inflate
+) {
+    override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val state = itemUiState as BulletState
-        val resources = itemView.context.resources
+        val resources = root.context.resources
 
         with(icon.layoutParams) {
             val size = resources.getDimensionPixelSize(state.sizeResId)
@@ -42,6 +43,6 @@ class JetpackBackupRestoreBulletViewHolder(
                     state.colorResId
             )
         }
-        bullet_label.text = uiHelpers.getTextOfUiString(itemView.context, state.label)
+        bulletLabel.text = uiHelpers.getTextOfUiString(itemView.context, state.label)
     }
 }

@@ -67,6 +67,8 @@
 
     <dimen name="default_cardview_radius">2dp</dimen>
 
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
     <!-- bottom navigation bar -->
     <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
@@ -183,6 +185,7 @@
     <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
@@ -248,6 +251,11 @@
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
     <dimen name="post_settings_featured_image_height_max">300dp</dimen>
 
+    <!-- comments -->
+    <dimen name="comment_avatar_sz">40dp</dimen>
+    <dimen name="comment_status_dot_sz">8dp</dimen>
+    <dimen name="comment_list_divider_start_offset">72dp</dimen>
+
     <!-- notifications -->
     <dimen name="note_icon_sz">16dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>
@@ -304,6 +312,7 @@
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
     <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
+    <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -644,4 +653,16 @@
     <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
+
+    <!-- likes list and user profile bottom sheet -->
+    <dimen name="reader_like_faces_padding">2dp</dimen>
+    <dimen name="liker_faces_section_min_height">80dp</dimen>
+    <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
+    <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
+
+    <!-- Login empty views-->
+    <dimen name="login_empty_view_avatar_width">72dp</dimen>
+    <dimen name="login_empty_view_avatar_height">72dp</dimen>
+    <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
+    <dimen name="login_empty_view_line_spacing">2sp</dimen>
 </resources>

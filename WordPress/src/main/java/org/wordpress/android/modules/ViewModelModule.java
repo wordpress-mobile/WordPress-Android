@@ -3,9 +3,17 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
+import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.accounts.LoginViewModel;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
+import org.wordpress.android.ui.engagement.UserProfileViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -30,6 +38,7 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
@@ -41,7 +50,6 @@ import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
@@ -83,6 +91,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -230,11 +239,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationSegmentsViewModel.class)
-    abstract ViewModel siteCreationSegmentsViewModel(SiteCreationSegmentsViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -390,7 +394,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListCreateMenuViewModel.class)
     abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
-    
+
     @Binds
     @IntoMap
     @ViewModelKey(StoryComposerViewModel.class)
@@ -487,5 +491,55 @@ abstract class ViewModelModule {
     abstract ViewModel peopleInviteViewModel(PeopleInviteViewModel viewModel);
 
     @Binds
+    @IntoMap
+    @ViewModelKey(EngagedPeopleListViewModel.class)
+    abstract ViewModel engagedPeopleListViewModel(EngagedPeopleListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserProfileViewModel.class)
+    abstract ViewModel userProfileViewModel(UserProfileViewModel viewModel);
+
+    @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteSettingsTimezoneViewModel.class)
+    abstract ViewModel siteSettingsTimezoneViewModel(SiteSettingsTimezoneViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginNoSitesViewModel.class)
+    abstract ViewModel loginNoSitesErrorViewModel(LoginNoSitesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginPrologueViewModel.class)
+    abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel.class)
+    abstract ViewModel loginViewModel(LoginViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkingIntentReceiverViewModel.class)
+    abstract ViewModel deepLinkingIntentReceiverViewModel(DeepLinkingIntentReceiverViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginSiteCheckErrorViewModel.class)
+    abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
 }

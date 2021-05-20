@@ -2,17 +2,17 @@ package org.wordpress.android.ui.jetpack.restore
 
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.restore_activity.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.RestoreActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class RestoreActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(RestoreActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
 
-        setContentView(R.layout.restore_activity)
-
-        setSupportActionBar(toolbar_main)
+            setSupportActionBar(toolbarMain)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
