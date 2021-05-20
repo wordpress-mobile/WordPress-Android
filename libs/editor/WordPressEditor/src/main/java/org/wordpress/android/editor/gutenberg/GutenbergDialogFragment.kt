@@ -36,7 +36,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         message: CharSequence,
         positiveButtonLabel: CharSequence,
         negativeButtonLabel: CharSequence? = null,
-        mediaId: Int,
+        mediaId: Int
     ) {
         mTag = tag
         mTitle = title
