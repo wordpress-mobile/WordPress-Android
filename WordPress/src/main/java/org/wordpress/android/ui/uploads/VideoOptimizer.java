@@ -26,22 +26,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR;
 
 public class VideoOptimizer implements org.m4m.IProgressListener {
-    public interface VideoOptimizationListener {
-        void onVideoOptimizationCompleted(@NonNull MediaModel media);
-
-        void onVideoOptimizationProgress(@NonNull MediaModel media, float progress);
-    }
-
-    public static class ProgressEvent {
-        public final MediaModel media;
-        public final float progress;
-
-        public ProgressEvent(@NonNull MediaModel media, float progress) {
-            this.media = media;
-            this.progress = progress;
-        }
-    }
-
     private final File mCacheDir;
     private final MediaModel mMedia;
     private final VideoOptimizationListener mListener;

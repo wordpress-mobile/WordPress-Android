@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
-public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
+public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizationListener {
     private static List<MediaModel> sPendingUploads = new ArrayList<>();
     private static List<MediaModel> sInProgressUploads = new ArrayList<>();
     private static ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
@@ -450,7 +450,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     public void onVideoOptimizationProgress(@NonNull MediaModel media, float progress) {
         sOptimizationProgressByMediaId.put(media.getId(), progress);
         // fire an event so EditPostActivity and PostsListFragment can show progress
-        VideoOptimizer.ProgressEvent event = new VideoOptimizer.ProgressEvent(media, progress);
+        ProgressEvent event = new ProgressEvent(media, progress);
         EventBus.getDefault().post(event);
     }
 

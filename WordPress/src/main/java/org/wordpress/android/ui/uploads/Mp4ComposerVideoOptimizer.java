@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.uploads.VideoOptimizer.VideoOptimizationListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;

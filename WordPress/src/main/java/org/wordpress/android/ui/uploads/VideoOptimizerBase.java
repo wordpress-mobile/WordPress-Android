@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.ui.uploads.VideoOptimizer.VideoOptimizationListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FileUtils;
