@@ -60,9 +60,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-293"
+            versionName "alpha-294"
         }
-        versionCode 1043
+        versionCode 1047
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -97,6 +97,7 @@ android {
 
     productFlavors {
         wordpress {
+            isDefault true
             dimension "app"
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
@@ -141,6 +142,7 @@ android {
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+            isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
         }

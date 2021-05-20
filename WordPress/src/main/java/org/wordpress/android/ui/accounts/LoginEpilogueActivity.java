@@ -2,7 +2,9 @@ package org.wordpress.android.ui.accounts;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -10,9 +12,12 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 
 import java.util.ArrayList;
 
@@ -25,6 +30,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject LoginEpilogueViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +49,32 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
             addPostLoginFragment(doLoginUpdate, showAndReturn, oldSitesIds);
         }
+
+        initViewModel();
+        initObservers();
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginEpilogueViewModel.class);
+    }
+
+    private void initObservers() {
+        mViewModel.getNavigationEvents().observe(this, event -> {
+            LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
+            if (loginEvent instanceof ShowPostSignupInterstitialScreen) {
+                showPostSignupInterstitialScreen();
+            } else if (loginEvent instanceof CloseWithResultOk) {
+                closeWithResultOk();
+            } else if (loginEvent instanceof ShowNoJetpackSites) {
+                showNoJetpackSites();
+            }
+        });
     }
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(doLoginUpdate, showAndReturn,
-                                                                                        oldSitesIds);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
-        fragmentTransaction.commit();
+                oldSitesIds);
+        showFragment(loginEpilogueFragment, LoginEpilogueFragment.TAG, false);
     }
 
     @Override
@@ -65,11 +90,31 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Override
     public void onContinue() {
-        if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
-            ActivityLauncher.showPostSignupInterstitial(this);
-        }
+        mViewModel.onContinue();
+    }
 
+    private void showPostSignupInterstitialScreen() {
+        ActivityLauncher.showPostSignupInterstitial(this);
+    }
+
+    private void closeWithResultOk() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    private void showNoJetpackSites() {
+        LoginNoSitesFragment fragment = LoginNoSitesFragment.Companion.newInstance();
+        showFragment(fragment, LoginNoSitesFragment.TAG, true);
+    }
+
+    private void showFragment(Fragment fragment, String tag, boolean applySlideAnimation) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (applySlideAnimation) {
+            fragmentTransaction
+                    .setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        }
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
+        fragmentTransaction.commit();
     }
 }
