@@ -2338,7 +2338,7 @@ Language: it
     <string name="jetpack_disconnect_confirm">Disconnetti</string>
     <string name="jetpack_disconnect_confirmation_message">Desideri disconnettere Jetpack dal sito?</string>
     <string name="jetpack_disconnect_pref_title">\"Esegui la disconnessione da WordPress.com\"</string>
-    <string name="site_settings_jetpack_allowlist_description">Puoi contrassegnare un indirizzo IP (o una serie di indirizzi) come \"Sempre consentito\" per evitare che venga bloccato da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Puoi contrassegnare un indirizzo IP (o una serie di indirizzi) come \"Sempre consentito\" per evitare che venga bloccato da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Richiede l\'Autenticazione a due passaggi</string>
     <string name="jetpack_match_wpcom_via_email_title">Confronta gli account tramite email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Consenti l\'accesso a WordPress.com</string>

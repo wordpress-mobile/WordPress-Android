@@ -199,6 +199,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StorageUtilsProvider.Source;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -214,6 +215,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -298,6 +300,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PUBLISH_SETTINGS = 2;
     private static final int PAGE_HISTORY = 3;
+    private static final int EDITOR_ONBOARDING_PHASE_PERCENTAGE = 0;
 
     private AztecImageLoader mAztecImageLoader;
 
@@ -403,6 +406,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
+    private StorageUtilsViewModel mStorageUtilsViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -481,6 +485,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
+        mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -698,6 +703,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
 
         mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
+
+        // The check on savedInstanceState should allow to show the dialog only on first start
+        // (even in cases when the VM could be re-created like when activity is destroyed in the background)
+        mStorageUtilsViewModel.start(savedInstanceState == null);
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -854,6 +863,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
+        mStorageUtilsViewModel.getCheckStorageWarning().observe(this, event ->
+                event.applyIfNotHandled(unit -> {
+                    mStorageUtilsViewModel.onStorageWarningCheck(getSupportFragmentManager(), Source.EDITOR);
+                    return null;
+                })
+        );
     }
 
     private void initializePostObject() {
@@ -934,6 +949,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
+        }
+
+        if (mShowGutenbergEditor) {
+            AppPrefs.setHasLaunchedGutenbergEditor(true);
         }
     }
 
@@ -2272,6 +2291,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
+        boolean canViewEditorOnboarding = (
+                mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
+                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
+
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
@@ -2283,7 +2306,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
-                themeBundle
+                themeBundle,
+                canViewEditorOnboarding
         );
     }
 
@@ -2963,17 +2987,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+        mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection, getSite());
     }
 
     @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection, getSite());
     }
 
-    @Override
-    public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
+    @Override public void onPerformFetch(
+            String path,
+            boolean enableCaching,
+            Consumer<String> onResult,
+            Consumer<Bundle> onError
+    ) {
         if (mSite != null) {
-            mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
+            mReactNativeRequestHandler.performGetRequest(path, mSite, enableCaching, onResult, onError);
         }
     }
 

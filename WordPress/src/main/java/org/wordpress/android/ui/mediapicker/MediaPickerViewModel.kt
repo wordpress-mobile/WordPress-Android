@@ -519,10 +519,16 @@ class MediaPickerViewModel @Inject constructor(
                         Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
                     }
                     listOf(AUDIO).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.AUDIO, MimeTypes().getAudioTypesOnly())
+                        Pair(
+                                ChooserContext.AUDIO,
+                                MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                        )
                     }
                     else -> {
-                        Pair(ChooserContext.MEDIA_FILE, MimeTypes().getAllTypes())
+                        Pair(
+                                ChooserContext.MEDIA_FILE,
+                                MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                        )
                     }
                 }
                 OpenSystemPicker(context, types.toList(), canMultiselect)

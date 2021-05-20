@@ -2345,7 +2345,7 @@ Language: ar
     <string name="jetpack_disconnect_confirm">قطع الاتصال</string>
     <string name="jetpack_disconnect_confirmation_message">هل تريد بالتأكيد قطع اتصال Jetpack بهذا الموقع؟</string>
     <string name="jetpack_disconnect_pref_title">\"قطع الاتصال بـ WordPress.com\"</string>
-    <string name="site_settings_jetpack_allowlist_description">يمكنك وضع علامة على عنوان IP أو (مجموعة من العناوين) كـ \"غير مسموح دائمًا\"، ما يمنع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">يمكنك وضع علامة على عنوان IP أو (مجموعة من العناوين) كـ \"غير مسموح دائمًا\"، ما يمنع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">يلزم إجراء مصادقة من خطوتين</string>
     <string name="jetpack_match_wpcom_via_email_title">مطابقة الحسابات باستخدام البريد الإلكتروني</string>
     <string name="jetpack_allow_wpcom_sign_in_title">السماح بتسجيل الدخول إلى WordPress.com</string>

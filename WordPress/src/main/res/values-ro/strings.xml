@@ -2345,7 +2345,7 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
-    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>

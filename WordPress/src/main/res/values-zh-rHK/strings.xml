@@ -2339,7 +2339,7 @@ Language: zh_TW
     <string name="jetpack_disconnect_confirm">中斷連線</string>
     <string name="jetpack_disconnect_confirmation_message">確定要中斷網站與 Jetpack 的連線？</string>
     <string name="jetpack_disconnect_pref_title">「中斷與 WordPress.com 的連線」</string>
-    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要雙步驟驗證</string>
     <string name="jetpack_match_wpcom_via_email_title">使用電子郵件地址比對帳號</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允許登入 WordPress.com</string>

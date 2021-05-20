@@ -62,26 +62,26 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var analyticsTracker: ModalLayoutPickerTracker
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
 
+    private val aboutCategory = GutenbergLayoutCategory(
+            slug = "about",
+            title = "About",
+            description = "About pages",
+            emoji = "👋"
+    )
+
+    private val aboutLayout = GutenbergLayout(
+            slug = "about",
+            title = "About",
+            previewTablet = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            previewMobile = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            content = "",
+            demoUrl = "",
+            categories = listOf(aboutCategory)
+    )
+
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
-        get() {
-            val aboutCategory = GutenbergLayoutCategory(
-                    slug = "about",
-                    title = "About",
-                    description = "About pages",
-                    emoji = "👋"
-            )
-            val aboutLayout = GutenbergLayout(
-                    slug = "about",
-                    title = "About",
-                    previewTablet = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-                    previewMobile = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-                    preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-                    content = "",
-                    demoUrl = "",
-                    categories = listOf(aboutCategory)
-            )
-            return OnBlockLayoutsFetched(listOf(aboutLayout), listOf(aboutCategory), null)
-        }
+        get() = OnBlockLayoutsFetched(listOf(aboutLayout), listOf(aboutCategory), null)
 
     @Before
     fun setUp() {
@@ -110,6 +110,7 @@ class ModalLayoutPickerViewModelTest {
             whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            whenever(siteStore.getBlockLayout(site, "about")).thenReturn(aboutLayout)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             whenever(thumbDimensionProvider.previewWidth).thenReturn(136)
             whenever(thumbDimensionProvider.scale).thenReturn(1.0)

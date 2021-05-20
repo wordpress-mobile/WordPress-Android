@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -242,6 +244,22 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
+    public static Plan getSitePlanForMimeTypes(SiteModel site) {
+        if (site.isWPCom()) {
+            if (SiteUtils.onFreePlan(site)) {
+                return Plan.WP_COM_FREE;
+            } else {
+                return Plan.WP_COM_PAID;
+            }
+        } else {
+            return Plan.SELF_HOSTED;
+        }
+    }
+
+    public static boolean isMimeTypeSupportedBySitePlan(SiteModel site, String mimeType) {
+        return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
+    }
+
     public static void launchChooserWithContext(
             Activity activity,
             OpenSystemPicker openSystemPicker,
@@ -306,7 +324,6 @@ public class WPMediaUtils {
                 preparePictureLibraryIntent(activity, multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
-
 
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
