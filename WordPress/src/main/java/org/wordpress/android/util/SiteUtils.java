@@ -350,11 +350,11 @@ public class SiteUtils {
     }
 
     public static boolean supportsContactInfoFeature(SiteModel site) {
-        return site != null & (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
+        return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
     }
 
     public static boolean supportsLayoutGridFeature(SiteModel site) {
-        return site != null & (site.isWPCom() || site.isWPComAtomic());
+        return site != null && (site.isWPCom() || site.isWPComAtomic());
     }
 
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
