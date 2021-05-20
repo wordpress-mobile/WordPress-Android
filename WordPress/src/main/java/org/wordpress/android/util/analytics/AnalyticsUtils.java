@@ -19,6 +19,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -69,6 +70,9 @@ public class AnalyticsUtils {
     private static final String NEWS_CARD_VERSION = "version";
     private static final String SITE_TYPE_KEY = "site_type";
     private static final String COMMENT_ACTION_SOURCE = "source";
+    private static final String SOURCE_KEY = "source";
+    private static final String LIST_TYPE_KEY = "list_type";
+    private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -690,5 +694,39 @@ public class AnalyticsUtils {
             @Nullable Map<String, Object> properties
     ) {
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
+    }
+
+    public static void trackUserProfileShown(String source) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+
+        AnalyticsTracker.track(Stat.USER_PROFILE_SHEET_SHOWN, properties);
+    }
+
+    public static void trackUserProfileSiteShown() {
+        AnalyticsTracker.track(Stat.USER_PROFILE_SHEET_SITE_SHOWN);
+    }
+
+    public static void trackBlogPreviewedByUrl(String source) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+
+        AnalyticsTracker.track(Stat.BLOG_URL_PREVIEWED, properties);
+    }
+
+    public static void trackLikeListOpened(String source, String listType) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+        properties.put(LIST_TYPE_KEY, listType);
+
+        AnalyticsTracker.track(Stat.LIKE_LIST_OPENED, properties);
+    }
+
+    public static void trackStorageWarningDialogEvent(Stat stat, String source, Boolean isStorageSettingsResolved) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+        properties.put(IS_STORAGE_SETTINGS_RESOLVED_KEY, isStorageSettingsResolved ? "true" : "false");
+
+        AnalyticsTracker.track(stat, properties);
     }
 }

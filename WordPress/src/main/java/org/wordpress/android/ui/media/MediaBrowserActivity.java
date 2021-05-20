@@ -972,7 +972,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 WPMediaUtils.launchVideoCamera(this);
                 break;
             case ITEM_CHOOSE_FILE:
-                mMediaPickerLauncher.showFilePicker(this, true);
+                mMediaPickerLauncher.showFilePicker(this, true, mSite);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 mMediaPickerLauncher.showStockMediaPickerForResult(this,

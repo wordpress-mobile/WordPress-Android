@@ -1,47 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-08 20:35:00+0000
+Translation-Revision-Date: 2021-05-06 17:51:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_use_icon_button">Použijte ikonu tlačítka</string>
-    <string name="gutenberg_native_search_input_field">Vyhledejte vstupní pole.</string>
-    <string name="gutenberg_native_search_button_current_button_text_is">Tlačítko hledat. Aktuální text tlačítka je</string>
+    <string name="gutenberg_native_size">Velikost</string>
+    <string name="gutenberg_native_media_settings">Nastavení médií</string>
+    <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
+    <string name="gutenberg_native_failed_to_insert_media">Vložení média se nezdařilo.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Vložení zvukového souboru se nezdařilo.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Popište účel obrázku. Pokud je obrázek čistě dekorativní, ponechte toto pole prázdné.</string>
+    <string name="like_faces_error_loading_message">Chyba při načítání podobných dat. %s.</string>
+    <string name="like_faces_plural_text">%d blogerům se to líbí.</string>
+    <string name="like_faces_singular_text">1 blogerovi se to líbí.</string>
+    <string name="like_title_plural">%d to se mi líbí</string>
+    <string name="like_title_singular">1 to se mi libí</string>
+    <string name="threat_fix_enter_server_creds_message_plural">Chcete-li opravit hrozby, zadejte pověření serveru.</string>
+    <string name="threat_fix_enter_server_creds_message_singular">Chcete-li opravit hrozbu, zadejte pověření serveru.</string>
+    <string name="suggestion">Doporučení:</string>
     <string name="gutenberg_native_search_blocks">Hledat bloky</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Vyhledat štítek bloku. Aktuální text je</string>
     <string name="gutenberg_native_search_block">Hledat blok</string>
-    <string name="gutenberg_native_outside">Vně</string>
-    <string name="gutenberg_native_no_custom_placeholder_set">Není nastaven žádný vlastní zástupný symbol</string>
-    <string name="gutenberg_native_no_button">Žádné tlačítko</string>
-    <string name="gutenberg_native_inside">Uvnitř</string>
-    <string name="gutenberg_native_hide_search_heading">Skrýt nadpis vyhledávání</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dvojitým klepnutím upravíte zástupný text</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dvojitým klepnutím upravíte text štítku</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dvojitým klepnutím upravíte text tlačítka</string>
+    <string name="gutenberg_native_outline">Obrys</string>
     <string name="gutenberg_native_double_tap_to_change_unit">dvojitým klepnutím změníte jednotku</string>
-    <string name="gutenberg_native_current_placeholder_text_is">Aktuální zástupný text je</string>
     <string name="gutenberg_native_clear_search">Vymazat vyhledávání</string>
     <string name="gutenberg_native_cancel_search">Zrušit vyhledávání</string>
-    <string name="gutenberg_native_button_position">Poloha tlačítka</string>
-    <string name="gutenberg_native_button_outside">Tlačítko venku</string>
-    <string name="gutenberg_native_button_inside">Tlačítko uvnitř</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Při získávání údajů o lajcích došlo k chybě</string>
     <string name="get_likes_unknown_error">Při získávání lajků došlo k neznámé chybě.</string>
     <string name="get_likes_no_network_error">Síť není dostupná.</string>
     <string name="comments_empty_list_filtered_unreplied">Žádné nezodpovězené komentáře</string>
     <string name="comment_status_unreplied">Bez odpovědi</string>
+    <string name="gutenberg_native_tag_link">Odkaz štítku</string>
     <string name="gutenberg_native_table_of_contents">Tabulka obsahu</string>
     <string name="gutenberg_native_summary">souhrn</string>
     <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Shrňte svůj příspěvek se seznamem nadpisů. Přidejte HTML kotvy do nadpisových bloků a propojte je zde.</string>
-    <string name="gutenberg_native_search_settings">Nastavení vyhledávání</string>
+    <string name="gutenberg_native_spacer_settings">Nastavení mezery</string>
+    <string name="gutenberg_native_posts_list">Seznam příspěvků</string>
     <string name="gutenberg_native_document_outline">osnova dokumentu</string>
-    <string name="gutenberg_native_buttongroup">Skupina tlačítek</string>
+    <string name="gutenberg_native_category_link">Odkaz rubriky</string>
+    <string name="gutenberg_native_a_link_to_a_tag">Odkaz na štítek.</string>
+    <string name="gutenberg_native_a_link_to_a_post">Odkaz na příspěvek.</string>
+    <string name="gutenberg_native_a_link_to_a_page">Odkaz na stránka.</string>
+    <string name="gutenberg_native_a_link_to_a_category">Odkaz na rubriku.</string>
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
-    <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
     <string name="reader_title_interests">Sledujte témata</string>
     <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
@@ -55,8 +59,8 @@ Language: cs_CZ
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Dvojitým klepnutím otevřete akční list, kde můžete obrázek upravit, nahradit nebo vymazat</string>
     <string name="new_site_creation_search_domain_example">priklad.com</string>
     <string name="new_site_creation_search_domain_input_hint">Zadejte název svého webu</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b>Všechny úkoly dokončeny&lt;/b>&lt;br/>Oslovíte více lidí. Dobrá práce!</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b>Všechny úkoly dokončeny&lt;/b>&lt;br/>Svůj web jste si přizpůsobili. Výborně!</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Oslovíte více lidí. Dobrá práce!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b&gt;Všechny úkoly dokončeny&lt;/b&gt;&lt;br/&gt;Svůj web jste si přizpůsobili. Výborně!</string>
     <string name="quick_start_card_menu_hide">Prozatím skrýt</string>
     <string name="magic_link_not_meaning_to_create_account">Nechtěli jste vytvořit nový účet? Vraťte se zpět a znovu zadejte svou emailovou adresu.</string>
     <string name="invite_links_disable_dialog_message">Jakmile je tento odkaz s pozvánkou deaktivován, nikdo ho nebude moci použít k připojení k vašemu týmu. Jsi si jistý?</string>
@@ -75,9 +79,9 @@ Language: cs_CZ
     <string name="invite_links_section_title">Zvací odkaz</string>
     <string name="threats_found_singular">Nalezena hrozba</string>
     <string name="threats_found_plural">Nalezeny hrozby</string>
-    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Skenování dokončeno&lt;/b>&lt;br>Nalezeny %s potenciální hrozby</string>
-    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Skenování dokončeno&lt;/b>&lt;br>Nalezena 1 potenciální hrozba</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b>Skenování dokončeno&lt;/b>&lt;br>Nebyly nalezeny žádné hrozby</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Skenování dokončeno&lt;/b&gt;&lt;br&gt;Nalezeny %s potenciální hrozby</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Skenování dokončeno&lt;/b&gt;&lt;br&gt;Nalezena 1 potenciální hrozba</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Skenování dokončeno&lt;/b&gt;&lt;br&gt;Nebyly nalezeny žádné hrozby</string>
     <string name="scan_fixing_threats_title_singular">Oprava hrozby</string>
     <string name="disable">Zakázat</string>
     <string name="quick_start_card_menu_unpin">Uvolněte to</string>
@@ -203,7 +207,7 @@ Language: cs_CZ
     <string name="threat_fix_all_warning_title">Opravte všechny hrozby</string>
     <string name="threat_ignore_error_message">Chyba při ignorování hrozby. Kontaktujte podporu.</string>
     <string name="threat_ignore_success_message">Hrozba ignorována.</string>
-    <string name="threat_ignore_warning">Zabezpečení byste neměli ignorovat, pokud si nejste absolutně jisti, že je neškodný. Pokud se rozhodnete tuto hrozbu ignorovat, zůstane na vašem webu &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_warning">Zabezpečení byste neměli ignorovat, pokud si nejste absolutně jisti, že je neškodný. Pokud se rozhodnete tuto hrozbu ignorovat, zůstane na vašem webu &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_fix_error_message">Chyba při opravě hrozby. Kontaktujte naši podporu.</string>
     <string name="threat_item_sub_header_status_ignored">Hrozba ignorována</string>
     <string name="threat_item_sub_header_status_fixed_on">Hrozba opravena v %s</string>
@@ -262,7 +266,7 @@ Language: cs_CZ
     <string name="threat_fix_fixable_update">Jetpack Scan se aktualizuje na novější verzi (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan odstraní ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b>Codeable+&lt;/b>, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_fix_current_not_fixable_header">Řešení hrozby</string>
     <string name="threat_fix_fixed_header">Jak to Jetpack opravil?</string>
     <string name="threat_fix_default_header">Jak to napravíme?</string>
@@ -376,9 +380,9 @@ Language: cs_CZ
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="scan">Prohledat</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> odpověděl na váš příspěvek</string>
-    <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b>50 lajků&lt;/b></string>
-    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> lajkoval váš příspěvek</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpověděl na váš příspěvek</string>
+    <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b&gt;50 lajků&lt;/b&gt;</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; lajkoval váš příspěvek</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Bylo otevřeno rolovací blok menu. Vyberte blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Nabídka rolovatelného bloku uzavřena.</string>
     <string name="hpp_skip_button">Přeskočit</string>
@@ -447,6 +451,7 @@ Language: cs_CZ
     <string name="media_uploading_default">Nahrávání médií</string>
     <string name="gutenberg_native_select_item">Vyberte položku</string>
     <string name="gutenberg_native_search_or_type_url">Vyhledejte nebo zadejte URL</string>
+    <string name="gutenberg_native_page_link">Odkaz stránky</string>
     <string name="gutenberg_native_add_this_telephone_link">Přidejte tento telefonní odkaz</string>
     <string name="gutenberg_native_add_this_link">Přidejte tento odkaz</string>
     <string name="gutenberg_native_add_this_email_link">Přidejte tento e-mailový odkaz</string>
@@ -479,7 +484,6 @@ Language: cs_CZ
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Skrýt</string>
     <string name="gutenberg_native_video_caption_empty">Titulek videa. Prázdný</string>
     <string name="gutenberg_native_updates_the_title">Aktualizuje název.</string>
-    <string name="gutenberg_native_paste_block_after">Vložte blok za</string>
     <string name="gutenberg_native_page_title_s">Název stránky. %s</string>
     <string name="gutenberg_native_page_title_empty">Název stránky. Prázdný</string>
     <string name="toast_error_playing_video">Při přehrávání videa došlo k chybě</string>
@@ -544,7 +548,7 @@ Language: cs_CZ
     <string name="prepublishing_nudges_story_title_hint">Dejte svému příběhu název</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Vytvořte příspěvek nebo příběh</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Vytvořte příspěvek, stránku nebo příběh</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b>Blogový příspěvek&lt;/b></string>
+    <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Vyberte si ze zařízení</string>
     <string name="my_site_bottom_sheet_add_story">Příběhový příspěvek</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Úpravy ikon webů na webech WordPress, které hostuje sám, vyžadují plugin Jetpack.</string>
@@ -557,7 +561,6 @@ Language: cs_CZ
     <string name="gutenberg_native_choose_video">Zvolit video</string>
     <string name="gutenberg_native_choose_image_or_video">Zvolit obrázek nebo video</string>
     <string name="gutenberg_native_choose_image">Zvolit obrázek</string>
-    <string name="gutenberg_native_block_removed">Blok odstraněn</string>
     <string name="enter_your_site_address">Zadejte svou stávající adresu</string>
     <string name="signup_confirmation_title">Potvrzení registrace</string>
     <string name="continue_with_google_terms_of_service_text">Pokud budete pokračovat se společností Google a ještě nemáte účet WordPress.com, vytváříte si účet a souhlasíte s našimi %1$sSmluvními podmínkami%2$s..</string>
@@ -581,17 +584,10 @@ Language: cs_CZ
     <string name="reset_your_password">Resetovat vaše heslo</string>
     <string name="reader_error_request_failed_title">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
     <string name="quick_start_list_update_site_title_title">Zadejte název svého webu</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Klepnutím na &lt;b>%1$s&lt;/b> nastavíte nový název</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; nastavíte nový název</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Vymazáním tohoto příspěvku také zrušíte místní změny. Opravdu chcete pokračovat?</string>
-    <string name="gutenberg_native_s_block_options">%s možnosti bloku</string>
-    <string name="gutenberg_native_duplicate_block">Duplikovat blok</string>
-    <string name="gutenberg_native_copy_block">Kopírovat blok</string>
     <string name="gutenberg_native_copied_block">Zkopírovaný blok</string>
-    <string name="gutenberg_native_block_settings">Nastavení bloku</string>
-    <string name="gutenberg_native_block_pasted">Blok byl vložen</string>
-    <string name="gutenberg_native_block_duplicated">Blok byl zduplikován</string>
-    <string name="gutenberg_native_block_cut">Vyjmout blok</string>
-    <string name="gutenberg_native_block_copied">Blok zkopírován</string>
+    <string name="gutenberg_native_table_settings">Nastavení tabulky</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Název webu může změnit pouze uživatel s rolí správce.</string>
     <string name="my_site_title_changer_dialog_hint">Název webu se zobrazuje v záhlaví webového prohlížeče a u většiny šablon se zobrazuje v záhlaví.</string>
     <string name="reader_title_tag_preview">Téma</string>
@@ -638,10 +634,7 @@ Language: cs_CZ
     <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
     <string name="status_and_visibility">Stav &amp; Viditelnost</string>
     <string name="update_now">Aktualizovat nyní</string>
-    <string name="gutenberg_native_open_block_actions_menu">Otevřete nabídku blokovat akce</string>
     <string name="gutenberg_native_move_to_top">Přesunout nahoru</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dvojitým klepnutím otevřete spodní list s dostupnými možnostmi</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
     <string name="pages_cannot_be_started">V tuto chvíli nemůžeme otevřít stránky. Prosím zkuste to znovu později</string>
     <string name="pages_set_as_posts_page">Nastavit jako stránku příspěvků</string>
     <string name="pages_set_as_homepage">Nastavit jako domovskou stránku</string>
@@ -698,6 +691,7 @@ Language: cs_CZ
     <string name="gutenberg_native_move_block_left">Přesuňte blok doleva</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dvojitým klepnutím přesunete blok doprava</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dvojitým klepnutím přesunete blok doleva</string>
+    <string name="gutenberg_native_blog">blog</string>
     <string name="new_site_creation_creating_site_loading_4">Vytváření řídicího panelu</string>
     <string name="new_site_creation_creating_site_loading_3">Nastavení šablony</string>
     <string name="new_site_creation_creating_site_loading_2">Přidávání funkcí webu</string>
@@ -753,10 +747,13 @@ Language: cs_CZ
     <string name="app_theme_light">Světlé</string>
     <string name="app_theme">Vzhled</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno jste provedli změny na této stránce, ale neuložili jste je. Vyberte verzi, kterou chcete načíst:\n\n\n</string>
+    <string name="gutenberg_native_text">text</string>
     <string name="gutenberg_native_show_post_content">Zobrazit obsah příspěvku</string>
+    <string name="gutenberg_native_stripes">Pruhy</string>
     <string name="gutenberg_native_only_show_excerpt">Zobrazit pouze výňatek</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
     <string name="gutenberg_native_link_settings">Nastavení odkazu</string>
+    <string name="gutenberg_native_navigation">navigace</string>
     <string name="gutenberg_native_excerpt_length_words">Délka výňatku (slova)</string>
     <string name="gutenberg_native_customize">PŘIZPŮSOBIT</string>
     <string name="gutenberg_native_add_paragraph_block">Přidat blok odstavců</string>
@@ -812,8 +809,8 @@ Language: cs_CZ
     <string name="stats_box_type_low">nízký</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
-    <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
+    <string name="gutenberg_native_move_image_forward_c0288724">Posunout obrázek dopředu</string>
+    <string name="gutenberg_native_move_image_backward_e334ca63">Přesunout obrázek dozadu</string>
     <string name="gutenberg_native_gallery_caption_s">Titulek galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Vytvořte příspěvek nebo stránku</string>
     <string name="content_description_person_building_website">Web pro budování osob</string>
@@ -834,10 +831,10 @@ Language: cs_CZ
     <string name="new_site_creation_unavailable_domain">Tato doména není k dispozici</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b>certifikátem SSL&lt;/b>. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b>Ověření HTTP&lt;/b>. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_discovery_error_xmlrpc">Nepodařilo se nám získat přístup k &lt;b>souboru XMLRPC&lt;/b> na vašem webu. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b>%1$s&lt;/b></string>
+    <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_discovery_error_xmlrpc">Nepodařilo se nám získat přístup k &lt;b&gt;souboru XMLRPC&lt;/b&gt; na vašem webu. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
     <string name="my_site_bottom_sheet_add_page">Stránka webu</string>
     <string name="reader_following_display_name">Sleduji</string>
@@ -858,16 +855,17 @@ Language: cs_CZ
     <string name="gutenberg_native_unsupported">Nepodporováno</string>
     <string name="gutenberg_native_ungroup">Rozdělit</string>
     <string name="gutenberg_native_translate">Přeložit</string>
+    <string name="gutenberg_native_title">název</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klepnutím skryjete klávesnici</string>
     <string name="gutenberg_native_tap_here_to_show_help">Klepnutím sem zobrazíte nápovědu</string>
     <string name="gutenberg_native_take_a_video">Pořiďte video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Pořiďte fotografii nebo video</string>
     <string name="gutenberg_native_take_a_photo">Vyfoť</string>
     <string name="gutenberg_native_start_writing">Začněte psát…</string>
+    <string name="gutenberg_native_six">Šest.</string>
     <string name="gutenberg_native_show_section">Zobrazit sekci</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Tento blok má neplatný obsah</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Prázdný</string>
-    <string name="gutenberg_native_cut_block">Vyjmout blok</string>
     <string name="gutenberg_native_problem_opening_the_video">Problém s otevřením videa</string>
     <string name="gutenberg_native_problem_displaying_block">Blok se zobrazením problému</string>
     <string name="gutenberg_native_post_title_s">Název příspěvku. %s</string>
@@ -896,14 +894,18 @@ Language: cs_CZ
     <string name="gutenberg_native_double_tap_to_edit_this_value">Tuto hodnotu upravíte dvojitým klepnutím</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dvojitým klepnutím přidáte blok</string>
     <string name="gutenberg_native_current_value_is_s">Aktuální hodnota je %s</string>
+    <string name="gutenberg_native_contact">Kontakt</string>
     <string name="gutenberg_native_choose_from_device">Vyberte si ze zařízení</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Nastala neznámá chyba. Prosím zkuste to znovu.</string>
     <string name="gutenberg_native_alt_text">Alternativní text</string>
     <string name="gutenberg_native_add_video">PŘIDAT VIDEO</string>
     <string name="gutenberg_native_add_url">Přidat URL</string>
+    <string name="gutenberg_native_add_alt_text">Přidejte alternativní text</string>
     <string name="gutenberg_native_add_image_or_video">PŘIDAT OBRÁZEK NEBO VIDEO</string>
     <string name="gutenberg_native_add_image">PŘIDAT OBRÁZEK</string>
     <string name="gutenberg_native_add_block_here">PŘIDAT BLOK TADY</string>
+    <string name="gutenberg_native_add_citation">Přidat citace</string>
+    <string name="gutenberg_native_term_description">Popis termínu.</string>
     <string name="reader_empty_saved_posts_content_description">Klepnutím na tlačítko Přidat k uložení příspěvků uložíte příspěvek do svého seznamu.</string>
     <string name="reader_acessibility_list_loaded">\"Seznam má načteno %1$d položek.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Oznámení</string>
@@ -1072,7 +1074,7 @@ Language: cs_CZ
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
-    <string name="domain_registration_result_description">nastavuje se vaše nová doména &lt;b>%s&lt;/b>. Váš web bude\n         dělat kotrmelce vzrušením!</string>
+    <string name="domain_registration_result_description">nastavuje se vaše nová doména &lt;b&gt;%s&lt;/b&gt;. Váš web bude\n         dělat kotrmelce vzrušením!</string>
     <string name="domain_registration_result_title">Gratulace!</string>
     <string name="domain_contact_information_register_domain_button">Registrovat doménu</string>
     <string name="domain_contact_information_postal_code_hint">PSČ</string>
@@ -1286,7 +1288,7 @@ Language: cs_CZ
     <string name="stats_insights_share_post">Sdílet příspěvek</string>
     <string name="stats_insights_create_post">Vytvořit příspěvek</string>
     <string name="stats_insights_latest_post_message">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován…</string>
-    <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Rozviňte míč a sdílejte svůj příspěvek tím, že zvýšíte počet zobrazení příspěvku:</string>
+    <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Zvyšte počet zobrazení příspěvku tím, že ho budete sdílet:</string>
     <string name="stats_insights_latest_post_empty">Dosud jste nezveřejnili žádné příspěvky. Jakmile začnete publikovat, zobrazí se zde souhrn nejnovějších příspěvků.</string>
     <string name="stats_insights_tags_and_categories">Štítky a Rubriky</string>
     <string name="stats_insights_all_time_stats">Pořád</string>
@@ -1454,8 +1456,6 @@ Language: cs_CZ
     <string name="support_contact_email">Kontaktní e-mail</string>
     <string name="application_log_button">Aplikační log</string>
     <string name="my_tickets">Moje konverzace</string>
-    <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %1$s na %2$s? Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
-    <string name="activity_log_rewind_site">Obnovit web</string>
     <string name="activity_log_currently_restoring_message_no_dates">Probíhá obnovení</string>
     <string name="activity_log_currently_restoring_message">Obnovování k %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Obnovuji stránku</string>
@@ -1624,7 +1624,7 @@ Language: cs_CZ
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar byl nahrán a bude brzy k dispozici.</string>
-    <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/>&lt;br/>Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong>%s&lt;/strong>.</string>
+    <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/&gt;&lt;br/&gt;Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">Oprávnění</string>
     <string name="plugin_caption_featured">Doporučené</string>
     <string name="sharing_disabled_description">Nemůžete se dostat do nastavení sdílení, protože váš Jetpack modul Sdílení je vypnutý.</string>

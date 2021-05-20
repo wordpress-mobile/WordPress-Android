@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2020-11-21 10:07:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
@@ -25,9 +25,9 @@ Language: ku_TR
     <string name="reader_discover_no_posts_title">Şandiyên nû tune ye</string>
     <string name="reader_discover_empty_title">Bi xêr hatî!</string>
     <string name="scan">venerîn</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> bersiv da şandiya te</string>
-    <string name="login_prologue_third_subtitle_two">Te îro li ser malpera xwe &lt;b>50 likes&lt;/b> ecibandin sitend</string>
-    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> şandiya te eciband</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; bersiv da şandiya te</string>
+    <string name="login_prologue_third_subtitle_two">Te îro li ser malpera xwe &lt;b&gt;50 likes&lt;/b&gt; ecibandin sitend</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; şandiya te eciband</string>
     <string name="hpp_skip_button">Derbas bibe</string>
     <string name="hpp_choose_button">Hilbijêre</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menuya biloka şemîtonkî vebû. Bilokekê hilbijêre.</string>
@@ -129,7 +129,6 @@ Language: ku_TR
     <string name="toast_error_saving_image">Çewtiya tomarkirina wêneyê</string>
     <string name="gutenberg_native_video_caption_empty">Sernivîsa vîdyoyê. Vala</string>
     <string name="gutenberg_native_updates_the_title">Sernavê hildidemîne.</string>
-    <string name="gutenberg_native_paste_block_after">Blokê li dawiya wê bizeliqîne</string>
     <string name="gutenberg_native_page_title_s">Sernavê rûpelê. %s</string>
     <string name="gutenberg_native_page_title_empty">Sernavê rûpelê. Vala</string>
     <string name="camera_error">Ev cîhaz piştgiriya Camera2 API\'ê nake.</string>
@@ -188,7 +187,7 @@ Language: ku_TR
     <string name="create_post_page_fab_tooltip_stories_enabled">Şandî, rûpel an jî çîrokekê biafirîne</string>
     <string name="capture_button_alt">Bigire</string>
     <string name="label_share_to">Parve bike bi:</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Li %1$s Biafirîne\'yê bitikîne. %2$s Piştre&lt;b>Şandiya Blogê&lt;/b> hilbijêre</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Li %1$s Biafirîne\'yê bitikîne. %2$s Piştre&lt;b&gt;Şandiya Blogê&lt;/b&gt; hilbijêre</string>
     <string name="mlp_choose_layout_subtitle">Ji nav raxistinên pirrengî yên berê çêkirî hilbijêre û dest pê bike. An jî bi rûpeleke vala re dest pê bike.</string>
     <string name="mlp_choose_layout_title">Raxistinekê hilbijêre</string>
     <string name="photo_picker_choose_file">Ji cîhazê hilbijêre</string>
@@ -203,7 +202,6 @@ Language: ku_TR
     <string name="gutenberg_native_choose_video">Vîdyo Hilbijêre</string>
     <string name="gutenberg_native_choose_image_or_video">Vîdyo an jî wêne hilbijêre</string>
     <string name="gutenberg_native_choose_image">Wêne Hilbijêre</string>
-    <string name="gutenberg_native_block_removed">Blok hat rakirin</string>
     <string name="signup_confirmation_title">Pejirandina tomarbûnê</string>
     <string name="continue_with_google_terms_of_service_text">Heke tu bi Googleê re dewam bikî û hesabê te yê WordPress\'ê tune be, dema tu ajimêrekê biafirînî tu pê re %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
     <string name="enter_your_site_address">Navnîşana malpera xwe ya heyî bikevê</string>
@@ -227,17 +225,9 @@ Language: ku_TR
     <string name="send_link_by_email">Girêdanê bi emailê re bişîne</string>
     <string name="reader_error_request_failed_title">Di hêrana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
     <string name="quick_start_list_update_site_title_title">Sernavê malpera xwe saz bike</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b>%1$s&lt;/b>ê bitikîne</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b&gt;%1$s&lt;/b&gt;ê bitikîne</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>
-    <string name="gutenberg_native_s_block_options">Vebijarkên bloka %s\'ê</string>
-    <string name="gutenberg_native_duplicate_block">Blokê pir bike</string>
-    <string name="gutenberg_native_copy_block">Blokê kopî bike</string>
     <string name="gutenberg_native_copied_block">Blok hat kopîkirin</string>
-    <string name="gutenberg_native_block_settings">Sazkariyên blokê</string>
-    <string name="gutenberg_native_block_pasted">Blok hat zeliqandin</string>
-    <string name="gutenberg_native_block_duplicated">Blok hat pirkirin</string>
-    <string name="gutenberg_native_block_cut">Blokê jê bike</string>
-    <string name="gutenberg_native_block_copied">Blok hat kopîkirin</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Sernavê Malperê tenê ji aliyê rêveberekî dikare were guhertin.</string>
     <string name="reader_title_tag_preview">Mijar</string>
     <string name="error_update_site_title_network">Sernavê malperê nehat hildemandin. Girêdana tora xwe kontrol bike û dîsa biceribîne.</string>
@@ -282,9 +272,6 @@ Language: ku_TR
     <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
-    <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="pages_set_as_posts_page">Bike Rûpela Şandiyan</string>
     <string name="site_settings_select_page">Rûpelê hilbijêre</string>
     <string name="pages_cannot_be_started">Em aniha nikarin rûpelan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
@@ -454,8 +441,6 @@ Language: ku_TR
     <string name="stats_posting_activity_content_description">%1$s dîtin ji bo %2$sê di ev qas rojan de pêk hatine: %2$s %3$s . Ji bo agahiyên bêhtir bitepîne.</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Şandî an jî rûpelekê biafirîne</string>
-    <string name="gutenberg_native_move_image_forward">Wênêyê veguhezîne pêşiyê</string>
-    <string name="gutenberg_native_move_image_backward">Wêneyê veguhezîne paşiyê</string>
     <string name="gutenberg_native_gallery_caption_s">Sernivîsa galeriyê. %s</string>
     <string name="content_description_person_building_website">Malpera ji destê mirovan</string>
     <string name="post_signup_interstitial_subtitle">Em ê alî te bikin ji bo her çi tiştên dixwazî li vê derê ava bikî an parve bikî.</string>
@@ -475,13 +460,13 @@ Language: ku_TR
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Ev navper(domain) nayê bikaranîn</string>
     <string name="login_discovery_error_generic">Me nekarî xwe bigihînin malpera te. Ji bo çareserkirina vê pirsgirêkê hewce ye tu xwe bigihînî hewangeha(host) xwe.</string>
-    <string name="login_discovery_error_ssl">Ji ber pirsgirêkeke eleqedarî &lt;b>Sertîfîkaya SSL&lt;/b>ê me nekarî xwe bigihînin malpera te. Ji bo çareserkirina vê pirsgirêkê hewce ye tu xwe bigihînî hewangeha(host) xwe.</string>
-    <string name="login_discovery_error_http_auth">Me nekarî xwe bigihînin malpera te ji ber ku hewceyî bi &lt;b>Rastandina HTTP&lt;/b>ê heye. Ji bo vê çareser bikî divê tu bi hewangerê xwe re têkilî dayînî.</string>
+    <string name="login_discovery_error_ssl">Ji ber pirsgirêkeke eleqedarî &lt;b&gt;Sertîfîkaya SSL&lt;/b&gt;ê me nekarî xwe bigihînin malpera te. Ji bo çareserkirina vê pirsgirêkê hewce ye tu xwe bigihînî hewangeha(host) xwe.</string>
+    <string name="login_discovery_error_http_auth">Me nekarî xwe bigihînin malpera te ji ber ku hewceyî bi &lt;b&gt;Rastandina HTTP&lt;/b&gt;ê heye. Ji bo vê çareser bikî divê tu bi hewangerê xwe re têkilî dayînî.</string>
     <string name="my_site_bottom_sheet_add_page">Rûpela malperê</string>
     <string name="reader_following_display_name">Şopandî</string>
-    <string name="login_site_credentials_magic_link_label">Hindikek ma! Tenê divê em navnîşana emaila te ya bi Jetpack\'ê ve girêdayî piştrast bikin &lt;b>%1$s&lt;/b></string>
+    <string name="login_site_credentials_magic_link_label">Hindikek ma! Tenê divê em navnîşana emaila te ya bi Jetpack\'ê ve girêdayî piştrast bikin &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Bi agahiyên xwe yên malpera %1$sê têkeve</string>
-    <string name="login_discovery_error_xmlrpc">Me nekarî xwe bigihînin &lt;b>dosyeya XMLRPC&lt;/b>\'ê ya li ser malpera te. Divê tu bi hewangerê xwe re têkilî dayînî ji bo vê çareser bikî.</string>
+    <string name="login_discovery_error_xmlrpc">Me nekarî xwe bigihînin &lt;b&gt;dosyeya XMLRPC&lt;/b&gt;\'ê ya li ser malpera te. Divê tu bi hewangerê xwe re têkilî dayînî ji bo vê çareser bikî.</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
@@ -504,7 +489,6 @@ Language: ku_TR
     <string name="gutenberg_native_take_a_photo">Wêneyekî Bikişîne</string>
     <string name="gutenberg_native_ungroup">Komê belav bike</string>
     <string name="gutenberg_native_show_section">Beşê nîşan bide</string>
-    <string name="gutenberg_native_cut_block">Blokê jê bike</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloka %s. Di vê blokê de naveroka nederbasdar heye</string>
     <string name="gutenberg_native_s_block_empty">Bloka %s. Vala</string>
     <string name="gutenberg_native_problem_opening_the_video">Pirsgirêk di vekirina vîdyoyê de derket</string>
@@ -713,7 +697,7 @@ Language: ku_TR
     <string name="domain_contact_information_postal_code_hint">Koda Posteyê</string>
     <string name="domain_registration_result_title">Bijî!</string>
     <string name="domain_contact_information_register_domain_button">Domain\'ê Tomar Bike</string>
-    <string name="domain_registration_result_description">navê domaina te &lt;b>%s&lt;/b> tê sazkirin. Malpera te ji kêfan\n        çirifîtkan diavêje!</string>
+    <string name="domain_registration_result_description">navê domaina te &lt;b&gt;%s&lt;/b&gt; tê sazkirin. Malpera te ji kêfan\n        çirifîtkan diavêje!</string>
     <string name="domain_contact_information_organization_hint">Organîzasyon (li gor daxwazê)</string>
     <string name="domain_contact_information_description">Ji bo rehetiya te, me agahiyên te yên têkiliyê yên WordPress.com\'ê\n        ji berê vê dagirt. Ji kerema xwe, kontrol bike bê ka agahiyên rast ên tu dixwazî ji bo vê domainê hatiye bikaranin.</string>
     <string name="domain_contact_information_title">Agahiyên têkiliyê yên navperê(domain)</string>
@@ -1250,7 +1234,7 @@ Language: ku_TR
     <string name="permissions_denied_title">Destûr</string>
     <string name="version_with_name_param">Guherto %s</string>
     <string name="sharing_disabled">Modula parvekirinê neçalak e</string>
-    <string name="permissions_denied_message">Xuya ye te ji bo vê taybetiyê destûrên hewce girtine.&lt;br/>&lt;br/>Ji bo guhertina vê, destûrên xwe sererast bike û ji çalakbûna &lt;strong>%s&lt;/strong>\'ê piştrast bibe.</string>
+    <string name="permissions_denied_message">Xuya ye te ji bo vê taybetiyê destûrên hewce girtine.&lt;br/&gt;&lt;br/&gt;Ji bo guhertina vê, destûrên xwe sererast bike û ji çalakbûna &lt;strong&gt;%s&lt;/strong&gt;\'ê piştrast bibe.</string>
     <string name="plugin_caption_featured">Bijarde</string>
     <string name="sharing_disabled_description">Ji ber ku modula Parvekirinê ya Jetpack\'a te neçalak e, tu nikarî bigihîjî sazkariyên pervekirinê.</string>
     <string name="publisher_with_company_param">Weşanger: %s</string>

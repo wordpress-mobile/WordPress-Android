@@ -156,6 +156,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
+            case JETPACK_LOGIN_ONLY:
             case SELFHOSTED_ONLY:
                 if (!TextUtils.isEmpty(mLoginSiteUrl)) {
                     label.setText(Html.fromHtml(

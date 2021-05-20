@@ -3,7 +3,7 @@ package org.wordpress.android.modules;
 import android.content.Context;
 import android.util.Base64;
 
-import com.goterl.lazycode.lazysodium.utils.Key;
+import com.goterl.lazysodium.utils.Key;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;

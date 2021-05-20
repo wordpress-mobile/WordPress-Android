@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -55,6 +57,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -210,6 +213,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
+    @Override
+    protected boolean isJetpackAppLogin() {
+        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
+    }
+
     private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
@@ -236,7 +244,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-        holder.itemView.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK_APP) ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
                 mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);

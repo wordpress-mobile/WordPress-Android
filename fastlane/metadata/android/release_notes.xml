@@ -1,70 +1,134 @@
 <ar>
-17.0:
-نحن متحمسون للإعلان عن ثلاثة تحديثات لـ ووردبريس للأندرويد WPAndroid. قمنا بتمكين وظائف القبضة / التكبير / التحريك في مكتبة القصص، مما يجعل إمكانيات العرض أكثر دقة من أي وقت مضى. قمنا بتحويل فلتر التعليقات من قائمة منسدلة إلى علامات تبويب. وقمنا بإزالة زر الإلغاء من خيارات الإعداد في محرر المكوّنات.
+17.3:
+ما الجديد؟
+
+باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+
+تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
 </ar>
 <de-DE>
-17.0:
-Wir freuen uns auf drei Updates für WPAndroid. In der Story-Mediathek gibt es jetzt Zwei-Finger-/Zoom-/Schwenk-Funktionen, die dir mehr Ansichtsoptionen denn je ermöglichen. Den Kommentarfilter findest du nun nicht mehr als Drop-down-Menü sondern als Tabs. Und wir haben die Schaltfläche zum Abbrechen aus den Einstellungsoptionen im Block-Editor entfernt. 
+17.3:
+Was gibt's Neues?
+
+Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+
+Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
 </de-DE>
 <en-US>
-17.0:
-We’re excited to announce three updates to WPAndroid. We enabled pinch/zoom/pan functionality in the Stories library, making viewing possibilities more thorough than ever. We switched the comments filter from a dropdown menu to tabs. And we removed the cancel button from the setting options in the Block Editor.
+17.3:
+What’s new?
+
+With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+
+Other improvements include more user information about your Likes, as well as an updated Comments screen.
 </en-US>
 <es-ES>
-17.0:
-Nos complace anunciar tres actualizaciones de WPAndroid. Hemos activado la funcionalidad de pellizco/zoom/panorámica en la biblioteca de historias, haciendo las posibilidades de visualización más completas que nunca. Hemos cambiado el filtro de comentarios de un menú desplegable a pestañas. Y hemos eliminado el botón de cancelación de las opciones de ajuste en el editor de bloques.
+17.3:
+Novedades
+
+Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
+
+Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
 </es-ES>
 <fr-CA>
-17.0 :
-Nous sommes heureux d’annoncer trois mises à jour de WPAndroid. Nous avons activé la fonctionnalité de pincement/zoom/panoramique dans la bibliothèque Stories, pour un affichage plus complet que jamais. Nous avons transformé en onglets le menu déroulant de filtrage des commentaires. Et nous avons supprimé le bouton Annuler des options de réglage de l’éditeur de blocs. 
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-CA>
 <fr-FR>
-17.0 :
-Nous sommes heureux d’annoncer trois mises à jour de WPAndroid. Nous avons activé la fonctionnalité de pincement/zoom/panoramique dans la bibliothèque Stories, pour un affichage plus complet que jamais. Nous avons transformé en onglets le menu déroulant de filtrage des commentaires. Et nous avons supprimé le bouton Annuler des options de réglage de l’éditeur de blocs. 
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-FR>
 <iw-IL>
-17.0:
-אנחנו שמחים להכריז על שלושה עדכונים ב-WPAndroid. הפעלנו את האפשרות של /התמקדות/ וסיבוב בספריית הסטוריז, כדי שאפשרויות הצפייה יהיו מקיפות יותר. החלפנו את מסנן התגובות מתפריט נפתח ללשוניות. והסרנו את הכפתור 'ביטול' מאפשרויות ההגדרה בעורך הבלוקים. 
+17.3:
+מה חדש?
+
+עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+
+שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
 </iw-IL>
 <id>
-17.0:
-Dengan bangga kami mengumumkan tiga pembaruan untuk WPAndroid. Kami mengaktifkan fungsi cubit untuk/memperbesar/memperkecil/layar pada pustaka Cerita, membuat kemungkinan penampilan cerita lebih rinci. Kami mengubah penyaringan komentar dari menu tarik-turun menjadi tab. Dan kami menghapus tombol batalkan dari opsi pengaturan pada Editor Blok. 
+17.3:
+Apa yang baru?
+
+Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+
+Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
 </id>
 <it-IT>
-17.0:
-Siamo felici di annunciare tre aggiornamenti a WordPress per Android. Abbiamo abilitato la funzionalità di avvicinamento delle dita/zoom/panoramica nella libreria Storie, rendendo le possibilità di visualizzazione più complete che mai. Abbiamo spostato il filtro dei commenti da un menu a discesa alle schede. Abbiamo anche rimosso il pulsante Annulla dalle opzioni delle impostazioni nell'editor a blocchi. 
+17.3:
+Cosa c'è di nuovo?
+
+Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
+
+Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
 </it-IT>
 <ja-JP>
-17.0:
-WPAndroid に3つのアップデートが追加されました。 ストーリーライブラリでのピンチ / ズーム / パン機能が追加され、今までにないさまざまな形での閲覧が可能になりました。 コメントフィルターをドロップダウンメニューからタブに切り替えました。 ブロックエディターの「設定」オプションから「キャンセル」ボタンを削除しました。  
+17.3:
+新着情報
+
+新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+
+その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
 </ja-JP>
 <ko-KR>
-17.0:
-WPAndroid에서 세 가지를 업데이트했습니다. 이전보다 더 꼼꼼히 볼 수 있도록 스토리 라이브러리에서 손가락 모으기/확대/축소/이동 기능을 활성화했습니다. 댓글 필터를 드롭다운 메뉴에서 탭으로 옮겼습니다. 그리고 블록 편집기의 설정 옵션에서 취소 버튼을 제거했습니다. 
+17.3:
+새로운 기능
+
+새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+
+기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
 </ko-KR>
 <nl-NL>
-17.0:
+17.3:
+Wat is er nieuw?
 
-We zijn verheugd om drie updates voor WPAndroid aan te kondigen. We hebben pinch/zoom/pan-functionaliteit ingeschakeld in de verhalenbibliotheek, waardoor de weergavemogelijkheden uitgebreider zijn dan ooit. We hebben het reactiefilter veranderd van een dropdown menu naar tabs. En we hebben de annuleerknop verwijderd uit de instellingsopties in de blok-editor.
+Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+
+Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
 </nl-NL>
 <ru-RU>
-17.0:
-Мы рады представить вам три обновления для WPAndroid. 
-Мы включили функцию сжатия/масштабирования/панорамирования в библиотеке историй, что сделало возможности просмотра более детальными, чем когда-либо. Мы переключили фильтр комментариев из раскрывающегося меню на вкладки. И мы удалили кнопку отмены из параметров настройки в редакторе блоков.
+17,3:
+Что нового?
+
+С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+
+Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
 </ru-RU>
 <sv-SE>
-17.0:
-Denna gång hela tre nyheter i WPAndroid. Vi har lagt till funktioner för nyp/zooma/rulla i berättelsebiblioteket så att det är enklare än någonsin att se allt. Vi har ändrat kommentarsfiltret från rullgardinsmeny till flikar. Slutligen har vi tagit bort knappen ”avbryt” i inställningarna för blockredigeraren.
+17.3:
+Vad är nytt?
+
+Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+
+Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
 </sv-SE>
 <tr-TR>
-17.0:
-WPAndroid'le ilgili üç güncellemeyi duyurmaktan heyecan duyuyoruz. Öyküler kitaplığında sıkıştırma/yaklaştırma/kaydırma işlevini etkinleştirerek görüntüleme olanaklarını her zamankinden daha kapsamlı hale getirdik. Açılır menü şeklindeki yorumlar filtresini sekme haline getirdik. Ayrıca Blok Düzenleyicideki ayar seçeneklerinden iptal düğmesini kaldırdık. 
+17.3:
+Yenilikler
+
+Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+
+Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
 </tr-TR>
 <zh-CN>
-17.0:
-我们很高兴地宣布WPAndroid的三个更新事项。在故事库中启用了捏合/缩放/平移功能，使查看的可能性比以往更彻底。将评论过滤器从下拉菜单换成了标签。从区块编辑器的设置选项中删除了取消按钮。
+17.3：
+通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+
+其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
 </zh-CN>
 <zh-TW>
-17.0：
-我們很高興宣布推出 WPAndroid 的三項更新。 啟用 Stories 媒體庫的撥動/縮放/平移功能，讓使用者能更加全面地觀看畫面上的內容。 將留言篩選器從下拉式選單移至索引標籤。 移除區塊編輯器設定選項中的取消按鈕。 
+17.3:
+新功能
+
+現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+
+其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
 </zh-TW>

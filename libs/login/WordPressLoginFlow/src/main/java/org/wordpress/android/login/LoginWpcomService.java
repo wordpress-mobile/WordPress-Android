@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
@@ -43,6 +44,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
     private static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
+    private static final String ARG_JETPACK_APP_LOGIN = "ARG_JETPACK_APP_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
     public enum LoginStep {
@@ -156,19 +158,22 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private String mIdToken;
     private String mService;
     private boolean mIsSocialLogin;
+    private boolean mIsJetpackAppLogin;
 
     public static void loginWithEmailAndPassword(
             Context context,
             String email,
             String password,
             String idToken, String service,
-            boolean isSocialLogin) {
+            boolean isSocialLogin,
+            boolean isJetpackAppLogin) {
         Intent intent = new Intent(context, LoginWpcomService.class);
         intent.putExtra(ARG_EMAIL, email);
         intent.putExtra(ARG_PASSWORD, password);
         intent.putExtra(ARG_SOCIAL_ID_TOKEN, idToken);
         intent.putExtra(ARG_SOCIAL_SERVICE, service);
         intent.putExtra(ARG_SOCIAL_LOGIN, isSocialLogin);
+        intent.putExtra(ARG_JETPACK_APP_LOGIN, isJetpackAppLogin);
         context.startService(intent);
     }
 
@@ -257,6 +262,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         mIdToken = intent.getStringExtra(ARG_SOCIAL_ID_TOKEN);
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         mIsSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
+        mIsJetpackAppLogin = intent.getBooleanExtra(ARG_JETPACK_APP_LOGIN, false);
 
         AuthenticatePayload payload = new AuthenticatePayload(email, password);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
@@ -376,7 +382,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             setState(LoginStep.FETCHING_SITES);
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(new FetchSitesPayload()));
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsJetpackAppLogin);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
 

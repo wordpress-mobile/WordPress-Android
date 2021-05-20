@@ -117,8 +117,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     protected void setupLabel(@NonNull TextView label) {
         final boolean isWoo = mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE;
         final int labelResId = isWoo ? R.string.enter_credentials_for_site : R.string.enter_account_info_for_site;
+        final String siteAddress =
+                (mEndpointAddress == null || mEndpointAddress.isEmpty()) ? mInputSiteAddress : mEndpointAddress;
         final String formattedSiteAddress =
-                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
+                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(siteAddress)));
         label.setText(getString(labelResId, formattedSiteAddress));
     }
 
@@ -487,6 +489,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
+            case HTTP_AUTH_ERROR:
                 showError(getString(R.string.username_or_password_incorrect));
                 break;
             case INVALID_OTP:
@@ -505,7 +508,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
 
                 ToastUtils.showToast(getActivity(),
-                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+                        TextUtils.isEmpty(errorMessage) ? getString(R.string.error_generic) : errorMessage);
                 break;
         }
     }

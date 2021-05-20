@@ -18,4 +18,6 @@ sealed class ScanNavigationEvents {
     }
 
     data class ShowContactSupport(val site: SiteModel) : ScanNavigationEvents()
+
+    data class ShowJetpackSettings(val url: String) : ScanNavigationEvents()
 }

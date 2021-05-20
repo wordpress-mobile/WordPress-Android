@@ -105,13 +105,19 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         // --> remove mediaFiles entirely
         // set start index and go up.
         var storyBlockStartIndex = 0
-        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length) {
+        var hasMediaFiles = true
+        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length && hasMediaFiles) {
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
-                val storyBlockEndIndex = content.indexOf(HEADING_END, storyBlockStartIndex)
+                val storyBlockEndIndex = content.indexOf(HEADING_END_NO_NEW_LINE, storyBlockStartIndex)
+                val mediaFilesStartIndex = storyBlockStartIndex + HEADING_START.length
+                hasMediaFiles = mediaFilesStartIndex < storyBlockEndIndex
+                if (!hasMediaFiles) {
+                    break
+                }
                 try {
                     val jsonString: String = content.substring(
-                            storyBlockStartIndex + HEADING_START.length,
+                            mediaFilesStartIndex,
                             storyBlockEndIndex
                     )
                     content = listener.doWithMediaFilesJson(content, jsonString)
@@ -248,6 +254,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         const val TEMPORARY_ID_PREFIX = "tempid-"
         const val HEADING_START = "<!-- wp:jetpack/story "
         const val HEADING_END = " -->\n"
+        const val HEADING_END_NO_NEW_LINE = " -->"
         const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
         const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
     }

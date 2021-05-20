@@ -1,8 +1,34 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.5
+-----
+
+
+17.4
+-----
+* [*] Stories: Improved reliability of retrying slides that failed to upload. [https://github.com/wordpress-mobile/WordPress-Android/pull/14579]
+* [*] Stories: Adding story block from block editor now opens media picker first. [https://github.com/wordpress-mobile/WordPress-Android/pull/14588]
+* [*] Stories: Fixed story preview rendering in the Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/14656]
+
+17.3
+-----
+* [*] Comments: Updated look of comments list. [https://github.com/wordpress-mobile/WordPress-Android/pull/14417]
+* [***]  Block Editor: New Block: Search Block [#https://github.com/wordpress-mobile/gutenberg-mobile/pull/3210]
+* [**]  Block Editor: The media upload options of the Image, Video and Gallery block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2700]
+* [*] Block Editor: Image block: Add a "featured" banner [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3371]
+* [**]  Block Editor: The media upload options of the File and Audio block automatically opens when the respective block is inserted. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3399]
+* [*]  Block Editor: Remove visual feedback from non-interactive bottom-sheet cell sections [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3404]
+* [**] Likes Enhancements: the full list of people who liked a post or comment is now shown in notifications and reader post detail. A user profile bottom sheet shows info about a liker. [https://github.com/wordpress-mobile/WordPress-Android/pull/14563]
+
+
 17.2
 -----
+* [**] Added transform block capability [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3321]
 * [*] Timezone: Timezone selection dialog in site settings is updated with grouping by continents, manual offsets and additional timezone information. [https://github.com/wordpress-mobile/WordPress-Android/pull/14198]
+* [*] My Site: Fixes a bug in rendering the menu in RTL interface languages
+* [*] a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
+* [*] Image block: Improve text entry for long alt text. [https://github.com/WordPress/gutenberg/pull/29670]
+* [***] New Block: Jetpack contact info. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3340]
 
 17.1
 -----

@@ -6,11 +6,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
+import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -26,14 +30,39 @@ class GetLikesHandler @Inject constructor(
     private val _likesStatusUpdate = MediatorLiveData<GetLikesState>()
     val likesStatusUpdate: LiveData<GetLikesState> = _likesStatusUpdate
 
-    suspend fun handleGetLikesForPost(siteId: Long, postId: Long, numLikes: Int) {
-        getLikesUseCase.getLikesForPost(siteId, postId, numLikes).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForPost(
+        fingerPrint: LikeGroupFingerPrint,
+        requestNextPage: Boolean,
+        pageLength: Int = LIKES_PER_PAGE_DEFAULT,
+        limit: Int = LIKES_RESULT_NO_LIMITS,
+        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
+    ) {
+        getLikesUseCase.getLikesForPost(
+                fingerPrint,
+                PaginationParams(
+                        requestNextPage,
+                        pageLength,
+                        limit
+                ),
+                expectingToBeThere
+        ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
 
-    suspend fun handleGetLikesForComment(siteId: Long, commentId: Long, numLikes: Int) {
-        getLikesUseCase.getLikesForComment(siteId, commentId, numLikes).flowOn(bgDispatcher).collect { state ->
+    suspend fun handleGetLikesForComment(
+        fingerPrint: LikeGroupFingerPrint,
+        requestNextPage: Boolean,
+        pageLength: Int = LIKES_PER_PAGE_DEFAULT
+    ) {
+        getLikesUseCase.getLikesForComment(
+                fingerPrint,
+                PaginationParams(
+                        requestNextPage,
+                        pageLength,
+                        LIKES_RESULT_NO_LIMITS
+                )
+        ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
     }
@@ -45,7 +74,9 @@ class GetLikesHandler @Inject constructor(
     private fun manageState(state: GetLikesState) {
         when (state) {
             Loading,
-            is LikesData -> _likesStatusUpdate.postValue(state)
+            is LikesData -> {
+                _likesStatusUpdate.postValue(state)
+            }
             is Failure -> {
                 _likesStatusUpdate.postValue(state)
                 if (state.failureType != NO_NETWORK || !state.emptyStateData.showEmptyState) {
@@ -53,5 +84,10 @@ class GetLikesHandler @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val LIKES_PER_PAGE_DEFAULT = 20
+        private const val LIKES_RESULT_NO_LIMITS = -1
     }
 }

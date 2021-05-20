@@ -1,11 +1,13 @@
 package org.wordpress.android.util.experiments
 
+import dagger.Lazy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.store.ExperimentStore
-import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.APPLICATION_SCOPE
@@ -20,19 +22,21 @@ import javax.inject.Singleton
 @Singleton
 class ExPlat
 @Inject constructor(
+    private val experiments: Lazy<Set<Experiment>>,
     private val experimentStore: ExperimentStore,
     private val appLog: AppLogWrapper,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
     private val platform = Platform.WORDPRESS_ANDROID
     private val activeVariations = mutableMapOf<String, Variation>()
+    private val experimentNames by lazy { experiments.get().map { it.name } }
 
     fun refreshIfNeeded() {
-        getAssignments(refreshStrategy = IF_STALE)
+        refresh(refreshStrategy = IF_STALE)
     }
 
     fun forceRefresh() {
-        getAssignments(refreshStrategy = ALWAYS)
+        refresh(refreshStrategy = ALWAYS)
     }
 
     fun clear() {
@@ -49,11 +53,27 @@ class ExPlat
      * is returned from the cached [Assignments] and then set as active. If the cached [Assignments]
      * is stale and [shouldRefreshIfStale] is `true`, then new [Assignments] are fetched and their
      * variations are going to be returned by this method on the next session.
+     *
+     * If the provided [Experiment] was not included in [ExPlat.start], then [Control] is returned.
+     * If [BuildConfig.DEBUG] is `true`, an [IllegalArgumentException] is thrown instead.
      */
-    internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean) =
-            activeVariations.getOrPut(experiment.name) {
-                getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
-            }
+    internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean): Variation {
+        if (!experimentNames.contains(experiment.name)) {
+            val message = "ExPlat: experiment not found: \"${experiment.name}\"! " +
+                    "Make sure to include it in the set provided via constructor."
+            appLog.e(T.API, message)
+            if (BuildConfig.DEBUG) throw IllegalArgumentException(message) else return Control
+        }
+        return activeVariations.getOrPut(experiment.name) {
+            getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
+        }
+    }
+
+    private fun refresh(refreshStrategy: RefreshStrategy) {
+        if (experimentNames.isNotEmpty()) {
+            getAssignments(refreshStrategy)
+        }
+    }
 
     private fun getAssignments(refreshStrategy: RefreshStrategy): Assignments {
         val cachedAssignments = experimentStore.getCachedAssignments() ?: Assignments()
@@ -63,7 +83,7 @@ class ExPlat
         return cachedAssignments
     }
 
-    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(FetchAssignmentsPayload(platform)).also {
+    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(platform, experimentNames).also {
         if (it.isError) {
             appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
         } else {

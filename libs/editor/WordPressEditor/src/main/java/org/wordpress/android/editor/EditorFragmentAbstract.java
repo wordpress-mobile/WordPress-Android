@@ -203,7 +203,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddGifClicked(boolean allowMultipleSelection);
         void onAddFileClicked(boolean allowMultipleSelection);
         void onAddAudioFileClicked(boolean allowMultipleSelection);
-        void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
+        void onPerformFetch(String path, boolean enableCaching, Consumer<String> onResult, Consumer<Bundle> onError);
         void showUserSuggestions(Consumer<String> onResult);
         void showXpostSuggestions(Consumer<String> onResult);
         void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown);

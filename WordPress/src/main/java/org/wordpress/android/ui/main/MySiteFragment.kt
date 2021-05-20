@@ -140,6 +140,7 @@ import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.AppLog.T.EDITOR
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
@@ -212,6 +213,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -391,10 +393,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { showSitePicker() }
         rowViewSite.setOnClickListener { viewSite() }
         mySiteRegisterDomainCta.setOnClickListener { registerDomain() }
-        quickActionStatsButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
-            viewStats()
-        }
         rowStats.setOnClickListener { viewStats() }
         mySiteBlavatar.setOnClickListener { updateBlavatar() }
         rowPlan.setOnClickListener {
@@ -402,20 +400,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         rowJetpackSettings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
-        quickActionPostsButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
-            viewPosts()
-        }
         rowBlogPosts.setOnClickListener { viewPosts() }
-        quickActionMediaButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
-            viewMedia()
-        }
         rowMedia.setOnClickListener { viewMedia() }
-        quickActionPagesButton.setOnClickListener {
-            AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
-            viewPages()
-        }
         rowPages.setOnClickListener { viewPages() }
         rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
         rowThemes.setOnClickListener {
@@ -440,6 +426,30 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         quickStartCustomize.setOnClickListener { showQuickStartList(CUSTOMIZE) }
         quickStartGrow.setOnClickListener { showQuickStartList(GROW) }
         quickStartMore.setOnClickListener { showQuickStartCardMenu() }
+    }
+
+    private fun MySiteFragmentBinding.setupQuickActionsIfNecessary() {
+        if (buildConfigWrapper.isJetpackApp) {
+            quickActionButtonsContainer.visibility = View.GONE
+            return
+        }
+
+        quickActionStatsButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
+            viewStats()
+        }
+        quickActionPostsButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
+            viewPosts()
+        }
+        quickActionMediaButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
+            viewMedia()
+        }
+        quickActionPagesButton.setOnClickListener {
+            AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
+            viewPages()
+        }
     }
 
     private fun registerDomain() {
@@ -561,6 +571,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.onBind() {
+        setupQuickActionsIfNecessary()
         setupClickListeners()
         collapsingToolbar.title = getString(R.string.my_site_section_screen_title)
 

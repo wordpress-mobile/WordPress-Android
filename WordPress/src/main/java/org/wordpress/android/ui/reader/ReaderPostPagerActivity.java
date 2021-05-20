@@ -504,7 +504,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mDispatcher.register(this);
 
         if (!hasPagerAdapter() || mBackFromLogin) {
-            if (ActivityUtils.isDeepLinking(getIntent())) {
+            if (ActivityUtils.isDeepLinking(getIntent()) || ReaderConstants.ACTION_VIEW_POST
+                    .equals(getIntent().getAction())) {
                 handleDeepLinking();
             }
 
