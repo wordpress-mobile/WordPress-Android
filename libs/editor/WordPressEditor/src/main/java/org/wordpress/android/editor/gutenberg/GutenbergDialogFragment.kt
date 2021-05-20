@@ -85,7 +85,10 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByPositiveButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as GutenbergDialogPositiveClickInterface).onGutenbergDialogPositiveClicked(mTag, mMediaId)
+                    (parentFragment as GutenbergDialogPositiveClickInterface).onGutenbergDialogPositiveClicked(
+                            mTag,
+                            mMediaId
+                    )
                 }
             }.setCancelable(true)
         }
@@ -95,7 +98,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByNegativeButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as GutenbergDialogNegativeClickInterface).onGutenbergDialogNegativeClicked(mTag)
+                    (parentFragment as GutenbergDialogNegativeClickInterface).onGutenbergDialogNegativeClicked(mTag)
                 }
             }
         }
