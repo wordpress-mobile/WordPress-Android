@@ -83,17 +83,19 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         mPositiveButtonLabel?.let {
             builder.setPositiveButton(mPositiveButtonLabel) { _, _ ->
                 dismissedByPositiveButton = true
-                val activity = activity
-                if (activity != null) {
-                    (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag)
+                val parentFragment: Fragment? = parentFragment
+                if (parentFragment != null) {
+                        (parentFragment as BasicDialogPositiveClickInterface).onPositiveClicked(mTag, mMediaId)
                 }
+            }.setCancelable(true)
         }
 
         mNegativeButtonLabel?.let {
             builder.setNegativeButton(mNegativeButtonLabel) { _, _ ->
                 dismissedByNegativeButton = true
-                if (activity != null) {
-                    (activity as BasicDialogNegativeClickInterface).onNegativeClicked(mTag)
+                val parentFragment: Fragment? = parentFragment
+                if (parentFragment != null) {
+                        (parentFragment as BasicDialogNegativeClickInterface).onNegativeClicked(mTag)
                 }
             }
         }
