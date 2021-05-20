@@ -1381,7 +1381,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag, int mediaId) {
+    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 setFeaturedImage(mediaId);
@@ -1390,7 +1390,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onNegativeClicked(@NotNull String instanceTag) {
+    public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 // Dismiss dialog with no action.

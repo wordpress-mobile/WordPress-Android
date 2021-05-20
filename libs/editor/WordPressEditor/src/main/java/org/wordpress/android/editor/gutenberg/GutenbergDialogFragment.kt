@@ -19,11 +19,11 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     private var dismissedByNegativeButton = false
 
     interface GutenbergDialogPositiveClickInterface {
-        fun onPositiveClicked(instanceTag: String, mediaId: Int)
+        fun onGutenbergDialogPositiveClicked(instanceTag: String, mediaId: Int)
     }
 
     interface GutenbergDialogNegativeClickInterface {
-        fun onNegativeClicked(instanceTag: String)
+        fun onGutenbergDialogNegativeClicked(instanceTag: String)
     }
 
     interface GutenbergDialogOnDismissByOutsideTouchInterface {
@@ -85,7 +85,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByPositiveButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as GutenbergDialogPositiveClickInterface).onPositiveClicked(mTag, mMediaId)
+                        (parentFragment as GutenbergDialogPositiveClickInterface).onGutenbergDialogPositiveClicked(mTag, mMediaId)
                 }
             }.setCancelable(true)
         }
@@ -95,7 +95,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByNegativeButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as GutenbergDialogNegativeClickInterface).onNegativeClicked(mTag)
+                        (parentFragment as GutenbergDialogNegativeClickInterface).onGutenbergDialogNegativeClicked(mTag)
                 }
             }
         }
