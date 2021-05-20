@@ -101,6 +101,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
+    public static final String ARG_FEATURED_IMAGE_ID = "featured_image_id";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -205,6 +206,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mExternallyEditedBlockOriginalHash = savedInstanceState.getString(
                     ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH);
             mFailedMediaIds = (HashSet<String>) savedInstanceState.getSerializable(ARG_FAILED_MEDIAS);
+            mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID);
         }
     }
 
@@ -927,6 +929,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putString(ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH, mExternallyEditedBlockOriginalHash);
         outState.putSerializable(ARG_FAILED_MEDIAS, mFailedMediaIds);
+        outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId);
     }
 
     @Override
