@@ -14,6 +14,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     private var mPositiveButtonLabel: CharSequence? = null
     private var mTitle: CharSequence? = null
     private var mNegativeButtonLabel: CharSequence? = null
+    private var mMediaId: Int = 0
     private var dismissedByPositiveButton = false
     private var dismissedByNegativeButton = false
 
@@ -35,12 +36,14 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         message: CharSequence,
         positiveButtonLabel: CharSequence,
         negativeButtonLabel: CharSequence? = null,
+        mediaId: Int,
     ) {
         mTag = tag
         mTitle = title
         mMessage = message
         mPositiveButtonLabel = positiveButtonLabel
         mNegativeButtonLabel = negativeButtonLabel
+        mMediaId = mediaId
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
             mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
             mPositiveButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL)
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
+            mMediaId = savedInstanceState.getInt(STATE_KEY_MEDIA_ID)
         }
     }
 
@@ -64,6 +68,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         outState.putCharSequence(STATE_KEY_MESSAGE, mMessage)
         outState.putCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL, mPositiveButtonLabel)
         outState.putCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL, mNegativeButtonLabel)
+        outState.putInt(STATE_KEY_MEDIA_ID, mMediaId)
         super.onSaveInstanceState(outState)
     }
 
@@ -117,5 +122,6 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         private const val STATE_KEY_MESSAGE = "state_key_message"
         private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
+        private const val STATE_KEY_MEDIA_ID = "state_key_media_id"
     }
 }
