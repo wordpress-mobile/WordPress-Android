@@ -1,2 +1,0 @@
-17,2:
-Bu sürümde yeni bir blok sunuyoruz - Jetpack iletişim bilgisi. Sitenizde güzel biçimlendirilmiş bir adres görüntülemek için mükemmeldir. Ayrıca bir resim blokuna çok sayıda alternatif metin eklemeyi, TalkBack'i sütun blokuyla kullanmayı, menüleri sağdan sola türünden dillerde daha iyi görüntülemeyi ve sitenizin saat dilimini ayarlamayı kolaylaştırdık.

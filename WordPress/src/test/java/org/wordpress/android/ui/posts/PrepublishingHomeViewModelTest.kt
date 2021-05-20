@@ -371,6 +371,26 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 
+    @Test
+    fun `verify story title is correctly updated when title is changed and publish is tapped `() {
+        // arrange
+        var event: Event<PublishPost>? = null
+        val storyTitle = "Story Title"
+        viewModel.onSubmitButtonClicked.observeForever {
+            event = it
+        }
+
+        // act
+        viewModel.start(editPostRepository, site, true)
+        getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+        val buttonUiState = getButtonUiState()
+        buttonUiState?.onButtonClicked?.invoke(true)
+
+        // assert
+        assertThat(event).isNotNull
+        verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
     private fun getStoryTitleUiState() = viewModel.storyTitleUiState.value
 

@@ -250,6 +250,9 @@ public class AppPrefs {
 
         // Used to determine if editor onboarding features should be displayed
         HAS_LAUNCHED_GUTENBERG_EDITOR,
+
+        // Used to indicate whether or not the device running out of storage warning should be shown
+        SHOULD_SHOW_STORAGE_WARNING,
     }
 
     private static SharedPreferences prefs() {
@@ -1195,6 +1198,14 @@ public class AppPrefs {
 
     public static boolean hasLaunchedGutenbergEditor() {
         return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
+    }
+
+    public static void setShouldShowStorageWarning(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
+    }
+
+    public static boolean shouldShowStorageWarning() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {

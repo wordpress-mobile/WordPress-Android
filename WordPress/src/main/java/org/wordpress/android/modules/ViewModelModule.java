@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
@@ -90,6 +91,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -513,6 +515,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(LoginPrologueViewModel.class)
     abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
 
@@ -530,4 +537,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginSiteCheckErrorViewModel.class)
     abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
 }
