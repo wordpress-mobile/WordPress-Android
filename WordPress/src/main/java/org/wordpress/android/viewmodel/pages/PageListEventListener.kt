@@ -24,7 +24,6 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
