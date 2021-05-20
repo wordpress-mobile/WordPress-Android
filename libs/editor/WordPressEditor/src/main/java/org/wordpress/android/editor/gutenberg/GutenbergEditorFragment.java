@@ -45,8 +45,8 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.BasicDialogPositiveClickInterface;
-import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.BasicDialogNegativeClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -88,8 +88,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         IHistoryListener,
         EditorThemeUpdateListener,
         StorySaveMediaListener,
-        BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface {
+        GutenbergDialogPositiveClickInterface,
+        GutenbergDialogNegativeClickInterface {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";

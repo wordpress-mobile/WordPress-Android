@@ -18,15 +18,15 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     private var dismissedByPositiveButton = false
     private var dismissedByNegativeButton = false
 
-    interface BasicDialogPositiveClickInterface {
+    interface GutenbergDialogPositiveClickInterface {
         fun onPositiveClicked(instanceTag: String, mediaId: Int)
     }
 
-    interface BasicDialogNegativeClickInterface {
+    interface GutenbergDialogNegativeClickInterface {
         fun onNegativeClicked(instanceTag: String)
     }
 
-    interface BasicDialogOnDismissByOutsideTouchInterface {
+    interface GutenbergDialogOnDismissByOutsideTouchInterface {
         fun onDismissByOutsideTouch(instanceTag: String)
     }
 
@@ -85,7 +85,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByPositiveButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as BasicDialogPositiveClickInterface).onPositiveClicked(mTag, mMediaId)
+                        (parentFragment as GutenbergDialogPositiveClickInterface).onPositiveClicked(mTag, mMediaId)
                 }
             }.setCancelable(true)
         }
@@ -95,7 +95,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
                 dismissedByNegativeButton = true
                 val parentFragment: Fragment? = parentFragment
                 if (parentFragment != null) {
-                        (parentFragment as BasicDialogNegativeClickInterface).onNegativeClicked(mTag)
+                        (parentFragment as GutenbergDialogNegativeClickInterface).onNegativeClicked(mTag)
                 }
             }
         }
@@ -109,10 +109,10 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         val activity = activity
-        if (activity != null && activity is BasicDialogOnDismissByOutsideTouchInterface) {
+        if (activity != null && activity is GutenbergDialogOnDismissByOutsideTouchInterface) {
             // Only handle the event if it wasn't triggered by a button
             if (!dismissedByPositiveButton && !dismissedByNegativeButton) {
-                (activity as BasicDialogOnDismissByOutsideTouchInterface).onDismissByOutsideTouch(mTag)
+                (activity as GutenbergDialogOnDismissByOutsideTouchInterface).onDismissByOutsideTouch(mTag)
             }
         }
         super.onDismiss(dialog)
