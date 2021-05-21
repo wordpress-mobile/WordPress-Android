@@ -122,7 +122,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "17.4-rc-1"
             }
-            versionCode 1046
+            versionCode 1049
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
