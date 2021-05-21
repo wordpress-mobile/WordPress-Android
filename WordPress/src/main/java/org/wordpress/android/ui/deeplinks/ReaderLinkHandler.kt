@@ -17,6 +17,7 @@ import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
+import java.lang.StringBuilder
 import javax.inject.Inject
 
 class ReaderLinkHandler
@@ -96,32 +97,39 @@ class ReaderLinkHandler
                     val segments = uri.pathSegments
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
                     // with the first segment being 'read'.
-                    val domains = uri.host?.split(".") ?: listOf()
-                    if (domains.size > 2 && domains[domains.size - 3] != "www") {
-                        append("$SITE_DOMAIN.$HOST_WORDPRESS_COM")
-                    } else {
-                        append(uri.host)
-                    }
+                    append(stripHost(uri))
                     if (segments.firstOrNull() == "read") {
-                        append("/read")
-                        if (segments.size > 2) {
-                            if (segments[1] == "blogs") {
-                                append("/blogs/$FEED_ID")
-                            } else if (segments[1] == "feeds") {
-                                append("/feeds/$FEED_ID")
-                            }
-                        }
-                        if (segments.size > 4 && segments[3] == "posts") {
-                            append("/posts/feedItemId")
-                        }
-                        toString()
-                    } else if (segments.size >= 4) {
+                        appendReadPath(segments)
+                    } else if (segments.size > DATE_URL_SEGMENTS) {
                         append("/YYYY/MM/DD/$POST_ID")
-                        toString()
                     }
-                }
-                        .ifEmpty { uri.host + uri.pathSegments.firstOrNull() }
+                }.ifEmpty { uri.host + uri.pathSegments.firstOrNull() }
             }
+        }
+    }
+
+    private fun stripHost(uri: UriWrapper): String {
+        val domains = uri.host?.split(".") ?: listOf()
+        return if (domains.size >= CUSTOM_DOMAIN_POSITION &&
+                domains[domains.size - CUSTOM_DOMAIN_POSITION] != "www") {
+            "$SITE_DOMAIN.$HOST_WORDPRESS_COM"
+        } else {
+            uri.host ?: HOST_WORDPRESS_COM
+        }
+    }
+
+    private fun StringBuilder.appendReadPath(segments: List<String>) {
+        append("/read")
+        when (segments.getOrNull(BLOGS_FEEDS_PATH_POSITION)) {
+            "blogs" -> {
+                append("/blogs/$FEED_ID")
+            }
+            "feeds" -> {
+                append("/feeds/$FEED_ID")
+            }
+        }
+        if (segments.getOrNull(POSTS_PATH_POSITION) == "posts") {
+            append("/posts/feedItemId")
         }
     }
 
@@ -131,5 +139,9 @@ class ReaderLinkHandler
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
         private const val FEED_ID = "feedId"
+        private const val CUSTOM_DOMAIN_POSITION = 3
+        private const val BLOGS_FEEDS_PATH_POSITION = 1
+        private const val POSTS_PATH_POSITION = 3
+        private const val DATE_URL_SEGMENTS = 3
     }
 }
