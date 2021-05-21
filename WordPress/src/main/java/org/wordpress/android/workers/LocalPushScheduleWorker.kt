@@ -20,24 +20,21 @@ class LocalPushScheduleWorker(
     params: WorkerParameters,
     private val localPushHandlerFactory: LocalPushHandlerFactory
 ) : CoroutineWorker(context, params) {
+    @Suppress("TooGenericExceptionCaught")
     override suspend fun doWork(): Result {
         try {
-            val type = Type.fromTag(inputData.getString(TYPE)) ?: return Result.failure()
-            val handler = localPushHandlerFactory.buildLocalPushHandler(type)
-            if (!handler.shouldShowNotification()) {
-                return Result.failure()
-            }
+            val type = Type.fromTag(inputData.getString(TYPE))
+            val handler = type?.let { localPushHandlerFactory.buildLocalPushHandler(it) }
+
             val id = inputData.getInt(ID, -1)
             val title = inputData.getInt(TITLE, -1)
             val text = inputData.getInt(TEXT, -1)
             val icon = inputData.getInt(ICON, -1)
-            if (id == -1 || title == -1 || text == -1) {
-                return Result.failure()
-            }
+
             val pendingIntent = PendingIntent.getActivity(
                     context,
                     0,
-                    handler.buildIntent(context),
+                    handler?.buildIntent(context),
                     PendingIntent.FLAG_CANCEL_CURRENT
             )
             val builder = NotificationCompat.Builder(
@@ -55,7 +52,7 @@ class LocalPushScheduleWorker(
                     .setAutoCancel(true)
                     .setColorized(true)
                     .setColor(ContextCompat.getColor(context, R.color.blue_50))
-                    .setLargeIcon(ContextCompat.getDrawable(context, icon)?.toBitmap(100, 100))
+                    .setLargeIcon(ContextCompat.getDrawable(context, icon)?.toBitmap(ICON_WIDTH, ICON_HEIGHT))
 
             with(NotificationManagerCompat.from(context)) {
                 notify(id, builder.build())
@@ -89,6 +86,8 @@ class LocalPushScheduleWorker(
         private const val TITLE = "key_title"
         private const val TEXT = "key_text"
         private const val ICON = "key_icon"
+        private const val ICON_WIDTH = 100
+        private const val ICON_HEIGHT = 100
         fun buildData(localNotification: LocalPush): Data {
             return workDataOf(
                     TYPE to localNotification.type.tag,
