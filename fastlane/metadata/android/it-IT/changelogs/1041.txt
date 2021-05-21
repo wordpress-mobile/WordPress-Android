@@ -1,2 +1,0 @@
-17.2:
-Questa versione introduce un nuovo blocco: Informazioni di contatto di Jetpack. È perfetto per la visualizzazione di un indirizzo formattato in modo corretto sul tuo sito. Abbiamo anche semplificato l'aggiunta di molto testo alternativo a un blocco Immagine, l'uso di TalkBack con il blocco Colonne, la migliore visualizzazione dei menu nelle lingue da destra a sinistra e l'impostazione del fuso orario del sito.

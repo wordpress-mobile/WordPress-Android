@@ -140,8 +140,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // convert our WPAndroid KEY_LAUNCHED_FROM_GUTENBERG flag into Stories general purpose EDIT_MODE flag
         intent.putExtra(KEY_STORY_EDIT_MODE, intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false))
         setMediaPickerProvider(this)
-        super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+        initSite(savedInstanceState)
         setSnackbarProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
@@ -152,9 +152,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)
-        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
 
         initViewModel(savedInstanceState)
+        super.onCreate(savedInstanceState)
+
+        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
+    }
+
+    private fun initSite(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
@@ -164,14 +174,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             localPostId = getBackingPostIdFromIntent()
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
             originalStorySaveResult = intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
                 notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             }
         } else {
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 localPostId = savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)
             }
@@ -328,6 +336,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+        requestCodes.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED =
+                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
@@ -471,8 +481,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (launchedFromGutenberg || storyDiscardedFromRetry) {
             setResult(Activity.RESULT_CANCELED)
-            finish()
         }
+        finish()
     }
 
     override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {

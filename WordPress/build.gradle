@@ -63,10 +63,16 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
+<<<<<<< HEAD
             versionName versionProperties.getProperty("wordpress.alpha.versionName")
         }
 
         versionCode versionProperties.getProperty("wordpress.alpha.versionCode").toInteger()
+=======
+            versionName "alpha-294"
+        }
+        versionCode 1047
+>>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -86,6 +92,8 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+
+        manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -100,6 +108,7 @@ android {
 
     productFlavors {
         wordpress {
+            isDefault true
             dimension "app"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
@@ -110,6 +119,8 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"wordpress"]
         }
 
         jetpack {
@@ -123,10 +134,20 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
+
+            manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
 
         vanilla { // used for release and beta
             dimension "buildType"
+<<<<<<< HEAD
+=======
+            // Only set the release version if one isn't provided
+            if (!project.hasProperty("versionName")) {
+                versionName "17.4-rc-1"
+            }
+            versionCode 1046
+>>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
@@ -145,6 +166,7 @@ android {
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+            isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
         }

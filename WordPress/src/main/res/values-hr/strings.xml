@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2021-01-09 10:49:53+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
@@ -64,7 +64,6 @@ Language: hr
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
     <string name="gutenberg_native_video_caption_empty">Video natpis. Prazan</string>
     <string name="gutenberg_native_updates_the_title">Ažurira naslov.</string>
-    <string name="gutenberg_native_paste_block_after">Zalijepite blok nakon</string>
     <string name="gutenberg_native_page_title_s">Naslov stranice. %s</string>
     <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
     <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>

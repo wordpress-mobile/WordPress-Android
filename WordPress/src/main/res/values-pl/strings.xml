@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2021-01-11 07:13:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
@@ -68,9 +68,9 @@ Language: pl
     <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> odpowiedział na twój wpis</string>
-    <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b>50 polubień&lt;/b></string>
-    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> polubił(a) twój wpis</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpowiedział na twój wpis</string>
+    <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b&gt;50 polubień&lt;/b&gt;</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; polubił(a) twój wpis</string>
     <string name="hpp_skip_button">Pomiń</string>
     <string name="hpp_choose_button">Wybierz</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
@@ -166,7 +166,6 @@ Language: pl
     <string name="create_page_fab_tooltip">Utwórz stronę</string>
     <string name="create_post_fab_tooltip">Utwórz wpis</string>
     <string name="gutenberg_native_updates_the_title">Uaktualnia tytuł.</string>
-    <string name="gutenberg_native_paste_block_after">Wklej blok po</string>
     <string name="gutenberg_native_page_title_s">Tytuł strony. %s</string>
     <string name="gutenberg_native_page_title_empty">Tytuł strony. Pusty</string>
     <string name="toast_error_playing_video">Podczas odtwarzania filmu wystąpił błąd</string>
@@ -228,7 +227,7 @@ Language: pl
     <string name="mlp_create_blank_page">Utwórz pustą stronę</string>
     <string name="mlp_choose_layout_subtitle">Zacznij od wybrania układu z szerokiej gamy gotowców lub rozpocznij z pustą stroną.</string>
     <string name="mlp_choose_layout_title">Wybierz układ</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b>Wpis na blogu&lt;/b></string>
+    <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
     <string name="label_share_to">Udostępnij na</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
@@ -240,12 +239,15 @@ Language: pl
     <string name="my_site_bottom_sheet_add_story">Wpis z relacją</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Edytowanie ikon witryn z samodzielnym hostingiem wymaga wtyczki Jetpack.</string>
     <string name="pick_file">Dodaj plik</string>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Prześlij obrazek, lub wybierz dowolny ze swojej biblioteki mediów, aby stał się logiem twojej witryny</string>
+    <string name="gutenberg_native_site_logo">Logo witryny</string>
     <string name="gutenberg_native_replace_video">Zamień plik wideo</string>
     <string name="gutenberg_native_replace_image_or_video">Zamień zdjęcie lub film</string>
+    <string name="gutenberg_native_image_width">Szerokość obrazka</string>
+    <string name="gutenberg_native_convert_to_blocks">Przekształć na bloki</string>
     <string name="gutenberg_native_choose_video">Wybierz film</string>
     <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
     <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
-    <string name="gutenberg_native_block_removed">Blok usunięto</string>
     <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
@@ -269,17 +271,9 @@ Language: pl
     <string name="reset_your_password">Zresetuj hasło</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b>%1$s&lt;/b> aby nadać nowy tytuł</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby nadać nowy tytuł</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
-    <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
-    <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
-    <string name="gutenberg_native_copy_block">Skopiuj blok</string>
     <string name="gutenberg_native_copied_block">Skopiowany blok</string>
-    <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
-    <string name="gutenberg_native_block_pasted">Blok wklejony</string>
-    <string name="gutenberg_native_block_duplicated">Blok zduplikowany</string>
-    <string name="gutenberg_native_block_cut">Blok wycięty</string>
-    <string name="gutenberg_native_block_copied">Blok skopiowano</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Tytuł witryny może być zmieniony wyłącznie przez użytkownika z rolą administratora.</string>
     <string name="reader_title_tag_preview">Zagadnienie</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niezapisane zmiany</string>
@@ -324,9 +318,6 @@ Language: pl
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
-    <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
     <string name="pages_set_as_homepage">Ustaw jako stronę domową</string>
     <string name="site_settings_select_page">Wybierz Stronę</string>
@@ -496,8 +487,6 @@ Language: pl
     <string name="stats_posting_activity_end_description">Sprawdziłeś już statystyki za ten okres.\n      Stuknij jeszcze raz i rozpoczniesz od nowa.</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
-    <string name="gutenberg_native_move_image_forward">Przesuń obrazek dalej</string>
-    <string name="gutenberg_native_move_image_backward">Przesuń obrazek do tyłu</string>
     <string name="gutenberg_native_gallery_caption_s">Podpis galerii. %s</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="content_description_person_building_website">Osoba budująca witrynę</string>
@@ -517,12 +506,12 @@ Language: pl
     <string name="new_site_creation_unavailable_domain">Domena nie jest dostępna</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b>SSL Certificatem&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b>Authentykacji HTTP&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b&gt;SSL Certificatem&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_discovery_error_http_auth">Nie byliśmy w stanie uzyskać dostępu do twojej witryny ponieważ wymaga &lt;b&gt;Authentykacji HTTP&lt;/b&gt;. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="reader_following_display_name">Obserwowane</string>
     <string name="enter_credentials_for_site">Zaloguj się za pomocą danych uwierzytelniających %1$s tej witryny</string>
-    <string name="login_discovery_error_xmlrpc">Nie byliśmy w stanie uzyskać dostępu do &lt;b>pliku XMLRPC&lt;/b> na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
-    <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b>%1$s&lt;/b> podłączony do Jetpacka</string>
+    <string name="login_discovery_error_xmlrpc">Nie byliśmy w stanie uzyskać dostępu do &lt;b&gt;pliku XMLRPC&lt;/b&gt; na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
+    <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b&gt;%1$s&lt;/b&gt; podłączony do Jetpacka</string>
     <string name="my_site_bottom_sheet_add_page">Strona witryny</string>
     <string name="suffix_1_000_000_000">%s mld</string>
     <string name="suffix_1_000_000">%s mln</string>
@@ -549,7 +538,6 @@ Language: pl
     <string name="gutenberg_native_show_section">Wybierz sekcję</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
-    <string name="gutenberg_native_cut_block">Wytnij blok</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
     <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
     <string name="gutenberg_native_post_title_s">Tytuł wpisu. %s</string>
@@ -562,9 +550,12 @@ Language: pl
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
     <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
+    <string name="gutenberg_native_empty">Puste</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
+    <string name="gutenberg_native_level_s_empty">Poziom %s. Puste.</string>
+    <string name="gutenberg_native_level_1_s_2_s">Poziom %1$s. %2$s</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
@@ -756,7 +747,7 @@ Language: pl
     <string name="domain_contact_information_state_hint">Stan </string>
     <string name="domain_registration_result_continue_button">kontynuuj</string>
     <string name="domain_registration_result_title">Gratulacje</string>
-    <string name="domain_registration_result_description">twoja nowa witryna &lt;b>%s&lt;/b> jest ustawiana. Twoja witryna \n        wykonuje salta z ekscytacji!</string>
+    <string name="domain_registration_result_description">twoja nowa witryna &lt;b&gt;%s&lt;/b&gt; jest ustawiana. Twoja witryna \n        wykonuje salta z ekscytacji!</string>
     <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
     <string name="domain_contact_information_description">Dla twojej wygody, wypełniliśmy wstępnie twoje dane kontaktowe\nWordpress.com. Przejrzyj je aby upewnić się, że wpisane są prawidłowe informacje dla tej domeny.</string>
     <string name="domain_contact_information_title">Informacje kontaktowe domeny</string>
@@ -1292,7 +1283,7 @@ Language: pl
     <string name="permissions_denied_title">Uprawnienia</string>
     <string name="plugin_caption_featured">Wyróżniający</string>
     <string name="version_with_name_param">Wersja %s</string>
-    <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/>&lt;br/>Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong>%s&lt;/strong> jest uaktywnione.</string>
+    <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/&gt;&lt;br/&gt;Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong&gt;%s&lt;/strong&gt; jest uaktywnione.</string>
     <string name="sharing_disabled_description">Nie możesz uzyskać dostępu do ustawień udostępniania ponieważ twój moduł udostępniania Jetpack jest wyłączony.</string>
     <string name="sharing_disabled">Moduł udostępniania wyłączony</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>

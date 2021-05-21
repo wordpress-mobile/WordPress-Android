@@ -327,7 +327,7 @@ REPOSITORY_NAME="WordPress-Android"
       prefix = "jetpack"
       package_name = "com.jetpack.android"
     end
-    build_bundle(version: version, app: "wordpress", flavor:"vanilla", buildType: "release", prefix: prefix)
+    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release", prefix: prefix)
 
     upload_build_to_play_store(version: version, track: "production", app: app)
 

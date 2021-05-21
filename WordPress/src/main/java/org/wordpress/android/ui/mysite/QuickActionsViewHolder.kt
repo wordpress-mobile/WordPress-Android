@@ -16,8 +16,8 @@ class QuickActionsViewHolder(
         quickActionPagesButton.setOnClickListener { item.onPagesClick.click() }
 
         val pagesVisibility = if (item.showPages) View.VISIBLE else View.GONE
-        quickActionPagesContainer.visibility = pagesVisibility
-        middleQuickActionSpacing.visibility = pagesVisibility
+        quickActionPagesButton.visibility = pagesVisibility
+        quickActionPagesLabel.visibility = pagesVisibility
 
         quickStartStatsFocusPoint.setVisibleOrGone(item.showStatsFocusPoint)
         quickStartPagesFocusPoint.setVisibleOrGone(item.showPagesFocusPoint)
