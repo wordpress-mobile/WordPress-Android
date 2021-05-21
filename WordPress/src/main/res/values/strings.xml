@@ -2702,7 +2702,7 @@
     <string name="login_not_a_jetpack_site">To use this app for %1$s you\'ll need to have the Jetpack plugin installed and connected to your WordPress.com account.</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="login_empty_view_avatar_content_description">Your profile photo</string>
-    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your Wordpress account.</string>
+    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
 
@@ -3588,4 +3588,9 @@
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
 
+    <!-- Storage Utils Provider -->
+    <string name="storage_utils_dialog_title">Insufficient device storage</string>
+    <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="storage_utils_dialog_ok_button">View Storage</string>
+    <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 </resources>
