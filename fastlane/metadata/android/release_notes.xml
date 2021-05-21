@@ -1,68 +1,134 @@
 <ar>
-17.2:
-يقدم هذا الإصدار مكوّن جديد - معلومات الاتصال Jetpack contact info. إنه مثالي لعرض عنوان منسّق بشكل جيد على موقعك. لقد سهلنا أيضًا إضافة الكثير من النص البديل إلى مكوّن صورة، واستخدام TalkBack مع مكوّن الأعمدة، وعرض القوائم بشكل أفضل باللغات التي تُكتب من اليمين إلى اليسار RTL، وتعيين المنطقة الزمنية لموقعك.
+17.3:
+ما الجديد؟
+
+باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+
+تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
 </ar>
 <de-DE>
-17.2:
-In dieser Version wird ein neuer Block vorgestellt – Jetpack Kontaktinfo. Er eignet sich hervorragend, um formatierte Adressen auf deiner Website sauber anzuzeigen. Außerdem haben wir es einfacher gemacht, dem Bildblock extra viel Alt-Text hinzuzufügen und TalkBack mit dem Spaltenblock zu verwenden. Zudem können Menüs jetzt einfacher in Rechts-nach-Links-Sprachen angesehen werden und deine Website kann mit Leichtigkeit deiner Zeitzone angepasst werden.
+17.3:
+Was gibt's Neues?
+
+Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+
+Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
 </de-DE>
 <en-US>
-17.2:
-This version introduces a new block – Jetpack contact info. It's perfect for displaying a nicely formatted address on your site. We've also made it easier to add lots of alt text to an image block, use TalkBack with the columns block, view menus better in right-to-left languages, and set your site timezone.
+17.3:
+What’s new?
+
+With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+
+Other improvements include more user information about your Likes, as well as an updated Comments screen.
 </en-US>
 <es-ES>
-17.2:
-Esta versión introduce un nuevo bloque: Información de contacto de Jetpack. Es perfecto para mostrar una dirección bien formada en tu sitio. También hemos hecho más fácil añadir mucho texto alternativo a un bloque de imagen, el uso de TalkBack con el bloque de columnas, ver mejor los menús en los idiomas de derecha a izquierda y establecer la zona horaria de tu sitio.
+17.3:
+Novedades
+
+Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
+
+Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
 </es-ES>
 <fr-CA>
-17.2 :
-Un nouveau bloc est disponible dans cette version : les coordonnées Jetpack. Ce bloc est la solution idéale pour afficher sur votre site une adresse ayant un format correct. Nous avons également simplifié l’ajout massif de texte alternatif à un bloc d’image et l’utilisation de TalkBack dans les blocs de colonnes. Les menus s’affichent mieux dans les langues qui se lisent de droite à gauche et il est plus facile de définir le fuseau horaire de votre site.
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-CA>
 <fr-FR>
-17.2 :
-Un nouveau bloc est disponible dans cette version : les coordonnées Jetpack. Ce bloc est la solution idéale pour afficher sur votre site une adresse ayant un format correct. Nous avons également simplifié l’ajout massif de texte alternatif à un bloc d’image et l’utilisation de TalkBack dans les blocs de colonnes. Les menus s’affichent mieux dans les langues qui se lisent de droite à gauche et il est plus facile de définir le fuseau horaire de votre site.
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
 </fr-FR>
 <iw-IL>
-17.2:
-בגרסה הזאת אנחנו מציגים בלוק חדש – 'פרטי הקשר' של Jetpack. הבלוק מומלץ להצגת כתובת בצורה יפה באתר שלך. בנוסף, קל יותר עכשיו להוסיף המון טקסט חלופי בבלוק תמונה, להשתמש ב-TalkBack בבלוק הטורים, להציג את התפריטים בצורה טובה יותר בשפות שנקראות מימין לשמאל ולהגדיר את אזור הזמן של האתר.
+17.3:
+מה חדש?
+
+עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+
+שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
 </iw-IL>
 <id>
-17.2:
-Versi ini memperkenalkan blok baru – info kontak Jetpack. Ini sangat sempurna untuk menampilkan alamat terformat rapi di situs Anda. Kami juga mempermudah penambahan banyak teks alt ke blok gambar, penggunaan TalkBack dengan blok kolom, penampilan menu yang lebih baik dalam bahasa dengan penulisan dari kanan ke kiri, dan pengaturan zona waktu situs Anda.
+17.3:
+Apa yang baru?
+
+Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+
+Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
 </id>
 <it-IT>
-17.2:
-Questa versione introduce un nuovo blocco: Informazioni di contatto di Jetpack. È perfetto per la visualizzazione di un indirizzo formattato in modo corretto sul tuo sito. Abbiamo anche semplificato l'aggiunta di molto testo alternativo a un blocco Immagine, l'uso di TalkBack con il blocco Colonne, la migliore visualizzazione dei menu nelle lingue da destra a sinistra e l'impostazione del fuso orario del sito.
+17.3:
+Cosa c'è di nuovo?
+
+Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
+
+Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
 </it-IT>
 <ja-JP>
-17.2:
-今回のバージョンでは Jetpack 連絡先情報という新しいブロックが導入されています。 形式が適切に整えられた住所をサイトに表示するのに最適なブロックです。 また、画像ブロックに多数の代替テキストを簡単に追加できるようにしました。列ブロックに TalkBack を使用し、右から左に書く言語でもメニューが適切に表示されるようになり、さらにサイトのタイムゾーンを設定できるようになりました。
+17.3:
+新着情報
+
+新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+
+その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
 </ja-JP>
 <ko-KR>
-17.2:
-이 버전에서는 젯팩 연락처라는 새 블록이 도입됩니다. 멋지게 형식을 지정한 사이트의 주소가 완벽하게 표시됩니다. 또한, 더 쉽게 많은 대체 텍스트를 이미지 블록에 추가하고, 열 블록에서 TalkBack을 사용하고, 오른쪽에서 왼쪽으로 쓰는 언어의 메뉴를 더 잘 보고, 사이트 시간대를 설정하도록 만들었습니다.
+17.3:
+새로운 기능
+
+새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+
+기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
 </ko-KR>
 <nl-NL>
-17.2:
-Deze versie introduceert een nieuw blok – Jetpack contact info. Het is perfect voor het tonen van een mooi geformatteerd adres op je site. We hebben het ook eenvoudiger gemaakt om een hoop alt tekst aan een afbeeldingsblok toe te voegen, gebruik van TalkBack met het kolommen blok, menu's beter bekijken in talen die van rechts naar links schrijven, en je tijdzone in te stellen
+17.3:
+Wat is er nieuw?
+
+Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+
+Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
 </nl-NL>
 <ru-RU>
-17.2:
-В этой версии появился новый блок - контактная информация Jetpack. Он идеально подходит для отображения красиво отформатированного адреса на вашем сайте. Мы также упростили добавление длинного alt текста в блок изображения, использование TalkBack с блоком столбцов, улучшение просмотра меню на языках с письмом справа налево и установку часового пояса вашего сайта.
+17,3:
+Что нового?
+
+С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+
+Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
 </ru-RU>
 <sv-SE>
-17.2:
-Med denna version lanseras ett nytt block – Jetpack kontaktinformation, som är perfekt för att visa en snyggt formaterad adress på webbplatsen. Det har också blivit enklare att lägga in en lång alt-text i ett bildblock, använda TalkBack med kolumnblocket, hantera menyerna i språk som skrivs från höger till vänster och att ange webbplatsens tidszon.
+17.3:
+Vad är nytt?
+
+Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+
+Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
 </sv-SE>
 <tr-TR>
-17,2:
-Bu sürümde yeni bir blok sunuyoruz - Jetpack iletişim bilgisi. Sitenizde güzel biçimlendirilmiş bir adres görüntülemek için mükemmeldir. Ayrıca bir resim blokuna çok sayıda alternatif metin eklemeyi, TalkBack'i sütun blokuyla kullanmayı, menüleri sağdan sola türünden dillerde daha iyi görüntülemeyi ve sitenizin saat dilimini ayarlamayı kolaylaştırdık.
+17.3:
+Yenilikler
+
+Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+
+Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
 </tr-TR>
 <zh-CN>
-17.2:
-此版本引入了一个新的区块- Jetpack联系信息。可以在您的网站上显示格式化良好的地址。我们还使其更容易为图像区块添加了alt文字，让TalkBack支持列区块的操作，使其在从右到左的语言中更好地查看菜单，并能设置您的站点时区。
+17.3：
+通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+
+其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
 </zh-CN>
 <zh-TW>
-17.2:
-此版本推出新的區塊 – Jetpack 聯絡資訊。 該區塊能在你的網站以正確格式顯示地址。 我們也改善了幾項操作：現在在圖片區塊新增大量替代文字、在欄位區塊使用 TalkBack，或是設定網站時區都變得簡單；從右至左語言的選單則顯示得更清楚。
+17.3:
+新功能
+
+現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+
+其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
 </zh-TW>
