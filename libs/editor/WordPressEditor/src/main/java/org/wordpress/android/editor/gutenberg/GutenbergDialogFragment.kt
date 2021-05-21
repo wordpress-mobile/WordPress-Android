@@ -108,6 +108,13 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        val parentFragment: Fragment? = parentFragment
+        if (parentFragment !is GutenbergDialogPositiveClickInterface) {
+            throw RuntimeException("Parent fragment must implement GutenbergDialogPositiveClickInterface")
+        }
+        if (mNegativeButtonLabel != null && parentFragment !is GutenbergDialogNegativeClickInterface) {
+            throw RuntimeException("Parent fragment must implement GutenbergDialogNegativeClickInterface")
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
