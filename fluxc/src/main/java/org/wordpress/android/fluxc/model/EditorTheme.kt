@@ -57,7 +57,7 @@ data class EditorTheme(
 }
 
 data class BlockEditorSettings(
-    @SerializedName("supportsLayout") val isFSETheme: Boolean,
+    @SerializedName("__unstableEnableFullSiteEditingBlocks") val isFSETheme: Boolean,
     @SerializedName("__experimentalStyles") val styles: JsonElement?,
     @SerializedName("__experimentalFeatures") val features: JsonElement?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val colors: List<EditorThemeElement>?,
