@@ -51,7 +51,7 @@ class StatsLinkHandler
      * The handled links are `https://wordpress.com/stats/day/$site` and `wordpress://stats`
      */
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
+        return (uri.host == HOST_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == STATS_PATH) || uri.host == STATS_PATH
     }
 

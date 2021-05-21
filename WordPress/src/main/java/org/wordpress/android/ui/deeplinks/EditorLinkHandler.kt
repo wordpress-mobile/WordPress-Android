@@ -10,11 +10,9 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
-import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 class EditorLinkHandler
@@ -23,7 +21,10 @@ class EditorLinkHandler
     private val postStore: PostStore
 ) : DeepLinkHandler {
     private val _toast = MutableLiveData<Event<Int>>()
-    val toast = _toast as LiveData<Event<Int>>
+
+    override fun toast(): LiveData<Event<Int>> {
+        return _toast
+    }
 
     /**
      * Builds navigate action from URL like:
@@ -76,7 +77,6 @@ class EditorLinkHandler
                     if (hasPostIdParameter) {
                         append("$POST_ID=$POST_ID")
                     }
-
                 }
             }
         } else {

@@ -33,7 +33,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         post.setRemotePostId(remotePostId)
         post.setId(localPostId)
         toasts = mutableListOf()
-        editorLinkHandler.toast.observeForever { it?.getContentIfNotHandled()?.let { toast -> toasts.add(toast) } }
+        editorLinkHandler.toast().observeForever { it?.getContentIfNotHandled()?.let { toast -> toasts.add(toast) } }
     }
 
     @Test

@@ -6,7 +6,7 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 class NotificationsLinkHandler
-@Inject constructor(): DeepLinkHandler {
+@Inject constructor() : DeepLinkHandler {
     /**
      * Builds navigate action from URL like:
      * https://wordpress.com/notifcations

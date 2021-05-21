@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -17,19 +16,13 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
-    @Mock lateinit var editorLinkHandler: EditorLinkHandler
-    @Mock lateinit var statsLinkHandler: StatsLinkHandler
-    @Mock lateinit var startLinkHandler: StartLinkHandler
-    @Mock lateinit var readerLinkHandler: ReaderLinkHandler
-    @Mock lateinit var notificationsLinkHandler: NotificationsLinkHandler
-    @Mock lateinit var pagesLinkHandler: PagesLinkHandler
+    @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
@@ -44,12 +37,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = DeepLinkingIntentReceiverViewModel(
                 TEST_DISPATCHER,
-                editorLinkHandler,
-                statsLinkHandler,
-                startLinkHandler,
-                readerLinkHandler,
-                pagesLinkHandler,
-                notificationsLinkHandler,
+                deepLinkHandlers,
                 deepLinkUriUtils,
                 accountStore,
                 serverTrackingHandler,
@@ -97,21 +85,36 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         viewModel.start(null, uri)
 
-        assertUriHandled(NavigateAction.OpenInBrowser(barUri))
+        assertUriHandled(OpenInBrowser(barUri))
     }
 
     @Test
-    fun `create site mbar URL triggers the Site Creation flow`() {
-        val startUrl = initStartUrl()
+    fun `URL passed to deep link handler from redirect parameter`() {
+        val startUrl = mock<UriWrapper>()
         val wpLoginUri = initWpLoginUri(startUrl)
         val uri = initTrackingUri(wpLoginUri)
 
-        whenever(startLinkHandler.buildNavigateAction(startUrl)).thenReturn(StartCreateSiteFlow)
+        whenever(deepLinkHandlers.buildNavigateAction(startUrl)).thenReturn(StartCreateSiteFlow)
 
         viewModel.start(null, uri)
 
         assertUriHandled(StartCreateSiteFlow)
         verify(serverTrackingHandler).request(uri)
+    }
+
+    @Test
+    fun `URL opened in browser from redirect parameter when deep link handler cannot handle it`() {
+        val startUrl = mock<UriWrapper>()
+        val wpLoginUri = initWpLoginUri(startUrl)
+        val uri = initTrackingUri(wpLoginUri)
+        val barUri = buildUri("public-api.wordpress.com")
+
+        whenever(deepLinkHandlers.buildNavigateAction(startUrl)).thenReturn(null)
+        whenever(uri.copy("bar")).thenReturn(barUri)
+
+        viewModel.start(null, uri)
+
+        assertUriHandled(OpenInBrowser(barUri))
     }
 
     @Test
@@ -123,114 +126,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
 
         viewModel.start(null, uri)
 
-        assertUriHandled(NavigateAction.OpenInBrowser(barUri))
-    }
-
-    @Test
-    fun `post mbar URL triggers the editor`() {
-        val postUrl = initPostUrl()
-        val uri = initTrackingUri(postUrl)
-        val expectedAction = OpenEditor
-        whenever(editorLinkHandler.buildNavigateAction(postUrl)).thenReturn(expectedAction)
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expectedAction)
-        verify(serverTrackingHandler).request(uri)
-    }
-
-    @Test
-    fun `does not handle pages url`() {
-        val uri = buildUri("wordpress.com")
-
-        viewModel.start(null, uri)
-
-        assertUriNotHandled()
-    }
-
-    @Test
-    fun `does not handle app link to pages`() {
-        val uri = buildUri("pages")
-
-        viewModel.start(null, uri)
-
-        assertUriNotHandled()
-    }
-
-    @Test
-    fun `opens navigate action from editor link handler`() {
-        val (uri, expected) = initEditorLinkHandler()
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expected)
-    }
-
-    @Test
-    fun `opens login when user logged out`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-        val (uri, _) = initEditorLinkHandler()
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(LoginForResult)
-    }
-
-    @Test
-    fun `opens navigate action from stats link handler`() {
-        val uri = buildUri("wordpress.com")
-        whenever(statsLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
-        val expected = NavigateAction.OpenStats
-        whenever(statsLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expected)
-    }
-
-    @Test
-    fun `opens navigate action from notifications link handler`() {
-        val uri = buildUri("wordpress.com")
-        whenever(notificationsLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
-        val expected = NavigateAction.OpenNotifications
-        whenever(notificationsLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expected)
-    }
-
-    @Test
-    fun `view post mbar URL triggers the reader when it can be resolved`() {
-        val redirect = buildUri("wordpress.com")
-        val uri = initTrackingUri(redirect)
-        val expectedAction = NavigateAction.OpenInReader(redirect)
-
-        whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
-        whenever(readerLinkHandler.shouldHandleUrl(redirect)).thenReturn(true)
-        whenever(readerLinkHandler.buildNavigateAction(redirect)).thenReturn(expectedAction)
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expectedAction)
-        verify(serverTrackingHandler).request(uri)
-    }
-
-    @Test
-    fun `view post mbar URL triggers the browser when it can't be resolved`() {
-        val redirect = buildUri("wordpress.com")
-        val uri = initTrackingUri(redirect)
-        val barUri = buildUri("public-api.wordpress.com")
-        val expectedAction = NavigateAction.OpenInBrowser(barUri)
-
-        whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
-        whenever(readerLinkHandler.shouldHandleUrl(redirect)).thenReturn(false)
-        whenever(uri.copy("bar")).thenReturn(barUri)
-
-        viewModel.start(null, uri)
-
-        assertUriHandled(expectedAction)
-        verifyZeroInteractions(serverTrackingHandler)
+        assertUriHandled(OpenInBrowser(barUri))
     }
 
     @Test
@@ -255,17 +151,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         verify(analyticsUtilsWrapper).trackWithDeepLinkData(DEEP_LINKED, action, host, mockedUri)
     }
 
-    @Test
-    fun `on successful login rehandles the cached URL`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false, true)
-        val (uri, expected) = initEditorLinkHandler()
-        viewModel.start(null, uri)
-
-        viewModel.onSuccessfulLogin()
-
-        assertThat(navigateActions).containsExactly(LoginForResult, expected)
-    }
-
     private fun assertUriNotHandled() {
         assertThat(isFinished).isTrue()
         assertThat(navigateActions).isEmpty()
@@ -274,14 +159,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     private fun assertUriHandled(navigateAction: NavigateAction) {
         assertThat(isFinished).isFalse()
         assertThat(navigateActions.last()).isEqualTo(navigateAction)
-    }
-
-    private fun initEditorLinkHandler(): Pair<UriWrapper, OpenEditor> {
-        val uri = buildUri("wordpress.com")
-        whenever(editorLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
-        val expected = OpenEditor
-        whenever(editorLinkHandler.buildNavigateAction(uri)).thenReturn(expected)
-        return Pair(uri, expected)
     }
 
     private fun initTrackingUri(redirectTo: UriWrapper? = null): UriWrapper {
@@ -301,18 +178,6 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         redirectTo?.let {
             whenever(deepLinkUriUtils.getRedirectUri(uri)).thenReturn(it)
         }
-        return uri
-    }
-
-    private fun initStartUrl(): UriWrapper {
-        val uri = mock<UriWrapper>()
-        whenever(startLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
-        return uri
-    }
-
-    private fun initPostUrl(): UriWrapper {
-        val uri = mock<UriWrapper>()
-        whenever(editorLinkHandler.shouldHandleUrl(uri)).thenReturn(true)
         return uri
     }
 }

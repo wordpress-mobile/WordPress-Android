@@ -20,12 +20,7 @@ import javax.inject.Named
 class DeepLinkingIntentReceiverViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
-    private val editorLinkHandler: EditorLinkHandler,
-    private val statsLinkHandler: StatsLinkHandler,
-    private val startLinkHandler: StartLinkHandler,
-    private val readerLinkHandler: ReaderLinkHandler,
-    private val pagesLinkHandler: PagesLinkHandler,
-    private val notificationsLinkHandler: NotificationsLinkHandler,
+    private val deepLinkHandlers: DeepLinkHandlers,
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
@@ -36,7 +31,7 @@ class DeepLinkingIntentReceiverViewModel
     val navigateAction = _navigateAction as LiveData<Event<NavigateAction>>
     private val _finish = MutableLiveData<Event<Unit>>()
     val finish = _finish as LiveData<Event<Unit>>
-    val toast = editorLinkHandler.toast
+    val toast = deepLinkHandlers.toast
     var cachedUri: UriWrapper? = null
 
     fun start(action: String?, uri: UriWrapper?) {
@@ -95,13 +90,7 @@ class DeepLinkingIntentReceiverViewModel
                     }
                     ?: OpenInBrowser(rootUri.copy(REGULAR_TRACKING_PATH))
             deepLinkUriUtils.isWpLoginUrl(uri) -> getRedirectUriAndBuildNavigateAction(uri, rootUri)
-            readerLinkHandler.shouldHandleUrl(uri) -> readerLinkHandler.buildNavigateAction(uri)
-            editorLinkHandler.shouldHandleUrl(uri) -> editorLinkHandler.buildNavigateAction(uri)
-            statsLinkHandler.shouldHandleUrl(uri) -> statsLinkHandler.buildNavigateAction(uri)
-            startLinkHandler.shouldHandleUrl(uri) -> startLinkHandler.buildNavigateAction(uri)
-            notificationsLinkHandler.shouldHandleUrl(uri) -> notificationsLinkHandler.buildNavigateAction(uri)
-            pagesLinkHandler.shouldHandleUrl(uri) -> pagesLinkHandler.buildNavigateAction(uri)
-            else -> null
+            else -> deepLinkHandlers.buildNavigateAction(uri)
         }
     }
 
@@ -121,5 +110,4 @@ class DeepLinkingIntentReceiverViewModel
         const val SITE_DOMAIN = "domain"
         private const val REGULAR_TRACKING_PATH = "bar"
     }
-
 }

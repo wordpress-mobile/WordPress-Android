@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.deeplinks
 
+import androidx.lifecycle.LiveData
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.viewmodel.Event
 
 interface DeepLinkHandler {
     /**
@@ -18,4 +20,9 @@ interface DeepLinkHandler {
      * Strips all uri sensitive params for tracking purposes
      */
     fun stripUrl(uri: UriWrapper): String?
+
+    /**
+     * Toast messages emitted from the handler
+     */
+    fun toast(): LiveData<Event<Int>>? = null
 }
