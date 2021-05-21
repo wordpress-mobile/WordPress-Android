@@ -63,11 +63,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
     emoji_regex (3.2.2)
-<<<<<<< HEAD
-    excon (0.79.0)
-=======
     excon (0.81.0)
->>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
     faraday (1.4.1)
       faraday-excon (~> 1.1)
       faraday-net_http (~> 1.0)
@@ -180,13 +176,8 @@ GEM
     jwt (2.2.3)
     memoist (0.16.2)
     mini_magick (4.11.0)
-<<<<<<< HEAD
-    mini_mime (1.0.2)
-    mini_portile2 (2.5.1)
-=======
     mini_mime (1.1.0)
     mini_portile2 (2.5.0)
->>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.0.0)

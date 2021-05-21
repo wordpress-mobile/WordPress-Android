@@ -63,16 +63,10 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-<<<<<<< HEAD
             versionName versionProperties.getProperty("wordpress.alpha.versionName")
         }
 
         versionCode versionProperties.getProperty("wordpress.alpha.versionCode").toInteger()
-=======
-            versionName "alpha-294"
-        }
-        versionCode 1047
->>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -140,14 +134,6 @@ android {
 
         vanilla { // used for release and beta
             dimension "buildType"
-<<<<<<< HEAD
-=======
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName "17.4-rc-1"
-            }
-            versionCode 1046
->>>>>>> ca8f72035b58950599d5f522b54d0758bbf063b7
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
