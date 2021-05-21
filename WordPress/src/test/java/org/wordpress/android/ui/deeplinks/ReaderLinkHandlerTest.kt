@@ -19,6 +19,9 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var intentUtils: IntentUtils
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var readerLinkHandler: ReaderLinkHandler
+    val blogId: Long = 111
+    val postId: Long = 222
+    val feedId: Long = 333
 
     @Before
     fun setUp() {
@@ -96,8 +99,6 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `URI with viewpost host with query params opens post in reader`() {
-        val blogId: Long = 123
-        val postId: Long = 321
         val uri = buildUri(
                 host = "viewpost",
                 queryParam1 = "blogId" to blogId.toString(),
@@ -132,8 +133,8 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `correctly strips VIEWPOST applink with all params`() {
         val uri = buildUri(
                 host = "viewpost",
-                queryParam1 = "blogId" to "123",
-                queryParam2 = "postId" to "321"
+                queryParam1 = "blogId" to blogId.toString(),
+                queryParam2 = "postId" to postId.toString()
         )
 
         val strippedUrl = readerLinkHandler.stripUrl(uri)
@@ -145,7 +146,7 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
     fun `correctly strips VIEWPOST applink with blog ID param`() {
         val uri = buildUri(
                 host = "viewpost",
-                queryParam1 = "blogId" to "123"
+                queryParam1 = "blogId" to blogId.toString()
         )
 
         val strippedUrl = readerLinkHandler.stripUrl(uri)
@@ -162,5 +163,59 @@ class ReaderLinkHandlerTest : BaseUnitTest() {
         val strippedUrl = readerLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("wordpress://viewpost")
+    }
+
+    @Test
+    fun `correctly strips feeds URI`() {
+        val uri = buildUri("wordpress.com", "read", "feeds", feedId.toString(), "posts", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/feeds/feedId/posts/feedItemId")
+    }
+
+    @Test
+    fun `correctly strips blogs URI`() {
+        val uri = buildUri("wordpress.com", "read", "blogs", feedId.toString(), "posts", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/read/blogs/feedId/posts/feedItemId")
+    }
+
+    @Test
+    fun `correctly strips 2xxx URI`() {
+        val uri = buildUri("wordpress.com", "2020", "10", "1", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/YYYY/MM/DD/postId")
+    }
+
+    @Test
+    fun `correctly strips 19xx URI`() {
+        val uri = buildUri("wordpress.com", "1999", "10", "1", postId.toString())
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/YYYY/MM/DD/postId")
+    }
+
+    @Test
+    fun `correctly strips URI with custom subdomain`() {
+        val uri = buildUri("testblog.wordpress.com", "read")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("domain.wordpress.com/read")
+    }
+
+    @Test
+    fun `correctly strips URI with www`() {
+        val uri = buildUri("www.wordpress.com", "read")
+
+        val strippedUrl = readerLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("www.wordpress.com/read")
     }
 }

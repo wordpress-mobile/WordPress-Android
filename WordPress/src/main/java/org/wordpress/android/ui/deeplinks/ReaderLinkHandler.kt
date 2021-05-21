@@ -10,6 +10,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenI
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.SITE_DOMAIN
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.UriWrapper
@@ -62,17 +64,12 @@ class ReaderLinkHandler
      * URLs handled here
      * `wordpress://read`
      * `wordpress://viewpost?blogId={blogId}&postId={postId}`
-     * Following URLs are handled in org.wordpress.android.ui.reader.ReaderPostPagerActivity.handleDeepLinking
-     * wordpress.com/read/feeds/feedId/posts/feedItemId
      * wordpress.com/read/feeds/feedId/posts/feedItemId
      * wordpress.com/read/blogs/feedId/posts/feedItemId
-     * wordpress.com/read/blogs/feedId/posts/feedItemId
      * domain.wordpress.com/2.../../../postId
-     * domain.wordpress.com/2.../../../postId
-     * domain.wordpress.com/19../../../postId
      * domain.wordpress.com/19../../../postId
      */
-    override fun stripUrl(uri: UriWrapper): String? {
+    override fun stripUrl(uri: UriWrapper): String {
         return when (uri.host) {
             DEEP_LINK_HOST_READ -> "$APPLINK_SCHEME$DEEP_LINK_HOST_READ"
             DEEP_LINK_HOST_VIEWPOST -> {
@@ -95,8 +92,35 @@ class ReaderLinkHandler
                 }
             }
             else -> {
-                // org.wordpress.android.ui.reader.ReaderPostPagerActivity.handleDeepLinking
-                return null
+                buildString {
+                    val segments = uri.pathSegments
+                    // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+                    // with the first segment being 'read'.
+                    val domains = uri.host?.split(".") ?: listOf()
+                    if (domains.size > 2 && domains[domains.size - 3] != "www") {
+                        append("$SITE_DOMAIN.$HOST_WORDPRESS_COM")
+                    } else {
+                        append(uri.host)
+                    }
+                    if (segments.firstOrNull() == "read") {
+                        append("/read")
+                        if (segments.size > 2) {
+                            if (segments[1] == "blogs") {
+                                append("/blogs/$FEED_ID")
+                            } else if (segments[1] == "feeds") {
+                                append("/feeds/$FEED_ID")
+                            }
+                        }
+                        if (segments.size > 4 && segments[3] == "posts") {
+                            append("/posts/feedItemId")
+                        }
+                        toString()
+                    } else if (segments.size >= 4) {
+                        append("/YYYY/MM/DD/$POST_ID")
+                        toString()
+                    }
+                }
+                        .ifEmpty { uri.host + uri.pathSegments.firstOrNull() }
             }
         }
     }
@@ -106,5 +130,6 @@ class ReaderLinkHandler
         private const val DEEP_LINK_HOST_VIEWPOST = "viewpost"
         private const val BLOG_ID = "blogId"
         private const val POST_ID = "postId"
+        private const val FEED_ID = "feedId"
     }
 }

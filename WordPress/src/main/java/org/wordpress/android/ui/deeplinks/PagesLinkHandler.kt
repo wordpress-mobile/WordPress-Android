@@ -30,7 +30,7 @@ class PagesLinkHandler
         }
     }
 
-    override fun stripUrl(uri: UriWrapper): String? {
+    override fun stripUrl(uri: UriWrapper): String {
         return buildString {
             append("$HOST_WORDPRESS_COM/$PAGES_PATH")
             if (uri.pathSegments.size > 1) {

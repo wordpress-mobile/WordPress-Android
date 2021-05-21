@@ -24,7 +24,7 @@ class DeepLinkingIntentReceiverViewModel
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val accountStore: AccountStore,
     private val serverTrackingHandler: ServerTrackingHandler,
-    private val deepLinkTrackingHelper: DeepLinkTrackingHelper,
+    private val deepLinkTrackingUtils: DeepLinkTrackingUtils,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(uiDispatcher) {
     private val _navigateAction = MutableLiveData<Event<NavigateAction>>()
@@ -65,13 +65,7 @@ class DeepLinkingIntentReceiverViewModel
         cachedUri = uriWrapper
         return buildNavigateAction(uriWrapper)?.also {
             if (action != null) {
-                val trackingData = deepLinkTrackingHelper.buildTrackingDataFromNavigateAction(it, uriWrapper)
-                analyticsUtilsWrapper.trackWithDeepLinkData(
-                        DEEP_LINKED,
-                        action,
-                        uriWrapper.host ?: "",
-                        trackingData
-                )
+                deepLinkTrackingUtils.track(action, it, uriWrapper)
             }
             if (accountStore.hasAccessToken() || it is OpenInBrowser || it is ShowSignInFlow) {
                 _navigateAction.value = Event(it)

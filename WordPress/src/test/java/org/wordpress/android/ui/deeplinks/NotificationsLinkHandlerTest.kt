@@ -13,7 +13,7 @@ class NotificationsLinkHandlerTest {
 
     @Test
     fun `handles WPCom notifications URL`() {
-        val uri = buildUri(host = "wordpress.com", path1 = "notifications")
+        val uri = buildUri(host = "wordpress.com", "notifications")
 
         val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
@@ -31,7 +31,7 @@ class NotificationsLinkHandlerTest {
 
     @Test
     fun `does not handle WPCom non-notifications URL`() {
-        val uri = buildUri(host = "wordpress.com", path1 = "stats")
+        val uri = buildUri(host = "wordpress.com", "stats")
 
         val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
@@ -40,7 +40,7 @@ class NotificationsLinkHandlerTest {
 
     @Test
     fun `does not handle non-WPCom notifications URL`() {
-        val uri = buildUri(host = "wordpress.org", path1 = "notifications")
+        val uri = buildUri(host = "wordpress.org", "notifications")
 
         val isHandled = notificationsLinkHandler.shouldHandleUrl(uri)
 
@@ -56,7 +56,7 @@ class NotificationsLinkHandlerTest {
 
     @Test
     fun `strip url returns notifications url`() {
-        val uri = buildUri(host = "wordpress.com", path1 = "notifications")
+        val uri = buildUri(host = "wordpress.com", "notifications")
 
         val strippedUrl = notificationsLinkHandler.stripUrl(uri)
 

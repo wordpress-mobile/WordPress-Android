@@ -1,59 +1,61 @@
 package org.wordpress.android.ui.deeplinks
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.deeplinks.DeepLinkModel.Source
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class DeepLinkTrackingHelperTest {
+class DeepLinkTrackingUtilsTest {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var deepLinkHandlers: DeepLinkHandlers
-    private lateinit var deepLinkTrackingHelper: DeepLinkTrackingHelper
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
+    private val action = "action"
 
     @Before
     fun setUp() {
-        deepLinkTrackingHelper = DeepLinkTrackingHelper(deepLinkUriUtils, deepLinkHandlers)
+        deepLinkTrackingUtils = DeepLinkTrackingUtils(deepLinkUriUtils, deepLinkHandlers, analyticsUtilsWrapper)
     }
 
     @Test
     fun `builds tracking data without stripped URL for OpenBrowser event`() {
-        val uri = mock<UriWrapper>()
+        val host = "wordpress.com"
+        val uri = buildUri(host)
         val expectedUrl = "wordpress.com/example.com/1234"
         whenever(uri.toString()).thenReturn(expectedUrl)
 
-        val trackingData = deepLinkTrackingHelper.buildTrackingDataFromNavigateAction(OpenInBrowser(uri), uri)
+        deepLinkTrackingUtils.track(action, OpenInBrowser(uri), uri)
 
-        assertThat(trackingData.source).isEqualTo(Source.EMAIL)
-        assertThat(trackingData.url).isEqualTo(expectedUrl)
-        assertThat(trackingData.sourceInfo).isNull()
+        assertTrackingData(host, DeepLinkSource.EMAIL, expectedUrl)
     }
-
 
     @Test
     fun `builds tracking data from an applink URL`() {
-        val uri = buildUri("reader")
+        val host = "reader"
+        val uri = buildUri(host)
         val expectedUrl = "wordpress://reader"
         whenever(deepLinkHandlers.stripUrl(uri)).thenReturn(expectedUrl)
 
-        val trackingData = deepLinkTrackingHelper.buildTrackingDataFromNavigateAction(OpenReader, uri)
+        deepLinkTrackingUtils.track(action, OpenReader, uri)
 
-        assertThat(trackingData.source).isEqualTo(Source.BANNER)
-        assertThat(trackingData.url).isEqualTo(expectedUrl)
-        assertThat(trackingData.sourceInfo).isNull()
+        assertTrackingData(host, DeepLinkSource.BANNER, expectedUrl)
     }
 
     @Test
     fun `builds tracking data from redirect param of a tracking URI with a login reason`() {
-        val uri = mock<UriWrapper>()
+        val host = "public-api.wordpress.com"
+        val uri = buildUri(host)
         whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
         val redirectUri = mock<UriWrapper>()
         val loginReason = "loginReason"
@@ -62,16 +64,15 @@ class DeepLinkTrackingHelperTest {
         val strippedUrl = "wordpress.com/read"
         whenever(deepLinkHandlers.stripUrl(redirectUri)).thenReturn(strippedUrl)
 
-        val trackingData = deepLinkTrackingHelper.buildTrackingDataFromNavigateAction(OpenReader, uri)
+        deepLinkTrackingUtils.track(action, OpenReader, uri)
 
-        assertThat(trackingData.source).isEqualTo(Source.EMAIL)
-        assertThat(trackingData.url).isEqualTo(strippedUrl)
-        assertThat(trackingData.sourceInfo).isEqualTo(loginReason)
+        assertTrackingData(host, DeepLinkSource.EMAIL, strippedUrl, loginReason)
     }
 
     @Test
     fun `builds tracking data from a nested param of a tracking URI without a login reason`() {
-        val uri = mock<UriWrapper>()
+        val host = "public-api.wordpress.com"
+        val uri = buildUri(host)
         whenever(deepLinkUriUtils.isTrackingUrl(uri)).thenReturn(true)
         val firstRedirect = mock<UriWrapper>()
         val secondRedirect = mock<UriWrapper>()
@@ -81,10 +82,19 @@ class DeepLinkTrackingHelperTest {
         val strippedUrl = "wordpress.com/read"
         whenever(deepLinkHandlers.stripUrl(secondRedirect)).thenReturn(strippedUrl)
 
-        val trackingData = deepLinkTrackingHelper.buildTrackingDataFromNavigateAction(OpenReader, uri)
+        deepLinkTrackingUtils.track(action, OpenReader, uri)
 
-        assertThat(trackingData.source).isEqualTo(Source.EMAIL)
-        assertThat(trackingData.url).isEqualTo(strippedUrl)
-        assertThat(trackingData.sourceInfo).isNull()
+        assertTrackingData(host, DeepLinkSource.EMAIL, strippedUrl)
+    }
+
+    private fun assertTrackingData(host: String, source: DeepLinkSource, expectedUrl: String, sourceInfo: String? = null) {
+        verify(analyticsUtilsWrapper).trackWithDeepLinkData(
+                DEEP_LINKED,
+                action,
+                host,
+                source.value,
+                expectedUrl,
+                sourceInfo
+        )
     }
 }

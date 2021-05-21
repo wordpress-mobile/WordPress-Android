@@ -39,8 +39,10 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
-import org.wordpress.android.ui.deeplinks.DeepLinkModel.Source;
-import org.wordpress.android.ui.deeplinks.DeepLinkModel.TrackingData;
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
+import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
+import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource;
+import org.wordpress.android.ui.deeplinks.ReaderLinkHandler;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -60,6 +62,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtilsWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
@@ -143,6 +146,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject UrlUtilsWrapper mUrlUtilsWrapper;
+    @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -265,42 +269,31 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // with the first segment being 'read'.
         if (segments != null) {
             // Builds stripped URI for tracking purposes
-            StringBuilder uriBuilder = new StringBuilder();
-            uriBuilder.append("wordpress.com");
+            UriWrapper wrappedUri = new UriWrapper(uri);
             if (segments.get(0).equals("read")) {
-                uriBuilder.append("/read");
                 if (segments.size() > 2) {
                     blogIdentifier = segments.get(2);
 
                     if (segments.get(1).equals("blogs")) {
-                        uriBuilder.append("/blogs/feedId");
                         interceptType = InterceptType.READER_BLOG;
                     } else if (segments.get(1).equals("feeds")) {
-                        uriBuilder.append("/feeds/feedId");
                         interceptType = InterceptType.READER_FEED;
                         mIsFeed = true;
                     }
                 }
 
                 if (segments.size() > 4 && segments.get(3).equals("posts")) {
-                    uriBuilder.append("/posts/feedItemId");
                     postIdentifier = segments.get(4);
                 }
 
                 parseFragment(uri);
-                mAnalyticsUtilsWrapper
-                        .trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, new TrackingData(
-                                Source.LINK,
-                                uriBuilder.toString(),
-                                null
-                                ));
+                mDeepLinkTrackingUtils.track(action, new OpenInReader(wrappedUri), wrappedUri);
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             } else if (segments.size() >= 4) {
                 blogIdentifier = uri.getHost();
                 try {
                     postIdentifier = URLEncoder.encode(segments.get(3), "UTF-8");
-                    uriBuilder.append("/YYYY/MM/DD/postId");
                 } catch (UnsupportedEncodingException e) {
                     AppLog.e(AppLog.T.READER, e);
                     ToastUtils.showToast(this, R.string.error_generic);
@@ -310,12 +303,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 detectLike(uri);
 
                 interceptType = InterceptType.WPCOM_POST_SLUG;
-                mAnalyticsUtilsWrapper
-                        .trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, new TrackingData(
-                                Source.LINK,
-                                uriBuilder.toString(),
-                                null
-                        ));
+                mDeepLinkTrackingUtils.track(action, new OpenInReader(wrappedUri), wrappedUri);
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             }

@@ -55,7 +55,7 @@ class StatsLinkHandler
                 uri.pathSegments.firstOrNull() == STATS_PATH) || uri.host == STATS_PATH
     }
 
-    override fun stripUrl(uri: UriWrapper): String? {
+    override fun stripUrl(uri: UriWrapper): String {
         return buildString {
             val offset = if (uri.host == STATS_PATH) {
                 append(APPLINK_SCHEME)

@@ -26,7 +26,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
     @Mock lateinit var serverTrackingHandler: ServerTrackingHandler
-    @Mock lateinit var deepLinkTrackingHelper: DeepLinkTrackingHelper
+    @Mock lateinit var deepLinkTrackingUtils: DeepLinkTrackingUtils
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var viewModel: DeepLinkingIntentReceiverViewModel
     private var isFinished = false
@@ -41,7 +41,7 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
                 deepLinkUriUtils,
                 accountStore,
                 serverTrackingHandler,
-                deepLinkTrackingHelper,
+                deepLinkTrackingUtils,
                 analyticsUtilsWrapper
         )
         isFinished = false

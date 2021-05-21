@@ -28,7 +28,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `handles stats URI`() {
-        val statsUri = buildUri(host = "wordpress.com", path1 = "stats")
+        val statsUri = buildUri(host = "wordpress.com", "stats")
 
         val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
@@ -46,7 +46,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `does not handle stats URI with different host`() {
-        val statsUri = buildUri(host = "wordpress.org", path1 = "stats")
+        val statsUri = buildUri(host = "wordpress.org", "stats")
 
         val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
@@ -55,7 +55,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `does not handle URI with different path`() {
-        val statsUri = buildUri(host = "wordpress.com", path1 = "post")
+        val statsUri = buildUri(host = "wordpress.com", "post")
 
         val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
@@ -64,7 +64,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `opens stats screen from empty URL`() {
-        val uri = buildUri(path1 = "stats")
+        val uri = buildUri(host = null, "stats")
 
         val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
@@ -83,7 +83,7 @@ class StatsLinkHandlerTest {
     @Test
     fun `opens stats screen for a site when URL ends with site URL`() {
         val siteUrl = "example.com"
-        val uri = buildUri(path1 = "stats", path2 = siteUrl)
+        val uri = buildUri(host = null, "stats", siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
         val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
@@ -102,7 +102,7 @@ class StatsLinkHandlerTest {
                 "insights" to INSIGHTS
         )
         timeframes.forEach { (key, timeframe) ->
-            val uri = buildUri(path1 = "stats", path2 = key, path3 = siteUrl)
+            val uri = buildUri(host = null, "stats", key, siteUrl)
             whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
             val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
@@ -119,7 +119,7 @@ class StatsLinkHandlerTest {
     @Test
     fun `opens stats screen for a site when timeframe not valid`() {
         val siteUrl = "example.com"
-        val uri = buildUri(path1 = "stats", path2 = "invalid", path3 = siteUrl)
+        val uri = buildUri(host = null, "stats", "invalid", siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
         val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
@@ -129,7 +129,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `strips applink with all params`() {
-        val uri = buildUri("stats", path1 = "day", path2 = "example.com")
+        val uri = buildUri(host = "stats", "day", "example.com")
 
         val strippedUrl = statsLinkHandler.stripUrl(uri)
 
@@ -147,7 +147,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `strips deeplink with all params`() {
-        val uri = buildUri("wordpress.com", path1 = "stats", path2 = "day", path3 = "example.com")
+        val uri = buildUri(host = "wordpress.com", "stats", "day", "example.com")
 
         val strippedUrl = statsLinkHandler.stripUrl(uri)
 
@@ -156,7 +156,7 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `strips deeplink without params`() {
-        val uri = buildUri("wordpress.com", path1 = "stats")
+        val uri = buildUri(host = "wordpress.com", "stats")
 
         val strippedUrl = statsLinkHandler.stripUrl(uri)
 
