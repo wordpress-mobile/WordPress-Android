@@ -1283,14 +1283,9 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResultJetpackOnly(Activity activity) {
-        showSignInForResultJetpackOnly(activity, false);
-    }
-
-    public static void showSignInForResultJetpackOnly(Activity activity, Boolean clearTop) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        if (clearTop) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         JETPACK_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }

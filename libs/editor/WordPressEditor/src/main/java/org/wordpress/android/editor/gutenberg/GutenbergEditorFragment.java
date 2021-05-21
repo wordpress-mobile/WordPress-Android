@@ -34,6 +34,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -44,6 +45,8 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -84,7 +87,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
         EditorThemeUpdateListener,
-        StorySaveMediaListener {
+        StorySaveMediaListener,
+        GutenbergDialogPositiveClickInterface,
+        GutenbergDialogNegativeClickInterface {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -96,6 +101,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
+    public static final String ARG_FEATURED_IMAGE_ID = "featured_image_id";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -108,6 +114,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
+
+    private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
 
     private boolean mHtmlModeEnabled;
 
@@ -198,6 +206,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mExternallyEditedBlockOriginalHash = savedInstanceState.getString(
                     ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH);
             mFailedMediaIds = (HashSet<String>) savedInstanceState.getSerializable(ARG_FAILED_MEDIAS);
+            mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID);
         }
     }
 
@@ -785,26 +794,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         dialog.show();
     }
 
-    private void showFeaturedImageConfirmationDialog(final int mediaId) {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(R.string.replace_current_title);
-        builder.setMessage(R.string.replace_current_description);
-        builder.setPositiveButton(R.string.replace_current_confirmation,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        setFeaturedImage(mediaId);
-                    }
-                });
+    public void showFeaturedImageConfirmationDialog(final int mediaId) {
+        GutenbergDialogFragment dialog = new GutenbergDialogFragment();
+        dialog.initialize(
+                TAG_REPLACE_FEATURED_DIALOG,
+                getString(R.string.replace_current_title),
+                getString(R.string.replace_current_description),
+                getString(R.string.replace_current_confirmation),
+                getString(R.string.replace_current_cancel),
+                mediaId
+        );
 
-        builder.setNegativeButton(R.string.replace_current_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        dialog.show(getChildFragmentManager(), TAG_REPLACE_FEATURED_DIALOG);
     }
 
     private void setFeaturedImage(int mediaId) {
@@ -928,6 +929,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putString(ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH, mExternallyEditedBlockOriginalHash);
         outState.putSerializable(ARG_FAILED_MEDIAS, mFailedMediaIds);
+        outState.putLong(ARG_FEATURED_IMAGE_ID, mFeaturedImageId);
     }
 
     @Override
@@ -1379,5 +1381,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void showNotice(String message) {
         getGutenbergContainerFragment().showNotice(message);
+    }
+
+    @Override
+    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
+        switch (instanceTag) {
+            case TAG_REPLACE_FEATURED_DIALOG:
+                setFeaturedImage(mediaId);
+                break;
+        }
+    }
+
+    @Override
+    public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
+        switch (instanceTag) {
+            case TAG_REPLACE_FEATURED_DIALOG:
+                // Dismiss dialog with no action.
+                break;
+        }
     }
 }

@@ -2073,6 +2073,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blog_url_previewed";
             case LIKE_LIST_OPENED:
                 return "like_list_opened";
+            case STORAGE_WARNING_SHOWN:
+                return "storage_warning_shown";
+            case STORAGE_WARNING_ACKNOWLEDGED:
+                return "storage_warning_acknowledged";
+            case STORAGE_WARNING_CANCELED:
+                return "storage_warning_canceled";
+            case STORAGE_WARNING_DONT_SHOW_AGAIN:
+                return "storage_warning_dont_show_again";
         }
         return null;
     }
