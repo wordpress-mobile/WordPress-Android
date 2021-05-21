@@ -2490,11 +2490,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             int postId = getEditPostRepository().getId();
-            mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_GUTENBERG_EDITOR,
-                    postId
-            );
-
+            if (mediaId == 0) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_REMOVED_GUTENBERG_EDITOR,
+                        postId
+                );
+            } else {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_GUTENBERG_EDITOR,
+                        postId
+                );
+            }
             mUpdateFeaturedImageUseCase.updateFeaturedImage(mediaId, postRepository,
                     postModel -> null);
         } else if (mEditPostSettingsFragment != null) {
