@@ -120,6 +120,12 @@ public class WPVideoUtils {
                                                                  @NonNull String outFile,
                                                                  @NonNull Listener listener,
                                                                  int width, int bitrate) {
+        // NOTE: the parameters here (namely the AVC format type, IFrameInterval, the audio bitrate
+        // and the CodecProfileLevel) have been selected based on what we had already as fixed parameters
+        // in the original implementation that was using the media for mobile lib.
+        // Two improvements could be:
+        // - Investigate if the parameters set is already optimal and can be improved
+        // - Expose them as parameters so that they can be eventually changed by some external logic
         ComposerInterface composer = ComposerProvider.INSTANCE.getComposerForUseCase(new CompressVideo(
                 inputFile,
                 outFile,
