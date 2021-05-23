@@ -13,7 +13,7 @@
                 "equalTo": "user"
             },
             "per_page": {
-                "equalTo": "10"
+                "equalTo": "100"
             }
         }
     },
