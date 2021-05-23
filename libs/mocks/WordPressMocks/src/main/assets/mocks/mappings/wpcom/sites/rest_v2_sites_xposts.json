@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/wpcom/v2/sites/181851495/xposts/",
+        "urlPath": "/wpcom/v2/sites/([0-9]+)/xposts/",
         "queryParameters": {
             "decode_html": {
                 "equalTo": "true"
