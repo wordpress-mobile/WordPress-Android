@@ -73,6 +73,10 @@ public class MySitesPage {
         clickItemWithText(R.string.activity_log);
     }
 
+    public void clickScan() {
+        clickItemWithText(R.string.scan);
+    }
+
     private void clickItemWithText(int stringResId) {
         clickItem(withText(stringResId));
     }

@@ -56,6 +56,7 @@ public class JPScreenshotTest extends BaseTest {
 
             navigateMySite();
             navigateActivityLog();
+            navigateScan();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -87,6 +88,16 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
+    private void navigateScan() {
+        moveToScan();
+
+        setNightModeAndWait(false);
+        takeScreenshot("3-scan-for-issues-on-the-go");
+
+        // Exit the Activity scan activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then choose "Activity Log"
         clickOn(R.id.nav_sites);
@@ -95,6 +106,17 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
 
         // Wait for the activity log to load
+        idleFor(8000);
+    }
+
+    private void moveToScan() {
+        // Click on the "Sites" tab in the nav, then choose "Scan"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).clickScan();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
+
+        // Wait for scan to load
         idleFor(8000);
     }
 
