@@ -66,6 +66,7 @@ public class JPScreenshotTest extends BaseTest {
             navigateActivityLog();
             navigateScan();
             navigateBackupDownload();
+            navigateStats();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -126,6 +127,21 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
+    private void navigateStats() {
+        moveToStats();
+        swipeToAvoidGrayOverlay(R.id.statsPager);
+
+        if (isElementDisplayed(R.id.button_negative)) {
+            clickOn(R.id.button_negative);
+        }
+
+        setNightModeAndWait(false);
+        takeScreenshot("5-site-stats-in-your-pocket");
+
+        // Exit the Stats Activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then choose "Activity Log"
         clickOn(R.id.nav_sites);
@@ -155,6 +171,17 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
 
         // Wait for backup to load
+        idleFor(8000);
+    }
+
+    private void moveToStats() {
+        // Click on the "Sites" tab in the nav, then choose "Stats"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).clickStats();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
+
+        // Wait for the stats to load
         idleFor(8000);
     }
 
