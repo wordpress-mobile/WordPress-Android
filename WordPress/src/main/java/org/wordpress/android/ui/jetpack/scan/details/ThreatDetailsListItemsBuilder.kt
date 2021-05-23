@@ -46,23 +46,15 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         addAll(buildTechnicalDetailsListItems(threatModel))
         addAll(buildFixDetailsListItems(threatModel))
         addAll(
-                buildActionButtons(
+                buildActionButtonsWithFootnote(
                         threatModel,
                         scanStateHasValidCredentials,
+                        siteId,
                         onFixThreatButtonClicked,
                         onGetFreeEstimateButtonClicked,
                         onIgnoreThreatButtonClicked
                 )
         )
-        if (shouldShowEnterServerCredsMessage(scanStateHasValidCredentials, threatModel)) {
-            add(
-                    buildEnterServerCredsMessageState(
-                            iconResId = R.drawable.ic_add_outline_grey_dark_24dp,
-                            iconColorResId = R.color.colorPrimary,
-                            siteId = siteId
-                    )
-            )
-        }
     }.toList()
 
     private fun shouldShowEnterServerCredsMessage(hasValidCredentials: Boolean, threatModel: ThreatModel) =
@@ -129,9 +121,10 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         }
     }
 
-    private fun buildActionButtons(
+    private fun buildActionButtonsWithFootnote(
         threatModel: ThreatModel,
         hasValidCredentials: Boolean,
+        siteId: Long,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
         onIgnoreThreatButtonClicked: () -> Unit
@@ -145,6 +138,15 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                                 isEnabled = hasValidCredentials
                         )
                 )
+                if (shouldShowEnterServerCredsMessage(hasValidCredentials, threatModel)) {
+                    add(
+                            buildEnterServerCredsMessageState(
+                                    iconResId = R.drawable.ic_add_outline_grey_dark_24dp,
+                                    iconColorResId = R.color.colorPrimary,
+                                    siteId = siteId
+                            )
+                    )
+                }
             } else {
                 add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
             }
