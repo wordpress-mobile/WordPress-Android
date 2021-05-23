@@ -24,8 +24,10 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
@@ -134,6 +136,12 @@ public class JPScreenshotTest extends BaseTest {
         if (isElementDisplayed(R.id.button_negative)) {
             clickOn(R.id.button_negative);
         }
+
+        // click on the Month tab
+        onView(allOf(withText(R.string.stats_timeframe_months),
+                isDescendantOfA(withId(R.id.tabLayout)))).perform(click());
+
+        idleFor(8000);
 
         setNightModeAndWait(false);
         takeScreenshot("5-site-stats-in-your-pocket");
