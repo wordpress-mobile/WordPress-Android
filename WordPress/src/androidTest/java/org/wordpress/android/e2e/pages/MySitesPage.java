@@ -77,6 +77,10 @@ public class MySitesPage {
         clickItemWithText(R.string.scan);
     }
 
+    public void clickBackup() {
+        clickItemWithText(R.string.backup);
+    }
+
     private void clickItemWithText(int stringResId) {
         clickItem(withText(stringResId));
     }

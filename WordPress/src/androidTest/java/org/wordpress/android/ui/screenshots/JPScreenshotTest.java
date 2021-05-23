@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.screenshots;
 
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -20,9 +21,17 @@ import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.containsString;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
@@ -57,6 +66,7 @@ public class JPScreenshotTest extends BaseTest {
             navigateMySite();
             navigateActivityLog();
             navigateScan();
+            navigateBackupDownload();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -98,6 +108,25 @@ public class JPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
+    private void navigateBackupDownload() {
+        moveToBackup();
+
+        onView(withId(R.id.log_list_view))
+                .check(matches(hasDescendant(withText(containsString("plugins"))))).perform(click());
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.activityDownloadBackupButton);
+
+        if (isElementDisplayed(R.id.activityDownloadBackupButton)) {
+            clickOn(R.id.activityDownloadBackupButton);
+        }
+
+        setNightModeAndWait(false);
+        takeScreenshot("4-back-up-your-site-at-any-moment");
+
+        // Exit the backup download activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
     private void moveToActivityLog() {
         // Click on the "Sites" tab in the nav, then choose "Activity Log"
         clickOn(R.id.nav_sites);
@@ -117,6 +146,16 @@ public class JPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
         // Wait for scan to load
+        idleFor(8000);
+    }
+
+    private void moveToBackup() {
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).clickBackup();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.log_list_view);
+
+        // Wait for backup to load
         idleFor(8000);
     }
 
