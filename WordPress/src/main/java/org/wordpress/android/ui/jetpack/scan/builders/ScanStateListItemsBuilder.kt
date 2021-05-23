@@ -134,8 +134,6 @@ class ScanStateListItemsBuilder @Inject constructor(
                 isEnabled = model.hasValidCredentials
         ).takeIf { fixableThreats.isNotEmpty() }?.let { items.add(it) }
 
-        items.add(scanButton)
-
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
                     buildEnterServerCredsMessageState(
@@ -146,6 +144,8 @@ class ScanStateListItemsBuilder @Inject constructor(
                     )
             )
         }
+
+        items.add(scanButton)
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState(threatsCount = threats.size))
