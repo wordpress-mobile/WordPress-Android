@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.SitePickerPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
+import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
@@ -53,6 +55,7 @@ public class JPScreenshotTest extends BaseTest {
             wpLogin();
 
             navigateMySite();
+            navigateActivityLog();
 
             // Turn Demo Mode off on the emulator when we're done
             mDemoModeEnabler.disable();
@@ -72,6 +75,27 @@ public class JPScreenshotTest extends BaseTest {
 
         setNightModeAndWait(false);
         takeScreenshot("1-bring-your-jetpack-with-you");
+    }
+
+    private void navigateActivityLog() {
+        moveToActivityLog();
+
+        setNightModeAndWait(false);
+        takeScreenshot("2-keep-tabs-on-your-site-activity");
+
+        // Exit the Activity Log Activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void moveToActivityLog() {
+        // Click on the "Sites" tab in the nav, then choose "Activity Log"
+        clickOn(R.id.nav_sites);
+        (new MySitesPage()).clickActivityLog();
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.swipe_refresh_layout);
+
+        // Wait for the activity log to load
+        idleFor(8000);
     }
 
     private void takeScreenshot(String screenshotName) {

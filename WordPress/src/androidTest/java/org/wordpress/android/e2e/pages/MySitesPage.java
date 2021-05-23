@@ -69,6 +69,10 @@ public class MySitesPage {
         clickItemWithText(R.string.my_site_btn_blog_posts);
     }
 
+    public void clickActivityLog() {
+        clickItemWithText(R.string.activity_log);
+    }
+
     private void clickItemWithText(int stringResId) {
         clickItem(withText(stringResId));
     }
