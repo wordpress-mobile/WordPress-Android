@@ -440,7 +440,7 @@
           "ID": 185119569,
           "name": "Four Paws Dog Grooming",
           "description": "Jetpack with Scan Enabled",
-          "URL": "example.wordpress.com ",
+          "URL": "example.wordpress.com",
           "user_can_manage": false,
           "capabilities": {
             "edit_pages": true,
@@ -494,11 +494,11 @@
             "blog_public": 1,
             "videopress_enabled": false,
             "upgraded_filetypes_enabled": true,
-            "login_url": "https://pressable-jetpack-daily-scan.mystagingwebsite.com/wp-login.php",
-            "admin_url": "https://pressable-jetpack-daily-scan.mystagingwebsite.com/wp-admin/",
+            "login_url": "https://fourpawsdoggrooming.files.wordpress.com/wp-login.php",
+            "admin_url": "https://fourpawsdoggrooming.files.wordpress.com/wp-admin/",
             "is_mapped_domain": true,
             "is_redirect": false,
-            "unmapped_url": "https://pressable-jetpack-daily-scan.mystagingwebsite.com",
+            "unmapped_url": "https://fourpawsdoggrooming.files.wordpress.com",
             "featured_images_enabled": false,
             "theme_slug": "twentytwenty",
             "header_image": false,
@@ -565,7 +565,7 @@
             "is_cloud_eligible": true,
             "anchor_podcast": false,
             "jetpack_version": "9.7",
-            "main_network_site": "https://pressable-jetpack-daily-scan.mystagingwebsite.com",
+            "main_network_site": "https://fourpawsdoggrooming.files.wordpress.com",
             "active_modules": [
               "contact-form",
               "enhanced-distribution",
@@ -627,7 +627,7 @@
               "help": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/185119569/help",
               "posts": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/185119569/posts/",
               "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/185119569/comments/",
-              "xmlrpc": "https://pressable-jetpack-daily-scan.mystagingwebsite.com/xmlrpc.php",
+              "xmlrpc": "https://example.wordpress.com/xmlrpc.php",
               "site_icon": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/185119569/media/126"
             }
           },
