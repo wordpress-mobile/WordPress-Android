@@ -174,10 +174,10 @@ import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.ProgressEvent;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
@@ -3490,7 +3490,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
+    public void onEventMainThread(ProgressEvent event) {
         if (!isFinishing()) {
             // use upload progress rather than optimizer progress since the former includes upload+optimization
             float progress = UploadService.getUploadProgressForMedia(event.media);

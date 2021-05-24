@@ -64,6 +64,7 @@ Language: hr
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
     <string name="gutenberg_native_video_caption_empty">Video natpis. Prazan</string>
     <string name="gutenberg_native_updates_the_title">Ažurira naslov.</string>
+    <string name="gutenberg_native_paste_block_after">Zalijepite blok nakon</string>
     <string name="gutenberg_native_page_title_s">Naslov stranice. %s</string>
     <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
     <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
