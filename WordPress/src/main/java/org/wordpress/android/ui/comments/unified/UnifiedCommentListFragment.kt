@@ -43,7 +43,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
     }
 
     private fun CommentListFragmentBinding.setupObservers() {
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.commentListItems.collectLatest { pagingData ->
                 commentsRecyclerView.adapter?.let { it -> (it as UnifiedCommentListAdapter).submitData(pagingData) }
             }
