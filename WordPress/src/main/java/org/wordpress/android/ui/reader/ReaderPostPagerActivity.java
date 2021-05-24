@@ -41,8 +41,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
-import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource;
-import org.wordpress.android.ui.deeplinks.ReaderLinkHandler;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
