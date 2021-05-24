@@ -431,7 +431,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `unified comments item built if is the feature flag is enabled`() {
+    fun `unified comments item built if the feature flag is enabled`() {
         val isUnifiedCommentFeatureAvailable = true
 
         val item = siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
