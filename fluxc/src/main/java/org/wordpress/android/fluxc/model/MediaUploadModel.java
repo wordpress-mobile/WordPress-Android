@@ -110,7 +110,7 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
         return new MediaError(
                 MediaErrorType.fromString(getErrorType()),
                 getErrorMessage(),
-                MediaErrorSubType.getSubTypeFromString(getErrorSubType())
+                MediaErrorSubType.deserialize(getErrorSubType())
         );
     }
 
@@ -124,7 +124,7 @@ public class MediaUploadModel extends Payload<BaseNetworkError> implements Ident
 
         setErrorType(mediaError.type.toString());
         setErrorMessage(mediaError.message);
-        setErrorSubType(mediaError.mErrorSubType != null ? mediaError.mErrorSubType.toString() : null);
+        setErrorSubType(mediaError.mErrorSubType != null ? mediaError.mErrorSubType.serialize() : null);
     }
 
     @Override
