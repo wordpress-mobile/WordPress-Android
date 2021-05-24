@@ -312,7 +312,7 @@ public class ReaderUpdateLogic {
 
         AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
         // request using ?meta=site,feed to get extra info
-        WordPress.getRestClientUtilsV1_1().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
 
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {

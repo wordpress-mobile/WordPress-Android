@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -29,7 +33,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -48,6 +51,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
+import kotlinx.coroutines.CoroutineScope;
 
 /**
  * An adapter for the media gallery grid.
@@ -62,6 +70,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
+    private GridLayoutManager mLayoutManager;
 
     private final Context mContext;
     private final SiteModel mSite;
@@ -75,8 +84,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .8f;
 
+    private static final String VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL = "view_tag_extract_from_remote_video_url";
+
     @Inject ImageManager mImageManager;
     @Inject AuthenticationUtils mAuthenticationUtils;
+    @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
@@ -256,12 +268,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             && mCallback != null) {
             mCallback.onAdapterFetchMoreData();
         }
-    }
-
-    @Override
-    public void onViewRecycled(GridViewHolder holder) {
-        super.onViewRecycled(holder);
-        holder.mImageView.setTag(R.id.media_grid_file_path_id, null);
     }
 
     public ArrayList<Integer> getSelectedItems() {
@@ -446,6 +452,46 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    @Override public void onViewRecycled(@NonNull GridViewHolder holder) {
+        mImageManager.cancelRequestAndClearImageView(holder.mImageView);
+        holder.mImageView.setTag(R.id.media_grid_remote_thumb_extract_id, null);
+        super.onViewRecycled(holder);
+    }
+
+    public void cancelPendingRequestsForVisibleItems(@NonNull RecyclerView recyclerView) {
+        int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+            GridViewHolder holder = (GridViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            if (holder != null
+                && (VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL.equals(
+                        holder.mImageView.getTag(R.id.media_grid_remote_thumb_extract_id)))) {
+                mImageManager.cancelRequestAndClearImageView(holder.mImageView);
+            }
+        }
+    }
+
+    public void refreshCurrentItems(@NonNull RecyclerView recyclerView) {
+        int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+        if (mMediaList.size() >= lastVisibleItemPosition && lastVisibleItemPosition > -1) {
+            for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+                // only refresh this one
+                GridViewHolder holder = (GridViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null
+                    && (VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL.equals(
+                            holder.mImageView.getTag(R.id.media_grid_remote_thumb_extract_id)))) {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+    }
+
+    @Override public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+    }
+
     /*
      * loads the thumbnail for the passed video media item - works with both local and network videos
      */
@@ -470,7 +516,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             AppLog.w(AppLog.T.MEDIA, "MediaGridAdapter > No path to video thumbnail");
             return;
         }
-        imageView.setTag(R.id.media_grid_file_path_id, filePath);
         // see if we have a cached thumbnail before retrieving it
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
         if (bitmap != null) {
@@ -478,29 +523,25 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                final Bitmap thumb =
-                        ImageUtils.getVideoFrameFromVideo(filePath,
-                                mThumbWidth,
-                                mAuthenticationUtils.getAuthHeaders(filePath)
-                        );
-                if (thumb != null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            WordPress.getBitmapCache().put(filePath, thumb);
-                            if (imageView.getTag(R.id.media_grid_file_path_id) instanceof String
-                                && (imageView.getTag(R.id.media_grid_file_path_id)).equals(filePath)) {
-                                imageView.setTag(R.id.media_grid_file_path_id, null);
-                                notifyItemChanged(position);
-                            }
+        imageView.setTag(R.id.media_grid_remote_thumb_extract_id, VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL);
+        mImageManager.loadThumbnailFromVideoUrl(mAppScope, imageView, filePath, ScaleType.CENTER_CROP,
+                new ImageManager.RequestListener<Drawable>() {
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (e != null) {
+                            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > error loading video thumbnail = " + e);
                         }
-                    });
-                }
-            }
-        }.start();
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        imageView.setTag(R.id.media_grid_remote_thumb_extract_id, null);
+                        Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                        // create a copy since the original bitmap may by automatically recycled
+                        bitmap = bitmap.copy(bitmap.getConfig(), true);
+                        WordPress.getBitmapCache().put(filePath, bitmap);
+                    }
+                });
     }
 
     public boolean isEmpty() {

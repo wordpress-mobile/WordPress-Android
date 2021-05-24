@@ -25,7 +25,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
-import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.lang.ref.WeakReference
 
@@ -38,7 +37,7 @@ class SnackbarSequencerTest {
     @Rule @JvmField var thrown2: ExpectedException = ExpectedException.none()
 
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
-    @Mock lateinit var wpSnackbar: WPSnackbar
+    @Mock lateinit var wpSnackbar: Snackbar
     @Mock lateinit var view: View
     @Mock lateinit var activity: Activity
 

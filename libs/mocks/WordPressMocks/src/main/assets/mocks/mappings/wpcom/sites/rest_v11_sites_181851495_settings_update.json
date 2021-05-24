@@ -1,0 +1,18 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPath": "/rest/v1.1/sites/181851495/settings",
+        "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "updated": []
+            }
+        }
+    }
+}

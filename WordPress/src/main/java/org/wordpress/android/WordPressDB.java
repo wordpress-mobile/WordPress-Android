@@ -8,7 +8,7 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -47,7 +47,7 @@ public class WordPressDB {
         // Create tables if they don't exist
         mDb.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         SiteSettingsTable.createTable(mDb);
-        SuggestionTable.createTables(mDb);
+        UserSuggestionTable.createTables(mDb);
         NotificationsTable.createTables(mDb);
 
         // Update tables for new installs and app updates

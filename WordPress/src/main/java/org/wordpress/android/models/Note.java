@@ -40,6 +40,7 @@ public class Note {
     public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     public static final String NOTE_REBLOG_TYPE = "reblog";
     public static final String NOTE_NEW_POST_TYPE = "new_post";
+    public static final String NOTE_VIEW_MILESTONE = "view_milestone";
     public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
@@ -130,6 +131,10 @@ public class Note {
 
     public Boolean isReblogType() {
         return isType(NOTE_REBLOG_TYPE);
+    }
+
+    public Boolean isViewMilestoneType() {
+        return isType(NOTE_VIEW_MILESTONE);
     }
 
     public Boolean isCommentReplyType() {

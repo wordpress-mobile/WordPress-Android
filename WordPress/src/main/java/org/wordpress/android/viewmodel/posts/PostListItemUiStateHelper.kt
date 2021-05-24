@@ -44,6 +44,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -60,6 +61,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
+
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
@@ -351,6 +353,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
+        val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
@@ -387,20 +390,33 @@ class PostListItemUiStateHelper @Inject constructor(
             )
         }
 
+        if (canShowStats) {
+            buttonTypes.add(BUTTON_STATS)
+        }
+
+        if (canShowCopy) {
+            buttonTypes.add(BUTTON_COPY)
+        }
+
+        buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
+
         when {
             isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
-                buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
                 buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
             postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
         }
 
-        if (canShowStats) {
-            buttonTypes.add(BUTTON_STATS)
-        }
-
         return buttonTypes
+    }
+
+    private fun MutableList<PostListButtonType>.addMoveToDraftActionIfAvailable(postStatus: PostStatus) {
+        val canMovePostToDraft = postStatus == PUBLISHED || postStatus == TRASHED
+
+        if (canMovePostToDraft) {
+            add(BUTTON_MOVE_TO_DRAFT)
+        }
     }
 
     private fun createDefaultViewActions(

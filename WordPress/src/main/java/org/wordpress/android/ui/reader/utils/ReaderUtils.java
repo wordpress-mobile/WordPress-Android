@@ -124,7 +124,7 @@ public class ReaderUtils {
 
     /*
      * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
-     * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
+     * https://git.io/JqUEP
      * http://stackoverflow.com/a/1612015/1673548
      */
     public static String sanitizeWithDashes(final String title) {
@@ -497,7 +497,7 @@ public class ReaderUtils {
     /**
     * isExternalFeed identifies an external RSS feed
      * blogId will be empty for feeds and in some instances, it is explicitly
-     * setting blogId equal to the feedId  
+     * setting blogId equal to the feedId
      */
     public static boolean isExternalFeed(long blogId, long feedId) {
          return (blogId == 0 && feedId != 0) || blogId == feedId;
@@ -505,5 +505,13 @@ public class ReaderUtils {
 
     public static String getReportPostUrl(String blogUrl) {
         return "https://wordpress.com/abuse/?report_url=" + blogUrl;
+    }
+
+    public static boolean postExists(long blogId, long postId) {
+        return ReaderPostTable.postExists(blogId, postId);
+    }
+
+    public static boolean commentExists(long blogId, long postId, long commentId) {
+        return ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
 }

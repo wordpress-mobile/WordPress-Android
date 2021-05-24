@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -43,6 +44,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
             PUBLISHED -> {
                 mutableSetOf(
                         VIEW_PAGE,
+                        COPY,
                         SET_PARENT
                 ).apply {
                     if (siteModel.isUsingWpComRestApi &&
@@ -55,14 +57,18 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                             add(SET_AS_POSTS_PAGE)
                         }
                     }
-                    add(MOVE_TO_DRAFT)
-                    add(MOVE_TO_TRASH)
+
+                    if (siteModel.pageOnFront != remoteId && listType == PUBLISHED) {
+                        add(MOVE_TO_DRAFT)
+                        add(MOVE_TO_TRASH)
+                    }
+
                     if (canCancelPendingAutoUpload(uploadUiState)) {
                         add(CANCEL_AUTO_UPLOAD)
                     }
                 }
             }
-            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH).apply {
+            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY).apply {
                 if (canCancelPendingAutoUpload(uploadUiState)) {
                     add(CANCEL_AUTO_UPLOAD)
                 }

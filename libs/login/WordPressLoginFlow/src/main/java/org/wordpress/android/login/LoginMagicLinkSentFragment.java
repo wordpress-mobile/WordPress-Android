@@ -137,6 +137,11 @@ public class LoginMagicLinkSentFragment extends Fragment {
         }
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mAnalyticsListener.magicLinkSentScreenResumed();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();

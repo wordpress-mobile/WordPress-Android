@@ -2,7 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
@@ -15,7 +15,7 @@ class EditPostPublishSettingsFragment : PublishSettingsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
     }
 

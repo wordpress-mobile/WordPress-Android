@@ -12,7 +12,14 @@ class ReaderPostTableWrapper @Inject constructor() {
     fun getBlogPost(blogId: Long, postId: Long, excludeTextColumn: Boolean): ReaderPost? =
             ReaderPostTable.getBlogPost(blogId, postId, excludeTextColumn)
 
+    fun getFeedPost(blogId: Long, postId: Long, excludeTextColumn: Boolean): ReaderPost? = ReaderPostTable
+            .getFeedPost(blogId, postId, excludeTextColumn)
+
     fun isPostFollowed(post: ReaderPost): Boolean = ReaderPostTable.isPostFollowed(post)
+
+    fun isPostSeen(post: ReaderPost): Boolean = ReaderPostTable.isPostSeen(post)
+
+    fun setPostSeenStatusInDb(post: ReaderPost, isSeen: Boolean) = ReaderPostTable.setPostSeenStatus(post, isSeen)
 
     fun getPostsWithTag(
         readerTag: ReaderTag,

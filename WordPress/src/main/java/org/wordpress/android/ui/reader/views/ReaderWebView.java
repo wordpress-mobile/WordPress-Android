@@ -11,17 +11,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -192,13 +193,18 @@ public class ReaderWebView extends WPWebView {
     }
 
     /***
-     * isValidInstagramImageClick checks if this is an embedded instragram situation.
-     * If so, we want to ignore image click so that the iframe src gets handled
-     * The additional URL grab is an additional check for the instagram.com host
+     * Checks if the tapped image is a child of an anchor tag we want to respect.
+     * If so, we want to ignore the image click so that the wrapping src gets handled.
+     * The additional URL grab is an additional check for the appropriate host or URL structure.
+     *
+     * Cases:
+     * 1. Instagram
+     * 2. The Story block
+     *
      * @param hr - the HitTestResult
-     * @return true if is instagram or false otherwise
+     * @return true if the image click should be ignored and deferred to the parent anchor tag
      */
-    private boolean isValidInstagramImageClick(HitTestResult hr) {
+    private boolean isValidEmbeddedImageClick(HitTestResult hr) {
         // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
         if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
             Handler handler = new Handler();
@@ -210,7 +216,7 @@ public class ReaderWebView extends WPWebView {
                 return false;
             }
 
-            return url.contains("ig_embed");
+            return url.contains("ig_embed") || url.contains("wp-story");
         } else {
             return false;
         }
@@ -227,7 +233,7 @@ public class ReaderWebView extends WPWebView {
             if (hr != null) {
                 if (isValidClickedUrl(hr.getExtra())) {
                     if (UrlUtils.isImageUrl(hr.getExtra())) {
-                        if (isValidInstagramImageClick(hr)) {
+                        if (isValidEmbeddedImageClick(hr)) {
                             return super.onTouchEvent(event);
                         } else {
                             return mUrlClickListener.onImageUrlClick(
@@ -259,6 +265,8 @@ public class ReaderWebView extends WPWebView {
             }
             mReaderWebView = readerWebView;
         }
+
+
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -312,12 +320,13 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
-    private static class ReaderWebChromeClient extends WebChromeClient {
+    private static class ReaderWebChromeClient extends WebChromeClientWithVideoPoster {
         private final ReaderWebView mReaderWebView;
         private View mCustomView;
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
+            super(readerWebView, R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }

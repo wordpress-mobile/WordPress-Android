@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -15,6 +16,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -22,6 +25,8 @@ import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.Version;
+import org.wordpress.android.util.image.BlavatarShape;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +35,8 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
-    // TODO Update to the first version with the story block as a production and not a beta block
-    public static final String WP_STORIES_JETPACK_VERSION = "8.8";
+    public static final String WP_STORIES_JETPACK_VERSION = "9.1";
+    public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
@@ -209,8 +214,12 @@ public class SiteUtils {
             // Default to block editor when mobile editor setting is empty
             return true;
         } else {
-            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
+            return alwaysDefaultToGutenberg(site) || site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
+    }
+
+    public static boolean alwaysDefaultToGutenberg(SiteModel site) {
+        return site.isWPCom() && !site.isWPComAtomic();
     }
 
     public static String getSiteNameOrHomeURL(SiteModel site) {
@@ -247,6 +256,36 @@ public class SiteUtils {
     public static String getSiteIconUrl(SiteModel site, int size) {
         return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
                 site.isPrivateWPComAtomic());
+    }
+
+    public static ImageType getSiteImageType(boolean isP2, BlavatarShape shape) {
+        ImageType type = ImageType.BLAVATAR;
+        if (isP2) {
+            switch (shape) {
+                case SQUARE:
+                    type = ImageType.P2_BLAVATAR;
+                    break;
+                case SQUARE_WITH_ROUNDED_CORNERES:
+                    type = ImageType.P2_BLAVATAR_ROUNDED_CORNERS;
+                    break;
+                case CIRCULAR:
+                    type = ImageType.P2_BLAVATAR_CIRCULAR;
+                    break;
+            }
+        } else {
+            switch (shape) {
+                case SQUARE:
+                    type = ImageType.BLAVATAR;
+                    break;
+                case SQUARE_WITH_ROUNDED_CORNERES:
+                    type = ImageType.BLAVATAR_ROUNDED_CORNERS;
+                    break;
+                case CIRCULAR:
+                    type = ImageType.BLAVATAR_CIRCULAR;
+                    break;
+            }
+        }
+        return type;
     }
 
     public static SiteAccessibilityInfo getAccessibilityInfoFromSite(@NotNull SiteModel site) {
@@ -310,6 +349,10 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION));
     }
 
+    public static boolean supportsContactInfoFeature(SiteModel site) {
+        return site != null & (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
+    }
+
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
         return site != null && !site.isAutomatedTransfer() && SiteUtils.hasNonJetpackBusinessPlan(site);
     }
@@ -328,10 +371,22 @@ public class SiteUtils {
     }
 
     public static boolean hasCustomDomain(@NonNull SiteModel site) {
-        return !site.getUrl().contains(".wordpress.com");
+        return !site.getUrl().contains(".wordpress.com") && !site.getUrl().contains(".wpcomstaging.com");
     }
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
+    }
+
+    // TODO: Inline this method when the legacy 'MySiteFragment' class is removed.
+    public static boolean isScanEnabled(boolean scanPurchased, SiteModel site) {
+        return scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
+    }
+
+    @NonNull
+    public static FetchSitesPayload getFetchSitesPayload() {
+        ArrayList<SiteFilter> siteFilters = new ArrayList<>();
+        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
+        return new FetchSitesPayload(siteFilters);
     }
 }

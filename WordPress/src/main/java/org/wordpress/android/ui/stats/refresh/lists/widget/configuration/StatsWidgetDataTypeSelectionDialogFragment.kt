@@ -7,7 +7,6 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
@@ -26,7 +25,7 @@ class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val nonNullActivity = requireActivity()
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(StatsDataTypeSelectionViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(nonNullActivity)
         val view = nonNullActivity.layoutInflater.inflate(R.layout.stats_data_type_selector, null) as RadioGroup

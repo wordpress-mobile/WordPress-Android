@@ -127,6 +127,11 @@ class PostUploadNotifier {
     }
 
     private synchronized void startOrUpdateForegroundNotification(@Nullable PostImmutableModel post) {
+        boolean isTotalPostsAndMediaItemsCountZero = sNotificationData.mTotalPostItems == 0
+                                                     && sNotificationData.mTotalMediaItems == 0;
+        if (isTotalPostsAndMediaItemsCountZero) {
+            return;
+        }
         updateNotificationBuilder(post);
         if (sNotificationData.mNotificationId == 0) {
             sNotificationData.mNotificationId = (new Random()).nextInt();
@@ -331,7 +336,7 @@ class PostUploadNotifier {
                 break;
         }
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
+        notificationBuilder.setSmallIcon(R.drawable.ic_app_white_24dp);
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         notificationBuilder.setContentTitle(notificationTitle);
@@ -412,7 +417,7 @@ class PostUploadNotifier {
                                                                 (int) notificationId,
                                                                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
+        notificationBuilder.setSmallIcon(R.drawable.ic_app_white_24dp);
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());

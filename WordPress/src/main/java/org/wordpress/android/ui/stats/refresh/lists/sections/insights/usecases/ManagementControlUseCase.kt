@@ -9,7 +9,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider

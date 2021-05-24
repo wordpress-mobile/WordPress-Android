@@ -1,4 +1,0 @@
-16.0:
-Updates voor blok-editor: er is nu ondersteuning voor uitlijning over de volledige breedte en breedte voor de video-, galerij- en meer blokken. We hebben een probleem met het klassieke blok op Jetpack sites opgelost en een probleem met niet-ondersteunde blokken op geroteerde apparaten opgelost.
-
-Reader updates: geniet van een betere leeservaring en prachtige afbeeldingen in de opnieuw ontworpen Reader. Je hebt er zelfs toegang toe als je geen onderwerpen volgt.

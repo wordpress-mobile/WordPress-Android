@@ -362,11 +362,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackEmailSignupConfirmationViewed() {
-        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.START);
-    }
-
-    @Override
     public void trackSocialSignupConfirmationViewed() {
         mUnifiedLoginTracker.track(Flow.GOOGLE_SIGNUP, Step.START);
     }
@@ -374,5 +369,25 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackCreateAccountClick() {
         mUnifiedLoginTracker.trackClick(Click.CREATE_ACCOUNT);
+    }
+
+    @Override public void emailPasswordFormScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void siteAddressFormScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void magicLinkRequestScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void magicLinkSentScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.MAGIC_LINK_REQUESTED);
+    }
+
+    @Override public void usernamePasswordScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.USERNAME_PASSWORD);
     }
 }

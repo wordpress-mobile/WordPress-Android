@@ -33,8 +33,9 @@ class FetchDomainsUseCase @Inject constructor(
 
     suspend fun fetchDomains(
         query: String,
-        segmentId: Long,
+        segmentId: Long? = null,
         includeVendorDot: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR,
+        includeDotBlog: Boolean = false,
         size: Int = FETCH_DOMAINS_SIZE
     ): OnSuggestedDomains {
         val payload = SuggestDomainsPayload(
@@ -43,6 +44,15 @@ class FetchDomainsUseCase @Inject constructor(
                 size,
                 includeVendorDot
         )
+
+        /**
+         * Depending on the payload the server may override the following values. Setting this values here to get
+         * reasonable results in case SKIP button is pressed ("default" template)
+         */
+        payload.includeWordpressCom = true
+        payload.onlyWordpressCom = true
+        payload.includeDotBlogSubdomain = includeDotBlog
+
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)
             dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))

@@ -26,7 +26,8 @@ import org.wordpress.android.util.UrlUtilsWrapper
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
-        "slug"
+        "slug",
+        "domain"
 )
 private const val LANGUAGE_ID = "lang_id"
 

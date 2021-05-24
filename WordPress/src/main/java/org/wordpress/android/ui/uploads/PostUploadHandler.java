@@ -277,6 +277,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+            payload.isFirstTimePublish = sFirstPublishPosts.contains(mPost.getId());
 
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:

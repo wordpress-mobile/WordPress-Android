@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
@@ -41,11 +42,14 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -61,26 +65,29 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
-private const val POST_PARAM_POSITION = 0
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 7
-private const val ON_TAG_CLICKED_PARAM_POSITION = 13
-private const val ON_BUTTON_CLICKED_PARAM_POSITION = 5
-private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 11
-private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 12
-private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 6
-private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 9
-private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 10
+private const val POST_PARAM_POSITION = 1
+private const val ON_BUTTON_CLICKED_PARAM_POSITION = 6
+private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 7
+private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
+private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 10
+private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 11
+private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 12
+private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 13
+private const val ON_TAG_CLICKED_PARAM_POSITION = 14
+
 private const val NUMBER_OF_ITEMS = 10L
+
 private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
 private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
 private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
@@ -98,7 +105,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock private lateinit var parentViewModel: ReaderViewModel
@@ -120,7 +127,7 @@ class ReaderDiscoverViewModelTest {
                 reblogUseCase,
                 readerUtilsWrapper,
                 appPrefsWrapper,
-                analyticsTrackerWrapper,
+                readerTracker,
                 displayUtilsWrapper,
                 getFollowedTagsUseCase,
                 TEST_DISPATCHER,
@@ -130,26 +137,37 @@ class ReaderDiscoverViewModelTest {
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
-        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(mock())
+        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                        anyOrNull(), anyOrNull()
+                        source = anyString(),
+                        post = anyOrNull(),
+                        isDiscover = anyBoolean(),
+                        photonWidth = anyInt(),
+                        photonHeight = anyInt(),
+                        postListType = anyOrNull(),
+                        onButtonClicked = anyOrNull(),
+                        onItemClicked = anyOrNull(),
+                        onItemRendered = anyOrNull(),
+                        onDiscoverSectionClicked = anyOrNull(),
+                        onMoreButtonClicked = anyOrNull(),
+                        onMoreDismissed = anyOrNull(),
+                        onVideoOverlayClicked = anyOrNull(),
+                        onPostHeaderViewClicked = anyOrNull(),
+                        onTagItemClicked = anyOrNull(),
+                        moreMenuItems = anyOrNull()
                 )
         ).thenAnswer {
-            val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
-            // propagate some of the arguments
             createDummyReaderPostUiState(
-                    post,
-                    it.getArgument<(ReaderCardUiState) -> Unit>(ON_ITEM_RENDERED_PARAM_POSITION),
-                    it.getArgument<(String) -> Unit>(ON_TAG_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long, ReaderPostCardActionType) -> Unit>(ON_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_POST_HEADER_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_POST_ITEM_CLICKED_PARAM_POSITION),
-                    it.getArgument<(ReaderPostUiState) -> Unit>(ON_MORE_MENU_CLICKED_PARAM_POSITION),
-                    it.getArgument<(ReaderPostUiState) -> Unit>(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
+                    it.getArgument(POST_PARAM_POSITION),
+                    it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
+                    it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_HEADER_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_ITEM_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_MORE_MENU_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
             )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(fakeCommunicationChannel)
@@ -164,11 +182,11 @@ class ReaderDiscoverViewModelTest {
                 )
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
-                    recommendedBlogs = it.getArgument<List<ReaderBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
-                    onItemClicked = it.getArgument<(Long, Long) -> Unit>(
+                    recommendedBlogs = it.getArgument(RECOMMENDED_BLOG_PARAM_POSITION),
+                    onItemClicked = it.getArgument(
                             ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
                     ),
-                    onFollowClicked = it.getArgument<(ReaderRecommendedBlogUiState) -> Unit>(
+                    onFollowClicked = it.getArgument(
                             ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION
                     )
             )
@@ -201,7 +219,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags `() = test {
+    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags`() = test {
         // Arrange
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         val uiStates = init().uiStates
@@ -209,7 +227,17 @@ class ReaderDiscoverViewModelTest {
         viewModel.start(parentViewModel)
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ShowFollowInterestsEmptyUiState::class.java)
+        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
+    }
+
+    @Test
+    fun `ShowNoPostsUiState is shown when the discoverFeed does not contain any posts`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList(numberOfItems = 0)
+        // Assert
+        assertThat(uiStates[1]).isInstanceOf(ShowNoPostsUiState::class.java)
     }
 
     @Test
@@ -251,17 +279,17 @@ class ReaderDiscoverViewModelTest {
 
     @Test
     fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
-        test {
-            // Arrange
-            val uiStates = init(autoUpdateFeed = false).uiStates
+            test {
+                // Arrange
+                val uiStates = init(autoUpdateFeed = false).uiStates
 
-            // Act
-            fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
 
-            // Assert
-            val contentUiState = uiStates[1] as ContentUiState
-            assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
-        }
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+            }
 
     @Test
     fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
@@ -275,7 +303,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `if welcome card exists with other cards, it is present in ContentUiState`() = test {
+    fun `if welcome card exists then ReaderWelcomeBannerCardUiState will be present`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
@@ -286,17 +314,6 @@ class ReaderDiscoverViewModelTest {
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
         assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
-    }
-
-    @Test
-    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
-        // Assert
-        assertThat(uiStates.size).isEqualTo(1)
-        assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
     }
 
     @Test
@@ -326,7 +343,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_FIRST_PAGE)))
         // Assert
-        assertThat(uiStates.last().reloadProgressVisibility).isTrue()
+        assertThat(uiStates.last().reloadProgressVisibility).isTrue
     }
 
     @Test
@@ -336,7 +353,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_MORE)))
         // Assert
-        assertThat(uiStates.last().loadMoreProgressVisibility).isTrue()
+        assertThat(uiStates.last().loadMoreProgressVisibility).isTrue
     }
 
     @Test
@@ -346,7 +363,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(Started(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenProgressVisibility).isTrue()
+        assertThat(uiStates.last().fullscreenProgressVisibility).isTrue
     }
 
     @Test
@@ -357,7 +374,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenErrorVisibility).isTrue()
+        assertThat(uiStates.last()).isInstanceOf(RequestFailedUiState::class.java)
     }
 
     @Test
@@ -367,9 +384,9 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenProgressVisibility).isFalse()
-        assertThat(uiStates.last().reloadProgressVisibility).isFalse()
-        assertThat(uiStates.last().loadMoreProgressVisibility).isFalse()
+        assertThat(uiStates.last().fullscreenProgressVisibility).isFalse
+        assertThat(uiStates.last().reloadProgressVisibility).isFalse
+        assertThat(uiStates.last().loadMoreProgressVisibility).isFalse
     }
 
     @Test
@@ -403,7 +420,7 @@ class ReaderDiscoverViewModelTest {
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
                 eq(LIKE),
                 eq(false),
-                eq(false)
+                anyString()
         )
     }
 
@@ -429,7 +446,8 @@ class ReaderDiscoverViewModelTest {
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId)
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId),
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.isFollowedByCurrentUser)
         )
     }
 
@@ -442,7 +460,8 @@ class ReaderDiscoverViewModelTest {
                 .onItemClicked.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleOnItemClicked(
-                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post)
+                eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
+                eq(ReaderTracker.SOURCE_DISCOVER)
         )
     }
 
@@ -473,12 +492,12 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user picks a site for reblog action the app shows the editor`() {
         // Arrange
-        val navigaitonObserver = init().navigation
+        val navigationObserver = init().navigation
         fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
         // Act
         viewModel.onReblogSiteSelected(1)
         // Assert
-        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+        assertThat(navigationObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
     @Test
@@ -490,7 +509,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         (uiStates.last() as ContentUiState).let {
             (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
-                card.blogs[0].onItemClicked.invoke(1, 0L)
+                card.blogs[0].onItemClicked.invoke(1, 0L, false)
             }
         }
 
@@ -512,13 +531,16 @@ class ReaderDiscoverViewModelTest {
         }
 
         // Assert
-        verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(blog)
+        verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(
+                eq(blog),
+                anyString()
+        )
     }
 
     @Test
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
-        val navigaitonObserver = init()
+        init()
         // Act
         viewModel.swipeToRefresh()
         // Assert
@@ -528,7 +550,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Data are refreshed when the user clicks on retry`() = test {
         // Arrange
-        val navigaitonObserver = init()
+        init()
         // Act
         viewModel.onRetryButtonClick()
         // Assert
@@ -543,7 +565,7 @@ class ReaderDiscoverViewModelTest {
         viewModel.swipeToRefresh()
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isTrue()
+        assertThat(uiStates.last().scrollToTop).isTrue
     }
 
     @Test
@@ -558,17 +580,42 @@ class ReaderDiscoverViewModelTest {
         }
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isFalse()
+        assertThat(uiStates.last().scrollToTop).isFalse
     }
 
     @Test
-    fun `OnEmptyActionClicked shows select interests screen`() = test {
+    fun `Action button on no tags empty screen opens reader interests screen`() = test {
         // Arrange
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         init()
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
         // Act
-        viewModel.onEmptyActionClick()
+        (viewModel.uiState.value as ShowNoFollowedTagsUiState).action.invoke()
         // Assert
         verify(parentViewModel).onShowReaderInterests()
+    }
+
+    @Test
+    fun `Action button on no posts empty screen opens subs screen`() = test {
+        // Arrange
+        val navigation = init().navigation
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
+        // Act
+        (viewModel.uiState.value as ShowNoPostsUiState).action.invoke()
+        // Assert
+        assertThat(navigation[0].peekContent()).isInstanceOf(ShowReaderSubs::class.java)
+    }
+
+    @Test
+    fun `Action button on error empty screen invokes refresh cards`() = test {
+        // Arrange
+        init(autoUpdateFeed = false).uiStates
+        viewModel.start(parentViewModel)
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Act
+        (viewModel.uiState.value as RequestFailedUiState).action.invoke()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
@@ -594,8 +641,12 @@ class ReaderDiscoverViewModelTest {
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(
-                createInterestsYouMayLikeCardList()
-                        .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                if (numberOfItems != 0L) {
+                    createInterestsYouMayLikeCardList()
+                            .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                } else {
+                    listOf()
+                }
         )
     }
 
@@ -622,10 +673,22 @@ class ReaderDiscoverViewModelTest {
         onMoreMenuDismissed: (ReaderPostUiState) -> Unit
     ): ReaderPostUiState {
         return ReaderPostUiState(
+                source = "source",
                 postId = post.postId,
                 blogId = post.blogId,
+                feedId = post.feedId,
+                isFollowed = post.isFollowedByCurrentUser,
                 blogSection = ReaderBlogSectionUiState(
-                        post.postId, post.blogId, "", mock(), "", "", ReaderBlogSectionClickData(postHeaderClicked, 0)
+                        post.postId,
+                        post.blogId,
+                        "",
+                        mock(),
+                        "",
+                        "",
+                        "",
+                        false,
+                        blavatarType = BLAVATAR_CIRCULAR,
+                        ReaderBlogSectionClickData(postHeaderClicked, 0)
                 ),
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
                 excerpt = "",
@@ -655,11 +718,11 @@ class ReaderDiscoverViewModelTest {
     }
 
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
-            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
+            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", mock(), mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
-        onItemClicked: (Long, Long) -> Unit,
+        onItemClicked: (Long, Long, Boolean) -> Unit,
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(

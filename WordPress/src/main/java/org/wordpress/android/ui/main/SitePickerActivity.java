@@ -16,7 +16,6 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -122,7 +121,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(SitePickerViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 
         setContentView(R.layout.site_picker_activity);
         restoreSavedInstanceState(savedInstanceState);
@@ -241,7 +240,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(true);
+            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
         }
 
         // no point showing search if there aren't multiple blogs
@@ -356,7 +355,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                         mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
                 }
         );
     }

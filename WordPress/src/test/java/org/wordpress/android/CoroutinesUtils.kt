@@ -23,7 +23,7 @@ fun <T : Any, R> KStubbing<T>.onBlocking(methodCall: suspend T.() -> R): Ongoing
     return runBlocking { Mockito.`when`(mock.methodCall()) }
 }
 
-val TEST_SCOPE = CoroutineScope(Unconfined)
+fun testScope() = CoroutineScope(Unconfined)
 @InternalCoroutinesApi val TEST_DISPATCHER: CoroutineDispatcher = TestDispatcher()
 
 @InternalCoroutinesApi

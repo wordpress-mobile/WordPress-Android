@@ -17,12 +17,12 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.REMOVED
+import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -71,7 +71,7 @@ class InsightsManagementMapper
                 type,
                 toName(type),
                 if (addedInsightTypes.any { it == type }) ADDED else REMOVED,
-                NavigationAction.create { onClick(type) }
+                ListItemInteraction.create(type, onClick)
         )
     }
 

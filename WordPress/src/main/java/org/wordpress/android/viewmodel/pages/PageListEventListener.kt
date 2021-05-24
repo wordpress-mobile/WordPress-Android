@@ -41,7 +41,7 @@ class PageListEventListener(
     private val siteStore: SiteStore,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-    private val handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
+    private val handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit,
     private val handleHomepageSettingsChange: (SiteModel) -> Unit
 ) : CoroutineScope {
@@ -118,7 +118,7 @@ class PageListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError)
+            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError, event.isFirstTimePublish)
         }
     }
 
@@ -197,7 +197,7 @@ class PageListEventListener(
             site: SiteModel,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
+            handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
             handleHomepageSettingsChange: (SiteModel) -> Unit
         ): PageListEventListener {
             return PageListEventListener(

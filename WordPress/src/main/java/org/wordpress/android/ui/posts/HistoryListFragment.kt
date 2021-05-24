@@ -2,19 +2,16 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.HistoryListFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
@@ -25,7 +22,7 @@ import org.wordpress.android.viewmodel.history.HistoryViewModel
 import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus
 import javax.inject.Inject
 
-class HistoryListFragment : Fragment() {
+class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var viewModel: HistoryViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -48,10 +45,6 @@ class HistoryListFragment : Fragment() {
         fun onHistoryItemClicked(revision: Revision, revisions: List<Revision>)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.history_list_fragment, container, false)
-    }
-
     private fun onItemClicked(item: HistoryListItem) {
         viewModel.onItemClicked(item)
     }
@@ -61,7 +54,7 @@ class HistoryListFragment : Fragment() {
 
         (requireActivity().application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -75,53 +68,54 @@ class HistoryListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
+        with(HistoryListFragmentBinding.bind(view)) {
+            emptyRecyclerView.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
+            emptyRecyclerView.setEmptyView(actionableEmptyView)
+            actionableEmptyView.button.setText(R.string.button_retry)
+            actionableEmptyView.button.setOnClickListener {
+                viewModel.onPullToRefresh()
+            }
 
-        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
-        empty_recycler_view.setEmptyView(actionable_empty_view)
-        actionable_empty_view.button.setText(R.string.button_retry)
-        actionable_empty_view.button.setOnClickListener {
-            viewModel.onPullToRefresh()
+            swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipeRefreshLayout) {
+                viewModel.onPullToRefresh()
+            }
+
+            (nonNullActivity.application as WordPress).component()?.inject(this@HistoryListFragment)
+
+            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
+            viewModel.create(
+                    localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
+                    site = arguments?.get(KEY_SITE) as SiteModel
+            )
+            updatePostOrPageEmptyView()
+            setObservers()
         }
-
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            viewModel.onPullToRefresh()
-        }
-
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
-        viewModel.create(
-                localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
-                site = arguments?.get(KEY_SITE) as SiteModel
-        )
-        updatePostOrPageEmptyView()
-        setObservers()
     }
 
-    private fun updatePostOrPageEmptyView() {
-        actionable_empty_view.title.text = getString(R.string.history_empty_title)
-        actionable_empty_view.button.visibility = View.GONE
-        actionable_empty_view.subtitle.visibility = View.VISIBLE
+    private fun HistoryListFragmentBinding.updatePostOrPageEmptyView() {
+        actionableEmptyView.title.text = getString(R.string.history_empty_title)
+        actionableEmptyView.button.visibility = View.GONE
+        actionableEmptyView.subtitle.visibility = View.VISIBLE
     }
 
-    private fun reloadList(data: List<HistoryListItem>) {
+    private fun HistoryListFragmentBinding.reloadList(data: List<HistoryListItem>) {
         setList(data)
     }
 
-    private fun setList(list: List<HistoryListItem>) {
+    private fun HistoryListFragmentBinding.setList(list: List<HistoryListItem>) {
         val adapter: HistoryAdapter
 
-        if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(requireActivity(), this::onItemClicked)
-            empty_recycler_view.adapter = adapter
+        if (emptyRecyclerView.adapter == null) {
+            adapter = HistoryAdapter(requireActivity(), this@HistoryListFragment::onItemClicked)
+            emptyRecyclerView.adapter = adapter
         } else {
-            adapter = empty_recycler_view.adapter as HistoryAdapter
+            adapter = emptyRecyclerView.adapter as HistoryAdapter
         }
 
         adapter.updateList(list)
     }
 
-    private fun setObservers() {
+    private fun HistoryListFragmentBinding.setObservers() {
         viewModel.revisions.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
@@ -136,21 +130,21 @@ class HistoryListFragment : Fragment() {
                         updatePostOrPageEmptyView()
                     }
                     HistoryListStatus.FETCHING -> {
-                        actionable_empty_view.title.setText(R.string.history_fetching_revisions)
-                        actionable_empty_view.subtitle.visibility = View.GONE
-                        actionable_empty_view.button.visibility = View.GONE
+                        actionableEmptyView.title.setText(R.string.history_fetching_revisions)
+                        actionableEmptyView.subtitle.visibility = View.GONE
+                        actionableEmptyView.button.visibility = View.GONE
                     }
                     HistoryListStatus.NO_NETWORK -> {
-                        actionable_empty_view.title.setText(R.string.no_network_title)
-                        actionable_empty_view.subtitle.setText(R.string.no_network_message)
-                        actionable_empty_view.subtitle.visibility = View.VISIBLE
-                        actionable_empty_view.button.visibility = View.VISIBLE
+                        actionableEmptyView.title.setText(R.string.no_network_title)
+                        actionableEmptyView.subtitle.setText(R.string.no_network_message)
+                        actionableEmptyView.subtitle.visibility = View.VISIBLE
+                        actionableEmptyView.button.visibility = View.VISIBLE
                     }
                     HistoryListStatus.ERROR -> {
-                        actionable_empty_view.title.setText(R.string.no_network_title)
-                        actionable_empty_view.subtitle.setText(R.string.error_generic_network)
-                        actionable_empty_view.subtitle.visibility = View.VISIBLE
-                        actionable_empty_view.button.visibility = View.VISIBLE
+                        actionableEmptyView.title.setText(R.string.no_network_title)
+                        actionableEmptyView.subtitle.setText(R.string.error_generic_network)
+                        actionableEmptyView.subtitle.visibility = View.VISIBLE
+                        actionableEmptyView.button.visibility = View.VISIBLE
                     }
                 }
             }
@@ -166,7 +160,7 @@ class HistoryListFragment : Fragment() {
         })
 
         viewModel.post.observe(viewLifecycleOwner, Observer { post ->
-            actionable_empty_view.subtitle.text = if (post?.isPage == true) {
+            actionableEmptyView.subtitle.text = if (post?.isPage == true) {
                 getString(R.string.history_empty_subtitle_page)
             } else {
                 getString(R.string.history_empty_subtitle_post)

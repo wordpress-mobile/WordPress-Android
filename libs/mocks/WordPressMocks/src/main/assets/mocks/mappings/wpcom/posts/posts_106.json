@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/posts/106/",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/posts/106/",
         "queryParameters": {
             "context": {
                 "equalTo": "edit"

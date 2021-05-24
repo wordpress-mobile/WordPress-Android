@@ -56,8 +56,8 @@ class StoriesIntroViewModel @Inject constructor(
     }
 
     companion object {
-        private const val STORY_URL_1 = "https://wpstories.wordpress.com/2020/10/12/patagonia-2/"
-        private const val STORY_URL_2 = "https://wpstories.wordpress.com/2020/10/12/hiking-in-the-southwest/"
+        private const val STORY_URL_1 = "https://wpstories.wordpress.com/2020/12/02/story-demo-01/"
+        private const val STORY_URL_2 = "https://wpstories.wordpress.com/2020/12/02/story-demo-02/"
         private const val STORY_FULLSCREEN_URL_PARAMS = "?wp-story-load-in-fullscreen=true&wp-story-play-on-load=true"
     }
 }

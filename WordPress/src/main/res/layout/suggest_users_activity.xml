@@ -32,7 +32,7 @@
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:dropDownWidth="match_parent"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionDone|flagNoExtractUi"
         android:inputType="text"
         android:background="?attr/colorGutenbergBackground"
         android:textAppearance="?attr/textAppearanceBody1"

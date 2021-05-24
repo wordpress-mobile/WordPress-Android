@@ -3,9 +3,9 @@ package org.wordpress.android.ui.pages
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PagesActivityBinding
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -25,14 +25,7 @@ class PagesActivity : LocaleAwareActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-
-        setContentView(R.layout.pages_activity)
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
+        setContentView(PagesActivityBinding.inflate(layoutInflater).root)
 
         handleIntent(intent)
     }

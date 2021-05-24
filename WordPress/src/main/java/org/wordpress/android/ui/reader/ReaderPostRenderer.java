@@ -8,7 +8,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderEmbedScanner;
@@ -48,12 +47,10 @@ public class ReaderPostRenderer {
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
-    private FeaturedImageUtils mFeaturedImageUtils;
     private ReaderCssProvider mCssProvider;
 
     @SuppressLint("SetJavaScriptEnabled")
-    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, FeaturedImageUtils featuredImageUtils,
-                              ReaderCssProvider cssProvider) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -64,7 +61,6 @@ public class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
-        mFeaturedImageUtils = featuredImageUtils;
         mCssProvider = cssProvider;
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
@@ -492,6 +488,10 @@ public class ReaderPostRenderer {
                 "(gallery-group) ([\\s\"'])",
                 "(tiled-gallery-item) ([\\s\"'])");
         String contentCustomised = content;
+
+        // removes background-color property from original content
+        contentCustomised = contentCustomised.replaceAll("\\s*(background-color)\\s*:\\s*.+?\\s*;\\s*", "");
+
         for (String classToAmend : classAmendRegexes) {
             contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
         }

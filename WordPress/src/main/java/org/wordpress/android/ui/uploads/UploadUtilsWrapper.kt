@@ -51,6 +51,7 @@ class UploadUtilsWrapper @Inject constructor(
         activity: Activity?,
         snackbarAttachView: View?,
         isError: Boolean,
+        isFirstTimePublish: Boolean,
         post: PostModel?,
         errorMessage: String?,
         site: SiteModel?
@@ -58,6 +59,7 @@ class UploadUtilsWrapper @Inject constructor(
             activity,
             snackbarAttachView,
             isError,
+            isFirstTimePublish,
             post,
             errorMessage,
             site,

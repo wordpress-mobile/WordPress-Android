@@ -36,10 +36,14 @@ public class AppLog {
         SHARING,
         PLUGINS,
         ACTIVITY_LOG,
+        SCAN,
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
         SITE_CREATION,
-        DOMAIN_REGISTRATION
+        DOMAIN_REGISTRATION,
+        JETPACK_BACKUP,
+        JETPACK_REWIND,
+        JETPACK_SCAN,
     }
 
     public static final String TAG = "WordPress";

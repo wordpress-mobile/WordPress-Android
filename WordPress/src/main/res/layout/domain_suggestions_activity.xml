@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_main"
+            android:id="@+id/toolbar_domain"
             app:navigationIcon="@drawable/ic_cross_white_24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

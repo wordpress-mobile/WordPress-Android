@@ -160,7 +160,7 @@ class EditorMediaTest : BaseUnitTest() {
                 // Assert
                 verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
                         eq(listOf(lastRecoredVideoUri)),
-                        anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()
+                        anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean(), anyBoolean()
                 )
             }
 
@@ -436,6 +436,7 @@ class EditorMediaTest : BaseUnitTest() {
                                 anyOrNull(),
                                 anyBoolean(),
                                 anyOrNull(),
+                                anyBoolean(),
                                 anyBoolean()
                         )
                     }.thenReturn(resultForAddNewMediaToEditorAsync)

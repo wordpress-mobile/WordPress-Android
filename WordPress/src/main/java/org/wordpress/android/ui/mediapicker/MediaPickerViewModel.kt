@@ -8,8 +8,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -74,6 +74,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
@@ -286,10 +287,13 @@ class MediaPickerViewModel @Inject constructor(
             else -> {
                 val isImagePicker = mediaPickerSetup.allowedTypes.contains(IMAGE)
                 val isVideoPicker = mediaPickerSetup.allowedTypes.contains(VIDEO)
+                val isAudioPicker = mediaPickerSetup.allowedTypes.contains(AUDIO)
                 if (isImagePicker && isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_media)
                 } else if (isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_video)
+                } else if (isAudioPicker) {
+                    UiStringRes(R.string.photo_picker_use_audio)
                 } else {
                     UiStringRes(R.string.photo_picker_use_photo)
                 }
@@ -348,15 +352,15 @@ class MediaPickerViewModel @Inject constructor(
             mediaPickerTracker.trackMediaPickerOpened(mediaPickerSetup)
             this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
             this.mediaInsertHandler = mediaInsertHandlerFactory.build(mediaPickerSetup, site)
-            launch(bgDispatcher) {
-                mediaLoader.loadMedia(loadActions).collect { domainModel ->
-                    withContext(mainDispatcher) {
-                        _domainModel.value = domainModel
-                    }
+            launch {
+                mediaLoader.loadMedia(loadActions).flowOn(bgDispatcher).collect { domainModel ->
+                    _domainModel.value = domainModel
                 }
             }
-            launch(bgDispatcher) {
-                loadActions.send(LoadAction.Start())
+            if (!mediaPickerSetup.requiresStoragePermissions || permissionsHandler.hasStoragePermission()) {
+                launch(bgDispatcher) {
+                    loadActions.send(LoadAction.Start())
+                }
             }
         }
         if (mediaPickerSetup.defaultSearchView) {
@@ -416,10 +420,14 @@ class MediaPickerViewModel @Inject constructor(
 
     fun performInsertAction() {
         val ids = selectedIdentifiers()
+        insertIdentifiers(ids)
+    }
+
+    private fun insertIdentifiers(ids: List<Identifier>) {
         var job: Job? = null
         job = launch {
             var progressDialogJob: Job? = null
-            mediaInsertHandler.insertMedia(ids).collect {
+            mediaInsertHandler.insertMedia(ids).flowOn(bgDispatcher).collect {
                 when (it) {
                     is InsertModel.Progress -> {
                         progressDialogJob = launch {
@@ -510,8 +518,17 @@ class MediaPickerViewModel @Inject constructor(
                     listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
                         Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
                     }
+                    listOf(AUDIO).containsAll(allowedTypes) -> {
+                        Pair(
+                                ChooserContext.AUDIO,
+                                MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                        )
+                    }
                     else -> {
-                        Pair(ChooserContext.MEDIA_FILE, MimeTypes().getAllTypes())
+                        Pair(
+                                ChooserContext.MEDIA_FILE,
+                                MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
+                        )
                     }
                 }
                 OpenSystemPicker(context, types.toList(), canMultiselect)
@@ -633,6 +650,13 @@ class MediaPickerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         searchJob?.cancel()
+    }
+
+    fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
+        launch {
+            delay(100)
+            insertIdentifiers(uris.map { LocalUri(it) })
+        }
     }
 
     data class MediaPickerUiState(

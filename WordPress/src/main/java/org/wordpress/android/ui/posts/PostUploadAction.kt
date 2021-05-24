@@ -27,6 +27,7 @@ sealed class PostUploadAction {
         val site: SiteModel,
         val post: PostModel,
         val isError: Boolean,
+        val isFirstTimePublish: Boolean,
         val errorMessage: String?
     ) : PostUploadAction()
 
@@ -79,6 +80,7 @@ fun handleUploadAction(
                     activity,
                     snackbarAttachView,
                     action.isError,
+                    action.isFirstTimePublish,
                     action.post,
                     action.errorMessage,
                     action.site

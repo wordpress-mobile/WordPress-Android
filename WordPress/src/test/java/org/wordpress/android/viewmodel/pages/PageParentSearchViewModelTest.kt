@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -12,10 +13,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
-import org.wordpress.android.TEST_SCOPE
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Empty
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PageParentSearchViewModelTest {
     @Rule
@@ -28,7 +30,7 @@ class PageParentSearchViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PageParentSearchViewModel(TEST_SCOPE)
+        viewModel = PageParentSearchViewModel(TEST_DISPATCHER)
         searchPages = MutableLiveData()
         whenever(pageParentViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pageParentViewModel)

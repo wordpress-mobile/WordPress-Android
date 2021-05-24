@@ -205,10 +205,25 @@ public class UploadService extends Service {
             // if this media belongs to some post, register such Post
             registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
+            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>();
             for (MediaModel media : mediaList) {
+                MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                boolean notUploadedYet = localMedia != null
+                                         && (localMedia.getUploadState() == null
+                                             || MediaUploadState.fromString(localMedia.getUploadState())
+                                                != MediaUploadState.UPLOADED);
+                if (notUploadedYet) {
+                    toBeUploadedMediaList.add(media);
+                }
+            }
+
+            for (MediaModel media : toBeUploadedMediaList) {
                 mMediaUploadHandler.upload(media);
             }
-            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
+
+            if (!toBeUploadedMediaList.isEmpty()) {
+                mPostUploadNotifier.addMediaInfoToForegroundNotification(toBeUploadedMediaList);
+            }
         }
     }
 
@@ -609,7 +624,7 @@ public class UploadService extends Service {
 
             // actually replace the media ID with the media uri
             processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
+                    FluxCUtils.mediaFileFromMediaModel(media), site);
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
@@ -1099,13 +1114,13 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String errorMessage;
 
-        UploadErrorEvent(PostModel post, String errorMessage) {
+        public UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
             this.mediaModelList = null;
             this.errorMessage = errorMessage;
         }
 
-        UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
+        public UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
             this.post = null;
             this.mediaModelList = mediaModelList;
             this.errorMessage = errorMessage;
@@ -1116,7 +1131,7 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String successMessage;
 
-        UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
+        public UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
             this.mediaModelList = mediaModelList;
             this.successMessage = successMessage;
         }

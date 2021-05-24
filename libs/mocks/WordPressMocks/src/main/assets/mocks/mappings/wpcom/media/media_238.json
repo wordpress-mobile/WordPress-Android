@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/media/238/",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/media/238/",
         "queryParameters": {
             "locale": {
                 "matches": "(.*)"

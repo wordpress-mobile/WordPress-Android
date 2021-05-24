@@ -11,6 +11,8 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import org.wordpress.android.WordPress
 import org.wordpress.android.networking.GlideRequestFactory
+import org.wordpress.android.networking.MShot
+import org.wordpress.android.networking.GlideMShotsLoader
 import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,7 +23,8 @@ import javax.inject.Named
  */
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
-    @Inject @field:Named("custom-ssl") lateinit var requestQueue: RequestQueue
+    @Inject @Named("custom-ssl") lateinit var requestQueue: RequestQueue
+    @Inject @Named("no-redirects") lateinit var noRedirectsRequestQueue: RequestQueue
     @Inject lateinit var glideRequestFactory: GlideRequestFactory
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {}
@@ -34,5 +37,6 @@ class WordPressGlideModule : AppGlideModule() {
         (context as WordPress).component().inject(this)
         registry.replace(GlideUrl::class.java, InputStream::class.java,
                 VolleyUrlLoader.Factory(requestQueue, glideRequestFactory))
+        registry.prepend(MShot::class.java, InputStream::class.java, GlideMShotsLoader.Factory(noRedirectsRequestQueue))
     }
 }

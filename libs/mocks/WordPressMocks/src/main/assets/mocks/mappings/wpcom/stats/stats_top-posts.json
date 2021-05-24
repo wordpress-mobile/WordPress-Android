@@ -11,16 +11,16 @@
                 "{{fnow format='yyyy-MM-dd'}}": {
                     "postviews": [
                         {
-                            "id": 0,
-                            "href": "https://e2eflowtestingmobile.wordpress.com/",
-                            "date": null,
-                            "title": "Home page / Archives",
-                            "type": "homepage",
-                            "views": 183,
+                            "id": 24,
+                            "href": "http://infocusphotographers.com/portfolio/",
+                            "date": "2016-02-09 17:33:03",
+                            "title": "Sticking To It",
+                            "type": "page",
+                            "views": 2535,
                             "video_play": false
                         }
                     ],
-                    "total_views": 183
+                    "total_views": 2535
                 }
             },
             "period": "day"

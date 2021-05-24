@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/categoriesBackground"
+    android:background="?attr/layoutPickerBackground"
     android:gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"

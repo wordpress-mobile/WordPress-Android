@@ -11,8 +11,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.datasets.UserSuggestionTable;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.Tag;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -103,9 +103,9 @@ public class SuggestionService extends Service {
                 }
 
                 JSONArray jsonSuggestions = jsonObject.optJSONArray("suggestions");
-                List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions, siteId);
+                List<UserSuggestion> suggestions = UserSuggestion.suggestionListFromJSON(jsonSuggestions, siteId);
                 if (suggestions != null) {
-                    SuggestionTable.insertSuggestionsForSite(siteId, suggestions);
+                    UserSuggestionTable.insertSuggestionsForSite(siteId, suggestions);
                     EventBus.getDefault().post(new SuggestionEvents.SuggestionNameListUpdated(siteId));
                 }
             }
@@ -150,7 +150,7 @@ public class SuggestionService extends Service {
                 JSONArray jsonTags = jsonObject.optJSONArray("tags");
                 List<Tag> tags = Tag.tagListFromJSON(jsonTags, siteId);
                 if (tags != null) {
-                    SuggestionTable.insertTagsForSite(siteId, tags);
+                    UserSuggestionTable.insertTagsForSite(siteId, tags);
                     EventBus.getDefault().post(new SuggestionEvents.SuggestionTagListUpdated(siteId));
                 }
             }

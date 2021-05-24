@@ -3,19 +3,17 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
-import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.databinding.PrepublishingTagsFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
@@ -60,11 +58,13 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        back_button.setOnClickListener {
-            trackTagsChangedEvent()
-            viewModel.onBackButtonClicked()
+        with(PrepublishingTagsFragmentBinding.bind(view)) {
+            prepublishingToolbar.backButton.setOnClickListener {
+                trackTagsChangedEvent()
+                viewModel.onBackButtonClicked()
+            }
+            initViewModel()
         }
-        initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -82,24 +82,20 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         super.onResume()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+    private fun PrepublishingTagsFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
-        viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                ActivityUtils.hideKeyboardForced(tags_edit_text)
-            }
+        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
+            ActivityUtils.hideKeyboardForced(fragmentPostSettingsTags.tagsEditText)
         })
 
-        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onBackClicked()
-            }
+        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
+            closeListener?.onBackClicked()
         })
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
-            toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
+            prepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
         val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
@@ -107,8 +103,10 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
-                "called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "This is possibly null because it's " +
+                    "called during config changes."
+        }
 
         return editPostActivityHook.editPostRepository
     }

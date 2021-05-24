@@ -4,7 +4,7 @@
     android:id="@+id/categoriesSkeleton"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mlp_categories_bar_height"
-    android:background="?attr/categoriesBackground"
+    android:background="?attr/layoutPickerBackground"
     android:paddingEnd="@dimen/mlp_layout_card_margin_end"
     android:paddingStart="@dimen/mlp_layout_card_margin_start">
 

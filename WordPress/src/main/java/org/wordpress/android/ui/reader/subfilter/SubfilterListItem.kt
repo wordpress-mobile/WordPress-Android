@@ -66,6 +66,8 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         } else {
             UiStringRes(R.string.reader_untitled_post)
         }
+        val showUnseenCount: Boolean = blog.numUnseenPosts > 0
+        val unseenCount: Int = blog.numUnseenPosts
     }
 
     data class Tag(

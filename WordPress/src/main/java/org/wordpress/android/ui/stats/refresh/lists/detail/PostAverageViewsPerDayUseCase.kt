@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
@@ -89,7 +89,7 @@ class PostAverageViewsPerDayUseCase(
             items.add(
                     Link(
                             text = R.string.stats_insights_view_more,
-                            navigateAction = NavigationAction.create(this::onLinkClick)
+                            navigateAction = ListItemInteraction.create(this::onLinkClick)
                     )
             )
         }

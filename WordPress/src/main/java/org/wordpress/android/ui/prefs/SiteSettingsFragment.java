@@ -53,6 +53,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
@@ -114,7 +116,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         Preference.OnPreferenceClickListener,
         AdapterView.OnItemLongClickListener,
         Dialog.OnDismissListener,
-        SiteSettingsInterface.SiteSettingsListener {
+        SiteSettingsInterface.SiteSettingsListener,
+        SiteSettingsTimezoneBottomSheet.TimezoneSelectionCallback {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
@@ -143,6 +146,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
 
+    private static final String TIMEZONE_BOTTOM_SHEET_TAG = "timezone-dialog-tag";
+
     /**
      * Request code used when creating the {@link RelatedPostsDialog}.
      */
@@ -155,7 +160,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int DATE_FORMAT_REQUEST_CODE = 7;
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
-    private static final int TIMEZONE_REQUEST_CODE = 10;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
@@ -228,10 +232,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mSortByPref;
     private Preference mThreadingPref;
     private Preference mPagingPref;
-    private DetailListPreference mWhitelistPref;
+    private DetailListPreference mAllowlistPref;
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
-    private Preference mBlacklistPref;
+    private Preference mDenylistPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -244,7 +248,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpMonitorEmailNotesPref;
     private WPSwitchPreference mJpMonitorWpNotesPref;
     private WPSwitchPreference mJpBruteForcePref;
-    private WPPreference mJpWhitelistPref;
+    private WPPreference mJpAllowlistPref;
     private WPSwitchPreference mJpSsoPref;
     private WPSwitchPreference mJpMatchEmailPref;
     private WPSwitchPreference mJpUseTwoFactorPref;
@@ -276,7 +280,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
 
-    // Hold for Moderation and Blacklist settings
+    // Hold for Moderation and Denylist settings
     private Dialog mDialog;
     private ActionMode mActionMode;
     private MultiSelectRecyclerViewAdapter mAdapter;
@@ -441,11 +445,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                         onPreferenceChange(mPostsPerPagePref, numPosts);
                     }
                     break;
-                case TIMEZONE_REQUEST_CODE:
-                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
-                    mSiteSettings.setTimezone(timezone);
-                    onPreferenceChange(mTimezonePref, timezone);
-                    break;
             }
         } else {
             if (requestCode == DELETE_SITE_REQUEST_CODE) {
@@ -492,6 +491,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (savedInstanceState != null) {
             setupMorePreferenceScreen();
             setupJetpackSecurityScreen();
+
+            SiteSettingsTimezoneBottomSheet bottomSheet =
+                    (SiteSettingsTimezoneBottomSheet) ((AppCompatActivity) getActivity())
+                            .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setTimezoneSettingCallback(this);
+            }
         }
     }
 
@@ -507,6 +513,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             return setupMorePreferenceScreen();
         } else if (preference == mJpSecuritySettings) {
+            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
             setupJetpackSecurityScreen();
         } else if (preference == mSiteAcceleratorSettings) {
             setupSiteAcceleratorScreen();
@@ -538,7 +545,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
-            showTimezoneDialog();
+            setupTimezoneBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -556,14 +563,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
                     R.string.site_settings_hold_for_moderation_description);
-        } else if (preference == mBlacklistPref) {
-            mEditingList = mSiteSettings.getBlacklistKeys();
-            showListEditorDialog(R.string.site_settings_blacklist_title,
-                    R.string.site_settings_blacklist_description);
-        } else if (preference == mJpWhitelistPref) {
-            mEditingList = mSiteSettings.getJetpackWhitelistKeys();
-            showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
-                    R.string.site_settings_jetpack_whitelist_description);
+        } else if (preference == mDenylistPref) {
+            mEditingList = mSiteSettings.getDenylistKeys();
+            showListEditorDialog(R.string.site_settings_denylist_title,
+                    R.string.site_settings_denylist_description);
+        } else if (preference == mJpAllowlistPref) {
+            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED);
+            mEditingList = mSiteSettings.getJetpackAllowlistKeys();
+            showListEditorDialog(R.string.jetpack_brute_force_allowlist_title,
+                    R.string.site_settings_jetpack_allowlist_description);
         } else if (preference == mStartOverPref) {
             handleStartOver();
         } else if (preference == mCloseAfterPref) {
@@ -613,8 +621,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             return false;
         }
 
-        if (preference == mJpWhitelistPref) {
-            mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        if (preference == mJpAllowlistPref) {
+            if (mJpAllowlistPref.getSummary() != mSiteSettings.getJetpackProtectAllowlistSummary()) {
+                AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_CHANGED);
+            }
+            mJpAllowlistPref.setSummary(mSiteSettings.getJetpackProtectAllowlistSummary());
         } else if (preference == mJpMonitorActivePref) {
             mJpMonitorActivePref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackMonitor((Boolean) newValue);
@@ -704,8 +715,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setIdentityRequired((Boolean) newValue);
         } else if (preference == mUserAccountRequiredPref) {
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
-        } else if (preference == mWhitelistPref) {
-            updateWhitelistSettings(Integer.parseInt(newValue.toString()));
+        } else if (preference == mAllowlistPref) {
+            updateAllowlistSettings(Integer.parseInt(newValue.toString()));
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
             String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
@@ -733,8 +744,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mRelatedPostsPref.setSummary(newValue.toString());
         } else if (preference == mModerationHoldPref) {
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        } else if (preference == mBlacklistPref) {
-            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mDenylistPref) {
+            mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         } else if (preference == mWeekStartPref) {
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
@@ -801,10 +812,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDismiss(DialogInterface dialog) {
         if (mEditingList == mSiteSettings.getModerationKeys()) {
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
-            onPreferenceChange(mBlacklistPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getJetpackWhitelistKeys()) {
-            onPreferenceChange(mJpWhitelistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getDenylistKeys()) {
+            onPreferenceChange(mDenylistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getJetpackAllowlistKeys()) {
+            onPreferenceChange(mJpAllowlistPref, mEditingList.size());
         }
         mEditingList = null;
     }
@@ -901,7 +912,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_site_identity_required);
         mUserAccountRequiredPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_user_account_required);
         mSortByPref = (DetailListPreference) getChangePref(R.string.pref_key_site_sort_by);
-        mWhitelistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_whitelist);
+        mAllowlistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_allowlist);
         mMorePreference = (PreferenceScreen) getClickPref(R.string.pref_key_site_more_discussion);
         mRelatedPostsPref = getClickPref(R.string.pref_key_site_related_posts);
         mCloseAfterPref = getClickPref(R.string.pref_key_site_close_after);
@@ -909,7 +920,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref = getClickPref(R.string.pref_key_site_threading);
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -922,7 +933,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpBruteForcePref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_prevent_brute_force);
         mJpMatchEmailPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_match_via_email);
         mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
-        mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
+        mJpAllowlistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_allowlist);
         mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
         mDateFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_date_format);
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
@@ -995,6 +1006,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
         }
+
+        // Simple WPCom Sites now always default to Gutenberg Editor
+        if (SiteUtils.alwaysDefaultToGutenberg(mSite)) {
+            removeEditorPreferences();
+        }
     }
 
     private void updateHomepageSummary() {
@@ -1029,11 +1045,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
-                mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
+                mSortByPref, mAllowlistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mDenylistPref, mWeekStartPref,
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
-                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
                 mGutenbergDefaultForNewPosts, mHomepagePref
         };
 
@@ -1133,10 +1149,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         dialog.show(getFragmentManager(), "format-dialog-tag");
     }
 
-    private void showTimezoneDialog() {
-        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
-        dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
-        dialog.show(getFragmentManager(), "timezone-dialog-tag");
+    private void setupTimezoneBottomSheet() {
+        if (mTimezonePref == null || !isAdded()) {
+            return;
+        }
+
+        SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
+        bottomSheet.setTimezoneSettingCallback(this);
+        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
     }
 
     private void showHomepageSettings() {
@@ -1289,9 +1309,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String.valueOf(mSiteSettings.getCommentSorting()),
                 mSiteSettings.getSortingDescription());
         int approval = mSiteSettings.getManualApproval()
-                ? mSiteSettings.getUseCommentWhitelist() ? 0
+                ? mSiteSettings.getUseCommentAllowlist() ? 0
                 : -1 : 1;
-        setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
+        setDetailListPreferenceValue(mAllowlistPref, String.valueOf(approval), getAllowlistSummary(approval));
         String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
                 R.string.site_settings_multiple_links_summary_one,
                 R.string.site_settings_multiple_links_summary_other,
@@ -1304,7 +1324,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());
@@ -1312,7 +1332,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpSsoPref.setChecked(mSiteSettings.isJetpackSsoEnabled());
         mJpMatchEmailPref.setChecked(mSiteSettings.isJetpackSsoMatchEmailEnabled());
         mJpUseTwoFactorPref.setChecked(mSiteSettings.isJetpackSsoTwoFactorEnabled());
-        mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
+        mJpAllowlistPref.setSummary(mSiteSettings.getJetpackProtectAllowlistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
@@ -1560,26 +1580,26 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private String getWhitelistSummary(int value) {
+    private String getAllowlistSummary(int value) {
         if (isAdded()) {
             switch (value) {
                 case -1:
-                    return getString(R.string.site_settings_whitelist_none_summary);
+                    return getString(R.string.site_settings_allowlist_none_summary);
                 case 0:
-                    return getString(R.string.site_settings_whitelist_known_summary);
+                    return getString(R.string.site_settings_allowlist_known_summary);
                 case 1:
-                    return getString(R.string.site_settings_whitelist_all_summary);
+                    return getString(R.string.site_settings_allowlist_all_summary);
             }
         }
         return "";
     }
 
-    private void updateWhitelistSettings(int val) {
+    private void updateAllowlistSettings(int val) {
         mSiteSettings.setManualApproval(val == -1);
-        mSiteSettings.setUseCommentWhitelist(val == 0);
-        setDetailListPreferenceValue(mWhitelistPref,
+        mSiteSettings.setUseCommentAllowlist(val == 0);
+        setDetailListPreferenceValue(mAllowlistPref,
                 String.valueOf(val),
-                getWhitelistSummary(val));
+                getAllowlistSummary(val));
     }
 
     private void handleStartOver() {
@@ -1667,8 +1687,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                 String entry = input.getText().toString();
                 if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
-                    // don't modify mEditingList if it's not a reference to the JP whitelist keys
-                    if (mEditingList == mSiteSettings.getJetpackWhitelistKeys() && !isValidIpOrRange(entry)) {
+                    // don't modify mEditingList if it's not a reference to the JP allowlist keys
+                    if (mEditingList == mSiteSettings.getJetpackAllowlistKeys() && !isValidIpOrRange(entry)) {
                         ToastUtils.showToast(getActivity(), R.string.invalid_ip_or_range);
                         return;
                     }
@@ -1883,6 +1903,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_jetpack_performance_settings);
     }
 
+    private void removeEditorPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
+                R.string.pref_key_gutenberg_default_for_new_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_site_editor);
+    }
+
     private Preference getChangePref(int id) {
         return WPPrefUtils.getPrefAndSetChangeListener(this, id, this);
     }
@@ -1970,6 +1997,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
             updateHomepageSummary();
         }
+    }
+
+    // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
+    // can't use neither setTargetFragment nor onActivityResult before re-writing this!
+    @Override
+    public void onSelectTimezone(@NotNull String timezone) {
+        mSiteSettings.setTimezone(timezone);
+        onPreferenceChange(mTimezonePref, timezone);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

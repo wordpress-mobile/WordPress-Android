@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
@@ -28,6 +29,7 @@ public class ReaderPost {
     public long feedId;
     public long feedItemId;
     public long authorId;
+    public long authorBlogId;
 
     private String mTitle;
     private String mText;
@@ -52,6 +54,7 @@ public class ReaderPost {
     private String mShortUrl;
     private String mFeaturedImage;
     private String mFeaturedVideo;
+    private String mAuthorBlogUrl;
 
     public int numReplies; // includes comments, trackbacks & pingbacks
     public int numLikes;
@@ -66,6 +69,10 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
     public boolean useExcerpt;
+    public boolean isSeen;
+    public boolean isSeenSupported; // might not be supported for posts created before 2020-07-13
+
+    public int organizationId;
 
     private String mAttachmentsJson;
     private String mDiscoverJson;
@@ -113,6 +120,8 @@ public class ReaderPost {
         post.isPrivateAtomic = JSONUtils.getBool(json, "site_is_atomic");
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
         post.useExcerpt = JSONUtils.getBool(json, "use_excerpt");
+        post.isSeen = JSONUtils.getBool(json, "is_seen");
+        post.isSeenSupported = json.has("is_seen");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {
@@ -168,6 +177,8 @@ public class ReaderPost {
             }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+
+            post.organizationId = jsonSite.optInt("organization_id");
         }
 
         // "discover" posts
@@ -265,6 +276,7 @@ public class ReaderPost {
         post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.mAuthorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
         post.authorId = jsonAuthor.optLong("ID");
+        post.authorBlogId = jsonAuthor.optLong("site_ID");
 
         // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
         // has a valid avatar - if this field exists and is set to false, skip setting
@@ -283,6 +295,8 @@ public class ReaderPost {
         if (TextUtils.isEmpty(post.mBlogUrl)) {
             post.setBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
         }
+
+        post.setAuthorBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
     }
 
     /*
@@ -475,6 +489,14 @@ public class ReaderPost {
         this.mBlogUrl = StringUtils.notNullStr(blogUrl);
     }
 
+    public String getAuthorBlogUrl() {
+        return StringUtils.notNullStr(mAuthorBlogUrl);
+    }
+
+    public void setAuthorBlogUrl(String authorBlogUrl) {
+        this.mAuthorBlogUrl = StringUtils.notNullStr(authorBlogUrl);
+    }
+
     public String getBlogImageUrl() {
         return StringUtils.notNullStr(mBlogImageUrl);
     }
@@ -553,6 +575,14 @@ public class ReaderPost {
 
     public boolean hasSecondaryTag() {
         return !TextUtils.isEmpty(mSecondaryTag);
+    }
+
+    public Organization getOrganization() {
+        return Organization.fromOrgId(organizationId);
+    }
+
+    public void setOrganization(Organization organization) {
+        organizationId = organization.getOrgId();
     }
 
     /*
@@ -666,6 +696,13 @@ public class ReaderPost {
      */
     public boolean isXpost() {
         return xpostBlogId != 0 && xpostPostId != 0;
+    }
+
+    /*
+     * returns true if this is a P2 or A8C post
+     */
+    public boolean isP2orA8C() {
+        return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
     }
 
     /*

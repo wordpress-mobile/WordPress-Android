@@ -45,7 +45,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
@@ -62,10 +62,12 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -77,6 +79,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -96,6 +99,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -111,7 +115,8 @@ import javax.inject.Inject;
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  */
-public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment {
+public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
+        OnCollapseListener {
     private static final String KEY_MODE = "KEY_MODE";
     private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -119,8 +124,22 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-    private static final int FROM_BLOG_COMMENT = 1;
-    private static final int FROM_NOTE = 2;
+
+    enum CommentSource {
+        NOTIFICATION,
+        SITE_COMMENTS;
+
+        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
+            switch (this) {
+                case NOTIFICATION:
+                    return AnalyticsCommentActionSource.NOTIFICATIONS;
+                case SITE_COMMENTS:
+                    return AnalyticsCommentActionSource.SITE_COMMENTS;
+            }
+            throw new IllegalArgumentException(
+                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
+        }
+    }
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -167,6 +186,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
+    private CommentSource mCommentSource;
+
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
@@ -180,7 +201,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
+        args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
         args.putInt(KEY_SITE_LOCAL_ID, site.getId());
         args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
         fragment.setArguments(args);
@@ -193,7 +214,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_MODE, FROM_NOTE);
+        args.putSerializable(KEY_MODE, CommentSource.NOTIFICATION);
         args.putString(KEY_NOTE_ID, noteId);
         args.putString(KEY_REPLY_TEXT, replyText);
         fragment.setArguments(args);
@@ -205,11 +226,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        switch (getArguments().getInt(KEY_MODE)) {
-            case FROM_BLOG_COMMENT:
+        mCommentSource = (CommentSource) getArguments().getSerializable(KEY_MODE);
+
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
                 setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getInt(KEY_SITE_LOCAL_ID));
                 break;
-            case FROM_NOTE:
+            case NOTIFICATION:
                 setNote(getArguments().getString(KEY_NOTE_ID));
                 setReplyText(getArguments().getString(KEY_REPLY_TEXT));
                 break;
@@ -306,6 +329,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply.initializeWithPrefix('@');
         mEditReply.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -333,27 +357,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
                     new Builder(requireContext())
                             .setTitle(R.string.comment)
-                            .setOnCollapseListener(result -> {
-                                if (result != null) {
-                                    mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
-                                    mEditReply.setSelection(result.getInt(
-                                            CommentFullScreenDialogFragment.RESULT_SELECTION_START),
-                                            result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END));
-                                    mEditReply.requestFocus();
-                                }
-                            })
-                            .setOnConfirmListener(result -> {
-                                if (result != null) {
-                                    mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
-                                    submitReply();
-                                }
-                            })
+                            .setOnCollapseListener(this)
+                            .setOnConfirmListener(this)
                             .setContent(CommentFullScreenDialogFragment.class, bundle)
                             .setAction(R.string.send)
                             .setHideActivityBar(true)
                             .build()
                             .show(requireActivity().getSupportFragmentManager(),
-                                    CollapseFullScreenDialogFragment.TAG);
+                                    CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
                 }
         );
         buttonExpand.setOnLongClickListener(v -> {
@@ -417,6 +428,29 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         return view;
     }
 
+    private String getCommentSpecificFragmentTagSuffix() {
+        return "_" + mComment.getRemoteSiteId() + "_" + mComment.getRemoteCommentId();
+    }
+
+    @Override
+    public void onConfirm(@Nullable Bundle result) {
+        if (result != null) {
+            mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
+            submitReply();
+        }
+    }
+
+    @Override
+    public void onCollapse(@Nullable Bundle result) {
+        if (result != null) {
+            mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
+            mEditReply.setSelection(result.getInt(
+                    CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+                    result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END));
+            mEditReply.requestFocus();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -427,6 +461,17 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             setNote(mRestoredNoteId);
             mRestoredNoteId = null;
         }
+
+        // reattach listeners to collapsible reply dialog
+        // we need to to it in onResume to make sure mComment is already intialized
+        CollapseFullScreenDialogFragment fragment =
+                (CollapseFullScreenDialogFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(
+                        CollapseFullScreenDialogFragment.TAG + getCommentSpecificFragmentTagSuffix());
+
+        if (fragment != null && fragment.isAdded()) {
+            fragment.setOnCollapseListener(this);
+            fragment.setOnConfirmListener(this);
+        }
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -434,7 +479,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSite, getActivity(),
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mSite, getActivity(),
                 mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
@@ -572,9 +617,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && mSite != null
-            && event.mRemoteBlogId == mSite.getSiteId() && mSuggestionAdapter != null) {
-            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+        if (event.mRemoteBlogId != 0
+            && mSite != null
+            && event.mRemoteBlogId == mSite.getSiteId()
+            && mSuggestionAdapter != null
+        ) {
+            List<UserSuggestion> userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            List<Suggestion> suggestions = Suggestion.Companion.fromUserSuggestions(userSuggestions);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
     }
@@ -589,6 +638,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
+            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
+                    mCommentSource.toAnalyticsCommentActionSource(), mSite);
         }
     }
 
@@ -612,6 +663,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded() || mComment == null) {
             return;
         }
+        AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITOR_OPENED,
+                mCommentSource.toAnalyticsCommentActionSource(), mSite);
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
@@ -800,28 +853,29 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener() {
-                    @Override
-                    public void onSuccess() {
-                        if (!isAdded()) {
-                            return;
-                        }
+                ReaderPostActions
+                        .requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener<String>() {
+                            @Override
+                            public void onSuccess(String blogUrl) {
+                                if (!isAdded()) {
+                                    return;
+                                }
 
-                        // update title if it wasn't set above
-                        if (!hasTitle) {
-                            String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
-                            if (!TextUtils.isEmpty(postTitle)) {
-                                setPostTitle(txtPostTitle, postTitle, true);
-                            } else {
-                                txtPostTitle.setText(R.string.untitled);
+                                // update title if it wasn't set above
+                                if (!hasTitle) {
+                                    String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
+                                    if (!TextUtils.isEmpty(postTitle)) {
+                                        setPostTitle(txtPostTitle, postTitle, true);
+                                    } else {
+                                        txtPostTitle.setText(R.string.untitled);
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(int statusCode) {
-                    }
-                });
+                            @Override
+                            public void onFailure(int statusCode) {
+                            }
+                        });
             }
 
             txtPostTitle.setOnClickListener(v -> {
@@ -838,19 +892,50 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void trackModerationFromNotification(final CommentStatus newStatus) {
+    // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
+    private void trackModerationEvent(final CommentStatus newStatus) {
         switch (newStatus) {
             case APPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_APPROVED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case UNAPPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNAPPROVED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case SPAM:
-                AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_SPAMMED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case UNSPAM:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNSPAMMED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case TRASH:
-                AnalyticsTracker.track(Stat.NOTIFICATION_TRASHED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_TRASHED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_TRASHED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case UNTRASH:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNTRASHED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case DELETED:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_DELETED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case ALL:
                 break;
         }
     }
@@ -868,10 +953,23 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mPreviousStatus = mComment.getStatus();
 
+        // Restoring comment from trash or spam works by approving it, but we want to track the actual action
+        // instead of generic Approve action
+        CommentStatus statusToTrack;
+        if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM && newStatus == CommentStatus.APPROVED) {
+            statusToTrack = CommentStatus.UNSPAM;
+        } else if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.TRASH
+                   && newStatus == CommentStatus.APPROVED) {
+            statusToTrack = CommentStatus.UNTRASH;
+        } else {
+            statusToTrack = newStatus;
+        }
+
+        trackModerationEvent(statusToTrack);
+
         // Fire the appropriate listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
-            trackModerationFromNotification(newStatus);
             dispatchModerationAction(newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);
@@ -920,7 +1018,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mIsSubmittingReply = true;
 
-        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
+        AnalyticsUtils.trackCommentReplyWithDetails(
+                false, mSite, mComment, mCommentSource.toAnalyticsCommentActionSource());
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
@@ -1037,7 +1136,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         announceCommentStatusChangeForAccessibility(
                 currentStatus == CommentStatus.TRASH ? CommentStatus.UNTRASH : newStatus);
 
-        mComment.setStatus(newStatus.toString());
         setModerateButtonForStatus(newStatus);
         AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
         moderateComment(newStatus);
@@ -1167,7 +1265,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
 
         // Bump analytics
-        AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
+        // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
+        if (mCommentSource == CommentSource.NOTIFICATION) {
+            AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
+        }
+        AnalyticsUtils.trackCommentActionWithSiteDetails(
+                mBtnLikeComment.isActivated() ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
+                mCommentSource.toAnalyticsCommentActionSource(), mSite);
 
         if (mNotificationsDetailListFragment != null && mComment != null) {
             // Optimistically set comment to approved when liking an unapproved comment
@@ -1259,6 +1363,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
             mEditReply.setText(null);
             mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+        }
+
+        // Self Hosted site does not return a newly created comment, so we need to fetch it manually.
+        if (!mSite.isUsingWpComRestApi() && !event.changedCommentsLocalIds.isEmpty()) {
+            CommentModel createdComment = mCommentStore.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
+
+            if (createdComment != null) {
+                mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(
+                        new RemoteCommentPayload(mSite, createdComment.getRemoteCommentId())));
+            }
         }
 
         // approve the comment
@@ -1440,22 +1554,25 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private void showSnackBar(String message) {
-        WPSnackbar snackBar = WPSnackbar.make(getView(), message, Snackbar.LENGTH_LONG)
-                                        .setAction(getString(R.string.share_action),
-                                                v -> {
-                                                    try {
-                                                        Intent intent = new Intent(Intent.ACTION_SEND);
-                                                        intent.setType("text/plain");
-                                                        intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
-                                                        startActivity(Intent.createChooser(intent,
-                                                                getString(R.string.comment_share_link_via)));
-                                                    } catch (ActivityNotFoundException exception) {
-                                                        ToastUtils.showToast(getContext(),
-                                                                R.string.comment_toast_err_share_intent);
-                                                    }
-                                                })
-                                        .setAnchorView(mSnackbarAnchor);
-        snackBar.show();
+        View view = getView();
+        if (view != null) {
+            Snackbar snackBar = WPSnackbar.make(view, message, Snackbar.LENGTH_LONG)
+                                          .setAction(getString(R.string.share_action),
+                                                  v -> {
+                                                      try {
+                                                          Intent intent = new Intent(Intent.ACTION_SEND);
+                                                          intent.setType("text/plain");
+                                                          intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                          startActivity(Intent.createChooser(intent,
+                                                                  getString(R.string.comment_share_link_via)));
+                                                      } catch (ActivityNotFoundException exception) {
+                                                          ToastUtils.showToast(view.getContext(),
+                                                                  R.string.comment_toast_err_share_intent);
+                                                      }
+                                                  })
+                                          .setAnchorView(mSnackbarAnchor);
+            snackBar.show();
+        }
     }
 
     @Override

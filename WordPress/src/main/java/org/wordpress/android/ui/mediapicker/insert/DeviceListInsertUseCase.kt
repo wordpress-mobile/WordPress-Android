@@ -14,25 +14,20 @@ class DeviceListInsertUseCase(
 ) : MediaInsertUseCase {
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         val localUris = identifiers.mapNotNull { it as? LocalUri }
-        val result = if (queueResults) {
-            emit(InsertModel.Progress(actionTitle))
-            var failed = false
-            val fetchedUris = localUris.mapNotNull { localUri ->
-                val fetchedUri = wpMediaUtilsWrapper.fetchMedia(localUri.value.uri)
-                if (fetchedUri == null) {
-                    failed = true
-                }
-                fetchedUri
+        emit(InsertModel.Progress(actionTitle))
+        var failed = false
+        val fetchedUris = localUris.mapNotNull { localUri ->
+            val fetchedUri = wpMediaUtilsWrapper.fetchMedia(localUri.value.uri)
+            if (fetchedUri == null) {
+                failed = true
             }
-            if (failed) {
-                InsertModel.Error("Failed to fetch local media")
-            } else {
-                InsertModel.Success(fetchedUris.map { LocalUri(UriWrapper(it), queueResults) })
-            }
-        } else {
-            InsertModel.Success(localUris)
+            fetchedUri
         }
-        emit(result)
+        if (failed) {
+            emit(InsertModel.Error("Failed to fetch local media"))
+        } else {
+            emit(InsertModel.Success(fetchedUris.map { LocalUri(UriWrapper(it), queueResults) }))
+        }
     }
 
     class DeviceListInsertUseCaseFactory

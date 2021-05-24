@@ -98,6 +98,16 @@ class GetDiscoverCardsUseCaseTest {
     }
 
     @Test
+    fun `welcome card is not added to the list of cards when there are no other cards`() = test {
+        // Arrange
+        whenever(mockedJsonArray.length()).thenReturn(0)
+        // Act
+        val result = useCase.get()
+        // Assert
+        assertThat(result.cards.filterIsInstance<WelcomeBannerCard>()).size().isEqualTo(0)
+    }
+
+    @Test
     fun `interest you might like card json is transformed into InterestsYouMayLikeCard object`() = test {
         // Arrange
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))

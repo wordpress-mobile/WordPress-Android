@@ -2,28 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/stats_insights_button_container_height"
-    android:gravity="end">
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:minHeight="@dimen/stats_insights_button_container_height">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_negative"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_medium"
         tools:text="Cancel" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_positive"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_medium"
         tools:text="OK" />
 
 </LinearLayout>

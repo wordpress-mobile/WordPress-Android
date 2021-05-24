@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -38,7 +37,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
 
         if (VERSION.SDK_INT >= VERSION_CODES.M) {

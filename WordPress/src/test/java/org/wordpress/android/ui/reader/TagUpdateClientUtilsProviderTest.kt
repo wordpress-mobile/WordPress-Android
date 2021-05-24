@@ -24,11 +24,11 @@ class TagUpdateClientUtilsProviderTest {
 
     @Test
     fun `getRestClientForTagUpdate return the expected client version`() {
-        assertThat(clientProvider.getRestClientForTagUpdate()).isEqualTo(WordPress.getRestClientUtilsV1_2())
+        assertThat(clientProvider.getRestClientForTagUpdate()).isEqualTo(WordPress.getRestClientUtilsV1_3())
     }
 
     @Test
     fun `getTagUpdateEndpointURL return the expected end point URL`() {
-        assertThat(clientProvider.getTagUpdateEndpointURL()).isEqualTo("https://public-api.wordpress.com/rest/v1.2/")
+        assertThat(clientProvider.getTagUpdateEndpointURL()).isEqualTo("https://public-api.wordpress.com/rest/v1.3/")
     }
 }

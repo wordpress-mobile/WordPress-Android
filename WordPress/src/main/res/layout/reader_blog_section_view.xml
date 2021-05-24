@@ -5,17 +5,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image_avatar_or_blavatar"
-        style="@style/ReaderImageView.Avatar"
-        android:importantForAccessibility="no"
-        android:background="@drawable/bg_oval_stroke_placeholder_1dp"
-        android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/author_and_site_imagery_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/text_author_and_blog_name"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/image_avatar_or_blavatar"
+            style="@style/ReaderImageView.Avatar"
+            android:background="@drawable/bg_oval_placeholder"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
+
+        <ViewStub
+            android:id="@+id/dynamic_center_point"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintLeft_toLeftOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintRight_toRightOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintTop_toTopOf="@+id/image_avatar_or_blavatar" />
+
+        <ImageView
+            android:id="@+id/authors_avatar"
+            style="@style/ReaderImageView.Avatar"
+            android:background="@drawable/bg_oval_stroke_p2_author_1dp"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            app:layout_constraintStart_toEndOf="@+id/dynamic_center_point"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_author_and_blog_name"
@@ -25,7 +53,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
-        app:layout_constraintStart_toEndOf="@id/image_avatar_or_blavatar"
+        app:layout_constraintStart_toEndOf="@id/author_and_site_imagery_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="text_blog_nametext_blog_name text_blog_name" />

@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -420,6 +422,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
+        // Existing Posts have title set before onResume is called
+        if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
+            showClassicEditorDeprecationDialog();
+        }
+        
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }
@@ -2377,5 +2384,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void disableHWAcceleration() {
         mFragmentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    }
+
+    /**
+     * Methods for showing Classic Editor Deprecation notice
+     */
+    private boolean isEmptyPost() {
+        return TextUtils.isEmpty(mTitle.getText())
+                          && TextUtils.isEmpty(mContent.getText());
+    }
+
+    private boolean hasSeenClassicEditorDeprecationDialog() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), false);
+    }
+
+    private void showClassicEditorDeprecationDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        builder.setTitle(getString(R.string.dialog_title_try_block_editor));
+        builder.setMessage(getString(R.string.dialog_body_try_block_editor));
+        builder.setNegativeButton(getString(R.string.dialog_dismiss_try_block_editor), null);
+        builder.show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.edit().putBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), true).apply();
     }
 }

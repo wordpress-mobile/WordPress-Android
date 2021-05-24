@@ -1,0 +1,33 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="168dp"
+    android:height="94dp"
+    android:viewportWidth="168"
+    android:viewportHeight="94">
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_background"
+        android:pathData="M0 0h168v94H0z" />
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_surface"
+        android:pathData="M49.26 26.98c0-4.42 3.58-8 8-8h53.48c4.42 0 8 3.58 8 8V99c0 4.42-3.58 8-8 8H57.26c-4.42 0-8-3.58-8-8z" />
+    <path
+        android:pathData="M57 29h54m-54 6h28"
+        android:strokeWidth="1"
+        android:strokeColor="@color/quick_start_task_card_illustration_line"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_area"
+        android:pathData="M56.5 43.5h54.42v33.99H56.5z" />
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_mountain"
+        android:pathData="M105.5 60.86L84.9 77.49h26.02V65.92l-5.42-5.06z" />
+    <path
+        android:fillColor="@color/quick_start_task_card_illustration_sun_fill"
+        android:pathData="M69.23 56.83c1.77 0 3.2-1.43 3.2-3.2 0-1.78-1.43-3.21-3.2-3.21-1.77 0-3.2 1.43-3.2 3.2 0 1.78 1.43 3.21 3.2 3.21z"
+        android:strokeWidth="0.63"
+        android:strokeColor="@color/quick_start_task_card_illustration_sun_stroke" />
+    <path
+        android:pathData="M57 84.99h54m-54 6h54"
+        android:strokeWidth="1"
+        android:strokeColor="@color/quick_start_task_card_illustration_line"
+        android:strokeLineCap="round" />
+</vector>

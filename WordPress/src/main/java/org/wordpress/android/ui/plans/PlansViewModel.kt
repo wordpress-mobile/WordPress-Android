@@ -2,8 +2,7 @@ package org.wordpress.android.ui.plans
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -14,11 +13,12 @@ import org.wordpress.android.fluxc.generated.PlanOffersActionBuilder
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.fluxc.store.PlanOffersStore
 import org.wordpress.android.fluxc.store.PlanOffersStore.OnPlanOffersFetched
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.DONE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,9 +27,9 @@ class PlansViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused")
     private var plansStore: PlanOffersStore,
-    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : ViewModel() {
+) : ScopedViewModel(uiDispatcher) {
     enum class PlansListStatus {
         DONE,
         ERROR,
@@ -69,7 +69,7 @@ class PlansViewModel @Inject constructor(
 
     private fun fetchPlans() {
         _listStatus.value = PlansListStatus.FETCHING
-        uiScope.launch {
+        launch {
             dispatcher.dispatch(PlanOffersActionBuilder.generateNoPayloadAction(FETCH_PLAN_OFFERS))
         }
     }

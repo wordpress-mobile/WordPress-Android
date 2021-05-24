@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.zendesk.logger.Logger
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -35,7 +36,6 @@ import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
-import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.Timer
@@ -106,45 +106,6 @@ class ZendeskHelper(
         Logger.setLoggable(enableLogs)
         Support.INSTANCE.init(zendeskInstance)
         refreshIdentity()
-    }
-
-    /**
-     * This function shows the Zendesk Help Center. It doesn't require a valid identity. If the support identity is
-     * available it'll be used and the "New Ticket" button will be available, if not, it'll work with an anonymous
-     * identity. The configuration will only be passed in if the identity is available, as it's only required if
-     * the user contacts us through it.
-     */
-    fun showZendeskHelpCenter(
-        context: Context,
-        origin: Origin?,
-        selectedSite: SiteModel?,
-        extraTags: List<String>? = null
-    ) {
-        require(isZendeskEnabled) {
-            zendeskNeedsToBeEnabledError
-        }
-        val isIdentitySet = isIdentitySet()
-        val builder = HelpCenterActivity.builder()
-                .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withContactUsButtonVisible(isIdentitySet)
-                .withLabelNames(ZendeskConstants.articleLabel)
-                .withShowConversationsMenuButton(isIdentitySet)
-        AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-        if (isIdentitySet) {
-            builder.show(
-                context,
-                buildZendeskConfig(
-                    context,
-                    siteStore.sites,
-                    origin,
-                    selectedSite,
-                    extraTags,
-                    zendeskPlanFieldHelper
-                )
-            )
-        } else {
-            builder.show(context)
-        }
     }
 
     /**
@@ -382,12 +343,13 @@ private fun buildZendeskConfig(
     extraTags: List<String>? = null,
     zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): Configuration {
+    val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
             buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
         )
-        .withRequestSubject(ZendeskConstants.ticketSubject)
+        .withRequestSubject(ticketSubject)
         .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
         .config()
 }
@@ -520,20 +482,17 @@ private val wpcomPushNotificationDeviceToken: String?
     }
 
 private object ZendeskConstants {
-    const val articleLabel = "Android"
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
-    const val mobileCategoryId = 360000041586
     const val networkWifi = "WiFi"
     const val networkWWAN = "Mobile"
     const val networkTypeLabel = "Network Type:"
     const val networkCarrierLabel = "Carrier:"
     const val networkCountryCodeLabel = "Country Code:"
     const val noneValue = "none"
-    // We rely on this platform tag to filter tickets in Zendesk, so should be kept separate from the `articleLabel`
+    // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
     const val sourcePlatform = "mobile_-_android"
-    const val ticketSubject = "WordPress for Android Support"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_medium_large">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- The ProgressBar component does not support determinate mode when using a
+        circular progress bar style. To work around this, we set a horizontal style
+        coupled with a custom circular drawable that has an equivalent structure,
+        which allow us to tint both its background and foreground layers programmatically. -->
+        <ProgressBar
+            android:id="@+id/quick_start_card_progress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="@dimen/quick_start_card_progress_indicator_size"
+            android:layout_height="@dimen/quick_start_card_progress_indicator_size"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/content_margin_site_row_start"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/quick_start_card_progress_drawable"
+            tools:progress="75"
+            tools:progressBackgroundTint="@color/green_0"
+            tools:progressTint="@color/green_20" />
+
+        <TextView
+            android:id="@+id/quick_start_card_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="serif"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="Quick Start card" />
+
+        <ImageButton
+            android:id="@+id/quick_start_card_more_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/actionBarItemBackground"
+            android:contentDescription="@string/more"
+            android:padding="@dimen/margin_medium_large"
+            android:src="@drawable/ic_more_vert_white_24dp"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/quick_start_card_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:requiresFadingEdge="horizontal" />
+</LinearLayout>

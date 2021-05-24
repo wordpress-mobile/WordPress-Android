@@ -1,54 +1,134 @@
-<en-US>
-16.0:
-Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.
+<ar>
+17.3:
+ما الجديد؟
 
-Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.
+باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+
+تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
+</ar>
+<de-DE>
+17.3:
+Was gibt's Neues?
+
+Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+
+Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
+</de-DE>
+<en-US>
+17.3:
+What’s new?
+
+With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+
+Other improvements include more user information about your Likes, as well as an updated Comments screen.
 </en-US>
 <es-ES>
-16.0:
-Actualizaciones en el editor de bloques: Ahora es compatible con la alineación ancha y completa en los bloques de vídeo, galería y más. Hemos corregido un problema que afectaba al bloque clásico en los sitios Jetpack y resuelto un problema relacionado con blloques no compatibles en dispositivos rotados.
+17.3:
+Novedades
 
-Actualizaciones en el lector: Disfruta de una experiencia de lectura más limpia y de bonitas imágenes en el rediseñado lector. Puede acceder aunque no sigas ningún tema.
+Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
+
+Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
 </es-ES>
+<fr-CA>
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
+</fr-CA>
+<fr-FR>
+17.3 :
+Nouveautés
+
+Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+
+Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
+</fr-FR>
 <iw-IL>
-16.0:
-עדכונים לעורך הבלוקים: יש כעת תמיכה ביישור בפריסה רחבה וברוחב מלא עבור הבלוקים 'וידאו', 'גלריה' ועוד. תיקנו בעיה שהשפיעה על הבלוק הקלאסי באתרי Jetpack ופתרנו בעיה בנוגע לבלוקים שאינם נתמכים בעת סיבוב המכשיר.
+17.3:
+מה חדש?
 
-עדכונים ל-Reader: כעת אפשר ליהנות מחוויית קריאה נקייה יותר ומתמונות מרהיבות ב-Reader שעוצב מחדש. אפשר לגשת אליו גם אם לא עוקבים אחר נושאים.
+עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+
+שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
 </iw-IL>
+<id>
+17.3:
+Apa yang baru?
+
+Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+
+Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
+</id>
 <it-IT>
-16.0:
-Aggiornamenti editor a blocchi: ora è disponibile il supporto per l'allineamento Wide e Full width per i blocchi Video, Galleria e molti altri. Abbiamo corretto un problema che influenzava il blocco Classico sui siti Jetpack e abbiamo risolto un problema relativo a blocchi non supportati su dispositivi ruotati.
+17.3:
+Cosa c'è di nuovo?
 
-Aggiornamenti Reader: Goditi un'esperienza di lettura più pulita e con immagini più belle nel Reader riprogettato. Puoi accedervi anche se non segui altri argomenti.
+Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
+
+Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
 </it-IT>
-<ko-KR>
-16.0:
-블록 편집기 업데이트: 영상, 갤러리 등 많은 블록이 이제 가로 전체 확장과 와이드 정렬을 지원합니다. Jetpack 사이트에서 클래식 블록에서 발생하는 문제와 회전된 기기를 지원하지 않는 블록과 관련된 문제를 수정했습니다.
+<ja-JP>
+17.3:
+新着情報
 
-리더 업데이트: 새롭게 디자인된 리더로 향상된 가독성 경험과 아름다운 이미지를 사용해보세요. 주제를 팔로우하지 않아도 사용할 수 있습니다.
+新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+
+その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
+</ja-JP>
+<ko-KR>
+17.3:
+새로운 기능
+
+새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+
+기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
 </ko-KR>
 <nl-NL>
-16.0:
-Updates voor blok-editor: er is nu ondersteuning voor uitlijning over de volledige breedte en breedte voor de video-, galerij- en meer blokken. We hebben een probleem met het klassieke blok op Jetpack sites opgelost en een probleem met niet-ondersteunde blokken op geroteerde apparaten opgelost.
+17.3:
+Wat is er nieuw?
 
-Reader updates: geniet van een betere leeservaring en prachtige afbeeldingen in de opnieuw ontworpen Reader. Je hebt er zelfs toegang toe als je geen onderwerpen volgt.
+Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+
+Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
 </nl-NL>
 <ru-RU>
-16.0:
-Обновления редактора блоков: поддержка широкого и выравнивания на полную ширину блоков видео, галереи и многих других. Исправлена проблема с классическим блоком на сайтах Jetpack и другая проблема с неподдерживаемых блоках и поворотом экрана устройства.
+17,3:
+Что нового?
 
-Обновления чтива: переработано оформление, вам понравится! Доступно даже если у вас нет подписок.
+С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+
+Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
 </ru-RU>
 <sv-SE>
-16.0:
-Nytt i blockredigereran: Nu finns det stöd för fullbredd och bredd layout av video-, galleri- m.fl. block. Vi har korrigerat ett problem med det klassiska blocket på webbplatser med Jetpack och löst ett bekymmer med ej stödda block vid rotering av mobila enheter.
+17.3:
+Vad är nytt?
 
-Uppdateringar i läsaren: Njut av en snyggare läsupplevelse och vackra bilder med den nya designen av läsaren. Du kommer åt den även om du inte har följt några ämnen.
+Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+
+Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
 </sv-SE>
-<zh-CN>
-16.0：
-区块编辑器更新：现在，我们为视频、画廊和更多区块提供了“全宽”和“加宽”对齐支持。 我们修复了影响 Jetpack 站点上经典区块的问题，并解决了设备旋转后区块不受支持的问题。
+<tr-TR>
+17.3:
+Yenilikler
 
-阅读器更新：阅读器经过重新设计，可带来更清晰的阅读体验和精美图像。 即使您没有关注任何主题，也可以享受阅读器带来的这些出色体验。
+Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+
+Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
+</tr-TR>
+<zh-CN>
+17.3：
+通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+
+其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
 </zh-CN>
+<zh-TW>
+17.3:
+新功能
+
+現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+
+其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
+</zh-TW>

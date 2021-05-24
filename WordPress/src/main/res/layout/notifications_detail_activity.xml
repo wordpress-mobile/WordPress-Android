@@ -33,4 +33,14 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="visible" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/confetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        app:lottie_rawRes="@raw/confetti"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

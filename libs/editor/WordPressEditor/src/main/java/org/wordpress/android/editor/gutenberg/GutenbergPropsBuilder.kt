@@ -8,28 +8,34 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 
 @Parcelize
 data class GutenbergPropsBuilder(
+    private val enableContactInfoBlock: Boolean,
     private val enableMediaFilesCollectionBlocks: Boolean,
     private val enableMentions: Boolean,
+    private val enableXPosts: Boolean,
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
-    private val enablePreviewMode: Boolean,
-    private val enableModalLayoutPicker: Boolean,
+    private val enableAudioBlock: Boolean,
     private val localeSlug: String,
     private val postType: String,
-    private val editorTheme: Bundle?
+    private val featuredImageId: Int,
+    private val editorTheme: Bundle?,
+    private val canViewEditorOnboarding: Boolean
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
+            enableContactInfoBlock = enableContactInfoBlock,
             enableMediaFilesCollectionBlocks = enableMediaFilesCollectionBlocks,
             enableMentions = enableMentions,
+            enableXPosts = enableXPosts,
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
             canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
+            enableAudioBlock = enableAudioBlock,
             localeSlug = localeSlug,
             postType = postType,
+            featuredImageId = featuredImageId,
             editorTheme = editorTheme,
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
             htmlModeEnabled = isHtmlModeEnabled,
-            isPreview = enablePreviewMode,
-            isModalLayoutPickerEnabled = enableModalLayoutPicker
+            canViewEditorOnboarding = canViewEditorOnboarding
     )
 }

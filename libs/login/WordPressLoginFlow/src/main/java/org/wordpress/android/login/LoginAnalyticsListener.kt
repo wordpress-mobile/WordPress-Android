@@ -65,9 +65,13 @@ interface LoginAnalyticsListener {
     fun trackPickEmailFromHint()
     fun trackShowEmailHints()
     fun emailFormScreenResumed()
-    fun trackEmailSignupConfirmationViewed()
     fun trackSocialSignupConfirmationViewed()
     fun trackCreateAccountClick()
+    fun emailPasswordFormScreenResumed()
+    fun siteAddressFormScreenResumed()
+    fun magicLinkRequestScreenResumed()
+    fun magicLinkSentScreenResumed()
+    fun usernamePasswordScreenResumed()
 
     enum class CreatedAccountSource {
         EMAIL,

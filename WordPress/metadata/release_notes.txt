@@ -1,2 +1,7 @@
-* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
+We’ve added 3 new updates to Stories in this update:
 
+You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
+
+Story previews now render as expected in the Reader.
+
+And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!

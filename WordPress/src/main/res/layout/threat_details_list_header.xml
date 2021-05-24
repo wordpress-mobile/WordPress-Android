@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="?attr/listPreferredItemHeight"
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
+
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/Scan.ThreatDetails.Icon"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/header"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header"
+        style="@style/Scan.ThreatDetails.Header"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/threat_item_header_vulnerable_plugin" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description"
+        style="@style/Scan.ThreatDetails.Description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        tools:text="@string/threat_item_sub_header_vulnerable_plugin" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

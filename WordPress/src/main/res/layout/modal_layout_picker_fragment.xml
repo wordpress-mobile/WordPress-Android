@@ -11,7 +11,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/categoriesBackground"
+        android:background="?attr/layoutPickerBackground"
         android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -32,7 +32,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/categoriesBackground"
+                android:background="?attr/layoutPickerBackground"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin">
 
@@ -69,7 +69,7 @@
             android:id="@+id/categoriesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mlp_categories_bar_height"
-            android:background="?attr/categoriesBackground"
+            android:background="?attr/layoutPickerBackground"
             android:clipToPadding="false"
             android:descendantFocusability="beforeDescendants"
             android:orientation="horizontal"
@@ -89,7 +89,7 @@
         android:id="@+id/layoutsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/categoriesBackground"
+        android:background="?attr/layoutPickerBackground"
         android:layout_marginBottom="@dimen/toolbar_content_offset"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"

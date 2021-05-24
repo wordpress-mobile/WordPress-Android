@@ -3,9 +3,6 @@
         "method": "GET",
         "urlPath": "/rest/v1.1/sites/106707880",
         "queryParameters": {
-            "fields": {
-                "equalTo": "ID,URL,name,description,jetpack,visible,is_private,options,plan,capabilities,quota,icon,meta"
-            },
             "locale": {
                 "matches": "(.*)"
             }
@@ -15,9 +12,9 @@
         "status": 200,
         "jsonBody": {
             "ID": 106707880,
-            "name": "In Focus Photography",
+            "name": "Tri-County Real Estate",
             "description": "",
-            "URL": "http://infocusphotographers.com",
+            "URL": "http://tricountyrealestate.wordpress.com",
             "capabilities": {
                 "edit_pages": true,
                 "edit_posts": true,
@@ -41,8 +38,8 @@
             },
             "jetpack": false,
             "icon": {
-                "img": "https://secure.gravatar.com/blavatar/e150bfd1895a72358af2b617b575be19",
-                "ico": "https://secure.gravatar.com/blavatar/e150bfd1895a72358af2b617b575be19"
+                "img": "https://tricountyrealestate.files.wordpress.com/2020/08/image-1.jpg?w=96",
+                "ico": "https://tricountyrealestate.files.wordpress.com/2020/08/image-1.jpg?w=96\""
             },
             "visible": true,
             "is_private": false,

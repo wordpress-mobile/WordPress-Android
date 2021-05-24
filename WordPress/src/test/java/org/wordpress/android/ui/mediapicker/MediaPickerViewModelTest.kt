@@ -2,11 +2,13 @@ package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
@@ -55,6 +58,7 @@ import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
@@ -83,10 +87,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaStore: MediaStore
     private lateinit var viewModel: MediaPickerViewModel
     private var uiStates = mutableListOf<MediaPickerUiState>()
+    private lateinit var actions: Channel<LoadAction>
     private var navigateEvents = mutableListOf<Event<MediaNavigationEvent>>()
     private val singleSelectMediaPickerSetup = buildMediaPickerSetup(false, setOf(IMAGE))
     private val multiSelectMediaPickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO))
     private val singleSelectVideoPickerSetup = buildMediaPickerSetup(false, setOf(VIDEO))
+    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(false, setOf(AUDIO))
     private val multiSelectFilePickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
@@ -123,6 +129,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("video/mpeg")).thenReturn("mpg")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("application/pdf")).thenReturn("pdf")
+        whenever(mediaUtilsWrapper.getSitePlanForMimeTypes(site)).thenReturn(MimeTypes.Plan.NO_PLAN_SPECIFIED)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
@@ -342,6 +349,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `action mode title is Use Audio when audio browser type`() = test {
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(AUDIO)))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_audio),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
+    }
+
+    @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE)))
@@ -495,6 +516,27 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `system picker opened for audio when allowed types is AUDIO only`() = test {
+        setupViewModel(listOf(), singleSelectAudioPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.AUDIO)
+    }
+
+    @Test
     fun `system picker opened for all supported files when is browser picker`() = test {
         setupViewModel(listOf(), multiSelectFilePickerSetup, true)
 
@@ -542,12 +584,14 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is SwitchMediaPicker).isTrue()
         val updatedMediaPickerSetup = (iconClickEvents[0].action as SwitchMediaPicker).mediaPickerSetup
-        assertThat(updatedMediaPickerSetup).isEqualTo(mediaPickerSetup.copy(
-                primaryDataSource = WP_LIBRARY,
-                availableDataSources = setOf(),
-                systemPickerEnabled = false,
-                cameraSetup = HIDDEN
-        ))
+        assertThat(updatedMediaPickerSetup).isEqualTo(
+                mediaPickerSetup.copy(
+                        primaryDataSource = WP_LIBRARY,
+                        availableDataSources = setOf(),
+                        systemPickerEnabled = false,
+                        cameraSetup = HIDDEN
+                )
+        )
     }
 
     @Test
@@ -574,12 +618,14 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is SwitchMediaPicker).isTrue()
         val updatedMediaPickerSetup = (iconClickEvents[0].action as SwitchMediaPicker).mediaPickerSetup
-        assertThat(updatedMediaPickerSetup).isEqualTo(mediaPickerSetup.copy(
-                primaryDataSource = STOCK_LIBRARY,
-                availableDataSources = setOf(),
-                defaultSearchView = true,
-                systemPickerEnabled = false
-        ))
+        assertThat(updatedMediaPickerSetup).isEqualTo(
+                mediaPickerSetup.copy(
+                        primaryDataSource = STOCK_LIBRARY,
+                        availableDataSources = setOf(),
+                        defaultSearchView = true,
+                        systemPickerEnabled = false
+                )
+        )
     }
 
     @Test
@@ -635,6 +681,39 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertPhotoListUiStateData()
+    }
+
+    @Test
+    fun `does not start loading without storage permissions`() = test {
+        setupViewModel(
+                listOf(firstItem),
+                singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
+                hasStoragePermissions = false
+        )
+
+        assertThat(actions.poll()).isNull()
+    }
+
+    @Test
+    fun `starts loading with storage permissions`() = test {
+        setupViewModel(
+                listOf(firstItem),
+                singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
+                hasStoragePermissions = true
+        )
+
+        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
+    }
+
+    @Test
+    fun `starts loading when storage permissions not necessary`() = test {
+        setupViewModel(
+                listOf(firstItem),
+                singleSelectMediaPickerSetup.copy(requiresStoragePermissions = false),
+                hasStoragePermissions = false
+        )
+
+        assertThat(actions.poll()).isEqualTo(LoadAction.Start(null))
     }
 
     private fun selectItem(position: Int) {
@@ -733,17 +812,21 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
         whenever(mediaLoaderFactory.build(mediaPickerSetup, site)).thenReturn(mediaLoader)
-        whenever(mediaLoader.loadMedia(any())).thenReturn(flow {
-            if (null != domainModel) {
-                emit(
-                        DomainModel(
-                                domainModel,
-                                filter = filter,
-                                hasMore = hasMore
-                        )
-                )
+        doAnswer {
+            actions = it.getArgument(0)
+            return@doAnswer flow {
+                if (null != domainModel) {
+                    emit(
+                            DomainModel(
+                                    domainModel,
+                                    filter = filter,
+                                    hasMore = hasMore
+                            )
+                    )
+                }
             }
-        })
+        }.whenever(mediaLoader).loadMedia(any())
+
         whenever(mediaInsertHandlerFactory.build(mediaPickerSetup, site)).thenReturn(mediaInsertHandler)
 
         viewModel.start(listOf(), mediaPickerSetup, null, site)
@@ -825,12 +908,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         canMultiselect: Boolean,
         allowedTypes: Set<MediaType>,
         cameraSetup: CameraSetup = HIDDEN,
-        editingEnabled: Boolean = true
+        editingEnabled: Boolean = true,
+        requiresStoragePermissions: Boolean = true
     ) = MediaPickerSetup(
             primaryDataSource = DEVICE,
             availableDataSources = setOf(),
             canMultiselect = canMultiselect,
-            requiresStoragePermissions = true,
+            requiresStoragePermissions = requiresStoragePermissions,
             allowedTypes = allowedTypes,
             cameraSetup = cameraSetup,
             systemPickerEnabled = true,

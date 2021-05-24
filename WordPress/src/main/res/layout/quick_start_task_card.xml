@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/task_card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="@dimen/quick_start_task_card_corner_radius"
+    app:cardElevation="@dimen/quick_start_task_card_elevation"
+    app:cardForegroundColor="@color/quick_start_task_card_foreground_selector"
+    app:contentPadding="@dimen/margin_medium"
+    app:rippleColor="@color/quick_start_task_card_ripple_selector">
+
+    <LinearLayout
+        android:layout_width="@dimen/quick_start_task_card_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/task_card_illustration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shapeAppearance="@style/ShapeAppearance.QuickStartTaskCardIllustration"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/img_illustration_quick_start_task_set_site_title" />
+
+        <TextView
+            android:id="@+id/task_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="Lorem ipsum" />
+
+        <TextView
+            android:id="@+id/task_card_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:ellipsize="end"
+            android:lines="3"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

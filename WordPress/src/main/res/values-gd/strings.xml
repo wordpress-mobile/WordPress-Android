@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
@@ -76,7 +76,6 @@ Language: gd_GB
     <string name="logs_copied_to_clipboard">Chaidh lethbhreac de logaichean na h-aplacaid a chur air an stòr-bhòrd</string>
     <string name="reader_label_new_posts">Puist ùra</string>
     <string name="error_copy_to_clipboard">Thachair mearachd nuair a chaidh lethbhreac dha na faidhlichean a chur air an stòr-bhòrd</string>
-    <string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
     <string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
     <string name="stats_followers_months">%1$d mìos(an)</string>
     <string name="stats_followers_a_year">Bliadhna</string>
@@ -124,7 +123,6 @@ Language: gd_GB
     <string name="schedule_verb">Cuir air an sgeideal</string>
     <string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
     <string name="help">Cobhair</string>
-    <string name="forgot_password">Na chaill thu am facal-faire agad?</string>
     <string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
     <string name="ssl_certificate_ask_trust">Ma gheibh thu cothrom air an làrach seo gun duilgheadas sam bith a ghnàth, dh’fhaoidte gu bheil a’ mhearachd seo a’ ciallachadh gu bheil cuideigin a’ leigeil orra gur iad-san an làrach cheart is cha bu chòir dhut leantainn air adhart. A bheil thu airson gabhail ris an teisteanas co-dhiù?</string>
     <string name="no_network_message">Chan eil lìonra ri làimh</string>

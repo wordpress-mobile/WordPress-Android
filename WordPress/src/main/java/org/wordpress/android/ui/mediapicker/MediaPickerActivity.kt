@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import androidx.fragment.app.FragmentTransaction
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PhotoPickerActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -24,7 +24,6 @@ import org.wordpress.android.ui.gif.GifPickerActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
@@ -103,9 +102,10 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.photo_picker_activity)
-        toolbar_main.setNavigationIcon(R.drawable.ic_close_white_24dp)
-        setSupportActionBar(toolbar_main)
+        val binding = PhotoPickerActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.toolbarMain.setNavigationIcon(R.drawable.ic_close_white_24dp)
+        setSupportActionBar(binding.toolbarMain)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
@@ -185,18 +185,9 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         val intent: Intent? = when (requestCode) {
             MEDIA_LIBRARY -> {
                 data?.let {
-                    val intent = Intent()
                     val uris = WPMediaUtils.retrieveMediaUris(data)
-                    if (mediaPickerSetup.queueResults) {
-                        intent.putQueuedUris(uris)
-                    } else {
-                        intent.putUris(uris)
-                    }
-                    intent.putExtra(
-                            EXTRA_MEDIA_SOURCE,
-                            ANDROID_PICKER.name
-                    )
-                    intent
+                    pickerFragment?.urisSelectedFromSystemPicker(uris)
+                    return
                 }
             }
             TAKE_PHOTO -> {

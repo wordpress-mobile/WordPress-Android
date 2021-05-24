@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/constraint_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:alignItems="stretch"
+        app:alignContent="space_around"
+        android:layout_marginTop="@dimen/edit_text_with_chips_margin_top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="@dimen/edit_text_with_chips_padding">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/flexbox_editor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_flexGrow="1"
+            android:background="@android:color/transparent"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="text|textNoSuggestions|textEmailAddress"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:minHeight="@dimen/edit_text_with_chips_edit_view_min_height"/>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/flexbox_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/edit_text_with_chips_label_text_size"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:background="?attr/colorSurface"
+        android:textColor="?attr/colorSurface"
+        app:layout_constraintStart_toStartOf="@+id/flexbox"
+        app:layout_constraintTop_toTopOf="@+id/flexbox"
+        app:layout_constraintBottom_toTopOf="@+id/flexbox"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/flexbox_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/edit_text_with_chips_hint_text_size"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintStart_toStartOf="@+id/flexbox"
+        app:layout_constraintTop_toTopOf="@+id/flexbox"
+        app:layout_constraintBottom_toBottomOf="@+id/flexbox" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -23,38 +25,48 @@ class ReaderSiteFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    private val readerUtilsWrapper: ReaderUtilsWrapper
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val readerTracker: ReaderTracker
 ) {
-    private var continuation: Continuation<Boolean>? = null
+    private val continuations: MutableMap<Param, Continuation<Boolean>?> = mutableMapOf()
 
-    suspend fun toggleFollow(param: Param) = flow<FollowSiteState> {
+    suspend fun toggleFollow(
+        param: Param,
+        source: String
+    ) = flow {
         val (blogId, feedId) = param
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(NoNetwork)
         } else {
+            // There is already an action running for this request
+            if (continuations[param] != null) {
+                emit(AlreadyRunning)
+                return@flow
+            }
             val isAskingToFollow = !readerBlogTableWrapper.isSiteFollowed(blogId, feedId)
             val showEnableNotification = !readerUtilsWrapper.isExternalFeed(blogId, feedId) && isAskingToFollow
 
-            emit(FollowStatusChanged(blogId, isAskingToFollow, showEnableNotification))
-            performAction(blogId, feedId, isAskingToFollow)
+            emit(FollowStatusChanged(blogId, feedId, isAskingToFollow, showEnableNotification))
+            performAction(param, isAskingToFollow, source)
         }
     }
 
     private suspend fun FlowCollector<FollowSiteState>.performAction(
-        blogId: Long,
-        feedId: Long,
-        isAskingToFollow: Boolean
+        param: Param,
+        isAskingToFollow: Boolean,
+        source: String
     ) {
-        val succeeded = followSiteAndWaitForResult(blogId, feedId, isAskingToFollow)
+        val succeeded = followSiteAndWaitForResult(param, isAskingToFollow, source)
         if (!succeeded) {
-            emit(FollowStatusChanged(blogId, !isAskingToFollow))
+            emit(FollowStatusChanged(param.blogId, param.feedId, !isAskingToFollow))
             emit(RequestFailed)
         } else {
-            val deleteNotificationSubscription = !readerUtilsWrapper.isExternalFeed(blogId, feedId) &&
+            val deleteNotificationSubscription = !readerUtilsWrapper.isExternalFeed(param.blogId, param.feedId) &&
                     !isAskingToFollow
             emit(
                     FollowStatusChanged(
-                            blogId,
+                            param.blogId,
+                            param.feedId,
                             isAskingToFollow,
                             deleteNotificationSubscription = deleteNotificationSubscription
                     )
@@ -63,27 +75,40 @@ class ReaderSiteFollowUseCase @Inject constructor(
         }
     }
 
-    private suspend fun followSiteAndWaitForResult(blogId: Long, feedId: Long, isAskingToFollow: Boolean): Boolean {
+    private suspend fun followSiteAndWaitForResult(
+        param: Param,
+        isAskingToFollow: Boolean,
+        source: String
+    ): Boolean {
         val actionListener = ActionListener { succeeded ->
-            continuation?.resume(succeeded)
-            continuation = null
+            continuations[param]?.resume(succeeded)
+            continuations[param] = null
         }
 
         return suspendCoroutine { cont ->
-            continuation = cont
-            readerBlogActionsWrapper.followBlog(blogId, feedId, isAskingToFollow, actionListener)
+            continuations[param] = cont
+            readerBlogActionsWrapper.followBlog(
+                    param.blogId,
+                    param.feedId,
+                    isAskingToFollow,
+                    actionListener,
+                    source,
+                    readerTracker
+            )
         }
     }
 
     sealed class FollowSiteState {
         data class FollowStatusChanged(
             val blogId: Long,
+            val feedId: Long,
             val following: Boolean,
             val showEnableNotification: Boolean = false,
             val deleteNotificationSubscription: Boolean = false
         ) : FollowSiteState()
 
         object Success : FollowSiteState()
+        object AlreadyRunning : FollowSiteState()
         sealed class Failed : FollowSiteState() {
             object NoNetwork : Failed()
             object RequestFailed : Failed()

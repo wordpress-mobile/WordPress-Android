@@ -199,11 +199,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
+        mGridAdapter.refreshCurrentItems(mRecycler);
     }
 
     @Override
     public void onStop() {
         mDispatcher.unregister(this);
+        mGridAdapter.cancelPendingRequestsForVisibleItems(mRecycler);
         super.onStop();
     }
 
@@ -383,7 +385,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
-        } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter()) {
+        } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter() || mBrowserType
+                .isSingleFilePicker() || mBrowserType
+                           .isSingleAudioFilePicker()) {
             mediaList = getMediaList();
         } else {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);

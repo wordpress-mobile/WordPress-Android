@@ -31,6 +31,13 @@
                 android:layout_marginTop="@dimen/margin_extra_medium_large"
                 android:text="@string/magic_link_not_seeing_email_message" />
 
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/Widget.LoginFlow.TextView.Label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_medium_large"
+                android:text="@string/magic_link_not_meaning_to_create_account" />
+
         </LinearLayout>
 
     </ScrollView>

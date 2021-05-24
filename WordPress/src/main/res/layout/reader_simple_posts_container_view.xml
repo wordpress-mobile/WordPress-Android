@@ -6,11 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:background="?android:attr/listDivider" />
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_posts_label"
         style="@style/ReaderTextView.MetaHeader"
@@ -20,10 +15,9 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         tools:text="@string/reader_label_global_related_posts" />
 
-    <LinearLayout
-        android:id="@+id/container_related_posts"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

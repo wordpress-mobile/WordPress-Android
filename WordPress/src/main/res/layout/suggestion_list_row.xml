@@ -18,7 +18,7 @@
         android:contentDescription="@null"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/suggestion_list_row_user_login_label"
+        android:id="@+id/suggestion_list_row_raw_value_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -26,11 +26,11 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBody2"
-        tools:text="user_login"
+        tools:text="raw_value"
         android:layout_marginStart="@dimen/margin_medium"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/suggestion_list_row_display_name_label"
+        android:id="@+id/suggestion_list_row_display_value_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="2"
@@ -39,7 +39,7 @@
         android:maxLines="1"
         android:textColor="@color/neutral_30"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="display_name"
+        tools:text="display_value"
         android:layout_marginStart="@dimen/margin_medium"/>
 
 </LinearLayout>

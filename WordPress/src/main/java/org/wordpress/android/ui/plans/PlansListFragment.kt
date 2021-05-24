@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.plans_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.PlansListFragmentBinding
 import org.wordpress.android.fluxc.model.plans.PlanOffersModel
 import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.ERROR
 import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.ERROR_WITH_CACHE
@@ -44,43 +43,44 @@ class PlansListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
+        with(PlansListFragmentBinding.bind(view)) {
+            emptyRecyclerView.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
+            emptyRecyclerView.setEmptyView(actionableEmptyView)
 
-        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
-        empty_recycler_view.setEmptyView(actionable_empty_view)
-
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            if (NetworkUtils.checkConnection(nonNullActivity)) {
-                viewModel.onPullToRefresh()
-            } else {
-                swipeToRefreshHelper.isRefreshing = false
+            swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipeRefreshLayout) {
+                if (NetworkUtils.checkConnection(nonNullActivity)) {
+                    viewModel.onPullToRefresh()
+                } else {
+                    swipeToRefreshHelper.isRefreshing = false
+                }
             }
+
+            (nonNullActivity.application as WordPress).component()?.inject(this@PlansListFragment)
+
+            viewModel = ViewModelProvider(this@PlansListFragment, viewModelFactory).get(PlansViewModel::class.java)
+            setObservers()
+            viewModel.create()
         }
-
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlansViewModel::class.java)
-        setObservers()
-        viewModel.create()
     }
 
-    private fun reloadList(data: List<PlanOffersModel>) {
+    private fun PlansListFragmentBinding.reloadList(data: List<PlanOffersModel>) {
         setList(data)
     }
 
-    private fun setList(list: List<PlanOffersModel>) {
+    private fun PlansListFragmentBinding.setList(list: List<PlanOffersModel>) {
         val adapter: PlansListAdapter
 
-        if (empty_recycler_view.adapter == null) {
-            adapter = PlansListAdapter(requireActivity(), this::onItemClicked)
-            empty_recycler_view.adapter = adapter
+        if (emptyRecyclerView.adapter == null) {
+            adapter = PlansListAdapter(requireActivity(), this@PlansListFragment::onItemClicked)
+            emptyRecyclerView.adapter = adapter
         } else {
-            adapter = empty_recycler_view.adapter as PlansListAdapter
+            adapter = emptyRecyclerView.adapter as PlansListAdapter
         }
 
         adapter.updateList(list)
     }
 
-    private fun setObservers() {
+    private fun PlansListFragmentBinding.setObservers() {
         viewModel.plans.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
@@ -92,15 +92,15 @@ class PlansListFragment : Fragment() {
 
             when (listStatus) {
                 ERROR -> {
-                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_network_title)
-                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_no_cache_subtitle)
-                    actionable_empty_view.button.visibility = View.GONE
+                    actionableEmptyView.title.text = getString(R.string.plans_loading_error_network_title)
+                    actionableEmptyView.subtitle.text = getString(R.string.plans_loading_error_no_cache_subtitle)
+                    actionableEmptyView.button.visibility = View.GONE
                 }
                 ERROR_WITH_CACHE -> {
-                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_network_title)
-                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_with_cache_subtitle)
-                    actionable_empty_view.button.visibility = View.VISIBLE
-                    actionable_empty_view.button.setOnClickListener {
+                    actionableEmptyView.title.text = getString(R.string.plans_loading_error_network_title)
+                    actionableEmptyView.subtitle.text = getString(R.string.plans_loading_error_with_cache_subtitle)
+                    actionableEmptyView.button.visibility = View.VISIBLE
+                    actionableEmptyView.button.setOnClickListener {
                         viewModel.onShowCachedPlansButtonClicked()
                     }
                 }
@@ -111,9 +111,9 @@ class PlansListFragment : Fragment() {
                 }
                 else -> {
                     // show generic error in case there are no plans to show for any reason
-                    actionable_empty_view.title.text = getString(R.string.plans_loading_error_no_plans_title)
-                    actionable_empty_view.subtitle.text = getString(R.string.plans_loading_error_no_plans_subtitle)
-                    actionable_empty_view.button.visibility = View.GONE
+                    actionableEmptyView.title.text = getString(R.string.plans_loading_error_no_plans_title)
+                    actionableEmptyView.subtitle.text = getString(R.string.plans_loading_error_no_plans_subtitle)
+                    actionableEmptyView.button.visibility = View.GONE
                 }
             }
         })

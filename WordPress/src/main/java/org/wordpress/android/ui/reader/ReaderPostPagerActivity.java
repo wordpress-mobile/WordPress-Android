@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -55,7 +58,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.UrlUtilsWrapper;
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -119,6 +123,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private boolean mPostSlugsResolutionUnderway;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+    private boolean mIsRelatedPostView;
 
     private boolean mBackFromLogin;
 
@@ -126,10 +131,14 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderPostTableWrapper mReaderPostTableWrapper;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
+    @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject UrlUtilsWrapper mUrlUtilsWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,6 +158,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -173,6 +183,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -212,8 +223,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             }
         });
 
-        mViewPager.setPageTransformer(false,
-                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+        mViewPager.setPageTransformer(
+                false,
+                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER)
+        );
     }
 
     private void handleDeepLinking() {
@@ -225,7 +238,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
+        mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
 
         if (uri == null) {
             // invalid uri so, just show the entry screen
@@ -295,12 +308,16 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
             mIsSinglePostView = true;
+            mIsRelatedPostView = false;
 
             switch (interceptType) {
                 case READER_BLOG:
                     if (parseIds(blogIdentifier, postIdentifier)) {
-                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                                                                mBlogId, mPostId);
+                        mReaderTracker.trackBlogPost(
+                                AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
+                                mBlogId,
+                                mPostId
+                        );
                         // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                     } else {
                         ToastUtils.showToast(this, R.string.error_generic);
@@ -308,17 +325,23 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     break;
                 case READER_FEED:
                     if (parseIds(blogIdentifier, postIdentifier)) {
-                        AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                                                                mBlogId, mPostId);
+                        mReaderTracker.trackFeedPost(
+                                AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                                mBlogId,
+                                mPostId
+                        );
                         // IDs have now been set so, let ReaderPostPagerActivity normally display the post
                     } else {
                         ToastUtils.showToast(this, R.string.error_generic);
                     }
                     break;
                 case WPCOM_POST_SLUG:
-                    AnalyticsUtils.trackWithBlogPostDetails(
-                            AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, blogIdentifier,
-                            postIdentifier, mCommentId);
+                    mReaderTracker.trackBlogPost(
+                            AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED,
+                            blogIdentifier,
+                            postIdentifier,
+                            mCommentId
+                    );
 
                     // try to get the post from the local db
                     ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
@@ -329,33 +352,45 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     } else {
                         // not stored locally, so request it
                         ReaderPostActions.requestBlogPost(
-                            blogIdentifier, postIdentifier,
-                            new ReaderActions.OnRequestListener() {
-                                @Override
-                                public void onSuccess() {
-                                    mPostSlugsResolutionUnderway = false;
-                                    ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier,
-                                                                                  true);
-                                    ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
-                                            ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId, post.postId)
-                                            : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault().post(slugsResolved);
+                                blogIdentifier, postIdentifier,
+                                new ReaderActions.OnRequestListener<String>() {
+                                    @Override
+                                    public void onSuccess(String blogUrl) {
+                                        mPostSlugsResolutionUnderway = false;
 
-                                    // post wasn't available locally earlier so, track it now
-                                    if (post != null) {
-                                        trackPost(post.blogId, post.postId);
+                                        // the scheme is removed to match the query pattern in ReaderPostTable
+                                        // .getBlogPost
+                                        String primaryBlogIdentifier = mUrlUtilsWrapper.removeScheme(blogUrl);
+
+                                        // getBlogPost utilizes the primaryBlogIdentifier instead of blogIdentifier
+                                        // since
+                                        // the custom and *.wordpress.com domains need to be used interchangeably since
+                                        // they can both be used as the primary domain when identifying the blog_url
+                                        // in the ReaderPostTable query.
+                                        ReaderPost post =
+                                                ReaderPostTable.getBlogPost(primaryBlogIdentifier, postIdentifier,
+                                                        true);
+                                        ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null)
+                                                ? new ReaderEvents.PostSlugsRequestCompleted(200, post.blogId,
+                                                post.postId)
+                                                : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault().post(slugsResolved);
+
+                                        // post wasn't available locally earlier so, track it now
+                                        if (post != null) {
+                                            trackPost(post.blogId, post.postId);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(int statusCode) {
-                                    mPostSlugsResolutionUnderway = false;
-                                    // notify that the slug resolution request has completed
-                                    EventBus.getDefault()
-                                            .post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(int statusCode) {
+                                        mPostSlugsResolutionUnderway = false;
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault()
+                                                .post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
+                                    }
+                                });
                         mPostSlugsResolutionUnderway = true;
                     }
 
@@ -469,7 +504,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         mDispatcher.register(this);
 
         if (!hasPagerAdapter() || mBackFromLogin) {
-            if (ActivityUtils.isDeepLinking(getIntent())) {
+            if (ActivityUtils.isDeepLinking(getIntent()) || ReaderConstants.ACTION_VIEW_POST
+                    .equals(getIntent().getAction())) {
                 handleDeepLinking();
             }
 
@@ -514,6 +550,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
@@ -563,11 +600,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         if (fragment != null && fragment.isCustomViewShowing()) {
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
-        } else //noinspection StatementWithEmptyBody
-            if (fragment != null && fragment.goBackInPostHistory()) {
-            // noop - fragment moved back to a previous post
         } else {
-            super.onBackPressed();
+            if (fragment != null && fragment.goBackInPostHistory()) {
+                // noop - fragment moved back to a previous post
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -598,10 +636,18 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // bump the page view
         ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
 
+        if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+            ReaderPost currentPost = ReaderPostTable.getBlogPost(blogId, postId, true);
+            if (currentPost != null) {
+                mPostSeenStatusWrapper.markPostAsSeenSilently(currentPost);
+            }
+        }
+
         // analytics tracking
-        AnalyticsUtils.trackWithReaderPostDetails(
+        mReaderTracker.trackPost(
                 AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                ReaderPostTable.getBlogPost(blogId, postId, true));
+                mReaderPostTableWrapper.getBlogPost(blogId, postId, true)
+        );
     }
 
     /*
@@ -636,30 +682,27 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 final int currentPosition = mViewPager.getCurrentItem();
                 final int newPosition = idList.indexOf(blogId, postId);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFinishing()) {
-                            return;
-                        }
+                runOnUiThread(() -> {
+                    if (isFinishing()) {
+                        return;
+                    }
 
-                        AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
-                        PostPagerAdapter adapter =
-                                new PostPagerAdapter(getSupportFragmentManager(), idList);
-                        mViewPager.setAdapter(adapter);
-                        if (adapter.isValidPosition(newPosition)) {
-                            mViewPager.setCurrentItem(newPosition);
-                            trackPostAtPositionIfNeeded(newPosition);
-                        } else if (adapter.isValidPosition(currentPosition)) {
-                            mViewPager.setCurrentItem(currentPosition);
-                            trackPostAtPositionIfNeeded(currentPosition);
-                        }
+                    AppLog.d(T.READER, "reader pager > creating adapter");
+                    PostPagerAdapter adapter =
+                            new PostPagerAdapter(getSupportFragmentManager(), idList);
+                    mViewPager.setAdapter(adapter);
+                    if (adapter.isValidPosition(newPosition)) {
+                        mViewPager.setCurrentItem(newPosition);
+                        trackPostAtPositionIfNeeded(newPosition);
+                    } else if (adapter.isValidPosition(currentPosition)) {
+                        mViewPager.setCurrentItem(currentPosition);
+                        trackPostAtPositionIfNeeded(currentPosition);
+                    }
 
-                        // let the user know they can swipe between posts
-                        if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                            WPSwipeSnackbar.show(mViewPager);
-                            AppPrefs.setReaderSwipeToNavigateShown(true);
-                        }
+                    // let the user know they can swipe between posts
+                    if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                        WPSwipeSnackbar.show(mViewPager);
+                        AppPrefs.setReaderSwipeToNavigateShown(true);
                     }
                 });
             }
@@ -737,6 +780,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                         mBlogId,
                         ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER);
                 break;
+            case SEARCH_RESULTS:
+                break;
         }
     }
 
@@ -786,7 +831,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return;
         }
 
-        AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+        mReaderTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
         ActivityLauncher.loginWithoutMagicLink(this);
     }
 
@@ -794,7 +839,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
      * pager adapter containing post detail fragments
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private ReaderBlogIdPostIdList mIdList;
+        private final ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
@@ -804,7 +849,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // retain *every* fragment
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
 
-        PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
+        @SuppressLint("WrongConstant") PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mIdList = (ReaderBlogIdPostIdList) ids.clone();
         }
@@ -856,6 +901,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     mIdList.get(position).getPostId(),
                     mDirectOperation,
                     mCommentId,
+                    mIsRelatedPostView,
                     mInterceptedUri,
                     getPostListType(),
                     mPostSlugsResolutionUnderway);
@@ -930,12 +976,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                             post,
                             site,
                             mUploadActionUseCase.getUploadAction(post),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils.publishPost(ReaderPostPagerActivity.this, post, site, mDispatcher);
-                                }
-                            });
+                            v -> UploadUtils.publishPost(ReaderPostPagerActivity.this, post, site, mDispatcher));
                 }
                 break;
             case RequestCodes.DO_LOGIN:
@@ -961,6 +1002,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     this,
                     findViewById(R.id.coordinator),
                     event.isError(),
+                    event.isFirstTimePublish,
                     event.post,
                     null,
                     site);

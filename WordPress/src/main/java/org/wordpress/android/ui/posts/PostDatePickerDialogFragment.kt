@@ -7,7 +7,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
@@ -25,9 +24,9 @@ class PostDatePickerDialogFragment : DialogFragment() {
         )
 
         when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            EDIT_POST -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 

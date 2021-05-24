@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory

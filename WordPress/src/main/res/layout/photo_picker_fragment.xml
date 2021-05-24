@@ -14,7 +14,8 @@
         android:layout_gravity="end|bottom"
         android:visibility="gone"
         android:src="@drawable/ic_photo_camera_24px"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin_stories"
         tools:ignore="InconsistentLayout"/>
 
     <RelativeLayout

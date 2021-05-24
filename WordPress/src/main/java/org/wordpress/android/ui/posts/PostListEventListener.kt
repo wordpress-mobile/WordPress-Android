@@ -181,7 +181,16 @@ class PostListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
-                triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
+                triggerPostUploadAction.invoke(
+                        PostUploadedSnackbar(
+                                dispatcher,
+                                site,
+                                event.post,
+                                event.isError,
+                                event.isFirstTimePublish,
+                                null
+                        )
+                )
             }
 
             uploadStatusChanged(event.post.id)
@@ -216,7 +225,16 @@ class PostListEventListener(
     fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         if (event.post != null) {
-            triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, true, event.errorMessage))
+            triggerPostUploadAction.invoke(
+                    PostUploadedSnackbar(
+                            dispatcher,
+                            site,
+                            event.post,
+                            true,
+                            false,
+                            event.errorMessage
+                    )
+            )
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             triggerPostUploadAction.invoke(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
         }

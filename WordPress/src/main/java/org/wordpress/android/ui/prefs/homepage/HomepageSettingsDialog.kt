@@ -13,16 +13,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.site_settings_homepage_dialog.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.SiteSettingsHomepageDialogBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class HomepageSettingsDialog : DialogFragment() {
@@ -41,71 +40,62 @@ class HomepageSettingsDialog : DialogFragment() {
             pageOnFrontId = bundle.get(KEY_PAGE_ON_FRONT)?.let { it as Long }
             pageForPostsId = bundle.get(KEY_PAGE_FOR_POSTS)?.let { it as Long }
         } ?: throw IllegalArgumentException("Site has to be initialized")
-        val view = View.inflate(
-                activity,
-                R.layout.site_settings_homepage_dialog,
-                null
-        )
-        view.apply {
-            homepage_settings_radio_group.setOnCheckedChangeListener { _, checkedId ->
+        val builder = MaterialAlertDialogBuilder(requireActivity())
+        builder.setPositiveButton(R.string.site_settings_accept_homepage) { _, _ -> }
+        builder.setNegativeButton(R.string.cancel) { _, _ -> }
+        with(SiteSettingsHomepageDialogBinding.inflate(requireActivity().layoutInflater)) {
+            homepageSettingsRadioGroup.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.classic_blog -> viewModel.classicBlogSelected()
                     R.id.static_homepage -> viewModel.staticHomepageSelected()
                 }
             }
-        }
-        val builder = MaterialAlertDialogBuilder(requireActivity())
-        builder.setPositiveButton(R.string.site_settings_accept_homepage) { _, _ -> }
-        builder.setNegativeButton(R.string.cancel) { _, _ -> }
-        builder.setView(view)
+            builder.setView(root)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(HomepageSettingsViewModel::class.java)
-        viewModel.uiState.observe(this, Observer { uiState ->
-            uiState?.let {
-                view.apply {
-                    loading_pages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
+            viewModel = ViewModelProvider(this@HomepageSettingsDialog, viewModelFactory)
+                    .get(HomepageSettingsViewModel::class.java)
+            viewModel.uiState.observe(this@HomepageSettingsDialog, { uiState ->
+                uiState?.let {
+                    loadingPages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                     enablePositiveButton(uiState.isSaveEnabled)
                     if (uiState.error != null) {
-                        loading_error.visibility = View.VISIBLE
-                        loading_error.setText(uiState.error)
+                        loadingError.visibility = View.VISIBLE
+                        loadingError.setText(uiState.error)
                     } else {
-                        loading_error.visibility = View.GONE
-                        loading_error.text = null
+                        loadingError.visibility = View.GONE
+                        loadingError.text = null
                     }
                     when (uiState.isClassicBlogState) {
                         true -> {
-                            homepage_settings_radio_group.checkIfNotChecked(R.id.classic_blog)
-                            dropdown_container.visibility = View.GONE
+                            homepageSettingsRadioGroup.checkIfNotChecked(R.id.classic_blog)
+                            dropdownContainer.visibility = View.GONE
                         }
                         false -> {
-                            homepage_settings_radio_group.checkIfNotChecked(R.id.static_homepage)
+                            homepageSettingsRadioGroup.checkIfNotChecked(R.id.static_homepage)
                             if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
-                                dropdown_container.visibility = View.VISIBLE
+                                dropdownContainer.visibility = View.VISIBLE
                                 setupDropdownItem(
                                         uiState.pageOnFrontState,
-                                        selected_homepage,
+                                        selectedHomepage,
                                         viewModel::onPageOnFrontDialogOpened,
                                         viewModel::onPageOnFrontSelected
                                 )
                                 setupDropdownItem(
                                         uiState.pageForPostsState,
-                                        selected_posts_page,
+                                        selectedPostsPage,
                                         viewModel::onPageForPostsDialogOpened,
                                         viewModel::onPageForPostsSelected
                                 )
                             } else {
-                                dropdown_container.visibility = View.GONE
+                                dropdownContainer.visibility = View.GONE
                             }
                         }
                     }
                 }
-            }
-        })
-        viewModel.dismissDialogEvent.observe(this, Observer {
-            it?.applyIfNotHandled {
-                requireDialog().dismiss()
-            }
+            })
+        }
+        viewModel.dismissDialogEvent.observeEvent(this, {
+            requireDialog().dismiss()
         })
         viewModel.start(requireNotNull(siteId), isClassicBlog, pageForPostsId, pageOnFrontId)
         return builder.create()

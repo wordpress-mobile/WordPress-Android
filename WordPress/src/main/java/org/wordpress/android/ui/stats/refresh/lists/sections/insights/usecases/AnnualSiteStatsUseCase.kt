@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
@@ -78,7 +78,7 @@ class AnnualSiteStatsUseCase(
                     items.add(
                             Link(
                                     text = R.string.stats_insights_view_more,
-                                    navigateAction = NavigationAction.create(this::onViewMoreClicked)
+                                    navigateAction = ListItemInteraction.create(this::onViewMoreClicked)
                             )
                     )
                 }

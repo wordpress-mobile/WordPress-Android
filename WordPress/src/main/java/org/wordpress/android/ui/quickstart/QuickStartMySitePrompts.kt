@@ -28,20 +28,6 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_view_site_message_short,
             R.drawable.ic_globe_white_24dp
     ),
-    CHOSE_THEME_TUTORIAL(
-            QuickStartTask.CHOOSE_THEME,
-            R.id.my_site_scroll_view_root,
-            R.id.row_themes,
-            R.string.quick_start_dialog_browse_themes_message_short,
-            R.drawable.ic_themes_white_24dp
-    ),
-    CUSTOMIZE_SITE_TUTORIAL(
-            QuickStartTask.CUSTOMIZE_SITE,
-            R.id.my_site_scroll_view_root,
-            R.id.row_themes,
-            R.string.quick_start_dialog_customize_site_message_short_themes,
-            R.drawable.ic_themes_white_24dp
-    ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
             R.id.my_site_scroll_view_root,
@@ -70,13 +56,6 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_upload_site_icon_message_short,
             ICON_NOT_SET
     ),
-    CREATE_NEW_PAGE(
-            QuickStartTask.CREATE_NEW_PAGE,
-            R.id.my_site_scroll_view_root,
-            R.id.quick_action_pages_button,
-            R.string.quick_start_dialog_create_new_page_message_short,
-            ICON_NOT_SET
-    ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,
             R.id.my_site_scroll_view_root,
@@ -90,6 +69,20 @@ enum class QuickStartMySitePrompts constructor(
             R.id.row_plan,
             R.string.quick_start_dialog_explore_plans_message_short,
             R.drawable.ic_plans_white_24dp
+    ),
+    REVIEW_PAGES(
+            QuickStartTask.REVIEW_PAGES,
+            R.id.my_site_scroll_view_root,
+            R.id.quick_action_pages_button,
+            R.string.quick_start_dialog_review_pages_message_short,
+            R.drawable.ic_pages_white_24dp
+    ),
+    EDIT_HOMEPAGE(
+            QuickStartTask.EDIT_HOMEPAGE,
+            R.id.my_site_scroll_view_root,
+            R.id.quick_action_pages_button,
+            R.string.quick_start_dialog_edit_homepage_message_short,
+            R.drawable.ic_pages_white_24dp
     );
 
     companion object {

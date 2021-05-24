@@ -21,7 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -137,7 +137,7 @@ constructor(
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(statsGranularity, this::onViewMoreClick)
+                                navigateAction = ListItemInteraction.create(statsGranularity, this::onViewMoreClick)
                         )
                 )
             }

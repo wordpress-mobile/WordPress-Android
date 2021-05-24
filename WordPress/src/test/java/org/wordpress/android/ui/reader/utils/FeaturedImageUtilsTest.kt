@@ -66,6 +66,17 @@ class FeaturedImageUtilsTest {
     }
 
     @Test
+    fun `shows featured image with different name and non-last path segment containing a dash`() {
+        val featuredImage = "https://wordpress.com/wp-content/image1.png"
+        val bodyImage = "https://wordpress.com/wp-content/image2.png"
+        val readerPost = initReaderPost(bodyImage, featuredImage)
+
+        val result = featuredImageUtils.showFeaturedImage(readerPost.featuredImage, readerPost.text)
+
+        assertThat(result).isTrue
+    }
+
+    @Test
     fun `shows featured image with the same name from different host`() {
         val featuredImage = "https://wordpress.com/image.png"
         val bodyImage = "https://wordpress2.com/image.png"

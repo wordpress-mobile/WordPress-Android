@@ -28,6 +28,11 @@
         android:title="@string/pages_set_as_posts_page"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/copy"
+        android:orderInCategory="100"
+        android:title="@string/button_copy"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/publish_now"
         android:orderInCategory="100"
         android:title="@string/pages_publish_now"

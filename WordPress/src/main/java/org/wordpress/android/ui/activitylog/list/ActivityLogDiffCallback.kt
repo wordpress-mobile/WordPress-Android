@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Notice
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress
 
 class ActivityLogDiffCallback(
@@ -21,6 +22,7 @@ class ActivityLogDiffCallback(
         return when {
             oldItem is Event && newItem is Event -> oldItem.activityId == newItem.activityId
             oldItem is Progress && newItem is Progress -> oldItem == newItem
+            oldItem is Notice && newItem is Notice -> oldItem == newItem
             else -> false
         }
     }

@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.login_include_email_header.*
 import kotlinx.android.synthetic.main.signup_confirmation_screen.*
 import kotlinx.android.synthetic.main.toolbar_login.*
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
-import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromEmail
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
 import javax.inject.Inject
 
@@ -27,7 +26,6 @@ class SignupConfirmationFragment : Fragment() {
     private var mIdToken: String? = null
     private var mPhotoUrl: String? = null
     private var mService: String? = null
-    private var mIsSocialSignup: Boolean = false
 
     @Inject lateinit var mAnalyticsListener: LoginAnalyticsListener
 
@@ -39,16 +37,6 @@ class SignupConfirmationFragment : Fragment() {
         private const val ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN"
         private const val ARG_SOCIAL_PHOTO_URL = "ARG_SOCIAL_PHOTO_URL"
         private const val ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE"
-        private const val ARG_IS_SOCIAL_SIGNUP = "ARG_IS_SOCIAL_SIGNUP"
-
-        @JvmStatic fun newInstance(email: String?): SignupConfirmationFragment {
-            return SignupConfirmationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_EMAIL, email)
-                    putBoolean(ARG_IS_SOCIAL_SIGNUP, false)
-                }
-            }
-        }
 
         @JvmStatic fun newInstance(
             email: String?,
@@ -64,7 +52,6 @@ class SignupConfirmationFragment : Fragment() {
                     putString(ARG_SOCIAL_ID_TOKEN, idToken)
                     putString(ARG_SOCIAL_PHOTO_URL, photoUrl)
                     putString(ARG_SOCIAL_SERVICE, service)
-                    putBoolean(ARG_IS_SOCIAL_SIGNUP, true)
                 }
             }
         }
@@ -87,7 +74,6 @@ class SignupConfirmationFragment : Fragment() {
             mIdToken = it.getString(ARG_SOCIAL_ID_TOKEN)
             mPhotoUrl = it.getString(ARG_SOCIAL_PHOTO_URL)
             mService = it.getString(ARG_SOCIAL_SERVICE)
-            mIsSocialSignup = it.getBoolean(ARG_IS_SOCIAL_SIGNUP)
         }
         setHasOptionsMenu(true)
     }
@@ -117,30 +103,14 @@ class SignupConfirmationFragment : Fragment() {
             }
         }
 
-        if (mIsSocialSignup) {
-            loadAvatarFromUrl(this, mPhotoUrl, gravatar, avatarRequestListener)
-            label.setText(R.string.signup_confirmation_message)
-            signup_confirmation_button.setText(R.string.create_account)
-            signup_confirmation_button.setOnClickListener {
-                mAnalyticsListener.trackCreateAccountClick()
-                mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
-            }
-        } else {
-            loadAvatarFromEmail(this, mEmail, gravatar, avatarRequestListener)
-            label.setText(R.string.signup_confirmation_magic_link_message)
-            signup_confirmation_button.setText(R.string.send_link_by_email)
-            signup_confirmation_button.setOnClickListener {
-                mAnalyticsListener.trackRequestMagicLinkClick()
-                mLoginListener?.showSignupMagicLink(mEmail)
-            }
+        loadAvatarFromUrl(this, mPhotoUrl, gravatar, avatarRequestListener)
+        signup_confirmation_button.setOnClickListener {
+            mAnalyticsListener.trackCreateAccountClick()
+            mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
         }
 
         if (savedInstanceState == null) {
-            if (mIsSocialSignup) {
-                mAnalyticsListener.trackSocialSignupConfirmationViewed()
-            } else {
-                mAnalyticsListener.trackEmailSignupConfirmationViewed()
-            }
+            mAnalyticsListener.trackSocialSignupConfirmationViewed()
         }
     }
 

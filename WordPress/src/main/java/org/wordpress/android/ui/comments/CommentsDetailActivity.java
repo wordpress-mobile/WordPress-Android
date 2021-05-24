@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
@@ -34,6 +35,8 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
@@ -113,6 +116,12 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
         // Asynchronously loads comments and build the adapter
         loadDataInViewPager();
+
+        if (savedInstanceState == null) {
+            // track initial comment view
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, mSite);
+        }
     }
 
     @Override
@@ -205,6 +214,9 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     }
 
     private void showCommentList(CommentList commentList) {
+        if (isFinishing()) {
+            return;
+        }
         final int previousItem = mViewPager.getCurrentItem();
 
         // Only notify adapter when loading new page
@@ -231,6 +243,9 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                     final CommentModel comment = mAdapter.getCommentAtPosition(position);
                     if (comment != null) {
                         mCommentId = comment.getRemoteCommentId();
+                        // track subsequent comment views
+                        AnalyticsUtils.trackCommentActionWithSiteDetails(
+                                Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, mSite);
                     }
                 }
             };

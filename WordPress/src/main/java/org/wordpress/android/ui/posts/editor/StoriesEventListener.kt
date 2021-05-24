@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.lifecycle.Lifecycle
@@ -13,7 +12,9 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryIndex
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -24,6 +25,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,9 +33,10 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
-import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
+import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
@@ -41,7 +44,6 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.StringUtils
-import org.wordpress.android.util.helpers.MediaFile
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
@@ -52,17 +54,35 @@ class StoriesEventListener @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val editorMedia: EditorMedia,
     private val loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase,
+    private val storiesPrefs: StoriesPrefs,
     private val storyRepositoryWrapper: StoryRepositoryWrapper
 ) : LifecycleObserver {
     private lateinit var lifecycle: Lifecycle
     private lateinit var site: SiteModel
     private lateinit var editPostRepository: EditPostRepository
     private var storySaveMediaListener: StorySaveMediaListener? = null
+    var storiesSavingInProgress = HashSet<StoryIndex>()
+        private set
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    private fun onCreate() {
-        dispatcher.register(this)
-        eventBusWrapper.register(this)
+    data class StoryFrameMediaUploadedEvent(
+        val localId: LocalId,
+        val assignedMediaId: RemoteId,
+        val oldUrl: String,
+        val newUrl: String
+    )
+
+    fun startListening() {
+        if (!eventBusWrapper.isRegistered(this)) {
+            dispatcher.register(this)
+            eventBusWrapper.register(this)
+        }
+    }
+
+    fun pauseListening() {
+        if (eventBusWrapper.isRegistered(this)) {
+            dispatcher.unregister(this)
+            eventBusWrapper.unregister(this)
+        }
     }
 
     /**
@@ -72,19 +92,51 @@ class StoriesEventListener @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
-        dispatcher.unregister(this)
-        eventBusWrapper.unregister(this)
+        pauseListening()
     }
 
-    fun start(lifecycle: Lifecycle, site: SiteModel, editPostRepository: EditPostRepository) {
+    fun start(
+        lifecycle: Lifecycle,
+        site: SiteModel,
+        editPostRepository: EditPostRepository,
+        editorMediaListener: EditorMediaListener
+    ) {
         this.site = site
         this.editPostRepository = editPostRepository
         this.lifecycle = lifecycle
         this.lifecycle.addObserver(this)
+        this.editorMedia.start(site, editorMediaListener)
     }
 
     fun setSaveMediaListener(newListener: StorySaveMediaListener) {
         storySaveMediaListener = newListener
+    }
+
+    fun postStoryMediaUploadedEvent(mediaModel: MediaModel) {
+        // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
+        // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
+        // mediaId.
+        // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
+        // within a story block in this post: we will only replace items for which a local-keyed frame has
+        // been created before, which can only happen when using the Story Creator.
+        storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                mediaModel.getId(),
+                mediaModel.getMediaId(),
+                mediaModel.localSiteId.toLong()
+        )
+
+        // also, let's post a sticky event for StoriesEventListener to catch - if the listener is not yet
+        // registered, it will be listening to this event as needed when Gutenberg is re-attached and ready
+        // to process events
+        // see subscriber method fun onStoryFrameMediaUploadedEvent(event: StoryFrameMediaUploadedEvent) below
+        eventBusWrapper.postSticky(
+                StoryFrameMediaUploadedEvent(
+                        LocalId(mediaModel.id),
+                        RemoteId(mediaModel.mediaId),
+                        "",
+                        mediaModel.url
+                )
+        )
     }
 
     // Story Frame Save Service events
@@ -111,50 +163,48 @@ class StoriesEventListener @Inject constructor(
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, progress)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveCompleted(event: FrameSaveCompleted) {
+        eventBusWrapper.removeStickyEvent(event)
+        // in onStoryFrameSaveCompleted we should always get a frameId that has the TEMPORARY_ID_PREFIX prefix
+        // for Stories being edited only
+        // otherwise we can exit
+        if (event.frameId == null) return
+
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
-        val localMediaId = requireNotNull(event.frameId)
+        val localMediaId = event.frameId
 
-        // check whether this is a temporary file being just saved (so we don't have a proper local MediaModel yet)
-        // catch ( NumberFormatException e)
-        if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
-            val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
+        val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
 
-            // first, update the media's url
-            val frame = frames[event.frameIndex]
-            storySaveMediaListener?.onMediaSaveSucceeded(
-                    localMediaId,
-                    Uri.fromFile(frame.composedFrameFile).toString()
-            )
+        // first, update the media's url
+        val frame = frames[event.frameIndex]
+        storySaveMediaListener?.onMediaSaveSucceeded(
+                localMediaId,
+                Uri.fromFile(frame.composedFrameFile).toString()
+        )
 
-            // now update progress
-            val totalProgress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
-                    event.storyIndex,
-                    0.0f
-            )
-            storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
-        } else {
-            val mediaModel: MediaModel = mediaStore.getSiteMediaWithId(site, localMediaId.toLong())
-            if (mediaModel != null) {
-                val mediaFile: MediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel)
-                storySaveMediaListener?.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL())
-            }
-        }
+        // now update progress
+        val totalProgress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
+                event.storyIndex,
+                0.0f
+        )
+        storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameMediaIdChanged(event: StoryFrameMediaModelCreatedEvent) {
+        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
         storySaveMediaListener?.onMediaModelCreatedForFile(event.oldId, event.newId.toString(), event.oldUrl)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveFailed(event: FrameSaveFailed) {
+        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -166,8 +216,10 @@ class StoriesEventListener @Inject constructor(
         // storySaveMediaListener?.onMediaSaveFailed(localMediaId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStorySaveProcessFinished(event: StorySaveResult) {
+        eventBusWrapper.removeStickyEvent(event)
+        storiesSavingInProgress.remove(event.storyIndex)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -177,6 +229,27 @@ class StoriesEventListener @Inject constructor(
             val localMediaId = story.frames[0].id.toString()
             storySaveMediaListener?.onStorySaveResult(localMediaId, event.isSuccess())
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onStorySaveStart(event: StorySaveProcessStart) {
+        storiesSavingInProgress.add(event.storyIndex)
+    }
+
+    // Story media Upload specific event - we trigger this from within this class so it can be handled appropriately
+    // and doesn't miss the target as regular FluxC upload events would if Gutenberg is not yet prepared
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onStoryFrameMediaUploadedEvent(event: StoryFrameMediaUploadedEvent) {
+        eventBusWrapper.removeStickyEvent(event)
+        if (!lifecycle.currentState.isAtLeast(CREATED)) {
+            return
+        }
+        storySaveMediaListener?.onStoryMediaSavedToRemote(
+                event.localId.value.toString(),
+                event.assignedMediaId.value.toString(),
+                event.oldUrl,
+                event.newUrl
+        )
     }
 
     // Editor load / cancel events
@@ -265,7 +338,7 @@ class StoriesEventListener @Inject constructor(
                     (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
             )
             if (localMediaId != 0) {
-                val media: MediaModel = mediaStore.getMediaWithLocalId(localMediaId)
+                val media: MediaModel? = mediaStore.getMediaWithLocalId(localMediaId)
                 // if we find at least one item in the mediaFiles collection passed
                 // for which we don't have a local MediaModel, just tell the user and bail
                 if (media == null) {
@@ -277,10 +350,7 @@ class StoriesEventListener @Inject constructor(
                             activity
                     )
                     builder.setTitle(activity.getString(string.cannot_retry_deleted_media_item_fatal))
-                    builder.setPositiveButton(string.yes) { dialog, id -> dialog.dismiss() }
-                    builder.setNegativeButton(activity.getString(string.no),
-                            DialogInterface.OnClickListener { dialog: DialogInterface, id: Int -> dialog.dismiss() }
-                    )
+                    builder.setPositiveButton(string.ok) { dialog, id -> dialog.dismiss() }
                     val dialog = builder.create()
                     dialog.show()
                     return

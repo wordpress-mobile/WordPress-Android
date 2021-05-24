@@ -1,20 +1,26 @@
 package org.wordpress.android.ui.stories
 
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.wordpress.stories.compose.frame.FrameIndex
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.EDITOR
+import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
 class SaveStoryGutenbergBlockUseCase @Inject constructor(
-    private val storiesPrefs: StoriesPrefs
+    private val storiesPrefs: StoriesPrefs,
+    private val crashLogging: CrashLogging
 ) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
@@ -44,7 +50,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = mediaFile.id.toString(),
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
@@ -56,7 +62,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = temporaryId, // mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
@@ -88,6 +94,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
         postModel: PostModel,
+        siteModel: SiteModel?,
         listener: DoWithMediaFilesListener
     ) {
         var content = postModel.content
@@ -98,24 +105,61 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         // --> remove mediaFiles entirely
         // set start index and go up.
         var storyBlockStartIndex = 0
-        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length) {
+        var hasMediaFiles = true
+        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length && hasMediaFiles) {
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
-                val jsonString: String = content.substring(
-                        storyBlockStartIndex + HEADING_START.length,
-                        content.indexOf(HEADING_END))
-                content = listener.doWithMediaFilesJson(content, jsonString)
-                storyBlockStartIndex += HEADING_START.length
+                val storyBlockEndIndex = content.indexOf(HEADING_END_NO_NEW_LINE, storyBlockStartIndex)
+                val mediaFilesStartIndex = storyBlockStartIndex + HEADING_START.length
+                hasMediaFiles = mediaFilesStartIndex < storyBlockEndIndex
+                if (!hasMediaFiles) {
+                    break
+                }
+                try {
+                    val jsonString: String = content.substring(
+                            mediaFilesStartIndex,
+                            storyBlockEndIndex
+                    )
+                    content = listener.doWithMediaFilesJson(content, jsonString)
+                    storyBlockStartIndex += HEADING_START.length
+                } catch (exception: StringIndexOutOfBoundsException) {
+                    logException(exception, postModel, siteModel)
+                }
             }
         }
 
         postModel.setContent(content)
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+    private fun logException(exception: Throwable, postModel: PostModel, siteModel: SiteModel?) {
+        AppLog.e(EDITOR, "Error while parsing Story blocks: ${exception.message}")
+        if (shouldLogContent(siteModel, postModel)) {
+            AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
+        }
+        crashLogging.reportException(exception, EDITOR.toString())
+    }
+
+    // See: https://git.io/JqfhK
+    private fun shouldLogContent(siteModel: SiteModel?, postModel: PostModel) = siteModel != null &&
+            siteModel.isWPCom &&
+            !siteModel.isPrivate &&
+            postModel.password.isEmpty() &&
+            postModel.status != PRIVATE.toString()
+
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(
+        postModel: PostModel,
+        siteModel: SiteModel?,
+        mediaFile: MediaFile
+    ) {
+        if (TextUtils.isEmpty(mediaFile.mediaId)) {
+            // if for any reason we couldn't obtain a remote mediaId, it's not worth spending time
+            // looking to replace anything in the Post. Skip processing for later in error handling.
+            return
+        }
         val gson = Gson()
         findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                 postModel,
+                siteModel,
                 object : DoWithMediaFilesListener {
                     override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
                         var processedContent = content
@@ -170,6 +214,19 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         }
     }
 
+    fun assignAltOnEachMediaFile(
+        frames: List<StoryFrameItem>,
+        mediaFiles: ArrayList<MediaFile>
+    ): List<MediaFile> {
+        return mediaFiles.mapIndexed { index, mediaFile ->
+            run {
+                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
+                mediaFile
+            }
+            mediaFile
+        }
+    }
+
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
         val gson = Gson()
         return HEADING_START + gson.toJson(storyBlock) + HEADING_END + DIV_PART + CLOSING_TAG
@@ -197,6 +254,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         const val TEMPORARY_ID_PREFIX = "tempid-"
         const val HEADING_START = "<!-- wp:jetpack/story "
         const val HEADING_END = " -->\n"
+        const val HEADING_END_NO_NEW_LINE = " -->"
         const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
         const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
     }

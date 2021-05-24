@@ -34,6 +34,7 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -67,7 +68,8 @@ class PostActionHandler(
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit,
-    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit
+    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
+    private val copyPost: (SiteModel, PostModel, Boolean) -> Unit
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -112,6 +114,7 @@ class PostActionHandler(
                     else -> trashPost(post)
                 }
             }
+            BUTTON_COPY -> copyPost(site, post, true)
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
@@ -168,6 +171,13 @@ class PostActionHandler(
         triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
     }
 
+    fun resolveConflictsAndEditPost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            performChecksAndEdit(site, post)
+        }
+    }
+
     fun moveTrashedPostToDraft(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
@@ -198,7 +208,9 @@ class PostActionHandler(
         showSnackbar.invoke(snackBarHolder)
     }
 
-    private fun editPostButtonAction(site: SiteModel, post: PostModel) {
+    private fun editPostButtonAction(site: SiteModel, post: PostModel) = performChecksAndEdit(site, post)
+
+    private fun performChecksAndEdit(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)

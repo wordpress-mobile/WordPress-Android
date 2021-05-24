@@ -16,7 +16,7 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 /**
  * Abstract class to be extended for each enumerated {@link MediaBlockType}.
  */
-abstract class BlockProcessor {
+public abstract class BlockProcessor {
     /**
      * HTML output used by the parser
      */

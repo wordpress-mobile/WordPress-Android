@@ -457,6 +457,7 @@ public class UploadUtils {
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
                                                      boolean isError,
+                                                     boolean isFirstTimePublish,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
@@ -511,9 +512,9 @@ public class UploadUtils {
                         snackbarButtonRes = R.string.button_view;
 
                         if (post.isPage()) {
-                            snackbarMessageRes = R.string.page_published;
+                            snackbarMessageRes = isFirstTimePublish ? R.string.page_published : R.string.page_updated;
                         } else if (userCanPublish) {
-                            snackbarMessageRes = R.string.post_published;
+                            snackbarMessageRes = isFirstTimePublish ? R.string.post_published : R.string.post_updated;
                         } else {
                             snackbarMessageRes = R.string.post_submitted;
                         }

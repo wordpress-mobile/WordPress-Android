@@ -19,38 +19,32 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
-import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
-import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.themes.ThemeBrowserActivity
+import org.wordpress.android.ui.themes.ThemeBrowserUtils
 
 class QuickStartUtils {
     companion object {
+        private val themeBrowserUtils = ThemeBrowserUtils()
         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
         const val ICON_NOT_SET = -1
 
@@ -66,13 +60,14 @@ class QuickStartUtils {
         @JvmStatic
         @JvmOverloads
         fun stylizeQuickStartPrompt(
-            context: Context,
+            activityContext: Context,
             messageId: Int,
+            isThemedSnackbar: Boolean = true,
             iconId: Int = ICON_NOT_SET
         ): Spannable {
-            val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
-            val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
-            var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
+            val spanTagOpen = activityContext.getString(R.string.quick_start_span_start)
+            val spanTagEnd = activityContext.getString(R.string.quick_start_span_end)
+            var formattedMessage = activityContext.getString(messageId, spanTagOpen, spanTagEnd)
 
             val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 
@@ -96,7 +91,11 @@ class QuickStartUtils {
             )
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
-                val highlightColor = ContextCompat.getColor(context, android.R.color.white)
+                val highlightColor = if (isThemedSnackbar) {
+                    activityContext.getColorFromAttribute(R.attr.colorSurface)
+                } else {
+                    ContextCompat.getColor(activityContext, android.R.color.white)
+                }
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -104,13 +103,14 @@ class QuickStartUtils {
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
-                    ContextCompat.getDrawable(context, iconId)?.mutate()
+                    activityContext.getDrawable(iconId)?.mutate()
                 } catch (e: Resources.NotFoundException) {
                     null
                 }
 
                 if (icon != null) {
-                    val iconSize = context.resources.getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
+                    val iconSize = activityContext.resources
+                            .getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
                     icon.setBounds(0, 0, iconSize, iconSize)
 
                     DrawableCompat.setTint(icon, highlightColor)
@@ -196,64 +196,30 @@ class QuickStartUtils {
         @JvmStatic
         fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
             return (siteModel.hasCapabilityManageOptions &&
-                    ThemeBrowserActivity.isAccessible(siteModel) &&
+                    themeBrowserUtils.isAccessible(siteModel) &&
                     SiteUtils.isAccessedViaWPComRest(siteModel))
         }
 
         @JvmStatic
         fun isQuickStartInProgress(quickStartStore: QuickStartStore): Boolean {
-            return !quickStartStore.getQuickStartCompleted(AppPrefs.getSelectedSite().toLong()) &&
-                    quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE)
+            return isQuickStartInProgress(quickStartStore, AppPrefs.getSelectedSite())
+        }
+
+        @JvmStatic
+        fun isQuickStartInProgress(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
+            return !quickStartStore.getQuickStartCompleted(selectedSiteId.toLong()) &&
+                    quickStartStore.hasDoneTask(selectedSiteId.toLong(), CREATE_SITE)
         }
 
         @JvmStatic
         fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore): Boolean {
-            return quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) == QuickStartTask.values().size
+            return isEveryQuickStartTaskDone(quickStartStore, AppPrefs.getSelectedSite())
         }
 
         @JvmStatic
-        @JvmOverloads
-        fun completeTaskAndRemindNextOne(
-            quickStartStore: QuickStartStore,
-            task: QuickStartTask,
-            dispatcher: Dispatcher,
-            site: SiteModel,
-            quickStartEvent: QuickStartEvent? = null,
-            context: Context?
-        ) {
-            val siteId = site.id.toLong()
-
-            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
-                    quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
-                return
-            }
-
-            if (context != null) {
-                cancelQuickStartReminder(context)
-            }
-
-            quickStartStore.setDoneTask(siteId, task, true)
-            AnalyticsTracker.track(getTaskCompletedTracker(task))
-
-            if (isEveryQuickStartTaskDone(quickStartStore)) {
-                AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
-                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
-                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
-            } else if (quickStartEvent?.task == task) {
-                AppPrefs.setQuickStartNoticeRequired(true)
-            } else {
-                if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
-                    val nextTask =
-                            getNextUncompletedQuickStartTaskForReminderNotification(
-                                    quickStartStore,
-                                    siteId,
-                                    task.taskType
-                            )
-                    if (nextTask != null) {
-                        startQuickStartReminderTimer(context, nextTask)
-                    }
-                }
-            }
+        fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
+            return quickStartStore.getDoneCount(selectedSiteId.toLong()) >= QuickStartTask.values()
+                    .filter { it.taskType != UNKNOWN }.size
         }
 
         @JvmStatic
@@ -262,15 +228,14 @@ class QuickStartUtils {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_CREATE_PAGE_TAPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
@@ -284,38 +249,36 @@ class QuickStartUtils {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
-                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_CREATE_PAGE_SKIPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
 
-        private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
+        fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
                 VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
-                CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
                 PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
                 FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_CREATE_PAGE_COMPLETED
                 CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
                 EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
+                REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
 
-        private fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
+        fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
             val intent = Intent(context, QuickStartReminderReceiver::class.java)
 
             // for some reason we have to use a bundle to pass serializable to broadcast receiver

@@ -196,6 +196,7 @@ class StoryEditorMediaTest : BaseUnitTest() {
                                 anyOrNull(),
                                 anyBoolean(),
                                 anyOrNull(),
+                                anyBoolean(),
                                 anyBoolean()
                         )
                     }.thenReturn(resultForAddNewMediaToEditorAsync)

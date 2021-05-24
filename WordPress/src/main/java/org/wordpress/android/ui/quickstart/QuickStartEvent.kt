@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
  **/
 @Parcelize
 @SuppressLint("ParcelCreator")
-class QuickStartEvent(val task: QuickStartTask) : Parcelable {
+data class QuickStartEvent(val task: QuickStartTask) : Parcelable {
     companion object {
         const val KEY = "quick_start_event"
     }

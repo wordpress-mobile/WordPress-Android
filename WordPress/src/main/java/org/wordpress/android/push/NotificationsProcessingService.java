@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
 
 import java.util.ArrayList;
@@ -543,15 +544,19 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+
             // Bump analytics
+            // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
+            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_QUICK_ACTION_LIKED,
+                    AnalyticsCommentActionSource.NOTIFICATIONS, site);
             AnalyticsUtils.trackQuickActionTouched(
                     QuickActionTrackPropertyValue.LIKE,
-                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    site,
                     mNote.buildComment());
 
-            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
                 mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
                         new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
@@ -567,18 +572,24 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+
             // Bump analytics
+            // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
+            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_QUICK_ACTION_APPROVED,
+                    AnalyticsCommentActionSource.NOTIFICATIONS, site);
+
             AnalyticsUtils.trackQuickActionTouched(
                     QuickActionTrackPropertyValue.APPROVE,
-                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    site,
                     mNote.buildComment());
 
             // Update pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
             comment.setStatus(CommentStatus.APPROVED.toString());
-            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+
             if (site == null) {
                 AppLog.e(T.NOTIFS, "Impossible to approve a comment on a site that is not in the App. SiteId: "
                                    + mNote.getSiteId());
@@ -621,7 +632,8 @@ public class NotificationsProcessingService extends Service {
                 mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
                 // Bump analytics
-                AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
+                AnalyticsUtils.trackCommentReplyWithDetails(true,
+                        site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
                 AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
             } else {
                 // cancel the current notification

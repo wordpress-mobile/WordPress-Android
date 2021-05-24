@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.jetpack_remote_install_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -36,8 +35,7 @@ class JetpackRemoteInstallFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         requireActivity().let { activity ->
-            viewModel = ViewModelProviders.of(this, viewModelFactory)
-                    .get<JetpackRemoteInstallViewModel>(JetpackRemoteInstallViewModel::class.java)
+            viewModel = ViewModelProvider(this, viewModelFactory).get(JetpackRemoteInstallViewModel::class.java)
 
             val intent = activity.intent
             val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel

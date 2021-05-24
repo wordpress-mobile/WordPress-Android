@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PrepublishingScreenClosedListener
@@ -14,6 +13,7 @@ import org.wordpress.android.ui.posts.PublishSettingsFragment
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 import org.wordpress.android.ui.posts.PublishSettingsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
@@ -26,7 +26,7 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(PrepublishingPublishSettingsViewModel::class.java)
     }
 
@@ -47,13 +47,11 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
         (viewModel as PrepublishingPublishSettingsViewModel).let {
             backButton.setOnClickListener { viewModel.onBackButtonClicked() }
 
-            viewModel.navigateToHomeScreen.observe(this, Observer { event ->
-                event?.applyIfNotHandled {
-                    closeListener?.onBackClicked()
-                }
+            viewModel.navigateToHomeScreen.observeEvent(this, {
+                closeListener?.onBackClicked()
             })
 
-            viewModel.updateToolbarTitle.observe(this, Observer { uiString ->
+            viewModel.updateToolbarTitle.observe(this, { uiString ->
                 toolbarTitle.text = uiHelpers.getTextOfUiString(
                         requireContext(),
                         uiString
