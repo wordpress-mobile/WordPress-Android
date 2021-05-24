@@ -9,7 +9,7 @@ import javax.inject.Inject
 class LocalNotificationHandlerFactory @Inject constructor(
     private val createSiteNotificationHandler: CreateSiteNotificationHandler
 ) {
-    fun buildLocalPushHandler(type: Type): LocalNotificationHandler {
+    fun buildLocalNotificationHandler(type: Type): LocalNotificationHandler {
         return when (type) {
             CREATE_SITE -> createSiteNotificationHandler
         }

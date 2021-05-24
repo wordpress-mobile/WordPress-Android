@@ -12,13 +12,13 @@ class LocalNotificationScheduler @Inject constructor(
     private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) {
     fun scheduleOneTimeNotification(localNotification: LocalNotification): Boolean {
-        val localPushHandler = localNotificationHandlerFactory.buildLocalPushHandler(localNotification.type)
+        val localPushHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(localNotification.type)
         if (localPushHandler.shouldShowNotification()) {
-            val work = OneTimeWorkRequestBuilder<LocalNotificationScheduleWorker>()
+            val work = OneTimeWorkRequestBuilder<LocalNotificationWorker>()
                     .setInitialDelay(localNotification.delay, localNotification.delayUnits)
                     .addTag(localNotification.type.tag)
                     .setInputData(
-                            LocalNotificationScheduleWorker.buildData(
+                            LocalNotificationWorker.buildData(
                                     localNotification
                             )
                     )

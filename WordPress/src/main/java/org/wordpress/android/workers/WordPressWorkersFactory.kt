@@ -13,6 +13,6 @@ class WordPressWorkersFactory @Inject constructor(
 ) : DelegatingWorkerFactory() {
     init {
         addFactory(UploadWorker.Factory(uploadStarter, siteStore))
-        addFactory(LocalNotificationScheduleWorker.Factory(localNotificationHandlerFactory))
+        addFactory(LocalNotificationWorker.Factory(localNotificationHandlerFactory))
     }
 }

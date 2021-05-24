@@ -15,7 +15,7 @@ import androidx.work.workDataOf
 import org.wordpress.android.R
 import org.wordpress.android.workers.LocalNotification.Type
 
-class LocalNotificationScheduleWorker(
+class LocalNotificationWorker(
     val context: Context,
     params: WorkerParameters,
     private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
@@ -24,7 +24,7 @@ class LocalNotificationScheduleWorker(
     override suspend fun doWork(): Result {
         try {
             val type = Type.fromTag(inputData.getString(TYPE))
-            val handler = type?.let { localNotificationHandlerFactory.buildLocalPushHandler(it) }
+            val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
 
             val id = inputData.getInt(ID, -1)
             val title = inputData.getInt(TITLE, -1)
@@ -72,8 +72,8 @@ class LocalNotificationScheduleWorker(
             workerClassName: String,
             workerParameters: WorkerParameters
         ): ListenableWorker? {
-            return if (workerClassName == LocalNotificationScheduleWorker::class.java.name) {
-                LocalNotificationScheduleWorker(appContext, workerParameters, localNotificationHandlerFactory)
+            return if (workerClassName == LocalNotificationWorker::class.java.name) {
+                LocalNotificationWorker(appContext, workerParameters, localNotificationHandlerFactory)
             } else {
                 null
             }
