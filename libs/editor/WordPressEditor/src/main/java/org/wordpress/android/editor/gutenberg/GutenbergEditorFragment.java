@@ -828,9 +828,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         setFeaturedImageId(mediaId);
 
         if (mediaId == 0) {
-            showNotice(getString(R.string.featured_image_removed));
+            showNotice(getString(R.string.featured_image_removed_notice));
         } else {
-            showNotice(getString(R.string.featured_image_confirmation));
+            showNotice(getString(R.string.featured_image_confirmation_notice));
         }
     }
 
