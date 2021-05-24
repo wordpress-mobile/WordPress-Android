@@ -12,14 +12,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CommentListFragmentBinding
 import org.wordpress.android.ui.comments.CommentListItemDecoration
-import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: UnifiedCommentListViewModel
 
@@ -43,7 +39,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
         val layoutManager = LinearLayoutManager(context)
         commentsRecyclerView.layoutManager = layoutManager
         commentsRecyclerView.addItemDecoration(CommentListItemDecoration(commentsRecyclerView.context))
-        commentsRecyclerView.adapter = UnifiedCommentListAdapter(imageManager, uiHelpers)
+        commentsRecyclerView.adapter = UnifiedCommentListAdapter(requireContext())
     }
 
     private fun CommentListFragmentBinding.setupObservers() {

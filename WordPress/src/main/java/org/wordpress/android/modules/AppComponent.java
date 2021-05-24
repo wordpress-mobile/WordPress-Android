@@ -39,6 +39,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity;
@@ -680,6 +681,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentsActivity object);
 
     void inject(UnifiedCommentListFragment object);
+
+    void inject(UnifiedCommentListAdapter object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
