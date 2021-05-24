@@ -6,37 +6,43 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type.NO_ERROR
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type.UNSUPPORTED_MIME_TYPE
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MediaErrorSubtypeCategory
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.UndefinedSubType
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaErrorSubTypeTest {
     @Test
-    fun `UndefinedSubType is got from string`() {
-        val result = UndefinedSubType.fromString(UndefinedSubType().toString())
-        assertThat(result).isNotNull
-        assertThat(result is UndefinedSubType).isTrue
+    fun `serialize has class simpleName as root`() {
+        MediaErrorSubtypeCategory.values().forEach { category ->
+            category.errors.forEach { subType ->
+                assertThat(subType.serialize()).isEqualTo("${subType::class.java.simpleName}:${subType.subTypeName}")
+            }
+        }
     }
 
     @Test
-    fun `UndefinedSubType is null from wrong string`() {
-        val result = UndefinedSubType.fromString(MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE).toString())
-        assertThat(result).isNull()
+    fun `deserialize returns UndefinedSubType when name is null`() {
+        val result = MediaErrorSubType.deserialize(null)
+        assertThat(result).isEqualTo(UndefinedSubType)
     }
 
     @Test
-    fun `MalformedMediaArgSubType is got from string`() {
-        val result = MalformedMediaArgSubType.fromString(MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE).toString())
-        assertThat(result).isNotNull
-        assertThat(result is MalformedMediaArgSubType).isTrue
-        assertThat((result as MalformedMediaArgSubType).type).isEqualTo(UNSUPPORTED_MIME_TYPE)
+    fun `deserialize returns UndefinedSubType when name does not match any mapped subtype`() {
+        val result = MediaErrorSubType.deserialize("this_does_not:match")
+        assertThat(result).isEqualTo(UndefinedSubType)
     }
 
     @Test
-    fun `MediaErrorSubType gives correct type from string`() {
-        val result = MediaErrorSubType.getSubTypeFromString(MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE).toString())
-        assertThat(result).isNotNull
-        assertThat(result is MalformedMediaArgSubType).isTrue
-        assertThat((result as MalformedMediaArgSubType).type).isEqualTo(UNSUPPORTED_MIME_TYPE)
+    fun `deserialize returns MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE) when name matches`() {
+        val result = MediaErrorSubType.deserialize("MalformedMediaArgSubType:UNSUPPORTED_MIME_TYPE")
+        assertThat(result).isEqualTo(MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE))
+    }
+
+    @Test
+    fun `deserialize returns NO_ERROR(null) when name matches`() {
+        val result = MediaErrorSubType.deserialize("MalformedMediaArgSubType:NO_ERROR")
+        assertThat(result).isEqualTo(MalformedMediaArgSubType(NO_ERROR))
     }
 }
