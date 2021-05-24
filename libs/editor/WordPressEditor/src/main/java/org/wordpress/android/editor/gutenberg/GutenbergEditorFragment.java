@@ -346,11 +346,25 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnSetFeaturedImageListener() {
                     @Override
                     public void onSetFeaturedImageButtonClicked(int mediaId) {
-                        if (mediaId == 0 || mFeaturedImageId == 0) {
-                            setFeaturedImage(mediaId);
-                        } else if (mFeaturedImageId != mediaId) {
-                            showFeaturedImageConfirmationDialog(mediaId);
+                        if (mediaId == mFeaturedImageId) {
+                            // nothing special to do, trying to set the image that's already set as featured
+                            return;
                         }
+
+                        if (mediaId == 0) {
+                            // user tries to clear the featured image setting
+                            setFeaturedImage(mediaId);
+                            return;
+                        }
+
+                        if (mFeaturedImageId == 0) {
+                            // current featured image is not set so, go ahead and set it to the provided one
+                            setFeaturedImage(mediaId);
+                            return;
+                        }
+
+                        // ask the user to confirm changing the featured image since there's already one set
+                        showFeaturedImageConfirmationDialog(mediaId);
                     }
                 },
                 new OnEditorMountListener() {
