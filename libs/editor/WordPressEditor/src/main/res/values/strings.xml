@@ -155,12 +155,12 @@
     <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
 
     <!-- Featured image replacement -->
-    <string name="replace_current_title">Replace current?</string>
-    <string name="replace_current_description">You already have a featured image set. Do you want to replace it?</string>
-    <string name="replace_current_confirmation">Replace</string>
-    <string name="replace_current_cancel">Cancel</string>
+    <string name="featured_image_replace_dialog_title">Replace current?</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace</string>
+    <string name="featured_image_replace_dialog_cancel">Cancel</string>
 
-    <string name="featured_image_confirmation">Set as Featured Image</string>
-    <string name="featured_image_removed">Removed as Featured Image</string>
+    <string name="featured_image_confirmation_notice">Set as Featured Image</string>
+    <string name="featured_image_removed_notice">Removed as Featured Image</string>
 
 </resources>

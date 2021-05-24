@@ -812,10 +812,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergDialogFragment dialog = new GutenbergDialogFragment();
         dialog.initialize(
                 TAG_REPLACE_FEATURED_DIALOG,
-                getString(R.string.replace_current_title),
-                getString(R.string.replace_current_description),
-                getString(R.string.replace_current_confirmation),
-                getString(R.string.replace_current_cancel),
+                getString(R.string.featured_image_replace_dialog_title),
+                getString(R.string.featured_image_replace_dialog_description),
+                getString(R.string.featured_image_replace_dialog_confirm),
+                getString(R.string.featured_image_replace_dialog_cancel),
                 mediaId
         );
 
