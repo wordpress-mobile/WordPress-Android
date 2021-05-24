@@ -87,7 +87,12 @@ class DeepLinkTrackingUtilsTest {
         assertTrackingData(host, DeepLinkSource.EMAIL, strippedUrl)
     }
 
-    private fun assertTrackingData(host: String, source: DeepLinkSource, expectedUrl: String, sourceInfo: String? = null) {
+    private fun assertTrackingData(
+        host: String,
+        source: DeepLinkSource,
+        expectedUrl: String,
+        sourceInfo: String? = null
+    ) {
         verify(analyticsUtilsWrapper).trackWithDeepLinkData(
                 DEEP_LINKED,
                 action,
