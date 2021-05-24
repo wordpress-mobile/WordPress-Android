@@ -55,8 +55,10 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 /**
  * @deprecated
- * Comments are being refactored as part of Comments Unification project. If you want to add any features or modify
- * this class, please ping develric or klymyam
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam * Comments are being refactored as part of
+ * Comments Unification project. If you are adding any
+ *  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
 public class CommentsListFragment extends ViewPagerFragment {
