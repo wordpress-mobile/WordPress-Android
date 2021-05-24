@@ -106,7 +106,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.UnifiedCommentsFeatureConfig
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
@@ -132,7 +132,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
-    @Mock lateinit var unifiedCommentsFeatureConfig: UnifiedCommentsFeatureConfig
+    @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -203,7 +203,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
-                unifiedCommentsFeatureConfig
+                unifiedCommentsListFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -918,8 +918,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unified comment menu item is visible, when unifiedCommentsFeatureConfig is enabled`() = test {
-        whenever(unifiedCommentsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `unified comment menu item is visible, when unifiedCommentsListFeatureConfig is enabled`() = test {
+        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(true)
 
         initSelectedSite()
 
@@ -936,8 +936,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unified comment menu item is NOT visible, when unifiedCommentsFeatureConfig is disabled`() = test {
-        whenever(unifiedCommentsFeatureConfig.isEnabled()).thenReturn(false)
+    fun `unified comment menu item is NOT visible, when unifiedCommentsListFeatureConfig is disabled`() = test {
+        whenever(unifiedCommentsListFeatureConfig.isEnabled()).thenReturn(false)
 
         initSelectedSite()
 

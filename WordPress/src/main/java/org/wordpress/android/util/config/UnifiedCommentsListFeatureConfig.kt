@@ -8,10 +8,10 @@ import javax.inject.Inject
  * Configuration of the Unified Comments improvements
  */
 @FeatureInDevelopment
-class UnifiedCommentsFeatureConfig
+class UnifiedCommentsListFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
         appConfig,
-        BuildConfig.UNIFIED_COMMENTS
+        BuildConfig.UNIFIED_COMMENTS_LIST
 )
