@@ -4,16 +4,13 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import org.m4m.MediaComposer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.io.File;
@@ -21,22 +18,21 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_CANT_OPTIMIZE;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR;
 
-public class VideoOptimizer implements org.m4m.IProgressListener {
-    private final File mCacheDir;
-    private final MediaModel mMedia;
-    private final VideoOptimizationListener mListener;
+public abstract class VideoOptimizerBase implements VideoOptimizerProvider {
+    protected final File mCacheDir;
+    protected final MediaModel mMedia;
+    protected final VideoOptimizationListener mListener;
 
-    private final String mFilename;
-    private final String mInputPath;
-    private String mOutputPath;
-    private long mStartTimeMS;
-    private float mLastProgress;
+    protected final String mFilename;
+    protected final String mInputPath;
+    protected String mOutputPath;
+    protected long mStartTimeMS;
+    protected float mLastProgress;
 
-    public VideoOptimizer(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
+    public VideoOptimizerBase(@NonNull MediaModel media, @NonNull VideoOptimizationListener listener) {
         mCacheDir = getContext().getCacheDir();
         mListener = listener;
         mMedia = media;
@@ -44,79 +40,46 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         mFilename = MediaUtils.generateTimeStampedFileName("video/mp4");
     }
 
-    private Context getContext() {
+    protected Context getContext() {
         return WordPress.getContext();
     }
 
-    public void start() {
+    protected boolean arePathsValidated() {
         if (mInputPath == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > empty input path");
             mListener.onVideoOptimizationCompleted(mMedia);
-            return;
+            return false;
         }
 
         if (mCacheDir == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null cache dir");
             mListener.onVideoOptimizationCompleted(mMedia);
-            return;
+            return false;
         }
 
         if (!mCacheDir.exists() && !mCacheDir.mkdirs()) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > cannot create cache dir");
             mListener.onVideoOptimizationCompleted(mMedia);
-            return;
+            return false;
         }
 
         mOutputPath = mCacheDir.getPath() + "/" + mFilename;
 
-        MediaComposer mediaComposer = null;
-        boolean wasNpeDetected = false;
-
-        try {
-            mediaComposer = WPVideoUtils.getVideoOptimizationComposer(
-                    getContext(),
-                    mInputPath,
-                    mOutputPath,
-                    this,
-                    AppPrefs.getVideoOptimizeWidth(),
-                    AppPrefs.getVideoOptimizeQuality());
-        } catch (NullPointerException npe) {
-            AppLog.w(
-                    AppLog.T.MEDIA,
-                    "VideoOptimizer > NullPointerException while getting composer " + npe.getMessage()
-            );
-            wasNpeDetected = true;
-        }
-
-        if (mediaComposer == null) {
-            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
-            Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
-                    null, mInputPath);
-            properties.put("was_npe_detected", wasNpeDetected);
-            properties.put("optimizer-lib", "m4m");
-            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
-            mListener.onVideoOptimizationCompleted(mMedia);
-            return;
-        }
-
-        // setup done. We're ready to optimize!
-        try {
-            mediaComposer.start();
-            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > composer started");
-        } catch (IllegalStateException e) {
-            AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
-            mListener.onVideoOptimizationCompleted(mMedia);
-        }
+        return true;
     }
 
-    private void trackVideoProcessingEvents(boolean isError, Exception exception) {
+    protected void trackVideoProcessingEvents(boolean isError, Exception exception) {
         Map<String, Object> properties = new HashMap<>();
         Map<String, Object> inputVideoProperties =
                 AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath);
         putAllWithPrefix("input_video_", inputVideoProperties, properties);
         if (mOutputPath != null) {
-            Map<String, Object> outputVideoProperties = AnalyticsUtils.getMediaProperties(getContext(), true, null,
-                                                                                          mOutputPath);
+            Map<String, Object> outputVideoProperties = AnalyticsUtils.getMediaProperties(
+                    getContext(),
+                    true,
+                    null,
+                    mOutputPath
+            );
             putAllWithPrefix("output_video_", outputVideoProperties, properties);
             String savedMegabytes =
                     String.valueOf((FileUtils.length(mInputPath) - FileUtils.length(mOutputPath)) / (1024 * 1024));
@@ -130,7 +93,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             properties.put("exception_message", exception.getMessage());
             AppLog.e(T.MEDIA, exception);
         }
-        properties.put("optimizer-lib", "m4m");
+        properties.put("optimizer-lib", "mp4composer");
 
         AnalyticsTracker.Stat currentStatToTrack = isError ? MEDIA_VIDEO_OPTIMIZE_ERROR : MEDIA_VIDEO_OPTIMIZED;
         AnalyticsTracker.track(currentStatToTrack, properties);
@@ -144,28 +107,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         }
     }
 
-    /*
-     * IProgressListener handlers
-     */
-    @Override
-    public void onMediaStart() {
-        mStartTimeMS = System.currentTimeMillis();
-    }
-
-    @Override
-    public void onMediaProgress(float progress) {
-        // this event fires quite often so we only call the listener when progress increases by 1% or more
-        if (mLastProgress == 0 || (progress - mLastProgress > 0.01F)) {
-            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
-            mLastProgress = progress;
-            mListener.onVideoOptimizationProgress(mMedia, progress);
-        }
-    }
-
-    @Override
-    public void onMediaDone() {
-        trackVideoProcessingEvents(false, null);
-
+    protected void selectMediaAndSendCompletionToListener() {
         long originalFileSize = FileUtils.length(mInputPath);
         long optimizedFileSize = FileUtils.length(mOutputPath);
         long savings = originalFileSize - optimizedFileSize;
@@ -187,23 +129,12 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         }
     }
 
-    @Override
-    public void onMediaPause() {
-        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > paused");
-    }
-
-    @Override
-    public void onMediaStop() {
-        // This seems to be called called in 2 cases. Do not use to check if we've manually stopped the composer.
-        // 1. When the encoding is done without errors, before onMediaDone
-        // 2. When we call 'stop' on the media composer
-        AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > stopped");
-    }
-
-    @Override
-    public void onError(Exception e) {
-        AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > Can't optimize the video", e);
-        trackVideoProcessingEvents(true, e);
-        mListener.onVideoOptimizationCompleted(mMedia);
+    protected void sendProgressIfNeeded(float progress) {
+        // this event fires quite often so we only call the listener when progress increases by 1% or more
+        if (mLastProgress == 0 || (progress - mLastProgress > 0.01F)) {
+            AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > " + mMedia.getId() + " - progress: " + progress);
+            mLastProgress = progress;
+            mListener.onVideoOptimizationProgress(mMedia, progress);
+        }
     }
 }
