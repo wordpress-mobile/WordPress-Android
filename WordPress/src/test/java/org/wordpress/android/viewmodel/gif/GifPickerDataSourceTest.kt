@@ -43,14 +43,14 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
                 assertThat(data).isEqualTo(expectedGifMediaViewModelCollection)
                 assertThat(position).isEqualTo(0)
                 assertThat(totalCount).isEqualTo(4)
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -68,14 +68,14 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
                 assertThat(data).isEqualTo(expectedGifMediaViewModelCollection)
                 assertThat(position).isEqualTo(0)
                 assertThat(totalCount).isEqualTo(4)
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -93,14 +93,14 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
                 assertThat(data).isEqualTo(expectedGifMediaViewModelCollection)
                 assertThat(position).isEqualTo(0)
                 assertThat(totalCount).isEqualTo(4)
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -119,14 +119,14 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
                 assertThat(data).isEmpty()
                 assertThat(position).isEqualTo(0)
                 assertThat(totalCount).isEqualTo(0)
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -143,14 +143,14 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
                 assertThat(data).isEmpty()
                 assertThat(position).isEqualTo(0)
                 assertThat(totalCount).isEqualTo(0)
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -170,11 +170,11 @@ class GifPickerDataSourceTest {
 
         val params = LoadInitialParams(0, 20, 5, false)
         val dataSourceCallback = object : LoadInitialCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int, totalCount: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int, totalCount: Int) {
                 onResultWasCalled = true
             }
 
-            override fun onResult(data: MutableList<GifMediaViewModel>, position: Int) {
+            override fun onResult(data: List<GifMediaViewModel>, position: Int) {
                 fail("Wrong onResult called")
             }
         }
@@ -196,7 +196,7 @@ class GifPickerDataSourceTest {
 
         val params = LoadRangeParams(0, 20)
         val dataSourceCallback = object : LoadRangeCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>) {
+            override fun onResult(data: List<GifMediaViewModel>) {
                 onResultWasCalled = true
                 assertThat(data).isEqualTo(expectedGifMediaViewModelCollection)
             }
@@ -215,7 +215,7 @@ class GifPickerDataSourceTest {
 
         val params = LoadRangeParams(0, 20)
         val dataSourceCallback = object : LoadRangeCallback<GifMediaViewModel>() {
-            override fun onResult(data: MutableList<GifMediaViewModel>) {}
+            override fun onResult(data: List<GifMediaViewModel>) {}
         }
         spiedDataSource.loadRange(params, dataSourceCallback)
 
