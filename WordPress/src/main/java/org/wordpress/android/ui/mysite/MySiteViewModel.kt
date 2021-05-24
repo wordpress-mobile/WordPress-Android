@@ -112,7 +112,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.UnifiedCommentsFeatureConfig
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
@@ -148,7 +148,7 @@ class MySiteViewModel
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsFeatureConfig: UnifiedCommentsFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -255,7 +255,7 @@ class MySiteViewModel
                             activeTask == QuickStartTask.VIEW_SITE,
                             activeTask == ENABLE_POST_SHARING,
                             activeTask == EXPLORE_PLANS,
-                            unifiedCommentsFeatureConfig.isEnabled()
+                            unifiedCommentsListFeatureConfig.isEnabled()
                     )
             )
             scrollToQuickStartTaskIfNecessary(

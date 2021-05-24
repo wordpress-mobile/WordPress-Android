@@ -5,13 +5,11 @@ import org.wordpress.android.annotation.FeatureInDevelopment
 import javax.inject.Inject
 
 /**
- * Configuration of the Unified Comments improvements
+ * Configuration of the Mp4Composer Video Optimizer
  */
 @FeatureInDevelopment
-class UnifiedCommentsFeatureConfig
-@Inject constructor(
-    appConfig: AppConfig
-) : FeatureConfig(
+class Mp4ComposerVideoOptimizationFeatureConfig
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.UNIFIED_COMMENTS
+        BuildConfig.MP4_COMPOSER_VIDEO_OPTIMIZATION
 )
