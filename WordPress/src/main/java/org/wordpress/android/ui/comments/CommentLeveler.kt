@@ -9,8 +9,8 @@ import java.util.ArrayList
 /**
  * Adaptation of ReaderCommentLeveler. We should combine them together as part of Comment Unification.
  */
-@Deprecated("Comments are being refactored as part of Comments Unification project. If you want to add any" +
-        " features or modify this class, please ping develric or klymyam")
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
 class CommentLeveler(private val mComments: List<CommentModel>) {
     fun createLevelList(): ArrayList<CommentModel> {
         val result = ArrayList<CommentModel>()
