@@ -826,7 +826,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
         // Necessary to update image in Post Settings
         setFeaturedImageId(mediaId);
-        sendToJSFeaturedImageId(mediaId);
 
         if (mediaId == 0) {
             showNotice(getString(R.string.featured_image_removed));
