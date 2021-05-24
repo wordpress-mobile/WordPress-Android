@@ -13,18 +13,18 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import org.wordpress.android.R
-import org.wordpress.android.workers.LocalPush.Type
+import org.wordpress.android.workers.LocalNotification.Type
 
-class LocalPushScheduleWorker(
+class LocalNotificationScheduleWorker(
     val context: Context,
     params: WorkerParameters,
-    private val localPushHandlerFactory: LocalPushHandlerFactory
+    private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) : CoroutineWorker(context, params) {
     @Suppress("TooGenericExceptionCaught")
     override suspend fun doWork(): Result {
         try {
             val type = Type.fromTag(inputData.getString(TYPE))
-            val handler = type?.let { localPushHandlerFactory.buildLocalPushHandler(it) }
+            val handler = type?.let { localNotificationHandlerFactory.buildLocalPushHandler(it) }
 
             val id = inputData.getInt(ID, -1)
             val title = inputData.getInt(TITLE, -1)
@@ -65,15 +65,15 @@ class LocalPushScheduleWorker(
     }
 
     class Factory(
-        private val localPushHandlerFactory: LocalPushHandlerFactory
+        private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
     ) : WorkerFactory() {
         override fun createWorker(
             appContext: Context,
             workerClassName: String,
             workerParameters: WorkerParameters
         ): ListenableWorker? {
-            return if (workerClassName == LocalPushScheduleWorker::class.java.name) {
-                LocalPushScheduleWorker(appContext, workerParameters, localPushHandlerFactory)
+            return if (workerClassName == LocalNotificationScheduleWorker::class.java.name) {
+                LocalNotificationScheduleWorker(appContext, workerParameters, localNotificationHandlerFactory)
             } else {
                 null
             }
@@ -88,7 +88,7 @@ class LocalPushScheduleWorker(
         private const val ICON = "key_icon"
         private const val ICON_WIDTH = 100
         private const val ICON_HEIGHT = 100
-        fun buildData(localNotification: LocalPush): Data {
+        fun buildData(localNotification: LocalNotification): Data {
             return workDataOf(
                     TYPE to localNotification.type.tag,
                     ID to localNotification.id,

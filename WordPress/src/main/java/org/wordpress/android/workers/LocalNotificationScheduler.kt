@@ -4,21 +4,21 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.wordpress.android.viewmodel.ContextProvider
-import org.wordpress.android.workers.LocalPush.Type
+import org.wordpress.android.workers.LocalNotification.Type
 import javax.inject.Inject
 
-class LocalPushScheduler @Inject constructor(
+class LocalNotificationScheduler @Inject constructor(
     private val contextProvider: ContextProvider,
-    private val localPushHandlerFactory: LocalPushHandlerFactory
+    private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) {
-    fun scheduleOneTimeNotification(localNotification: LocalPush): Boolean {
-        val localPushHandler = localPushHandlerFactory.buildLocalPushHandler(localNotification.type)
+    fun scheduleOneTimeNotification(localNotification: LocalNotification): Boolean {
+        val localPushHandler = localNotificationHandlerFactory.buildLocalPushHandler(localNotification.type)
         if (localPushHandler.shouldShowNotification()) {
-            val work = OneTimeWorkRequestBuilder<LocalPushScheduleWorker>()
+            val work = OneTimeWorkRequestBuilder<LocalNotificationScheduleWorker>()
                     .setInitialDelay(localNotification.delay, localNotification.delayUnits)
                     .addTag(localNotification.type.tag)
                     .setInputData(
-                            LocalPushScheduleWorker.buildData(
+                            LocalNotificationScheduleWorker.buildData(
                                     localNotification
                             )
                     )

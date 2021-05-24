@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.push.NotificationPushIds
 import java.util.concurrent.TimeUnit
 
-data class LocalPush(
+data class LocalNotification(
     val type: Type,
     val delay: Long,
     val delayUnits: TimeUnit,

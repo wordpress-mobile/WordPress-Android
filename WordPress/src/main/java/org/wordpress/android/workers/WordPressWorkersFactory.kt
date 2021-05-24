@@ -9,10 +9,10 @@ import javax.inject.Inject
 class WordPressWorkersFactory @Inject constructor(
     uploadStarter: UploadStarter,
     siteStore: SiteStore,
-    localPushHandlerFactory: LocalPushHandlerFactory
+    localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) : DelegatingWorkerFactory() {
     init {
         addFactory(UploadWorker.Factory(uploadStarter, siteStore))
-        addFactory(LocalPushScheduleWorker.Factory(localPushHandlerFactory))
+        addFactory(LocalNotificationScheduleWorker.Factory(localNotificationHandlerFactory))
     }
 }

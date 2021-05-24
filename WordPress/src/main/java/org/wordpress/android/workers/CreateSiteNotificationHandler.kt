@@ -6,10 +6,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import javax.inject.Inject
 
-class CreateSitePushHandler @Inject constructor(
+class CreateSiteNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore
-) : LocalPushHandler {
+) : LocalNotificationHandler {
     override fun shouldShowNotification(): Boolean {
         return accountStore.hasAccessToken() && !siteStore.hasSite()
     }
