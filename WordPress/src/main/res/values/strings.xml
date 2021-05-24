@@ -1802,7 +1802,7 @@
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
     <string name="error_media_not_enough_storage">Not enough available site storage</string>
-    <string name="error_media_unexpected_null_value">Unexpected null value for Media</string>
+    <string name="error_media_unexpected_null_value">Media was empty</string>
     <string name="error_media_file_type_not_allowed">This file type is not allowed</string>
     <string name="error_media_unexpected_empty_media_file_path">Unexpected empty file path for Media</string>
     <string name="error_media_could_not_find_media_in_path">Could not find media file in path</string>
