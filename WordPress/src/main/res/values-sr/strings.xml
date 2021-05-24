@@ -138,6 +138,7 @@ Language: sr_RS
     <string name="reader_discover_interests_header">Можда Вам се свиди</string>
     <string name="gutenberg_native_video_caption_empty">Натпис видео записа. Празно</string>
     <string name="gutenberg_native_updates_the_title">Ажурира наслов.</string>
+    <string name="gutenberg_native_paste_block_after">Залепи блок након</string>
     <string name="gutenberg_native_page_title_s">Наслов странице. %s</string>
     <string name="gutenberg_native_page_title_empty">Наслов странице. Празно</string>
     <string name="toast_error_playing_video">Грешка се појавила током пуштања Вашег видео записа</string>
@@ -209,6 +210,7 @@ Language: sr_RS
     <string name="gutenberg_native_choose_video">Одабери видео запис</string>
     <string name="gutenberg_native_choose_image_or_video">Одабери слику или видео запис</string>
     <string name="gutenberg_native_choose_image">Одабери слику</string>
+    <string name="gutenberg_native_block_removed">Уклоњен блок</string>
     <string name="signup_confirmation_title">Потврда пријаве</string>
     <string name="enter_your_site_address">Унесите постојећу адресу свој сајта</string>
     <string name="continue_terms_of_service_text">Наставком, прихваћате наше %1$sУслове коришћења%2$s.</string>
@@ -224,7 +226,14 @@ Language: sr_RS
     <string name="reset_your_password">Ресетујте своју лозинку</string>
     <string name="quick_start_list_update_site_title_title">Поставите наслов свог сајта</string>
     <string name="quick_start_dialog_update_site_title_message_short">Додирни &lt;b&gt;%1$s&lt;/b&gt; за постављање новог наслова</string>
+    <string name="gutenberg_native_s_block_options">опције блока %s</string>
+    <string name="gutenberg_native_duplicate_block">Дуплирај блок</string>
+    <string name="gutenberg_native_copy_block">Копирај блок</string>
     <string name="gutenberg_native_copied_block">Ископиран блок</string>
+    <string name="gutenberg_native_block_pasted">Блок залепљен</string>
+    <string name="gutenberg_native_block_duplicated">Блок дуплиран</string>
+    <string name="gutenberg_native_block_cut">Блок исечен</string>
+    <string name="gutenberg_native_block_copied">Блок копиран</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Наслов сајта може да измени само корисник са администраторском улогом.</string>
     <string name="reader_title_tag_preview">Тема</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
@@ -389,6 +398,7 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_video">Направи видео запис</string>
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
+    <string name="gutenberg_native_cut_block">Исеци блок</string>
     <string name="gutenberg_native_show_section">Прикажи одељак</string>
     <string name="gutenberg_native_s_block_empty">%s блок. Празно</string>
     <string name="gutenberg_native_post_title_s">Наслов чланка. %s</string>
