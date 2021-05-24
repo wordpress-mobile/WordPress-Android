@@ -7,7 +7,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
