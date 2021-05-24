@@ -53,6 +53,8 @@ import java.util.HashMap
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
 class CommentsActivity : LocaleAwareActivity(),
         OnCommentSelectedListener,
         OnPostClickListener,
