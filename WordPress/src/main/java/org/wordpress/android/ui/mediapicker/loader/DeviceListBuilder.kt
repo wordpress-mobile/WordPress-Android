@@ -103,8 +103,16 @@ class DeviceListBuilder(
         val deviceMediaList = deviceMediaLoader.loadMedia(mediaType, filter, pageSize, lastDateModified)
         val result = deviceMediaList.items.mapNotNull {
             val mimeType = deviceMediaLoader.getMimeType(it.uri)
-            if (mimeType != null && MediaUtils.isSupportedMimeType(mimeType) &&
-                    mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, mimeType)) {
+            val isMimeTypeSupported = mimeType != null && site?.let {
+                mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(
+                        site,
+                        mimeType
+                )
+            } ?: true && MediaUtils.isSupportedMimeType(
+                    mimeType
+            )
+
+            if (isMimeTypeSupported) {
                 MediaItem(LocalUri(it.uri), it.uri.toString(), it.title, mediaType, mimeType, it.dateModified)
             } else {
                 null
@@ -123,8 +131,17 @@ class DeviceListBuilder(
 
         val filteredPage = documentsList.items.mapNotNull { document ->
             val mimeType = deviceMediaLoader.getMimeType(document.uri)
-            if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType) &&
-                    mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, mimeType)) {
+            val isMimeTypeSupported = mimeType != null && site?.let {
+                mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(
+                        site,
+                        mimeType
+                )
+            } ?: true && MediaUtils.isSupportedMimeType(
+                    mimeType
+            )
+            val isSupportedApplicationType = mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)
+
+            if (isSupportedApplicationType && isMimeTypeSupported) {
                 MediaItem(
                         LocalUri(document.uri),
                         document.uri.toString(),
