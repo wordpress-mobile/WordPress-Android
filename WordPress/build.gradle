@@ -120,7 +120,7 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.4.2-rc-3"
+                versionName "17.4-rc-3"
             }
             versionCode 1053
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
