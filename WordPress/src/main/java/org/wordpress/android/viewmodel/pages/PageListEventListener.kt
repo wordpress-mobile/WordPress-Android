@@ -22,8 +22,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -154,7 +154,7 @@ class PageListEventListener(
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
-    fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
+    fun onEventBackgroundThread(event: ProgressEvent) {
         if (event.media != null && site.id == event.media.localSiteId) {
             uploadStatusChanged(LocalId(event.media.localPostId))
         }

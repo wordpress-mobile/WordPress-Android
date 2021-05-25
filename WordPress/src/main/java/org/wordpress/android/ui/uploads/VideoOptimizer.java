@@ -26,22 +26,6 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR;
 
 public class VideoOptimizer implements org.m4m.IProgressListener {
-    public interface VideoOptimizationListener {
-        void onVideoOptimizationCompleted(@NonNull MediaModel media);
-
-        void onVideoOptimizationProgress(@NonNull MediaModel media, float progress);
-    }
-
-    public static class ProgressEvent {
-        public final MediaModel media;
-        public final float progress;
-
-        public ProgressEvent(@NonNull MediaModel media, float progress) {
-            this.media = media;
-            this.progress = progress;
-        }
-    }
-
     private final File mCacheDir;
     private final MediaModel mMedia;
     private final VideoOptimizationListener mListener;
@@ -109,6 +93,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
                     null, mInputPath);
             properties.put("was_npe_detected", wasNpeDetected);
+            properties.put("optimizer-lib", "m4m");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
@@ -145,6 +130,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
             properties.put("exception_message", exception.getMessage());
             AppLog.e(T.MEDIA, exception);
         }
+        properties.put("optimizer-lib", "m4m");
 
         AnalyticsTracker.Stat currentStatToTrack = isError ? MEDIA_VIDEO_OPTIMIZE_ERROR : MEDIA_VIDEO_OPTIMIZED;
         AnalyticsTracker.track(currentStatToTrack, properties);
