@@ -9,9 +9,9 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
@@ -19,9 +19,11 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatMo
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_PATH
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
@@ -32,14 +34,16 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 
 private const val TEST_THREAT_ITEM_HEADER = "Threat found"
 private const val TEST_THREAT_ITEM_SUB_HEADER = "Miscellaneous vulnerability"
 private const val TEST_FOUND_ON_DATE = "1 January, 2020"
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
-private const val TEST_TEXT = "Test text"
+private const val TEST_SITE_ID = 1L
+private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
+        "<a href=\"${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}\">Enter your server credentials&lt</a> " +
+                "to fix threat."
 
 @InternalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
@@ -55,8 +59,6 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var dateFormat: DateFormat
 
-    @Mock
-    private lateinit var resourceProvider: ResourceProvider
     private lateinit var builder: ThreatDetailsListItemsBuilder
 
     private val technicalDetailsHeaderItem = HeaderState(UiStringRes(R.string.threat_technical_details_header))
@@ -88,8 +90,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         builder = ThreatDetailsListItemsBuilder(
                 htmlMessageUtils,
                 threatItemBuilder,
-                dateFormatWrapper,
-                resourceProvider
+                dateFormatWrapper
         )
 
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any())).thenReturn(
@@ -104,7 +105,6 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 .thenReturn(TEST_FOUND_ON_DATE)
         whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
                 .thenReturn(TEST_FIXED_ON_DATE)
-        whenever(resourceProvider.getString(anyInt())).thenReturn(TEST_TEXT)
     }
 
     /* BASIC DETAILS */
@@ -318,8 +318,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 scanStateHasValidCredentials = false
         )
 
-        assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+        assertThat(items.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNotNull
     }
 
@@ -327,8 +327,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     fun `given ignored fixable threat with server creds, when items are built, then server creds msg doesn't exist`() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInIgnoredStatus)
 
-        assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+        assertThat(items.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNull()
     }
 
@@ -339,8 +339,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 scanStateHasValidCredentials = false
         )
 
-        assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+        assertThat(items.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNotNull
     }
 
@@ -348,8 +348,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     fun `given fixed threat with server creds, when items are built, then server creds msg doesn't exist`() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
 
-        assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+        assertThat(items.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNull()
     }
 
@@ -357,8 +357,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     fun `given fixed threat without server creds, when items are built, then server creds msg doesn't exist`() {
         val items = buildThreatDetailsListItems(ThreatTestData.fixableThreatInFixedStatus)
 
-        assertThat(items.filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) })
+        assertThat(items.filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNull()
     }
 
@@ -612,12 +612,24 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         onFixThreatButtonClicked: () -> Unit = mock(),
         onGetFreeEstimateButtonClicked: () -> Unit = mock(),
         onIgnoreThreatButtonClicked: () -> Unit = mock()
-    ) = builder.buildThreatDetailsListItems(
-            threatModel = model,
-            scanStateHasValidCredentials = scanStateHasValidCredentials,
-            onFixThreatButtonClicked = onFixThreatButtonClicked,
-            onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked,
-            onEnterServerCredsMessageClicked = mock()
-    )
+    ): List<JetpackListItemState> {
+        if (!scanStateHasValidCredentials) {
+            whenever(
+                    htmlMessageUtils
+                            .getHtmlMessageFromStringFormatResId(
+                                    R.string.threat_fix_enter_server_creds_message_singular,
+                                    "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
+                            )
+            ).thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
+        }
+
+        return builder.buildThreatDetailsListItems(
+                threatModel = model,
+                scanStateHasValidCredentials = scanStateHasValidCredentials,
+                siteId = TEST_SITE_ID,
+                onFixThreatButtonClicked = onFixThreatButtonClicked,
+                onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+        )
+    }
 }
