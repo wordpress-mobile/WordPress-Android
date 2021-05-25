@@ -216,7 +216,7 @@ REPOSITORY_NAME="WordPress-Android"
   lane :new_beta_release do | options |
     android_betabuild_prechecks(options)
     send_strings_for_translation()
-    # download_translations(options)
+    download_translations(options)
     android_bump_version_beta()
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
