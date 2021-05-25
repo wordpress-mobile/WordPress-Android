@@ -18,4 +18,3 @@ class BloggingRemindersDiffCallback(
         TODO("Not yet implemented")
     }
 }
-

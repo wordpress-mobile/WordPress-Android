@@ -24,4 +24,3 @@ class BloggingRemindersViewModel @Inject constructor(
         )
     }
 }
-

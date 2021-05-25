@@ -35,7 +35,8 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             contentRecyclerView.adapter = BloggingRemindersAdapter()
 
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
+            viewModel =
+                ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
             viewModel.uiState.observe(this@BloggingReminderBottomSheetFragment) {
                 (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.update(it ?: listOf())
             }
@@ -44,7 +45,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                        com.google.android.material.R.id.design_bottom_sheet
+                    com.google.android.material.R.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

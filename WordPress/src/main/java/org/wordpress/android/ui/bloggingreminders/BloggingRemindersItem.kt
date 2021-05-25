@@ -7,6 +7,6 @@ sealed class BloggingRemindersItem(val type: Type) {
     enum class Type {
         TITLE
     }
-    data class Title(val text: UiString): BloggingRemindersItem(TITLE)
-}
 
+    data class Title(val text: UiString) : BloggingRemindersItem(TITLE)
+}
