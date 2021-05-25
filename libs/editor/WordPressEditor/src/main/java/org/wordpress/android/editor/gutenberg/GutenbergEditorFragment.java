@@ -824,7 +824,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void setFeaturedImage(int mediaId) {
         mEditorFragmentListener.updateFeaturedImage(mediaId, false);
-        // Necessary to update image in Post Settings
+
+        // Ensure "mFeaturedImageId" member variable is updated to specified "mediaId"
         setFeaturedImageId(mediaId);
 
         if (mediaId == 0) {
