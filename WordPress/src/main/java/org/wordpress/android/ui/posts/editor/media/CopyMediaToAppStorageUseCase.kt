@@ -5,6 +5,7 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -14,6 +15,7 @@ import javax.inject.Named
 @Reusable
 class CopyMediaToAppStorageUseCase @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
+    private val authenticationUtils: AuthenticationUtils,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     /*
@@ -48,7 +50,10 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
 
     private fun copyToAppStorage(mediaUri: Uri): Uri? {
         return try {
-            mediaUtilsWrapper.copyFileToAppStorage(mediaUri)
+            mediaUtilsWrapper.copyFileToAppStorageWithHeaders(
+                    mediaUri,
+                    authenticationUtils.getAuthHeaders(mediaUri.toString())
+            )
         } catch (e: IllegalStateException) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
             val errorMessage = "Can't download the image at: $mediaUri See issue #5823"

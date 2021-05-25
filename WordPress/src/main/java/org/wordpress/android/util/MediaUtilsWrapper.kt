@@ -40,6 +40,9 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun copyFileToAppStorage(imageUri: Uri): Uri? =
             MediaUtils.downloadExternalMedia(appContext, imageUri)
 
+    fun copyFileToAppStorageWithHeaders(imageUri: Uri, headers: Map<String, String>): Uri? =
+            MediaUtils.downloadExternalMedia(appContext, imageUri, headers)
+
     fun shouldAdvertiseImageOptimization(): Boolean =
             WPMediaUtils.shouldAdvertiseImageOptimization(appContext)
 
