@@ -79,6 +79,7 @@ import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewMode
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -542,4 +543,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StorageUtilsViewModel.class)
     abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BloggingRemindersViewModel.class)
+    abstract ViewModel bloggingRemindersViewModel(BloggingRemindersViewModel viewModel);
 }
