@@ -610,7 +610,7 @@ public class GCMMessageHandler {
             // Build the new notification, add group to support wearable stacking
             return new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_normal_id))
-                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
+                    .setSmallIcon(R.drawable.ic_app_white_24dp)
                     .setColor(context.getResources().getColor(R.color.primary_50))
                     .setContentTitle(title)
                     .setContentText(message)

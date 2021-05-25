@@ -55,7 +55,8 @@ class SiteItemsBuilderTest {
                 addSiteSettingsItem = true,
                 addThemesItem = true,
                 addBackupItem = true,
-                addScanItem = true
+                addScanItem = true,
+                addUnifiedComments = true
         )
 
         val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, SITE_ITEM_ACTION)
@@ -73,6 +74,7 @@ class SiteItemsBuilderTest {
                 MEDIA_ITEM,
                 PAGES_ITEM,
                 COMMENTS_ITEM,
+                UNIFIED_COMMENTS_ITEM,
                 LOOK_AND_FEEL_HEADER,
                 THEMES_ITEM,
                 CONFIGURATION_HEADER,
@@ -116,7 +118,8 @@ class SiteItemsBuilderTest {
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
         addScanItem: Boolean = false,
-        showPlansFocusPoint: Boolean = false
+        showPlansFocusPoint: Boolean = false,
+        addUnifiedComments: Boolean = false
     ) {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
@@ -197,6 +200,11 @@ class SiteItemsBuilderTest {
         if (addThemesItem) {
             whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                     THEMES_ITEM
+            )
+        }
+        if (addUnifiedComments) {
+            whenever(siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(SITE_ITEM_ACTION)).thenReturn(
+                    UNIFIED_COMMENTS_ITEM
             )
         }
     }

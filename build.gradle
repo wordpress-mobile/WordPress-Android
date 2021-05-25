@@ -145,6 +145,8 @@ ext {
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
 
+    coreLibraryDesugaringVersion = '1.1.5'
+
     // testing
     jUnitVersion = '4.13'
     androidxTestVersion = '1.1.0'
