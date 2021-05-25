@@ -3,8 +3,10 @@ package org.wordpress.android.ui.bloggingreminders
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -24,7 +26,9 @@ class BloggingRemindersViewModel @Inject constructor(
         bloggingRemindersManager.bloggingRemindersShown(siteId)
         _isBottomSheetShowing.value = Event(true)
         _uiState.value = listOf(
-            CloseButton(ListItemInteraction.create(this::onClose))
+            CloseButton(ListItemInteraction.create(this::onClose)),
+            // TODO update with actual illustration
+            Illustration(R.drawable.img_illustration_cloud_off_152dp)
         )
     }
     private fun onClose() {

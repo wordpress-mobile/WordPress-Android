@@ -7,10 +7,12 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -49,11 +51,18 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val state = uiState.last()
 
         assertCloseButton(state[0])
+        assertIllustration(state[1])
     }
 
     private fun assertCloseButton(item: BloggingRemindersItem) {
         val closeButton = item as CloseButton
         closeButton.listItemInteraction.click()
         assertThat(events.last()).isFalse()
+    }
+
+    private fun assertIllustration(item: BloggingRemindersItem) {
+        val illustration = item as Illustration
+        // TODO replace this assert with real illustration
+        assertThat(illustration.illustration).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
     }
 }

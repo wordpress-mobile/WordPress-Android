@@ -4,20 +4,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.CLOSE_BUTTON
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.*
+import org.wordpress.android.util.image.ImageManager
 
-class BloggingRemindersAdapter : Adapter<BloggingRemindersViewHolder<*>>() {
+class BloggingRemindersAdapter(private val imageManager: ImageManager) : Adapter<BloggingRemindersViewHolder<*>>() {
     private var items: List<BloggingRemindersItem> = listOf()
 
     fun update(newItems: List<BloggingRemindersItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                BloggingRemindersDiffCallback(
-                        items,
-                        newItems
-                )
+            BloggingRemindersDiffCallback(
+                items,
+                newItems
+            )
         )
         items = newItems
         diffResult.dispatchUpdatesTo(this)
@@ -27,8 +30,9 @@ class BloggingRemindersAdapter : Adapter<BloggingRemindersViewHolder<*>>() {
 
     override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int) {
         val item = items[position]
-        when(holder) {
+        when (holder) {
             is CloseButtonViewHolder -> holder.onBind(item as CloseButton)
+            is IllustrationViewHolder -> holder.onBind(item as Illustration)
         }
     }
 
@@ -36,6 +40,7 @@ class BloggingRemindersAdapter : Adapter<BloggingRemindersViewHolder<*>>() {
         return when (Type.values()[viewType]) {
             TITLE -> TODO()
             CLOSE_BUTTON -> CloseButtonViewHolder(parent)
+            ILLUSTRATION -> IllustrationViewHolder(parent, imageManager)
         }
     }
 

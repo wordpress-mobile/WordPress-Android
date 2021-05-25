@@ -1099,9 +1099,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 }
                             });
                     boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
-                    if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
+//                    if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
                         mBloggingRemindersViewModel.start(site.getId());
-                    }
+//                    }
                 }
                 break;
             case RequestCodes.CREATE_SITE:
