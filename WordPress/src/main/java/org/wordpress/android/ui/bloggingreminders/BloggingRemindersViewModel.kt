@@ -10,6 +10,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BloggingRemindersViewModel @Inject constructor(
+    private val bloggingRemindersManager: BloggingRemindersManager,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
@@ -17,7 +18,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _uiState = MutableLiveData<List<BloggingRemindersItem>>()
     val uiState = _uiState as LiveData<List<BloggingRemindersItem>>
 
-    fun start() {
+    fun start(siteId: Int) {
+        bloggingRemindersManager.bloggingRemindersShown(siteId)
         _isBottomSheetShowing.value = Event(true)
         _uiState.value = listOf(
 //            Title(UiStringText("Set your blogging goals")),

@@ -79,6 +79,7 @@ import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -227,7 +228,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingRemindersManager mBloggingRemindersManager;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1098,8 +1099,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 }
                             });
                     boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
-                    if (isNewPost && mBloggingRemindersFeatureConfig.isEnabled()) {
-                        mBloggingRemindersViewModel.start();
+                    if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
+                        mBloggingRemindersViewModel.start(site.getId());
                     }
                 }
                 break;

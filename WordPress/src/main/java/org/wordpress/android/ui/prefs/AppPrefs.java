@@ -156,7 +156,8 @@ public class AppPrefs {
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
-        PINNED_DYNAMIC_CARD
+        PINNED_DYNAMIC_CARD,
+        BLOGGING_REMINDERS_SHOWN
     }
 
     /**
@@ -1238,6 +1239,18 @@ public class AppPrefs {
 
     @NonNull private static String getManualFeatureConfigKey(String featureKey) {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
+    }
+
+    public static void setBloggingRemindersShown(int siteId) {
+        prefs().edit().putBoolean(getBloggingRemindersConfigKey(siteId), true).apply();
+    }
+
+    public static boolean isBloggingRemindersShown(int siteId) {
+        return prefs().getBoolean(getBloggingRemindersConfigKey(siteId), false);
+    }
+
+    @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
+        return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
     }
 
     /*
