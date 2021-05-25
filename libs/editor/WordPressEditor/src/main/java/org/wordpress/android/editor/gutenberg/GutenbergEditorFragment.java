@@ -117,6 +117,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
 
+    private static final int MEDIA_ID_NO_FEATURED_IMAGE_SET = 0;
+
     private boolean mHtmlModeEnabled;
 
     private Handler mInvalidateOptionsHandler;
@@ -351,13 +353,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             return;
                         }
 
-                        if (mediaId == 0) {
+                        if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
                             // user tries to clear the featured image setting
                             setFeaturedImage(mediaId);
                             return;
                         }
 
-                        if (mFeaturedImageId == 0) {
+                        if (mFeaturedImageId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
                             // current featured image is not set so, go ahead and set it to the provided one
                             setFeaturedImage(mediaId);
                             return;
@@ -828,7 +830,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Ensure "mFeaturedImageId" member variable is updated to specified "mediaId"
         setFeaturedImageId(mediaId);
 
-        if (mediaId == 0) {
+        if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
             showNotice(getString(R.string.featured_image_removed_notice));
         } else {
             showNotice(getString(R.string.featured_image_confirmation_notice));
