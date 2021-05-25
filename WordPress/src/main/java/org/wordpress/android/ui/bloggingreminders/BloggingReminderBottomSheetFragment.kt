@@ -14,12 +14,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.RecyclerViewBottomSheetBinding
-import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var adapter: BloggingRemindersAdapter
     private lateinit var viewModel: BloggingRemindersViewModel
 
     override fun onCreateView(
@@ -35,7 +34,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
 
         with(RecyclerViewBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            contentRecyclerView.adapter = BloggingRemindersAdapter(imageManager)
+            contentRecyclerView.adapter = adapter
 
             viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)

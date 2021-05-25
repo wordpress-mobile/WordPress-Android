@@ -13,6 +13,8 @@ import org.wordpress.android.eventToList
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -52,6 +54,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         assertCloseButton(state[0])
         assertIllustration(state[1])
+        assertTitle(state[2])
     }
 
     private fun assertCloseButton(item: BloggingRemindersItem) {
@@ -64,5 +67,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val illustration = item as Illustration
         // TODO replace this assert with real illustration
         assertThat(illustration.illustration).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+    }
+
+    private fun assertTitle(item: BloggingRemindersItem) {
+        val title = item as Title
+        // TODO replace this assert with real copy
+        assertThat((title.text as UiStringText).text).isEqualTo("Set your blogging goals!")
     }
 }

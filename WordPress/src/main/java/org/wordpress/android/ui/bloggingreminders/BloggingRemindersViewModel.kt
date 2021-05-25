@@ -7,7 +7,9 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -28,7 +30,9 @@ class BloggingRemindersViewModel @Inject constructor(
         _uiState.value = listOf(
             CloseButton(ListItemInteraction.create(this::onClose)),
             // TODO update with actual illustration
-            Illustration(R.drawable.img_illustration_cloud_off_152dp)
+            Illustration(R.drawable.img_illustration_cloud_off_152dp),
+            // TODO update with actual copy
+            Title(UiStringText("Set your blogging goals!"))
         )
     }
     private fun onClose() {
