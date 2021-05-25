@@ -10,6 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.toList
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -45,6 +46,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `shows ui state on start`() {
         viewModel.start(siteId)
 
-        assertThat(uiState).containsExactly(emptyList())
+        val state = uiState.last()
+
+        assertCloseButton(state[0])
+    }
+
+    private fun assertCloseButton(item: BloggingRemindersItem) {
+        val closeButton = item as CloseButton
+        closeButton.listItemInteraction.click()
+        assertThat(events.last()).isFalse()
     }
 }
