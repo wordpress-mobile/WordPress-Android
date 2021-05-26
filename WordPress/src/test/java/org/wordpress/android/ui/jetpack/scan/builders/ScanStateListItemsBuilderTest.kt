@@ -303,6 +303,19 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             }
 
     @Test
+    fun `given server creds msg exists, when items are built, then primary colored plus button exists`() =
+            test {
+                val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = false)
+
+                val serverCredsMsg = scanStateItems.filterIsInstance(FootnoteState::class.java)
+                        .first { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+                with(serverCredsMsg) {
+                    assertThat(iconResId).isEqualTo(R.drawable.ic_plus_white_24dp)
+                    assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
+                }
+            }
+
+    @Test
     fun `given idle state fixable threats with server creds, when items are built, then server creds msg not exists`() =
             test {
                 val scanStateItems = buildScanStateItems(fixableThreatsPresent = true, serverCredsPresent = true)

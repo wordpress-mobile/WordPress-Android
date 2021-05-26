@@ -137,7 +137,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
                     buildEnterServerCredsMessageState(
-                            iconResId = R.drawable.ic_add_outline_grey_dark_24dp,
+                            iconResId = R.drawable.ic_plus_white_24dp,
                             iconColorResId = R.color.colorPrimary,
                             threatsCount = threats.size,
                             siteId = site.siteId

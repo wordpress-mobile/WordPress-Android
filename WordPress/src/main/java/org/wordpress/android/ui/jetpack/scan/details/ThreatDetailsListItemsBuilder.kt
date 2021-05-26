@@ -141,7 +141,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                 if (shouldShowEnterServerCredsMessage(hasValidCredentials, threatModel)) {
                     add(
                             buildEnterServerCredsMessageState(
-                                    iconResId = R.drawable.ic_add_outline_grey_dark_24dp,
+                                    iconResId = R.drawable.ic_plus_white_24dp,
                                     iconColorResId = R.color.colorPrimary,
                                     siteId = siteId
                             )

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatMo
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -331,6 +332,22 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) })
                 .isNull()
     }
+
+    @Test
+    fun `given server creds msg exists, when items are built, then primary colored plus button exists`() =
+            test {
+                val scanStateItems = buildThreatDetailsListItems(
+                        model = ThreatTestData.fixableThreatInCurrentStatus,
+                        scanStateHasValidCredentials = false
+                )
+
+                val serverCredsMsg = scanStateItems.filterIsInstance(FootnoteState::class.java)
+                        .first { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+                with(serverCredsMsg) {
+                    assertThat(iconResId).isEqualTo(R.drawable.ic_plus_white_24dp)
+                    assertThat(iconColorResId).isEqualTo(R.color.colorPrimary)
+                }
+            }
 
     @Test
     fun `given ignored fixable threat without server creds, when items are built, then server creds msg exists`() {
