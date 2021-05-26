@@ -167,8 +167,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case WOO_LOGIN_MODE:
                 if (mOptionalSiteCredsLayout) {
+                    String siteAddressClean = mLoginSiteUrl.replaceFirst("^(http[s]?://)", "");
                     label.setText(Html.fromHtml(
-                            getString(R.string.enter_email_for_site, mLoginSiteUrl)));
+                            getString(R.string.enter_email_for_site, siteAddressClean)));
                 } else {
                     label.setText(getString(R.string.enter_email_wordpress_com));
                 }

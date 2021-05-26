@@ -17,9 +17,9 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:contentDescription="@null"
-            android:tint="?attr/colorControlNormal"
             android:visibility="gone"
-            app:srcCompat="@drawable/login_toolbar_icon" />
+            app:srcCompat="@drawable/login_toolbar_icon"
+            app:tint="?attr/colorControlNormal" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 
