@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersCloseButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
+import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
@@ -25,7 +27,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             )
         ) {
         fun onBind(item: CloseButton) = with(binding) {
-            closeButton.setOnClickListener { item.listItemInteraction.click() }
+            closeButton.setOnClickListener { item.onClick.click() }
         }
     }
     class IllustrationViewHolder(parentView: ViewGroup, private val imageManager: ImageManager) :
@@ -56,6 +58,19 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         ) {
         fun onBind(item: Text) = with(binding) {
             uiHelpers.setTextOrHide(text, item.text)
+        }
+    }
+    class PrimaryButtonViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+        BloggingRemindersViewHolder<BloggingRemindersPrimaryButtonBinding>(
+            parentView.viewBinding(
+                BloggingRemindersPrimaryButtonBinding::inflate
+            )
+        ) {
+        fun onBind(item: PrimaryButton) = with(binding) {
+            uiHelpers.setTextOrHide(primaryButton, item.text)
+            primaryButton.setOnClickListener{
+                item.onClick.click()
+            }
         }
     }
 }

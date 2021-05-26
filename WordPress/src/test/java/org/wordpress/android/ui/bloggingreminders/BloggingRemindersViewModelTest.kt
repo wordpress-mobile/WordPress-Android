@@ -13,8 +13,10 @@ import org.wordpress.android.eventToList
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
@@ -57,11 +59,12 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         assertIllustration(state[1])
         assertTitle(state[2])
         assertText(state[3])
+        assertPrimaryButton(state[4])
     }
 
     private fun assertCloseButton(item: BloggingRemindersItem) {
         val closeButton = item as CloseButton
-        closeButton.listItemInteraction.click()
+        closeButton.onClick.click()
         assertThat(events.last()).isFalse()
     }
 
@@ -81,5 +84,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val title = item as Text
         // TODO replace this assert with real copy
         assertThat((title.text as UiStringText).text).isEqualTo("Well done on your first post! Keep it going.")
+    }
+
+    private fun assertPrimaryButton(item: BloggingRemindersItem) {
+        val closeButton = item as PrimaryButton
+        assertThat((closeButton.text as UiStringRes).stringRes).isEqualTo(R.string.get_started)
     }
 }

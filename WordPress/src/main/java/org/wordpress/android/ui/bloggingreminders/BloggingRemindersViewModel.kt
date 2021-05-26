@@ -7,9 +7,11 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -35,10 +37,14 @@ class BloggingRemindersViewModel @Inject constructor(
             // TODO update with actual copy
             Title(UiStringText("Set your blogging goals!")),
             // TODO update with actual copy
-            Text(UiStringText("Well done on your first post! Keep it going."))
+            Text(UiStringText("Well done on your first post! Keep it going.")),
+            PrimaryButton(UiStringRes(R.string.get_started), ListItemInteraction.create(this::onPrimaryClick))
         )
     }
     private fun onClose() {
         _isBottomSheetShowing.value = Event(false)
+    }
+    private fun onPrimaryClick() {
+        TODO("Action not implemented")
     }
 }
