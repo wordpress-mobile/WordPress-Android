@@ -37,6 +37,20 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `do NOT copy files which are local to the device`() = test {
+        // Arrange
+        val uris = listOf<Uri>(mock())
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForIsFile = true)
+        // Act
+        val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
+                .copyFilesToAppStorageIfNecessary(uris)
+
+        // Assert
+        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
+        assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(uris[0])
+    }
+
+    @Test
     fun `copy only files which are NOT present in media store`() = test {
         // Arrange
         val expectedCopiedFileUri = mock<Uri>()
