@@ -17,4 +17,33 @@ sealed class ReminderConfig(val type: ReminderType) {
     enum class ReminderType {
         DAILY, WEEKLY
     }
+
+    fun toMap() = mapOf(
+            REMINDER_TYPE to type.name,
+            REMINDER_DAYS to when (this) {
+                is DailyReminder -> null
+                is WeeklyReminder -> days.joinToString(DAYS_SEPARATOR)
+            }
+    )
+
+    companion object {
+        private const val REMINDER_TYPE = "reminder_type"
+        private const val REMINDER_DAYS = "reminder_days"
+        private const val DAYS_SEPARATOR = ","
+
+        fun fromMap(map: Map<String, Any>): ReminderConfig {
+            val type: ReminderType = (map[REMINDER_TYPE] as? String)
+                    ?.let { ReminderType.valueOf(it) }
+                    ?: DAILY
+            val days: Set<DayOfWeek> = (map[REMINDER_DAYS] as? String)
+                    ?.split(DAYS_SEPARATOR)
+                    ?.map { DayOfWeek.valueOf(it) }
+                    ?.toSet()
+                    .orEmpty()
+            return when (type) {
+                DAILY -> DailyReminder
+                WEEKLY -> if (days.isEmpty()) DailyReminder else WeeklyReminder(days)
+            }
+        }
+    }
 }
