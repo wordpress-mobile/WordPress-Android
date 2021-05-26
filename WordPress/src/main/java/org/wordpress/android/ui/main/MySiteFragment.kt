@@ -417,6 +417,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
         }
         rowPeople.setOnClickListener { ActivityLauncher.viewCurrentBlogPeople(activity, selectedSite) }
+        rowBloggingReminders.setOnClickListener { ActivityLauncher.viewBloggingReminders(activity, selectedSite) }
         rowPlugins.setOnClickListener { ActivityLauncher.viewPluginBrowser(activity, selectedSite) }
         rowActivityLog.setOnClickListener { ActivityLauncher.viewActivityLogList(activity, selectedSite) }
         rowBackup.setOnClickListener { ActivityLauncher.viewBackupList(activity, selectedSite) }

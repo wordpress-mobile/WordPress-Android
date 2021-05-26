@@ -647,6 +647,13 @@
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!--Goals-->
+        <activity
+            android:name=".ui.bloggingreminders.BloggingRemindersActivity"
+            android:label="@string/blogging_reminders"
+            android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!--Plugins-->
         <activity
             android:name=".ui.plugins.PluginDetailActivity"

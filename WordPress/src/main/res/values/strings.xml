@@ -2320,6 +2320,7 @@
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
 
     <!--Blogging Reminders-->
+    <string name="blogging_reminders">Blogging Reminders</string>
     <string name="blogging_reminders_notification_title">%s, it\'s time to blog</string>
     <string name="blogging_reminders_notification_text">This is your reminder to blog today &#9997;</string>
 

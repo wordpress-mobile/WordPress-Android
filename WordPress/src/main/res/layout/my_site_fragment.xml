@@ -644,6 +644,24 @@
 
                     </LinearLayout>
 
+                    <!--Blogging Reminders-->
+                    <LinearLayout
+                        android:id="@+id/row_blogging_reminders"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_blogging_reminders_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_app_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_blogging_reminders_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/blogging_reminders" />
+
+                    </LinearLayout>
+
                     <!--Plugin-->
                     <LinearLayout
                         android:id="@+id/row_plugins"

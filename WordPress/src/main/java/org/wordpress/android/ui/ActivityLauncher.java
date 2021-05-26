@@ -50,6 +50,7 @@ import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
 import org.wordpress.android.ui.engagement.ListScenario;
 import org.wordpress.android.ui.engagement.ListScenarioType;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -630,6 +631,12 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
+    }
+
+    public static void viewBloggingReminders(Context context, SiteModel site) {
+        Intent intent = new Intent(context, BloggingRemindersActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 
     public static void viewPluginBrowser(Context context, SiteModel site) {

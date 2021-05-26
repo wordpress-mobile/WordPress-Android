@@ -47,6 +47,7 @@ import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
 import org.wordpress.android.ui.gif.GifPickerActivity;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersFragment;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
@@ -674,6 +675,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UserProfileBottomSheetFragment object);
 
     void inject(EngagedPeopleListActivity object);
+
+    void inject(BloggingRemindersFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
