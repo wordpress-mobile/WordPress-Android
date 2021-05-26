@@ -37,8 +37,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.config.manual.ManualFeatureConfigFragment;
 import org.wordpress.android.util.wizard.WizardManager;
-import org.wordpress.android.viewmodel.gif.provider.GifProvider;
-import org.wordpress.android.viewmodel.gif.provider.TenorProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -119,14 +117,6 @@ public abstract class ApplicationModule {
     @Provides
     static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
         return new ConnectionStatusLiveData.Factory(context).create();
-    }
-
-    @Provides
-    static GifProvider provideGifProvider(Context context) {
-        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
-        builder.apiKey(BuildConfig.TENOR_API_KEY);
-        ApiClient.init(context, builder);
-        return new TenorProvider(context, ApiClient.getInstance(context));
     }
 
     @Provides
