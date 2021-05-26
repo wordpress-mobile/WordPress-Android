@@ -12,6 +12,8 @@ data class LocalNotification(
     @StringRes val title: Int,
     @StringRes val text: Int,
     @DrawableRes val icon: Int,
+    @DrawableRes val actionIcon: Int,
+    @StringRes val actionTitle: Int,
     val uniqueId: Int? = null
 ) {
     val id = uniqueId ?: NotificationPushIds.LOCAL_NOTIFICATION_ID + type.ordinal
