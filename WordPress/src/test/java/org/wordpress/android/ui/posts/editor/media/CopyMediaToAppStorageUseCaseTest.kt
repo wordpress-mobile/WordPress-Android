@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -28,7 +29,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
                 .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
-        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any())
+        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any(), any())
         assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(uris[0])
     }
 
@@ -46,7 +47,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
                 .copyFilesToAppStorageIfNecessary(uris)
 
         // Assert
-        verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0])
+        verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0], null)
         assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(expectedCopiedFileUri)
     }
 
@@ -80,6 +81,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     fun `copyingSomeMediaFailed is set to false on success`() = test {
         // Arrange
         val uris = listOf<Uri>(mock(), mock(), mock())
+        // val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[0] to mock()))
         // Act
         val result = createCopyMediaToAppStorageUseCase()
                 .copyFilesToAppStorageIfNecessary(uris)
@@ -89,8 +91,9 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
 
     private companion object Fixtures {
         @InternalCoroutinesApi
-        fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()) =
-                CopyMediaToAppStorageUseCase(mediaUtilsWrapper, TEST_DISPATCHER)
+        fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
+                        authenticationUtils: AuthenticationUtils = createAuthenticationUtils()) =
+                CopyMediaToAppStorageUseCase(mediaUtilsWrapper, authenticationUtils, TEST_DISPATCHER)
 
         fun createMediaUtilsWrapper(
             resultForIsInMediaStore: Boolean = false,
@@ -98,12 +101,19 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         ) =
                 mock<MediaUtilsWrapper> {
                     on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
-                    on { copyFileToAppStorage(any()) }.thenReturn(mock())
+                    on { copyFileToAppStorage(any(), any()) }.thenReturn(mock())
                     resultForCopiedFileUri?.let {
-                        on { copyFileToAppStorage(resultForCopiedFileUri.first) }.thenReturn(
+                        on { copyFileToAppStorage(resultForCopiedFileUri.first, null) }.thenReturn(
                                 resultForCopiedFileUri.second
                         )
                     }
+                }
+
+        fun createAuthenticationUtils(
+            resultForAuthHeader: Map<String, String>? = null
+        ) =
+                mock<AuthenticationUtils> {
+                    on { getAuthHeaders(any()) }.thenReturn(resultForAuthHeader)
                 }
     }
 }
