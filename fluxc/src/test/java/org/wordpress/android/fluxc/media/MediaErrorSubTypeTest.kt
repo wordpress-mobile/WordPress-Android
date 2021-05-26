@@ -14,15 +14,6 @@ import org.wordpress.android.fluxc.store.media.MediaErrorSubType.UndefinedSubTyp
 @RunWith(MockitoJUnitRunner::class)
 class MediaErrorSubTypeTest {
     @Test
-    fun `serialize has class simpleName as root`() {
-        MediaErrorSubtypeCategory.values().forEach { category ->
-            category.errors.forEach { subType ->
-                assertThat(subType.serialize()).isEqualTo("${subType::class.java.simpleName}:${subType.subTypeName}")
-            }
-        }
-    }
-
-    @Test
     fun `deserialize returns UndefinedSubType when name is null`() {
         val result = MediaErrorSubType.deserialize(null)
         assertThat(result).isEqualTo(UndefinedSubType)
@@ -36,13 +27,13 @@ class MediaErrorSubTypeTest {
 
     @Test
     fun `deserialize returns MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE) when name matches`() {
-        val result = MediaErrorSubType.deserialize("MalformedMediaArgSubType:UNSUPPORTED_MIME_TYPE")
+        val result = MediaErrorSubType.deserialize("MALFORMED_MEDIA_ARG_SUBTYPE:UNSUPPORTED_MIME_TYPE")
         assertThat(result).isEqualTo(MalformedMediaArgSubType(UNSUPPORTED_MIME_TYPE))
     }
 
     @Test
     fun `deserialize returns NO_ERROR(null) when name matches`() {
-        val result = MediaErrorSubType.deserialize("MalformedMediaArgSubType:NO_ERROR")
+        val result = MediaErrorSubType.deserialize("MALFORMED_MEDIA_ARG_SUBTYPE:NO_ERROR")
         assertThat(result).isEqualTo(MalformedMediaArgSubType(NO_ERROR))
     }
 }
