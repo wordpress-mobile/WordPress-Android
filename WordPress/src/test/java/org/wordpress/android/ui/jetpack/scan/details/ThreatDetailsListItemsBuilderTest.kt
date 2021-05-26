@@ -628,7 +628,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         scanStateHasValidCredentials: Boolean = true,
         onFixThreatButtonClicked: () -> Unit = mock(),
         onGetFreeEstimateButtonClicked: () -> Unit = mock(),
-        onIgnoreThreatButtonClicked: () -> Unit = mock()
+        onIgnoreThreatButtonClicked: () -> Unit = mock(),
+        onEnterServerCredsIconClicked: () -> Unit = mock()
     ): List<JetpackListItemState> {
         if (!scanStateHasValidCredentials) {
             whenever(
@@ -646,7 +647,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 siteId = TEST_SITE_ID,
                 onFixThreatButtonClicked = onFixThreatButtonClicked,
                 onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
-                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+                onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked,
+                onEnterServerCredsIconClicked = onEnterServerCredsIconClicked
         )
     }
 }

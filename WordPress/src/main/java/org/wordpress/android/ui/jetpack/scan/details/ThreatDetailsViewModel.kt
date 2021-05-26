@@ -156,7 +156,7 @@ class ThreatDetailsViewModel @Inject constructor(
         updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
     }
 
-    private fun onEnterServerCredsMessageClicked() {
+    private fun onEnterServerCredsIconClicked() {
         updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
     }
 
@@ -192,7 +192,8 @@ class ThreatDetailsViewModel @Inject constructor(
                     siteId,
                     this@ThreatDetailsViewModel::onFixThreatButtonClicked,
                     this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
+                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
+                    this@ThreatDetailsViewModel::onEnterServerCredsIconClicked
             )
     )
 

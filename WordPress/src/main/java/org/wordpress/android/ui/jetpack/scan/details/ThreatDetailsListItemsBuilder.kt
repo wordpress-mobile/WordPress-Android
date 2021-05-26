@@ -40,7 +40,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         siteId: Long,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
-        onIgnoreThreatButtonClicked: () -> Unit
+        onIgnoreThreatButtonClicked: () -> Unit,
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> = mutableListOf<JetpackListItemState>().apply {
         addAll(buildBasicThreatDetailsListItems(threatModel))
         addAll(buildTechnicalDetailsListItems(threatModel))
@@ -52,7 +53,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                         siteId,
                         onFixThreatButtonClicked,
                         onGetFreeEstimateButtonClicked,
-                        onIgnoreThreatButtonClicked
+                        onIgnoreThreatButtonClicked,
+                        onEnterServerCredsIconClicked
                 )
         )
     }.toList()
@@ -127,7 +129,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         siteId: Long,
         onFixThreatButtonClicked: () -> Unit,
         onGetFreeEstimateButtonClicked: () -> Unit,
-        onIgnoreThreatButtonClicked: () -> Unit
+        onIgnoreThreatButtonClicked: () -> Unit,
+        onEnterServerCredsIconClicked: () -> Unit
     ) = mutableListOf<JetpackListItemState>().apply {
         val isFixable = threatModel.baseThreatModel.fixable != null
         if (threatModel.baseThreatModel.status != ThreatStatus.FIXED) {
@@ -141,6 +144,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                 if (shouldShowEnterServerCredsMessage(hasValidCredentials, threatModel)) {
                     add(
                             buildEnterServerCredsMessageState(
+                                    onEnterServerCredsIconClicked,
                                     iconResId = R.drawable.ic_plus_white_24dp,
                                     iconColorResId = R.color.colorPrimary,
                                     siteId = siteId
@@ -293,6 +297,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     )
 
     private fun buildEnterServerCredsMessageState(
+        onEnterServerCredsIconClicked: () -> Unit,
         @DrawableRes iconResId: Int? = null,
         @ColorRes iconColorResId: Int? = null,
         siteId: Long
@@ -307,7 +312,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                                 messageResId,
                                 "${Constants.URL_JETPACK_SETTINGS}/$siteId"
                         )
-                )
+                ),
+                onIconClick = onEnterServerCredsIconClicked
         )
     }
 }
