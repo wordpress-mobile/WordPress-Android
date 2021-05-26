@@ -62,6 +62,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
+    @Mock private lateinit var onEnterServerCredsIconClicked: () -> Unit
 
     private val baseThreatModel = BaseThreatModel(
             id = 1L,
@@ -650,7 +651,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 onScanButtonClicked = mock(),
                 onFixAllButtonClicked = mock(),
                 onThreatItemClicked = mock(),
-                onHelpClicked = onHelpClickedMock
+                onHelpClicked = onHelpClickedMock,
+                onEnterServerCredsIconClicked = onEnterServerCredsIconClicked
         )
     }
 
