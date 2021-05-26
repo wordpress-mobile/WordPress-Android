@@ -20,7 +20,7 @@ sealed class MediaErrorSubType(val category: MediaErrorSubtypeCategory, val subT
 
     companion object {
         private val categories = MediaErrorSubtypeCategory.values().flatMap { value ->
-            when(value) {
+            when (value) {
                 UNDEFINED_SUBTYPE -> listOf(UndefinedSubType)
                 MALFORMED_MEDIA_ARG_SUBTYPE -> Type.values().map { MalformedMediaArgSubType(it) }
             }
