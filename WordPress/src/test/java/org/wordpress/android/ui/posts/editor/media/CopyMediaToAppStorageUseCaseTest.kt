@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -9,6 +10,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.AdditionalMatchers.or
+import org.mockito.ArgumentMatchers.anyMap
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
@@ -97,11 +100,13 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
 
         fun createMediaUtilsWrapper(
             resultForIsInMediaStore: Boolean = false,
+            resultForIsFile: Boolean = false,
             resultForCopiedFileUri: Pair<Uri, Uri?>? = null
         ) =
                 mock<MediaUtilsWrapper> {
                     on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
-                    on { copyFileToAppStorage(any(), any()) }.thenReturn(mock())
+                    on { isFile(any()) }.thenReturn(resultForIsFile)
+                    on { copyFileToAppStorage(any(), or(isNull(), anyMap())) }.thenReturn(mock())
                     resultForCopiedFileUri?.let {
                         on { copyFileToAppStorage(resultForCopiedFileUri.first, null) }.thenReturn(
                                 resultForCopiedFileUri.second
