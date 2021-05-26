@@ -55,6 +55,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SHARING
 import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.ListItemAction.UNIFIED_COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
@@ -85,6 +86,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -110,6 +112,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
@@ -144,7 +147,8 @@ class MySiteViewModel
     private val quickStartItemBuilder: QuickStartItemBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -250,7 +254,8 @@ class MySiteViewModel
                             scanAvailable,
                             activeTask == QuickStartTask.VIEW_SITE,
                             activeTask == ENABLE_POST_SHARING,
-                            activeTask == EXPLORE_PLANS
+                            activeTask == EXPLORE_PLANS,
+                            unifiedCommentsListFeatureConfig.isEnabled()
                     )
             )
             scrollToQuickStartTaskIfNecessary(
@@ -306,6 +311,7 @@ class MySiteViewModel
                 }
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
+                UNIFIED_COMMENTS -> OpenUnifiedComments(site)
                 VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     OpenSite(site)

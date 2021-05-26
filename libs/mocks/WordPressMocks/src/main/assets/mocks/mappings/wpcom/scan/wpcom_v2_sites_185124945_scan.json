@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wpcom/v2/sites/185124945/scan/"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "state": "idle",
+      "threats": [],
+      "has_cloud": false,
+      "credentials": [{
+        "still_valid": true,
+        "type": "managed",
+        "role": "main"
+      }],
+      "most_recent": {
+        "is_initial": false,
+        "timestamp": "2021-05-18T06:20:06+00:00",
+        "duration": 17,
+        "progress": 100,
+        "error": false
+      }
+    }
+  }
+}

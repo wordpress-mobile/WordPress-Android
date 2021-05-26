@@ -101,6 +101,19 @@ class SiteListItemBuilder
         } else null
     }
 
+    fun buildUnifiedCommentsItemIfAvailable(
+        onClick: (ListItemAction) -> Unit,
+        isUnifiedCommentsAvailable: Boolean = false
+    ): ListItem? {
+        return if (isUnifiedCommentsAvailable) {
+            ListItem(
+                    R.drawable.ic_comment_white_24dp,
+                    UiStringRes(R.string.my_site_btn_unified_comments),
+                    onClick = ListItemInteraction.create(ListItemAction.UNIFIED_COMMENTS, onClick)
+            )
+        } else null
+    }
+
     fun buildAdminItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (shouldShowWPAdmin(site)) {
             ListItem(
