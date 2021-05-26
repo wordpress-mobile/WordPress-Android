@@ -123,6 +123,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun buildActionButtonsWithFootnote(
         threatModel: ThreatModel,
         hasValidCredentials: Boolean,
@@ -141,22 +142,31 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
                                 isEnabled = hasValidCredentials
                         )
                 )
-                if (shouldShowEnterServerCredsMessage(hasValidCredentials, threatModel)) {
-                    add(
-                            buildEnterServerCredsMessageState(
-                                    onEnterServerCredsIconClicked,
-                                    iconResId = R.drawable.ic_plus_white_24dp,
-                                    iconColorResId = R.color.colorPrimary,
-                                    siteId = siteId
-                            )
-                    )
-                }
+                showEnterServerCredsMessage(threatModel, hasValidCredentials, onEnterServerCredsIconClicked, siteId)
             } else {
                 add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
             }
         }
         if (threatModel.baseThreatModel.status == ThreatStatus.CURRENT) {
             add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
+        }
+    }
+
+    private fun MutableList<JetpackListItemState>.showEnterServerCredsMessage(
+        threatModel: ThreatModel,
+        hasValidCredentials: Boolean,
+        onEnterServerCredsIconClicked: () -> Unit,
+        siteId: Long
+    ) {
+        if (shouldShowEnterServerCredsMessage(hasValidCredentials, threatModel)) {
+            add(
+                    buildEnterServerCredsMessageState(
+                            onEnterServerCredsIconClicked,
+                            iconResId = R.drawable.ic_plus_white_24dp,
+                            iconColorResId = R.color.colorPrimary,
+                            siteId = siteId
+                    )
+            )
         }
     }
 
