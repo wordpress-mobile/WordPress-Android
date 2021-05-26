@@ -20,8 +20,6 @@ interface ListItemInteraction {
         fun <T> create(data: T, action: (T) -> Unit): ListItemInteraction {
             return OneParam(data, action)
         }
-
-
     }
 
     private data class OneParam<T>(
