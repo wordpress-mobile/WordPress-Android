@@ -189,6 +189,7 @@ platform :android do
         app_project_url = "https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/"
     else
         app_project_url = "https://translate.wordpress.org/projects/apps/android/release-notes/"
+    end
 
     gp_downloadmetadata(project_url: project_URL,
       target_files: files,
