@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.store.media.MediaErrorSubType
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type.NO_ERROR
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type.UNSUPPORTED_MIME_TYPE
-import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MediaErrorSubtypeCategory
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.UndefinedSubType
 
 @RunWith(MockitoJUnitRunner::class)
