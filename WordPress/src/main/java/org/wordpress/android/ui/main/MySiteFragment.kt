@@ -160,6 +160,7 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -214,6 +215,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Inject lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -404,6 +406,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowMedia.setOnClickListener { viewMedia() }
         rowPages.setOnClickListener { viewPages() }
         rowComments.setOnClickListener { ActivityLauncher.viewCurrentBlogComments(activity, selectedSite) }
+        rowUnifiedComments.setOnClickListener {
+            if (unifiedCommentsListFeatureConfig.isEnabled()) {
+                ActivityLauncher.viewUnifiedComments(activity, selectedSite)
+            }
+        }
         rowThemes.setOnClickListener {
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
@@ -603,6 +610,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         selectedSiteRepository.showSiteIconProgressBar.observe(viewLifecycleOwner, {
             showSiteIconProgressBar(it == true)
         })
+
+        rowUnifiedComments.visibility = if (unifiedCommentsListFeatureConfig.isEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

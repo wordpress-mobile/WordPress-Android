@@ -2290,6 +2290,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
+        boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
         boolean canViewEditorOnboarding = (
                 mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
@@ -2303,6 +2304,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
+                // Only enable reusable block in WP.com sites until the issue
+                // (https://github.com/wordpress-mobile/gutenberg-mobile/issues/3457) in self-hosted sites is fixed
+                isWPComSite,
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
