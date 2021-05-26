@@ -322,9 +322,9 @@ class ScanStateListItemsBuilder @Inject constructor(
         siteId: Long
     ): FootnoteState {
         val messageResId = if (threatsCount > 1) {
-            R.string.threat_fix_enter_server_creds_message_plural
+            R.string.threat_fix_enter_server_creds_msg_plural
         } else {
-            R.string.threat_fix_enter_server_creds_message_singular
+            R.string.threat_fix_enter_server_creds_msg_singular
         }
         return FootnoteState(
                 iconResId = iconResId,

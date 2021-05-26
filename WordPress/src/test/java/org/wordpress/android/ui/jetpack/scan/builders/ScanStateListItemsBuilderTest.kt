@@ -198,7 +198,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 assertThat(
                         scanStateItems.filterIsInstance(DescriptionState::class.java)
                                 .firstOrNull {
-                                    it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular)
+                                    it.text == UiStringRes(R.string.threat_fix_enter_server_creds_msg_singular)
                                 }
                 ).isNull()
             }
@@ -638,7 +638,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             whenever(
                     htmlMessageUtils
                             .getHtmlMessageFromStringFormatResId(
-                                    R.string.threat_fix_enter_server_creds_message_singular,
+                                    R.string.threat_fix_enter_server_creds_msg_singular,
                                     "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
                             )
             ).thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)

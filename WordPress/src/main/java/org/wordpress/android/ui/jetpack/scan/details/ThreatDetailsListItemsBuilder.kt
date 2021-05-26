@@ -312,7 +312,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         @ColorRes iconColorResId: Int? = null,
         siteId: Long
     ): FootnoteState {
-        val messageResId = R.string.threat_fix_enter_server_creds_message_singular
+        val messageResId = R.string.threat_fix_enter_server_creds_msg_singular
 
         return FootnoteState(
                 iconResId = iconResId,
