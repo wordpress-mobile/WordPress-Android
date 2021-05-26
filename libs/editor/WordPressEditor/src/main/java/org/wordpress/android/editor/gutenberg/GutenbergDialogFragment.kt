@@ -113,12 +113,10 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        (parentFragment is GutenbergDialogOnDismissByOutsideTouchInterface)?.let {
-            // Only handle the event if it wasn't triggered by a button
-            if (!dismissedByPositiveButton && !dismissedByNegativeButton) {
-                (parentFragment as? GutenbergDialogOnDismissByOutsideTouchInterface)?.let {
-                    it.onDismissByOutsideTouch(mTag)
-                }
+        // Only handle the event if it wasn't triggered by a button
+        if (!dismissedByPositiveButton && !dismissedByNegativeButton) {
+            (parentFragment as? GutenbergDialogOnDismissByOutsideTouchInterface)?.let {
+                it.onDismissByOutsideTouch(mTag)
             }
         }
         super.onDismiss(dialog)
