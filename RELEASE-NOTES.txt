@@ -3,6 +3,9 @@
 17.4
 -----
 
+17.3.2
+-----
+* [***] Me Screen: Fixed an issue with the Change Photo flow that was causing a crash. [https://github.com/wordpress-mobile/WordPress-Android/pull/14701]
 
 17.3
 -----
