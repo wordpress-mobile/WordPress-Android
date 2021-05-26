@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.helpers.Version
+//import org.wordpress.android.util.helpers.Version
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -144,5 +144,5 @@ class EditorThemeStore
     }
 
     private fun globalStyleSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && (site.isWPCom || Version(site.softwareVersion) >= Version(GSS_LIMIT_VERSION))
+            gssEnabled // && (site.isWPCom || Version(site.softwareVersion) >= Version(GSS_LIMIT_VERSION))
 }
