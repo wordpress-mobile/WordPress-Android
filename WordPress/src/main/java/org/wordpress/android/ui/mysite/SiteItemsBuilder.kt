@@ -13,6 +13,7 @@ class SiteItemsBuilder
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
+    @Suppress("LongParameterList")
     fun buildSiteItems(
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,
@@ -20,7 +21,8 @@ class SiteItemsBuilder
         isScanAvailable: Boolean = false,
         showViewSiteFocusPoint: Boolean = false,
         showEnablePostSharingFocusPoint: Boolean = false,
-        showExplorePlansFocusPoint: Boolean = false
+        showExplorePlansFocusPoint: Boolean = false,
+        isUnifiedCommentsFeatureEnabled: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, showExplorePlansFocusPoint, onClick),
@@ -50,6 +52,10 @@ class SiteItemsBuilder
                         R.drawable.ic_comment_white_24dp,
                         UiStringRes(R.string.my_site_btn_comments),
                         onClick = ListItemInteraction.create(ListItemAction.COMMENTS, onClick)
+                ),
+                siteListItemBuilder.buildUnifiedCommentsItemIfAvailable(
+                        onClick,
+                        isUnifiedCommentsFeatureEnabled
                 ),
                 siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(site),
                 siteListItemBuilder.buildThemesItemIfAvailable(site, onClick),

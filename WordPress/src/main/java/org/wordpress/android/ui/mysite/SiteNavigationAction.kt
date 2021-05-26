@@ -25,6 +25,7 @@ sealed class SiteNavigationAction {
     data class OpenPlugins(val site: SiteModel) : SiteNavigationAction()
     data class OpenMedia(val site: SiteModel) : SiteNavigationAction()
     data class OpenComments(val site: SiteModel) : SiteNavigationAction()
+    data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
     data class ConnectJetpackForStats(val site: SiteModel) : SiteNavigationAction()
