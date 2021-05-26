@@ -50,7 +50,7 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
 
     private fun copyToAppStorage(mediaUri: Uri): Uri? {
         return try {
-            mediaUtilsWrapper.copyFileToAppStorageWithHeaders(
+            mediaUtilsWrapper.copyFileToAppStorage(
                     mediaUri,
                     authenticationUtils.getAuthHeaders(mediaUri.toString())
             )
