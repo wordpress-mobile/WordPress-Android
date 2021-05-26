@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -44,8 +46,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
-        onHelpClicked: () -> Unit,
-        onEnterServerCredsMessageClicked: () -> Unit
+        onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
             buildThreatsFixingStateItems(fixingThreatIds)
@@ -59,8 +60,7 @@ class ScanStateListItemsBuilder @Inject constructor(
                             onScanButtonClicked,
                             onFixAllButtonClicked,
                             onThreatItemClicked,
-                            onHelpClicked,
-                            onEnterServerCredsMessageClicked
+                            onHelpClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -115,8 +115,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
-        onHelpClicked: () -> Unit,
-        onEnterServerCredsMessageClicked: () -> Unit
+        onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
@@ -140,8 +139,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
                     buildEnterServerCredsMessageState(
-                            onEnterServerCredsMessageClicked = onEnterServerCredsMessageClicked,
-                            threatsCount = threats.size
+                            iconResId = R.drawable.ic_add_outline_grey_dark_24dp,
+                            iconColorResId = R.color.colorPrimary,
+                            threatsCount = threats.size,
+                            siteId = site.siteId
                     )
             )
         }
@@ -310,26 +311,26 @@ class ScanStateListItemsBuilder @Inject constructor(
     }
 
     private fun buildEnterServerCredsMessageState(
-        onEnterServerCredsMessageClicked: () -> Unit,
-        threatsCount: Int
-    ): DescriptionState {
+        @DrawableRes iconResId: Int? = null,
+        @ColorRes iconColorResId: Int? = null,
+        threatsCount: Int,
+        siteId: Long
+    ): FootnoteState {
         val messageResId = if (threatsCount > 1) {
             R.string.threat_fix_enter_server_creds_message_plural
         } else {
             R.string.threat_fix_enter_server_creds_message_singular
         }
-
-        val clickableText = resourceProvider.getString(messageResId)
-
-        val clickableTextsInfo = listOf(
-                ClickableTextInfo(
-                        startIndex = 0,
-                        endIndex = clickableText.length,
-                        onClick = onEnterServerCredsMessageClicked
+        return FootnoteState(
+                iconResId = iconResId,
+                iconColorResId = iconColorResId,
+                text = UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                messageResId,
+                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                        )
                 )
         )
-
-        return DescriptionState(text = UiStringRes(messageResId), clickableTextsInfo = clickableTextsInfo)
     }
 
     companion object {
