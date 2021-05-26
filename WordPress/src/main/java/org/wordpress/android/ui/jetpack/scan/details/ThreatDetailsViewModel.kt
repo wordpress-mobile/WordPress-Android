@@ -71,7 +71,7 @@ class ThreatDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             threatModel = requireNotNull(getThreatModelUseCase.get(threatId))
             val scanStateHasValidCredentials = scanStore.hasValidCredentials(site)
-            updateUiState(buildContentUiState(threatModel, scanStateHasValidCredentials))
+            updateUiState(buildContentUiState(threatModel, site.siteId, scanStateHasValidCredentials))
         }
     }
 
@@ -185,14 +185,14 @@ class ThreatDetailsViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(model: ThreatModel, scanStateHasValidCredentials: Boolean) = Content(
+    private fun buildContentUiState(model: ThreatModel, siteId: Long, scanStateHasValidCredentials: Boolean) = Content(
             builder.buildThreatDetailsListItems(
                     model,
                     scanStateHasValidCredentials,
+                    siteId,
                     this@ThreatDetailsViewModel::onFixThreatButtonClicked,
                     this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked,
-                    this@ThreatDetailsViewModel::onEnterServerCredsMessageClicked
+                    this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
             )
     )
 
