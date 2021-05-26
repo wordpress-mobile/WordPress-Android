@@ -108,8 +108,10 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
 
     private companion object Fixtures {
         @InternalCoroutinesApi
-        fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
-                        authenticationUtils: AuthenticationUtils = createAuthenticationUtils()) =
+        fun createCopyMediaToAppStorageUseCase(
+            mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
+            authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
+        ) =
                 CopyMediaToAppStorageUseCase(mediaUtilsWrapper, authenticationUtils, TEST_DISPATCHER)
 
         fun createMediaUtilsWrapper(
