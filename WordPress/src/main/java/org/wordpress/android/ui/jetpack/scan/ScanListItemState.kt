@@ -42,6 +42,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         @DrawableRes val iconResId: Int? = null,
         @ColorRes val iconColorResId: Int? = null,
         val text: UiString,
-        val isVisible: Boolean = true
+        val isVisible: Boolean = true,
+        val onIconClick: (() -> Unit)? = null
     ) : JetpackListItemState(ViewType.SCAN_FOOTNOTE)
 }

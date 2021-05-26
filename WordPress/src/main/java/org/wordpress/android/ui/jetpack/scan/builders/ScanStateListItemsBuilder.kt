@@ -46,7 +46,8 @@ class ScanStateListItemsBuilder @Inject constructor(
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
-        onHelpClicked: () -> Unit
+        onHelpClicked: () -> Unit,
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
             buildThreatsFixingStateItems(fixingThreatIds)
@@ -60,7 +61,8 @@ class ScanStateListItemsBuilder @Inject constructor(
                             onScanButtonClicked,
                             onFixAllButtonClicked,
                             onThreatItemClicked,
-                            onHelpClicked
+                            onHelpClicked,
+                            onEnterServerCredsIconClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -115,7 +117,8 @@ class ScanStateListItemsBuilder @Inject constructor(
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
-        onHelpClicked: () -> Unit
+        onHelpClicked: () -> Unit,
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
@@ -137,6 +140,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
                     buildEnterServerCredsMessageState(
+                            onEnterServerCredsIconClicked,
                             iconResId = R.drawable.ic_plus_white_24dp,
                             iconColorResId = R.color.colorPrimary,
                             threatsCount = threats.size,
@@ -311,6 +315,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     }
 
     private fun buildEnterServerCredsMessageState(
+        onEnterServerCredsIconClicked: () -> Unit,
         @DrawableRes iconResId: Int? = null,
         @ColorRes iconColorResId: Int? = null,
         threatsCount: Int,
@@ -329,7 +334,8 @@ class ScanStateListItemsBuilder @Inject constructor(
                                 messageResId,
                                 "${Constants.URL_JETPACK_SETTINGS}/$siteId"
                         )
-                )
+                ),
+                onIconClick = onEnterServerCredsIconClicked
         )
     }
 

@@ -48,6 +48,11 @@ class ScanFootnoteViewHolder(
                             state.iconColorResId
                     )
                 }
+
+                state.onIconClick?.let {
+                    icon.isClickable = true
+                    icon.setOnClickListener { state.onIconClick.invoke() }
+                }
             }
         }
     }

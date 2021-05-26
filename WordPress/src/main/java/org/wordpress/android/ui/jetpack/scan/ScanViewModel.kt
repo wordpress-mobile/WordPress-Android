@@ -294,7 +294,7 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun onEnterServerCredsMessageClicked() {
+    private fun onEnterServerCredsIconClicked() {
         updateNavigationEvent(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}"))
     }
 
@@ -333,7 +333,8 @@ class ScanViewModel @Inject constructor(
                     onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
                     onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
                     onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
-                    onHelpClicked = this@ScanViewModel::onContactSupportClicked
+                    onHelpClicked = this@ScanViewModel::onContactSupportClicked,
+                    onEnterServerCredsIconClicked = this@ScanViewModel::onEnterServerCredsIconClicked
             )
     )
 
