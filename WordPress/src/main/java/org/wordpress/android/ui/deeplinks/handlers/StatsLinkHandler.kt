@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
@@ -6,6 +6,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenS
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.SITE_DOMAIN

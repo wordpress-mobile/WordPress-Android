@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
+import org.wordpress.android.ui.deeplinks.handlers.ServerTrackingHandler
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 

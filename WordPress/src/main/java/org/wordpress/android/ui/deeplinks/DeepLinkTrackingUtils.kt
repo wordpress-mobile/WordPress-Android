@@ -6,6 +6,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenI
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.BANNER
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.EMAIL
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.LINK
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject

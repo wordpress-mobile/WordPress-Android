@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import android.content.Intent
 import androidx.lifecycle.LiveData

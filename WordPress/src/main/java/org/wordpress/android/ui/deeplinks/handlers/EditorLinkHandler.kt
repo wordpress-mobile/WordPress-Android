@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +10,8 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event

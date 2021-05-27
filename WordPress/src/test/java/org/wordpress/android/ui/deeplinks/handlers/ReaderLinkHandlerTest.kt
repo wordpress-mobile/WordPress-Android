@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -11,6 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_VIEWPOST_INT
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
+import org.wordpress.android.ui.deeplinks.buildUri
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.utils.IntentUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper

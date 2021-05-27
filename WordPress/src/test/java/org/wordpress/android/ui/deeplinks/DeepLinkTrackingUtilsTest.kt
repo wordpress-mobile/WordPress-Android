@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 

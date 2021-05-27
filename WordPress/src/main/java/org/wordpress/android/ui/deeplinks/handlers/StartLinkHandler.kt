@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowSignInFlow
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 

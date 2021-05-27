@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.whenever
