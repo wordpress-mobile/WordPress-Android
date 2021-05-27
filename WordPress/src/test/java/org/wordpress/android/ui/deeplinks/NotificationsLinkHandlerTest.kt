@@ -55,11 +55,20 @@ class NotificationsLinkHandlerTest {
     }
 
     @Test
-    fun `strip url returns notifications url`() {
+    fun `deeplink - strip url returns notifications url`() {
         val uri = buildUri(host = "wordpress.com", "notifications")
 
         val strippedUrl = notificationsLinkHandler.stripUrl(uri)
 
         assertThat(strippedUrl).isEqualTo("wordpress.com/notifications")
+    }
+
+    @Test
+    fun `applink - strip url returns notifications url`() {
+        val uri = buildUri(host = "notifications")
+
+        val strippedUrl = notificationsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://notifications")
     }
 }

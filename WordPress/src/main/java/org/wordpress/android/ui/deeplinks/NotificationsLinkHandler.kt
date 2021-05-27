@@ -9,7 +9,7 @@ class NotificationsLinkHandler
 @Inject constructor() : DeepLinkHandler {
     /**
      * Builds navigate action from URL like:
-     * https://wordpress.com/notifcations
+     * https://wordpress.com/notifications
      */
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
         return OpenNotifications
@@ -25,7 +25,14 @@ class NotificationsLinkHandler
     }
 
     override fun stripUrl(uri: UriWrapper): String {
-        return uri.host + "/" + uri.pathSegments.firstOrNull()
+        return buildString {
+            if (uri.host == NOTIFICATIONS_PATH) {
+                append(DeepLinkingIntentReceiverViewModel.APPLINK_SCHEME)
+            } else {
+                append("${DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM}/")
+            }
+            append(NOTIFICATIONS_PATH)
+        }
     }
 
     companion object {
