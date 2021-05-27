@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/sub_filter_component_container"
         app:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
-        app:wpToolbarDisableScrollGestures="true"
+        app:wpToolbarDisableScrollGestures="false"
         app:wpHideAppBarLayout="true" />
 
     <include
