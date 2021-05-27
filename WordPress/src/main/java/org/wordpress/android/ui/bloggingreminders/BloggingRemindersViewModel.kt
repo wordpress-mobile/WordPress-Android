@@ -26,6 +26,8 @@ class BloggingRemindersViewModel @Inject constructor(
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
     private val _uiState = MutableLiveData<List<BloggingRemindersItem>>()
     val uiState = _uiState as LiveData<List<BloggingRemindersItem>>
+    private val _selectedState = MutableLiveData<String>()
+    val selectedState = _selectedState as LiveData<String>
 
     fun start(siteId: Int) {
         bloggingRemindersManager.bloggingRemindersShown(siteId)
@@ -41,10 +43,12 @@ class BloggingRemindersViewModel @Inject constructor(
             PrimaryButton(UiStringRes(R.string.get_started), ListItemInteraction.create(this::onPrimaryClick))
         )
     }
+
     private fun onClose() {
         _isBottomSheetShowing.value = Event(false)
     }
+
     private fun onPrimaryClick() {
-        TODO("Action not implemented")
+        _selectedState.value = "Testing value"
     }
 }
