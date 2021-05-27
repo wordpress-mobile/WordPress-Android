@@ -4,22 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_medium"
     android:paddingStart="0dp"
-    android:paddingTop="@dimen/margin_medium">
+    android:layout_marginBottom="@dimen/margin_medium">
 
     <ImageView
         android:id="@+id/icon"
         style="@style/Scan.Footnote.Icon"
         android:contentDescription="@string/jetpack_icon_content_description"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/footnote"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_add_outline_grey_dark_24dp"
+        tools:src="@drawable/ic_plus_white_24dp"
         tools:visibility="visible"/>
 
     <com.google.android.material.textview.MaterialTextView
