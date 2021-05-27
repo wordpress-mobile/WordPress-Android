@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +9,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.buildUri
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
@@ -28,9 +30,9 @@ class StatsLinkHandlerTest {
 
     @Test
     fun `handles stats URI`() {
-        val statsUri = buildUri(host = "wordpress.com", path1 = "stats")
+        val statsUri = buildUri(host = "wordpress.com", "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isTrue()
     }
@@ -39,56 +41,56 @@ class StatsLinkHandlerTest {
     fun `handles stats App link`() {
         val statsUri = buildUri(host = "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isTrue()
     }
 
     @Test
     fun `does not handle stats URI with different host`() {
-        val statsUri = buildUri(host = "wordpress.org", path1 = "stats")
+        val statsUri = buildUri(host = "wordpress.org", "stats")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isFalse()
     }
 
     @Test
     fun `does not handle URI with different path`() {
-        val statsUri = buildUri(host = "wordpress.com", path1 = "post")
+        val statsUri = buildUri(host = "wordpress.com", "post")
 
-        val isStatsUri = statsLinkHandler.isStatsUrl(statsUri)
+        val isStatsUri = statsLinkHandler.shouldHandleUrl(statsUri)
 
         assertThat(isStatsUri).isFalse()
     }
 
     @Test
     fun `opens stats screen from empty URL`() {
-        val uri = buildUri(path1 = "stats")
+        val uri = buildUri(host = null, "stats")
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStats)
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStats)
     }
 
     @Test
     fun `opens stats screen from app link`() {
         val uri = buildUri(host = "stats")
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStats)
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStats)
     }
 
     @Test
     fun `opens stats screen for a site when URL ends with site URL`() {
         val siteUrl = "example.com"
-        val uri = buildUri(path1 = "stats", path2 = siteUrl)
+        val uri = buildUri(host = null, "stats", siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
     }
 
     @Test
@@ -102,12 +104,12 @@ class StatsLinkHandlerTest {
                 "insights" to INSIGHTS
         )
         timeframes.forEach { (key, timeframe) ->
-            val uri = buildUri(path1 = "stats", path2 = key, path3 = siteUrl)
+            val uri = buildUri(host = null, "stats", key, siteUrl)
             whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-            val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+            val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-            assertThat(buildOpenStatsNavigateAction).isEqualTo(
+            assertThat(buildNavigateAction).isEqualTo(
                     NavigateAction.OpenStatsForSiteAndTimeframe(
                             site,
                             timeframe
@@ -119,11 +121,47 @@ class StatsLinkHandlerTest {
     @Test
     fun `opens stats screen for a site when timeframe not valid`() {
         val siteUrl = "example.com"
-        val uri = buildUri(path1 = "stats", path2 = "invalid", path3 = siteUrl)
+        val uri = buildUri(host = null, "stats", "invalid", siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val buildOpenStatsNavigateAction = statsLinkHandler.buildOpenStatsNavigateAction(uri)
+        val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
 
-        assertThat(buildOpenStatsNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+        assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStatsForSite(site))
+    }
+
+    @Test
+    fun `strips applink with all params`() {
+        val uri = buildUri(host = "stats", "day", "example.com")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://stats/day/domain")
+    }
+
+    @Test
+    fun `strips applink without params`() {
+        val uri = buildUri("stats")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://stats")
+    }
+
+    @Test
+    fun `strips deeplink with all params`() {
+        val uri = buildUri(host = "wordpress.com", "stats", "day", "example.com")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/stats/day/domain")
+    }
+
+    @Test
+    fun `strips deeplink without params`() {
+        val uri = buildUri(host = "wordpress.com", "stats")
+
+        val strippedUrl = statsLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress.com/stats")
     }
 }
