@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.comments.CommentListViewHolder
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
@@ -13,7 +12,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCommentListItem, CommentListViewHolder>(
+class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
         diffCallback
 ) {
     @Inject lateinit var imageManager: ImageManager
@@ -23,7 +22,7 @@ class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCom
         (context.applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentListViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnifiedCommentListViewHolder<*> {
         return when (viewType) {
             SUB_HEADER.ordinal -> UnifiedCommentSubHeaderViewHolder(parent)
             COMMENT.ordinal -> UnifiedCommentViewHolder(parent, imageManager, uiHelpers)
@@ -31,7 +30,7 @@ class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCom
         }
     }
 
-    override fun onBindViewHolder(holder: CommentListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UnifiedCommentListViewHolder<*>, position: Int) {
         if (holder is UnifiedCommentSubHeaderViewHolder) {
             holder.bind((getItem(position) as SubHeader))
         } else if (holder is UnifiedCommentViewHolder) {
