@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.buildUri
 
 class EditorLinkHandlerTest : BaseUnitTest() {
     @Mock lateinit var deepLinkUriUtils: DeepLinkUriUtils
@@ -33,14 +35,14 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         post.setRemotePostId(remotePostId)
         post.setId(localPostId)
         toasts = mutableListOf()
-        editorLinkHandler.toast.observeForever { it?.getContentIfNotHandled()?.let { toast -> toasts.add(toast) } }
+        editorLinkHandler.toast().observeForever { it?.getContentIfNotHandled()?.let { toast -> toasts.add(toast) } }
     }
 
     @Test
     fun `handles post URI`() {
-        val postUri = buildUri(host = "wordpress.com", path1 = "post")
+        val postUri = buildUri(host = "wordpress.com", "post")
 
-        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+        val isEditorUri = editorLinkHandler.shouldHandleUrl(postUri)
 
         assertThat(isEditorUri).isTrue()
     }
@@ -49,34 +51,34 @@ class EditorLinkHandlerTest : BaseUnitTest() {
     fun `handles post app link`() {
         val postUri = buildUri(host = "post")
 
-        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+        val isEditorUri = editorLinkHandler.shouldHandleUrl(postUri)
 
         assertThat(isEditorUri).isTrue()
     }
 
     @Test
     fun `does not handle post URI with different host`() {
-        val postUri = buildUri(host = "wordpress.org", path1 = "post")
+        val postUri = buildUri(host = "wordpress.org", "post")
 
-        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+        val isEditorUri = editorLinkHandler.shouldHandleUrl(postUri)
 
         assertThat(isEditorUri).isFalse()
     }
 
     @Test
     fun `does not handle URI with different path`() {
-        val postUri = buildUri(host = "wordpress.com", path1 = "stats")
+        val postUri = buildUri(host = "wordpress.com", "stats")
 
-        val isEditorUri = editorLinkHandler.isEditorUrl(postUri)
+        val isEditorUri = editorLinkHandler.shouldHandleUrl(postUri)
 
         assertThat(isEditorUri).isFalse()
     }
 
     @Test
     fun `deeplink - opens editor and shows toast when site not found`() {
-        val uri = buildUri(path1 = "post", path2 = siteUrl)
+        val uri = buildUri(null, "post", siteUrl)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
         assertThat(toasts.last()).isEqualTo(R.string.blog_not_found)
@@ -84,10 +86,10 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `deeplink - opens editor for a site when post missing in URL`() {
-        val uri = buildUri(path1 = "post", path2 = siteUrl)
+        val uri = buildUri(host = null, "post", siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
         assertThat(toasts).isEmpty()
@@ -95,11 +97,11 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `deeplink - opens editor for a post when both site and post exist`() {
-        val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
+        val uri = buildUri(host = null, "post", siteUrl, remotePostId.toString())
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForPost(site, localPostId))
         assertThat(toasts).isEmpty()
@@ -107,14 +109,41 @@ class EditorLinkHandlerTest : BaseUnitTest() {
 
     @Test
     fun `deeplink - opens editor for a site and shows toast when post not found`() {
-        val uri = buildUri(path1 = "post", path2 = siteUrl, path3 = remotePostId.toString())
+        val uri = buildUri(host = null, "post", siteUrl, remotePostId.toString())
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
         assertThat(toasts.last()).isEqualTo(R.string.post_not_found)
+    }
+
+    @Test
+    fun `deeplink - strips full uri`() {
+        val uri = buildUri(host = null, "post", siteUrl, remotePostId.toString())
+
+        val strippedUri = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUri).isEqualTo("wordpress.com/post/domain/postId")
+    }
+
+    @Test
+    fun `deeplink - strips uri with site URL`() {
+        val uri = buildUri(host = null, "post", siteUrl)
+
+        val strippedUri = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUri).isEqualTo("wordpress.com/post/domain")
+    }
+
+    @Test
+    fun `deeplink - strips uri without params`() {
+        val uri = buildUri(null, "post")
+
+        val strippedUri = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUri).isEqualTo("wordpress.com/post/")
     }
 
     @Test
@@ -124,7 +153,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
                 queryParam1 = "blogId" to blogId
         )
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditor)
         assertThat(toasts.last()).isEqualTo(R.string.blog_not_found)
@@ -138,7 +167,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         )
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
         assertThat(toasts).isEmpty()
@@ -152,7 +181,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         )
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
         assertThat(toasts).isEmpty()
@@ -168,7 +197,7 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(post)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForPost(site, localPostId))
         assertThat(toasts).isEmpty()
@@ -184,9 +213,45 @@ class EditorLinkHandlerTest : BaseUnitTest() {
         whenever(deepLinkUriUtils.blogIdToSite(blogId)).thenReturn(site)
         whenever(postStore.getPostByRemotePostId(remotePostId, site)).thenReturn(null)
 
-        val navigateAction = editorLinkHandler.buildOpenEditorNavigateAction(uri)
+        val navigateAction = editorLinkHandler.buildNavigateAction(uri)
 
         assertThat(navigateAction).isEqualTo(NavigateAction.OpenEditorForSite(site))
         assertThat(toasts.last()).isEqualTo(R.string.post_not_found)
+    }
+
+    @Test
+    fun `applink - strips full uri`() {
+        val uri = buildUri(
+                host = "post",
+                queryParam1 = "blogId" to blogId,
+                queryParam2 = "postId" to remotePostId.toString()
+        )
+
+        val strippedUrl = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://post?blogId=blogId&postId=postId")
+    }
+
+    @Test
+    fun `applink - strips uri with blog ID`() {
+        val uri = buildUri(
+                host = "post",
+                queryParam1 = "blogId" to blogId
+        )
+
+        val strippedUrl = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://post?blogId=blogId")
+    }
+
+    @Test
+    fun `applink - strips uri without params`() {
+        val uri = buildUri(
+                host = "post"
+        )
+
+        val strippedUrl = editorLinkHandler.stripUrl(uri)
+
+        assertThat(strippedUrl).isEqualTo("wordpress://post")
     }
 }
