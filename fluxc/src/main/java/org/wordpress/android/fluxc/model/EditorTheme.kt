@@ -18,7 +18,6 @@ const val MAP_KEY_ELEMENT_SLUG: String = "slug"
 const val MAP_KEY_ELEMENT_COLORS: String = "colors"
 const val MAP_KEY_ELEMENT_GRADIENTS: String = "gradients"
 const val MAP_KEY_ELEMENT_STYLES: String = "rawStyles"
-const val MAP_KEY_ELEMENT_FEATURES: String = "rawFeatures"
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
@@ -29,8 +28,7 @@ data class EditorTheme(
             themeSupport = EditorThemeSupport(
                     blockEditorSettings.colors,
                     blockEditorSettings.gradients,
-                    blockEditorSettings.styles.toString(),
-                    blockEditorSettings.features.toString()
+                    blockEditorSettings.styles.toString()
             ),
             stylesheet = null,
             version = null
@@ -42,7 +40,6 @@ data class EditorTheme(
         element.stylesheet = stylesheet
         element.version = version
         element.rawStyles = themeSupport.rawStyles
-        element.rawFeatures = themeSupport.rawFeatures
 
         return element
     }
@@ -59,7 +56,6 @@ data class EditorTheme(
 data class BlockEditorSettings(
     @SerializedName("__unstableEnableFullSiteEditingBlocks") val isFSETheme: Boolean,
     @SerializedName("__experimentalStyles") val styles: JsonElement?,
-    @SerializedName("__experimentalFeatures") val features: JsonElement?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val colors: List<EditorThemeElement>?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val gradients: List<EditorThemeElement>?
 )
@@ -71,8 +67,7 @@ data class EditorThemeSupport(
     @JsonAdapter(EditorThemeElementListSerializer::class)
     @SerializedName("editor-gradient-presets")
     val gradients: List<EditorThemeElement>?,
-    val rawStyles: String?,
-    val rawFeatures: String?
+    val rawStyles: String?
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
@@ -87,10 +82,6 @@ data class EditorThemeSupport(
 
         rawStyles?.let {
             bundle.putString(MAP_KEY_ELEMENT_STYLES, it)
-        }
-
-        rawFeatures?.let {
-            bundle.putString(MAP_KEY_ELEMENT_FEATURES, it)
         }
 
         return bundle
