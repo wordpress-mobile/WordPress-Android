@@ -98,7 +98,6 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     fun `copyingSomeMediaFailed is set to false on success`() = test {
         // Arrange
         val uris = listOf<Uri>(mock(), mock(), mock())
-        // val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[0] to mock()))
         // Act
         val result = createCopyMediaToAppStorageUseCase()
                 .copyFilesToAppStorageIfNecessary(uris)
