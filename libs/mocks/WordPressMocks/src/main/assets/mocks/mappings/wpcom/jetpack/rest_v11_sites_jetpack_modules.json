@@ -1,0 +1,479 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/rest/v1.1/sites/([0-9]+)/jetpack/modules(/)?($|\\?.*)",
+    "queryParameters": {
+      "locale": {
+        "matches": "(.*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "modules": [{
+        "id": "carousel",
+        "active": false,
+        "name": "Carousel",
+        "description": "With Carousel active, any standard WordPress galleries or single images you have embedded in posts or pages will\n\t\tlaunch a full-screen photo browsing experience with comments and EXIF metadata.",
+        "sort": 22,
+        "introduced": "1.5",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Photos and Videos"],
+        "override": ""
+      }, {
+        "id": "comment-likes",
+        "active": false,
+        "name": "Comment Likes",
+        "description": "Increase visitor engagement by adding a Like button to comments.",
+        "sort": 39,
+        "introduced": "5.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social"],
+        "override": ""
+      }, {
+        "id": "comments",
+        "active": false,
+        "name": "Comments",
+        "description": "Allow visitors to use their WordPress.com, Twitter, or Facebook accounts when commenting on\n\t\tyour site. Jetpack will match your site&#039;s color scheme automatically (but you can adjust that).",
+        "sort": 20,
+        "introduced": "1.4",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social"],
+        "override": ""
+      }, {
+        "id": "contact-form",
+        "active": true,
+        "name": "Contact Form",
+        "description": "Create simple contact forms without any coding. You can have multiple forms and when\n\t\ta user submits it, their feedback will be emailed directly to you. If Akismet is active, submissions will be\n\t\tautomatically filtered for spam.",
+        "sort": 15,
+        "introduced": "1.3",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "copy-post",
+        "active": false,
+        "name": "Copy Post",
+        "description": "Create a new post based on an existing post.",
+        "sort": 15,
+        "introduced": "7.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "custom-content-types",
+        "active": false,
+        "name": "Custom content types",
+        "description": "Add and organize content that doesn\u2019t necessarily fit into a post or static page such as portfolios\n\t\tor testimonials. Custom\tcontent can be visible at specific URLs, or you may add them with shortcodes.",
+        "sort": 34,
+        "introduced": "3.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "custom-css",
+        "active": false,
+        "name": "Custom CSS",
+        "description": "Add to or replace your theme&#039;s CSS including mobile styles, LESS, and SaSS.\n\t\tIncludes syntax coloring, auto-indentation, and immediate CSS validation.",
+        "sort": 2,
+        "introduced": "1.7",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Appearance"],
+        "override": ""
+      }, {
+        "id": "enhanced-distribution",
+        "active": true,
+        "name": "Enhanced Distribution",
+        "description": "Jetpack will automatically take your great published content and share it instantly with third-party services\n\t\tlike search engines, increasing your reach and traffic.",
+        "sort": 5,
+        "introduced": "1.2",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "google-analytics",
+        "active": false,
+        "name": "Google Analytics",
+        "description": "Track website statistics with Google Analytics for a deeper understanding of your website visitors and customers.",
+        "sort": 37,
+        "introduced": "4.5",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "gravatar-hovercards",
+        "active": false,
+        "name": "Gravatar Hovercards",
+        "description": "Enhance plain Gravatar images with information about a person (including a name,\n\t\tbio, pictures, and contact info) when they leave a comment on one of your posts.",
+        "sort": 11,
+        "introduced": "1.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social", "Appearance"],
+        "override": ""
+      }, {
+        "id": "infinite-scroll",
+        "active": false,
+        "name": "Infinite Scroll",
+        "description": "Infinite scrolling pulls the next set of posts automatically into view when the reader approaches\n\t\tthe bottom of the page. This helps you reader see more of your content.",
+        "sort": 26,
+        "introduced": "2.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Appearance"],
+        "override": ""
+      }, {
+        "id": "json-api",
+        "active": true,
+        "name": "JSON API",
+        "description": "Authorize applications and services to securely connect to your site. Developers can use WordPress.com&#039;s OAuth2\n\t\tauthentication system and WordPress.com REST API to manage and access your site&#039;s content.",
+        "sort": 19,
+        "introduced": "1.9",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing", "Developers"],
+        "override": ""
+      }, {
+        "id": "latex",
+        "active": false,
+        "name": "Beautiful Math",
+        "description": "LaTeX is a powerful markup language for writing complex mathematical equations and formulas.\n\t\tJetpack combines the power of LaTeX and the simplicity of WordPress to give you the ultimate\n\t\tin math blogging platforms. Use $latex your latex code here$ or [latex]your latex code here[\/latex]\n\t\tto include  in your posts and comments. Enjoy all sorts of options and embrace your inner nerd.",
+        "sort": 12,
+        "introduced": "1.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "lazy-images",
+        "active": false,
+        "name": "Lazy Images",
+        "description": "Improve your site&#039;s speed by only loading images visible on the screen.\n\t\tNew images will load just before they scroll into view. This prevents viewers\n\t\tfrom having to download all the images on a page all at once, even ones they can&#039;t see.",
+        "sort": 24,
+        "introduced": "5.6.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Appearance", "Recommended"],
+        "override": ""
+      }, {
+        "id": "likes",
+        "active": false,
+        "name": "Likes",
+        "description": "Allow your readers to show their appreciation for your posts and other content. Likes show up\n\t\tbelow each post and your readers will also be able to review their liked posts from WordPress.com.",
+        "sort": 23,
+        "introduced": "2.2",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social"],
+        "override": ""
+      }, {
+        "id": "markdown",
+        "active": false,
+        "name": "Markdown",
+        "description": "Compose posts and comments with links, lists, and other styles using regular characters and\n\t\tpunctuation marks. A quick and easy way to format text without needing any HTML or coding.",
+        "sort": 31,
+        "introduced": "2.8",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "masterbar",
+        "active": false,
+        "name": "WordPress.com Toolbar and Dashboard customizations",
+        "description": "Quickly access your Stats, Notifications, Posts and more on WordPress.com.\n\t\tThe Toolbar is displayed for any user on the site that is connected to WordPress.com.",
+        "sort": 38,
+        "introduced": "4.8",
+        "changed": "",
+        "free": true,
+        "module_tags": ["General"],
+        "override": ""
+      }, {
+        "id": "monitor",
+        "active": false,
+        "name": "Monitor",
+        "description": "Jetpack checks your site every five minutes and if any downtime is detected you will receive an email\n\t\tnotification alerting you to the issue, so you can act quickly and get your site back online.",
+        "sort": 28,
+        "introduced": "2.6",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Recommended"],
+        "override": ""
+      }, {
+        "id": "notes",
+        "active": true,
+        "name": "Notifications",
+        "description": "You will receive instant notifications in your dashboard or your mobile device when somebody comments\n\t\ton any of your sites. Reply directly wherever you are to keep the conversation going.",
+        "sort": 13,
+        "introduced": "1.9",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "photon-cdn",
+        "active": false,
+        "name": "Asset CDN",
+        "description": "Our asset CDN is a site acceleration service.\n\t\tThat means that we host static assets like JavaScript and CSS shipped with WordPress Core and Jetpack from our servers, alleviating the load on your server.",
+        "sort": 26,
+        "introduced": "6.6",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Photos and Videos", "Appearance", "Recommended"],
+        "override": ""
+      }, {
+        "id": "photon",
+        "active": false,
+        "name": "Image CDN",
+        "description": "Jetpack will optimize your images and serve them from the server location nearest\n\t\tto your visitors. Using our global content delivery network will boost the loading speed of your site.",
+        "sort": 25,
+        "introduced": "2.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Photos and Videos", "Appearance", "Recommended"],
+        "override": ""
+      }, {
+        "id": "post-by-email",
+        "active": false,
+        "name": "Post by email",
+        "description": "Publish posts on your site by writing and sending an email from any email client instead of using the post editor.",
+        "sort": 14,
+        "introduced": "2.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Writing"],
+        "override": ""
+      }, {
+        "id": "protect",
+        "active": true,
+        "name": "Protect",
+        "description": "Most sites will come under attack from automated bots that attempt to log in for malicious purposes.\n\t\tWe protect you automatically from unauthorized access by using data from millions of sites.",
+        "sort": 1,
+        "introduced": "3.4",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Recommended"],
+        "override": ""
+      }, {
+        "id": "publicize",
+        "active": false,
+        "name": "Publicize",
+        "description": "Automatically share and promote newly published posts to Facebook, Twitter, Tumblr,\n\t\tand LinkedIn. You can add connections for yourself or for all users on your site.",
+        "sort": 10,
+        "introduced": "2.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social", "Recommended"],
+        "override": ""
+      }, {
+        "id": "related-posts",
+        "active": false,
+        "name": "Related posts",
+        "description": "Show visitors related content from your site at the bottom of your posts. This encourages them\n\t\tto browse more content, explore your site, and transform them into regular readers.",
+        "sort": 29,
+        "introduced": "2.9",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Recommended"],
+        "override": ""
+      }, {
+        "id": "search",
+        "active": false,
+        "name": "Search",
+        "description": "Help visitors quickly find answers with highly relevant instant search results and powerful filtering.",
+        "sort": 34,
+        "introduced": "5.0",
+        "changed": "",
+        "free": false,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "seo-tools",
+        "active": false,
+        "name": "SEO Tools",
+        "description": "Better results on search engines and social media.",
+        "sort": 35,
+        "introduced": "4.4",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social", "Appearance"],
+        "override": ""
+      }, {
+        "id": "sharedaddy",
+        "active": false,
+        "name": "Sharing",
+        "description": "Visitors can share your posts with Twitter, Facebook, Reddit, Digg, LinkedIn, Google+, print,\n\t\tand email. You can configure services to appear as icons, text, or both and some services like Twitter\n\t\thave additional options.",
+        "sort": 7,
+        "introduced": "1.1",
+        "changed": "1.2",
+        "free": true,
+        "module_tags": ["Social", "Recommended"],
+        "override": ""
+      }, {
+        "id": "shortcodes",
+        "active": false,
+        "name": "Shortcode Embeds",
+        "description": "Easily and safely embed media from YouTube, Facebook, Flickr, Vimeo, Instagram,\n\t\tGoogle Maps, SlideShare, Vine, SoundCloud, and more. Just enter the appropriate shortcode directly into the\n\t\teditor and click \u201cPublish.\u201d",
+        "sort": 3,
+        "introduced": "1.1",
+        "changed": "1.2",
+        "free": true,
+        "module_tags": ["Photos and Videos", "Social", "Writing", "Appearance"],
+        "override": ""
+      }, {
+        "id": "shortlinks",
+        "active": false,
+        "name": "WP.me Shortlinks",
+        "description": "Grab short and simple links to your posts and pages using the compact wp.me domain name. Perfect\n\t\tfor use on Twitter, Facebook, and in text messages where every character counts.",
+        "sort": 8,
+        "introduced": "1.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social"],
+        "override": ""
+      }, {
+        "id": "sitemaps",
+        "active": false,
+        "name": "Sitemaps",
+        "description": "Automatically create two sitemap files that list the URLs of posts and pages in your site.\n\t\tThis makes it easier for search engines (like Google) to include your site in relevant search results.",
+        "sort": 13,
+        "introduced": "3.9",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Recommended", "Traffic"],
+        "override": ""
+      }, {
+        "id": "sso",
+        "active": false,
+        "name": "Secure Sign On",
+        "description": "Your users will be able to log in to your site with their WordPress.com account.\n\t\tThis includes two-factor authentication making it the safest login mechanism for your site.",
+        "sort": 30,
+        "introduced": "2.6",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Developers"],
+        "override": ""
+      }, {
+        "id": "stats",
+        "active": true,
+        "name": "Site Stats",
+        "description": "Simple and concise statistics about your traffic. Jetpack collects data about pageviews, likes, comments,\n\t\tlocations, and top posts. View them in your dashboard or on WordPress.com.",
+        "sort": 1,
+        "introduced": "1.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Site Stats", "Recommended"],
+        "override": ""
+      }, {
+        "id": "subscriptions",
+        "active": false,
+        "name": "Subscriptions",
+        "description": "A widget in your sidebar allows visitors to subscribe to your site so that they receive an email\n\t\teach time you publish new content. Your visitors can also subscribe to a post&#039;s comments to keep up with the conversation.",
+        "sort": 9,
+        "introduced": "1.2",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social"],
+        "override": ""
+      }, {
+        "id": "tiled-gallery",
+        "active": false,
+        "name": "Tiled Galleries",
+        "description": "When adding an image gallery, you will have the option to create elegant magazine-style mosaic layouts for your photos,\n\t\tincluding mosaic (default), square, and circular layouts.",
+        "sort": 24,
+        "introduced": "2.1",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Photos and Videos"],
+        "override": ""
+      }, {
+        "id": "vaultpress",
+        "active": false,
+        "name": "Backups and Scanning",
+        "description": "We keep a daily or real-time backup of your site so that when mistakes or accidents occur, restoring your\n\t\tsite to any location takes a matter of minutes. Your site\u2019s files are regularly scanned for unauthorized or\n\t\tsuspicious modifications that could compromise your security and data. In many cases, we can fix them\n\t\tautomatically (and will notify you). When we can\u2019t, we provide you with expert support.",
+        "sort": 32,
+        "introduced": "0:1.2",
+        "changed": "",
+        "free": false,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "verification-tools",
+        "active": true,
+        "name": "Site verification",
+        "description": "Verify your site ownership with services like Google, Bing, Pinterest, and Yandex. This gives you access to\n\t\tadvanced features on these services and get verification badges.",
+        "sort": 33,
+        "introduced": "3.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Other"],
+        "override": ""
+      }, {
+        "id": "videopress",
+        "active": false,
+        "name": "VideoPress",
+        "description": "The easiest way to upload ad-free and unbranded videos to your site. You get stats on video\n\t\tplayback and shares and the player is lightweight and responsive.",
+        "sort": 27,
+        "introduced": "2.5",
+        "changed": "",
+        "free": false,
+        "module_tags": ["Photos and Videos"],
+        "override": ""
+      }, {
+        "id": "widget-visibility",
+        "active": false,
+        "name": "Widget Visibility",
+        "description": "Choose from a set of visibility options for sidebar widgets such as showing them only certain categories,\n\t\tonly on error pages, or only search results pages. You can also do the reverse and choose to hide them on certain pages.",
+        "sort": 17,
+        "introduced": "2.4",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Appearance"],
+        "override": ""
+      }, {
+        "id": "widgets",
+        "active": false,
+        "name": "Extra Sidebar Widgets",
+        "description": "Add as many custom widgets as you like by dragging and dropping and customize each to fit your needs,\n\t\tincluding, Twitter streams, Facebook like boxes, custom images, Gravatars, tiled galleries, recent posts,\n\t\tor social icons.",
+        "sort": 4,
+        "introduced": "1.2",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Social", "Appearance"],
+        "override": ""
+      }, {
+        "id": "woocommerce-analytics",
+        "active": true,
+        "name": "WooCommerce Analytics",
+        "description": "Enhanced analytics for WooCommerce and Jetpack users.",
+        "sort": 13,
+        "introduced": "8.4",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Other", "Recommended"],
+        "override": ""
+      }, {
+        "id": "wordads",
+        "active": false,
+        "name": "Ads",
+        "description": "By default ads are shown at the end of every page, post, or the first article on your front page. You can also add them to the top of your site and to any widget area to increase your earnings!",
+        "sort": 1,
+        "introduced": "4.5.0",
+        "changed": "",
+        "free": true,
+        "module_tags": ["Traffic", "Appearance"],
+        "override": ""
+      }]
+    }
+  }
+}

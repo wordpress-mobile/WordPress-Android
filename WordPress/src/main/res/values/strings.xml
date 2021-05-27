@@ -2107,6 +2107,7 @@
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
+    <string name="my_site_btn_unified_comments" translatable="false">Unified Comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
@@ -2702,7 +2703,7 @@
     <string name="login_not_a_jetpack_site">To use this app for %1$s you\'ll need to have the Jetpack plugin installed and connected to your WordPress.com account.</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="login_empty_view_avatar_content_description">Your profile photo</string>
-    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your Wordpress account.</string>
+    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
 

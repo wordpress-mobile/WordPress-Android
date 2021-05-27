@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-05 21:04:47+0000
+Translation-Revision-Date: 2021-05-19 07:26:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
     <string name="gutenberg_native_size">Μέγεθος</string>
-    <string name="gutenberg_native_post_link">Σύνδεσμος Άρθρου</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_media_settings">Ρυθμίσεις Πολυμέσων</string>
-    <string name="gutenberg_native_link_to_s">Σύνδεσμος σε %s</string>
-    <string name="gutenberg_native_link_rel">rel Συνδέσμου</string>
     <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
-    <string name="gutenberg_native_format_settings">Ρυθμίσεις μορφής</string>
-    <string name="gutenberg_native_five">Πέντε.</string>
-    <string name="gutenberg_native_description">περιγραφή</string>
     <string name="gutenberg_native_audio_settings">Ρυθμίσεις ήχου</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
@@ -41,8 +34,6 @@ Language: el_GR
     <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
     <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
     <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
-    <string name="gutenberg_native_move_image_forward_c0288724">Μετακίνηση εικόνας εμπρός</string>
-    <string name="gutenberg_native_move_image_backward_e334ca63">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_replace_image">Αντικατάσταση εικόνας</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
@@ -58,13 +49,10 @@ Language: el_GR
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_title">τίτλος</string>
-    <string name="gutenberg_native_six">Μέγεθος</string>
     <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
-    <string name="gutenberg_native_contact">Επικοινωνία</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -1265,8 +1253,4 @@ Language: el_GR
     <string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>
     <string name="on">ενεργό</string>
     <string name="notification_settings">Ρυθμίσεις Ειδοποιήσεων</string>
-    <string-array name="gutenberg_native_s_comment">
-        <item>%s σχόλιο</item>
-        <item>%s σχόλια</item>
-    </string-array>
 </resources>
