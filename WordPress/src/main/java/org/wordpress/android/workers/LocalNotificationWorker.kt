@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ListenableWorker
@@ -22,46 +21,48 @@ class LocalNotificationWorker(
 ) : CoroutineWorker(context, params) {
     @Suppress("TooGenericExceptionCaught")
     override suspend fun doWork(): Result {
-        try {
-            val type = Type.fromTag(inputData.getString(TYPE))
-            val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
+        val id = inputData.getInt(ID, -1)
 
-            val id = inputData.getInt(ID, -1)
-            val title = inputData.getInt(TITLE, -1)
-            val text = inputData.getInt(TEXT, -1)
-            val icon = inputData.getInt(ICON, -1)
+        if (id == -1) return Result.failure()
 
-            val pendingIntent = PendingIntent.getActivity(
-                    context,
-                    0,
-                    handler?.buildIntent(context),
-                    PendingIntent.FLAG_CANCEL_CURRENT
-            )
-            val builder = NotificationCompat.Builder(
-                    context,
-                    context.getString(R.string.notification_channel_normal_id)
-            )
-                    .setContentIntent(pendingIntent)
-                    .setSmallIcon(icon)
-                    .setContentTitle(context.getString(title))
-                    .setContentText(context.getString(text))
-                    .addAction(R.drawable.ic_story_icon_24dp, context.getString(R.string.cancel),
-                            pendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                    .setAutoCancel(true)
-                    .setColorized(true)
-                    .setColor(ContextCompat.getColor(context, R.color.blue_50))
-                    .setLargeIcon(ContextCompat.getDrawable(context, icon)?.toBitmap(ICON_WIDTH, ICON_HEIGHT))
-
-            with(NotificationManagerCompat.from(context)) {
-                notify(id, builder.build())
-            }
-
-            return Result.success()
-        } catch (e: Exception) {
-            return Result.failure()
+        with(NotificationManagerCompat.from(context)) {
+            notify(id, localNotificationBuilder().build())
         }
+
+        return Result.success()
+    }
+
+    private fun localNotificationBuilder(): NotificationCompat.Builder {
+        val title = inputData.getInt(TITLE, -1)
+        val text = inputData.getInt(TEXT, -1)
+        val icon = inputData.getInt(ICON, -1)
+        val actionIcon = inputData.getInt(ACTION_ICON, -1)
+        val actionTitle = inputData.getInt(ACTION_TITLE, -1)
+
+        return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_normal_id)).apply {
+            val pendingIntent = getPendingIntent()
+            setContentIntent(pendingIntent)
+            setSmallIcon(icon)
+            setContentTitle(context.getString(title))
+            setContentText(context.getString(text))
+            addAction(actionIcon, context.getString(actionTitle), pendingIntent)
+            priority = NotificationCompat.PRIORITY_DEFAULT
+            setCategory(NotificationCompat.CATEGORY_REMINDER)
+            setAutoCancel(true)
+            setColorized(true)
+            color = ContextCompat.getColor(context, R.color.blue_50)
+        }
+    }
+
+    private fun getPendingIntent(): PendingIntent {
+        val type = Type.fromTag(inputData.getString(TYPE))
+        val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
+        return PendingIntent.getActivity(
+                context,
+                0,
+                handler?.buildIntent(context),
+                PendingIntent.FLAG_CANCEL_CURRENT
+        )
     }
 
     class Factory(
@@ -86,15 +87,18 @@ class LocalNotificationWorker(
         private const val TITLE = "key_title"
         private const val TEXT = "key_text"
         private const val ICON = "key_icon"
-        private const val ICON_WIDTH = 100
-        private const val ICON_HEIGHT = 100
+        private const val ACTION_ICON = "key_action_icon"
+        private const val ACTION_TITLE = "key_action_title"
+
         fun buildData(localNotification: LocalNotification): Data {
             return workDataOf(
                     TYPE to localNotification.type.tag,
                     ID to localNotification.id,
                     TITLE to localNotification.title,
                     TEXT to localNotification.text,
-                    ICON to localNotification.icon
+                    ICON to localNotification.icon,
+                    ACTION_ICON to localNotification.actionIcon,
+                    ACTION_TITLE to localNotification.actionTitle
             )
         }
     }

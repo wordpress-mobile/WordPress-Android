@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +9,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.buildUri
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesLinkHandlerTest {
@@ -23,34 +25,34 @@ class PagesLinkHandlerTest {
 
     @Test
     fun `handles pages URI`() {
-        val pagesUri = buildUri(host = "wordpress.com", path1 = "pages")
+        val pagesUri = buildUri(host = "wordpress.com", "pages")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isTrue()
     }
 
     @Test
     fun `does not handle pages URI with different host`() {
-        val pagesUri = buildUri(host = "wordpress.org", path1 = "pages")
+        val pagesUri = buildUri(host = "wordpress.org", "pages")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isFalse()
     }
 
     @Test
     fun `does not handle URI with different path`() {
-        val pagesUri = buildUri(host = "wordpress.com", path1 = "post")
+        val pagesUri = buildUri(host = "wordpress.com", "post")
 
-        val isPagesUri = pagesLinkHandler.isPagesUrl(pagesUri)
+        val isPagesUri = pagesLinkHandler.shouldHandleUrl(pagesUri)
 
         assertThat(isPagesUri).isFalse()
     }
 
     @Test
     fun `opens pages screen from empty URL`() {
-        val uri = buildUri(path1 = "pages")
+        val uri = buildUri(host = null, "pages")
 
         val navigateAction = pagesLinkHandler.buildNavigateAction(uri)
 
@@ -60,7 +62,7 @@ class PagesLinkHandlerTest {
     @Test
     fun `opens pages screen for a site when URL ends with site URL`() {
         val siteUrl = "example.com"
-        val uri = buildUri(path1 = "pages", path2 = siteUrl)
+        val uri = buildUri(host = null, "pages", siteUrl)
         whenever(uri.lastPathSegment).thenReturn(siteUrl)
         whenever(deepLinkUriUtils.hostToSite(siteUrl)).thenReturn(site)
 
