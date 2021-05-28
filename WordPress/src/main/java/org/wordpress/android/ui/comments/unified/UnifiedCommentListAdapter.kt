@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class UnifiedCommentListAdapter(context: Context) :
         PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
-        diffCallback
+        DIFF_CALLBACK
 ) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -44,6 +44,6 @@ class UnifiedCommentListAdapter(context: Context) :
     }
 
     companion object {
-        private val diffCallback = UnifiedCommentsListDiffCallback()
+        private val DIFF_CALLBACK = UnifiedCommentsListDiffCallback()
     }
 }
