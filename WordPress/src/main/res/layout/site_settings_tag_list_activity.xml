@@ -26,7 +26,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-            android:id="@+id/recycler"
+            android:id="@+id/tags_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
