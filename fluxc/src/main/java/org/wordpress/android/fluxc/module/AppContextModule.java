@@ -2,9 +2,6 @@ package org.wordpress.android.fluxc.module;
 
 import android.content.Context;
 
-import org.wordpress.android.fluxc.persistence.BloggingRemindersDao;
-import org.wordpress.android.fluxc.persistence.WPAndroidDatabase;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -22,17 +19,5 @@ public class AppContextModule {
     @Provides
     Context providesContext() {
         return mAppContext;
-    }
-
-    @Singleton
-    @Provides
-    WPAndroidDatabase provideDatabase(Context context){
-        return WPAndroidDatabase.Companion.buildDb(context);
-    }
-
-    @Singleton
-    @Provides
-    BloggingRemindersDao provideBloggingRemindersDao(WPAndroidDatabase wpAndroidDatabase) {
-        return wpAndroidDatabase.bloggingRemindersDao();
     }
 }

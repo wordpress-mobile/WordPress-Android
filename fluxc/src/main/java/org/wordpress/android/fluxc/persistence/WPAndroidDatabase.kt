@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingRemi
 
 @Database(entities = [BloggingReminders::class], version = 1)
 abstract class WPAndroidDatabase : RoomDatabase() {
-    abstract fun bloggingRemindersDao(): BloggingRemindersDao?
+    abstract fun bloggingRemindersDao(): BloggingRemindersDao
 
     companion object {
         fun buildDb(applicationContext: Context) = Room.databaseBuilder(
