@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.THURSDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.TUESDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
-import org.wordpress.android.fluxc.persistence.BloggingRemindersSqlUtils.BloggingReminders
+import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
 import javax.inject.Inject
 
 class BloggingRemindersMapper
