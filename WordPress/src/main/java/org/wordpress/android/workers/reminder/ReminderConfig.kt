@@ -3,6 +3,8 @@ package org.wordpress.android.workers.reminder
 import org.wordpress.android.workers.reminder.ReminderConfig.ReminderType.DAILY
 import org.wordpress.android.workers.reminder.ReminderConfig.ReminderType.WEEKLY
 import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters.next
 
 sealed class ReminderConfig(val type: ReminderType) {
     object DailyReminder : ReminderConfig(DAILY)
@@ -17,6 +19,14 @@ sealed class ReminderConfig(val type: ReminderType) {
     enum class ReminderType {
         DAILY, WEEKLY
     }
+
+    // TODO Use site timezone instead of local time
+    fun calculateNext(from: LocalDate = LocalDate.now()): LocalDate = when (this) {
+        is DailyReminder -> from.plusDays(1)
+        is WeeklyReminder -> from.withNextDayOfWeekFrom(days)!! // We know the set won't be empty
+    }
+
+    private fun LocalDate.withNextDayOfWeekFrom(days: Set<DayOfWeek>) = days.map { with(next(it)) }.minOrNull()
 
     fun toMap() = mapOf(
             REMINDER_TYPE to type.name,

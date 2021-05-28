@@ -5,13 +5,8 @@ import androidx.work.ExistingWorkPolicy.REPLACE
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.wordpress.android.viewmodel.ContextProvider
-import org.wordpress.android.workers.reminder.ReminderConfig.DailyReminder
-import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
-import java.time.DayOfWeek
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.TemporalAdjusters.next
 import java.util.UUID
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
@@ -21,10 +16,10 @@ class ReminderScheduler @Inject constructor(
 ) {
     val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
 
-    fun schedule(siteId: Long, reminderConfig: ReminderConfig): LocalDateTime {
+    fun schedule(siteId: Long, reminderConfig: ReminderConfig) {
         val uniqueName = getUniqueName(siteId)
-        val dateTime = calculateDate(reminderConfig).atTime(8, 0)
-        val initialDelay = Duration.between(LocalDateTime.now(), dateTime)
+        val next = reminderConfig.calculateNext().atTime(8, 0)
+        val delay = Duration.between(LocalDateTime.now(), next)
         val inputData = Data.Builder()
                 .putLong(REMINDER_SITE_ID, siteId)
                 .putAll(reminderConfig.toMap())
@@ -32,24 +27,12 @@ class ReminderScheduler @Inject constructor(
 
         val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
                 .addTag(REMINDER_TAG)
-                .setInitialDelay(initialDelay.toMillis(), MILLISECONDS)
+                .setInitialDelay(delay.toMillis(), MILLISECONDS)
                 .setInputData(inputData)
                 .build()
 
         workManager.enqueueUniqueWork(uniqueName, REPLACE, workRequest)
-
-        return dateTime
     }
-
-    // TODO Use site timezone instead of local time
-    private fun calculateDate(reminderConfig: ReminderConfig) = LocalDate.now().let { today ->
-        when (reminderConfig) {
-            is DailyReminder -> today.plusDays(1)
-            is WeeklyReminder -> today.withNextDayOfWeekFrom(reminderConfig.days)
-        }
-    }
-
-    private fun LocalDate.withNextDayOfWeekFrom(days: Set<DayOfWeek>) = days.map { with(next(it)) }.minOrNull()!!
 
     fun cancelById(id: UUID) = workManager.cancelWorkById(id)
 
