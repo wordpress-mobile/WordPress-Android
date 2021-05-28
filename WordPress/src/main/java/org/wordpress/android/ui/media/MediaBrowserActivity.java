@@ -63,7 +63,6 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -508,8 +507,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.GIF_PICKER_SINGLE_SELECT:
             case RequestCodes.GIF_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK
-                    && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                    int[] mediaLocalIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    && data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                    int[] mediaLocalIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
 
                     ArrayList<MediaModel> mediaModels = new ArrayList<>();
                     for (int localId : mediaLocalIds) {

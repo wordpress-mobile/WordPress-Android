@@ -49,7 +49,6 @@ import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
@@ -529,8 +528,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeServiceAdapter object);
 
     void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
-
-    void inject(GifPickerActivity object);
 
     void inject(PlansListAdapter object);
 
