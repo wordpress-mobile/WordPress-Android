@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 151
+        return 152
     }
 
     override fun getDbName(): String {
@@ -1762,6 +1762,13 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "USERNAME TEXT," +
                                     "EMAIL TEXT," +
                                     "ROLES TEXT)"
+                    )
+                }
+                151 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE BloggingReminders (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER,MONDAY INTEGER,TUESDAY INTEGER,WEDNESDAY INTEGER," +
+                                    "THURSDAY INTEGER,FRIDAY INTEGER,SATURDAY INTEGER,SUNDAY INTEGER)"
                     )
                 }
             }
