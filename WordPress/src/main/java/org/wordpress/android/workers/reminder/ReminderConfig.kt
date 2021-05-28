@@ -33,11 +33,15 @@ sealed class ReminderConfig(val type: ReminderType) {
 
         fun fromMap(map: Map<String, Any?>): ReminderConfig {
             val type: ReminderType = (map[REMINDER_TYPE] as? String)
-                    ?.let { ReminderType.valueOf(it) }
+                    ?.let {
+                        runCatching { ReminderType.valueOf(it) }.getOrNull()
+                    }
                     ?: DAILY
             val days: Set<DayOfWeek> = (map[REMINDER_DAYS] as? String)
                     ?.split(DAYS_SEPARATOR)
-                    ?.map { DayOfWeek.valueOf(it) }
+                    ?.mapNotNull {
+                        runCatching { DayOfWeek.valueOf(it) }.getOrNull()
+                    }
                     ?.toSet()
                     .orEmpty()
             return when (type) {
