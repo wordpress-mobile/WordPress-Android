@@ -31,7 +31,7 @@ sealed class ReminderConfig(val type: ReminderType) {
         private const val REMINDER_DAYS = "reminder_days"
         private const val DAYS_SEPARATOR = ","
 
-        fun fromMap(map: Map<String, Any>): ReminderConfig {
+        fun fromMap(map: Map<String, Any?>): ReminderConfig {
             val type: ReminderType = (map[REMINDER_TYPE] as? String)
                     ?.let { ReminderType.valueOf(it) }
                     ?: DAILY
