@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-12 12:54:54+0000
+Translation-Revision-Date: 2021-05-27 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Zum Hinzufügen eines Links zweimal tippen</string>
+    <string name="gutenberg_native_add_link">LINK HINZUFÜGEN</string>
+    <string name="login_empty_view_try_another_account">Mit einem anderen Konto probieren</string>
+    <string name="login_empty_view_see_instructions">Anweisungen anzeigen</string>
+    <string name="login_no_jetpack_sites_error_message">Wenn du bereits eine Website hast, musst du das kostenlose Jetpack-Plugin installieren und deinen Store mit deinem WordPress-Konto verbinden.</string>
+    <string name="login_empty_view_avatar_content_description">Dein Profilfoto</string>
+    <string name="login_not_a_jetpack_site">Um diese App für %1$s zu verwenden, muss das Jetpack-Plugin installiert und mit einem WordPress.com-Konto verbunden sein.</string>
     <string name="gutenberg_native_audio_settings">Audio-Einstellungen</string>
     <string name="gutenberg_native_image_settings">Bild-Einstellungen</string>
     <string name="gutenberg_native_size">Größe</string>
+    <string name="gutenberg_native_move_image_backward">Bild nach hinten verschieben</string>
+    <string name="gutenberg_native_move_image_forward">Bild nach vorne verschieben</string>
     <string name="user_profile_site_section_header">Website</string>
     <string name="user_profile_untitled_site">(Ohne Titel)</string>
     <string name="user_profile_bottom_sheet_description">Benutzerprofil Bottom Sheet-Informationen</string>
@@ -42,6 +51,7 @@ Language: de
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Block wurde gelöscht oder ist nicht verfügbar.</string>
     <string name="gutenberg_native_add_text">Text hinzufügen…</string>
     <string name="gutenberg_native_add_caption">Überschrift hinzufügen</string>
+    <string name="login_no_jetpack_sites">Keine Jetpack-Websites gefunden</string>
     <string name="gutenberg_native_what_is_alt_text">Was ist Alt-Text?</string>
     <string name="gutenberg_native_transform_s_to">%s umwandeln in</string>
     <string name="gutenberg_native_transform_block">Block umwandeln …</string>
@@ -737,6 +747,7 @@ Language: de
     <string name="new_site_creation_creating_site_loading_1">Die Website-URL wird abgerufen</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Deine Website wird in Kürze bereit sein</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nFast geschafft</string>
+    <string name="gutenberg_native_block_settings">Blockeinstellungen</string>
     <string name="pages_and_posts_cancel_auto_upload">Upload abbrechen</string>
     <string name="gif_list_search_returned_unknown_error">Beim Verarbeiten der Anfrage ist ein Problem aufgetreten</string>
     <string name="gif_powered_by_tenor">Bereitgestellt von Tenor</string>

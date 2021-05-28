@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-13 09:54:08+0000
+Translation-Revision-Date: 2021-05-27 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">按兩下以新增連結。</string>
+    <string name="gutenberg_native_add_link">新增連結</string>
+    <string name="login_empty_view_try_another_account">嘗試其他帳號</string>
+    <string name="login_empty_view_see_instructions">查看說明</string>
+    <string name="login_no_jetpack_sites_error_message">若你已擁有網站，則需要安裝免費 Jetpack 外掛程式，並連結你的 WordPress 帳號。</string>
+    <string name="login_empty_view_avatar_content_description">你的個人檔案照片</string>
+    <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
     <string name="gutenberg_native_audio_settings">音訊設定</string>
     <string name="gutenberg_native_image_settings">圖片設定</string>
     <string name="gutenberg_native_size">尺寸</string>
@@ -42,6 +49,7 @@ Language: zh_TW
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">區塊已刪除或無法使用。</string>
     <string name="gutenberg_native_add_text">加入文字…</string>
     <string name="gutenberg_native_add_caption">新增說明文字</string>
+    <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
     <string name="gutenberg_native_what_is_alt_text">替代文字是什麼？</string>
     <string name="gutenberg_native_transform_s_to">將 %s 轉換為</string>
     <string name="gutenberg_native_transform_block">轉換區塊…</string>
@@ -737,6 +745,7 @@ Language: zh_TW
     <string name="new_site_creation_creating_site_loading_1">擷取網站網址</string>
     <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
     <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
+    <string name="gutenberg_native_block_settings">區塊設定</string>
     <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
     <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
     <string name="gif_powered_by_tenor">由 Tenor 支援</string>
@@ -1849,7 +1858,7 @@ Language: zh_TW
     <string name="jetpack_disconnect_confirm">中斷連線</string>
     <string name="jetpack_disconnect_confirmation_message">確定要中斷網站與 Jetpack 的連線？</string>
     <string name="jetpack_disconnect_pref_title">「中斷與 WordPress.com 的連線」</string>
-    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">你可以將某個 IP 位址 (或多個位址) 標記為「一律允許」，避免這些位址遭到 Jetpack 封鎖。 可接受 IPv4 和 IPv6。 若要指定範圍，請輸入最低值及最高值，並以破折號分隔。 例如：12.12.12.1-12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要雙步驟驗證</string>
     <string name="jetpack_match_wpcom_via_email_title">使用電子郵件地址比對帳號</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允許登入 WordPress.com</string>

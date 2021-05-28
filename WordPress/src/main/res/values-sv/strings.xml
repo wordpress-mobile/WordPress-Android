@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 05:42:49+0000
+Translation-Revision-Date: 2021-05-22 13:10:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
@@ -10,7 +10,9 @@ Language: sv_SE
     <string name="gutenberg_native_add_link">LÄGG TILL LÄNK</string>
     <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
     <string name="login_empty_view_see_instructions">Se instruktionerna</string>
+    <string name="login_no_jetpack_sites_error_message">Om du redan har en webbplats behöver du installera gratis-tillägget Jetpack och koppla det till ditt konto hos WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Ditt profilfoto</string>
+    <string name="login_not_a_jetpack_site">För att använda denna app för %1$s måste du ha tillägget Jetpack installerat och anslutet till ditt WordPress.com-konto.</string>
     <string name="gutenberg_native_size">Storlek</string>
     <string name="gutenberg_native_move_image_forward">Flytta bilden framåt</string>
     <string name="gutenberg_native_move_image_backward">Flytta bilden bakåt</string>
@@ -1864,7 +1866,7 @@ Language: sv_SE
     <string name="jetpack_disconnect_confirm">Koppla bort</string>
     <string name="jetpack_disconnect_confirmation_message">Är du säker på att du vill koppla bort Jetpack från denna webbplats?</string>
     <string name="jetpack_disconnect_pref_title">”Koppla bort från WordPress.com”</string>
-    <string name="site_settings_jetpack_allowlist_description">Du kan vitlista en IP-adress eller ett IP-adressintervall så att de aldrig blockeras av Jetpack. Man kan lägga in både IPv4- och IPv6-adresser. Ange ett intervall genom att skriva in det lägsta och det högsta värdet med bindestreck mellan dem. Exempel: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Du kan vitlista en IP-adress eller ett IP-adressintervall så att de aldrig blockeras av Jetpack. Man kan lägga in både IPv4- och IPv6-adresser. Ange ett intervall genom att skriva in det lägsta och det högsta värdet med bindestreck mellan dem. Exempel: 12.12.12.1-12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Kräv tvåstegsautentisering</string>
     <string name="jetpack_match_wpcom_via_email_title">Koppla samman konton via e-postadressen</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillåt inloggning via WordPress.com</string>
