@@ -2560,7 +2560,6 @@
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
-    <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
@@ -2575,10 +2574,8 @@
     <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
-    <string name="gif_picker_search_hint">Search Tenor</string>
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
     <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
     <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">No media matching your search</string>
     <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">There was a problem handling the request</string>
 
