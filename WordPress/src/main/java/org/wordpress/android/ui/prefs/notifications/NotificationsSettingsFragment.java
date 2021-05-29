@@ -62,6 +62,7 @@ import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.Prefer
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -117,6 +118,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
         removeSightAndSoundsForAPI26();
+        if (mBuildConfigWrapper.isJetpackApp()) removeFollowedBlogsPreference();
 
         // Bump Analytics
         if (savedInstanceState == null) {
@@ -147,6 +150,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void removeFollowedBlogsPreference() {
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
+
+        PreferenceCategory categoryFollowedBlogs = (PreferenceCategory) preferenceScreen
+                .findPreference(getActivity().getString(R.string.pref_notification_blogs_followed));
+        preferenceScreen.removePreference(categoryFollowedBlogs);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -567,7 +578,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private void configureFollowedBlogsSettings(PreferenceCategory blogsCategory, final boolean showAll) {
-        if (!isAdded()) {
+        if (!isAdded() || blogsCategory == null) {
             return;
         }
 
