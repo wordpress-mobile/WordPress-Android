@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import dagger.Reusable
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,7 +36,7 @@ class AnalyticsUtilsWrapper @Inject constructor(
     ) = AnalyticsUtils.trackEditorCreatedPost(action, intent, site, post)
 
     fun trackInviteLinksAction(
-        stat: AnalyticsTracker.Stat,
+        stat: Stat,
         site: SiteModel?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
@@ -53,13 +52,13 @@ class AnalyticsUtilsWrapper @Inject constructor(
     /* READER */
 
     fun trackWithReaderPostDetails(
-        stat: AnalyticsTracker.Stat,
+        stat: Stat,
         post: ReaderPost?,
         properties: Map<String, Any?>
     ) = AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties)
 
     fun trackFollowCommentsWithReaderPostDetails(
-        stat: AnalyticsTracker.Stat,
+        stat: Stat,
         blogId: Long,
         postId: Long,
         post: ReaderPost?,
@@ -67,11 +66,28 @@ class AnalyticsUtilsWrapper @Inject constructor(
     ) = AnalyticsUtils.trackFollowCommentsWithReaderPostDetails(stat, blogId, postId, post, properties)
 
     fun trackWithDeepLinkData(
-        stat: AnalyticsTracker.Stat,
+        stat: Stat,
         action: String,
         host: String,
         data: Uri?
     ) = AnalyticsUtils.trackWithDeepLinkData(stat, action, host, data)
+
+    @Suppress("LongParameterList")
+    fun trackWithDeepLinkData(
+        stat: Stat,
+        action: String,
+        host: String,
+        source: String,
+        url: String,
+        sourceInfo: String?
+    ) = AnalyticsUtils.trackWithDeepLinkData(
+            stat,
+            action,
+            host,
+            source,
+            url,
+            sourceInfo
+    )
 
     fun trackRailcarRender(
         railcarJson: String
