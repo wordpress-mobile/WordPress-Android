@@ -16,7 +16,7 @@ class ReminderScheduler @Inject constructor(
 ) {
     val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
 
-    fun schedule(siteId: Long, reminderConfig: ReminderConfig) {
+    fun schedule(siteId: Long, reminderConfig: ReminderConfig): LocalDateTime {
         val uniqueName = getUniqueName(siteId)
         val next = reminderConfig.calculateNext().atTime(8, 0)
         val delay = Duration.between(LocalDateTime.now(), next)
@@ -32,6 +32,8 @@ class ReminderScheduler @Inject constructor(
                 .build()
 
         workManager.enqueueUniqueWork(uniqueName, REPLACE, workRequest)
+
+        return next
     }
 
     fun cancelById(id: UUID) = workManager.cancelWorkById(id)
