@@ -1,0 +1,144 @@
+{
+	"version": 0.1,
+	"stylesheet": "playstoreres/assets/jetpack_style.css",
+	"devices": [
+		{
+			"name": "Pixel 3",
+			"canvas_size": [1080,1920],
+			"text_size": [750,350],
+			"text_offset": [157,0 ],
+			"font_size": "100px",
+			"screenshot_size": [636, 1191],
+			"screenshot_offset": [226, 501],
+			"screenshot_mask": "playstoreres/assets/pixel-3-mask.png",
+			"device_frame": "playstoreres/assets/pixel-3.png",
+			"device_frame_size": [900, 1626],
+			"device_frame_offset": [91, 286]
+		},
+		{
+			"name": "Nexus 9",
+			"canvas_size": [3000,2000],
+			"text_size": [3000,250],
+			"text_offset": [0,71],
+			"font_size": "180px",
+			"screenshot_size": [1731, 1298],
+			"screenshot_offset": [634, 493],
+			"device_frame": "playstoreres/assets/nexus-9.png",
+			"device_frame_size": [2139, 1451],
+			"device_frame_offset": [430, 419]
+		}
+	],
+	"entries": [
+		// Safer. Faster. More traffic.
+		{
+			"device": "Pixel 3",
+			"filename": "images/phoneScreenshots/0-pixel-3-splash.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/phone-backgrounds/jetpack-splash-planets.png",
+					"size": [1080, 1920],
+					"position": [0, 0]
+				},
+				{
+					"text": "playstoreres/metadata/%s/jetpack_play_store_splash_0.txt",
+					"size": [810,480],
+					"position": [100,100],
+					"font-size": 140,
+					"alignment": "left",
+					"stylesheet": "playstoreres/assets/jetpack-style.css"
+				}
+			]
+		},
+		// Bring your Jetpack with you
+		{
+			"device": "Pixel 3",
+			"screenshot": "images/phoneScreenshots/1-bring-your-jetpack-with-you.png",
+			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_1.txt"
+		},
+		// Keep tabs on your site activity
+		{
+			"device": "Pixel 3",
+			"screenshot": "images/phoneScreenshots/2-keep-tabs-on-your-site-activity.png",
+			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_2.txt"
+		},
+		// Scan for issues on the go
+		{
+			"device": "Pixel 3",
+			"screenshot": "images/phoneScreenshots/3-scan-for-issues-on-the-go.png",
+			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_3.txt"
+		},
+		// Back up your site at any moment
+		{
+			"device": "Pixel 3",
+			"screenshot": "images/phoneScreenshots/4-back-up-your-site-at-any-moment.png",
+			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_4.txt"
+		},
+		// Site stats in your pocket
+		{
+			"device": "Pixel 3",
+			"screenshot": "images/phoneScreenshots/5-site-stats-in-your-pocket.png",
+			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_5.txt"
+		},
+		// Safer. Faster. More traffic.
+		// Safer. Faster. More traffic.
+		{
+			"device": "Nexus 9",
+			"filename": "images/tenInchScreenshots/0-nexus-9-splash.png",
+			"attachments": [
+				{
+					"file": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-splash-planets.png",
+					"size": [3000, 2000],
+					"position": [0, 0]
+				},
+				{
+					"text": "playstoreres/metadata/%s/jetpack_play_store_splash_0.txt",
+					"size": [1200,345],
+					"position": [200,220],
+					"font-size": 200,
+					"alignment": "left",
+					"stylesheet": "playstoreres/assets/jetpack-style.css"
+				}
+			]
+		},
+		// Bring your Jetpack with you
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/1-bring-your-jetpack-with-you.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_1.txt"
+		},
+		// Keep tabs on your site activity
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/2-keep-tabs-on-your-site-activity.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_2.txt"
+		},
+		// Scan for issues on the go
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/3-scan-for-issues-on-the-go.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_3.txt"
+		},
+		// Back up your site at any moment
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/4-back-up-your-site-at-any-moment.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_4.txt"
+		},
+		// Site stats in your pocket
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/5-site-stats-in-your-pocket.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
+			"text": "playstoreres/metadata/%s/jetpack_play_store_screenshot_5.txt"
+		}
+	]
+}
