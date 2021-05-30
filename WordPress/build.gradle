@@ -142,7 +142,6 @@ android {
             applicationIdSuffix ".beta"
             dimension "buildType"
             buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
-            buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions

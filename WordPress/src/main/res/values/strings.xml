@@ -1802,6 +1802,11 @@
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
     <string name="error_media_not_enough_storage">Not enough available site storage</string>
+    <string name="error_media_unexpected_null_value">Media was empty</string>
+    <string name="error_media_file_type_not_allowed">This file type is not allowed</string>
+    <string name="error_media_unexpected_empty_media_file_path">Unexpected empty file path for Media</string>
+    <string name="error_media_could_not_find_media_in_path">Could not find media file in path</string>
+    <string name="error_media_path_is_directory">The specified path is a directory instead of a Media file</string>
     <string name="error_media_upload_failed_for_reason">Media upload failed.\n%1$s</string>
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
@@ -2560,7 +2565,6 @@
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
-    <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
@@ -2575,10 +2579,8 @@
     <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
-    <string name="gif_picker_search_hint">Search Tenor</string>
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
     <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
     <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">No media matching your search</string>
     <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">There was a problem handling the request</string>
 

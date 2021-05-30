@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.deeplinks
+package org.wordpress.android.ui.deeplinks.handlers
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +10,9 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForSite
+import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -18,9 +21,12 @@ class EditorLinkHandler
 @Inject constructor(
     private val deepLinkUriUtils: DeepLinkUriUtils,
     private val postStore: PostStore
-) {
+) : DeepLinkHandler {
     private val _toast = MutableLiveData<Event<Int>>()
-    val toast = _toast as LiveData<Event<Int>>
+
+    override fun toast(): LiveData<Event<Int>> {
+        return _toast
+    }
 
     /**
      * Builds navigate action from URL like:
@@ -28,7 +34,7 @@ class EditorLinkHandler
      * where siteNameOrUrl and postID are optional
      * or App links like wordpress://post?blogId=798&postId=1231
      */
-    fun buildOpenEditorNavigateAction(uri: UriWrapper): NavigateAction {
+    override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
         var hasSiteParam = false
         var hasPostParam = false
         val (targetSite, targetPost) = if (uri.host == POST_PATH) {
@@ -50,9 +56,42 @@ class EditorLinkHandler
      * Returns true if the URI should be handled by EditorLinkHandler.
      * The handled links are `wordpress.com/post...1
      */
-    fun isEditorUrl(uri: UriWrapper): Boolean {
+    override fun shouldHandleUrl(uri: UriWrapper): Boolean {
         return (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == POST_PATH) || uri.host == POST_PATH
+    }
+
+    override fun stripUrl(uri: UriWrapper): String {
+        return if (uri.host == POST_PATH) {
+            // Transforms wordpress://post?blogId=798&postId=1231 to wordpress://post?blogId=blogId&postId=postId
+            buildString {
+                append("$APPLINK_SCHEME$POST_PATH")
+                val hasBlogIdParameter = uri.getQueryParameter(BLOG_ID) != null
+                val hasPostIdParameter = uri.getQueryParameter(POST_ID) != null
+                if (hasBlogIdParameter || hasPostIdParameter) {
+                    append("?")
+                    if (hasBlogIdParameter) {
+                        append("$BLOG_ID=$BLOG_ID")
+                        if (hasPostIdParameter) {
+                            append("&")
+                        }
+                    }
+                    if (hasPostIdParameter) {
+                        append("$POST_ID=$POST_ID")
+                    }
+                }
+            }
+        } else {
+            // Transforms https://wordpress.com/post/example.com/1231 to https://wordpress.com/post/siteNameOrUrl/postId
+            buildString {
+                append("${DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM}/$POST_PATH/")
+                if (uri.pathSegments.size > 2) {
+                    append("${DeepLinkingIntentReceiverViewModel.SITE_DOMAIN}/$POST_ID")
+                } else if (uri.pathSegments.size > 1) {
+                    append(DeepLinkingIntentReceiverViewModel.SITE_DOMAIN)
+                }
+            }
+        }
     }
 
     /**

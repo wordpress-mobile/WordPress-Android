@@ -88,7 +88,7 @@ public class M4mVideoOptimizer extends VideoOptimizerBase implements org.m4m.IPr
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
                     null, mInputPath);
             properties.put("was_npe_detected", wasNpeDetected);
-            properties.put("optimizer-lib", "m4m");
+            properties.put("optimizer_lib", "m4m");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
