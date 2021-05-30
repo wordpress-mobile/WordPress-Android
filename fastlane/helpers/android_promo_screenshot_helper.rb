@@ -2,21 +2,24 @@ require 'tmpdir'
 
 module Fastlane
   module Helpers
-    
+
     class AndroidPromoScreenshots
-      attr_reader :device, :locales, :orig_folder, :target_folder, :default_locale, :metadata_folder
+      attr_reader :device, :locales, :orig_folder, :target_folder, :default_locale, :metadata_folder, :config_file
 
       TEXT_OFFSET_X = 0
       TEXT_OFFSET_Y = 58
       DEFAULT_TEXT_SIZE = 80
       private_constant :TEXT_OFFSET_X, :TEXT_OFFSET_Y, :DEFAULT_TEXT_SIZE
 
-      def initialize(locales, default_locale, orig_folder, target_folder, metadata_folder)
+      def initialize(locales, default_locale, orig_folder, target_folder, metadata_folder, config_file)
         @locales = locales
         @default_locale = default_locale
         @orig_folder = orig_folder
         @target_folder = target_folder
         @metadata_folder = metadata_folder
+        @config_file = config_file
+
+        UI.message("Passed in the config_file: #{@config_file}")
 
         load_default_locale()
       end
@@ -44,6 +47,8 @@ module Fastlane
         Dir.mkdir(font_folder) unless File.exist?(font_folder)
         Fastlane::Actions::sh("wget \"https://fonts.google.com/download?family=Noto%20Serif\" -O \"#{font_folder}/noto.zip\"")
         Fastlane::Actions::sh("unzip \"#{font_folder}/noto.zip\" -d \"#{font_folder}\"")
+        Fastlane::Actions::sh("wget \"https://fonts.google.com/download?family=Roboto\" -O \"#{font_folder}/roboto.zip\"")
+        Fastlane::Actions::sh("unzip \"#{font_folder}/roboto.zip\" -d \"#{font_folder}\"")
       end
 
     private
@@ -108,7 +113,7 @@ module Fastlane
         if (@default_strings.key?(index))
           return @default_strings[index]
         end
-        
+
         return "Unknown"
       end
 
@@ -127,13 +132,13 @@ module Fastlane
 
           # Read the file into a string
           promo_string = File.read(promo_file)
-          
+
           # Add to hash
           strings[promo_id] = promo_string
         end
 
         return strings
-      end 
+      end
 
       # Helpers
       def get_text_size_for(locale_options)
@@ -172,7 +177,11 @@ module Fastlane
       end
 
       def self.get_font_path()
-        "#{Dir.tmpdir()}/font/NotoSerif-Bold.ttf"
+        if @config_file.downcase.include? "jetpack"
+         return  "#{Dir.tmpdir()}/font/Roboto-Bold.ttf"
+        else
+         return "#{Dir.tmpdir()}/font/NotoSerif-Bold.ttf"
+        end
       end
     end
   end

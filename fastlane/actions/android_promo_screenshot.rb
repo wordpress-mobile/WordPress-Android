@@ -11,13 +11,15 @@ module Fastlane
         UI.message "Configuration: #{params[:device_config].inspect}"
         UI.message "Default locale: #{params[:default_locale]}"
         UI.message "Metadata folder path: #{params[:metadata_folder]}"
+        UI.message "Promos config file name: #{params[:config_file]}"
 
         Fastlane::Helpers::AndroidPromoScreenshots::require_font()
-        screenshot_gen = Fastlane::Helpers::AndroidPromoScreenshots.new(params[:locales], 
+        screenshot_gen = Fastlane::Helpers::AndroidPromoScreenshots.new(params[:locales],
           params[:default_locale],
-          params[:orig_folder], 
+          params[:orig_folder],
           params[:output_folder],
-          params[:metadata_folder])
+          params[:metadata_folder],
+          params[:config_file])
 
         device_config = params[:device_config]
         device_config.each do | device |
@@ -74,6 +76,12 @@ module Fastlane
                                      description: "The default locale to use in case of missing translations",
                                         optional: false,
                                       is_string: true),
+          FastlaneCore::ConfigItem.new(key: :config_file,
+                                       env_name: 'PROMOSS_CONFIG_FILE',
+                                       description: 'The path to the file containing the promo screenshot configuration',
+                                       optional: true,
+                                       is_string: true,
+                                       default_value: 'screenshots.json'),
         ]
       end
 
