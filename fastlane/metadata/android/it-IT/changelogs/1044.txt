@@ -1,6 +1,0 @@
-17.3:
-Cosa c'è di nuovo?
-
-Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
-
-Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
