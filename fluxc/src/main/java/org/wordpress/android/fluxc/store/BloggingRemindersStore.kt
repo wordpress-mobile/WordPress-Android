@@ -10,7 +10,10 @@ import javax.inject.Singleton
 
 @Singleton
 class BloggingRemindersStore
-@Inject constructor(private val bloggingRemindersDao: BloggingRemindersDao, private val mapper: BloggingRemindersMapper) {
+@Inject constructor(
+    private val bloggingRemindersDao: BloggingRemindersDao,
+    private val mapper: BloggingRemindersMapper
+) {
     fun bloggingRemindersModel(siteId: Int): Flow<BloggingRemindersModel> {
         return bloggingRemindersDao.getBySiteId(siteId).map(mapper::toDomainModel)
     }
