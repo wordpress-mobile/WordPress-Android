@@ -3594,4 +3594,9 @@
     <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
     <string name="storage_utils_dialog_ok_button">View Storage</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
+
+    <!-- Blogging reminders -->
+    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
+    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
+    <string name="set_your_blogging_goals_button">Set goals</string>
 </resources>
