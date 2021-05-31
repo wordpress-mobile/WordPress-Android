@@ -10,8 +10,8 @@ import javax.inject.Singleton
 
 @Module
 class DatabaseModule {
-    @Singleton @Provides fun provideDatabase(context: Context?): WPAndroidDatabase {
-        return buildDb(context!!)
+    @Singleton @Provides fun provideDatabase(context: Context): WPAndroidDatabase {
+        return buildDb(context)
     }
 
     @Singleton @Provides fun provideBloggingRemindersDao(wpAndroidDatabase: WPAndroidDatabase): BloggingRemindersDao {
