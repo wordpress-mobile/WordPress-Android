@@ -1,0 +1,8 @@
+17.4:
+Bu güncellemede Hikayeler'e 3 yeni güncelleme ekledik:
+
+Artık blok düzenleyiciden bir Hikaye bloku eklerken, başlamayı kolaylaştıran bir medya seçici göreceksiniz.
+
+Hikaye önizlemeleri artık Okuyucu'da beklendiği gibi çalışıyor.
+
+Son olarak, slaytlar yüklenemediğinde, uygulama otomatik olarak yeniden dener ve size fazladan bir dokunuş kazandırır.
