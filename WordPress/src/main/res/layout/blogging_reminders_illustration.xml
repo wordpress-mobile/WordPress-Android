@@ -6,9 +6,9 @@
 
     <ImageView
         android:id="@+id/illustration_view"
-        android:src="@drawable/img_illustration_stars_130dp"
-        android:layout_width="130dp"
-        android:layout_height="118dp"
+        android:src="@drawable/img_illustration_celebration_150dp"
+        android:layout_width="150dp"
+        android:layout_height="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

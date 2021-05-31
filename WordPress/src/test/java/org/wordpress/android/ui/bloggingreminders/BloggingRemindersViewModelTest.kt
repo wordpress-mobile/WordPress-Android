@@ -11,13 +11,11 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.toList
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.CloseButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -55,39 +53,29 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         val state = uiState.last()
 
-        assertCloseButton(state[0])
-        assertIllustration(state[1])
-        assertTitle(state[2])
-        assertText(state[3])
-        assertPrimaryButton(state[4])
-    }
-
-    private fun assertCloseButton(item: BloggingRemindersItem) {
-        val closeButton = item as CloseButton
-        closeButton.onClick.click()
-        assertThat(events.last()).isFalse()
+        assertIllustration(state[0])
+        assertTitle(state[1])
+        assertText(state[2])
+        assertPrimaryButton(state[3])
     }
 
     private fun assertIllustration(item: BloggingRemindersItem) {
         val illustration = item as Illustration
-        // TODO replace this assert with real illustration
-        assertThat(illustration.illustration).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+        assertThat(illustration.illustration).isEqualTo(R.drawable.img_illustration_celebration_150dp)
     }
 
     private fun assertTitle(item: BloggingRemindersItem) {
         val title = item as Title
-        // TODO replace this assert with real copy
-        assertThat((title.text as UiStringText).text).isEqualTo("Set your blogging goals!")
+        assertThat((title.text as UiStringRes).stringRes).isEqualTo(R.string.set_your_blogging_goals_title)
     }
 
     private fun assertText(item: BloggingRemindersItem) {
         val title = item as Text
-        // TODO replace this assert with real copy
-        assertThat((title.text as UiStringText).text).isEqualTo("Well done on your first post! Keep it going.")
+        assertThat((title.text as UiStringRes).stringRes).isEqualTo(R.string.set_your_blogging_goals_message)
     }
 
     private fun assertPrimaryButton(item: BloggingRemindersItem) {
         val closeButton = item as PrimaryButton
-        assertThat((closeButton.text as UiStringRes).stringRes).isEqualTo(R.string.get_started)
+        assertThat((closeButton.text as UiStringRes).stringRes).isEqualTo(R.string.set_your_blogging_goals_button)
     }
 }
