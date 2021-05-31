@@ -17,46 +17,49 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.viewBinding
 
 sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding: T) :
-    RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
     class IllustrationViewHolder(parentView: ViewGroup, private val imageManager: ImageManager) :
-        BloggingRemindersViewHolder<BloggingRemindersIllustrationBinding>(
-            parentView.viewBinding(
-                BloggingRemindersIllustrationBinding::inflate
-            )
-        ) {
+            BloggingRemindersViewHolder<BloggingRemindersIllustrationBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersIllustrationBinding::inflate
+                    )
+            ) {
         fun onBind(item: Illustration) = with(binding) {
             imageManager.load(illustrationView, item.illustration, CENTER)
         }
     }
+
     class TitleViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-        BloggingRemindersViewHolder<BloggingRemindersTitleBinding>(
-            parentView.viewBinding(
-                BloggingRemindersTitleBinding::inflate
-            )
-        ) {
+            BloggingRemindersViewHolder<BloggingRemindersTitleBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTitleBinding::inflate
+                    )
+            ) {
         fun onBind(item: Title) = with(binding) {
             uiHelpers.setTextOrHide(title, item.text)
         }
     }
+
     class TextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-        BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
-            parentView.viewBinding(
-                BloggingRemindersTextBinding::inflate
-            )
-        ) {
+            BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTextBinding::inflate
+                    )
+            ) {
         fun onBind(item: Text) = with(binding) {
             uiHelpers.setTextOrHide(text, item.text)
         }
     }
+
     class PrimaryButtonViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-        BloggingRemindersViewHolder<BloggingRemindersPrimaryButtonBinding>(
-            parentView.viewBinding(
-                BloggingRemindersPrimaryButtonBinding::inflate
-            )
-        ) {
+            BloggingRemindersViewHolder<BloggingRemindersPrimaryButtonBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersPrimaryButtonBinding::inflate
+                    )
+            ) {
         fun onBind(item: PrimaryButton) = with(binding) {
             uiHelpers.setTextOrHide(primaryButton, item.text)
-            primaryButton.setOnClickListener{
+            primaryButton.setOnClickListener {
                 item.onClick.click()
             }
         }
