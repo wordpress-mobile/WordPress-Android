@@ -96,4 +96,3 @@ class BloggingRemindersMapperTest {
         assertThat(this.enabledDays.contains(SUNDAY)).isEqualTo(databaseModel.sunday)
     }
 }
-
