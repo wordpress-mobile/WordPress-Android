@@ -64,7 +64,9 @@ GEM
     dotenv (2.7.6)
     emoji_regex (3.2.2)
     excon (0.81.0)
-    faraday (1.4.1)
+    faraday (1.4.2)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
       faraday-net_http (~> 1.0)
       faraday-net_http_persistent (~> 1.1)
@@ -73,6 +75,8 @@ GEM
     faraday-cookie_jar (0.0.7)
       faraday (>= 0.8.0)
       http-cookie (~> 1.0.0)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.1.0)
@@ -177,13 +181,13 @@ GEM
     memoist (0.16.2)
     mini_magick (4.11.0)
     mini_mime (1.1.0)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.1)
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.1)
-    nokogiri (1.11.3)
+    nokogiri (1.11.5)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     octokit (4.21.0)
@@ -265,4 +269,4 @@ DEPENDENCIES
   rmagick (~> 4.1)
 
 BUNDLED WITH
-   2.2.15
+   2.2.16

@@ -35,6 +35,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * @deprecated
+ * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * features or modifying this class, please ping develric or klymyam
+ */
+@Deprecated
 public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> {
     interface OnDataLoadedListener {
         void onDataLoaded(boolean isEmpty);

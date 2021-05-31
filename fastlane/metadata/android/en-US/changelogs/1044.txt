@@ -1,6 +1,0 @@
-17.3:
-What’s new?
-
-With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
-
-Other improvements include more user information about your Likes, as well as an updated Comments screen.

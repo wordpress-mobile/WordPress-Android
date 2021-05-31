@@ -58,6 +58,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
@@ -255,6 +256,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
         is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
+        is OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@ImprovedMySiteFragment)

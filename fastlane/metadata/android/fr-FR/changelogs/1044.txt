@@ -1,6 +1,0 @@
-17.3 :
-Nouveautés
-
-Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
-
-Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.

@@ -129,6 +129,7 @@ Language: ku_TR
     <string name="toast_error_saving_image">Çewtiya tomarkirina wêneyê</string>
     <string name="gutenberg_native_video_caption_empty">Sernivîsa vîdyoyê. Vala</string>
     <string name="gutenberg_native_updates_the_title">Sernavê hildidemîne.</string>
+    <string name="gutenberg_native_paste_block_after">Blokê li dawiya wê bizeliqîne</string>
     <string name="gutenberg_native_page_title_s">Sernavê rûpelê. %s</string>
     <string name="gutenberg_native_page_title_empty">Sernavê rûpelê. Vala</string>
     <string name="camera_error">Ev cîhaz piştgiriya Camera2 API\'ê nake.</string>
@@ -202,6 +203,7 @@ Language: ku_TR
     <string name="gutenberg_native_choose_video">Vîdyo Hilbijêre</string>
     <string name="gutenberg_native_choose_image_or_video">Vîdyo an jî wêne hilbijêre</string>
     <string name="gutenberg_native_choose_image">Wêne Hilbijêre</string>
+    <string name="gutenberg_native_block_removed">Blok hat rakirin</string>
     <string name="signup_confirmation_title">Pejirandina tomarbûnê</string>
     <string name="continue_with_google_terms_of_service_text">Heke tu bi Googleê re dewam bikî û hesabê te yê WordPress\'ê tune be, dema tu ajimêrekê biafirînî tu pê re %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
     <string name="enter_your_site_address">Navnîşana malpera xwe ya heyî bikevê</string>
@@ -227,7 +229,14 @@ Language: ku_TR
     <string name="quick_start_list_update_site_title_title">Sernavê malpera xwe saz bike</string>
     <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b&gt;%1$s&lt;/b&gt;ê bitikîne</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>
+    <string name="gutenberg_native_s_block_options">Vebijarkên bloka %s\'ê</string>
+    <string name="gutenberg_native_duplicate_block">Blokê pir bike</string>
+    <string name="gutenberg_native_copy_block">Blokê kopî bike</string>
     <string name="gutenberg_native_copied_block">Blok hat kopîkirin</string>
+    <string name="gutenberg_native_block_pasted">Blok hat zeliqandin</string>
+    <string name="gutenberg_native_block_duplicated">Blok hat pirkirin</string>
+    <string name="gutenberg_native_block_cut">Blokê jê bike</string>
+    <string name="gutenberg_native_block_copied">Blok hat kopîkirin</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Sernavê Malperê tenê ji aliyê rêveberekî dikare were guhertin.</string>
     <string name="reader_title_tag_preview">Mijar</string>
     <string name="error_update_site_title_network">Sernavê malperê nehat hildemandin. Girêdana tora xwe kontrol bike û dîsa biceribîne.</string>
@@ -272,6 +281,9 @@ Language: ku_TR
     <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
+    <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="pages_set_as_posts_page">Bike Rûpela Şandiyan</string>
     <string name="site_settings_select_page">Rûpelê hilbijêre</string>
     <string name="pages_cannot_be_started">Em aniha nikarin rûpelan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
@@ -489,6 +501,7 @@ Language: ku_TR
     <string name="gutenberg_native_take_a_photo">Wêneyekî Bikişîne</string>
     <string name="gutenberg_native_ungroup">Komê belav bike</string>
     <string name="gutenberg_native_show_section">Beşê nîşan bide</string>
+    <string name="gutenberg_native_cut_block">Blokê jê bike</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloka %s. Di vê blokê de naveroka nederbasdar heye</string>
     <string name="gutenberg_native_s_block_empty">Bloka %s. Vala</string>
     <string name="gutenberg_native_problem_opening_the_video">Pirsgirêk di vekirina vîdyoyê de derket</string>

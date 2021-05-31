@@ -6,6 +6,7 @@
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
+    <issue id="TypographyDashes" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
@@ -51,7 +52,6 @@
     <issue id="UnusedResources" severity="error" />
     <issue id="UselessParent" severity="error" />
     <issue id="UnusedNamespace" severity="error" />
-    <issue id="TypographyDashes" severity="error" />
     <issue id="TypographyEllipsis" severity="error" />
     <issue id="IconLocation" severity="error" />
     <issue id="TextFields" severity="error" />
@@ -78,7 +78,6 @@
     <issue id="LabelFor" severity="ignore" /> <!-- Severity should be increased to error when minSdk >= 17 -->
     <issue id="OldTargetApi" severity="ignore" /> <!-- We are aware of down sides of having an old targetApi -->
     <issue id="UseAppTint" severity="ignore" /> <!-- android:tint attribute had a problem on API<=21, but our minSdk is 21, ignore -->
-    
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.9.0.jar" />
         <ignore regexp="java-common-1.13.jar" />

@@ -86,6 +86,8 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
+        buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
+        buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -149,6 +151,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationIdSuffix ".beta"
             dimension "buildType"
+            buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -219,6 +222,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(path: ':mp4compose')
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
