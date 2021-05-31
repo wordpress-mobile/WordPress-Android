@@ -59,13 +59,7 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        // Allow versionName to be overridden with property. e.g. -PversionName=1234
-        if (project.hasProperty("versionName")) {
-            versionName project.property("versionName")
-        } else {
-            versionName versionProperties.getProperty("wordpress.alpha.versionName")
-        }
-
+        versionName versionProperties.getProperty("wordpress.alpha.versionName")
         versionCode versionProperties.getProperty("wordpress.alpha.versionCode").toInteger()
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -101,15 +95,12 @@ android {
 
     flavorDimensions "app", "buildType"
 
-
     productFlavors {
         wordpress {
             isDefault true
             dimension "app"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName versionProperties.getProperty("wordpress.versionName")
-            }
+
+            versionName versionProperties.getProperty("wordpress.versionName")
             versionCode versionProperties.getProperty("wordpress.versionCode").toInteger()
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
@@ -121,10 +112,8 @@ android {
 
         jetpack {
             dimension "app"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName versionProperties.getProperty("jetpack.versionName")
-            }
+
+            versionName versionProperties.getProperty("jetpack.versionName")
             versionCode versionProperties.getProperty("jetpack.versionCode").toInteger()
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
@@ -479,13 +468,13 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 
 task printWordPressVersionName {
     doLast {
-        println android.productFlavors.wordpress.versionName-rc-1
+        println android.productFlavors.wordpress.versionName
     }
 }
 
 task printWordPressVersionCode {
     doLast {
-        println 1
+        println android.productFlavors.wordpress.versionCode
     }
 }
 
