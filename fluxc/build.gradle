@@ -88,7 +88,8 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.1'
     api "androidx.paging:paging-runtime:2.1.2"
     implementation "androidx.room:room-runtime:$roomVersion"
-    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
