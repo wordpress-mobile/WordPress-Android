@@ -3600,4 +3600,6 @@
     <string name="set_your_blogging_goals_title">Set your blogging goals</string>
     <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
     <string name="set_your_blogging_goals_button">Set goals</string>
+    <string name="blogging_goals_n_times_a_week">%d times a week</string>
+    <string name="blogging_goals_not_set">No goals set</string>
 </resources>

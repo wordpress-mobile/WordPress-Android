@@ -14,7 +14,9 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +24,7 @@ import javax.inject.Named
 class BloggingRemindersViewModel @Inject constructor(
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
+    private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
@@ -32,9 +35,12 @@ class BloggingRemindersViewModel @Inject constructor(
     fun getSettingsState(siteId: Int): LiveData<String> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
             if (it.enabledDays.isNotEmpty()) {
-                "Blogging reminders ${it.enabledDays.size} times a week"
+                resourceProvider.getString(
+                        R.string.blogging_goals_n_times_a_week,
+                        listOf(UiStringText(it.enabledDays.size.toString()))
+                )
             } else {
-                "No blogging reminders set"
+                resourceProvider.getString(R.string.blogging_goals_not_set)
             }
         }.asLiveData(mainDispatcher)
     }

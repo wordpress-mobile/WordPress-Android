@@ -24,10 +24,12 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
+    @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -36,7 +38,12 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = BloggingRemindersViewModel(bloggingRemindersManager, bloggingRemindersStore, TEST_DISPATCHER)
+        viewModel = BloggingRemindersViewModel(
+                bloggingRemindersManager,
+                bloggingRemindersStore,
+                resourceProvider,
+                TEST_DISPATCHER
+        )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
         uiState = viewModel.uiState.toList()
@@ -79,6 +86,12 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                         )
                 )
         )
+        whenever(
+                resourceProvider.getString(
+                        R.string.blogging_goals_n_times_a_week,
+                        2
+                )
+        ).thenReturn("Blogging reminders 2 times a week")
         var uiState: String? = null
 
         viewModel.getSettingsState(siteId).observeForever { uiState = it }
