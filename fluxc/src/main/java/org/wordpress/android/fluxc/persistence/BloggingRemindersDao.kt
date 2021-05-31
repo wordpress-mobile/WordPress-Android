@@ -14,7 +14,7 @@ abstract class BloggingRemindersDao {
     abstract fun getAll(): Flow<List<BloggingReminders>>
 
     @Query("SELECT * FROM BloggingReminders WHERE localSiteId = :siteId")
-    abstract fun getBySiteId(siteId: Int): Flow<BloggingReminders>
+    abstract fun getBySiteId(siteId: Int): Flow<BloggingReminders?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(type: BloggingReminders): Long

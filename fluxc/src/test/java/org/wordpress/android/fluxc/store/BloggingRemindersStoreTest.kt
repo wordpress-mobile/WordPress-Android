@@ -40,6 +40,13 @@ class BloggingRemindersStoreTest {
     }
 
     @Test
+    fun `maps null value to empty model emitted from dao`() = test {
+        whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(flowOf(null))
+
+        assertThat(store.bloggingRemindersModel(siteId).single()).isEqualTo(BloggingRemindersModel(siteId))
+    }
+
+    @Test
     fun `maps items stored to dao`() = test {
         val dbEntity = BloggingReminders(siteId, monday = true)
         val domainModel = BloggingRemindersModel(siteId, setOf(MONDAY))
