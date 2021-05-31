@@ -49,7 +49,7 @@ class BloggingRemindersViewModel @Inject constructor(
         bloggingRemindersManager.bloggingRemindersShown(siteId)
         _isBottomSheetShowing.value = Event(true)
         _uiState.value = listOf(
-                Illustration(R.drawable.img_illustration_stars_130dp),
+                Illustration(R.drawable.img_illustration_celebration_150dp),
                 Title(UiStringRes(R.string.set_your_blogging_goals_title)),
                 Text(UiStringRes(R.string.set_your_blogging_goals_message)),
                 PrimaryButton(
