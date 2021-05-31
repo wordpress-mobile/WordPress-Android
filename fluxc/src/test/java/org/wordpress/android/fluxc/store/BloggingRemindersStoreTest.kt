@@ -50,4 +50,3 @@ class BloggingRemindersStoreTest {
         verify(bloggingRemindersDao).insert(dbEntity)
     }
 }
-
