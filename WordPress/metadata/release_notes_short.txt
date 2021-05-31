@@ -1,5 +1,7 @@
-What’s new?
+We’ve added 3 new updates to Stories in this update:
 
-With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
 
-Other improvements include more user information about your Likes, as well as an updated Comments screen.
+Story previews now render as expected in the Reader.
+
+And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!

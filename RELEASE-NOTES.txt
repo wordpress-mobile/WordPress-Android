@@ -1,11 +1,17 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-17.4
+17.5
 -----
 
 17.3.2
 -----
 * [***] Me Screen: Fixed an issue with the Change Photo flow that was causing a crash. [https://github.com/wordpress-mobile/WordPress-Android/pull/14701]
+
+17.4
+-----
+* [*] Stories: Improved reliability of retrying slides that failed to upload. [https://github.com/wordpress-mobile/WordPress-Android/pull/14579]
+* [*] Stories: Adding story block from block editor now opens media picker first. [https://github.com/wordpress-mobile/WordPress-Android/pull/14588]
+* [*] Stories: Fixed story preview rendering in the Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/14656]
 
 17.3
 -----

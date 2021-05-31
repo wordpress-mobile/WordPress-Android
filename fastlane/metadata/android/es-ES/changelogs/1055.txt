@@ -1,0 +1,8 @@
+17.4:
+Hemos añadido 3 nuevas actualizaciones a las historias en esta actualización:
+
+Ahora verás un selector de medios cuando añadas un bloque de historias desde el editor de bloques, haciendo más fácil empezar.
+
+Las vistas previas de las historias ahora se muestran en el lector como se espera.
+
+Y, por último, cuando las diapositivas fallan al subir, la aplicación volverá a intentarlo automáticamente, ¡ahorrándote un toque adicional!

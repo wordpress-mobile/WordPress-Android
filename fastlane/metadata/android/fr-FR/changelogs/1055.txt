@@ -1,0 +1,8 @@
+17.4 :
+Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
+
+Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
+
+Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
+
+Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !

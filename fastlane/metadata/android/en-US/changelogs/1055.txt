@@ -1,3 +1,4 @@
+17.4:
 We’ve added 3 new updates to Stories in this update:
 
 You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
