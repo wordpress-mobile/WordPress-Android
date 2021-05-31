@@ -112,7 +112,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
     private PreferenceCategory mBlogsCategory;
-    private PreferenceCategory mFollowedBlogsCategory;
+    @Nullable private PreferenceCategory mFollowedBlogsCategory;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -579,7 +579,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         updateSearchMenuVisibility();
     }
 
-    private void configureFollowedBlogsSettings(PreferenceCategory blogsCategory, final boolean showAll) {
+    private void configureFollowedBlogsSettings(@Nullable PreferenceCategory blogsCategory, final boolean showAll) {
         if (!isAdded() || blogsCategory == null) {
             return;
         }
