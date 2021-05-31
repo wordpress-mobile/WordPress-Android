@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryB
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
@@ -85,8 +87,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         )
         whenever(
                 resourceProvider.getString(
-                        R.string.blogging_goals_n_times_a_week,
-                        2
+                        eq(R.string.blogging_goals_n_times_a_week),
+                        eq(UiStringText("2"))
                 )
         ).thenReturn("Blogging reminders 2 times a week")
         var uiState: String? = null

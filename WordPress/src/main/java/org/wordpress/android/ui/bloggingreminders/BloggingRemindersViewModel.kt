@@ -37,7 +37,7 @@ class BloggingRemindersViewModel @Inject constructor(
             if (it.enabledDays.isNotEmpty()) {
                 resourceProvider.getString(
                         R.string.blogging_goals_n_times_a_week,
-                        listOf(UiStringText(it.enabledDays.size.toString()))
+                        UiStringText(it.enabledDays.size.toString())
                 )
             } else {
                 resourceProvider.getString(R.string.blogging_goals_not_set)
