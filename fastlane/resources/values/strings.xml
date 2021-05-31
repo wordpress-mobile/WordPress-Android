@@ -3466,7 +3466,7 @@
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for Android</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>	
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>
     <!-- translators: %s: Block name e.g. "Image block" -->
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
