@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import kotlin.jvm.functions.Function0;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -45,7 +44,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -77,7 +75,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -101,6 +98,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -181,6 +179,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -491,14 +490,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
-                .get(BloggingRemindersViewModel.class);
-        BloggingReminderUtils.observeBottomSheet(
-                mBloggingRemindersViewModel.isBottomSheetShowing(),
-                getAppCompatActivity(),
-                BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
-                () -> getAppCompatActivity().getSupportFragmentManager()
-        );
+        initBloggingReminders();
     }
 
     private AppCompatActivity getAppCompatActivity() {
@@ -1191,12 +1183,36 @@ public class SiteSettingsFragment extends PreferenceFragment
         bottomSheet.show((getAppCompatActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
     }
 
+    private void initBloggingReminders() {
+        if (mBloggingRemindersPref == null || !isAdded()) {
+            return;
+        }
+
+        if (!mBloggingRemindersFeatureConfig.isEnabled()) {
+            removeBloggingRemindersSettings();
+        } else {
+            mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
+                    .get(BloggingRemindersViewModel.class);
+            BloggingReminderUtils.observeBottomSheet(
+                    mBloggingRemindersViewModel.isBottomSheetShowing(),
+                    getAppCompatActivity(),
+                    BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
+                    () -> getAppCompatActivity().getSupportFragmentManager()
+            );
+            mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
+                if (mBloggingRemindersPref != null) {
+                    mBloggingRemindersPref.setSummary(s);
+                }
+            });
+        }
+    }
+
     private void setupBloggingRemindersBottomSheet() {
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
 
-        mBloggingRemindersViewModel.start(mSite.getId());
+        mBloggingRemindersViewModel.showBottomSheet(mSite.getId());
     }
 
     private void showHomepageSettings() {
@@ -1930,6 +1946,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeMoreJetpackSettings() {
         WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
                 R.string.pref_key_jetpack_performance_more_settings);
+    }
+
+    private void removeBloggingRemindersSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

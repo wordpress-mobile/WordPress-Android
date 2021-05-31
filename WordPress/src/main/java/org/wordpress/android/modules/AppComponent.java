@@ -6,6 +6,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.OkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
+import org.wordpress.android.fluxc.module.DatabaseModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
 import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
@@ -237,6 +238,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ReleaseNetworkModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class,
+        DatabaseModule.class,
         AndroidSupportInjectionModule.class,
         ViewModelModule.class,
         StatsModule.class,
