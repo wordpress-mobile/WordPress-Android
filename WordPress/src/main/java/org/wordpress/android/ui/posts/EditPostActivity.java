@@ -403,6 +403,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
+    @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -1673,7 +1674,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                     .getId()) {
-                setFeaturedImageId(media.getMediaId(), false);
+                setFeaturedImageId(media.getMediaId(), false, false);
             }
         }
     }
@@ -2484,12 +2485,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked, final boolean isGutenbergEditor) {
+        if (isGutenbergEditor) {
+            EditPostRepository postRepository = getEditPostRepository();
+            if (postRepository == null) {
+                return;
             }
+
+            int postId = getEditPostRepository().getId();
+            if (mediaId == 0) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_REMOVED_GUTENBERG_EDITOR,
+                        postId
+                );
+            } else {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_GUTENBERG_EDITOR,
+                        postId
+                );
+            }
+            mUpdateFeaturedImageUseCase.updateFeaturedImage(mediaId, postRepository,
+                    postModel -> null);
+        } else if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+        }
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
         }
     }
 
@@ -2600,13 +2621,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId, true);
+                        setFeaturedImageId(mediaId, true, false);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
                         int postId = getImmutablePost().getId();
                         mFeaturedImageHelper.trackFeaturedImageEvent(
-                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                                 postId
                         );
                         for (Uri mediaUri : uris) {
@@ -2896,7 +2917,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void updateFeaturedImage(final long mediaId, final boolean imagePicked) {
-        setFeaturedImageId(mediaId, imagePicked);
+        setFeaturedImageId(mediaId, imagePicked, true);
     }
 
     @Override
