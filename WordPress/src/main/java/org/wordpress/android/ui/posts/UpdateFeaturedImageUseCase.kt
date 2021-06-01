@@ -6,13 +6,16 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import javax.inject.Inject
 
-class UpdateFeaturedImageUseCase @Inject constructor() { fun updateFeaturedImage(
-    featuredImageId: Long,
-    editPostRepository: EditPostRepository,
-    onPostFeaturedImageUpdated: (PostImmutableModel) -> Unit
-) { editPostRepository.updateAsync({ postModel: PostModel ->
+class UpdateFeaturedImageUseCase @Inject constructor() {
+    fun updateFeaturedImage(
+        featuredImageId: Long,
+        editPostRepository: EditPostRepository,
+        onPostFeaturedImageUpdated: (PostImmutableModel) -> Unit
+    ) {
+        editPostRepository.updateAsync({ postModel: PostModel ->
             postModel.setFeaturedImageId(featuredImageId)
-            true }) { postModel: PostImmutableModel, result: UpdatePostResult ->
+            true
+        }) { postModel: PostImmutableModel, result: UpdatePostResult ->
             if (result === Updated) {
                 onPostFeaturedImageUpdated.invoke(postModel)
             }
