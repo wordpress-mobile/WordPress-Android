@@ -94,4 +94,16 @@ class MediaUploadCompletionProcessorTest {
         val processedContent = processor.processContent(TestContent.oldPostWithGalleryJsonNullId)
         Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithGalleryJsonNullId)
     }
+
+    @Test
+    fun `processPost can handle original galleries with refactored galleries present`() {
+        val processedContent = processor.processContent(TestContent.oldPostWithMixedGalleriesOriginal)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithMixedGalleriesOriginal)
+    }
+
+    @Test
+    fun `processPost can handle refactored galleries with original galleries present`() {
+        val processedContent = processor.processContent(TestContent.oldPostWithMixedGalleriesRefactored)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithMixedGalleriesRefactored)
+    }
 }
