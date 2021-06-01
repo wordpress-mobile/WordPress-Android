@@ -1557,4 +1557,10 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="fontFamily">serif</item>
     </style>
+
+    <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+    </style>
 </resources>
