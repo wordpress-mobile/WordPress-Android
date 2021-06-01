@@ -214,6 +214,11 @@
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
+            android:name=".ui.comments.unified.UnifiedCommentsActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/comments"/>
+        <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
@@ -621,9 +626,6 @@
         <activity
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
-            android:name=".ui.gif.GifPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".util.config.manual.ManualFeatureConfigActivity"

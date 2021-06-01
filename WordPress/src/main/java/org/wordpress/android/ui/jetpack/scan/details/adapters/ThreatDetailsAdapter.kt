@@ -10,6 +10,7 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionVie
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanFootnoteViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatContextLinesViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatDetailHeaderViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatFileNameViewHolder
@@ -36,6 +37,7 @@ class ThreatDetailsAdapter(
             ViewType.THREAT_CONTEXT_LINES.id -> ThreatContextLinesViewHolder(parent)
             ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
             ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
+            ViewType.SCAN_FOOTNOTE.id -> ScanFootnoteViewHolder(imageManager, uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
