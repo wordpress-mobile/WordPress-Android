@@ -16,6 +16,6 @@ sealed class BloggingRemindersItem(val type: Type) {
     data class Illustration(@DrawableRes val illustration: Int) : BloggingRemindersItem(ILLUSTRATION)
     data class Title(val text: UiString) : BloggingRemindersItem(TITLE)
     data class Text(val text: UiString) : BloggingRemindersItem(TEXT)
-    data class PrimaryButton(val text: UiString, val onClick: ListItemInteraction) :
+    data class PrimaryButton(val text: UiString, val enabled: Boolean, val onClick: ListItemInteraction) :
         BloggingRemindersItem(PRIMARY_BUTTON)
 }

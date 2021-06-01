@@ -62,6 +62,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             primaryButton.setOnClickListener {
                 item.onClick.click()
             }
+            primaryButton.isEnabled = item.enabled
         }
     }
 }
