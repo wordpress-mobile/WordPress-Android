@@ -61,9 +61,10 @@ class RestoreStateListItemBuilder @Inject constructor(
                 ),
                 buildEnterServerCredsMessageState(
                         onEnterServerCredsIconClicked,
+                        siteId = siteId,
                         iconResId = R.drawable.ic_plus_white_24dp,
                         iconColorResId = R.color.colorPrimary,
-                        siteId = siteId
+                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
                 ),
                 buildSubHeaderState(R.string.restore_details_choose_items_header)
         )
@@ -245,13 +246,15 @@ class RestoreStateListItemBuilder @Inject constructor(
 
     private fun buildEnterServerCredsMessageState(
         onEnterServerCredsIconClicked: () -> Unit,
+        siteId: Long,
         @DrawableRes iconResId: Int? = null,
         @ColorRes iconColorResId: Int? = null,
-        siteId: Long
+        @DimenRes iconSizeResId: Int? = null
     ): FootnoteState {
         return FootnoteState(
                 iconRes = iconResId,
                 iconColorResId = iconColorResId,
+                iconSizeResId = iconSizeResId,
                 text = UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                 R.string.restore_details_enter_server_creds_msg,
