@@ -173,7 +173,7 @@ class RestoreViewModel @Inject constructor(
         outState.putParcelable(KEY_RESTORE_STATE, restoreState)
     }
 
-    private fun buildDetails() {
+    private fun buildDetails(isAwaitingCredentials: Boolean = false) {
         launch {
             val availableItems = availableItemsProvider.getAvailableItems()
             val activityLogModel = getActivityLogItemUseCase.get(activityId)
@@ -184,6 +184,7 @@ class RestoreViewModel @Inject constructor(
                                 availableItems = availableItems,
                                 published = activityLogModel.published,
                                 siteId = site.siteId,
+                                isAwaitingCredentials = isAwaitingCredentials,
                                 onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
                                 onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
                                 onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked

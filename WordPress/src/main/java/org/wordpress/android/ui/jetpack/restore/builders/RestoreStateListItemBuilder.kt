@@ -42,6 +42,7 @@ class RestoreStateListItemBuilder @Inject constructor(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
         siteId: Long,
+        isAwaitingCredentials: Boolean,
         onCreateDownloadClick: () -> Unit,
         onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit,
         onEnterServerCredsIconClicked: () -> Unit
@@ -58,16 +59,20 @@ class RestoreStateListItemBuilder @Inject constructor(
                         titleRes = R.string.restore_details_action_button,
                         contentDescRes = R.string.restore_details_action_button_content_description,
                         onClick = onCreateDownloadClick
-                ),
-                buildEnterServerCredsMessageState(
-                        onEnterServerCredsIconClicked,
-                        siteId = siteId,
-                        iconResId = R.drawable.ic_plus_white_24dp,
-                        iconColorResId = R.color.colorPrimary,
-                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
-                ),
-                buildSubHeaderState(R.string.restore_details_choose_items_header)
+                )
         )
+        if (isAwaitingCredentials) {
+            items.add(
+                    buildEnterServerCredsMessageState(
+                            onEnterServerCredsIconClicked,
+                            siteId = siteId,
+                            iconResId = R.drawable.ic_plus_white_24dp,
+                            iconColorResId = R.color.colorPrimary,
+                            iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
+                    )
+            )
+        }
+        items.add(buildSubHeaderState(R.string.restore_details_choose_items_header))
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
             CheckboxState(
