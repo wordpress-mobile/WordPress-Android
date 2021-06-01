@@ -14,12 +14,12 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     private lateinit var mPositiveButtonLabel: CharSequence
     private var mTitle: CharSequence? = null
     private var mNegativeButtonLabel: CharSequence? = null
-    private var mMediaId: Int = 0
+    private var mId: Int = 0
     private var dismissedByPositiveButton = false
     private var dismissedByNegativeButton = false
 
     interface GutenbergDialogPositiveClickInterface {
-        fun onGutenbergDialogPositiveClicked(instanceTag: String, mediaId: Int)
+        fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int)
     }
 
     interface GutenbergDialogNegativeClickInterface {
@@ -36,14 +36,14 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         message: CharSequence,
         positiveButtonLabel: CharSequence,
         negativeButtonLabel: CharSequence? = null,
-        mediaId: Int
+        id: Int
     ) {
         mTag = tag
         mTitle = title
         mMessage = message
         mPositiveButtonLabel = positiveButtonLabel
         mNegativeButtonLabel = negativeButtonLabel
-        mMediaId = mediaId
+        mId = id
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
             mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
             mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
-            mMediaId = savedInstanceState.getInt(STATE_KEY_MEDIA_ID)
+            mId = savedInstanceState.getInt(STATE_KEY_ID)
         }
     }
 
@@ -68,7 +68,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         outState.putCharSequence(STATE_KEY_MESSAGE, mMessage)
         outState.putCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL, mPositiveButtonLabel)
         outState.putCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL, mNegativeButtonLabel)
-        outState.putInt(STATE_KEY_MEDIA_ID, mMediaId)
+        outState.putInt(STATE_KEY_ID, mId)
         super.onSaveInstanceState(outState)
     }
 
@@ -84,7 +84,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
             builder.setPositiveButton(mPositiveButtonLabel) { _, _ ->
                 dismissedByPositiveButton = true
                 (parentFragment as? GutenbergDialogPositiveClickInterface)?.let {
-                    it.onGutenbergDialogPositiveClicked(mTag, mMediaId)
+                    it.onGutenbergDialogPositiveClicked(mTag, mId)
                 }
             }.setCancelable(true)
         }
@@ -128,6 +128,6 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         private const val STATE_KEY_MESSAGE = "state_key_message"
         private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
-        private const val STATE_KEY_MEDIA_ID = "state_key_media_id"
+        private const val STATE_KEY_ID = "state_key_id"
     }
 }
