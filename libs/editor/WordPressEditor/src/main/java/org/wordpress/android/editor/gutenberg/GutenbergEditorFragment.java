@@ -117,7 +117,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
 
-    private static final int MEDIA_ID_NO_FEATURED_IMAGE_SET = 0;
+    public static final int MEDIA_ID_NO_FEATURED_IMAGE_SET = 0;
 
     private boolean mHtmlModeEnabled;
 

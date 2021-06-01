@@ -239,6 +239,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -2493,7 +2494,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             int postId = getEditPostRepository().getId();
-            if (mediaId == 0) {
+            if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
                 mFeaturedImageHelper.trackFeaturedImageEvent(
                         FeaturedImageHelper.TrackableEvent.IMAGE_REMOVED_GUTENBERG_EDITOR,
                         postId
