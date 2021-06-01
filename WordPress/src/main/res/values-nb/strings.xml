@@ -1455,7 +1455,7 @@ Language: nb_NO
     <string name="jetpack_disconnect_confirm">Koble fra</string>
     <string name="jetpack_disconnect_confirmation_message">Er du sikker på at du vil frakoble Jetpack fra denne siden?</string>
     <string name="jetpack_disconnect_pref_title">«Koble ut fra WordPress.com»</string>
-    <string name="site_settings_jetpack_allowlist_description">Du angi en IP-adresse (eller serier av IP-adresser) som \"Alltid tillatte\" for å hindre dem fra å noensinne bli blokkert av Jetpack. IPv6 og IPv4 er mulige. For å bestemme en rekkevidde, skriv inn minimumsverdien og maksverdien, adskilt av en bindestrek. Eksempel: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Du angi en IP-adresse (eller serier av IP-adresser) som \"Alltid tillatte\" for å hindre dem fra å noensinne bli blokkert av Jetpack. IPv6 og IPv4 er mulige. For å bestemme en rekkevidde, skriv inn minimumsverdien og maksverdien, adskilt av en bindestrek. Eksempel: 12.12.12.1-12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Krev to-trinnsautentisering</string>
     <string name="jetpack_match_wpcom_via_email_title">Samsvar kontoer gjennom E-post</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillat WordPress.com-innlogging</string>
