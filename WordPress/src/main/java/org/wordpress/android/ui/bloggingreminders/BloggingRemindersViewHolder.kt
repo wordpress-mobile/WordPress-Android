@@ -2,13 +2,17 @@ package org.wordpress.android.ui.bloggingreminders
 
 import android.view.ViewGroup
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -76,6 +80,29 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                 item.onClick.click()
             }
             primaryButton.isEnabled = item.enabled
+        }
+    }
+
+    class DayButtonsViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersDayButtonsBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersDayButtonsBinding::inflate
+                    )
+            ) {
+        fun onBind(item: DayButtons) = with(binding) {
+            dayOne.initDay(item.dayItems[0])
+            dayTwo.initDay(item.dayItems[1])
+            dayThree.initDay(item.dayItems[2])
+            dayFour.initDay(item.dayItems[3])
+            dayFive.initDay(item.dayItems[4])
+            daySix.initDay(item.dayItems[5])
+            daySeven.initDay(item.dayItems[6])
+        }
+
+        private fun TextView.initDay(dayItem: DayItem) {
+            uiHelpers.setTextOrHide(this, dayItem.text)
+            setOnClickListener { dayItem.onClick.click() }
+            isSelected = dayItem.isSelected
         }
     }
 }

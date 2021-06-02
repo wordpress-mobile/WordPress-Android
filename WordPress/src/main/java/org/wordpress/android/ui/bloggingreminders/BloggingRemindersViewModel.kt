@@ -12,18 +12,17 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -33,10 +32,12 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BloggingRemindersViewModel @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val resourceProvider: ResourceProvider,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    private val daySelectionBuilder: DaySelectionBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -48,7 +49,7 @@ class BloggingRemindersViewModel @Inject constructor(
     ) { screen, bloggingRemindersModel ->
         when (screen) {
             PROLOGUE -> buildPrologue()
-            SELECTION -> buildSelection(bloggingRemindersModel)
+            SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay, this::showEpilogue)
             EPILOGUE -> buildEpilogue()
             null -> null
         }
@@ -59,7 +60,7 @@ class BloggingRemindersViewModel @Inject constructor(
             if (it.enabledDays.isNotEmpty()) {
                 resourceProvider.getString(
                         R.string.blogging_goals_n_times_a_week,
-                        UiStringText(it.enabledDays.size.toString())
+                        it.enabledDays.size
                 )
             } else {
                 resourceProvider.getString(R.string.blogging_goals_not_set)
@@ -91,20 +92,6 @@ class BloggingRemindersViewModel @Inject constructor(
             )
     )
 
-    private fun buildSelection(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
-        // TODO Add selection view items
-        return listOf(
-                Illustration(R.drawable.img_illustration_calendar),
-                Title(UiStringRes(R.string.blogging_reminders_select_days)),
-                MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
-                PrimaryButton(
-                        UiStringRes(R.string.blogging_reminders_notify_me),
-                        enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,
-                        ListItemInteraction.create(bloggingRemindersModel, this::showEpilogue)
-                )
-        )
-    }
-
     private fun buildEpilogue(): List<BloggingRemindersItem> {
         // TODO Add epilogue view items
         return listOf(
@@ -134,7 +121,9 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
         if (bloggingRemindersModel != null) {
-            bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+            launch(bgDispatcher) {
+                bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+            }
             // TODO Add logic to save state and schedule notifications here
             _selectedScreen.value = EPILOGUE
         }

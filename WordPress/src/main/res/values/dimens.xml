@@ -665,4 +665,7 @@
     <dimen name="login_empty_view_avatar_height">72dp</dimen>
     <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
     <dimen name="login_empty_view_line_spacing">2sp</dimen>
+
+    <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
+    <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
 </resources>
