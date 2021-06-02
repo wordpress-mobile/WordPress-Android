@@ -1572,6 +1572,7 @@
     <style name="BloggingRemindersDayBubble">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_lowest</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
     </style>
 </resources>
