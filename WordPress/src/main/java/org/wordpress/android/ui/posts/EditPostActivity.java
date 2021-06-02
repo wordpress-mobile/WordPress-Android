@@ -123,7 +123,6 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -2290,6 +2289,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
+        boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
         boolean canViewEditorOnboarding = (
                 mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
@@ -2303,6 +2303,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
+                // Only enable reusable block in WP.com sites until the issue
+                // (https://github.com/wordpress-mobile/gutenberg-mobile/issues/3457) in self-hosted sites is fixed
+                isWPComSite,
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
@@ -2632,8 +2635,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
-                    } else if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         int postId = getImmutablePost().getId();
                         for (int localId : localIds) {
                             MediaModel media = mMediaStore.getMediaWithLocalId(localId);
@@ -2685,8 +2688,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.GIF_PICKER_SINGLE_SELECT:
                 case RequestCodes.GIF_PICKER_MULTI_SELECT:
-                    if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         mEditorMedia.addGifMediaToPostAsync(localIds);
                     }
                     break;

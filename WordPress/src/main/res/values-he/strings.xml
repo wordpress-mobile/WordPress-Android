@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-12 17:54:54+0000
+Translation-Revision-Date: 2021-05-28 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">יש להקיש פעמיים כדי להוסיף קישור.</string>
+    <string name="gutenberg_native_add_link">להוסיף קישור</string>
+    <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
+    <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
+    <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.</string>
+    <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
+    <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="gutenberg_native_audio_settings">הגדרות אודיו</string>
     <string name="gutenberg_native_image_settings">הגדרות תמונה</string>
     <string name="gutenberg_native_size">גודל</string>
+    <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
+    <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="user_profile_site_section_header">אתר</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
@@ -42,6 +51,7 @@ Language: he_IL
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">הבלוק נמחק או לא זמין.</string>
     <string name="gutenberg_native_add_text">הוספת טקסט…</string>
     <string name="gutenberg_native_add_caption">להוסיף כיתוב</string>
+    <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">מה זה טקסט חלופי?</string>
     <string name="gutenberg_native_transform_s_to">לשנות את %s אל</string>
     <string name="gutenberg_native_transform_block">לשנות בלוק…</string>
@@ -735,6 +745,7 @@ Language: he_IL
     <string name="new_site_creation_creating_site_loading_1">תופס את כתובת ה-URL של האתר</string>
     <string name="new_site_creation_creating_site_loading_subtitle">האתר שלך יהיה מוכן בקרוב</string>
     <string name="new_site_creation_creating_site_loading_title">הידד!\nכמעט סיימת</string>
+    <string name="gutenberg_native_block_settings">הגדרות הבלוק</string>
     <string name="pages_and_posts_cancel_auto_upload">לבטל העלאה</string>
     <string name="gif_list_search_returned_unknown_error">הייתה בעיה בטיפול בבקשה הזאת</string>
     <string name="gif_powered_by_tenor">מופעל על ידי Tenor</string>

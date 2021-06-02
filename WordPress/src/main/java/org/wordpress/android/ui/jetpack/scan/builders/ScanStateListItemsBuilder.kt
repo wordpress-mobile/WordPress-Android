@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -45,7 +47,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
         onHelpClicked: () -> Unit,
-        onEnterServerCredsMessageClicked: () -> Unit
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
             buildThreatsFixingStateItems(fixingThreatIds)
@@ -60,7 +62,7 @@ class ScanStateListItemsBuilder @Inject constructor(
                             onFixAllButtonClicked,
                             onThreatItemClicked,
                             onHelpClicked,
-                            onEnterServerCredsMessageClicked
+                            onEnterServerCredsIconClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -116,7 +118,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit,
         onHelpClicked: () -> Unit,
-        onEnterServerCredsMessageClicked: () -> Unit
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
@@ -135,16 +137,19 @@ class ScanStateListItemsBuilder @Inject constructor(
                 isEnabled = model.hasValidCredentials
         ).takeIf { fixableThreats.isNotEmpty() }?.let { items.add(it) }
 
-        items.add(scanButton)
-
         if (!model.hasValidCredentials && fixableThreats.isNotEmpty()) {
             items.add(
                     buildEnterServerCredsMessageState(
-                            onEnterServerCredsMessageClicked = onEnterServerCredsMessageClicked,
-                            threatsCount = threats.size
+                            onEnterServerCredsIconClicked,
+                            iconResId = R.drawable.ic_plus_white_24dp,
+                            iconColorResId = R.color.colorPrimary,
+                            threatsCount = threats.size,
+                            siteId = site.siteId
                     )
             )
         }
+
+        items.add(scanButton)
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState(threatsCount = threats.size))
@@ -310,26 +315,28 @@ class ScanStateListItemsBuilder @Inject constructor(
     }
 
     private fun buildEnterServerCredsMessageState(
-        onEnterServerCredsMessageClicked: () -> Unit,
-        threatsCount: Int
-    ): DescriptionState {
+        onEnterServerCredsIconClicked: () -> Unit,
+        @DrawableRes iconResId: Int? = null,
+        @ColorRes iconColorResId: Int? = null,
+        threatsCount: Int,
+        siteId: Long
+    ): FootnoteState {
         val messageResId = if (threatsCount > 1) {
-            R.string.threat_fix_enter_server_creds_message_plural
+            R.string.threat_fix_enter_server_creds_msg_plural
         } else {
-            R.string.threat_fix_enter_server_creds_message_singular
+            R.string.threat_fix_enter_server_creds_msg_singular
         }
-
-        val clickableText = resourceProvider.getString(messageResId)
-
-        val clickableTextsInfo = listOf(
-                ClickableTextInfo(
-                        startIndex = 0,
-                        endIndex = clickableText.length,
-                        onClick = onEnterServerCredsMessageClicked
-                )
+        return FootnoteState(
+                iconResId = iconResId,
+                iconColorResId = iconColorResId,
+                text = UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                messageResId,
+                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                        )
+                ),
+                onIconClick = onEnterServerCredsIconClicked
         )
-
-        return DescriptionState(text = UiStringRes(messageResId), clickableTextsInfo = clickableTextsInfo)
     }
 
     companion object {
