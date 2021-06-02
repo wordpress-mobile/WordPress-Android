@@ -14,7 +14,7 @@ data class RewindStatusModel(
         ACTIVE("active"),
         INACTIVE("inactive"),
         UNAVAILABLE("unavailable"),
-        AWAITING_CREDENTIALS("awaitingCredentials"),
+        AWAITING_CREDENTIALS("awaiting_credentials"),
         PROVISIONING("provisioning"),
         UNKNOWN("unknown");
 
