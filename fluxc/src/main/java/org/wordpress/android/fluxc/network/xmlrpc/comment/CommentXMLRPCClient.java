@@ -337,6 +337,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         comment.setStatus(getCommentStatusFromXMLRPCStatusString(stringStatus).toString());
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
+        comment.setPublishedTimestamp(DateTimeUtils.timestampFromIso8601(comment.getDatePublished()));
         comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
         comment.setUrl(XMLRPCUtils.safeGetMapValue(commentMap, "link", ""));
 
