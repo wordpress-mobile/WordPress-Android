@@ -24,6 +24,7 @@ import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
@@ -186,14 +187,17 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val state = uiState.last()
         assertIllustration(state[0], R.drawable.img_illustration_celebration_150dp)
         assertTitle(state[1], R.string.set_your_blogging_goals_title)
-        assertText(state[2], R.string.set_your_blogging_goals_message)
+        assertHighEmphasisText(state[2], R.string.set_your_blogging_goals_message)
         assertPrimaryButton(state[3], R.string.set_your_blogging_goals_button, isEnabled = true)
     }
 
     private fun assertDaySelection(primaryButtonEnabled: Boolean) {
         val state = uiState.last()
         // TODO change this method when the list contains the updated UI
-        assertPrimaryButton(state[0], R.string.blogging_reminders_notify_me, isEnabled = primaryButtonEnabled)
+        assertIllustration(state[0], R.drawable.img_illustration_calendar)
+        assertTitle(state[1], R.string.blogging_reminders_select_days)
+        assertMediumEmphasisText(state[2], R.string.blogging_reminders_select_days_message)
+        assertPrimaryButton(state[3], R.string.blogging_reminders_notify_me, isEnabled = primaryButtonEnabled)
     }
 
     private fun assertEpilogue() {
@@ -212,8 +216,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(titleRes)
     }
 
-    private fun assertText(item: BloggingRemindersItem, @StringRes textRes: Int) {
+    private fun assertHighEmphasisText(item: BloggingRemindersItem, @StringRes textRes: Int) {
         val title = item as HighEmphasisText
+        assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
+    }
+
+    private fun assertMediumEmphasisText(item: BloggingRemindersItem, @StringRes textRes: Int) {
+        val title = item as MediumEmphasisText
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
     }
 
