@@ -160,7 +160,7 @@
     <string name="featured_image_replace_dialog_confirm">Replace</string>
     <string name="featured_image_replace_dialog_cancel">Cancel</string>
 
-    <string name="featured_image_confirmation_notice">Set as Featured Image</string>
-    <string name="featured_image_removed_notice">Removed as Featured Image</string>
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
 
 </resources>
