@@ -1568,4 +1568,10 @@
     <style name="BloggingRemindersLargeTitle" parent="BloggingRemindersTitle">
         <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
     </style>
+
+    <style name="BloggingRemindersDayBubble">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_lowest</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 </resources>

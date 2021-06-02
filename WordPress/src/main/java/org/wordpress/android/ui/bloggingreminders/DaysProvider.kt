@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.TUESDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.ui.reader.utils.DateProvider
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 class DaysProvider
@@ -27,7 +28,8 @@ class DaysProvider
     fun getDays(): List<Pair<String, Day>> {
         val offset = dateProvider.getFirstDayOfTheWeek() - 1
         val shortWeekdays = dateProvider.getShortWeekdays()
-        return (days.takeLast(7 - offset) + days.take(offset)).map { shortWeekdays[it.first] to it.second }
+        val orderedDays = days.takeLast(7 - offset) + days.take(offset)
+        return orderedDays.map { shortWeekdays[it.first] to it.second }
     }
 }
 

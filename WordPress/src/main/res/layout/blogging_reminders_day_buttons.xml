@@ -11,104 +11,97 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toStartOf="@+id/day_two"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginBottom="@dimen/blogging_reminders_days_middle_margin"
-        tools:text="MON" />
+        tools:text="Mon" />
 
     <TextView
         android:id="@+id/day_two"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toStartOf="@id/day_three"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/day_one"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginBottom="@dimen/blogging_reminders_days_middle_margin"
-        tools:text="TUE" />
+        tools:text="Tue" />
 
     <TextView
         android:id="@+id/day_three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toStartOf="@id/day_four"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/day_two"
         android:layout_marginBottom="@dimen/blogging_reminders_days_middle_margin"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="WED" />
+        tools:text="Wed" />
 
     <TextView
         android:id="@+id/day_four"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/day_three"
         android:layout_marginBottom="@dimen/blogging_reminders_days_middle_margin"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="THU" />
+        tools:text="Thu" />
 
     <TextView
         android:id="@+id/day_five"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/day_six"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         android:layout_marginTop="@dimen/blogging_reminders_days_middle_margin"
-        tools:text="FRI" />
+        tools:text="Fri" />
 
     <TextView
         android:id="@+id/day_six"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/day_seven"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/day_five"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         android:layout_marginTop="@dimen/blogging_reminders_days_middle_margin"
-        tools:text="SAT" />
+        tools:text="Sat" />
 
     <TextView
         android:id="@+id/day_seven"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
-        android:gravity="center"
+        style="@style/BloggingRemindersDayBubble"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/day_six"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         android:layout_marginTop="@dimen/blogging_reminders_days_middle_margin"
-        tools:text="SUN" />
+        tools:text="Sun" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/divider"
