@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -36,6 +37,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -60,6 +62,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -145,6 +148,7 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
+    private val bloggingReminderItemBuilder: BloggingReminderItemBuilder,
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -228,6 +232,18 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
+
+            if (shouldShowBloggingRemindersCard()) {
+                siteItems.add(
+                        bloggingReminderItemBuilder.build(
+                                QuickStartCategory(GROW, listOf(), listOf()),
+                                GROW_QUICK_START,
+                                this::onDynamicCardMoreClick,
+                                this::onBloggingReminderCardClick
+                        )
+                )
+            }
+
             val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
                 // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
                 // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
@@ -268,6 +284,15 @@ class MySiteViewModel
             State.NoSites(shouldShowImage)
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun shouldShowBloggingRemindersCard(): Boolean {
+        // TODO: Check for feature flag enabled && blogging reminder card not already shown && not showing quick start menu
+        return true
+    }
+
+    private fun onBloggingReminderCardClick() {
+
     }
 
     private fun scrollToQuickStartTaskIfNecessary(

@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.mysite.MySiteItem.Type.BLOGGING_REMINDER_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -20,7 +21,8 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
         DOMAIN_REGISTRATION_BLOCK,
         QUICK_START_CARD,
         CATEGORY_HEADER,
-        LIST_ITEM
+        LIST_ITEM,
+        BLOGGING_REMINDER_CARD
     }
 
     data class SiteInfoBlock(
@@ -70,6 +72,25 @@ sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Bool
             override val onMoreClick: ListItemInteraction
         ) : DynamicCard(QUICK_START_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
             data class QuickStartTaskCard(
+                val quickStartTask: QuickStartTask,
+                val title: UiString,
+                val description: UiString,
+                @DrawableRes val illustration: Int,
+                @ColorRes val accentColor: Int,
+                val done: Boolean = false,
+                val onClick: ListItemInteraction
+            )
+        }
+
+        data class BloggingReminderCard(
+            val id: DynamicCardType,
+            val title: UiString,
+            val taskCards: List<BloggingReminderTaskCard>,
+            @ColorRes val accentColor: Int,
+            val progress: Int,
+            override val onMoreClick: ListItemInteraction
+        ) : DynamicCard(BLOGGING_REMINDER_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
+            data class BloggingReminderTaskCard(
                 val quickStartTask: QuickStartTask,
                 val title: UiString,
                 val description: UiString,

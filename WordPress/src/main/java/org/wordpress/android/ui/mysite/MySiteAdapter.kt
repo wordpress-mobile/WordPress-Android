@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.BloggingReminderCard
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
@@ -58,6 +59,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             is QuickStartCardViewHolder -> holder.bind(items[position] as QuickStartCard)
             is MySiteCategoryViewHolder -> holder.bind(items[position] as CategoryHeader)
             is MySiteListItemViewHolder -> holder.bind(items[position] as ListItem)
+            is BloggingReminderCardViewHolder -> holder.bind(items[position] as BloggingReminderCard)
         }
     }
 
