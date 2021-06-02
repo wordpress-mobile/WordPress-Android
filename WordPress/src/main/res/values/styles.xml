@@ -1550,7 +1550,7 @@
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:alpha">@dimen/material_emphasis_high</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="BloggingRemindersTextLowEmphasis" parent="BloggingRemindersText">
