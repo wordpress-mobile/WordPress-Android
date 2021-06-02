@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
 @RunWith(MockitoJUnitRunner::class)
 class BloggingRemindersStoreTest {
@@ -26,7 +27,7 @@ class BloggingRemindersStoreTest {
 
     @Before
     fun setUp() {
-        store = BloggingRemindersStore(bloggingRemindersDao, mapper)
+        store = BloggingRemindersStore(bloggingRemindersDao, mapper, initCoroutineEngine())
     }
 
     @Test
