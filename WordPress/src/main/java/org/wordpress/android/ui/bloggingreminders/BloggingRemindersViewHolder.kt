@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
-import org.wordpress.android.databinding.BloggingRemindersTextBinding
+import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
+import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
@@ -42,9 +43,9 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
     }
 
     class HighEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-            BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
+            BloggingRemindersViewHolder<BloggingRemindersTextHighEmphasisBinding>(
                     parentView.viewBinding(
-                            BloggingRemindersTextBinding::inflate
+                            BloggingRemindersTextHighEmphasisBinding::inflate
                     )
             ) {
         fun onBind(item: HighEmphasisText) = with(binding) {
@@ -53,9 +54,9 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
     }
 
     class MediumEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-            BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
+            BloggingRemindersViewHolder<BloggingRemindersTextMediumEmphasisBinding>(
                     parentView.viewBinding(
-                            BloggingRemindersTextBinding::inflate
+                            BloggingRemindersTextMediumEmphasisBinding::inflate
                     )
             ) {
         fun onBind(item: MediumEmphasisText) = with(binding) {
