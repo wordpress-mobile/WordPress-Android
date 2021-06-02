@@ -84,7 +84,7 @@ android {
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
-        buildConfigField "boolean", "BLOGGING_REMIDERS", "false"
+        buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
