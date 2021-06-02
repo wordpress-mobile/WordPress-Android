@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.view.ViewGroup
-import android.widget.ImageView.ScaleType.CENTER
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -19,19 +18,18 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmph
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.viewBinding
 
 sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding: T) :
         RecyclerView.ViewHolder(binding.root) {
-    class IllustrationViewHolder(parentView: ViewGroup, private val imageManager: ImageManager) :
+    class IllustrationViewHolder(parentView: ViewGroup) :
             BloggingRemindersViewHolder<BloggingRemindersIllustrationBinding>(
                     parentView.viewBinding(
                             BloggingRemindersIllustrationBinding::inflate
                     )
             ) {
         fun onBind(item: Illustration) = with(binding) {
-            imageManager.load(illustrationView, item.illustration, CENTER)
+            illustrationView.setImageResource(item.illustration)
         }
     }
 

@@ -23,11 +23,10 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.Pr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TitleViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BloggingRemindersAdapter
-@Inject constructor(private val imageManager: ImageManager, private val uiHelpers: UiHelpers) :
+@Inject constructor(private val uiHelpers: UiHelpers) :
     Adapter<BloggingRemindersViewHolder<*>>() {
     private var items: List<BloggingRemindersItem> = listOf()
 
@@ -59,7 +58,7 @@ class BloggingRemindersAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BloggingRemindersViewHolder<*> {
         return when (Type.values()[viewType]) {
             TITLE -> TitleViewHolder(parent, uiHelpers)
-            ILLUSTRATION -> IllustrationViewHolder(parent, imageManager)
+            ILLUSTRATION -> IllustrationViewHolder(parent)
             HIGH_EMPHASIS_TEXT -> HighEmphasisTextViewHolder(parent, uiHelpers)
             LOW_EMPHASIS_TEXT -> MediumEmphasisTextViewHolder(parent, uiHelpers)
             PRIMARY_BUTTON -> PrimaryButtonViewHolder(parent, uiHelpers)
