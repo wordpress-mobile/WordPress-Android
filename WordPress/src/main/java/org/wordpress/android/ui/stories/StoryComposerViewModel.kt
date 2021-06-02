@@ -185,6 +185,6 @@ class StoryComposerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        postEditorAnalyticsSession?.end()
+        postEditorAnalyticsSession?.end(null)
     }
 }

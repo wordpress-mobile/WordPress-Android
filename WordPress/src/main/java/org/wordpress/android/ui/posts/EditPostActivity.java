@@ -959,7 +959,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
             if (mPostEditorAnalyticsSession != null) {
-                mPostEditorAnalyticsSession.end();
+                mPostEditorAnalyticsSession.end(getGutenbergPropsBuilder());
             }
         }
 

@@ -143,7 +143,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
     }
 
-    public void end() {
+    public void end(GutenbergPropsBuilder capabilities) {
         // don't try to send an "end" event if the session wasn't started in the first place
         if (mStarted) {
             if (mOutcome == null) {
@@ -153,6 +153,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
+            if (capabilities != null) {
+                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, capabilities.getCanViewEditorOnboarding());
+            }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
