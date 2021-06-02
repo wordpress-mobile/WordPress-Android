@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -41,17 +40,8 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.update(it ?: listOf())
             }
 
-            dialog?.setOnShowListener { dialogInterface ->
-                val sheetDialog = dialogInterface as? BottomSheetDialog
-
-                val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
-                ) as? FrameLayout
-
-                bottomSheet?.let {
-                    val behavior = BottomSheetBehavior.from(it)
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
+            (dialog as? BottomSheetDialog)?.apply {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
     }
