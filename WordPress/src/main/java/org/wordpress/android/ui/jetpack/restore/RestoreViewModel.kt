@@ -12,6 +12,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes.GenericFailure
+import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
@@ -181,8 +183,10 @@ class RestoreViewModel @Inject constructor(
                         items = stateListItemBuilder.buildDetailsListStateItems(
                                 availableItems = availableItems,
                                 published = activityLogModel.published,
+                                siteId = site.siteId,
                                 onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
-                                onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked
+                                onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
+                                onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked
                         ),
                         type = StateType.DETAILS
                 )
@@ -444,6 +448,10 @@ class RestoreViewModel @Inject constructor(
             val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
             _uiState.postValue(it.copy(items = updatedItems))
         }
+    }
+
+    private fun onEnterServerCredsIconClicked() {
+        _navigationEvents.postValue(Event(ShowJetpackSettings("${Constants.URL_JETPACK_SETTINGS}/${site.siteId}")))
     }
 
     private fun onRestoreSiteClick() {

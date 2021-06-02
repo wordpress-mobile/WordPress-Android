@@ -55,6 +55,7 @@ import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -70,6 +71,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -98,7 +100,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel)
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
