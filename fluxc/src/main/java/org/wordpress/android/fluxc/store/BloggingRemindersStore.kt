@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.BloggingRemindersMapper
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,7 +14,8 @@ import javax.inject.Singleton
 class BloggingRemindersStore
 @Inject constructor(
     private val bloggingRemindersDao: BloggingRemindersDao,
-    private val mapper: BloggingRemindersMapper
+    private val mapper: BloggingRemindersMapper,
+    private val coroutineEngine: CoroutineEngine
 ) {
     fun bloggingRemindersModel(siteId: Int): Flow<BloggingRemindersModel> {
         return bloggingRemindersDao.getBySiteId(siteId).map {
@@ -20,7 +23,8 @@ class BloggingRemindersStore
         }
     }
 
-    fun updateBloggingReminders(model: BloggingRemindersModel) {
-        bloggingRemindersDao.insert(mapper.toDatabaseModel(model))
-    }
+    suspend fun updateBloggingReminders(model: BloggingRemindersModel) =
+            coroutineEngine.withDefaultContext(T.SETTINGS, this, "Updating blogging reminders") {
+                bloggingRemindersDao.insert(mapper.toDatabaseModel(model))
+            }
 }
