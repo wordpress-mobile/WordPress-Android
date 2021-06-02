@@ -507,7 +507,6 @@ private object ZendeskConstants {
     const val platformTag = "Android"
     const val jp_sourcePlatform = "mobile_-_jp_android"
     const val wp_sourcePlatform = "mobile_-_wp_android"
-    const val sourcePlatform = "asdf"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }
