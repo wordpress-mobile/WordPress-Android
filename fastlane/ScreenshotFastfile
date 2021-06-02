@@ -346,13 +346,14 @@ end
     locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
       .map { |hsh| hsh[:google_play] }
+      .compact
 
     # Allow creating promo screenshots for just one locale
     # undefined method `casecmp' for nil:NilClass (NoMethodError) may be thrown
     # because locales contains a NIL value?
     if options[:locale] != nil
       locales.keep_if { |locale|
-        locale != nil && locale.casecmp(options[:locale]) == 0
+        locale.casecmp(options[:locale]) == 0
       }
     end
 
