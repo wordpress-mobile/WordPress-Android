@@ -6,4 +6,8 @@ group :screenshots, optional: true do
   gem 'rmagick', '~> 4.1'
 end
 
-gem 'fastlane-plugin-wpmreleasetoolkit', '~> 1.0'
+# Production ready version
+# gem 'fastlane-plugin-wpmreleasetoolkit', '~> 1.0'
+
+# Branch testing use tag
+gem 'fastlane-plugin-wpmreleasetoolkit', git: 'https://github.com/wordpress-mobile/release-toolkit', tag: '1.0.1'
