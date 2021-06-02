@@ -4,17 +4,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.IllustrationViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.MediumEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.PrimaryButtonViewHolder
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TextViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TitleViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -43,7 +46,8 @@ class BloggingRemindersAdapter
         when (holder) {
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
             is TitleViewHolder -> holder.onBind(item as Title)
-            is TextViewHolder -> holder.onBind(item as Text)
+            is HighEmphasisTextViewHolder -> holder.onBind(item as HighEmphasisText)
+            is MediumEmphasisTextViewHolder -> holder.onBind(item as MediumEmphasisText)
             is PrimaryButtonViewHolder -> holder.onBind(item as PrimaryButton)
         }
     }
@@ -52,7 +56,8 @@ class BloggingRemindersAdapter
         return when (Type.values()[viewType]) {
             TITLE -> TitleViewHolder(parent, uiHelpers)
             ILLUSTRATION -> IllustrationViewHolder(parent, imageManager)
-            TEXT -> TextViewHolder(parent, uiHelpers)
+            HIGH_EMPHASIS_TEXT -> HighEmphasisTextViewHolder(parent, uiHelpers)
+            LOW_EMPHASIS_TEXT -> MediumEmphasisTextViewHolder(parent, uiHelpers)
             PRIMARY_BUTTON -> PrimaryButtonViewHolder(parent, uiHelpers)
         }
     }

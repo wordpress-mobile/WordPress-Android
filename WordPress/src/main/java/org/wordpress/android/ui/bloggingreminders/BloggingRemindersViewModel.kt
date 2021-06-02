@@ -14,8 +14,9 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
@@ -82,7 +83,7 @@ class BloggingRemindersViewModel @Inject constructor(
     private fun buildPrologue() = listOf(
             Illustration(R.drawable.img_illustration_celebration_150dp),
             Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-            Text(UiStringRes(R.string.set_your_blogging_goals_message)),
+            HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message)),
             PrimaryButton(
                     UiStringRes(R.string.set_your_blogging_goals_button),
                     enabled = true,
@@ -93,6 +94,9 @@ class BloggingRemindersViewModel @Inject constructor(
     private fun buildSelection(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
         // TODO Add selection view items
         return listOf(
+                Illustration(R.drawable.img_illustration_calendar),
+                Title(UiStringRes(R.string.blogging_reminders_select_days)),
+                MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
                 PrimaryButton(
                         UiStringRes(R.string.blogging_reminders_notify_me),
                         enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,

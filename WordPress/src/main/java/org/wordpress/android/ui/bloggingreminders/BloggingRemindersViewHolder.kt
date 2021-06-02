@@ -10,7 +10,8 @@ import org.wordpress.android.databinding.BloggingRemindersTextBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -40,13 +41,24 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         }
     }
 
-    class TextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+    class HighEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
             BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
                     parentView.viewBinding(
                             BloggingRemindersTextBinding::inflate
                     )
             ) {
-        fun onBind(item: Text) = with(binding) {
+        fun onBind(item: HighEmphasisText) = with(binding) {
+            uiHelpers.setTextOrHide(text, item.text)
+        }
+    }
+
+    class MediumEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTextBinding::inflate
+                    )
+            ) {
+        fun onBind(item: MediumEmphasisText) = with(binding) {
             uiHelpers.setTextOrHide(text, item.text)
         }
     }

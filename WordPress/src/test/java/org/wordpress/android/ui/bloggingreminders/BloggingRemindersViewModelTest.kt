@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
@@ -213,7 +213,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     private fun assertText(item: BloggingRemindersItem, @StringRes textRes: Int) {
-        val title = item as Text
+        val title = item as HighEmphasisText
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
     }
 
