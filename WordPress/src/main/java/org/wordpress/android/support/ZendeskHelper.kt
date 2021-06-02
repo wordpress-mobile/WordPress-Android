@@ -507,7 +507,7 @@ private object ZendeskConstants {
     // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
     const val jp_sourcePlatform = "mobile_-_jp_android"
-    const val wp_sourcePlatform = "mobile_-_wp_android"
+    const val wp_sourcePlatform = "mobile_-_android"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }
