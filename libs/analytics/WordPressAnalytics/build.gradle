@@ -5,13 +5,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.2'
-        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
 repositories {
     google()
@@ -35,15 +32,3 @@ android {
     }
 }
 
-publish {
-    artifactId = 'analytics'
-    userOrg = 'wordpress-mobile'
-    groupId = 'org.wordpress'
-    uploadName = 'analytics'
-    desc = 'Analytics library for WordPress for Android'
-    publishVersion = android.defaultConfig.versionName
-    licences = ['GPL-2.0']
-    website = 'https://github.com/wordpress-mobile/WordPress-Analytics-Android'
-    dryRun = 'false'
-    autoPublish = 'true'
-}
