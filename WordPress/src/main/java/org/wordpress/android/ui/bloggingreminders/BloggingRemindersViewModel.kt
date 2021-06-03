@@ -130,9 +130,11 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
         if (bloggingRemindersModel != null) {
-            bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
-            // TODO Add logic to save state and schedule notifications here
-            _selectedScreen.value = EPILOGUE
+            launch {
+                bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+                // TODO Add logic to save state and schedule notifications here
+                _selectedScreen.value = EPILOGUE
+            }
         }
     }
 
