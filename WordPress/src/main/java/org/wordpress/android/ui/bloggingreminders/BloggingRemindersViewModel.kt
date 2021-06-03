@@ -104,7 +104,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun buildEpilogue(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
         return listOf(
-                Illustration(R.drawable.img_illustration_celebration_150dp), // TODO: Replace this image with correct one
+                Illustration(R.drawable.img_illustration_bell_yellow_96dp),
                 Title(UiStringRes(R.string.blogging_reminders_epilogue_title)),
                 Text(UiStringRes(R.string.blogging_reminders_epilogue_body)),
                 Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption)), // TODO: Update with number of days and days depending on copy
