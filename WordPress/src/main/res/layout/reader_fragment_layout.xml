@@ -14,7 +14,7 @@
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:layout_height="@dimen/prominent_toolbar_height">
 
             <com.google.android.material.appbar.MaterialToolbar
