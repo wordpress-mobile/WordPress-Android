@@ -39,6 +39,8 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInReader;
+import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -58,7 +60,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtilsWrapper;
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -131,6 +135,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
+    @Inject AnalyticsUtilsWrapper mAnalyticsUtilsWrapper;
     @Inject ReaderPostTableWrapper mReaderPostTableWrapper;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
@@ -139,6 +144,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
     @Inject UrlUtilsWrapper mUrlUtilsWrapper;
+    @Inject DeepLinkTrackingUtils mDeepLinkTrackingUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -238,9 +244,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             host = uri.getHost();
         }
 
-        mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
 
         if (uri == null) {
+            mReaderTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
             // invalid uri so, just show the entry screen
             Intent intent = new Intent(this, WPLaunchActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -260,6 +266,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
         // with the first segment being 'read'.
         if (segments != null) {
+            // Builds stripped URI for tracking purposes
+            UriWrapper wrappedUri = new UriWrapper(uri);
             if (segments.get(0).equals("read")) {
                 if (segments.size() > 2) {
                     blogIdentifier = segments.get(2);
@@ -277,7 +285,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 }
 
                 parseFragment(uri);
-
+                mDeepLinkTrackingUtils.track(action, new OpenInReader(wrappedUri), wrappedUri);
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             } else if (segments.size() >= 4) {
@@ -293,6 +301,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 detectLike(uri);
 
                 interceptType = InterceptType.WPCOM_POST_SLUG;
+                mDeepLinkTrackingUtils.track(action, new OpenInReader(wrappedUri), wrappedUri);
                 showPost(interceptType, blogIdentifier, postIdentifier);
                 return;
             }

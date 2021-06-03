@@ -1,0 +1,8 @@
+17.4:
+We hebben in deze update drie nieuwe updates aan Verhalen toegevoegd:
+
+Je ziet nu een mediakiezer wanneer je een verhaalblok toevoegt vanuit de blok-editor, waardoor het gemakkelijker wordt om aan de slag te gaan.
+
+Verhaal voorbeelden worden nu weergegeven zoals verwacht in de Reader.
+
+En tot slot, wanneer slides niet kunnen worden geüpload, zal de app het automatisch opnieuw proberen, waardoor je een extra tik bespaart!

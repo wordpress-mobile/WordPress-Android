@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-11 11:54:48+0000
+Translation-Revision-Date: 2021-05-28 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Ketuk dua kali untuk menambahkan tautan.</string>
+    <string name="gutenberg_native_add_link">TAMBAHKAN TAUTAN</string>
+    <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
+    <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
+    <string name="login_no_jetpack_sites_error_message">Jika Anda sudah memiliki situs, Anda perlu memasang plugin Jetpack gratis ini dan menghubungkannya ke akun WordPress Anda.</string>
+    <string name="login_empty_view_avatar_content_description">Foto profil Anda</string>
+    <string name="login_not_a_jetpack_site">Untuk menggunakan aplikasi ini untuk %1$s, Anda perlu memasang plugin Jeptpack dan menghubungkannya ke akun WordPress.com Anda.</string>
     <string name="gutenberg_native_size">Ukuran</string>
+    <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
+    <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_image_settings">Pengaturan gambar</string>
     <string name="gutenberg_native_audio_settings">Pengaturan audio</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
@@ -42,6 +51,7 @@ Language: id
     <string name="gutenberg_native_attachment_page">Laman lampiran</string>
     <string name="gutenberg_native_add_text">Tambahkan teks…</string>
     <string name="gutenberg_native_add_caption">Tambahkan keterangan</string>
+    <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
     <string name="gutenberg_native_what_is_alt_text">Apa itu teks alt?</string>
     <string name="gutenberg_native_transform_s_to">Ubah %s menjadi</string>
     <string name="gutenberg_native_transform_block">Mengubah blok…</string>
@@ -729,6 +739,7 @@ Language: id
     <string name="gutenberg_native_move_block_left">Geser blok ke kiri</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Ketuk dua kali untuk memindahkan blok ke kanan</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Ketuk dua kali untuk memindahkan blok ke kiri</string>
+    <string name="gutenberg_native_block_settings">Pengaturan blok</string>
     <string name="new_site_creation_creating_site_loading_4">Membuat dasbor</string>
     <string name="new_site_creation_creating_site_loading_3">Menyiapkan tema</string>
     <string name="new_site_creation_creating_site_loading_2">Menambahkan fitur situs</string>

@@ -93,7 +93,7 @@ public abstract class VideoOptimizerBase implements VideoOptimizerProvider {
             properties.put("exception_message", exception.getMessage());
             AppLog.e(T.MEDIA, exception);
         }
-        properties.put("optimizer-lib", "mp4composer");
+        properties.put("optimizer_lib", "mp4composer");
 
         AnalyticsTracker.Stat currentStatToTrack = isError ? MEDIA_VIDEO_OPTIMIZE_ERROR : MEDIA_VIDEO_OPTIMIZED;
         AnalyticsTracker.track(currentStatToTrack, properties);

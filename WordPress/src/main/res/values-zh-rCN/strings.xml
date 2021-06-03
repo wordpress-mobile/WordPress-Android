@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-06 09:24:46+0000
+Translation-Revision-Date: 2021-05-21 10:16:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">双击可添加链接。</string>
+    <string name="gutenberg_native_add_link">添加链接</string>
+    <string name="login_empty_view_try_another_account">使用其他帐户尝试</string>
+    <string name="login_empty_view_see_instructions">请参阅说明</string>
+    <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
+    <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
+    <string name="login_not_a_jetpack_site">要将此应用用于 %1$s，您需要安装并启用 Jetpack 插件。</string>
     <string name="gutenberg_native_size">大小</string>
+    <string name="gutenberg_native_move_image_forward">前移图像</string>
+    <string name="gutenberg_native_move_image_backward">后移图像</string>
     <string name="gutenberg_native_image_settings">图像设置</string>
     <string name="gutenberg_native_audio_settings">音频设置</string>
     <string name="user_profile_untitled_site">（无标题）</string>
@@ -42,6 +51,7 @@ Language: zh_CN
     <string name="gutenberg_native_attachment_page">附件页面</string>
     <string name="gutenberg_native_add_text">添加文本…</string>
     <string name="gutenberg_native_add_caption">视频说明文字</string>
+    <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>
     <string name="gutenberg_native_transform_block">转换区块…</string>
@@ -76,7 +86,7 @@ Language: zh_CN
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="reader_title_interests">关注话题</string>
-    <string name="stories_intro_main_subtitle">在您的网站上创建、发布吸引人内容的新方法。</string>
+    <string name="stories_intro_main_subtitle">在您的站点上创建、发布吸引人内容的新方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下载</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修复威胁。</string>
@@ -91,7 +101,7 @@ Language: zh_CN
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将吸引更多用户。 做得漂亮！</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任务&lt;/b&gt;&lt;br/&gt;您将自定义您的站点。 大功告成了！</string>
     <string name="quick_start_card_menu_hide">立即隐藏</string>
-    <string name="magic_link_not_meaning_to_create_account">不打算创建新帐户？ 返回以重新输入您的电子邮件地址。</string>
+    <string name="magic_link_not_meaning_to_create_account">不打算创建新帐户？ 返回以重新输入您的电子邮箱地址。</string>
     <string name="invite_links_disable_dialog_message">禁用此邀请链接后，任何人都无法再使用它来加入您的团队。 是否确定？</string>
     <string name="invite_links_disable_dialog_title">禁用邀请链接</string>
     <string name="invite_links_bad_format_response">收到无效响应</string>
@@ -295,7 +305,7 @@ Language: zh_CN
     <string name="threat_fix_fixable_update">Jetpack Scan 将更新至较新的版本 (%s)。</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan 将删除受影响的文件或目录。</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan 将替换受影响的文件或目录。</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan 无法自动修复此威胁。\n 我们建议您手动解决威胁：确保 WordPress、主题和所有插件都是最新的，并从您的站点中删除有问题的代码、主题或插件。 \n \n\n 如果您需要更多帮助来解决此威胁，建议您使用 &lt;b&gt;Codeable&lt;/b&gt; - 一个由经过严格审查的 WordPress 专家组成的值得信赖的自由职业者市场。\n 他们已组建一个安全专家小组来帮助开展这些项目。 价格从 70–120 美元/小时不等，您可以免费估价，无需租用。</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan 无法自动修复此威胁。\n 我们建议您手动解决威胁：确保 WordPress、主题和所有插件都是最新的，并从您的站点中删除有问题的代码、主题或插件。 \n \n\n 如果您需要更多帮助来解决此威胁，建议您使用 &lt;b&gt;Codeable&lt;/b&gt; - 一个由经过严格审查的 WordPress 专家组成的值得信赖的自由职业者市场。\n 他们已组建一个安全专家小组来帮助开展这些项目。 价格从 70-120 美元/小时不等，您可以免费估价，无需租用。</string>
     <string name="threat_fix_current_not_fixable_header">解决威胁</string>
     <string name="threat_fix_fixed_header">Jetpack 如何修复该问题？</string>
     <string name="threat_fix_default_header">我们将如何解决？</string>
@@ -383,7 +393,7 @@ Language: zh_CN
     <string name="activity_log_activity_type_filter_apply">应用</string>
     <string name="dialog_edit_story_unsupported_format_message">您的故事没有添加一张或多张幻灯片，因为故事目前不支持GIF文件。 请选择静态图片或视频背景。</string>
     <string name="dialog_edit_story_unsupported_format_title">不支持GIF文件</string>
-    <string name="dialog_edit_story_unrecoverable_message">我们在网站上找不到该故事的媒体。</string>
+    <string name="dialog_edit_story_unrecoverable_message">我们在站点上找不到该故事的媒体。</string>
     <string name="dialog_edit_story_unrecoverable_title">无法编辑故事</string>
     <string name="dialog_edit_story_unavailable_message">无法加载该故事的媒体。 检查您的互联网连接，稍后再试。</string>
     <string name="dialog_edit_story_unavailable_title">无法编辑故事</string>
@@ -445,7 +455,7 @@ Language: zh_CN
     <string name="login_prologue_title_fourth">通过深入分析观察您的受众增长。</string>
     <string name="login_prologue_title_third">实时查看评论和通知。</string>
     <string name="login_prologue_title_second">有了这个功能强大的编辑器，您可以随时随地发表内容。</string>
-    <string name="login_prologue_title_first">欢迎使用全球最热门的网站生成器。</string>
+    <string name="login_prologue_title_first">欢迎使用全球最热门的网站构建器。</string>
     <string name="media_loading_failed">媒体加载失败</string>
     <string name="reader_discover_recommended_blogs_header">关注的站点</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我们正在努力在每个版本中添加更多区块。</string>
@@ -495,7 +505,7 @@ Language: zh_CN
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 已选择</string>
     <string name="login_get_link_by_email">通过电子邮件获取登录链接</string>
-    <string name="email_not_registered_wpcom">找不到与此电子邮件地址关联的 WordPress.com 帐户。</string>
+    <string name="email_not_registered_wpcom">找不到与此电子邮箱地址关联的 WordPress.com 帐户。</string>
     <string name="permission_microphone">麦克风</string>
     <string name="comment_unable_to_show_error">无法显示此评论</string>
     <string name="media_browse_for_items">浏览商品</string>
@@ -596,19 +606,19 @@ Language: zh_CN
     <string name="signup_confirmation_title">注册确认</string>
     <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>
+    <string name="signup_confirmation_message">我们将使用此电子邮箱地址为您创建新 WordPress.com 帐户。</string>
     <string name="signup_magic_link_message">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
     <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
     <string name="login_or">或</string>
     <string name="continue_google_button_suffix">继续使用 Google</string>
     <string name="login_find_your_site_adress">找到您的站点地址</string>
     <string name="login_done">完成</string>
-    <string name="magic_link_not_seeing_email_message">没有看到电子邮件？ 请检查您的垃圾邮件文件夹。</string>
-    <string name="login_magic_links_sent_label">在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
+    <string name="magic_link_not_seeing_email_message">没有看到邮件？ 请检查您的垃圾邮件文件夹。</string>
+    <string name="login_magic_links_sent_label">检查此设备上的电子邮件客户端并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
     <string name="login_magic_links_label">我们将通过电子邮件向您发送一个链接，无需密码即可登录。</string>
     <string name="check_email">查收电子邮件</string>
     <string name="get_started">开始</string>
-    <string name="enter_email_to_continue_wordpress_com">输入您的电子邮件地址以登录或创建 WordPress.com 帐户。</string>
+    <string name="enter_email_to_continue_wordpress_com">输入您的电子邮箱地址以登录或创建 WordPress.com 帐户。</string>
     <string name="or_type_your_password">或者输入您的密码</string>
     <string name="create_account">创建帐户</string>
     <string name="send_link_by_email">通过电子邮件发送链接</string>
@@ -731,6 +741,7 @@ Language: zh_CN
     <string name="gutenberg_native_move_block_left">向左移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">轻按两下以向右移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">轻按两下以向左移动区块</string>
+    <string name="gutenberg_native_block_settings">区块设置</string>
     <string name="new_site_creation_creating_site_loading_4">正在创建控制面板</string>
     <string name="new_site_creation_creating_site_loading_3">正在设置主题</string>
     <string name="new_site_creation_creating_site_loading_2">正在添加站点功能</string>
@@ -870,7 +881,7 @@ Language: zh_CN
     <string name="login_discovery_error_ssl">由于 &lt;b&gt;SSL 证书&lt;/b&gt;的问题，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
     <string name="login_discovery_error_http_auth">由于需要 &lt;b&gt;HTTP 验证&lt;/b&gt;，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
     <string name="login_discovery_error_xmlrpc">我们无法访问您的站点上的 &lt;b&gt;XMLRPC 文件&lt;/b&gt;。您需要联系您的主机来解决这个问题。</string>
-    <string name="login_site_credentials_magic_link_label">马上就好！我们需要验证您的 Jetpack 连接的电子邮件地址 &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="login_site_credentials_magic_link_label">马上就好！我们需要验证您的 Jetpack 连接的电子邮箱地址 &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="my_site_bottom_sheet_add_page">站点页面</string>
     <string name="reader_following_display_name">关注中</string>
@@ -1081,11 +1092,11 @@ Language: zh_CN
     <string name="stats_widget_error_no_data">无法加载数据</string>
     <string name="stats_widget_select_type">类型</string>
     <string name="stats_widget_select_color">颜色</string>
-    <string name="stats_widget_select_your_site">选择你的站点</string>
+    <string name="stats_widget_select_your_site">选择您的站点</string>
     <string name="stats_widget_color_dark">暗色</string>
     <string name="stats_widget_color_light">明亮</string>
     <string name="stats_widget_color">颜色</string>
-    <string name="stats_widget_site_caption">选择你的站点</string>
+    <string name="stats_widget_site_caption">选择您的站点</string>
     <string name="stats_widget_site">站点</string>
     <string name="stats_widget_all_time_title">全部时间</string>
     <string name="stats_widget_views_title">本周浏览次数</string>
@@ -1165,7 +1176,7 @@ Language: zh_CN
     <string name="posts_scheduled_empty">您没有任何预发布的文章</string>
     <string name="posts_published_empty">您尚未发布任何文章</string>
     <string name="notification_wpcom_username_needed">请使用您的用户名和密码登录。</string>
-    <string name="error_user_username_instead_of_email">请使用您的 WordPress.com 用户名（而不是电子邮件地址）登录。</string>
+    <string name="error_user_username_instead_of_email">请使用您的 WordPress.com 用户名（而不是电子邮箱地址）登录。</string>
     <string name="stats_insights_average_words">每篇文章的平均字数</string>
     <string name="stats_insights_total_words">总字数</string>
     <string name="stats_insights_average_likes">平均喜欢数/文章</string>
@@ -1479,13 +1490,13 @@ Language: zh_CN
     <string name="button_discard">放弃</string>
     <string name="reader_avatar_desc">个人资料照片</string>
     <string name="notification_channel_transient_title">暂时</string>
-    <string name="support_identity_input_dialog_email_label">电子邮件</string>
-    <string name="support_identity_input_dialog_enter_email">请输入您的电子邮件地址</string>
-    <string name="support_identity_input_dialog_enter_email_and_name">请输入您的电子邮件地址和名称以继续</string>
+    <string name="support_identity_input_dialog_email_label">电子邮箱地址</string>
+    <string name="support_identity_input_dialog_enter_email">请输入您的电子邮箱地址</string>
+    <string name="support_identity_input_dialog_enter_email_and_name">请输入您的电子邮箱地址和名称以继续</string>
     <string name="support_push_notification_message">来自“帮助与支持”的新消息</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">未设置</string>
-    <string name="support_contact_email">联系人电子邮件</string>
+    <string name="support_contact_email">联系电子邮箱地址</string>
     <string name="application_log_button">应用程序日志</string>
     <string name="my_tickets">我的工单</string>
     <string name="activity_log_currently_restoring_message_no_dates">恢复正在进行中</string>
@@ -1508,7 +1519,7 @@ Language: zh_CN
     <string name="magic_link_sent_login_title">免密登录链接已发送</string>
     <string name="magic_link_login_title">使用免密登录链接登录</string>
     <string name="site_address_login_title">使用站点地址登录</string>
-    <string name="email_address_login_title">使用电子邮件地址登录</string>
+    <string name="email_address_login_title">使用电子邮箱地址登录</string>
     <string name="reader_empty_saved_posts_description">轻按“%s”以将文章保存到您的列表中。</string>
     <string name="reader_empty_saved_posts_title">尚未保存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已保存</string>
@@ -1550,7 +1561,7 @@ Language: zh_CN
     <string name="plugin_install_site_ineligible_non_admin_user">使用插件功能需要具有管理员权限。</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">无法在 VIP 站点上安装插件。</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">由于磁盘空间限制，无法安装插件。</string>
-    <string name="plugin_install_site_ineligible_email_unverified">使用插件功能需要提供已验证的电子邮件地址。</string>
+    <string name="plugin_install_site_ineligible_email_unverified">使用插件功能需要提供已验证的电子邮箱地址。</string>
     <string name="plugin_install_site_ineligible_site_private">使用插件功能需要站点处于公开状态。</string>
     <string name="plugin_install_site_ineligible_no_business_plan">使用插件功能需要具有商务版套餐。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">使用插件功能需要具有自定义域。</string>
@@ -1712,7 +1723,7 @@ Language: zh_CN
     <string name="content_description_add_avatar">添加头像</string>
     <string name="signup_user_exists">电子邮件已注册 WordPress.com。\n继续登录。</string>
     <string name="signup_updating_account">正在更新帐户…</string>
-    <string name="signup_magic_link_progress">正在发送电子邮件</string>
+    <string name="signup_magic_link_progress">正在发送邮件</string>
     <string name="signup_magic_link_error_button_positive">重试</string>
     <string name="signup_magic_link_error_button_negative">关闭</string>
     <string name="signup_magic_link_error">发送电子邮件时出现问题。您可以立即重试，或关闭并稍后重试。</string>
@@ -1806,9 +1817,9 @@ Language: zh_CN
     <string name="plugin_updated_successfully">已成功更新 %s</string>
     <string name="plugin_available_version">版本 %s 已发布</string>
     <string name="plugin_detail_label_state_autoupdates">自动更新</string>
-    <string name="plugin_detail_label_state_active">激活</string>
-    <string name="plugin_inactive">未激活</string>
-    <string name="plugin_active">激活</string>
+    <string name="plugin_detail_label_state_active">启用</string>
+    <string name="plugin_inactive">未启用</string>
+    <string name="plugin_active">启用</string>
     <string name="plugins">插件</string>
     <string name="my_site_btn_plugins">插件</string>
     <string name="media_edit_link_hint">在新窗口/选项卡中打开链接</string>
@@ -2208,7 +2219,7 @@ Language: zh_CN
     <string name="invite_error_no_usernames">请添加至少一个用户名</string>
     <string name="invite_message_title">自定义消息</string>
     <string name="invite">邀请</string>
-    <string name="invite_names_title">用户名或邮箱</string>
+    <string name="invite_names_title">用户名或电子邮箱地址</string>
     <string name="invite_people">邀请用户</string>
     <string name="my_site_header_external">外部</string>
     <string name="label_clear_search_history">清除搜索历史记录</string>
@@ -2440,7 +2451,7 @@ Language: zh_CN
     <string name="media_edit_copy_url_toast">URL 已复制到剪贴板</string>
     <string name="selected_theme">选择的主题</string>
     <string name="could_not_load_theme">无法加载主题</string>
-    <string name="theme_activation_error">出现错误。无法激活主题</string>
+    <string name="theme_activation_error">出现错误。无法启用主题</string>
     <string name="theme_by_author_prompt_append">作者：%1$s</string>
     <string name="theme_prompt">感谢您选择 %1$s</string>
     <string name="theme_manage_site">管理站点</string>
@@ -2449,8 +2460,8 @@ Language: zh_CN
     <string name="theme_details">详细信息</string>
     <string name="theme_view">查看</string>
     <string name="theme_try_and_customize">尝试与定制</string>
-    <string name="theme_activate">激活</string>
-    <string name="active">已激活</string>
+    <string name="theme_activate">启用</string>
+    <string name="active">已启用</string>
     <string name="support">支持</string>
     <string name="details">详细信息</string>
     <string name="customize">定制</string>
@@ -2615,12 +2626,12 @@ Language: zh_CN
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_page_followed_tags">已关注的主题</string>
     <string name="reader_title_blog_preview">“阅读器”站点</string>
-    <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>
+    <string name="ssl_certificate_ask_trust">如果您平时连接该站点没有问题，则此错误可能意味着有人试图冒充该站点，您不应继续。是否仍然信任该证书？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>
     <string name="help">帮助</string>
-    <string name="username_or_password_incorrect">你输入的用户名或密码错误</string>
+    <string name="username_or_password_incorrect">您输入的用户名或密码不正确</string>
     <string name="email_invalid">请输入一个可用的电子邮件地址</string>
-    <string name="invalid_email_message">你的邮件地址不可用</string>
+    <string name="invalid_email_message">您的电子邮箱地址无效</string>
     <string name="error_downloading_image">下载图片错误</string>
     <string name="error_load_comment">无法加载评论</string>
     <string name="error_edit_comment">在编辑评论时出现了一个错误</string>
@@ -2688,7 +2699,7 @@ Language: zh_CN
     <string name="page_settings">页面设置</string>
     <string name="link_enter_url_text">链接文字 (可选)</string>
     <string name="cannot_delete_multi_media_items">一些媒体文件现在不能删除.请稍后再试.</string>
-    <string name="media_error_no_permission">你没有权限查看媒体库</string>
+    <string name="media_error_no_permission">您无权查看媒体库</string>
     <string name="media_gallery_type_thumbnail_grid">缩略图</string>
     <string name="learn_more">了解更多</string>
     <string name="post_not_found">抱歉，尝试加载文章时出现错误。请刷新文章列表再试.</string>
@@ -2701,7 +2712,7 @@ Language: zh_CN
     <string name="reader_likes_you_and_multi">您和另外 %,d 人喜欢了</string>
     <string name="reader_likes_multi">%,d 人喜欢了</string>
     <string name="reader_label_reply">回复</string>
-    <string name="cant_share_no_visible_blog">没有一个博客，你不能分享到WordPress</string>
+    <string name="cant_share_no_visible_blog">没有可见的博客，您就不能分享到WordPress</string>
     <string name="comment_spammed">评论被标记为垃圾评论</string>
     <string name="reader_toast_err_get_post">无法检索这篇文章</string>
     <string name="reader_likes_you_and_one">您和另外1人喜欢了</string>
@@ -2736,7 +2747,7 @@ Language: zh_CN
     <string name="stats_view_clicks">点击</string>
     <string name="stats">统计</string>
     <string name="share_action">分享</string>
-    <string name="theme_activate_button">激活</string>
+    <string name="theme_activate_button">启用</string>
     <string name="media_edit_failure">更新失败</string>
     <string name="media_edit_description_text">描述</string>
     <string name="media_edit_caption_text">标题</string>
