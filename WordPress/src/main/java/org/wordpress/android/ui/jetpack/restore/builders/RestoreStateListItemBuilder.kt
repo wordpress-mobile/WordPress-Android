@@ -58,6 +58,7 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildActionButtonState(
                         titleRes = R.string.restore_details_action_button,
                         contentDescRes = R.string.restore_details_action_button_content_description,
+                        isEnabled = !isAwaitingCredentials,
                         onClick = onCreateDownloadClick
                 )
         )
@@ -314,7 +315,8 @@ class RestoreStateListItemBuilder @Inject constructor(
 
     fun updateCheckboxes(
         uiState: RestoreUiState,
-        itemType: JetpackAvailableItemType
+        itemType: JetpackAvailableItemType,
+        siteId: Long
     ): List<JetpackListItemState> {
         val updatedCheckboxes = uiState.items.map { state ->
             if (state.type == CHECKBOX) {
@@ -329,7 +331,8 @@ class RestoreStateListItemBuilder @Inject constructor(
             }
         }
         val atLeastOneChecked = updatedCheckboxes.filterIsInstance<CheckboxState>().find { it.checked } != null
-        return updateDetailsActionButtonState(updatedCheckboxes, atLeastOneChecked)
+        val isDetailsActionButtonEnabled = atLeastOneChecked && !hasServerCredentialsMessage(uiState, siteId)
+        return updateDetailsActionButtonState(updatedCheckboxes, isDetailsActionButtonEnabled)
     }
 
     private fun updateDetailsActionButtonState(
@@ -354,4 +357,14 @@ class RestoreStateListItemBuilder @Inject constructor(
             }
         }
     }
+
+    private fun hasServerCredentialsMessage(uiState: RestoreUiState, siteId: Long) =
+            uiState.items.filterIsInstance<FootnoteState>().any {
+                (it.text as? UiStringText)?.text?.toString()?.equals(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                R.string.restore_details_enter_server_creds_msg,
+                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                        ).toString()
+                ) ?: false
+            }
 }
