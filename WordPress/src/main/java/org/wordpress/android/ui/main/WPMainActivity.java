@@ -353,6 +353,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         }
 
+        // Pre-load the custom story fonts if necessary
+        TextStyleGroupManager.Companion.preloadFonts(getApplicationContext());
+
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
         WPActivityUtils.enableReaderDeeplinks(this);
 
