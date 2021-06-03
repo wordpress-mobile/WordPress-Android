@@ -554,6 +554,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, results, true);
 
