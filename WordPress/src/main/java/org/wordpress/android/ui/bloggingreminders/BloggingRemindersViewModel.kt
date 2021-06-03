@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
@@ -48,7 +49,7 @@ class BloggingRemindersViewModel @Inject constructor(
         when (screen) {
             PROLOGUE -> buildPrologue()
             SELECTION -> buildSelection(bloggingRemindersModel)
-            EPILOGUE -> buildEpilogue()
+            EPILOGUE -> buildEpilogue(bloggingRemindersModel)
             null -> null
         }
     }.distinctUntilChanged()
@@ -101,9 +102,12 @@ class BloggingRemindersViewModel @Inject constructor(
         )
     }
 
-    private fun buildEpilogue(): List<BloggingRemindersItem> {
-        // TODO Add epilogue view items
+    private fun buildEpilogue(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
         return listOf(
+                Illustration(R.drawable.img_illustration_celebration_150dp), // TODO: Replace this image with correct one
+                Title(UiStringRes(R.string.blogging_reminders_epilogue_title)),
+                Text(UiStringRes(R.string.blogging_reminders_epilogue_body)),
+                Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption)), // TODO: Update with number of days and days depending on copy
                 PrimaryButton(
                         UiStringRes(R.string.blogging_reminders_done),
                         enabled = true,
@@ -130,7 +134,8 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
         if (bloggingRemindersModel != null) {
-            bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+            // TODO: Perform this update login on coroutine
+            //bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
             // TODO Add logic to save state and schedule notifications here
             _selectedScreen.value = EPILOGUE
         }

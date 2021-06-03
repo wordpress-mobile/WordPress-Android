@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
@@ -198,8 +199,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     private fun assertEpilogue() {
         val state = uiState.last()
-        // TODO change this method when the list contains the updated UI
-        assertPrimaryButton(state[0], R.string.blogging_reminders_done, isEnabled = true)
+        assertIllustration(state[0], R.drawable.img_illustration_celebration_150dp)
+        assertTitle(state[1], R.string.blogging_reminders_epilogue_title)
+        assertText(state[2], R.string.blogging_reminders_epilogue_body)
+        assertCaption(state[3], R.string.blogging_reminders_epilogue_caption)
+        assertPrimaryButton(state[4], R.string.blogging_reminders_done, isEnabled = true)
     }
 
     private fun assertIllustration(item: BloggingRemindersItem, @DrawableRes drawableRes: Int) {
@@ -215,6 +219,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun assertText(item: BloggingRemindersItem, @StringRes textRes: Int) {
         val title = item as Text
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
+    }
+
+    private fun assertCaption(item: BloggingRemindersItem, @StringRes textRes: Int) {
+        val caption = item as Caption
+        assertThat((caption.text as UiStringRes).stringRes).isEqualTo(textRes)
     }
 
     private fun assertPrimaryButton(

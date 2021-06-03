@@ -3604,4 +3604,7 @@
     <string name="blogging_goals_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_done">Done</string>
+    <string name="blogging_reminders_epilogue_title">All set!</string>
+    <string name="blogging_reminders_epilogue_body">You\'ll get blog %d times a week on %s.</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site > Settings > Blogging goals.</string>
 </resources>

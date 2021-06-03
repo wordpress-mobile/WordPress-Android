@@ -3,15 +3,18 @@ package org.wordpress.android.ui.bloggingreminders
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.CAPTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.CaptionViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.IllustrationViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.PrimaryButtonViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TextViewHolder
@@ -44,6 +47,7 @@ class BloggingRemindersAdapter
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
             is TitleViewHolder -> holder.onBind(item as Title)
             is TextViewHolder -> holder.onBind(item as Text)
+            is CaptionViewHolder -> holder.onBind(item as Caption)
             is PrimaryButtonViewHolder -> holder.onBind(item as PrimaryButton)
         }
     }
@@ -53,6 +57,7 @@ class BloggingRemindersAdapter
             TITLE -> TitleViewHolder(parent, uiHelpers)
             ILLUSTRATION -> IllustrationViewHolder(parent, imageManager)
             TEXT -> TextViewHolder(parent, uiHelpers)
+            CAPTION -> CaptionViewHolder(parent, uiHelpers)
             PRIMARY_BUTTON -> PrimaryButtonViewHolder(parent, uiHelpers)
         }
     }

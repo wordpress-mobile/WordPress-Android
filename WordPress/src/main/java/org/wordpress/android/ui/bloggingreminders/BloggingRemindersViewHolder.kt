@@ -4,10 +4,12 @@ import android.view.ViewGroup
 import android.widget.ImageView.ScaleType.CENTER
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import org.wordpress.android.databinding.BloggingRemindersCaptionBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
@@ -47,6 +49,15 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     )
             ) {
         fun onBind(item: Text) = with(binding) {
+            uiHelpers.setTextOrHide(text, item.text)
+        }
+    }
+
+    class CaptionViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersCaptionBinding>(
+                    parentView.viewBinding(BloggingRemindersCaptionBinding::inflate)
+            ) {
+        fun onBind(item: Caption) = with(binding) {
             uiHelpers.setTextOrHide(text, item.text)
         }
     }
