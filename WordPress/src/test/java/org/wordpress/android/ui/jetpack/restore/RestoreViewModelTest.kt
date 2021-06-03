@@ -31,6 +31,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Success
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
@@ -133,6 +134,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 .thenReturn("contents")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
                 .thenReturn("sqls")
+        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(flowOf(AwaitingCredentials(false)))
     }
 
     @Test
@@ -282,7 +285,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postSuccess)
-        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull()))
+        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(flowOf(Complete("Id", 100L, Date(1609690147756))))
 
         startViewModelForStep(PROGRESS)
