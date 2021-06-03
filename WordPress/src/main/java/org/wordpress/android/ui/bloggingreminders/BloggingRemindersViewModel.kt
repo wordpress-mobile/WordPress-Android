@@ -53,6 +53,14 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }.distinctUntilChanged()
 
+    private val startDaySelection: () -> Unit = {
+        _selectedScreen.value = SELECTION
+    }
+
+    private val finish: () -> Unit = {
+        _isBottomSheetShowing.value = Event(false)
+    }
+
     fun getSettingsState(siteId: Int): LiveData<String> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
             if (it.enabledDays.isNotEmpty()) {
@@ -86,7 +94,7 @@ class BloggingRemindersViewModel @Inject constructor(
             PrimaryButton(
                     UiStringRes(R.string.set_your_blogging_goals_button),
                     enabled = true,
-                    ListItemInteraction.create(this::startDaySelection)
+                    ListItemInteraction.create(startDaySelection)
             )
     )
 
@@ -107,7 +115,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 PrimaryButton(
                         UiStringRes(R.string.blogging_reminders_done),
                         enabled = true,
-                        ListItemInteraction.create(this::finish)
+                        ListItemInteraction.create(finish)
                 )
         )
     }
@@ -124,10 +132,6 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value = currentState.copy(enabledDays = enabledDays)
     }
 
-    private fun startDaySelection() {
-        _selectedScreen.value = SELECTION
-    }
-
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
         if (bloggingRemindersModel != null) {
             launch {
@@ -136,10 +140,6 @@ class BloggingRemindersViewModel @Inject constructor(
                 _selectedScreen.value = EPILOGUE
             }
         }
-    }
-
-    private fun finish() {
-        _isBottomSheetShowing.value = Event(false)
     }
 
     fun saveState(outState: Bundle) {
