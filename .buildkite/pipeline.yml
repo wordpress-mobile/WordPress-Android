@@ -1,0 +1,12 @@
+steps:
+  #################
+  # Lint & Checkstyle
+  #################
+  - label: "🧹 Lint & Checkstyle"
+    command: |
+        cp gradle.properties-example gradle.properties
+        ./gradlew lintWordpressVanillaRelease
+    plugins:
+      - docker#v3.8.0:
+          image: "wordpressmobile/android-build-image"
+
