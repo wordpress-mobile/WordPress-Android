@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -623,7 +622,7 @@ class PagesViewModel
     fun onItemTapped(pageItem: Page) {
         if (pageItem.remoteId == site.pageForPosts) {
             launch(defaultDispatcher) {
-                showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_is_posts_page_warning)))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.page_is_posts_page_warning)))
             }
         } else {
             pageMap[pageItem.remoteId]?.let { checkAndEdit(it) }
