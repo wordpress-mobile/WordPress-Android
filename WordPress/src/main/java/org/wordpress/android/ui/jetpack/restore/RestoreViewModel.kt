@@ -34,6 +34,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes.GenericFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
@@ -88,7 +89,8 @@ data class RestoreState(
     val restoreId: Long? = null,
     val published: Date? = null,
     val errorType: Int? = null,
-    val shouldInitProgress: Boolean = true
+    val shouldInitProgress: Boolean = true,
+    val shouldInitDetails: Boolean = true
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<RestoreStep, RestoreState>
@@ -178,19 +180,24 @@ class RestoreViewModel @Inject constructor(
             val availableItems = availableItemsProvider.getAvailableItems()
             val activityLogModel = getActivityLogItemUseCase.get(activityId)
             if (activityLogModel != null) {
-                _uiState.value = DetailsState(
-                        activityLogModel = activityLogModel,
-                        items = stateListItemBuilder.buildDetailsListStateItems(
-                                availableItems = availableItems,
-                                published = activityLogModel.published,
-                                siteId = site.siteId,
-                                isAwaitingCredentials = isAwaitingCredentials,
-                                onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
-                                onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
-                                onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked
-                        ),
-                        type = StateType.DETAILS
-                )
+                if (restoreState.shouldInitDetails) {
+                    restoreState = restoreState.copy(shouldInitDetails = false)
+                    queryRestoreStatus(checkIfAwaitingCredentials = true)
+                } else {
+                    _uiState.value = DetailsState(
+                            activityLogModel = activityLogModel,
+                            items = stateListItemBuilder.buildDetailsListStateItems(
+                                    availableItems = availableItems,
+                                    published = activityLogModel.published,
+                                    siteId = site.siteId,
+                                    isAwaitingCredentials = isAwaitingCredentials,
+                                    onCreateDownloadClick = this@RestoreViewModel::onRestoreSiteClick,
+                                    onCheckboxItemClicked = this@RestoreViewModel::onCheckboxItemClicked,
+                                    onEnterServerCredsIconClicked = this@RestoreViewModel::onEnterServerCredsIconClicked
+                            ),
+                            type = StateType.DETAILS
+                    )
+                }
             } else {
                 trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(GenericFailure)
@@ -376,9 +383,9 @@ class RestoreViewModel @Inject constructor(
         return (_uiState.value as? DetailsState)?.activityLogModel?.published as Date
     }
 
-    private fun queryRestoreStatus() {
+    private fun queryRestoreStatus(checkIfAwaitingCredentials: Boolean = false) {
         launch {
-            getRestoreStatusUseCase.getRestoreStatus(site, restoreState.restoreId as Long)
+            getRestoreStatusUseCase.getRestoreStatus(site, restoreState.restoreId, checkIfAwaitingCredentials)
                     .collect { state -> handleQueryStatus(state) }
         }
     }
@@ -393,6 +400,7 @@ class RestoreViewModel @Inject constructor(
                 trackError(TRACKING_ERROR_CAUSE_REMOTE)
                 transitionToError(RestoreErrorTypes.RemoteRequestFailure)
             }
+            is AwaitingCredentials -> buildDetails(isAwaitingCredentials = restoreStatus.isAwaitingCredentials)
             is Progress -> transitionToProgress(restoreStatus)
             is Complete -> wizardManager.showNextStep()
             is Empty -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
@@ -439,7 +447,8 @@ class RestoreViewModel @Inject constructor(
                     errorType = null,
                     optionsSelected = null,
                     published = null,
-                    shouldInitProgress = true
+                    shouldInitProgress = true,
+                    shouldInitDetails = true
             )
         }
     }
