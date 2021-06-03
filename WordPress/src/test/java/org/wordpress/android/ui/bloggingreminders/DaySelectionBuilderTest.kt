@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
@@ -22,14 +24,19 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class DaySelectionBuilderTest {
     @Mock lateinit var daysProvider: DaysProvider
+    @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var daySelectionBuilder: DaySelectionBuilder
     private var daySelected: Day? = null
     private var confirmed = false
+    private val once = "once"
+    private val twice = "twice"
 
     private val onSelectDay: (Day) -> Unit = {
         daySelected = it
@@ -40,12 +47,15 @@ class DaySelectionBuilderTest {
 
     @Before
     fun setUp() {
-        daySelectionBuilder = DaySelectionBuilder(daysProvider)
+        daySelectionBuilder = DaySelectionBuilder(daysProvider, resourceProvider)
         whenever(daysProvider.getDays()).thenReturn(Day.values().map {
             it.name to it
         })
         daySelected = null
         confirmed = false
+        whenever(resourceProvider.getStringArray(R.array.blogging_goals_count)).thenReturn(
+                arrayOf(once, twice)
+        )
     }
 
     @Test
@@ -112,7 +122,20 @@ class DaySelectionBuilderTest {
                         }
                 )
         )
-        assertThat(uiModel[4]).isEqualTo(
+        val param = when (selectedDays.size) {
+            0 -> null
+            1 -> once
+            else -> twice
+        }
+        val text = param?.let {
+            UiStringResWithParams(
+                    string.blogging_goals_n_a_week,
+                    listOf(UiStringText(param))
+            )
+        }
+
+        assertThat(uiModel[4]).isEqualTo(MediumEmphasisText(text?.let { EmphasizedText(text) }, text == null))
+        assertThat(uiModel[5]).isEqualTo(
                 PrimaryButton(
                         UiStringRes(string.blogging_reminders_notify_me),
                         selectedDays.isNotEmpty(),

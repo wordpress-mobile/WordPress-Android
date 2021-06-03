@@ -17,16 +17,30 @@ sealed class BloggingRemindersItem(val type: Type) {
 
     data class Illustration(@DrawableRes val illustration: Int) : BloggingRemindersItem(ILLUSTRATION)
     data class Title(val text: UiString) : BloggingRemindersItem(TITLE)
-    data class HighEmphasisText(val text: UiString) : BloggingRemindersItem(HIGH_EMPHASIS_TEXT)
-    data class MediumEmphasisText(val text: UiString) : BloggingRemindersItem(LOW_EMPHASIS_TEXT)
+    data class HighEmphasisText(val text: EmphasizedText) : BloggingRemindersItem(
+            HIGH_EMPHASIS_TEXT
+    ) {
+        constructor(uiString: UiString): this(EmphasizedText(uiString))
+    }
+
+    data class MediumEmphasisText(val text: EmphasizedText?, val isInvisible: Boolean = false) : BloggingRemindersItem(
+            LOW_EMPHASIS_TEXT
+    ) {
+        constructor(uiString: UiString): this(EmphasizedText(uiString, false))
+    }
+
+    data class EmphasizedText(val text: UiString, val emphasizeTextParams: Boolean = true)
+
     data class DayButtons(val dayItems: List<DayItem>) : BloggingRemindersItem(DAY_BUTTONS) {
         init {
             assert(dayItems.size == 7) {
                 "7 days need to be defined"
             }
         }
+
         data class DayItem(val text: UiString, val isSelected: Boolean, val onClick: ListItemInteraction)
     }
+
     data class PrimaryButton(val text: UiString, val enabled: Boolean, val onClick: ListItemInteraction) :
-        BloggingRemindersItem(PRIMARY_BUTTON)
+            BloggingRemindersItem(PRIMARY_BUTTON)
 }

@@ -54,7 +54,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = BloggingRemindersViewModel(
                 TEST_DISPATCHER,
-                TEST_DISPATCHER,
                 bloggingRemindersManager,
                 bloggingRemindersStore,
                 resourceProvider,
