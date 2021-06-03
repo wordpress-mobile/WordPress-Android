@@ -178,6 +178,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorFragmentListener extends DialogVisibilityProvider {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
+        void updateFeaturedImage(long mediaId, boolean imagePicked);
         void onAddMediaClicked();
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
