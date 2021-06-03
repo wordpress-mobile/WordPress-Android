@@ -240,18 +240,21 @@ class WPMainActivityViewModel @Inject constructor(
         val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
 
-        launch {
-            val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-            val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+        // Do not proceed with feature announcement check for Jetpack
+        if (!buildConfigWrapper.isJetpackApp) {
+            launch {
+                val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+                val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
 
-            // only proceed to feature announcement logic if we are upgrading the app
-            if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
-                if (canShowFeatureAnnouncement()) {
-                    analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
-                    _onFeatureAnnouncementRequested.call()
+                // only proceed to feature announcement logic if we are upgrading the app
+                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                    if (canShowFeatureAnnouncement()) {
+                        analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+                        _onFeatureAnnouncementRequested.call()
+                    }
+                } else {
+                    appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 }
-            } else {
-                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
             }
         }
     }

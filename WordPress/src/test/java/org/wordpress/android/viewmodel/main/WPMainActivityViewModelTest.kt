@@ -594,6 +594,14 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
+        startViewModelWithDefaultParameters()
+        resumeViewModelWithDefaultParameters()
+
+        verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
+    }
+
+    @Test
     fun `when the active task needs to show an focus point, emit visible focus point info`() {
         activeTask.value = FOLLOW_SITE
 
