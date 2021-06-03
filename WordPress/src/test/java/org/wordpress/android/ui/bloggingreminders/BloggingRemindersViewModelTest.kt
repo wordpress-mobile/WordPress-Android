@@ -58,7 +58,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 bloggingRemindersManager,
                 bloggingRemindersStore,
                 resourceProvider,
-                daySelectionBuilder,
+                daySelectionBuilder
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()

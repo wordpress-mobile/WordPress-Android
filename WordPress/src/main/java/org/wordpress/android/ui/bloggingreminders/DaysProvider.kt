@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.TUESDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.ui.reader.utils.DateProvider
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 class DaysProvider
@@ -32,4 +31,3 @@ class DaysProvider
         return orderedDays.map { shortWeekdays[it.first] to it.second }
     }
 }
-
