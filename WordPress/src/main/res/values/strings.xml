@@ -250,6 +250,7 @@
     <string name="page_status_change_error">There was a problem changing the page status</string>
     <string name="page_parent_change_error">There was a problem changing the page parent</string>
     <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
     <string name="top_level">Top level</string>
     <string name="page_moved_to_draft">Page has been moved to Drafts</string>
     <string name="page_moved_to_trash">Page has been trashed</string>

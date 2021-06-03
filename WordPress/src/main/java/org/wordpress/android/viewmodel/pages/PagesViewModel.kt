@@ -621,7 +621,13 @@ class PagesViewModel
     }
 
     fun onItemTapped(pageItem: Page) {
-        pageMap[pageItem.remoteId]?.let { checkAndEdit(it) }
+        if (pageItem.remoteId == site.pageForPosts) {
+            launch(defaultDispatcher) {
+                showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_is_posts_page_warning)))
+            }
+        } else {
+            pageMap[pageItem.remoteId]?.let { checkAndEdit(it) }
+        }
     }
 
     private fun checkAndEdit(page: PageModel) {
