@@ -38,6 +38,7 @@ class RestoreStateListItemBuilder @Inject constructor(
     private val checkboxSpannableLabel: CheckboxSpannableLabel,
     private val htmlMessageUtils: HtmlMessageUtils
 ) {
+    @Suppress("LongParameterList")
     fun buildDetailsListStateItems(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
