@@ -134,6 +134,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -1000,23 +1001,21 @@ public class EditPostSettingsFragment extends Fragment {
         if (isAdded() && imagePicked) {
             int postId = getEditPostRepository().getId();
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                    TrackableEvent.IMAGE_PICKED,
+                    TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                     postId
             );
         }
+
         EditPostRepository postRepository = getEditPostRepository();
         if (postRepository == null) {
             return;
         }
-        postRepository.updateAsync(postModel -> {
-            postModel.setFeaturedImageId(featuredImageId);
-            return true;
-        }, (postModel, result) -> {
-            if (result == UpdatePostResult.Updated.INSTANCE) {
-                updateFeaturedImageView(postModel);
-            }
-            return null;
-        });
+
+        mUpdateFeaturedImageUseCase.updateFeaturedImage(featuredImageId, postRepository,
+                postModel -> {
+                    updateFeaturedImageView(postModel);
+                    return null;
+                });
     }
 
     private void clearFeaturedImage() {
