@@ -600,7 +600,7 @@ REPOSITORY_NAME="WordPress-Android"
             strings_path: download_path, 
             exclusions: lib[:exclusions]
           }]
-          an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)
+          an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: lib_to_merge)
         end
         File.delete(download_path) if File.exist?(download_path)
       end
