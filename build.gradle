@@ -36,15 +36,6 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
 
-        if (gradle.ext.includedBuildGutenbergMobilePath) {
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
-            }
-        } else {
-            maven { url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror" }
-        }
-
         flatDir {
             dirs '../aars'
         }
