@@ -34,6 +34,7 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions")
 class BloggingRemindersViewModel @Inject constructor(
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
@@ -109,25 +110,25 @@ class BloggingRemindersViewModel @Inject constructor(
         val numberOfDays = bloggingRemindersModel?.enabledDays?.size ?: 0
 
         val selectedDays = when {
-            numberOfDays <= 3 -> {
+            numberOfDays <= THREE_DAYS -> {
                 bloggingRemindersModel?.enabledDays?.map { day ->
                     day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
                         it.toUpperCase()
                     }.plus(" and ")
                 }.toString()
             }
-            numberOfDays in 4..6 -> {
+            numberOfDays in FOUR_DAYS..SIX_DAYS -> {
                 bloggingRemindersModel?.enabledDays?.map { day ->
                     day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
                         it.toUpperCase()
-                    }.take(3).plus(", ")
+                    }.take(FIRST_THREE_CHARS).plus(", ")
                 }.toString()
             }
             else -> "everyday"
         }
 
         val body = when (numberOfDays) {
-            7 -> UiStringRes(R.string.blogging_reminders_epilogue_body)
+            SEVEN_DAYS -> UiStringRes(R.string.blogging_reminders_epilogue_body)
             else -> UiStringResWithParams(
                     R.string.blogging_reminders_epilogue_body_days,
                     listOf(UiStringText(numberOfDays.toString()), UiStringText(selectedDays)))
@@ -204,5 +205,10 @@ class BloggingRemindersViewModel @Inject constructor(
         private const val SELECTED_SCREEN = "key_shown_screen"
         private const val SELECTED_DAYS = "key_selected_days"
         private const val SITE_ID = "key_site_id"
+        private const val FIRST_THREE_CHARS = 3
+        private const val THREE_DAYS = 3
+        private const val FOUR_DAYS = 4
+        private const val SIX_DAYS = 6
+        private const val SEVEN_DAYS = 7
     }
 }
