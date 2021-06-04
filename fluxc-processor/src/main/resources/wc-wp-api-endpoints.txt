@@ -44,6 +44,7 @@
 
 /payments/connection_tokens
 /payments/orders/<id>/capture_terminal_payment
+/payments/accounts
 
 /taxes
 /taxes/classes/
