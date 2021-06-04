@@ -6,4 +6,4 @@ import javax.inject.Inject
 
 @FeatureInDevelopment
 class BloggingRemindersFeatureConfig
-@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.BLOGGING_REMIDERS)
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.BLOGGING_REMINDERS)

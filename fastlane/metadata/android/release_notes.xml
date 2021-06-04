@@ -1,134 +1,170 @@
 <ar>
-17.3:
-ما الجديد؟
+17.4:
+لقد أضفنا 3 تحديثات جديدة في هذا التحديث:
 
-باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+سترى الآن أداة انتقاء الوسائط عند إضافة مكوِّن القصة من محرِّر المكوِّن، ما يسهِّل البدء.
 
-تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
+تعرض معاينات القصة الآن كما هو متوقع في القارئ.
+
+وأخيرًا، عند فشل رفع الشرائح، سيقوم التطبيق بإعادة المحاولة تلقائيًا، ما يوفِّر عليك نقرة إضافية!
 </ar>
 <de-DE>
-17.3:
-Was gibt's Neues?
+17.4:
+Wir haben bei diesem Update 3 neue Updates für Geschichten hinzugefügt:
 
-Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+Dir wird nun eine Medienauswahl angezeigt, wenn du einen Geschichtenblock vom Block-Editor hinzufügst, um dir den Start zu erleichtern.
 
-Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
+Die Geschichtenvorschau wird im Reader nun wie erwartet wiedergegeben.
+
+Und zuletzt versucht die App nun automatisch erneut, Slides hochzuladen, wenn dies fehlgeschlagen ist.
 </de-DE>
 <en-US>
-17.3:
-What’s new?
+17.4:
+We’ve added 3 new updates to Stories in this update:
 
-With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
 
-Other improvements include more user information about your Likes, as well as an updated Comments screen.
+Story previews now render as expected in the Reader.
+
+And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
 </en-US>
 <es-ES>
-17.3:
-Novedades
+17.4:
+Hemos añadido 3 nuevas actualizaciones a las historias en esta actualización:
 
-Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
+Ahora verás un selector de medios cuando añadas un bloque de historias desde el editor de bloques, haciendo más fácil empezar.
 
-Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
+Las vistas previas de las historias ahora se muestran en el lector como se espera.
+
+Y, por último, cuando las diapositivas fallan al subir, la aplicación volverá a intentarlo automáticamente, ¡ahorrándote un toque adicional!
 </es-ES>
 <fr-CA>
-17.3 :
-Nouveautés
+17.4 :
+Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
 
-Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
 
-Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
+Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
+
+Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
 </fr-CA>
 <fr-FR>
-17.3 :
-Nouveautés
+17.4 :
+Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
 
-Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
+Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
 
-Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
+Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
+
+Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
 </fr-FR>
 <iw-IL>
-17.3:
-מה חדש?
+17.4:
+בעדכון הזה הוספנו שלושה עדכונים חדשים לסטוריז:
 
-עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+בורר המדיה מוצג כעת כאשר מוסיפים בלוק של סטורי מעורך הבלוקים, כך שאפשר להתחיל לפרסם בקלות רבה יותר.
 
-שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
+התצוגות המקדימות של הסטורי כעת מעובדות באופן תקין ב-Reader.
+
+ואחרון חביב, אם טעינת השקופיות נכשלת, האפליקציה תמשיך לנסות שוב באופן אוטומטי כדי לחסוך לך את ההקשה הנוספת!
 </iw-IL>
 <id>
-17.3:
-Apa yang baru?
+17.4:
+Kami menambahkan 3 pembaruan untuk Cerita pada pembaruan ini:
 
-Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+Pemilih media akan ditampilkan saat menambahkan blok Cerita dari editor blok, sehingga proses memulai menjadi lebih mudah.
 
-Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
+Pratinjau Cerita kini ditampilkan dengan pas di Pembaca.
+
+Akhirnya, jika slide gagal diunggah, aplikasi akan otomatis mencoba ulang, sehingga tidak perlu mengetuk layar lagi.
 </id>
-<it-IT>
-17.3:
-Cosa c'è di nuovo?
-
-Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
-
-Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
-</it-IT>
 <ja-JP>
-17.3:
-新着情報
+17.4:
+今回のアップデートでは、ストーリーに3件の新しいアップデートを追加しました。
 
-新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+ブロックエディターからストーリーブロックを追加する際に、メディアピッカーが表示されるようになり、開始が簡単になりました。
 
-その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
+Reader でストーリーのプレビューが期待どおりに表示されるようになりました。
+
+さらに、スライドのアップロードに失敗するとアプリが自動的に再試行するため、再びタップする必要がなくなりました。
 </ja-JP>
 <ko-KR>
-17.3:
-새로운 기능
+17.4:
+이 업데이트에서 새 업데이트 3가지를 스토리에 추가했습니다.
 
-새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+이제는 더 쉽게 시작할 수 있도록 블록 편집기의 스토리 블록을 추가할 때 미디어 선택기가 표시됩니다.
 
-기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
+이제는 스토리 미리보기가 뉴스피드에서 예상대로 렌더링됩니다.
+
+그리고 마지막으로, 슬라이드가 업로드되지 않으면 앱에서 자동으로 다시 시도되므로 다시 누르지 않아도 됩니다.
 </ko-KR>
 <nl-NL>
-17.3:
-Wat is er nieuw?
+17.4:
+We hebben in deze update drie nieuwe updates aan Verhalen toegevoegd:
 
-Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+Je ziet nu een mediakiezer wanneer je een verhaalblok toevoegt vanuit de blok-editor, waardoor het gemakkelijker wordt om aan de slag te gaan.
 
-Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
+Verhaal voorbeelden worden nu weergegeven zoals verwacht in de Reader.
+
+En tot slot, wanneer slides niet kunnen worden geüpload, zal de app het automatisch opnieuw proberen, waardoor je een extra tik bespaart!
 </nl-NL>
+<pt-BR>
+17.4:
+Adicionamos 3 novas atualizações às Stories:
+
+Um seletor de mídia agora é exibido ao adicionar o bloco Story no editor de blocos, facilitando a criação.
+
+A visualização de Story agora é exibida como esperado no leitor.
+
+Por fim, quando slides não são enviados corretamente, o aplicativo tentará novamente economizando um toque adicional.
+</pt-BR>
 <ru-RU>
-17,3:
-Что нового?
+17,4:
+В этой версии мы добавили 3 новых обновления для историй:
 
-С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+Теперь при добавлении блока истории из редактора блоков вы увидите средство выбора мультимедиа, что позволит начать гораздо проще.
 
-Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
+Предварительный просмотр истории теперь отображается в Чтиве должным образом.
+
+И, наконец, когда слайды не загружаются, приложение автоматически повторит попытку, экономя вам дополнительное нажатие!
 </ru-RU>
 <sv-SE>
-17.3:
-Vad är nytt?
+17.4:
+Vi har lagt till 3 nya uppdateringar för berättelser i denna uppdatering:
 
-Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+Nu visas en mediaväljare när du lägger till ett berättelseblock i blockredigeraren, så att du enklare kommer igång.
 
-Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
+Nu visas förhandsvisningar av berättelser på förväntat sätt i läsaren.
+
+Slutligen: Om en bildspelsbild inte laddas upp korrekt kommer appen automatiskt att göra ett nytt försök, så att du inte behöver trycka en extra gång!
 </sv-SE>
 <tr-TR>
-17.3:
-Yenilikler
+17.4:
+Bu güncellemede Hikayeler'e 3 yeni güncelleme ekledik:
 
-Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+Artık blok düzenleyiciden bir Hikaye bloku eklerken, başlamayı kolaylaştıran bir medya seçici göreceksiniz.
 
-Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
+Hikaye önizlemeleri artık Okuyucu'da beklendiği gibi çalışıyor.
+
+Son olarak, slaytlar yüklenemediğinde, uygulama otomatik olarak yeniden dener ve size fazladan bir dokunuş kazandırır.
 </tr-TR>
 <zh-CN>
-17.3：
-通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+17.4
+在本次更新中，我们向故事功能新增了3项更新。
 
-其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
+现在，您使用区块编辑器添加故事区块时会看到一个媒体选择器，让您更容易上手。
+
+在阅读器中，故事的预览渲染已经达到预期。
+
+当幻灯片上传失败，应用程序将自动重试，减少您的操作负担。
 </zh-CN>
 <zh-TW>
-17.3:
-新功能
+17.4:
+我們在此次更新中為「故事」新增了 3 個更新：
 
-現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+現在從區塊編輯器新增故事區塊會看到媒體選擇器，讓你更容易上手。
 
-其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
+故事預覽現在可在閱讀器中正常顯示。
+
+若投影片無法上傳，該應用程式將自動重試，為你省去按按鍵的麻煩！
 </zh-TW>

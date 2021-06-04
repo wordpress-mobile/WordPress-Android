@@ -69,6 +69,29 @@ public class MySitesPage {
         clickItemWithText(R.string.my_site_btn_blog_posts);
     }
 
+    public void clickActivityLog() {
+        clickItemWithText(R.string.activity_log);
+    }
+
+    public void clickScan() {
+        clickItemWithText(R.string.scan);
+    }
+
+    public void clickBackup() {
+        clickItemWithText(R.string.backup);
+    }
+
+    public void clickStats() {
+        if (isElementDisplayed(R.id.recycler_view)) {
+            // If My Site Improvements are enabled, we reach the item in a different way
+            onView(withId(R.id.recycler_view))
+                    .perform(actionOnItem(hasDescendant(withText(R.string.stats)), click()));
+        } else {
+            onView(allOf(withId(R.id.my_site_stats_text_view), withText(R.string.stats)))
+                    .perform(scrollTo(), click());
+        }
+    }
+
     private void clickItemWithText(int stringResId) {
         clickItem(withText(stringResId));
     }

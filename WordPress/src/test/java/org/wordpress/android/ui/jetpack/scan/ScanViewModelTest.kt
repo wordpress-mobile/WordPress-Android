@@ -25,9 +25,8 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
@@ -59,6 +58,8 @@ private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 4
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 5
 private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 7
+private const val TEST_SITE_ID = 1L
+private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -304,15 +305,14 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `when server creds msg is clicked, then app opens site's jetpack settings external url`() = test {
+    fun `when server creds icon is clicked, then app opens site's jetpack settings external url`() = test {
+        whenever(site.siteId).thenReturn(TEST_SITE_ID)
         val observers = init()
 
         (observers.uiStates.last() as ContentUiState).items
-                .filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
-                ?.clickableTextsInfo
-                ?.firstOrNull()
-                ?.onClick
+                .filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_LINK) }
+                ?.onIconClick
                 ?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(
@@ -707,7 +707,7 @@ class ScanViewModelTest : BaseUnitTest() {
         onStartScanButtonClicked: (() -> Unit),
         onFixAllButtonClicked: (() -> Unit),
         onThreatItemClicked: (Long) -> Unit,
-        onEnterServerCredsMessageClicked: () -> Unit
+        onEnterServerCredsIconClicked: () -> Unit
     ) = listOf(
             ActionButtonState(
                     text = fakeUiStringText,
@@ -727,15 +727,11 @@ class ScanViewModelTest : BaseUnitTest() {
                     isIndeterminate = true,
                     isVisible = false
             ),
-            DescriptionState(
-                    text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
-                    clickableTextsInfo = listOf(
-                            ClickableTextInfo(
-                                    startIndex = 0,
-                                    endIndex = 1,
-                                    onClick = onEnterServerCredsMessageClicked
-                            )
-                    )
+            FootnoteState(
+                    iconResId = R.drawable.ic_plus_white_24dp,
+                    iconColorResId = R.color.primary,
+                    text = UiStringText(SERVER_CREDS_LINK),
+                    onIconClick = onEnterServerCredsIconClicked
             ),
             ThreatItemState(
                     threatId = fakeThreatId,
