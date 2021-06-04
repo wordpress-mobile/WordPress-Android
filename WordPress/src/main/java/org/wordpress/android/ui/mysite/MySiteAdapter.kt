@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.mysite.MySiteItem.Type.BLOGGING_REMINDER_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -47,6 +48,12 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             )
             CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
+            BLOGGING_REMINDER_CARD.ordinal -> BloggingReminderCardViewHolder(
+                    parent,
+                    quickStartViewPool,
+                    nestedScrollStates,
+                    uiHelpers
+            )
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

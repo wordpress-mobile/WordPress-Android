@@ -292,7 +292,7 @@ class MySiteViewModel
     }
 
     private fun onBloggingReminderCardClick() {
-
+        // TODO: Connect it to new Blogging Reminder flow
     }
 
     private fun scrollToQuickStartTaskIfNecessary(
