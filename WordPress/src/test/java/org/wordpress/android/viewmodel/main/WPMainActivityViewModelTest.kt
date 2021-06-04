@@ -594,8 +594,22 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given wordpress app, when app is launched, then feature announcement is shown`() = test {
+        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
+        whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                featureAnnouncement
+        )
+
+        startViewModelWithDefaultParameters(false)
+        resumeViewModelWithDefaultParameters()
+
+        verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
+    }
+
+    @Test
     fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
-        startViewModelWithDefaultParameters()
+        startViewModelWithDefaultParameters(true)
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
