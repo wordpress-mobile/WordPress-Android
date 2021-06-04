@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/106707880/stats/video-plays/",
+        "urlPathPattern": "/rest/v1.1/sites/([0-9]+)/stats/video-plays/",
         "queryParameters": {
             "period": {
                 "equalTo": "month"

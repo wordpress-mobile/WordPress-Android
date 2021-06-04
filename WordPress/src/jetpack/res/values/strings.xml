@@ -15,7 +15,7 @@
 
     <!-- Contact us -->
     <!--Note: Support ticket subject, only visible to the end users of the Zendesk support portal, doesn't need a translation -->
-    <string name="support_ticket_subject" translatable="false">Jetpack for Android Support</string>
+    <string name="support_ticket_subject">Jetpack for Android Support</string>
 
     <!-- Log out actions in Me -->
     <string name="me_disconnect_from_wordpress_com">Log out of Jetpack</string>
