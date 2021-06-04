@@ -239,7 +239,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress(boolean cancellable) {
-        mBottomButton.setEnabled(false);
+        if (mBottomButton != null) {
+            mBottomButton.setEnabled(false);
+        }
 
         mProgressDialog =
                 ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,

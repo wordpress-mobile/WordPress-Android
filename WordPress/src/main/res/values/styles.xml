@@ -1575,4 +1575,10 @@
         <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
         <item name="android:textAppearance">?attr/textAppearanceButton</item>
     </style>
+
+    <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+    </style>
 </resources>
