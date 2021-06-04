@@ -138,7 +138,6 @@ Language: es_CO
     <string name="media_uploading_gif_library_photo">Subiendo medios GIF</string>
     <string name="media_uploading_stock_library_photo">Subiendo medios de inventarios</string>
     <string name="media_uploading_default">Subiendo medios</string>
-    <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
     <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
@@ -295,7 +294,6 @@ Language: es_CO
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_list_author">Autor de la página</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
     <string name="menu_content_info">Estructura del contenido</string>
     <string name="everyone">Todos</string>
@@ -328,6 +326,7 @@ Language: es_CO
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
+    <string name="gutenberg_native_insert_mention">Insertar una mención</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces para abrir la hoja de acción con las opciones disponibles</string>
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
@@ -394,7 +393,6 @@ Language: es_CO
     <string name="pages_and_posts_cancel_auto_upload">Cancelar la subida</string>
     <string name="gif_list_search_returned_unknown_error">Ha habido un problema al gestionar la petición</string>
     <string name="gif_powered_by_tenor">Funciona con Tenor</string>
-    <string name="gif_picker_search_hint">Buscar en Tenor</string>
     <string name="photo_picker_gif">Elegir desde Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Viernes</string>
@@ -539,14 +537,12 @@ Language: es_CO
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar el teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para mostrar la ayuda</string>
     <string name="gutenberg_native_take_a_video">Haz un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Haz una foto o un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Haz una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
-    <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
@@ -926,7 +922,6 @@ Language: es_CO
     <string name="stats_no_data_for_period">No hay datos en este periodo</string>
     <string name="preference_strip_image_location">Eliminar la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="gif_picker_endless_scroll_network_error">Algunos medios fallan al cargar debido a un error de red.</string>
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_author_views_label">Vistas</string>
