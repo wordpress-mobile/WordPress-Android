@@ -60,7 +60,6 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             ) {
         fun onBind(item: HighEmphasisText) = with(binding) {
             text.drawEmphasizedText(uiHelpers, item.text)
-            text.alpha = text.resources.getDimension(R.dimen.material_emphasis_high_type)
         }
     }
 
