@@ -1090,7 +1090,7 @@
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
     <string name="scan_fixing_threats_title_plural">Fixing Threats</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
-    <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_scanning_description">We will send you a notification if a threat is found. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_fixing_threats_description_singular">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
