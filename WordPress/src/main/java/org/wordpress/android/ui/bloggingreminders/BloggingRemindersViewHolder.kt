@@ -88,13 +88,15 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     )
             ) {
         fun onBind(item: DayButtons) = with(binding) {
-            dayOne.initDay(item.dayItems[0])
-            dayTwo.initDay(item.dayItems[1])
-            dayThree.initDay(item.dayItems[2])
-            dayFour.initDay(item.dayItems[3])
-            dayFive.initDay(item.dayItems[4])
-            daySix.initDay(item.dayItems[5])
-            daySeven.initDay(item.dayItems[6])
+            listOf(
+                    dayOne,
+                    dayTwo,
+                    dayThree,
+                    dayFour,
+                    dayFive,
+                    daySix,
+                    daySeven
+            ).forEachIndexed { index, day -> day.initDay(item.dayItems[index]) }
         }
 
         private fun TextView.initDay(dayItem: DayItem) {
