@@ -101,7 +101,7 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-wpmreleasetoolkit (1.0.1)
+    fastlane-plugin-wpmreleasetoolkit (1.1.0)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
@@ -258,9 +258,9 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2)
-  fastlane-plugin-wpmreleasetoolkit (~> 1.0)
+  fastlane-plugin-wpmreleasetoolkit (~> 1.1)
   nokogiri
   rmagick (~> 4.1)
 
 BUNDLED WITH
-   2.2.16
+   2.2.19
