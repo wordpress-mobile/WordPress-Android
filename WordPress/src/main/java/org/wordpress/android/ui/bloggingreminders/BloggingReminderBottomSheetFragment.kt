@@ -29,6 +29,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.recycler_view_bottom_sheet, container)
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

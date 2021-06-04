@@ -23,12 +23,14 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.ArrayList
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,7 +44,7 @@ class BloggingRemindersViewModel @Inject constructor(
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
     private val _selectedScreen = MutableLiveData<Screen>()
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersModel>()
-    val uiState: LiveData<List<BloggingRemindersItem>> = merge(
+    @ExperimentalStdlibApi val uiState: LiveData<List<BloggingRemindersItem>> = merge(
             _selectedScreen,
             _bloggingRemindersModel
     ) { screen, bloggingRemindersModel ->
@@ -102,12 +104,40 @@ class BloggingRemindersViewModel @Inject constructor(
         )
     }
 
+    @ExperimentalStdlibApi
     private fun buildEpilogue(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
+        val numberOfDays = bloggingRemindersModel?.enabledDays?.size ?: 0
+
+        val selectedDays = when {
+            numberOfDays <= 3 -> {
+                bloggingRemindersModel?.enabledDays?.map { day ->
+                    day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
+                        it.toUpperCase()
+                    }.plus(" and ")
+                }.toString()
+            }
+            numberOfDays in 4..6 -> {
+                bloggingRemindersModel?.enabledDays?.map { day ->
+                    day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
+                        it.toUpperCase()
+                    }.take(3).plus(", ")
+                }.toString()
+            }
+            else -> "everyday"
+        }
+
+        val body = when (numberOfDays) {
+            7 -> UiStringRes(R.string.blogging_reminders_epilogue_body)
+            else -> UiStringResWithParams(
+                    R.string.blogging_reminders_epilogue_body_days,
+                    listOf(UiStringText(numberOfDays.toString()), UiStringText(selectedDays)))
+        }
+
         return listOf(
                 Illustration(R.drawable.img_illustration_bell_yellow_96dp),
                 Title(UiStringRes(R.string.blogging_reminders_epilogue_title)),
-                Text(UiStringRes(R.string.blogging_reminders_epilogue_body)),
-                Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption)), // TODO: Update with number of days and days depending on copy
+                Text(body),
+                Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption)),
                 PrimaryButton(
                         UiStringRes(R.string.blogging_reminders_done),
                         enabled = true,
@@ -135,7 +165,7 @@ class BloggingRemindersViewModel @Inject constructor(
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
         if (bloggingRemindersModel != null) {
             // TODO: Perform this update login on coroutine
-            //bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+            // bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
             // TODO Add logic to save state and schedule notifications here
             _selectedScreen.value = EPILOGUE
         }
