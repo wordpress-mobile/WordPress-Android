@@ -240,6 +240,10 @@ class WPMainActivityViewModel @Inject constructor(
         val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
         setMainFabUiState(showFab, site)
 
+        checkAndShowFeatureAnnouncementForWordPressApp()
+    }
+
+    private fun checkAndShowFeatureAnnouncementForWordPressApp() {
         // Do not proceed with feature announcement check for Jetpack
         if (!buildConfigWrapper.isJetpackApp) {
             launch {
