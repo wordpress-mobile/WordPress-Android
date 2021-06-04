@@ -8,10 +8,12 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://a8c-libs.s3.amazonaws.com/android' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.automattic.android:publish-to-s3:0.4.0'
     }
 }
 
@@ -19,6 +21,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.automattic.android.publish-library-to-s3'
 
 repositories {
     mavenCentral()
@@ -33,8 +36,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 2
-        versionName "1.1"
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -111,3 +112,10 @@ android.buildTypes.all { buildType ->
         }
     }
 }
+
+s3PublishLibrary {
+    groupId "org.wordpress"
+    artifactId "login"
+    from "release"
+}
+
