@@ -15,6 +15,7 @@ import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
+import org.wordpress.android.databinding.BloggingRemindersTipBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmph
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -140,6 +142,18 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             uiHelpers.setTextOrHide(this, dayItem.text)
             setOnClickListener { dayItem.onClick.click() }
             isSelected = dayItem.isSelected
+        }
+    }
+
+    class TipViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTipBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTipBinding::inflate
+                    )
+            ) {
+        fun onBind(item: Tip) = with(binding) {
+            uiHelpers.setTextOrHide(title, item.title)
+            uiHelpers.setTextOrHide(message, item.message)
         }
     }
 }

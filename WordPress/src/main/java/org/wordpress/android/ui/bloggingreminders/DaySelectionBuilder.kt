@@ -9,6 +9,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Emphasiz
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -37,6 +38,7 @@ class DaySelectionBuilder
                     )
                 }),
                 buildNTimesLabel(bloggingRemindersModel),
+                Tip(UiStringRes(R.string.blogging_reminders_tip), UiStringRes(R.string.blogging_reminders_tip_message)),
                 PrimaryButton(
                         UiStringRes(R.string.blogging_reminders_notify_me),
                         enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,

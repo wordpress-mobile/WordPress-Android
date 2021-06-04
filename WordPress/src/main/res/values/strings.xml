@@ -3616,4 +3616,6 @@
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_tip_message">People who post atleast twice weekly get 87% more views on their site.</string>
 </resources>
