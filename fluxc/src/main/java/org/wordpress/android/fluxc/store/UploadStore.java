@@ -31,6 +31,8 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -267,10 +269,17 @@ public class UploadStore extends Store {
 
     private void handleUploadMedia(MediaPayload payload) {
         MediaUploadModel mediaUploadModel = new MediaUploadModel(payload.media.getId());
-        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
-        if (errorMessage != null) {
+        MalformedMediaArgSubType argError = MediaUtils.getMediaValidationErrorType(payload.media);
+
+        if (argError.getType() != Type.NO_ERROR) {
             mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
-            mediaUploadModel.setMediaError(new MediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage));
+            mediaUploadModel.setMediaError(
+                    new MediaError(
+                            MediaErrorType.MALFORMED_MEDIA_ARG,
+                            argError.getType().getErrorLogDescription(),
+                            argError
+                    )
+            );
         }
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
     }

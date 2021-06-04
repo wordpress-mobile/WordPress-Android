@@ -25,6 +25,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
+import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType.Type;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.util.AppLog;
@@ -215,6 +218,7 @@ public class MediaStore extends Store {
 
     public static class MediaError implements OnChangedError {
         public MediaErrorType type;
+        public MediaErrorSubType mErrorSubType;
         public String message;
         public int statusCode;
         public String logMessage;
@@ -224,6 +228,12 @@ public class MediaStore extends Store {
         public MediaError(MediaErrorType type, String message) {
             this.type = type;
             this.message = message;
+        }
+
+        public MediaError(MediaErrorType type, String message, MediaErrorSubType errorSubType) {
+            this.type = type;
+            this.message = message;
+            this.mErrorSubType = errorSubType;
         }
 
         public static MediaError fromIOException(IOException e) {
@@ -744,22 +754,29 @@ public class MediaStore extends Store {
     }
 
     private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media,
-                                        String logMessage) {
+                                        String logMessage, MalformedMediaArgSubType argErrorType) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
-        MediaError mediaError = new MediaError(errorType, errorMessage);
+        MediaError mediaError = new MediaError(errorType, errorMessage, argErrorType);
         mediaError.logMessage = logMessage;
         onMediaUploaded.error = mediaError;
         emitChange(onMediaUploaded);
     }
 
     private void performUploadMedia(UploadMediaPayload payload) {
-        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
-        if (errorMessage != null) {
-            String message = "Media doesn't have required data: " + errorMessage;
+        MalformedMediaArgSubType argError = MediaUtils.getMediaValidationErrorType(payload.media);
+
+        if (argError.getType() != Type.NO_ERROR) {
+            String message = "Media doesn't have required data: " + argError.getType().getErrorLogDescription();
             AppLog.e(AppLog.T.MEDIA, message);
             payload.media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
-            notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media, message);
+            notifyMediaUploadError(
+                    MediaErrorType.MALFORMED_MEDIA_ARG,
+                    argError.getType().getErrorLogDescription(),
+                    payload.media,
+                    message,
+                    argError
+            );
             return;
         }
 
