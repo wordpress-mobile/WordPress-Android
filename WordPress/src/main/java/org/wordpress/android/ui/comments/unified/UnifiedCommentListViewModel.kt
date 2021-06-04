@@ -21,6 +21,7 @@ class UnifiedCommentListViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
+    // TODO we woiuld like to explore moving PagingSource into the repository
     val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) { CommentPagingSource() }
 
     val commentListItems = commentListItemPager.flow
