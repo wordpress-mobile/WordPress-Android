@@ -110,7 +110,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -119,6 +118,7 @@ import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.workers.WordPressWorkersFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,6 +183,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
     @Inject ExPlat mExPlat;
+    @Inject WordPressWorkersFactory mWordPressWorkerFactory;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -370,9 +371,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     protected void initWorkManager() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
         androidx.work.Configuration config =
-                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(mWordPressWorkerFactory).build();
         WorkManager.initialize(this, config);
     }
 

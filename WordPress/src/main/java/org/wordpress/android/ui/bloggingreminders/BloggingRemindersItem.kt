@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import androidx.annotation.DrawableRes
+import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY_BUTTONS
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TIP
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -34,7 +35,7 @@ sealed class BloggingRemindersItem(val type: Type) {
 
     data class DayButtons(val dayItems: List<DayItem>) : BloggingRemindersItem(DAY_BUTTONS) {
         init {
-            assert(dayItems.size == 7) {
+            assert(dayItems.size == BloggingRemindersModel.Day.values().size) {
                 "7 days need to be defined"
             }
         }

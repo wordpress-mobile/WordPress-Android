@@ -1,0 +1,8 @@
+17.4:
+Kami menambahkan 3 pembaruan untuk Cerita pada pembaruan ini:
+
+Pemilih media akan ditampilkan saat menambahkan blok Cerita dari editor blok, sehingga proses memulai menjadi lebih mudah.
+
+Pratinjau Cerita kini ditampilkan dengan pas di Pembaca.
+
+Akhirnya, jika slide gagal diunggah, aplikasi akan otomatis mencoba ulang, sehingga tidak perlu mengetuk layar lagi.

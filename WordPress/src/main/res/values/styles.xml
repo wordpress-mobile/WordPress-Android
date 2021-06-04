@@ -1571,6 +1571,12 @@
         <item name="android:textAppearance">?attr/textAppearanceButton</item>
     </style>
 
+    <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+    </style>
+
     <style name="BloggingRemindersTipTitle">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>

@@ -27,7 +27,7 @@ class DaysProvider
     fun getDays(): List<Pair<String, Day>> {
         val offset = dateProvider.getFirstDayOfTheWeek() - 1
         val shortWeekdays = dateProvider.getShortWeekdays()
-        val orderedDays = days.takeLast(7 - offset) + days.take(offset)
+        val orderedDays = days.takeLast(days.size - offset) + days.take(offset)
         return orderedDays.map { shortWeekdays[it.first] to it.second }
     }
 }

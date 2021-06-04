@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -36,4 +37,12 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
     }
 
     object ThreatItemLoadingSkeletonState : ScanListItemState(ViewType.THREAT_ITEM_LOADING_SKELETON)
+
+    data class FootnoteState(
+        @DrawableRes val iconResId: Int? = null,
+        @ColorRes val iconColorResId: Int? = null,
+        val text: UiString,
+        val isVisible: Boolean = true,
+        val onIconClick: (() -> Unit)? = null
+    ) : JetpackListItemState(ViewType.SCAN_FOOTNOTE)
 }

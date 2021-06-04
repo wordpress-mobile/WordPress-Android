@@ -1,6 +1,0 @@
-17.3:
-Vad är nytt?
-
-Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
-
-Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.

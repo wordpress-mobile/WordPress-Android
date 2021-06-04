@@ -1,8 +1,19 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-17.5
+17.6
 -----
 
+
+17.5
+-----
+* [**] Block Editor: Audio block: Add Insert from URL functionality. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3031]
+* [***] Block Editor: Slash command to insert new blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3250]
+* [***] Block Editor: New Block: Reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3490]
+* [***] Block Editor: Add reusable blocks to the block inserter menu. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3054]
+
+17.3.2
+-----
+* [***] Me Screen: Fixed an issue with the Change Photo flow that was causing a crash. [https://github.com/wordpress-mobile/WordPress-Android/pull/14701]
 
 17.4
 -----

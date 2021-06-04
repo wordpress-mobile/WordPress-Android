@@ -1,6 +1,0 @@
-17.3:
-Yenilikler
-
-Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
-
-Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
