@@ -25,10 +25,10 @@ repositories {
             includeGroup "org.wordpress-mobile"
         }
     }
-    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ?
-        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-        "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
-        : "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+    def localRNUrl = "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
+    def remoteRNUrl ="https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ? localRNUrl : remoteRNUrl
     maven {
         url reactNativeUrl
         content {
