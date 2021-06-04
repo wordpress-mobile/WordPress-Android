@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
