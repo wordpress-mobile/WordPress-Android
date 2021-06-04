@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 15:52:28+0000
+Translation-Revision-Date: 2021-06-04 12:04:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
@@ -18,14 +18,20 @@ Language: es
     <string name="gutenberg_native_audio_settings">Ajustes de audio</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
+    <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
+    <string name="gutenberg_native_column_settings">Ajustes de columna</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
+    <string name="gutenberg_native_write_title">Escribe el título…</string>
     <string name="gutenberg_native_write_code">Escribe código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordenación y filtrado</string>
     <string name="gutenberg_native_show_download_button">Mostrar el botón de descarga</string>
+    <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_shortcode">Shortcode </string>
+    <string name="gutenberg_native_add_label">Añadir etiqueta…</string>
+    <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_read_more">Leer más</string>
     <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_post_meta_settings">Ajustes meta de la entrada</string>
@@ -34,21 +40,23 @@ Language: es
     <string name="gutenberg_native_media_file">Archivo de medios</string>
     <string name="gutenberg_native_metadata">Metadatos</string>
     <string name="gutenberg_native_loop">Repetir</string>
+    <string name="gutenberg_native_link_label">Etiqueta del enlace</string>
     <string name="gutenberg_native_link_to_12d6f96a">Enlazar a</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imagen %1$d de %2$d en la biblioteca</string>
     <string name="gutenberg_native_heading_d">Encabezado %d</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Introduce aquí la URL a incrustar…</string>
     <string name="gutenberg_native_edit_image">Editar la imagen</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_change_heading_level">Cambiar el nivel del encabezado</string>
     <string name="gutenberg_native_code">Código</string>
     <string name="gutenberg_native_browser_default">Navegador por defecto</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
     <string name="gutenberg_native_attachment_page">Página de adjuntos</string>
     <string name="gutenberg_native_auto">Automático</string>
     <string name="gutenberg_native_autoplay">Reproducción automática</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">El bloque no se puede procesar dentro de sí mismo.</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">El bloque se ha borrado o no está disponible.</string>
+    <string name="gutenberg_native_cover">Fondo</string>
     <string name="gutenberg_native_add_text">Añade texto…</string>
     <string name="gutenberg_native_add_caption">Añadir leyenda</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
@@ -64,27 +72,38 @@ Language: es
     <string name="like_faces_singular_text">A 1 bloguero le gusta esto.</string>
     <string name="like_title_plural">%d me gusta</string>
     <string name="like_title_singular">1 me gusta</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Introduce las credenciales de tu servidor para corregir las amenazas.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Introduce las credenciales de tu servidor para corregir la amenaza.</string>
     <string name="suggestion">Sugerencia:</string>
+    <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
+    <string name="gutenberg_native_search_input_field">Campo de introducción de búsqueda.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Botón de búsqueda. El texto actual del botón es</string>
     <string name="gutenberg_native_search_blocks">Bloques de búsqueda</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta del bloque de búsqueda. El texto actual es</string>
     <string name="gutenberg_native_search_block">Bloque de búsqueda</string>
+    <string name="gutenberg_native_inside">Dentro</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">No se ha establecido ningún marcador de posición personalizado</string>
+    <string name="gutenberg_native_no_button">Sin botón</string>
+    <string name="gutenberg_native_hide_search_heading">Ocultar el encabezado de búsqueda</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Doble toque para editar el texto del marcador de posición</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Doble toque para editar el texto de la etiqueta</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Doble toque para editar el texto del botón</string>
     <string name="gutenberg_native_double_tap_to_change_unit">doble-toque para cambiar la unidad</string>
+    <string name="gutenberg_native_outside">Exterior</string>
+    <string name="gutenberg_native_current_placeholder_text_is">El texto de marcador de posición actual es</string>
     <string name="gutenberg_native_clear_search">Vaciar la búsqueda</string>
     <string name="gutenberg_native_cancel_search">Cancelar la búsqueda</string>
+    <string name="gutenberg_native_button_position">Posición del botón</string>
+    <string name="gutenberg_native_button_outside">Botón exterior</string>
+    <string name="gutenberg_native_button_inside">Botón interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocurrió un error al obtener los datos de los me gusta</string>
     <string name="get_likes_unknown_error">Ocurrió un error al obtener los me gusta.</string>
     <string name="get_likes_no_network_error">No hay ninguna red disponible.</string>
     <string name="comments_empty_list_filtered_unreplied">No hay ningún comentario sin responder</string>
     <string name="comment_status_unreplied">Sin responder</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Resume tu entrada con una lista de encabezados. Añade anclas HTML a los bloques de encabezados para enlazarlos aquí.</string>
-    <string name="gutenberg_native_summary">resumen</string>
-    <string name="gutenberg_native_table_of_contents">Tabla de contenidos</string>
-    <string name="gutenberg_native_buttongroup">Grupo de botones</string>
-    <string name="gutenberg_native_document_outline">esquema del documento</string>
+    <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
+    <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
     <string name="reader_title_interests">Seguir temas</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
@@ -156,15 +175,14 @@ Language: es
     <string name="gutenberg_native_replace_file">Reemplazar archivo</string>
     <string name="gutenberg_native_replace_audio">Reemplazar audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema al abrir el audio</string>
-    <string name="gutenberg_native_open">ABIERTO</string>
     <string name="gutenberg_native_no_application_can_handle_this_request">Ninguna aplicación puede gestionar esta solicitud.</string>
     <string name="gutenberg_native_lock_icon">Icono de candado</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Fallo al insertar el archivo de audio. Por favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_double_tap_to_select_an_audio_file">Toca dos veces para seleccionar un archivo de audio</string>
+    <string name="gutenberg_native_open">ABRIR</string>
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Toca dos veces para escuchar el archivo de audio</string>
     <string name="gutenberg_native_choose_audio">Elegir audio</string>
     <string name="gutenberg_native_audio_player">Reproductor de audio</string>
-    <string name="gutenberg_native_audio_file">archivo de audio</string>
     <string name="gutenberg_native_audio_caption_s">Leyenda del audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Leyenda del audio. Vacía</string>
     <string name="gutenberg_native_add_audio">AÑADIR AUDIO</string>
@@ -172,6 +190,7 @@ Language: es
     <string name="photo_picker_choose_audio">Elige un audio del dispositivo</string>
     <string name="people_optional_custom_message_helper_text">Opcional: Introduce un mensaje personalizado que enviar con tu invitación.</string>
     <string name="photo_picker_use_audio">Usasr este audio</string>
+    <string name="gutenberg_native_audio_file">archivo de audio</string>
     <string name="people_learn_more_about_roles">Aprende más sobre los perfiles</string>
     <string name="threat_status_fixed">Corregido</string>
     <string name="threat_found_header">Encontrado</string>
@@ -489,7 +508,6 @@ Language: es
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
-    <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
     <string name="gutenberg_native_page_break">Salto de página</string>
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
@@ -647,7 +665,6 @@ Language: es
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_list_author">Autor de la página</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
     <string name="menu_content_info">Estructura del contenido</string>
     <string name="everyone">Todos</string>
@@ -683,8 +700,10 @@ Language: es
     <string name="update_now">Actualizar ahora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
+    <string name="gutenberg_native_remove">Eliminar</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
+    <string name="gutenberg_native_insert_mention">Insertar una mención</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">La página de inicio seleccionada y la página de entradas no pueden ser la misma.</string>
     <string name="site_settings_classic_blog">Blog clásico</string>
     <string name="site_settings_static_homepage">Página de inicio estática</string>
@@ -735,6 +754,7 @@ Language: es
     <string name="button_insert">Insertar</string>
     <string name="continue_label">Continuar</string>
     <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_number_of_columns">Número de columnas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover el bloque a la derecha desde la posición %1$s a la posición %2$s</string>
     <string name="gutenberg_native_move_block_right">Mover el bloque a la derecha</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover el bloque a la izquierda desde la posición %1$s a la posición %2$s</string>
@@ -759,7 +779,6 @@ Language: es
     <string name="weekday_tuesday">Martes</string>
     <string name="weekday_monday">Lunes</string>
     <string name="weekday_sunday">Domingo</string>
-    <string name="gif_picker_search_hint">Buscar en Tenor</string>
     <string name="media_accessing_failed">Ha fallado el acceso al contenido de un sitio privado. Algunos medios pueden no estar disponibles</string>
     <string name="media_accessing_progress">Accediendo al contenido de un sitio privado</string>
     <string name="error_failed_to_crop_and_save_image">Fallo al recortar y guardar la imagen, por favor, inténtalo de nuevo.</string>
@@ -802,7 +821,10 @@ Language: es
     <string name="gutenberg_native_link_to">Enlazar a</string>
     <string name="gutenberg_native_link_settings">Ajustes de enlace</string>
     <string name="gutenberg_native_excerpt_length_words">Longitud del extracto (palabras)</string>
+    <string name="gutenberg_native_edit_cover_media">Editar el medio de la portada</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
+    <string name="gutenberg_native_button_link_url">URL del enlace del botón</string>
+    <string name="gutenberg_native_border_radius">Radio del borde</string>
     <string name="gutenberg_native_add_paragraph_block">Añadir un bloque de párrafo</string>
     <string name="gutenberg_native_video_settings">Ajustes de vídeo</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear una entrada</string>
@@ -843,6 +865,7 @@ Language: es
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar el vídeo</string>
+    <string name="gutenberg_native_edit_media">Editar los medios</string>
     <string name="gutenberg_native_add_a_shortcode">Añadir un shortcode…</string>
     <string name="post_list_author">Autor de la entrada</string>
     <string name="fab_create_desc">Crear una entrada</string>
@@ -901,14 +924,12 @@ Language: es
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar el teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para mostrar la ayuda</string>
     <string name="gutenberg_native_take_a_video">Haz un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Haz una foto o un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Haz una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
-    <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
@@ -925,11 +946,13 @@ Language: es
     <string name="gutenberg_native_move_block_up">Mover el bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, de la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque abajo</string>
+    <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar el teclado</string>
     <string name="gutenberg_native_help_icon">Icono de ayuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dos veces para deshacer el último cambio</string>
+    <string name="gutenberg_native_link_text">Texto del enlace</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toca dos veces para alternar los ajustes</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Toca dos veces para seleccionar una imagen</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Toca dos veces para seleccionar un vídeo</string>
@@ -939,6 +962,7 @@ Language: es
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dos veces para mover el bloque hacia abajo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toca dos veces para editar este valor</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dos veces para añadir un bloque</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toca dos veces y mantén para editar</string>
     <string name="gutenberg_native_current_value_is_s">El valor actual es %s</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
@@ -1327,7 +1351,6 @@ Language: es
     <string name="stats_insights_share_post">Compartir entrada</string>
     <string name="stats_insights_create_post">Crear entrada</string>
     <string name="stats_insights_latest_post_message">Han pasado %1$s desde que se publicó %2$s. Así es como ha funcionado la entrada hasta ahora:</string>
-    <string name="gif_picker_endless_scroll_network_error">Algunos medios fallan al cargar debido a un error de red.</string>
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_videos">Vídeos</string>
