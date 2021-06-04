@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 08:54:34+0000
+Translation-Revision-Date: 2021-05-26 12:05:02+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
     <string name="gutenberg_native_add_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="login_empty_view_avatar_content_description">Vaše profilová fotka</string>
     <string name="gutenberg_native_size">Velikost</string>
+    <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
+    <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
+    <string name="gutenberg_native_image_settings">Nastavení obrázku</string>
+    <string name="gutenberg_native_audio_settings">Nastavení audia</string>
+    <string name="user_profile_untitled_site">(bez názvu)</string>
+    <string name="user_profile_site_section_header">Web</string>
+    <string name="gutenberg_native_write_code">Napsat kód…</string>
+    <string name="gutenberg_native_sorting_and_filtering">Filtry a řazení</string>
+    <string name="gutenberg_native_show_download_button">Zobrazit tlačítko pro stažení</string>
+    <string name="gutenberg_native_shortcode">Zdrojový kód</string>
+    <string name="gutenberg_native_read_more">Číst dále</string>
+    <string name="gutenberg_native_preload">Předběžně načíst</string>
+    <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
+    <string name="gutenberg_native_post_content_settings">Nastavení obsahu příspěvku</string>
+    <string name="gutenberg_native_metadata">Metadata</string>
+    <string name="gutenberg_native_media_file">Mediální soubor</string>
+    <string name="gutenberg_native_media_area">Oblast média</string>
     <string name="gutenberg_native_what_is_alt_text">Co je alternativní text?</string>
     <string name="gutenberg_native_transform_s_to">Změnit %s na</string>
     <string name="gutenberg_native_transform_block">Změnit blok…</string>

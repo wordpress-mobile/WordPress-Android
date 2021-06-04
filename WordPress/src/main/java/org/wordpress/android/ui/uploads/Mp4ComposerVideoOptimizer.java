@@ -80,7 +80,7 @@ public class Mp4ComposerVideoOptimizer extends VideoOptimizerBase implements Lis
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
                     null, mInputPath);
-            properties.put("optimizer-lib", "mp4composer");
+            properties.put("optimizer_lib", "mp4composer");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
