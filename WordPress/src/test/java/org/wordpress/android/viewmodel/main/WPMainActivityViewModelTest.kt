@@ -609,12 +609,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
-        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
-        whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
-                featureAnnouncement
-        )
-
         startViewModelWithDefaultParameters(true)
         resumeViewModelWithDefaultParameters()
 
