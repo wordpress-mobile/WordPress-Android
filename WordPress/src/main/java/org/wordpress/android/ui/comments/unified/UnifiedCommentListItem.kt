@@ -32,13 +32,13 @@ sealed class UnifiedCommentListItem(val type: CommentListItemType) {
         val remoteCommentId: Long,
         private val toggleSelected: (remoteCommentId: Long) -> Unit
     ) {
-        fun toggle() = toggleSelected(remoteCommentId)
+        fun onToggle() = toggleSelected(remoteCommentId)
     }
 
     data class ClickAction(
         val remoteCommentId: Long,
         private val clickItem: (remoteCommentId: Long) -> Unit
     ) {
-        fun click() = clickItem(remoteCommentId)
+        fun onClick() = clickItem(remoteCommentId)
     }
 }
