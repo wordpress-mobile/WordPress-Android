@@ -744,7 +744,7 @@ Language: en_CA
     <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="update_now">Update Now</string>
-    <string name="gutenberg_native_remove">Remove %s</string>
+    <string name="gutenberg_native_remove">Remove</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
     <string name="gutenberg_native_move_to_top">Move to top</string>
     <string name="gutenberg_native_insert_mention">Insert mention</string>
