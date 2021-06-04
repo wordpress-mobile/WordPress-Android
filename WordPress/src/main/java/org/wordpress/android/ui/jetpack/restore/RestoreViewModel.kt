@@ -455,7 +455,7 @@ class RestoreViewModel @Inject constructor(
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
         (_uiState.value as? DetailsState)?.let {
-            val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType, site.siteId)
+            val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
             _uiState.postValue(it.copy(items = updatedItems))
         }
     }

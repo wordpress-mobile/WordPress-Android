@@ -81,7 +81,8 @@ class RestoreStateListItemBuilder @Inject constructor(
                     availableItemType = it.availableItemType,
                     label = UiStringRes(it.labelResId),
                     labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
-                    checked = true,
+                    checked = !isAwaitingCredentials,
+                    isEnabled = !isAwaitingCredentials,
                     onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
         }
@@ -316,8 +317,7 @@ class RestoreStateListItemBuilder @Inject constructor(
 
     fun updateCheckboxes(
         uiState: RestoreUiState,
-        itemType: JetpackAvailableItemType,
-        siteId: Long
+        itemType: JetpackAvailableItemType
     ): List<JetpackListItemState> {
         val updatedCheckboxes = uiState.items.map { state ->
             if (state.type == CHECKBOX) {
@@ -332,8 +332,7 @@ class RestoreStateListItemBuilder @Inject constructor(
             }
         }
         val atLeastOneChecked = updatedCheckboxes.filterIsInstance<CheckboxState>().find { it.checked } != null
-        val isDetailsActionButtonEnabled = atLeastOneChecked && !hasServerCredentialsMessage(uiState, siteId)
-        return updateDetailsActionButtonState(updatedCheckboxes, isDetailsActionButtonEnabled)
+        return updateDetailsActionButtonState(updatedCheckboxes, atLeastOneChecked)
     }
 
     private fun updateDetailsActionButtonState(
@@ -358,14 +357,4 @@ class RestoreStateListItemBuilder @Inject constructor(
             }
         }
     }
-
-    private fun hasServerCredentialsMessage(uiState: RestoreUiState, siteId: Long) =
-            uiState.items.filterIsInstance<FootnoteState>().any {
-                (it.text as? UiStringText)?.text?.toString()?.equals(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                                R.string.restore_details_enter_server_creds_msg,
-                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
-                        ).toString()
-                ) ?: false
-            }
 }
