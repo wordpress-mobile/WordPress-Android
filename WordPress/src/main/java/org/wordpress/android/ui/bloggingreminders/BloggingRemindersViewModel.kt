@@ -107,7 +107,6 @@ class BloggingRemindersViewModel @Inject constructor(
         )
     }
 
-    // TODO Call this method on day selection
     fun selectDay(day: Day) {
         val currentState = _bloggingRemindersModel.value!!
         val enabledDays = currentState.enabledDays.toMutableSet()
