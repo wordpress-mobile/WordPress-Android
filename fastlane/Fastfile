@@ -76,6 +76,9 @@ before_all do |lane|
   unless is_ci || File.file?(USER_ENV_FILE_PATH)
     UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")
   end
+
+  # Ensure we use the latest version of the toolkit
+  check_for_toolkit_updates unless is_ci || ENV['FASTLANE_SKIP_TOOLKIT_UPDATE_CHECK']
 end
 
 platform :android do
