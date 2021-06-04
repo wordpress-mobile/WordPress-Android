@@ -39,10 +39,10 @@ class UnifiedCommentViewHolder(
         uiHelpers.updateVisibility(statusIndicator, item.isPending)
 
         itemView.setOnClickListener {
-            item.clickAction.click()
+            item.clickAction.onClick()
         }
         itemView.setOnLongClickListener {
-            item.toggleAction.toggle()
+            item.toggleAction.onToggle()
             true
         }
     }
