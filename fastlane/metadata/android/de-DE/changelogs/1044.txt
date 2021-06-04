@@ -1,6 +1,0 @@
-17.3:
-Was gibt's Neues?
-
-Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
-
-Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.

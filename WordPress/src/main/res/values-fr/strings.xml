@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 06:17:14+0000
+Translation-Revision-Date: 2021-05-26 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Appuyez deux fois pour ajouter un lien.</string>
+    <string name="gutenberg_native_add_link">AJOUTER UN LIEN</string>
+    <string name="login_empty_view_try_another_account">Essayer avec un autre compte</string>
+    <string name="login_empty_view_see_instructions">Voir les instructions</string>
+    <string name="login_no_jetpack_sites_error_message">Si vous possédez déjà un site, vous devrez installer l’extension Jetpack gratuite et la connecter à votre compte WordPress.</string>
+    <string name="login_empty_view_avatar_content_description">Votre photo de profil</string>
+    <string name="login_not_a_jetpack_site">Pour utiliser cette application pour %1$s, vous devez installer et connecter l’extension Jetpack à votre compte WordPress.com.</string>
     <string name="gutenberg_native_size">Taille</string>
     <string name="gutenberg_native_image_settings">Réglages d’image</string>
     <string name="gutenberg_native_audio_settings">Réglages de son</string>
@@ -42,6 +49,7 @@ Language: fr
     <string name="gutenberg_native_attachment_page">Page de fichier joint</string>
     <string name="gutenberg_native_add_text">Ajout de texte…</string>
     <string name="gutenberg_native_add_caption">Ajouter une légende</string>
+    <string name="login_no_jetpack_sites">Aucun site Jetpack trouvé</string>
     <string name="gutenberg_native_what_is_alt_text">Qu’est-ce que le texte alternatif ?</string>
     <string name="gutenberg_native_transform_s_to">Transformer %s en</string>
     <string name="gutenberg_native_transform_block">Transformer le bloc…</string>
@@ -180,6 +188,7 @@ Language: fr
     <string name="pick_audio">Sélectionner un fichier audio</string>
     <string name="restore_complete_visit_site_button_content_description">Bouton Visiter le site</string>
     <string name="restore_complete_done_button_content_description">Bouton Terminé</string>
+    <string name="restore_complete_icon_content_description">Icône Restaurer</string>
     <string name="restore_complete_header">Votre site a été restauré.</string>
     <string name="restore_progress_footnote">Pas besoin d’attendre. Nous vous avertirons lorsque votre site aura été restauré.</string>
     <string name="restore_progress_icon_content_description">Icône Restaurer le site</string>
@@ -332,7 +341,12 @@ Language: fr
     <string name="gutenberg_native_error">Erreur</string>
     <string name="gutenberg_native_choose_file">Choisir un fichier</string>
     <string name="activity_log_item_menu_download_backup_label">Télécharger la sauvegarde</string>
+    <string name="activity_log_activity_type_filter_label">Type d’activité</string>
+    <string name="activity_log_activity_type_filter_header">Filtrer par type d’activité</string>
     <string name="dialog_confirm_copy_local_copy_button">Copier la version depuis cette application</string>
+    <string name="dialog_confirm_copy_local_edit_button">Modifier d’abord l’article</string>
+    <string name="dialog_confirm_copy_local_message">L’article que vous essayez de copier existe en deux versions conflictuelles ou vous avez apporté des modifications dernièrement qui n’ont pas été enregistrées.\nCommencez par modifier l’article pour résoudre les conflits ou poursuivez en copiant la version à partir de l’application.</string>
+    <string name="dialog_confirm_copy_local_title">Conflit de synchronisation de l’article</string>
     <string name="button_copy">Dupliquer</string>
     <string name="toast_edit_story_update_in_progress_title">La story a été enregistrée, veuillez patienter…</string>
     <string name="gutenberg_native_file_name">Nom du fichier</string>
@@ -706,6 +720,7 @@ Language: fr
     <string name="gutenberg_native_move_block_left">Déplacer le bloc à gauche</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toucher deux fois pour déplacer le bloc à droite</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toucher deux fois pour déplacer le bloc à gauche</string>
+    <string name="gutenberg_native_block_settings">Réglages du bloc</string>
     <string name="new_site_creation_creating_site_loading_4">Création du tableau de bord</string>
     <string name="new_site_creation_creating_site_loading_3">Configuration du thème</string>
     <string name="new_site_creation_creating_site_loading_2">Ajout des fonctionnalités du site</string>

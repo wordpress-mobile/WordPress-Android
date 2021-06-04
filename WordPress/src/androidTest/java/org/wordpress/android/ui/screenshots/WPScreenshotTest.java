@@ -13,6 +13,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.e2e.pages.SitePickerPage;
@@ -59,23 +60,26 @@ public class WPScreenshotTest extends BaseTest {
 
     @Test
     public void wPScreenshotTest() {
-        mActivityTestRule.launchActivity(null);
-        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
+        if (!BuildConfig.IS_JETPACK_APP) {
+            mActivityTestRule.launchActivity(null);
+            Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
-        // Enable Demo Mode
-        mDemoModeEnabler.enable();
-        wpLogin();
+            // Enable Demo Mode
+            mDemoModeEnabler.enable();
 
-        editBlogPost();
-        navigateDiscover();
-        navigateMySite();
-        navigateStats();
-        navigateNotifications();
-        manageMedia();
+            wpLogin();
 
-        // Turn Demo Mode off on the emulator when we're done
-        mDemoModeEnabler.disable();
-        logoutIfNecessary();
+            editBlogPost();
+            navigateDiscover();
+            navigateMySite();
+            navigateStats();
+            navigateNotifications();
+            manageMedia();
+
+            // Turn Demo Mode off on the emulator when we're done
+            mDemoModeEnabler.disable();
+            logoutIfNecessary();
+        }
     }
 
     private void editBlogPost() {

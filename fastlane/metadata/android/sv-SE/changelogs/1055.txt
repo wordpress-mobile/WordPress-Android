@@ -1,0 +1,8 @@
+17.4:
+Vi har lagt till 3 nya uppdateringar för berättelser i denna uppdatering:
+
+Nu visas en mediaväljare när du lägger till ett berättelseblock i blockredigeraren, så att du enklare kommer igång.
+
+Nu visas förhandsvisningar av berättelser på förväntat sätt i läsaren.
+
+Slutligen: Om en bildspelsbild inte laddas upp korrekt kommer appen automatiskt att göra ett nytt försök, så att du inte behöver trycka en extra gång!

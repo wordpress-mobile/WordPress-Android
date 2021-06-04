@@ -11,6 +11,7 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHold
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackProgressViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanFootnoteViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatLoadingSkeletonViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsDateHeaderViewHolder
@@ -40,6 +41,7 @@ class ScanAdapter(
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM_LOADING_SKELETON.id -> ThreatLoadingSkeletonViewHolder(parent)
             ViewType.THREAT_DETECTED_DATE.id -> ThreatsDateHeaderViewHolder(uiHelpers, parent)
+            ViewType.SCAN_FOOTNOTE.id -> ScanFootnoteViewHolder(imageManager, uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

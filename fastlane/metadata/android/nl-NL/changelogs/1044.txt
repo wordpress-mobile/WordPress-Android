@@ -1,6 +1,0 @@
-17.3:
-Wat is er nieuw?
-
-Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
-
-Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
