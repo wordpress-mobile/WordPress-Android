@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
@@ -8,9 +9,9 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -22,8 +23,7 @@ class DaySelectionBuilder
 @Inject constructor(private val daysProvider: DaysProvider, private val resourceProvider: ResourceProvider) {
     fun buildSelection(
         bloggingRemindersModel: BloggingRemindersModel?,
-        onSelectDay: (Day) -> Unit,
-        onConfirm: (BloggingRemindersModel?) -> Unit
+        onSelectDay: (Day) -> Unit
     ): List<BloggingRemindersItem> {
         val daysOfWeek = daysProvider.getDays()
         return listOf(
@@ -38,12 +38,18 @@ class DaySelectionBuilder
                     )
                 }),
                 buildNTimesLabel(bloggingRemindersModel),
-                Tip(UiStringRes(R.string.blogging_reminders_tip), UiStringRes(R.string.blogging_reminders_tip_message)),
-                PrimaryButton(
-                        UiStringRes(R.string.blogging_reminders_notify_me),
-                        enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,
-                        ListItemInteraction.create(bloggingRemindersModel, onConfirm)
-                )
+                Tip(UiStringRes(R.string.blogging_reminders_tip), UiStringRes(R.string.blogging_reminders_tip_message))
+        )
+    }
+
+    fun buildPrimaryButton(
+        bloggingRemindersModel: BloggingRemindersModel?,
+        onConfirm: (BloggingRemindersModel?) -> Unit
+    ): PrimaryButton {
+        return PrimaryButton(
+                UiStringRes(string.blogging_reminders_notify_me),
+                enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,
+                ListItemInteraction.create(bloggingRemindersModel, onConfirm)
         )
     }
 

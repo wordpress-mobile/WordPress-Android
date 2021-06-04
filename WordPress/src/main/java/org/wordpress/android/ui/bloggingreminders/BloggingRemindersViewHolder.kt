@@ -12,7 +12,6 @@ import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
 import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
-import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTipBinding
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Emphasiz
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
@@ -104,21 +102,6 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             this.text = spannable
         } else {
             uiHelpers.setTextOrHide(this, message)
-        }
-    }
-
-    class PrimaryButtonViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-            BloggingRemindersViewHolder<BloggingRemindersPrimaryButtonBinding>(
-                    parentView.viewBinding(
-                            BloggingRemindersPrimaryButtonBinding::inflate
-                    )
-            ) {
-        fun onBind(item: PrimaryButton) = with(binding) {
-            uiHelpers.setTextOrHide(primaryButton, item.text)
-            primaryButton.setOnClickListener {
-                item.onClick.click()
-            }
-            primaryButton.isEnabled = item.enabled
         }
     }
 

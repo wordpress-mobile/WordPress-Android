@@ -19,8 +19,8 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -62,9 +62,9 @@ class DaySelectionBuilderTest {
     fun `builds UI model with no selected days`() {
         val bloggingRemindersModel = BloggingRemindersModel(1)
 
-        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, onConfirm)
+        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay)
 
-        assertModel(bloggingRemindersModel, uiModel, setOf())
+        assertModel(uiModel, setOf())
     }
 
     @Test
@@ -73,18 +73,17 @@ class DaySelectionBuilderTest {
 
         val uiModel = daySelectionBuilder.buildSelection(
                 bloggingRemindersModel,
-                onSelectDay,
-                onConfirm
+                onSelectDay
         )
 
-        assertModel(bloggingRemindersModel, uiModel, setOf(WEDNESDAY, SUNDAY))
+        assertModel(uiModel, setOf(WEDNESDAY, SUNDAY))
     }
 
     @Test
     fun `click on a day select day`() {
         val bloggingRemindersModel = BloggingRemindersModel(1)
 
-        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, onConfirm)
+        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay)
 
         Day.values().forEachIndexed { index, day ->
             uiModel.clickOnDayItem(index)
@@ -93,18 +92,47 @@ class DaySelectionBuilderTest {
     }
 
     @Test
-    fun `click on primary button confirm selection`() {
+    fun `primary button disabled when model is empty`() {
         val bloggingRemindersModel = BloggingRemindersModel(1)
 
-        val uiModel = daySelectionBuilder.buildSelection(bloggingRemindersModel, onSelectDay, onConfirm)
+        val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, onConfirm)
 
-        uiModel.clickOnPrimaryButton()
+        assertThat(primaryButton).isEqualTo(
+                PrimaryButton(
+                        UiStringRes(string.blogging_reminders_notify_me),
+                        false,
+                        Companion.create(bloggingRemindersModel, onConfirm)
+                )
+        )
+    }
+
+    @Test
+    fun `primary button enabled when model is not empty`() {
+        val bloggingRemindersModel = BloggingRemindersModel(1, setOf(WEDNESDAY, SUNDAY))
+
+        val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, onConfirm)
+
+        assertThat(primaryButton).isEqualTo(
+                PrimaryButton(
+                        UiStringRes(string.blogging_reminders_notify_me),
+                        true,
+                        Companion.create(bloggingRemindersModel, onConfirm)
+                )
+        )
+    }
+
+    @Test
+    fun `click on primary button confirm selection`() {
+        val bloggingRemindersModel = BloggingRemindersModel(1, setOf(WEDNESDAY, SUNDAY))
+
+        val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, onConfirm)
+
+        primaryButton.onClick.click()
 
         assertThat(confirmed).isTrue()
     }
 
     private fun assertModel(
-        domainModel: BloggingRemindersModel,
         uiModel: List<BloggingRemindersItem>,
         selectedDays: Set<Day>
     ) {
@@ -135,20 +163,9 @@ class DaySelectionBuilderTest {
         }
 
         assertThat(uiModel[4]).isEqualTo(MediumEmphasisText(text?.let { EmphasizedText(text) }, text == null))
-        assertThat(uiModel[5]).isEqualTo(
-                PrimaryButton(
-                        UiStringRes(string.blogging_reminders_notify_me),
-                        selectedDays.isNotEmpty(),
-                        Companion.create(domainModel, onConfirm)
-                )
-        )
     }
 
     private fun List<BloggingRemindersItem>.clickOnDayItem(position: Int) {
         (this.find { it is DayButtons } as DayButtons).dayItems[position].onClick.click()
-    }
-
-    private fun List<BloggingRemindersItem>.clickOnPrimaryButton() {
-        (this.find { it is PrimaryButton } as PrimaryButton).onClick.click()
     }
 }
