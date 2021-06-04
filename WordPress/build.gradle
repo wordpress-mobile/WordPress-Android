@@ -12,13 +12,40 @@ buildscript {
 }
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+    def localRNUrl = "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
+    def remoteRNUrl ="https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ? localRNUrl : remoteRNUrl
+    maven {
+        url reactNativeUrl
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    maven {
+        url 'https://zendesk.jfrog.io/zendesk/repo'
+        content {
+            includeGroup "com.zendesk"
+            includeGroup "com.zendesk.belvedere2"
+        }
+    }
     google()
     jcenter()
     mavenCentral()
-    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
 apply plugin: 'com.android.application'
@@ -436,7 +463,7 @@ android.buildTypes.all { buildType ->
     }
 
     // Print warning message if example Google services file is used.
-    if ((new File('WordPress/google-services.json').text) == (new File('WordPress/google-services.json-example').text)) {
+    if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
         println("WARNING: You're using the example google-services.json file. Google login will fail.")
     }
 }
