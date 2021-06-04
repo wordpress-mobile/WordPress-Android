@@ -1,6 +1,9 @@
-* [**] Block Editor:a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
-* [**] Block Editor: Audio block: Add Insert from URL functionality. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3031]
-* [***] Block Editor: Slash command to insert new blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3250]
-* [***] Block Editor: New Block: Reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3490]
-* [***] Block Editor: Add reusable blocks to the block inserter menu. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3054]
+What’s new in 17.5?
 
+Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
+
+Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
+
+You can now pull in audio via URL with the Audio block.
+
+Finally, screen readers can now select the stepper cell.
