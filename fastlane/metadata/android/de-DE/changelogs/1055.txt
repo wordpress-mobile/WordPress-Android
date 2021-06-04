@@ -1,0 +1,8 @@
+17.4:
+Wir haben bei diesem Update 3 neue Updates für Geschichten hinzugefügt:
+
+Dir wird nun eine Medienauswahl angezeigt, wenn du einen Geschichtenblock vom Block-Editor hinzufügst, um dir den Start zu erleichtern.
+
+Die Geschichtenvorschau wird im Reader nun wie erwartet wiedergegeben.
+
+Und zuletzt versucht die App nun automatisch erneut, Slides hochzuladen, wenn dies fehlgeschlagen ist.

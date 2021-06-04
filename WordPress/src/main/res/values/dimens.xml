@@ -445,12 +445,14 @@
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
     <dimen name="jetpack_backup_restore_footnote_icon_size">24dp</dimen>
+    <dimen name="jetpack_backup_restore_footnote_enter_server_creds_icon_size">18dp</dimen>
 
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
     <dimen name="scan_icon_size">48dp</dimen>
     <dimen name="scan_icon_margin">16dp</dimen>
     <dimen name="scan_threat_item_icon_size">40dp</dimen>
+    <dimen name="scan_footnote_icon_size">18dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>

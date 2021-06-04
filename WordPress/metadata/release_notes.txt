@@ -1,7 +1,9 @@
-We’ve added 3 new updates to Stories in this update:
+What’s new in 17.5?
 
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
+Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
 
-Story previews now render as expected in the Reader.
+Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
 
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
+You can now pull in audio via URL with the Audio block.
+
+Finally, screen readers can now select the stepper cell.
