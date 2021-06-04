@@ -30,6 +30,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -42,6 +43,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<List<BloggingRemindersItem>>
 
+    @ExperimentalStdlibApi
     @InternalCoroutinesApi
     @Before
     fun setUp() {
@@ -199,9 +201,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     private fun assertEpilogue() {
         val state = uiState.last()
-        assertIllustration(state[0], R.drawable.img_illustration_celebration_150dp)
+        assertIllustration(state[0], R.drawable.img_illustration_bell_yellow_96dp)
         assertTitle(state[1], R.string.blogging_reminders_epilogue_title)
-        assertText(state[2], R.string.blogging_reminders_epilogue_body)
+        assertTextWithParams(state[2], R.string.blogging_reminders_epilogue_body_days)
         assertCaption(state[3], R.string.blogging_reminders_epilogue_caption)
         assertPrimaryButton(state[4], R.string.blogging_reminders_done, isEnabled = true)
     }
@@ -219,6 +221,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun assertText(item: BloggingRemindersItem, @StringRes textRes: Int) {
         val title = item as Text
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
+    }
+
+    private fun assertTextWithParams(item: BloggingRemindersItem, @StringRes textRes: Int) {
+        val title = item as Text
+        assertThat((title.text as UiStringResWithParams).stringRes).isEqualTo(textRes)
     }
 
     private fun assertCaption(item: BloggingRemindersItem, @StringRes textRes: Int) {
