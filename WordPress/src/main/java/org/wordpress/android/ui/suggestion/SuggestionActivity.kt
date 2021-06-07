@@ -125,6 +125,7 @@ class SuggestionActivity : LocaleAwareActivity() {
                             // Tapping delete when only the prefix is shown exits the suggestions UI
                             viewModel.trackExit(false)
                             finish()
+                        } else if (s.startsWith("$prefix ")) {
                         } else if (!s.startsWith(prefix)) {
                             // Re-insert prefix if it was deleted
                             val string = "$prefix$s"
