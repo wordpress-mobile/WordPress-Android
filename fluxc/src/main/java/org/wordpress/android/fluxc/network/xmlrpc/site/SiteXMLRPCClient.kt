@@ -17,6 +17,9 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
@@ -34,7 +37,8 @@ class SiteXMLRPCClient @Inject constructor(
     dispatcher: Dispatcher?,
     @Named("custom-ssl") requestQueue: RequestQueue?,
     userAgent: UserAgent?,
-    httpAuthManager: HTTPAuthManager?
+    httpAuthManager: HTTPAuthManager?,
+    private val xmlrpcRequestBuilder: XMLRPCRequestBuilder
 ) : BaseXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager) {
     fun fetchProfile(site: SiteModel) {
         val params: MutableList<Any> = ArrayList(3)
@@ -54,26 +58,26 @@ class SiteXMLRPCClient @Inject constructor(
         add(request)
     }
 
-    fun fetchSites(xmlrpcUrl: String?, username: String, password: String) {
+    suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
         val params = listOf(username, password)
-        val request = XMLRPCRequest(
-                xmlrpcUrl, GET_USERS_SITES, params,
-                { response ->
-                    var sites = sitesResponseToSitesModel(response, username, password)
-                    if (sites != null) {
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites))
-                    } else {
-                        sites = SitesModel()
-                        sites.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites))
-                    }
+        val response = xmlrpcRequestBuilder.syncGetRequest(this, xmlrpcUrl, GET_USERS_SITES, params)
+        return when(response) {
+            is Success -> {
+                val sites = sitesResponseToSitesModel(response.data, username, password)
+                if (sites != null) {
+                    sites
+                } else {
+                    val result = SitesModel()
+                    result.error = BaseNetworkError(INVALID_RESPONSE)
+                    result
                 }
-        ) { error ->
-            val sites = SitesModel()
-            sites.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites))
+            }
+            is Error -> {
+                val sites = SitesModel()
+                sites.error = response.error
+                sites
+            }
         }
-        add(request)
     }
 
     fun fetchSite(site: SiteModel) {
