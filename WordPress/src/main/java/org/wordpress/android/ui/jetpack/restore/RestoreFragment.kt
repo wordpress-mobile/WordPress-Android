@@ -17,6 +17,7 @@ import org.wordpress.android.databinding.JetpackBackupRestoreFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
+import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
@@ -113,6 +114,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { events ->
             when (events) {
                 is VisitSite -> ActivityLauncher.openUrlExternal(requireContext(), events.url)
+                is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(requireContext(), events.url)
             }
         })
 
