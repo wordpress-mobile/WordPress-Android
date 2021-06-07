@@ -11,10 +11,14 @@ class BloggingRemindersDiffCallback(
     override fun getNewListSize() = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        TODO("Not yet implemented")
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem.type == newItem.type
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        TODO("Not yet implemented")
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem == newItem
     }
 }

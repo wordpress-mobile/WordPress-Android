@@ -17,6 +17,7 @@ import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var adapter: BloggingRemindersAdapter
     private lateinit var viewModel: BloggingRemindersViewModel
 
     override fun onCreateView(
@@ -32,7 +33,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
 
         with(RecyclerViewBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            contentRecyclerView.adapter = BloggingRemindersAdapter()
+            contentRecyclerView.adapter = adapter
 
             viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
