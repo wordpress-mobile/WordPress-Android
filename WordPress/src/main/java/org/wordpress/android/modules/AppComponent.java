@@ -6,6 +6,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.OkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
+import org.wordpress.android.fluxc.module.DatabaseModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
 import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -238,6 +240,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ReleaseNetworkModule.class,
         LegacyModule.class,
         ReleaseToolsModule.class,
+        DatabaseModule.class,
         AndroidSupportInjectionModule.class,
         ViewModelModule.class,
         StatsModule.class,
@@ -680,6 +683,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentListFragment object);
 
     void inject(UnifiedCommentListAdapter object);
+
+    void inject(BloggingReminderBottomSheetFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

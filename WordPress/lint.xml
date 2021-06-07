@@ -87,7 +87,6 @@
 
     <issue id="UnusedResources" severity="error">
         <ignore path="**/WordPressEditor/**" />
-        <ignore path="**/WordPressLoginFlow/**" />
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>

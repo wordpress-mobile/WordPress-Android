@@ -111,6 +111,7 @@ android {
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
+        buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -390,7 +391,8 @@ dependencies {
     implementation (project(path:':libs:editor:WordPressEditor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation (project(path:':libs:login:WordPressLoginFlow')) {
+
+    implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
