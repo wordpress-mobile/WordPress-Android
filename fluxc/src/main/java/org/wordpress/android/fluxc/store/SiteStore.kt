@@ -118,10 +118,10 @@ import javax.inject.Singleton
 class SiteStore
 @Inject constructor(
     dispatcher: Dispatcher?,
-    private val mPostSqlUtils: PostSqlUtils,
-    private val mSiteRestClient: SiteRestClient,
-    private val mSiteXMLRPCClient: SiteXMLRPCClient,
-    private val mPrivateAtomicCookie: PrivateAtomicCookie
+    private val postSqlUtils: PostSqlUtils,
+    private val siteRestClient: SiteRestClient,
+    private val siteXMLRPCClient: SiteXMLRPCClient,
+    private val privateAtomicCookie: PrivateAtomicCookie
 ) : Store(dispatcher) {
     // Payloads
     data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError?>()
@@ -1194,7 +1194,7 @@ class SiteStore
             CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(action.payload as DomainAvailabilityResponsePayload)
             FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
             FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(action.payload as DomainSupportedStatesResponsePayload)
-            FETCH_DOMAIN_SUPPORTED_COUNTRIES -> mSiteRestClient.fetchSupportedCountries()
+            FETCH_DOMAIN_SUPPORTED_COUNTRIES -> siteRestClient.fetchSupportedCountries()
             FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(action.payload as DomainSupportedCountriesResponsePayload)
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
@@ -1214,23 +1214,23 @@ class SiteStore
     }
 
     private fun fetchProfileXmlRpc(site: SiteModel) {
-        mSiteXMLRPCClient.fetchProfile(site)
+        siteXMLRPCClient.fetchProfile(site)
     }
 
     private fun fetchSite(site: SiteModel) {
         if (site.isUsingWpComRestApi) {
-            mSiteRestClient.fetchSite(site)
+            siteRestClient.fetchSite(site)
         } else {
-            mSiteXMLRPCClient.fetchSite(site)
+            siteXMLRPCClient.fetchSite(site)
         }
     }
 
     private fun fetchSites(payload: FetchSitesPayload) {
-        mSiteRestClient.fetchSites(payload.filters)
+        siteRestClient.fetchSites(payload.filters)
     }
 
     private fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload) {
-        mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password)
+        siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password)
     }
 
     private fun updateSiteProfile(siteModel: SiteModel) {
@@ -1296,7 +1296,7 @@ class SiteStore
             } else {
                 OnSiteChanged(res.rowsAffected)
             }
-            SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, fetchedSites.sites)
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
         }
         emitChange(event)
@@ -1330,7 +1330,7 @@ class SiteStore
             emitChange(event)
             return
         }
-        mSiteRestClient.deleteSite(site)
+        siteRestClient.deleteSite(site)
     }
 
     private fun handleDeletedSite(payload: DeleteSiteResponsePayload) {
@@ -1347,7 +1347,7 @@ class SiteStore
             emitChange(OnSiteExported(ExportSiteError(ExportSiteErrorType.INVALID_SITE)))
             return
         }
-        mSiteRestClient.exportSite(site)
+        siteRestClient.exportSite(site)
     }
 
     private fun handleExportedSite(payload: ExportSiteResponsePayload) {
@@ -1388,7 +1388,7 @@ class SiteStore
     }
 
     private fun createNewSite(payload: NewSitePayload) {
-        mSiteRestClient.newSite(
+        siteRestClient.newSite(
                 payload.siteName, payload.language, payload.visibility,
                 payload.segmentId, payload.siteDesign, payload.dryRun
         )
@@ -1400,9 +1400,9 @@ class SiteStore
 
     private fun fetchPostFormats(site: SiteModel) {
         if (site.isUsingWpComRestApi) {
-            mSiteRestClient.fetchPostFormats(site)
+            siteRestClient.fetchPostFormats(site)
         } else {
-            mSiteXMLRPCClient.fetchPostFormats(site)
+            siteXMLRPCClient.fetchPostFormats(site)
         }
     }
 
@@ -1418,20 +1418,20 @@ class SiteStore
 
     private fun fetchSiteEditors(site: SiteModel) {
         if (site.isUsingWpComRestApi) {
-            mSiteRestClient.fetchSiteEditors(site)
+            siteRestClient.fetchSiteEditors(site)
         }
     }
 
     private fun fetchBlockLayouts(payload: FetchBlockLayoutsPayload) {
         if (payload.preferCache == true && cachedLayoutsRetrieved(payload.site)) return
         if (payload.site.isUsingWpComRestApi) {
-            mSiteRestClient
+            siteRestClient
                     .fetchWpComBlockLayouts(
                             payload.site, payload.supportedBlocks,
                             payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta
                     )
         } else {
-            mSiteRestClient.fetchSelfHostedBlockLayouts(
+            siteRestClient.fetchSelfHostedBlockLayouts(
                     payload.site, payload.supportedBlocks,
                     payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta
             )
@@ -1441,7 +1441,7 @@ class SiteStore
     private fun designateMobileEditor(payload: DesignateMobileEditorPayload) {
         // wpcom sites sync the new value with the backend
         if (payload.site.isUsingWpComRestApi) {
-            mSiteRestClient.designateMobileEditor(payload.site, payload.editor)
+            siteRestClient.designateMobileEditor(payload.site, payload.editor)
         }
 
         // Update the editor pref on the DB, and emit the change immediately
@@ -1471,7 +1471,7 @@ class SiteStore
             }
         }
         val isNetworkResponse = if (wpcomPostRequestRequired) {
-            mSiteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty)
+            siteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty)
             false
         } else {
             true
@@ -1532,7 +1532,7 @@ class SiteStore
 
     private fun fetchUserRoles(site: SiteModel) {
         if (site.isUsingWpComRestApi) {
-            mSiteRestClient.fetchUserRoles(site)
+            siteRestClient.fetchUserRoles(site)
         }
     }
 
@@ -1555,7 +1555,7 @@ class SiteStore
     }
 
     private fun fetchConnectSiteInfo(payload: String) {
-        mSiteRestClient.fetchConnectSiteInfo(payload)
+        siteRestClient.fetchConnectSiteInfo(payload)
     }
 
     private fun handleFetchedConnectSiteInfo(payload: ConnectSiteInfoPayload) {
@@ -1565,7 +1565,7 @@ class SiteStore
     }
 
     private fun fetchWPComSiteByUrl(payload: String) {
-        mSiteRestClient.fetchWPComSiteByUrl(payload)
+        siteRestClient.fetchWPComSiteByUrl(payload)
     }
 
     private fun handleFetchedWPComSiteByUrl(payload: FetchWPComSiteResponsePayload) {
@@ -1575,7 +1575,7 @@ class SiteStore
     }
 
     private fun checkUrlIsWPCom(payload: String) {
-        mSiteRestClient.checkUrlIsWPCom(payload)
+        siteRestClient.checkUrlIsWPCom(payload)
     }
 
     private fun handleCheckedIsWPComUrl(payload: IsWPComResponsePayload) {
@@ -1590,7 +1590,7 @@ class SiteStore
     }
 
     private fun suggestDomains(payload: SuggestDomainsPayload) {
-        mSiteRestClient.suggestDomains(
+        siteRestClient.suggestDomains(
                 payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
                 payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
                 payload.tlds
@@ -1623,7 +1623,7 @@ class SiteStore
             emitChange(OnPrivateAtomicCookieFetched(site, false, cookieError))
             return
         }
-        mSiteRestClient.fetchAccessCookie(site)
+        siteRestClient.fetchAccessCookie(site)
     }
 
     private fun handleFetchedPrivateAtomicCookie(payload: FetchedPrivateAtomicCookiePayload) {
@@ -1637,15 +1637,15 @@ class SiteStore
                             )
                     )
             )
-            mPrivateAtomicCookie.set(null)
+            privateAtomicCookie.set(null)
             return
         }
-        mPrivateAtomicCookie.set(payload.cookie.cookies[0])
+        privateAtomicCookie.set(payload.cookie.cookies[0])
         emitChange(OnPrivateAtomicCookieFetched(payload.site, true, payload.error))
     }
 
     private fun fetchJetpackCapabilities(payload: FetchJetpackCapabilitiesPayload) {
-        mSiteRestClient.fetchJetpackCapabilities(payload.remoteSiteId)
+        siteRestClient.fetchJetpackCapabilities(payload.remoteSiteId)
     }
 
     private fun handleFetchedJetpackCapabilities(payload: FetchedJetpackCapabilitiesPayload) {
@@ -1654,7 +1654,7 @@ class SiteStore
 
     private fun fetchPlans(siteModel: SiteModel) {
         if (siteModel.isUsingWpComRestApi) {
-            mSiteRestClient.fetchPlans(siteModel)
+            siteRestClient.fetchPlans(siteModel)
         } else {
             val plansError = PlansError(NOT_AVAILABLE)
             handleFetchedPlans(FetchedPlansPayload(siteModel, plansError))
@@ -1670,7 +1670,7 @@ class SiteStore
             val error = DomainAvailabilityError(INVALID_DOMAIN_NAME)
             handleCheckedDomainAvailability(DomainAvailabilityResponsePayload(error))
         } else {
-            mSiteRestClient.checkDomainAvailability(domainName)
+            siteRestClient.checkDomainAvailability(domainName)
         }
     }
 
@@ -1690,7 +1690,7 @@ class SiteStore
             val error = DomainSupportedStatesError(INVALID_COUNTRY_CODE)
             handleFetchedSupportedStates(DomainSupportedStatesResponsePayload(error))
         } else {
-            mSiteRestClient.fetchSupportedStates(countryCode)
+            siteRestClient.fetchSupportedStates(countryCode)
         }
     }
 
@@ -1732,7 +1732,7 @@ class SiteStore
 
     // Automated Transfers
     private fun checkAutomatedTransferEligibility(site: SiteModel) {
-        mSiteRestClient.checkAutomatedTransferEligibility(site)
+        siteRestClient.checkAutomatedTransferEligibility(site)
     }
 
     private fun handleCheckedAutomatedTransferEligibility(payload: AutomatedTransferEligibilityResponsePayload) {
@@ -1745,7 +1745,7 @@ class SiteStore
     }
 
     private fun initiateAutomatedTransfer(payload: InitiateAutomatedTransferPayload) {
-        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall)
+        siteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall)
     }
 
     private fun handleInitiatedAutomatedTransfer(payload: InitiateAutomatedTransferResponsePayload) {
@@ -1753,7 +1753,7 @@ class SiteStore
     }
 
     private fun checkAutomatedTransferStatus(site: SiteModel) {
-        mSiteRestClient.checkAutomatedTransferStatus(site)
+        siteRestClient.checkAutomatedTransferStatus(site)
     }
 
     private fun handleCheckedAutomatedTransferStatus(payload: AutomatedTransferStatusResponsePayload) {
@@ -1772,7 +1772,7 @@ class SiteStore
     }
 
     private fun completeQuickStart(payload: CompleteQuickStartPayload) {
-        mSiteRestClient.completeQuickStart(payload.site, payload.variant)
+        siteRestClient.completeQuickStart(payload.site, payload.variant)
     }
 
     private fun handleQuickStartCompleted(payload: QuickStartCompletedResponsePayload) {
@@ -1782,7 +1782,7 @@ class SiteStore
     }
 
     private fun designatePrimaryDomain(payload: DesignatePrimaryDomainPayload) {
-        mSiteRestClient.designatePrimaryDomain(payload.site, payload.domain)
+        siteRestClient.designatePrimaryDomain(payload.site, payload.domain)
     }
 
     private fun handleDesignatedPrimaryDomain(payload: DesignatedPrimaryDomainPayload) {
