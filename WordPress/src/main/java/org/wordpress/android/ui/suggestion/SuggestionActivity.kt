@@ -199,7 +199,12 @@ class SuggestionActivity : LocaleAwareActivity() {
     }
 
     private fun finishWithValue(value: String?) {
-        viewModel.trackExit(true)
+        if (value == "") {
+            // Tapping the space key directly after the prefix exits the suggestions UI
+            viewModel.trackExit(false)
+        } else {
+            viewModel.trackExit(true)
+        }
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(SELECTED_VALUE, value)
         })
