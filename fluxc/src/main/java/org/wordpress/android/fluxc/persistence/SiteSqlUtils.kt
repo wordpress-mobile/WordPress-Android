@@ -1,73 +1,64 @@
-package org.wordpress.android.fluxc.persistence;
+package org.wordpress.android.fluxc.persistence
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteConstraintException;
+import android.content.ContentValues
+import android.database.sqlite.SQLiteConstraintException
+import com.wellsql.generated.AccountModelTable
+import com.wellsql.generated.GutenbergLayoutCategoriesModelTable
+import com.wellsql.generated.GutenbergLayoutCategoryModelTable
+import com.wellsql.generated.GutenbergLayoutModelTable
+import com.wellsql.generated.PostFormatModelTable
+import com.wellsql.generated.RoleModelTable
+import com.wellsql.generated.SiteModelTable
+import com.yarolegovich.wellsql.SelectQuery
+import com.yarolegovich.wellsql.WellSql
+import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.PostFormatModel
+import org.wordpress.android.fluxc.model.RoleModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModel
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModel
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModel
+import org.wordpress.android.fluxc.model.layouts.connections
+import org.wordpress.android.fluxc.model.layouts.transform
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.DB
+import org.wordpress.android.util.UrlUtils
+import java.util.ArrayList
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.wellsql.generated.AccountModelTable;
-import com.wellsql.generated.GutenbergLayoutCategoriesModelTable;
-import com.wellsql.generated.GutenbergLayoutCategoryModelTable;
-import com.wellsql.generated.GutenbergLayoutModelTable;
-import com.wellsql.generated.PostFormatModelTable;
-import com.wellsql.generated.RoleModelTable;
-import com.wellsql.generated.SiteModelTable;
-import com.yarolegovich.wellsql.SelectQuery;
-import com.yarolegovich.wellsql.WellSql;
-import com.yarolegovich.wellsql.mapper.InsertMapper;
-
-import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.PostFormatModel;
-import org.wordpress.android.fluxc.model.RoleModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModel;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModelKt;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModel;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModelKt;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModel;
-import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModelKt;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.UrlUtils;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-public class SiteSqlUtils {
-    public static class DuplicateSiteException extends Exception {
-        private static final long serialVersionUID = -224883903136726226L;
+class SiteSqlUtils
+@Inject constructor() {
+    object DuplicateSiteException : Exception() {
+        private const val serialVersionUID = -224883903136726226L
     }
 
-    public static SelectQuery<SiteModel> getSitesWith(String field, Object value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere();
+    fun getSitesWith(field: String?, value: Any?): SelectQuery<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where().equals(field, value).endWhere()
     }
 
-    public static SelectQuery<SiteModel> getSitesWith(String field, boolean value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere();
+    fun getSitesWith(field: String?, value: Boolean): SelectQuery<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where().equals(field, value).endWhere()
     }
 
-    public static List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(String searchString) {
+    fun getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString: String?): List<SiteModel> {
         // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
-        return WellSql.select(SiteModel.class).where()
-                // ORIGIN = ORIGIN_WPCOM_REST AND (x in url OR x in name)
+        return WellSql.select(SiteModel::class.java).where() // ORIGIN = ORIGIN_WPCOM_REST AND (x in url OR x in name)
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .beginGroup()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere().asModel
     }
 
-    public static List<SiteModel> getSitesByNameOrUrlMatching(String searchString) {
-        return WellSql.select(SiteModel.class).where()
+    fun getSitesByNameOrUrlMatching(searchString: String?): List<SiteModel> {
+        return WellSql.select(SiteModel::class.java).where()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
-                .endWhere().getAsModel();
+                .endWhere().asModel
     }
 
     /**
@@ -81,54 +72,55 @@ public class SiteSqlUtils {
      * 5. Exists in the DB, originally an XML-RPC site, and matches by XMLRPC_URL -> UPDATE
      * 6. Not matching any previous cases -> INSERT
      */
-    public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
+    @Throws(DuplicateSiteException::class)
+    fun insertOrUpdateSite(site: SiteModel?): Int {
         if (site == null) {
-            return 0;
+            return 0
         }
 
         // If we're inserting or updating a WP.com REST API site, validate that we actually have a WordPress.com
         // AccountModel present
         // This prevents a late UPDATE_SITES action from re-populating the database after sign out from WordPress.com
-        if (site.isUsingWpComRestApi()) {
-            List<AccountModel> accountModel = WellSql.select(AccountModel.class)
+        if (site.isUsingWpComRestApi) {
+            val accountModel = WellSql.select(AccountModel::class.java)
                     .where()
                     .not().equals(AccountModelTable.USER_ID, 0)
                     .endWhere()
-                    .getAsModel();
+                    .asModel
             if (accountModel.isEmpty()) {
-                AppLog.w(T.DB, "Can't insert WP.com site " + site.getUrl() + ", missing user account");
-                return 0;
+                AppLog.w(DB, "Can't insert WP.com site " + site.url + ", missing user account")
+                return 0
             }
         }
 
         // If the site already exist and has an id, we want to update it.
-        List<SiteModel> siteResult = WellSql.select(SiteModel.class)
+        var siteResult = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
-                .equals(SiteModelTable.ID, site.getId())
-                .endGroup().endWhere().getAsModel();
+                .equals(SiteModelTable.ID, site.id)
+                .endGroup().endWhere().asModel
         if (!siteResult.isEmpty()) {
-            AppLog.d(T.DB, "Site found by (local) ID: " + site.getId());
+            AppLog.d(DB, "Site found by (local) ID: " + site.id)
         }
 
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            if (site.getSiteId() > 0) {
+            if (site.siteId > 0) {
                 // For WordPress.com and Jetpack sites, the WP.com ID is a unique enough identifier
-                siteResult = WellSql.select(SiteModel.class)
+                siteResult = WellSql.select(SiteModel::class.java)
                         .where().beginGroup()
-                        .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                        .endGroup().endWhere().getAsModel();
+                        .equals(SiteModelTable.SITE_ID, site.siteId)
+                        .endGroup().endWhere().asModel
                 if (!siteResult.isEmpty()) {
-                    AppLog.d(T.DB, "Site found by SITE_ID: " + site.getSiteId());
+                    AppLog.d(DB, "Site found by SITE_ID: " + site.siteId)
                 }
             } else {
-                siteResult = WellSql.select(SiteModel.class)
+                siteResult = WellSql.select(SiteModel::class.java)
                         .where().beginGroup()
-                        .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                        .equals(SiteModelTable.URL, site.getUrl())
-                        .endGroup().endWhere().getAsModel();
+                        .equals(SiteModelTable.SITE_ID, site.siteId)
+                        .equals(SiteModelTable.URL, site.url)
+                        .endGroup().endWhere().asModel
                 if (!siteResult.isEmpty()) {
-                    AppLog.d(T.DB, "Site found by SITE_ID: " + site.getSiteId() + " and URL: " + site.getUrl());
+                    AppLog.d(DB, "Site found by SITE_ID: " + site.siteId + " and URL: " + site.url)
                 }
             }
         }
@@ -136,18 +128,17 @@ public class SiteSqlUtils {
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
         if (siteResult.isEmpty()) {
-            String forcedHttpXmlRpcUrl = "http://" + UrlUtils.removeScheme(site.getXmlRpcUrl());
-            String forcedHttpsXmlRpcUrl = "https://" + UrlUtils.removeScheme(site.getXmlRpcUrl());
-
-            siteResult = WellSql.select(SiteModel.class)
+            val forcedHttpXmlRpcUrl = "http://" + UrlUtils.removeScheme(site.xmlRpcUrl)
+            val forcedHttpsXmlRpcUrl = "https://" + UrlUtils.removeScheme(site.xmlRpcUrl)
+            siteResult = WellSql.select(SiteModel::class.java)
                     .where()
                     .beginGroup()
                     .equals(SiteModelTable.XMLRPC_URL, forcedHttpXmlRpcUrl)
                     .or().equals(SiteModelTable.XMLRPC_URL, forcedHttpsXmlRpcUrl)
                     .endGroup()
-                    .endWhere().getAsModel();
+                    .endWhere().asModel
             if (!siteResult.isEmpty()) {
-                AppLog.d(T.DB, "Site found using XML-RPC url: " + site.getXmlRpcUrl());
+                AppLog.d(DB, "Site found using XML-RPC url: " + site.xmlRpcUrl)
                 // Four possibilities here:
                 // 1. DB site is WP.com, new site is WP.com:
                 // Something really weird is happening, this should have been caught earlier --> DuplicateSiteException
@@ -159,229 +150,225 @@ public class SiteSqlUtils {
                 // 4. DB site is XML-RPC, new site is XML-RPC:
                 // An existing self-hosted site was logged-into again, and we couldn't identify it by URL or
                 // by WP.com site ID + URL --> proceed
-                if (siteResult.get(0).getOrigin() == SiteModel.ORIGIN_WPCOM_REST) {
-                    AppLog.d(T.DB, "Site is a duplicate");
-                    throw new DuplicateSiteException();
+                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST) {
+                    AppLog.d(DB, "Site is a duplicate")
+                    throw DuplicateSiteException
                 }
             }
         }
-
-        if (siteResult.isEmpty()) {
+        return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
-            AppLog.d(T.DB, "Inserting site: " + site.getUrl());
-            WellSql.insert(site).asSingleTransaction(true).execute();
-            return 1;
+            AppLog.d(DB, "Inserting site: " + site.url)
+            WellSql.insert(site).asSingleTransaction(true).execute()
+            1
         } else {
             // Update old site
-            AppLog.d(T.DB, "Updating site: " + site.getUrl());
-            int oldId = siteResult.get(0).getId();
+            AppLog.d(DB, "Updating site: " + site.url)
+            val oldId = siteResult[0].id
             try {
-                return WellSql.update(SiteModel.class).whereId(oldId)
-                        .put(site, new UpdateAllExceptId<>(SiteModel.class)).execute();
-            } catch (SQLiteConstraintException e) {
-                AppLog.e(T.DB, "Error while updating site: siteId=" + site.getSiteId() + " url=" + site.getUrl()
-                        + " xmlrpc=" + site.getXmlRpcUrl(), e);
-                // Can happen on self hosted sites with incorrect url values in wp.getOption response.
-                // See https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/397
-                throw new DuplicateSiteException();
+                WellSql.update(SiteModel::class.java).whereId(oldId)
+                        .put(site, UpdateAllExceptId(SiteModel::class.java)).execute()
+            } catch (e: SQLiteConstraintException) {
+                AppLog.e(
+                        DB, "Error while updating site: siteId=" + site.siteId + " url=" + site.url
+                        + " xmlrpc=" + site.xmlRpcUrl, e
+                )
+                throw DuplicateSiteException
             }
         }
     }
 
-    public static int deleteSite(SiteModel site) {
-        if (site == null) {
-            return 0;
-        }
-        return WellSql.delete(SiteModel.class)
-                 .where().equals(SiteModelTable.ID, site.getId()).endWhere()
-                 .execute();
+    fun deleteSite(site: SiteModel?): Int {
+        return if (site == null) {
+            0
+        } else WellSql.delete(SiteModel::class.java)
+                .where().equals(SiteModelTable.ID, site.id).endWhere()
+                .execute()
     }
 
-    public static int deleteAllSites() {
-        return WellSql.delete(SiteModel.class).execute();
+    fun deleteAllSites(): Int {
+        return WellSql.delete(SiteModel::class.java).execute()
     }
 
-    public static int setSiteVisibility(SiteModel site, boolean visible) {
-        if (site == null) {
-            return 0;
-        }
-        return WellSql.update(SiteModel.class)
-                .whereId(site.getId())
+    fun setSiteVisibility(site: SiteModel?, visible: Boolean): Int {
+        return if (site == null) {
+            0
+        } else WellSql.update(SiteModel::class.java)
+                .whereId(site.id)
                 .where().equals(SiteModelTable.IS_WPCOM, true).endWhere()
-                .put(visible, new InsertMapper<Boolean>() {
-                    @Override
-                    public ContentValues toCv(Boolean item) {
-                        ContentValues cv = new ContentValues();
-                        cv.put(SiteModelTable.IS_VISIBLE, item);
-                        return cv;
-                    }
-                }).execute();
+                .put(visible, { item ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.IS_VISIBLE, item)
+                    cv
+                }).execute()
     }
 
-    public static SelectQuery<SiteModel> getWPComSites() {
-        return WellSql.select(SiteModel.class)
+    val wPComSites: SelectQuery<SiteModel>
+        get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
-                .endGroup().endWhere();
-    }
+                .endGroup().endWhere()
 
     /**
      * @return A selectQuery to get all the sites accessed via the XMLRPC, this includes: pure self hosted sites,
      * but also Jetpack sites connected via XMLRPC.
      */
-    public static SelectQuery<SiteModel> getSitesAccessedViaXMLRPC() {
-        return WellSql.select(SiteModel.class)
+    val sitesAccessedViaXMLRPC: SelectQuery<SiteModel>
+        get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
-                .endGroup().endWhere();
-    }
-
-    public static SelectQuery<SiteModel> getSitesAccessedViaWPComRest() {
-        return WellSql.select(SiteModel.class)
+                .endGroup().endWhere()
+    val sitesAccessedViaWPComRest: SelectQuery<SiteModel>
+        get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .endGroup().endWhere();
-    }
-
-    public static SelectQuery<SiteModel> getVisibleSitesAccessedViaWPCom() {
-        return WellSql.select(SiteModel.class)
+                .endGroup().endWhere()
+    val visibleSitesAccessedViaWPCom: SelectQuery<SiteModel>
+        get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere();
-    }
+                .endGroup().endWhere()
 
-    public static List<PostFormatModel> getPostFormats(@NonNull SiteModel site) {
-        return WellSql.select(PostFormatModel.class)
+    fun getPostFormats(site: SiteModel): List<PostFormatModel> {
+        return WellSql.select(PostFormatModel::class.java)
                 .where()
-                .equals(PostFormatModelTable.SITE_ID, site.getId())
-                .endWhere().getAsModel();
+                .equals(PostFormatModelTable.SITE_ID, site.id)
+                .endWhere().asModel
     }
 
-    public static void insertOrReplacePostFormats(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+    fun insertOrReplacePostFormats(site: SiteModel, postFormats: List<PostFormatModel>) {
         // Remove previous post formats for this site
-        WellSql.delete(PostFormatModel.class)
+        WellSql.delete(PostFormatModel::class.java)
                 .where()
-                .equals(PostFormatModelTable.SITE_ID, site.getId())
-                .endWhere().execute();
+                .equals(PostFormatModelTable.SITE_ID, site.id)
+                .endWhere().execute()
         // Insert new post formats for this site
-        for (PostFormatModel postFormat : postFormats) {
-            postFormat.setSiteId(site.getId());
+        for (postFormat in postFormats) {
+            postFormat.siteId = site.id
         }
-        WellSql.insert(postFormats).execute();
+        WellSql.insert(postFormats).execute()
     }
 
-    public static List<RoleModel> getUserRoles(@NonNull SiteModel site) {
-        return WellSql.select(RoleModel.class)
+    fun getUserRoles(site: SiteModel): List<RoleModel> {
+        return WellSql.select(RoleModel::class.java)
                 .where()
-                .equals(RoleModelTable.SITE_ID, site.getId())
-                .endWhere().getAsModel();
+                .equals(RoleModelTable.SITE_ID, site.id)
+                .endWhere().asModel
     }
 
-    public static void insertOrReplaceUserRoles(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
+    fun insertOrReplaceUserRoles(site: SiteModel, roles: List<RoleModel>) {
         // Remove previous roles for this site
-        WellSql.delete(RoleModel.class)
+        WellSql.delete(RoleModel::class.java)
                 .where()
-                .equals(RoleModelTable.SITE_ID, site.getId())
-                .endWhere().execute();
+                .equals(RoleModelTable.SITE_ID, site.id)
+                .endWhere().execute()
         // Insert new user roles for this site
-        for (RoleModel role : roles) {
-            role.setSiteId(site.getId());
+        for (role in roles) {
+            role.siteId = site.id
         }
-        WellSql.insert(roles).execute();
+        WellSql.insert(roles).execute()
     }
 
-    public static List<GutenbergLayoutCategory> getBlockLayoutCategories(@NonNull SiteModel site) {
-        List<GutenbergLayoutCategoryModel> categories =
-                WellSql.select(GutenbergLayoutCategoryModel.class)
-                       .where()
-                       .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.getId())
-                       .endWhere().getAsModel();
-        return GutenbergLayoutCategoryModelKt.transform(categories);
+    fun getBlockLayoutCategories(site: SiteModel): List<GutenbergLayoutCategory> {
+        val categories = WellSql.select(
+                GutenbergLayoutCategoryModel::class.java
+        )
+                .where()
+                .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.id)
+                .endWhere().asModel
+        return categories.transform()
     }
 
-    public static List<GutenbergLayout> getBlockLayouts(@NonNull SiteModel site) {
-        ArrayList<GutenbergLayout> blockLayouts = new ArrayList<>();
-        List<GutenbergLayoutModel> layouts =
-                WellSql.select(GutenbergLayoutModel.class)
-                       .where()
-                       .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
-                       .endWhere().getAsModel();
-        for (GutenbergLayoutModel layout : layouts) {
-            blockLayouts.add(getGutenbergLayout(site, layout));
+    fun getBlockLayouts(site: SiteModel): List<GutenbergLayout> {
+        val blockLayouts = ArrayList<GutenbergLayout>()
+        val layouts = WellSql.select(
+                GutenbergLayoutModel::class.java
+        )
+                .where()
+                .equals(GutenbergLayoutModelTable.SITE_ID, site.id)
+                .endWhere().asModel
+        for (layout in layouts) {
+            blockLayouts.add(getGutenbergLayout(site, layout))
         }
-        return blockLayouts;
+        return blockLayouts
     }
 
-    public static @Nullable GutenbergLayout getBlockLayout(@NonNull SiteModel site, @NonNull String slug) {
-        GutenbergLayoutModel layoutModel = getGutenbergLayoutModel(site, slug);
-        if (layoutModel != null) {
-            return getGutenbergLayout(site, layoutModel);
+    fun getBlockLayout(site: SiteModel, slug: String): GutenbergLayout? {
+        val layoutModel = getGutenbergLayoutModel(site, slug)
+        return layoutModel?.let { getGutenbergLayout(site, it) }
+    }
+
+    private fun getGutenbergLayout(site: SiteModel, layout: GutenbergLayoutModel): GutenbergLayout {
+        val connections = WellSql.select(
+                GutenbergLayoutCategoriesModel::class.java
+        )
+                .where()
+                .equals(
+                        GutenbergLayoutCategoriesModelTable.SITE_ID,
+                        site.id
+                )
+                .equals(
+                        GutenbergLayoutCategoriesModelTable.LAYOUT_ID,
+                        layout.id
+                )
+                .endWhere().asModel
+        val categories = ArrayList<GutenbergLayoutCategoryModel>()
+        for (connection in connections) {
+            categories.addAll(
+                    WellSql.select(GutenbergLayoutCategoryModel::class.java)
+                            .where()
+                            .equals(GutenbergLayoutCategoriesModelTable.ID, connection.categoryId)
+                            .endWhere().asModel
+            )
         }
-        return null;
+        return layout.transform(categories)
     }
 
-    private static GutenbergLayout getGutenbergLayout(@NonNull SiteModel site, @NonNull GutenbergLayoutModel layout) {
-        List<GutenbergLayoutCategoriesModel> connections = WellSql.select(GutenbergLayoutCategoriesModel.class)
-                                                                  .where()
-                                                                  .equals(GutenbergLayoutCategoriesModelTable.SITE_ID,
-                                                                          site.getId())
-                                                                  .equals(GutenbergLayoutCategoriesModelTable.LAYOUT_ID,
-                                                                          layout.getId())
-                                                                  .endWhere().getAsModel();
-        ArrayList<GutenbergLayoutCategoryModel> categories = new ArrayList<>();
-        for (GutenbergLayoutCategoriesModel connection : connections) {
-            categories.addAll(WellSql.select(GutenbergLayoutCategoryModel.class)
-                                     .where()
-                                     .equals(GutenbergLayoutCategoriesModelTable.ID, connection.getCategoryId())
-                                     .endWhere().getAsModel());
-        }
-        return GutenbergLayoutModelKt.transform(layout, categories);
+    private fun getGutenbergLayoutModel(
+        site: SiteModel,
+        slug: String
+    ): GutenbergLayoutModel? {
+        val layouts = WellSql.select(
+                GutenbergLayoutModel::class.java
+        )
+                .where()
+                .equals(GutenbergLayoutModelTable.SITE_ID, site.id)
+                .equals(GutenbergLayoutModelTable.SLUG, slug)
+                .endWhere().asModel
+        return if (layouts.size == 1) {
+            layouts[0]
+        } else null
     }
 
-    private static @Nullable GutenbergLayoutModel getGutenbergLayoutModel(@NonNull SiteModel site,
-                                                                          @NonNull String slug) {
-        List<GutenbergLayoutModel> layouts =
-                WellSql.select(GutenbergLayoutModel.class)
-                       .where()
-                       .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
-                       .equals(GutenbergLayoutModelTable.SLUG, slug)
-                       .endWhere().getAsModel();
-        if (layouts.size() == 1) {
-            return layouts.get(0);
-        }
-        return null;
+    fun getBlockLayoutContent(site: SiteModel, slug: String): String? {
+        val layout = getGutenbergLayoutModel(site, slug)
+        return layout?.content
     }
 
-    public static @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
-        GutenbergLayoutModel layout = getGutenbergLayoutModel(site, slug);
-        if (layout != null) {
-            return layout.getContent();
-        }
-        return null;
-    }
-
-    public static void insertOrReplaceBlockLayouts(@NonNull SiteModel site,
-                                                   @NonNull List<GutenbergLayoutCategory> categories,
-                                                   @NonNull List<GutenbergLayout> layouts) {
+    fun insertOrReplaceBlockLayouts(
+        site: SiteModel,
+        categories: List<GutenbergLayoutCategory>,
+        layouts: List<GutenbergLayout>
+    ) {
         // Update categories
-        WellSql.delete(GutenbergLayoutCategoryModel.class)
-               .where()
-               .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.getId())
-               .endWhere().execute();
-        WellSql.insert(GutenbergLayoutCategoryModelKt.transform(categories, site)).execute();
+        WellSql.delete(GutenbergLayoutCategoryModel::class.java)
+                .where()
+                .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.id)
+                .endWhere().execute()
+        WellSql.insert(categories.transform(site)).execute()
         // Update layouts
-        WellSql.delete(GutenbergLayoutModel.class)
-               .where()
-               .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
-               .endWhere().execute();
-        WellSql.insert(GutenbergLayoutModelKt.transform(layouts, site)).execute();
+        WellSql.delete(GutenbergLayoutModel::class.java)
+                .where()
+                .equals(GutenbergLayoutModelTable.SITE_ID, site.id)
+                .endWhere().execute()
+        WellSql.insert(layouts.transform(site)).execute()
         // Update connections
-        WellSql.delete(GutenbergLayoutCategoriesModel.class)
-               .where()
-               .equals(GutenbergLayoutCategoriesModelTable.SITE_ID, site.getId())
-               .endWhere().execute();
-        WellSql.insert(GutenbergLayoutCategoriesModelKt.connections(layouts, site)).execute();
+        WellSql.delete(GutenbergLayoutCategoriesModel::class.java)
+                .where()
+                .equals(GutenbergLayoutCategoriesModelTable.SITE_ID, site.id)
+                .endWhere().execute()
+        WellSql.insert<GutenbergLayoutCategoriesModel>(layouts.connections(site)).execute()
     }
 
     /**
@@ -391,41 +378,39 @@ public class SiteSqlUtils {
      * 3. Remote site ID does not match a site ID found in given sites list
      *
      * @param sites
-     *  list of sites to keep in local database
+     * list of sites to keep in local database
      */
-    public static int removeWPComRestSitesAbsentFromList(PostSqlUtils postSqlUtils, @NonNull List<SiteModel> sites) {
+    fun removeWPComRestSitesAbsentFromList(postSqlUtils: PostSqlUtils, sites: List<SiteModel>): Int {
         // get all local WP.com+Jetpack sites
-        List<SiteModel> localSites = WellSql.select(SiteModel.class)
+        val localSites = WellSql.select(SiteModel::class.java)
                 .where()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .endWhere().getAsModel();
-
-        if (localSites.size() > 0) {
+                .endWhere().asModel
+        if (localSites.size > 0) {
             // iterate through all local WP.com+Jetpack sites
-            Iterator<SiteModel> localIterator = localSites.iterator();
+            val localIterator = localSites.iterator()
             while (localIterator.hasNext()) {
-                SiteModel localSite = localIterator.next();
+                val localSite = localIterator.next()
 
                 // don't remove sites with local changes
                 if (postSqlUtils.getSiteHasLocalChanges(localSite)) {
-                    localIterator.remove();
+                    localIterator.remove()
                 } else {
                     // don't remove local site if the remote ID matches a given site's ID
-                    for (SiteModel site : sites) {
-                        if (site.getSiteId() == localSite.getSiteId()) {
-                            localIterator.remove();
-                            break;
+                    for (site in sites) {
+                        if (site.siteId == localSite.siteId) {
+                            localIterator.remove()
+                            break
                         }
                     }
                 }
             }
 
             // delete applicable sites
-            for (SiteModel site : localSites) {
-                deleteSite(site);
+            for (site in localSites) {
+                deleteSite(site)
             }
         }
-
-        return localSites.size();
+        return localSites.size
     }
 }
