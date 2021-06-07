@@ -1,0 +1,8 @@
+17.4:
+Adicionamos 3 novas atualizações às Stories:
+
+Um seletor de mídia agora é exibido ao adicionar o bloco Story no editor de blocos, facilitando a criação.
+
+A visualização de Story agora é exibida como esperado no leitor.
+
+Por fim, quando slides não são enviados corretamente, o aplicativo tentará novamente economizando um toque adicional.

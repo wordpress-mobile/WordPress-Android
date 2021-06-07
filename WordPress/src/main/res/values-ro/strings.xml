@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 08:55:34+0000
+Translation-Revision-Date: 2021-05-21 05:43:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -12,7 +12,7 @@ Language: ro
     <string name="login_empty_view_see_instructions">Vezi instrucțiunile</string>
     <string name="login_no_jetpack_sites_error_message">Dacă ai deja un sit, va trebui să instalezi modulul gratuit Jetpack și să îl conectezi la contul tău WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Poza ta de profil</string>
-    <string name="login_not_a_jetpack_site">Pentru a utiliza această aplicație pentru %1$s, va trebui să ai instalat modulul Jetpack și să fie conectat la contul tău WordPress.com.</string>
+    <string name="login_not_a_jetpack_site">Ca să utilizezi această aplicație pentru %1$s, va trebui să ai instalat modulul Jetpack și să fie conectat la contul tău WordPress.com.</string>
     <string name="gutenberg_native_size">Dimensiune</string>
     <string name="gutenberg_native_move_image_forward">Mută imaginea înainte</string>
     <string name="gutenberg_native_move_image_backward">Mută imaginea înapoi</string>
@@ -1866,7 +1866,7 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
-    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1-12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>

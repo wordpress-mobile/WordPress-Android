@@ -21,6 +21,8 @@ class JetpackCheckboxViewHolder(
             checkboxLabel.text = checkboxState.labelSpannable
         }
         checkbox.isChecked = checkboxState.checked
+        checkbox.isEnabled = checkboxState.isEnabled
+        itemContainer.isEnabled = checkboxState.isEnabled
         itemContainer.setOnClickListener { checkboxState.onClick.invoke() }
     }
 }

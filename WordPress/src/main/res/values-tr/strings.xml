@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-11 11:54:48+0000
+Translation-Revision-Date: 2021-05-28 13:54:55+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Bağlantı eklemek için iki kez dokunun.</string>
+    <string name="gutenberg_native_add_link">BAĞLANTI EKLE</string>
+    <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
+    <string name="login_empty_view_see_instructions">Talimatlara bakın</string>
+    <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini yüklemeniz ve WordPress hesabınıza bağlamanız gerekir.</string>
+    <string name="login_empty_view_avatar_content_description">Profil fotoğrafınız</string>
+    <string name="login_not_a_jetpack_site">Bu uygulamayı %1$s için kullanmak istiyorsanız Jetpack eklentisi kurulmuş ve bir WordPress.com hesabınıza bağlanmış olmalıdır</string>
     <string name="gutenberg_native_size">Boyut</string>
     <string name="gutenberg_native_image_settings">Görsel ayarları</string>
     <string name="gutenberg_native_audio_settings">Ses ayarları</string>
@@ -42,6 +49,7 @@ Language: tr
     <string name="gutenberg_native_attachment_page">Ek sayfası</string>
     <string name="gutenberg_native_add_text">Metin ekle…</string>
     <string name="gutenberg_native_add_caption">Başlık ekle</string>
+    <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
     <string name="gutenberg_native_what_is_alt_text">Alternatif metin nedir?</string>
     <string name="gutenberg_native_transform_s_to">%s öğesini şuna dönüştür:</string>
     <string name="gutenberg_native_transform_block">Bloku dönüştür…</string>
@@ -731,6 +739,7 @@ Language: tr
     <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_block_settings">Blok ayarları</string>
     <string name="new_site_creation_creating_site_loading_4">Pano oluşturma</string>
     <string name="new_site_creation_creating_site_loading_3">Tema ayarlama</string>
     <string name="new_site_creation_creating_site_loading_2">Site özellikleri ekleme</string>
