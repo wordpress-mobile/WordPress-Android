@@ -593,11 +593,11 @@ REPOSITORY_NAME="WordPress-Android"
       else
         UI.message("Strings.xml file for #{lib[:name]} downloaded to #{download_path}.")
         if lib.key?(:merge_tool)
-          sh(lib[:merge_tool], lib[:name], download_path) 
-        else 
+          sh(lib[:merge_tool], lib[:name], download_path)
+        else
           lib_to_merge = [ {
-            library: lib[:name], 
-            strings_path: download_path, 
+            library: lib[:name],
+            strings_path: download_path,
             exclusions: lib[:exclusions]
           }]
           an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: lib_to_merge)
@@ -612,7 +612,10 @@ REPOSITORY_NAME="WordPress-Android"
     end
   end
 
-  lane :validate_login_strings do | options |
+  # This lane verifies that new strings which have been added to the main strings.xml
+  # and which belongs to features of subtrees and submodules have also been added
+  # to the library strings.xml file.
+  lane :validate_submodules_strings do | options |
     pr_number = options[:pr_number]
     pr_number = options[:pr_url].split('/').last unless options[:pr_url].nil?
 
