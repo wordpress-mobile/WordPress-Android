@@ -11,9 +11,9 @@ buildscript {
         maven { url 'https://a8c-libs.s3.amazonaws.com/android' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.automattic.android:publish-to-s3:0.4.0'
+        classpath 'com.automattic.android:publish-to-s3:0.4.1'
     }
 }
 
