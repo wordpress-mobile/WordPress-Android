@@ -78,6 +78,8 @@ import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -131,6 +133,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -196,9 +199,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
+    private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
+    private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
     private final Handler mHandler = new Handler();
 
     @Inject AccountStore mAccountStore;
@@ -222,6 +227,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -429,6 +435,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
+        mBloggingRemindersViewModel =
+                new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
@@ -554,15 +562,29 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.isBottomSheetShowing().observe(this, event -> {
             event.applyIfNotHandled(isShowing -> {
                 FragmentManager fm = getSupportFragmentManager();
-                if (fm != null) {
-                    MainBottomSheetFragment bottomSheet =
-                            (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
-                    if (isShowing && bottomSheet == null) {
-                        bottomSheet = new MainBottomSheetFragment();
-                        bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
-                    } else if (!isShowing && bottomSheet != null) {
-                        bottomSheet.dismiss();
-                    }
+                MainBottomSheetFragment bottomSheet =
+                        (MainBottomSheetFragment) fm.findFragmentByTag(MAIN_BOTTOM_SHEET_TAG);
+                if (isShowing && bottomSheet == null) {
+                    bottomSheet = new MainBottomSheetFragment();
+                    bottomSheet.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+                } else if (!isShowing && bottomSheet != null) {
+                    bottomSheet.dismiss();
+                }
+                return null;
+            });
+        });
+
+        mBloggingRemindersViewModel.isBottomSheetShowing().observe(this, event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getSupportFragmentManager();
+                BloggingReminderBottomSheetFragment bottomSheet =
+                        (BloggingReminderBottomSheetFragment) fm
+                                .findFragmentByTag(BLOGGING_REMINDERS_BOTTOM_SHEET_TAG);
+                if (isShowing && bottomSheet == null) {
+                    bottomSheet = new BloggingReminderBottomSheetFragment();
+                    bottomSheet.show(getSupportFragmentManager(), BLOGGING_REMINDERS_BOTTOM_SHEET_TAG);
+                } else if (!isShowing && bottomSheet != null) {
+                    bottomSheet.dismiss();
                 }
                 return null;
             });
@@ -571,17 +593,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mMLPViewModel.isModalLayoutPickerShowing().observe(this, event -> {
             event.applyIfNotHandled(isShowing -> {
                 FragmentManager fm = getSupportFragmentManager();
-                if (fm != null) {
-                    ModalLayoutPickerFragment mlpFragment =
-                            (ModalLayoutPickerFragment) fm
-                                    .findFragmentByTag(ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
-                    if (isShowing && mlpFragment == null) {
-                        mlpFragment = new ModalLayoutPickerFragment();
-                        mlpFragment
-                                .show(getSupportFragmentManager(), ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
-                    } else if (!isShowing && mlpFragment != null) {
-                        mlpFragment.dismiss();
-                    }
+                ModalLayoutPickerFragment mlpFragment =
+                        (ModalLayoutPickerFragment) fm
+                                .findFragmentByTag(ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                if (isShowing && mlpFragment == null) {
+                    mlpFragment = new ModalLayoutPickerFragment();
+                    mlpFragment
+                            .show(getSupportFragmentManager(), ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                } else if (!isShowing && mlpFragment != null) {
+                    mlpFragment.dismiss();
                 }
                 return null;
             });
@@ -1077,6 +1097,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
                             });
+                    boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
+                    if (isNewPost && mBloggingRemindersFeatureConfig.isEnabled()) {
+                        mBloggingRemindersViewModel.start();
+                    }
                 }
                 break;
             case RequestCodes.CREATE_SITE:
