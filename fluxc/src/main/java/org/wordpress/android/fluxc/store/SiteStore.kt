@@ -1,837 +1,549 @@
-package org.wordpress.android.fluxc.store;
+package org.wordpress.android.fluxc.store
 
-import android.database.Cursor;
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.wellsql.generated.SiteModelTable;
-import com.yarolegovich.wellsql.WellSql;
-import com.yarolegovich.wellsql.mapper.SelectMapper;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.action.SiteAction;
-import org.wordpress.android.fluxc.annotations.action.Action;
-import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.JetpackCapability;
-import org.wordpress.android.fluxc.model.PlanModel;
-import org.wordpress.android.fluxc.model.PostFormatModel;
-import org.wordpress.android.fluxc.model.RoleModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse;
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
-import org.wordpress.android.fluxc.persistence.PostSqlUtils;
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
-import org.wordpress.android.fluxc.utils.SiteErrorUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import android.text.TextUtils
+import com.wellsql.generated.SiteModelTable
+import com.yarolegovich.wellsql.WellSql
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.ASYNC
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
+import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY
+import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_STATUS
+import org.wordpress.android.fluxc.action.SiteAction.CHECKED_DOMAIN_AVAILABILITY
+import org.wordpress.android.fluxc.action.SiteAction.CHECKED_IS_WPCOM_URL
+import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_ELIGIBILITY
+import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_STATUS
+import org.wordpress.android.fluxc.action.SiteAction.CHECK_DOMAIN_AVAILABILITY
+import org.wordpress.android.fluxc.action.SiteAction.COMPLETED_QUICK_START
+import org.wordpress.android.fluxc.action.SiteAction.COMPLETE_QUICK_START
+import org.wordpress.android.fluxc.action.SiteAction.CREATED_NEW_SITE
+import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
+import org.wordpress.android.fluxc.action.SiteAction.DELETED_SITE
+import org.wordpress.android.fluxc.action.SiteAction.DELETE_SITE
+import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES
+import org.wordpress.android.fluxc.action.SiteAction.DESIGNATED_PRIMARY_DOMAIN
+import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR
+import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES
+import org.wordpress.android.fluxc.action.SiteAction.DESIGNATE_PRIMARY_DOMAIN
+import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
+import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_POST_FORMATS
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PROFILE_XML_RPC
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES_XML_RPC
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITE_EDITORS
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
+import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_BLOCK_LAYOUTS
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_CONNECT_SITE_INFO
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_COUNTRIES
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_PLANS
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_POST_FORMATS
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_PRIVATE_ATOMIC_COOKIE
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_PROFILE_XML_RPC
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_WPCOM_SITE_BY_URL
+import org.wordpress.android.fluxc.action.SiteAction.HIDE_SITES
+import org.wordpress.android.fluxc.action.SiteAction.INITIATED_AUTOMATED_TRANSFER
+import org.wordpress.android.fluxc.action.SiteAction.INITIATE_AUTOMATED_TRANSFER
+import org.wordpress.android.fluxc.action.SiteAction.IS_WPCOM_URL
+import org.wordpress.android.fluxc.action.SiteAction.REMOVE_ALL_SITES
+import org.wordpress.android.fluxc.action.SiteAction.REMOVE_SITE
+import org.wordpress.android.fluxc.action.SiteAction.REMOVE_WPCOM_AND_JETPACK_SITES
+import org.wordpress.android.fluxc.action.SiteAction.SHOW_SITES
+import org.wordpress.android.fluxc.action.SiteAction.SUGGESTED_DOMAINS
+import org.wordpress.android.fluxc.action.SiteAction.SUGGEST_DOMAINS
+import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
+import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITES
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.model.PlanModel
+import org.wordpress.android.fluxc.model.PostFormatModel
+import org.wordpress.android.fluxc.model.RoleModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.SitesModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
+import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_SITE
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.INVALID_DOMAIN_NAME
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
+import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
+import org.wordpress.android.fluxc.utils.SiteErrorUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
+import java.util.ArrayList
+import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * SQLite based only. There is no in memory copy of mapped data, everything is queried from the DB.
  */
 @Singleton
-public class SiteStore extends Store {
+class SiteStore
+@Inject constructor(
+    dispatcher: Dispatcher?,
+    private val mPostSqlUtils: PostSqlUtils,
+    private val mSiteRestClient: SiteRestClient,
+    private val mSiteXMLRPCClient: SiteXMLRPCClient,
+    private val mPrivateAtomicCookie: PrivateAtomicCookie
+) : Store(dispatcher) {
     // Payloads
-    public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public String variant;
+    data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError?>()
+    data class RefreshSitesXMLRPCPayload(
+        @JvmField val username: String = "",
+        @JvmField val password: String = "",
+        @JvmField val url: String = ""
+    ) : Payload<BaseNetworkError?>()
 
-        public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
-            this.site = site;
-            this.variant = variant;
+    data class FetchSitesPayload(val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError?>()
+
+    data class NewSitePayload(
+        val siteName: String,
+        val language: String,
+        val visibility: SiteVisibility,
+        val segmentId: Long? = null,
+        val siteDesign: String? = null,
+        val dryRun: Boolean
+    ) : Payload<BaseNetworkError?>() {
+        constructor(
+            siteName: String, language: String,
+            visibility: SiteVisibility, dryRun: Boolean
+        ) : this(siteName, language, visibility, null, null, dryRun)
+
+        constructor(
+            siteName: String, language: String,
+            visibility: SiteVisibility, segmentId: Long?, dryRun: Boolean
+        ) : this(siteName, language, visibility, segmentId, null, dryRun)
+    }
+
+    data class FetchedPostFormatsPayload(
+        val site: SiteModel,
+        val postFormats: List<PostFormatModel>
+    ) : Payload<PostFormatsError?>()
+
+    data class DesignateMobileEditorForAllSitesPayload(
+        val editor: String,
+        val setOnlyIfEmpty: Boolean = true
+    ) : Payload<SiteEditorsError?>()
+
+    data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError?>()
+    data class FetchedEditorsPayload(
+        val site: SiteModel,
+        val webEditor: String,
+        val mobileEditor: String
+    ) : Payload<SiteEditorsError?>()
+
+    data class FetchBlockLayoutsPayload(
+        val site: SiteModel,
+        val supportedBlocks: List<String>?,
+        val previewWidth: Float?,
+        val previewHeight: Float?,
+        val scale: Float?,
+        val isBeta: Boolean?,
+        val preferCache: Boolean?
+    ) : Payload<BaseNetworkError?>()
+
+    data class FetchedBlockLayoutsResponsePayload(
+        val site: SiteModel,
+        val layouts: List<GutenbergLayout>? = null,
+        val categories: List<GutenbergLayoutCategory>? = null
+    ) : Payload<SiteError?>() {
+        constructor(site: SiteModel, error: SiteError?) : this(site) {
+            this.error = error
         }
     }
 
-    public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
-        public RefreshSitesXMLRPCPayload() {
-        }
-
-        public String username;
-        public String password;
-        public String url;
-    }
-
-    public static class FetchSitesPayload extends Payload<BaseNetworkError> {
-        @NonNull private List<SiteFilter> mFilters = new ArrayList<>();
-
-        public FetchSitesPayload() {
-        }
-
-        public FetchSitesPayload(@NonNull List<SiteFilter> filters) {
-            this.mFilters = filters;
-        }
-
-        @NonNull
-        public List<SiteFilter> getFilters() {
-            return mFilters;
+    data class DesignateMobileEditorForAllSitesResponsePayload(val editors: Map<String, String>) : Payload<SiteEditorsError?>()
+    data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError?>()
+    data class FetchedPlansPayload(
+        val site: SiteModel,
+        val plans: List<PlanModel>? = null
+    ) : Payload<PlansError?>() {
+        constructor(site: SiteModel, error: PlansError) : this(site) {
+            this.error = error
         }
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static class NewSitePayload extends Payload<BaseNetworkError> {
-        @NonNull public String siteName;
-        @NonNull public String language;
-        @NonNull public SiteVisibility visibility;
-        @Nullable public Long segmentId;
-        @Nullable public String siteDesign;
-        @NonNull public boolean dryRun;
+    data class FetchedPrivateAtomicCookiePayload(
+        val site: SiteModel,
+        val cookie: PrivateAtomicCookieResponse?
+    ) : Payload<PrivateAtomicCookieError?>()
 
-        public NewSitePayload(@NonNull String siteName, @NonNull String language,
-                              @NonNull SiteVisibility visibility, boolean dryRun) {
-            this(siteName, language, visibility, null, null, dryRun);
-        }
-
-        public NewSitePayload(@NonNull String siteName, @NonNull String language,
-                              @NonNull SiteVisibility visibility, @Nullable Long segmentId, boolean dryRun) {
-            this(siteName, language, visibility, segmentId, null, dryRun);
-        }
-
-        public NewSitePayload(@NonNull String siteName, @NonNull String language, @NonNull SiteVisibility visibility,
-                              @Nullable Long segmentId, @Nullable String siteDesign, boolean dryRun) {
-            this.siteName = siteName;
-            this.language = language;
-            this.visibility = visibility;
-            this.segmentId = segmentId;
-            this.siteDesign = siteDesign;
-            this.dryRun = dryRun;
+    data class FetchPrivateAtomicCookiePayload(val siteId: Long)
+    data class FetchJetpackCapabilitiesPayload(val remoteSiteId: Long)
+    data class FetchedJetpackCapabilitiesPayload(
+        val remoteSiteId: Long,
+        val capabilities: List<JetpackCapability> = listOf()
+    ) : Payload<JetpackCapabilitiesError?>() {
+        constructor(remoteSiteId: Long, error: JetpackCapabilitiesError) : this(remoteSiteId) {
+            this.error = error
         }
     }
 
-    public static class FetchedPostFormatsPayload extends Payload<PostFormatsError> {
-        public SiteModel site;
-        public List<PostFormatModel> postFormats;
+    data class OnJetpackCapabilitiesFetched(
+        val remoteSiteId: Long,
+        val capabilities: List<JetpackCapability> = listOf(),
+        val error: JetpackCapabilitiesError? = null
+    ) : OnChanged<JetpackCapabilitiesError?>()
 
-        public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
-            this.site = site;
-            this.postFormats = postFormats;
+    data class SuggestDomainsPayload(
+        val query: String,
+        val onlyWordpressCom: Boolean? = null,
+        val includeWordpressCom: Boolean? = null,
+        val includeDotBlogSubdomain: Boolean? = null,
+        val tlds: String? = null,
+        val segmentId: Long? = null,
+        val quantity: Int,
+        val includeVendorDot: Boolean = false
+    ) : Payload<BaseNetworkError?>() {
+        constructor(
+            query: String, onlyWordpressCom: Boolean, includeWordpressCom: Boolean,
+            includeDotBlogSubdomain: Boolean, quantity: Int, includeVendorDot: Boolean
+        ) : this(
+                query = query,
+                onlyWordpressCom = onlyWordpressCom,
+                includeWordpressCom = includeWordpressCom,
+                includeDotBlogSubdomain = includeDotBlogSubdomain,
+                quantity = quantity,
+                includeVendorDot = includeVendorDot,
+                segmentId = null,
+                tlds = null
+        )
+
+        constructor(
+            query: String, segmentId: Long?,
+            quantity: Int, includeVendorDot: Boolean
+        ) : this(
+                query = query,
+                segmentId = segmentId,
+                quantity = quantity,
+                includeVendorDot = includeVendorDot,
+                tlds = null
+        )
+
+        constructor(query: String, quantity: Int, tlds: String?) : this(
+                query = query,
+                quantity = quantity,
+                tlds = tlds,
+                segmentId = null
+        )
+    }
+
+    data class SuggestDomainsResponsePayload(
+        val query: String,
+        val suggestions: List<DomainSuggestionResponse> = listOf()
+    ) : Payload<SuggestDomainError?>() {
+        constructor(query: String, error: SuggestDomainError?) : this(query) {
+            this.error = error
         }
     }
 
-    public static class DesignateMobileEditorForAllSitesPayload extends Payload<SiteEditorsError> {
-        public String editor;
-        public boolean setOnlyIfEmpty;
-
-        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName) {
-            this.editor = editorName;
-            this.setOnlyIfEmpty = true;
+    data class ConnectSiteInfoPayload
+    @JvmOverloads constructor(
+        val url: String,
+        @JvmField val exists: Boolean = false,
+        @JvmField val isWordPress: Boolean = false,
+        @JvmField val hasJetpack: Boolean = false,
+        @JvmField val isJetpackActive: Boolean = false,
+        @JvmField val isJetpackConnected: Boolean = false,
+        @JvmField val isWPCom: Boolean = false,
+        @JvmField val urlAfterRedirects: String? = null
+    ) : Payload<SiteError?>() {
+        constructor(url: String, error: SiteError?) : this(url) {
+            this.error = error
         }
 
-        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName, boolean setOnlyIfEmpty) {
-            this.editor = editorName;
-            this.setOnlyIfEmpty = setOnlyIfEmpty;
-        }
-    }
-
-    public static class DesignateMobileEditorPayload extends Payload<SiteEditorsError> {
-        public SiteModel site;
-        public String editor;
-
-        public DesignateMobileEditorPayload(@NonNull SiteModel site, @NonNull String editorName) {
-            this.site = site;
-            this.editor = editorName;
+        fun description(): String {
+            return String.format(
+                    "url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
+                    url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects
+            )
         }
     }
 
-    public static class FetchedEditorsPayload extends Payload<SiteEditorsError> {
-        public SiteModel site;
-        public String webEditor;
-        public String mobileEditor;
+    data class DesignatePrimaryDomainPayload(
+        val site: SiteModel,
+        val domain: String
+    ) : Payload<DesignatePrimaryDomainError?>()
 
-        public FetchedEditorsPayload(@NonNull SiteModel site, @NonNull String webEditor, @NonNull String mobileEditor) {
-            this.site = site;
-            this.mobileEditor = mobileEditor;
-            this.webEditor = webEditor;
+    data class InitiateAutomatedTransferPayload(
+        val site: SiteModel,
+        val pluginSlugToInstall: String
+    ) : Payload<AutomatedTransferError?>()
+
+    data class AutomatedTransferEligibilityResponsePayload
+    @JvmOverloads constructor(
+        val site: SiteModel,
+        val isEligible: Boolean = false,
+        val errorCodes: List<String> = listOf()
+    ) : Payload<AutomatedTransferError?>() {
+        constructor(site: SiteModel, error: AutomatedTransferError) : this(site) {
+            this.error = error
         }
     }
 
-    public static class FetchBlockLayoutsPayload extends Payload<BaseNetworkError> {
-        @NonNull public SiteModel site;
-        @Nullable public List<String> supportedBlocks;
-        @Nullable public Float previewWidth;
-        @Nullable public Float previewHeight;
-        @Nullable public Float scale;
-        @Nullable public Boolean isBeta;
-        @Nullable public Boolean preferCache;
+    data class InitiateAutomatedTransferResponsePayload
+    @JvmOverloads constructor(
+        val site: SiteModel,
+        val pluginSlugToInstall: String,
+        val success: Boolean = false
+    ) : Payload<AutomatedTransferError?>()
 
-        public FetchBlockLayoutsPayload(@NonNull SiteModel site,
-                                        @Nullable List<String> supportedBlocks,
-                                        @Nullable Float previewWidth,
-                                        @Nullable Float previewHeight,
-                                        @Nullable Float scale,
-                                        @Nullable Boolean isBeta,
-                                        @Nullable Boolean preferCache) {
-            this.site = site;
-            this.supportedBlocks = supportedBlocks;
-            this.previewWidth = previewWidth;
-            this.previewHeight = previewHeight;
-            this.scale = scale;
-            this.isBeta = isBeta;
-            this.preferCache = preferCache;
+    data class AutomatedTransferStatusResponsePayload(
+        val site: SiteModel,
+        val status: String? = null,
+        val currentStep: Int = 0,
+        val totalSteps: Int = 0
+    ) : Payload<AutomatedTransferError?>() {
+        constructor(site: SiteModel, error: AutomatedTransferError?) : this(site) {
+            this.error = error
         }
     }
 
-    public static class FetchedBlockLayoutsResponsePayload extends Payload<SiteError> {
-        public SiteModel site;
-        public List<GutenbergLayout> layouts;
-        public List<GutenbergLayoutCategory> categories;
-
-        public FetchedBlockLayoutsResponsePayload(SiteModel site,
-                                                  List<GutenbergLayout> layouts,
-                                                  List<GutenbergLayoutCategory> categories) {
-            this.site = site;
-            this.layouts = layouts;
-            this.categories = categories;
-        }
-
-        public FetchedBlockLayoutsResponsePayload(SiteModel site, SiteError error) {
-            this.site = site;
-            this.error = error;
+    data class DomainAvailabilityResponsePayload(
+        val status: DomainAvailabilityStatus? = null,
+        val mappable: DomainMappabilityStatus? = null,
+        val supportsPrivacy: Boolean = false
+    ) : Payload<DomainAvailabilityError?>() {
+        constructor(error: DomainAvailabilityError) : this() {
+            this.error = error
         }
     }
 
-    public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
-        public Map<String, String> editors;
-
-        public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
-            this.editors = editors;
+    data class DomainSupportedStatesResponsePayload(
+        val supportedStates: List<SupportedStateResponse>? = null
+    ) : Payload<DomainSupportedStatesError?>() {
+        constructor(error: DomainSupportedStatesError) : this() {
+            this.error = error
         }
     }
 
-    public static class FetchedUserRolesPayload extends Payload<UserRolesError> {
-        public SiteModel site;
-        public List<RoleModel> roles;
-
-        public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
-            this.site = site;
-            this.roles = roles;
+    data class DomainSupportedCountriesResponsePayload(
+        val supportedCountries: List<SupportedCountryResponse>? = null
+    ) : Payload<DomainSupportedCountriesError?>() {
+        constructor(error: DomainSupportedCountriesError) : this() {
+            this.error = error
         }
     }
 
-    public static class FetchedPlansPayload extends Payload<PlansError> {
-        public SiteModel site;
-        @Nullable public List<PlanModel> plans;
-
-        public FetchedPlansPayload(SiteModel site, @Nullable List<PlanModel> plans) {
-            this.site = site;
-            this.plans = plans;
-        }
-
-        public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
-            this.site = site;
-            this.error = error;
-        }
+    data class SiteError @JvmOverloads constructor(@JvmField val type: SiteErrorType, @JvmField val message: String = "") : OnChangedError
+    data class SiteEditorsError internal constructor(val type: SiteEditorsErrorType?, val message: String) :
+            OnChangedError {
+        constructor(type: SiteEditorsErrorType?) : this(type, "") {}
     }
 
-    public static class FetchedPrivateAtomicCookiePayload extends Payload<PrivateAtomicCookieError> {
-        public SiteModel site;
-        @Nullable public PrivateAtomicCookieResponse cookie;
+    data class PostFormatsError @JvmOverloads constructor(val type: PostFormatsErrorType, val message: String = "") :
+            OnChangedError
 
-        public FetchedPrivateAtomicCookiePayload(SiteModel site, @Nullable PrivateAtomicCookieResponse cookie) {
-            this.site = site;
-            this.cookie = cookie;
-        }
+    data class UserRolesError internal constructor(
+        val type: UserRolesErrorType?,
+        val message: String
+    ) : OnChangedError {
+        constructor(type: UserRolesErrorType?) : this(type, "") {}
     }
 
-    public static class FetchPrivateAtomicCookiePayload {
-        public long siteId;
-
-        public FetchPrivateAtomicCookiePayload(long siteId) {
-            this.siteId = siteId;
-        }
+    data class NewSiteError(@JvmField val type: NewSiteErrorType, @JvmField val message: String) : OnChangedError
+    data class DeleteSiteError(
+        @JvmField val type: DeleteSiteErrorType,
+        @JvmField val message: String = ""
+    ) : OnChangedError {
+        constructor(errorType: String, message: String) : this(DeleteSiteErrorType.fromString(errorType), message)
     }
 
-    public static class FetchJetpackCapabilitiesPayload {
-        public long remoteSiteId;
-
-        public FetchJetpackCapabilitiesPayload(long remoteSiteId) {
-            this.remoteSiteId = remoteSiteId;
-        }
+    data class ExportSiteError(@JvmField val type: ExportSiteErrorType) : OnChangedError
+    data class AutomatedTransferError(val type: AutomatedTransferErrorType?, val message: String?) : OnChangedError {
+        constructor(type: String, message: String) : this(AutomatedTransferErrorType.fromString(type), message)
     }
 
-    public static class FetchedJetpackCapabilitiesPayload extends Payload<JetpackCapabilitiesError> {
-        public long remoteSiteId;
-        @NonNull public List<JetpackCapability> capabilities;
-
-        public FetchedJetpackCapabilitiesPayload(long remoteSiteId, @NonNull List<JetpackCapability> capabilities) {
-            this.remoteSiteId = remoteSiteId;
-            this.capabilities = capabilities;
-        }
-
-        public FetchedJetpackCapabilitiesPayload(long remoteSiteId, @NonNull JetpackCapabilitiesError error) {
-            this.remoteSiteId = remoteSiteId;
-            this.capabilities = new ArrayList<>();
-            this.error = error;
-        }
-    }
-
-    public static class OnJetpackCapabilitiesFetched extends OnChanged<JetpackCapabilitiesError> {
-        public long remoteSiteId;
-        public @Nullable List<JetpackCapability> capabilities;
-
-        public OnJetpackCapabilitiesFetched(long remoteSiteId, @NonNull List<JetpackCapability> capabilities,
-                                            @Nullable JetpackCapabilitiesError error) {
-            this.remoteSiteId = remoteSiteId;
-            this.capabilities = capabilities;
-            this.error = error;
-        }
-    }
-
-    public static class SuggestDomainsPayload extends Payload<BaseNetworkError> {
-        @NonNull public String query;
-        @Nullable public Boolean onlyWordpressCom;
-        @Nullable public Boolean includeWordpressCom;
-        @Nullable public Boolean includeDotBlogSubdomain;
-        @Nullable public String tlds;
-        @Nullable public Long segmentId;
-        public int quantity;
-        public boolean includeVendorDot;
-
-        public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
-                                     boolean includeDotBlogSubdomain, int quantity, boolean includeVendorDot) {
-            this.query = query;
-            this.onlyWordpressCom = onlyWordpressCom;
-            this.includeWordpressCom = includeWordpressCom;
-            this.includeDotBlogSubdomain = includeDotBlogSubdomain;
-            this.tlds = tlds;
-            this.quantity = quantity;
-            this.includeVendorDot = includeVendorDot;
-        }
-
-        public SuggestDomainsPayload(@NonNull String query, @Nullable Long segmentId,
-                                     int quantity, boolean includeVendorDot) {
-            this.query = query;
-            this.segmentId = segmentId;
-            this.quantity = quantity;
-            this.includeVendorDot = includeVendorDot;
-        }
-
-        public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
-            this.query = query;
-            this.quantity = quantity;
-            this.tlds = tlds;
-        }
-    }
-
-    public static class SuggestDomainsResponsePayload extends Payload<SuggestDomainError> {
-        public String query;
-        public List<DomainSuggestionResponse> suggestions;
-
-        public SuggestDomainsResponsePayload(@NonNull String query, SuggestDomainError error) {
-            this.query = query;
-            this.error = error;
-            this.suggestions = new ArrayList<>();
-        }
-
-        public SuggestDomainsResponsePayload(@NonNull String query, List<DomainSuggestionResponse> suggestions) {
-            this.query = query;
-            this.suggestions = suggestions;
-        }
-    }
-
-    public static class ConnectSiteInfoPayload extends Payload<SiteError> {
-        public String url;
-        public boolean exists;
-        public boolean isWordPress;
-        public boolean hasJetpack;
-        public boolean isJetpackActive;
-        public boolean isJetpackConnected;
-        public boolean isWPCom;
-        public String urlAfterRedirects;
-
-        public ConnectSiteInfoPayload(@NonNull String url, SiteError error) {
-            this.url = url;
-            this.error = error;
-        }
-
-        public String description() {
-            return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
-                    url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects);
-        }
-    }
-
-    public static class DesignatePrimaryDomainPayload extends Payload<DesignatePrimaryDomainError> {
-        public SiteModel site;
-        public String domain;
-
-        public DesignatePrimaryDomainPayload(SiteModel site, @NonNull String domainName) {
-            this.site = site;
-            this.domain = domainName;
-        }
-    }
-
-    public static class InitiateAutomatedTransferPayload extends Payload<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public @NonNull String pluginSlugToInstall;
-
-        public InitiateAutomatedTransferPayload(SiteModel site, String pluginSlugToInstall) {
-            this.site = site;
-            this.pluginSlugToInstall = pluginSlugToInstall;
-        }
-    }
-
-    public static class AutomatedTransferEligibilityResponsePayload extends Payload<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public boolean isEligible;
-        public @NonNull List<String> errorCodes;
-
-        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site,
-                                                           boolean isEligible,
-                                                           @NonNull List<String> errors) {
-            this.site = site;
-            this.isEligible = isEligible;
-            this.errorCodes = errors;
-        }
-
-        public AutomatedTransferEligibilityResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
-            this.site = site;
-            this.error = error;
-            this.errorCodes = new ArrayList<>();
-        }
-    }
-
-    public static class InitiateAutomatedTransferResponsePayload extends Payload<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public @NonNull String pluginSlugToInstall;
-        public boolean success;
-
-        public InitiateAutomatedTransferResponsePayload(@NonNull SiteModel site, @NonNull String pluginSlugToInstall) {
-            this.site = site;
-            this.pluginSlugToInstall = pluginSlugToInstall;
-        }
-    }
-
-    public static class AutomatedTransferStatusResponsePayload extends Payload<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public @NonNull String status;
-        public int currentStep;
-        public int totalSteps;
-
-        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site,
-                                                      @NonNull String status,
-                                                      int currentStep,
-                                                      int totalSteps) {
-            this.site = site;
-            this.status = status;
-            this.currentStep = currentStep;
-            this.totalSteps = totalSteps;
-        }
-
-        public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
-            this.site = site;
-            this.error = error;
-        }
-    }
-
-    public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
-        public @Nullable DomainAvailabilityStatus status;
-        public @Nullable DomainMappabilityStatus mappable;
-        public boolean supportsPrivacy;
-
-        public DomainAvailabilityResponsePayload(@Nullable DomainAvailabilityStatus status,
-                                                 @Nullable DomainMappabilityStatus mappable,
-                                                 @Nullable boolean supportsPrivacy) {
-            this.status = status;
-            this.mappable = mappable;
-            this.supportsPrivacy = supportsPrivacy;
-        }
-
-        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityError error) {
-            this.error = error;
-        }
-    }
-
-    public static class DomainSupportedStatesResponsePayload extends Payload<DomainSupportedStatesError> {
-        public @Nullable List<SupportedStateResponse> supportedStates;
-
-        public DomainSupportedStatesResponsePayload(@Nullable List<SupportedStateResponse> supportedStates) {
-            this.supportedStates = supportedStates;
-        }
-
-        public DomainSupportedStatesResponsePayload(@NonNull DomainSupportedStatesError error) {
-            this.error = error;
-        }
-    }
-
-    public static class DomainSupportedCountriesResponsePayload extends Payload<DomainSupportedCountriesError> {
-        public List<SupportedCountryResponse> supportedCountries;
-
-        public DomainSupportedCountriesResponsePayload(@Nullable List<SupportedCountryResponse> supportedCountries) {
-            this.supportedCountries = supportedCountries;
-        }
-
-        public DomainSupportedCountriesResponsePayload(@NonNull DomainSupportedCountriesError error) {
-            this.error = error;
-        }
-    }
-
-    public static class SiteError implements OnChangedError {
-        public SiteErrorType type;
-        public String message;
-
-        public SiteError(SiteErrorType type) {
-            this(type, "");
-        }
-
-        public SiteError(SiteErrorType type, String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class SiteEditorsError implements OnChangedError {
-        public SiteEditorsErrorType type;
-        public String message;
-
-        public SiteEditorsError(SiteEditorsErrorType type) {
-            this(type, "");
-        }
-
-        SiteEditorsError(SiteEditorsErrorType type, String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class PostFormatsError implements OnChangedError {
-        public PostFormatsErrorType type;
-        public String message;
-
-        public PostFormatsError(PostFormatsErrorType type) {
-            this(type, "");
-        }
-
-        public PostFormatsError(PostFormatsErrorType type, String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class UserRolesError implements OnChangedError {
-        public UserRolesErrorType type;
-        public String message;
-
-        public UserRolesError(UserRolesErrorType type) {
-            this(type, "");
-        }
-
-        UserRolesError(UserRolesErrorType type, String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class NewSiteError implements OnChangedError {
-        public NewSiteErrorType type;
-        public String message;
-
-        public NewSiteError(NewSiteErrorType type, @NonNull String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class DeleteSiteError implements OnChangedError {
-        public DeleteSiteErrorType type;
-        public String message;
-
-        public DeleteSiteError(String errorType, @NonNull String message) {
-            this.type = DeleteSiteErrorType.fromString(errorType);
-            this.message = message;
-        }
-
-        public DeleteSiteError(DeleteSiteErrorType errorType) {
-            this.type = errorType;
-            this.message = "";
-        }
-    }
-
-    public static class ExportSiteError implements OnChangedError {
-        public ExportSiteErrorType type;
-
-        public ExportSiteError(ExportSiteErrorType type) {
-            this.type = type;
-        }
-    }
-
-    public static class AutomatedTransferError implements OnChangedError {
-        public final @NonNull AutomatedTransferErrorType type;
-        public final @Nullable String message;
-
-        public AutomatedTransferError(@Nullable String type, @Nullable String message) {
-            this.type = AutomatedTransferErrorType.fromString(type);
-            this.message = message;
-        }
-    }
-
-    public static class DomainAvailabilityError implements OnChangedError {
-        @NonNull public DomainAvailabilityErrorType type;
-        @Nullable public String message;
-
-        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
-        }
-
-        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
-            this.type = type;
-        }
-    }
-
-    public static class DomainSupportedStatesError implements OnChangedError {
-        @NonNull public DomainSupportedStatesErrorType type;
-        @Nullable public String message;
-
-        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
-        }
-
-        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type) {
-            this.type = type;
-        }
-    }
-
-    public static class DomainSupportedCountriesError implements OnChangedError {
-        @NonNull public DomainSupportedCountriesErrorType type;
-        @Nullable public String message;
-
-        public DomainSupportedCountriesError(
-                @NonNull DomainSupportedCountriesErrorType type,
-                @Nullable String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class QuickStartError implements OnChangedError {
-        @NonNull public QuickStartErrorType type;
-        @Nullable public String message;
-
-        public QuickStartError(@NonNull QuickStartErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class DesignatePrimaryDomainError implements OnChangedError {
-        @NonNull public DesignatePrimaryDomainErrorType type;
-        @Nullable public String message;
-
-        public DesignatePrimaryDomainError(@NonNull DesignatePrimaryDomainErrorType type, @Nullable String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
+    data class DomainAvailabilityError
+    @JvmOverloads
+    constructor(
+        @JvmField val type: DomainAvailabilityErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
+    data class DomainSupportedStatesError
+    @JvmOverloads
+    constructor(
+        @JvmField val type: DomainSupportedStatesErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
+    data class DomainSupportedCountriesError(
+        val type: DomainSupportedCountriesErrorType,
+        val message: String?
+    ) : OnChangedError
+
+    data class QuickStartError(val type: QuickStartErrorType, val message: String?) : OnChangedError
+    data class DesignatePrimaryDomainError(val type: DesignatePrimaryDomainErrorType, val message: String?) :
+            OnChangedError
 
     // OnChanged Events
-    public static class OnProfileFetched extends OnChanged<SiteError> {
-        public SiteModel site;
+    data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError?>()
+    data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError?>() {
+        constructor(rowsAffected: Int = 0, siteError: SiteError) : this(rowsAffected) {
+            this.error = siteError
+        }
 
-        public OnProfileFetched(SiteModel site) {
-            this.site = site;
+        constructor(siteError: SiteError) : this()
+    }
+
+    data class OnSiteRemoved(val mRowsAffected: Int) : OnChanged<SiteError?>()
+    data class OnAllSitesRemoved(val mRowsAffected: Int) : OnChanged<SiteError?>()
+    data class OnBlockLayoutsFetched(
+        val layouts: List<GutenbergLayout>?,
+        val categories: List<GutenbergLayoutCategory>?
+    ) : OnChanged<SiteError?>() {
+        constructor(
+            layouts: List<GutenbergLayout>?,
+            categories: List<GutenbergLayoutCategory>?,
+            error: SiteError?
+        ) : this(layouts, categories) {
+            this.error = error
         }
     }
 
-    public static class OnSiteChanged extends OnChanged<SiteError> {
-        public int rowsAffected;
-
-        public OnSiteChanged(int rowsAffected) {
-            this.rowsAffected = rowsAffected;
+    data class OnNewSiteCreated(
+        @JvmField val dryRun: Boolean = false,
+        @JvmField val newSiteRemoteId: Long = 0
+    ) : OnChanged<NewSiteError?>() {
+        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError) : this(dryRun, newSiteRemoteId) {
+            this.error = error
         }
     }
 
-    public static class OnSiteRemoved extends OnChanged<SiteError> {
-        public int mRowsAffected;
-
-        public OnSiteRemoved(int rowsAffected) {
-            mRowsAffected = rowsAffected;
+    data class OnSiteDeleted(@JvmField val error: DeleteSiteError?) : OnChanged<DeleteSiteError?>() {
+        init {
+            this.error = error
         }
     }
 
-    public static class OnAllSitesRemoved extends OnChanged<SiteError> {
-        public int mRowsAffected;
-
-        public OnAllSitesRemoved(int rowsAffected) {
-            mRowsAffected = rowsAffected;
+    class OnSiteExported() : OnChanged<ExportSiteError?>() {
+        constructor(error: ExportSiteError) : this() {
+            this.error = error
         }
     }
 
-    public static class OnBlockLayoutsFetched extends OnChanged<SiteError> {
-        public List<GutenbergLayout> layouts;
-        public List<GutenbergLayoutCategory> categories;
-
-        public OnBlockLayoutsFetched(List<GutenbergLayout> layouts, List<GutenbergLayoutCategory> categories,
-                                     SiteError error) {
-            this.layouts = layouts;
-            this.categories = categories;
-            this.error = error;
+    data class OnPostFormatsChanged(val site: SiteModel) : OnChanged<PostFormatsError?>()
+    data class OnSiteEditorsChanged(val site: SiteModel, val rowsAffected: Int = 0) : OnChanged<SiteEditorsError?>() {
+        constructor(site: SiteModel, error: SiteEditorsError) : this(site) {
+            this.error = error
         }
     }
 
-    public static class OnNewSiteCreated extends OnChanged<NewSiteError> {
-        public boolean dryRun;
-        public long newSiteRemoteId;
-    }
-
-    public static class OnSiteDeleted extends OnChanged<DeleteSiteError> {
-        public OnSiteDeleted(DeleteSiteError error) {
-            this.error = error;
+    data class OnAllSitesMobileEditorChanged(
+        val rowsAffected: Int = 0,
+            // True when all sites are self-hosted or wpcom backend response
+        val isNetworkResponse: Boolean = false,
+        val siteEditorsError: SiteEditorsError? = null
+    ) : OnChanged<SiteEditorsError?>() {
+        init {
+            this.error = siteEditorsError
         }
     }
 
-    public static class OnSiteExported extends OnChanged<ExportSiteError> {
-        public OnSiteExported() {
+    data class OnUserRolesChanged(val site: SiteModel) : OnChanged<UserRolesError?>()
+    data class OnPlansFetched(
+        @JvmField val site: SiteModel,
+        @JvmField val plans: List<PlanModel>?
+    ) : OnChanged<PlansError?>() {
+        constructor(
+            site: SiteModel,
+            plans: List<PlanModel>?,
+            error: PlansError?
+        ) : this(site, plans) {
+            this.error = error
         }
     }
 
-    public static class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
-        public SiteModel site;
-
-        public OnPostFormatsChanged(SiteModel site) {
-            this.site = site;
+    data class OnPrivateAtomicCookieFetched(
+        val site: SiteModel?,
+        val success: Boolean,
+        val privateAtomicCookieError: PrivateAtomicCookieError? = null
+    ) : OnChanged<PrivateAtomicCookieError?>() {
+        init {
+            this.error = privateAtomicCookieError
         }
     }
 
-    public static class OnSiteEditorsChanged extends OnChanged<SiteEditorsError> {
-        public SiteModel site;
-        public int rowsAffected;
-
-        public OnSiteEditorsChanged(SiteModel site) {
-            this.site = site;
+    data class OnURLChecked(
+        @JvmField val url: String,
+        @JvmField val isWPCom: Boolean = false,
+        var siteError: SiteError? = null
+    ) :
+            OnChanged<SiteError?>() {
+        init {
+            this.error = siteError
         }
     }
 
-    public static class OnAllSitesMobileEditorChanged extends OnChanged<SiteEditorsError> {
-        public int rowsAffected;
-        public boolean isNetworkResponse; // True when all sites are self-hosted or wpcom backend response
+    data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError?>()
+    data class OnWPComSiteFetched(@JvmField val checkedUrl: String, @JvmField val site: SiteModel) : OnChanged<SiteError?>()
+    data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
+            OnChangedError {
+        constructor(apiErrorType: String, message: String) : this(
+                SuggestDomainErrorType.fromString(apiErrorType),
+                message
+        )
+    }
 
-        public OnAllSitesMobileEditorChanged() {
+    data class OnSuggestedDomains(
+        val query: String,
+        @JvmField val suggestions: List<DomainSuggestionResponse>
+    ) : OnChanged<SuggestDomainError?>()
+
+    data class OnDomainAvailabilityChecked(
+        val status: DomainAvailabilityStatus?,
+        val mappable: DomainMappabilityStatus?,
+        val supportsPrivacy: Boolean
+    ) : OnChanged<DomainAvailabilityError?>() {
+        constructor(
+            status: DomainAvailabilityStatus?,
+            mappable: DomainMappabilityStatus?,
+            supportsPrivacy: Boolean,
+            error: DomainAvailabilityError?
+        ) : this(status, mappable, supportsPrivacy) {
+            this.error = error
         }
     }
 
-    public static class OnUserRolesChanged extends OnChanged<UserRolesError> {
-        public SiteModel site;
-
-        public OnUserRolesChanged(SiteModel site) {
-            this.site = site;
-        }
-    }
-
-    public static class OnPlansFetched extends OnChanged<PlansError> {
-        public SiteModel site;
-        public @Nullable List<PlanModel> plans;
-
-        public OnPlansFetched(SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
-            this.site = site;
-            this.plans = plans;
-            this.error = error;
-        }
-    }
-
-    public static class OnPrivateAtomicCookieFetched extends OnChanged<PrivateAtomicCookieError> {
-        public SiteModel site;
-        public boolean success;
-
-        public OnPrivateAtomicCookieFetched(@Nullable SiteModel site, boolean success,
-                                            @Nullable PrivateAtomicCookieError error) {
-            this.site = site;
-            this.success = success;
-            this.error = error;
-        }
-    }
-
-    public static class OnURLChecked extends OnChanged<SiteError> {
-        public String url;
-        public boolean isWPCom;
-
-        public OnURLChecked(@NonNull String url) {
-            this.url = url;
-        }
-    }
-
-    public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
-        public ConnectSiteInfoPayload info;
-
-        public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfoPayload info) {
-            this.info = info;
-        }
-    }
-
-    public static class OnWPComSiteFetched extends OnChanged<SiteError> {
-        public String checkedUrl;
-        public SiteModel site;
-
-        public OnWPComSiteFetched(String checkedUrl, @NonNull SiteModel site) {
-            this.checkedUrl = checkedUrl;
-            this.site = site;
-        }
-    }
-
-    public static class SuggestDomainError implements OnChangedError {
-        public SuggestDomainErrorType type;
-        public String message;
-
-        public SuggestDomainError(@NonNull String apiErrorType, @NonNull String message) {
-            this.type = SuggestDomainErrorType.fromString(apiErrorType);
-            this.message = message;
-        }
-    }
-
-    public static class OnSuggestedDomains extends OnChanged<SuggestDomainError> {
-        public String query;
-        public List<DomainSuggestionResponse> suggestions;
-
-        public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
-            this.query = query;
-            this.suggestions = suggestions;
-        }
-    }
-
-    public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
-        public @Nullable DomainAvailabilityStatus status;
-        public @Nullable DomainMappabilityStatus mappable;
-        public boolean supportsPrivacy;
-
-        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityStatus status,
-                                           @Nullable DomainMappabilityStatus mappable,
-                                           boolean supportsPrivacy,
-                                           @Nullable DomainAvailabilityError error) {
-            this.status = status;
-            this.mappable = mappable;
-            this.supportsPrivacy = supportsPrivacy;
-            this.error = error;
-        }
-    }
-
-    public enum DomainAvailabilityStatus {
+    enum class DomainAvailabilityStatus {
         BLACKLISTED_DOMAIN,
         INVALID_TLD,
         INVALID_DOMAIN,
@@ -840,283 +552,211 @@ public class SiteStore extends Store {
         AVAILABLE,
         UNKNOWN_STATUS;
 
-        public static DomainAvailabilityStatus fromString(final String string) {
-            if (!TextUtils.isEmpty(string)) {
-                for (DomainAvailabilityStatus v : DomainAvailabilityStatus.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            @JvmStatic fun fromString(string: String): DomainAvailabilityStatus {
+                if (!TextUtils.isEmpty(string)) {
+                    for (v in values()) {
+                        if (string.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return UNKNOWN_STATUS
             }
-            return UNKNOWN_STATUS;
         }
     }
 
-    public enum DomainMappabilityStatus {
-        BLACKLISTED_DOMAIN,
-        INVALID_TLD,
-        INVALID_DOMAIN,
-        MAPPABLE_DOMAIN,
-        UNKNOWN_STATUS;
+    enum class DomainMappabilityStatus {
+        BLACKLISTED_DOMAIN, INVALID_TLD, INVALID_DOMAIN, MAPPABLE_DOMAIN, UNKNOWN_STATUS;
 
-        public static DomainMappabilityStatus fromString(final String string) {
-            if (!TextUtils.isEmpty(string)) {
-                for (DomainMappabilityStatus v : DomainMappabilityStatus.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            @JvmStatic fun fromString(string: String): DomainMappabilityStatus {
+                if (!TextUtils.isEmpty(string)) {
+                    for (v in values()) {
+                        if (string.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return UNKNOWN_STATUS
             }
-            return UNKNOWN_STATUS;
         }
     }
 
-    public static class OnDomainSupportedStatesFetched extends OnChanged<DomainSupportedStatesError> {
-        public @Nullable List<SupportedStateResponse> supportedStates;
-
-        public OnDomainSupportedStatesFetched(@Nullable List<SupportedStateResponse> supportedStates,
-                                              @Nullable DomainSupportedStatesError error) {
-            this.supportedStates = supportedStates;
-            this.error = error;
+    data class OnDomainSupportedStatesFetched(
+        val supportedStates: List<SupportedStateResponse>?
+    ) : OnChanged<DomainSupportedStatesError?>() {
+        constructor(
+            supportedStates: List<SupportedStateResponse>?,
+            error: DomainSupportedStatesError?
+        ) : this(supportedStates) {
+            this.error = error
         }
     }
 
-    public static class OnDomainSupportedCountriesFetched extends OnChanged<DomainSupportedCountriesError> {
-        public @Nullable List<SupportedCountryResponse> supportedCountries;
-
-        public OnDomainSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
-                                                 @Nullable DomainSupportedCountriesError error) {
-            this.supportedCountries = supportedCountries;
-            this.error = error;
+    class OnDomainSupportedCountriesFetched(
+        val supportedCountries: List<SupportedCountryResponse>?,
+        error: DomainSupportedCountriesError?
+    ) : OnChanged<DomainSupportedCountriesError?>() {
+        init {
+            this.error = error
         }
     }
 
-    public static class PlansError implements OnChangedError {
-        @NonNull public PlansErrorType type;
-        @Nullable public String message;
-
-        public PlansError(@Nullable String type, @Nullable String message) {
-            this.type = PlansErrorType.fromString(type);
-            this.message = message;
-        }
-
-        public PlansError(@NonNull PlansErrorType type) {
-            this.type = type;
-        }
+    class PlansError
+    @JvmOverloads constructor(
+        @JvmField val type: PlansErrorType,
+        @JvmField val message: String? = null
+    ) : OnChangedError {
+        constructor(type: String?, message: String?) : this(PlansErrorType.fromString(type), message)
     }
 
-    public static class PrivateAtomicCookieError implements OnChangedError {
-        @NonNull public AccessCookieErrorType type;
-        @Nullable public String message;
+    class PrivateAtomicCookieError(val type: AccessCookieErrorType, val message: String) : OnChangedError
 
-        public PrivateAtomicCookieError(@NonNull AccessCookieErrorType type, @NonNull String message) {
-            this.type = type;
-            this.message = message;
-        }
-    }
-
-    public static class JetpackCapabilitiesError implements OnChangedError {
-        @NonNull public JetpackCapabilitiesErrorType type;
-        @Nullable public String message;
-
-        public JetpackCapabilitiesError(@NonNull JetpackCapabilitiesErrorType type, String message) {
-            this.type = type;
-            this.message = message;
+    class JetpackCapabilitiesError(val type: JetpackCapabilitiesErrorType, val message: String?) : OnChangedError
+    class OnAutomatedTransferEligibilityChecked(
+        val site: SiteModel,
+        val isEligible: Boolean,
+        val eligibilityErrorCodes: List<String>
+    ) : OnChanged<AutomatedTransferError?>() {
+        constructor(
+            site: SiteModel,
+            isEligible: Boolean,
+            eligibilityErrorCodes: List<String>,
+            error: AutomatedTransferError?
+        ) : this(site, isEligible, eligibilityErrorCodes) {
+            this.error = error
         }
     }
 
-    public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public boolean isEligible;
-        public @NonNull List<String> eligibilityErrorCodes;
-
-        public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
-                                                     boolean isEligible,
-                                                     @NonNull List<String> eligibilityErrorCodes,
-                                                     @Nullable AutomatedTransferError error) {
-            this.site = site;
-            this.isEligible = isEligible;
-            this.eligibilityErrorCodes = eligibilityErrorCodes;
-            this.error = error;
+    class OnAutomatedTransferInitiated(
+        val site: SiteModel,
+        val pluginSlugToInstall: String
+    ) : OnChanged<AutomatedTransferError?>() {
+        constructor(
+            site: SiteModel,
+            pluginSlugToInstall: String,
+            error: AutomatedTransferError?
+        ) : this(site, pluginSlugToInstall) {
+            this.error = error
         }
     }
 
-    public static class OnAutomatedTransferInitiated extends OnChanged<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public @NonNull String pluginSlugToInstall;
-
-        public OnAutomatedTransferInitiated(@NonNull SiteModel site,
-                                            @NonNull String pluginSlugToInstall,
-                                            AutomatedTransferError error) {
-            this.site = site;
-            this.pluginSlugToInstall = pluginSlugToInstall;
-            this.error = error;
+    class OnAutomatedTransferStatusChecked(
+        @JvmField val site: SiteModel,
+        @JvmField val isCompleted: Boolean = false,
+        @JvmField val currentStep: Int = 0,
+        @JvmField val totalSteps: Int = 0
+    ) : OnChanged<AutomatedTransferError?>() {
+        constructor(site: SiteModel, error: AutomatedTransferError?) : this(site) {
+            this.error = error
         }
     }
 
-    public static class OnAutomatedTransferStatusChecked extends OnChanged<AutomatedTransferError> {
-        public @NonNull SiteModel site;
-        public boolean isCompleted;
-        public int currentStep;
-        public int totalSteps;
+    class QuickStartCompletedResponsePayload(val site: SiteModel, val success: Boolean) : OnChanged<QuickStartError?>()
+    class OnQuickStartCompleted internal constructor(
+        val site: SiteModel,
+        val success: Boolean
+    ) : OnChanged<QuickStartError?>()
 
-        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, boolean isCompleted, int currentStep,
-                                                int totalSteps) {
-            this.site = site;
-            this.isCompleted = isCompleted;
-            this.currentStep = currentStep;
-            this.totalSteps = totalSteps;
-        }
+    class DesignatedPrimaryDomainPayload(
+        val site: SiteModel,
+        val success: Boolean
+    ) : OnChanged<DesignatePrimaryDomainError?>()
 
-        public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
-            this.site = site;
-            this.error = error;
-        }
+    class OnPrimaryDomainDesignated(
+        val site: SiteModel,
+        val success: Boolean
+    ) : OnChanged<DesignatePrimaryDomainError?>()
+
+    data class UpdateSitesResult(
+        @JvmField val rowsAffected: Int = 0,
+        @JvmField val duplicateSiteFound: Boolean = false
+    )
+
+    enum class SiteErrorType {
+        INVALID_SITE, UNKNOWN_SITE, DUPLICATE_SITE, INVALID_RESPONSE, UNAUTHORIZED, GENERIC_ERROR
     }
 
-    public static class QuickStartCompletedResponsePayload extends OnChanged<QuickStartError> {
-        public @NonNull SiteModel site;
-        public boolean success;
+    enum class SuggestDomainErrorType {
+        EMPTY_RESULTS, EMPTY_QUERY, INVALID_MINIMUM_QUANTITY, INVALID_MAXIMUM_QUANTITY, INVALID_QUERY, GENERIC_ERROR;
 
-        public QuickStartCompletedResponsePayload(@NonNull SiteModel site, boolean status) {
-            this.site = site;
-            this.success = status;
-        }
-    }
-
-    public static class OnQuickStartCompleted extends OnChanged<QuickStartError> {
-        public @NonNull SiteModel site;
-        public boolean success;
-
-        OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
-            this.site = site;
-            this.success = status;
-        }
-    }
-
-    public static class DesignatedPrimaryDomainPayload extends OnChanged<DesignatePrimaryDomainError> {
-        public @NonNull SiteModel site;
-        public boolean success;
-
-        public DesignatedPrimaryDomainPayload(@NonNull SiteModel site, boolean status) {
-            this.site = site;
-            this.success = status;
-        }
-    }
-
-    public static class OnPrimaryDomainDesignated extends OnChanged<DesignatePrimaryDomainError> {
-        public @NonNull SiteModel site;
-        public boolean success;
-
-        public OnPrimaryDomainDesignated(@NonNull SiteModel site, boolean status) {
-            this.site = site;
-            this.success = status;
-        }
-    }
-
-    public static class UpdateSitesResult {
-        public int rowsAffected = 0;
-        public boolean duplicateSiteFound = false;
-    }
-
-    public enum SiteErrorType {
-        INVALID_SITE,
-        UNKNOWN_SITE,
-        DUPLICATE_SITE,
-        INVALID_RESPONSE,
-        UNAUTHORIZED,
-        GENERIC_ERROR
-    }
-
-    public enum SuggestDomainErrorType {
-        EMPTY_RESULTS,
-        EMPTY_QUERY,
-        INVALID_MINIMUM_QUANTITY,
-        INVALID_MAXIMUM_QUANTITY,
-        INVALID_QUERY,
-        GENERIC_ERROR;
-
-        public static SuggestDomainErrorType fromString(final String string) {
-            if (!TextUtils.isEmpty(string)) {
-                for (SuggestDomainErrorType v : SuggestDomainErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            fun fromString(string: String): SuggestDomainErrorType {
+                if (!TextUtils.isEmpty(string)) {
+                    for (v in values()) {
+                        if (string.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum PostFormatsErrorType {
-        INVALID_SITE,
-        INVALID_RESPONSE,
-        GENERIC_ERROR;
+    enum class PostFormatsErrorType {
+        INVALID_SITE, INVALID_RESPONSE, GENERIC_ERROR
     }
 
-    public enum PlansErrorType {
-        NOT_AVAILABLE,
-        AUTHORIZATION_REQUIRED,
-        UNAUTHORIZED,
-        UNKNOWN_BLOG,
-        GENERIC_ERROR;
+    enum class PlansErrorType {
+        NOT_AVAILABLE, AUTHORIZATION_REQUIRED, UNAUTHORIZED, UNKNOWN_BLOG, GENERIC_ERROR;
 
-        public static PlansErrorType fromString(String type) {
-            if (!TextUtils.isEmpty(type)) {
-                for (PlansErrorType v : PlansErrorType.values()) {
-                    if (type.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            fun fromString(type: String?): PlansErrorType {
+                if (!TextUtils.isEmpty(type)) {
+                    for (v in values()) {
+                        if (type.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum AccessCookieErrorType {
-        GENERIC_ERROR,
-        INVALID_RESPONSE,
-        SITE_MISSING_FROM_STORE,
-        NON_PRIVATE_AT_SITE
+    enum class AccessCookieErrorType {
+        GENERIC_ERROR, INVALID_RESPONSE, SITE_MISSING_FROM_STORE, NON_PRIVATE_AT_SITE
     }
 
-    public enum UserRolesErrorType {
+    enum class UserRolesErrorType {
         GENERIC_ERROR
     }
 
-    public enum SiteEditorsErrorType {
+    enum class SiteEditorsErrorType {
         GENERIC_ERROR
     }
 
-    public enum JetpackCapabilitiesErrorType {
+    enum class JetpackCapabilitiesErrorType {
         GENERIC_ERROR
     }
 
-    public enum DeleteSiteErrorType {
-        INVALID_SITE,
-        UNAUTHORIZED, // user don't have permission to delete
-        AUTHORIZATION_REQUIRED, // missing access token
+    enum class DeleteSiteErrorType {
+        INVALID_SITE, UNAUTHORIZED,  // user don't have permission to delete
+        AUTHORIZATION_REQUIRED,  // missing access token
         GENERIC_ERROR;
 
-        public static DeleteSiteErrorType fromString(final String string) {
-            if (!TextUtils.isEmpty(string)) {
-                if (string.equals("unauthorized")) {
-                    return UNAUTHORIZED;
-                } else if (string.equals("authorization_required")) {
-                    return AUTHORIZATION_REQUIRED;
+        companion object {
+            fun fromString(string: String): DeleteSiteErrorType {
+                if (!TextUtils.isEmpty(string)) {
+                    if (string == "unauthorized") {
+                        return UNAUTHORIZED
+                    } else if (string == "authorization_required") {
+                        return AUTHORIZATION_REQUIRED
+                    }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum ExportSiteErrorType {
-        INVALID_SITE,
-        GENERIC_ERROR
+    enum class ExportSiteErrorType {
+        INVALID_SITE, GENERIC_ERROR
     }
 
     // Enums
-    public enum NewSiteErrorType {
+    enum class NewSiteErrorType {
         SITE_NAME_REQUIRED,
         SITE_NAME_NOT_ALLOWED,
         SITE_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS,
@@ -1132,412 +772,345 @@ public class SiteStore extends Store {
         SITE_TITLE_INVALID,
         GENERIC_ERROR;
 
-        // SiteStore semantics prefers SITE over BLOG but errors reported from the API use BLOG
-        // these are used to convert API errors to the appropriate enum value in fromString
-        private static final String BLOG = "BLOG";
-        private static final String SITE = "SITE";
-
-        public static NewSiteErrorType fromString(final String string) {
-            if (!TextUtils.isEmpty(string)) {
-                String siteString = string.toUpperCase(Locale.US).replace(BLOG, SITE);
-                for (NewSiteErrorType v : NewSiteErrorType.values()) {
-                    if (siteString.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            // SiteStore semantics prefers SITE over BLOG but errors reported from the API use BLOG
+            // these are used to convert API errors to the appropriate enum value in fromString
+            private const val BLOG = "BLOG"
+            private const val SITE = "SITE"
+            @JvmStatic fun fromString(string: String): NewSiteErrorType {
+                if (!TextUtils.isEmpty(string)) {
+                    val siteString = string.toUpperCase(Locale.US).replace(BLOG, SITE)
+                    for (v in values()) {
+                        if (siteString.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum AutomatedTransferErrorType {
-        AT_NOT_ELIGIBLE, // occurs if AT is initiated when the site is not eligible
-        NOT_FOUND, // occurs if transfer status of a site with no active transfer is checked
+    enum class AutomatedTransferErrorType {
+        AT_NOT_ELIGIBLE,  // occurs if AT is initiated when the site is not eligible
+        NOT_FOUND,  // occurs if transfer status of a site with no active transfer is checked
         GENERIC_ERROR;
 
-        public static AutomatedTransferErrorType fromString(String type) {
-            if (!TextUtils.isEmpty(type)) {
-                for (AutomatedTransferErrorType v : AutomatedTransferErrorType.values()) {
-                    if (type.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            fun fromString(type: String?): AutomatedTransferErrorType {
+                if (!TextUtils.isEmpty(type)) {
+                    for (v in values()) {
+                        if (type.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum DomainAvailabilityErrorType {
-        INVALID_DOMAIN_NAME,
-        GENERIC_ERROR
+    enum class DomainAvailabilityErrorType {
+        INVALID_DOMAIN_NAME, GENERIC_ERROR
     }
 
-    public enum DomainSupportedStatesErrorType {
-        INVALID_COUNTRY_CODE,
-        INVALID_QUERY,
-        GENERIC_ERROR;
+    enum class DomainSupportedStatesErrorType {
+        INVALID_COUNTRY_CODE, INVALID_QUERY, GENERIC_ERROR;
 
-        public static DomainSupportedStatesErrorType fromString(String type) {
-            if (!TextUtils.isEmpty(type)) {
-                for (DomainSupportedStatesErrorType v : DomainSupportedStatesErrorType.values()) {
-                    if (type.equalsIgnoreCase(v.name())) {
-                        return v;
+        companion object {
+            @JvmStatic fun fromString(type: String): DomainSupportedStatesErrorType {
+                if (!TextUtils.isEmpty(type)) {
+                    for (v in values()) {
+                        if (type.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
                     }
                 }
+                return GENERIC_ERROR
             }
-            return GENERIC_ERROR;
         }
     }
 
-    public enum DomainSupportedCountriesErrorType {
+    enum class DomainSupportedCountriesErrorType {
         GENERIC_ERROR
     }
 
-    public enum QuickStartErrorType {
+    enum class QuickStartErrorType {
         GENERIC_ERROR
     }
 
-    public enum DesignatePrimaryDomainErrorType {
+    enum class DesignatePrimaryDomainErrorType {
         GENERIC_ERROR
     }
 
-    public enum SiteVisibility {
-        PRIVATE(-1),
-        BLOCK_SEARCH_ENGINE(0),
-        PUBLIC(1);
+    enum class SiteVisibility(private val mValue: Int) {
+        PRIVATE(-1), BLOCK_SEARCH_ENGINE(0), PUBLIC(1);
 
-        private final int mValue;
-
-        SiteVisibility(int value) {
-            this.mValue = value;
-        }
-
-        public int value() {
-            return mValue;
+        fun value(): Int {
+            return mValue
         }
     }
 
-    public enum CompleteQuickStartVariant {
+    enum class CompleteQuickStartVariant(private val mString: String) {
         NEXT_STEPS("next-steps");
 
-        private final String mString;
-
-        CompleteQuickStartVariant(final String s) {
-            mString = s;
-        }
-
-        @Override
-        public String toString() {
-            return mString;
+        override fun toString(): String {
+            return mString
         }
     }
 
-    public enum SiteFilter {
-        ATOMIC("atomic"),
-        JETPACK("jetpack"),
-        WPCOM("wpcom");
+    enum class SiteFilter(private val mString: String) {
+        ATOMIC("atomic"), JETPACK("jetpack"), WPCOM("wpcom");
 
-        private final String mString;
-
-        SiteFilter(final String s) {
-            mString = s;
-        }
-
-        @Override
-        public String toString() {
-            return mString;
+        override fun toString(): String {
+            return mString
         }
     }
 
-    private SiteRestClient mSiteRestClient;
-    private SiteXMLRPCClient mSiteXMLRPCClient;
-    private PostSqlUtils mPostSqlUtils;
-    private PrivateAtomicCookie mPrivateAtomicCookie;
-
-    @Inject public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
-                     SiteXMLRPCClient siteXMLRPCClient, PrivateAtomicCookie privateAtomicCookie) {
-        super(dispatcher);
-        mSiteRestClient = siteRestClient;
-        mSiteXMLRPCClient = siteXMLRPCClient;
-        mPostSqlUtils = postSqlUtils;
-        mPrivateAtomicCookie = privateAtomicCookie;
-    }
-
-    @Override
-    public void onRegister() {
-        AppLog.d(T.API, "SiteStore onRegister");
+    override fun onRegister() {
+        AppLog.d(API, "SiteStore onRegister")
     }
 
     /**
-     * Returns all sites in the store as a {@link SiteModel} list.
+     * Returns all sites in the store as a [SiteModel] list.
      */
-    public List<SiteModel> getSites() {
-        return WellSql.select(SiteModel.class).getAsModel();
-    }
+    val sites: List<SiteModel>
+        get() = WellSql.select(SiteModel::class.java).asModel
 
     /**
      * Returns the number of sites of any kind in the store.
      */
-    public int getSitesCount() {
-        return (int) WellSql.select(SiteModel.class).count();
-    }
+    val sitesCount: Int
+        get() = WellSql.select(SiteModel::class.java).count().toInt()
 
     /**
      * Checks whether the store contains any sites of any kind.
      */
-    public boolean hasSite() {
-        return getSitesCount() != 0;
+    fun hasSite(): Boolean {
+        return sitesCount != 0
     }
 
     /**
-     * Obtains the site with the given (local) id and returns it as a {@link SiteModel}.
+     * Obtains the site with the given (local) id and returns it as a [SiteModel].
      */
-    public SiteModel getSiteByLocalId(int id) {
-        List<SiteModel> result = SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).getAsModel();
-        if (result.size() > 0) {
-            return result.get(0);
-        }
-        return null;
+    fun getSiteByLocalId(id: Int): SiteModel? {
+        val result = SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).asModel
+        return if (result.size > 0) {
+            result[0]
+        } else null
     }
 
     /**
      * Checks whether the store contains a site matching the given (local) id.
      */
-    public boolean hasSiteWithLocalId(int id) {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists();
+    fun hasSiteWithLocalId(id: Int): Boolean {
+        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists()
     }
 
     /**
      * Returns all .COM sites in the store.
      */
-    public List<SiteModel> getWPComSites() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).getAsModel();
-    }
+    val wPComSites: List<SiteModel>
+        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).asModel
 
     /**
      * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
      */
-    public List<SiteModel> getSitesAccessedViaWPComRest() {
-        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
-    }
+    val sitesAccessedViaWPComRest: List<SiteModel>
+        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
 
     /**
      * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
      * via WPCom REST API).
      */
-    public int getSitesAccessedViaWPComRestCount() {
-        return (int) SiteSqlUtils.getSitesAccessedViaWPComRest().count();
-    }
+    val sitesAccessedViaWPComRestCount: Int
+        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via WPCom REST API (WPCom sites or Jetpack
      * sites connected via WPCom REST API).
      */
-    public boolean hasSitesAccessedViaWPComRest() {
-        return getSitesAccessedViaWPComRestCount() != 0;
+    fun hasSitesAccessedViaWPComRest(): Boolean {
+        return sitesAccessedViaWPComRestCount != 0
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
-    public int getWPComSitesCount() {
-        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count();
-    }
+    val wPComSitesCount: Int
+        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count().toInt()
 
     /**
      * Returns the number of .COM Atomic sites in the store.
      */
-    public int getWPComAtomicSitesCount() {
-        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count();
-    }
+    val wPComAtomicSitesCount: Int
+        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count().toInt()
 
     /**
      * Returns sites with a name or url matching the search string.
      */
-    @NonNull
-    public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString);
+    fun getSitesByNameOrUrlMatching(searchString: String): List<SiteModel> {
+        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString)
     }
 
     /**
      * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API) with a
      * name or url matching the search string.
      */
-    @NonNull
-    public List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString);
+    fun getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString: String): List<SiteModel> {
+        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString)
     }
 
     /**
      * Checks whether the store contains at least one .COM site.
      */
-    public boolean hasWPComSite() {
-        return getWPComSitesCount() != 0;
+    fun hasWPComSite(): Boolean {
+        return wPComSitesCount != 0
     }
 
     /**
      * Checks whether the store contains at least one .COM Atomic site.
      */
-    public boolean hasWPComAtomicSite() {
-        return getWPComAtomicSitesCount() != 0;
+    fun hasWPComAtomicSite(): Boolean {
+        return wPComAtomicSitesCount != 0
     }
 
     /**
      * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public List<SiteModel> getSitesAccessedViaXMLRPC() {
-        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsModel();
-    }
+    val sitesAccessedViaXMLRPC: List<SiteModel>
+        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel
 
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public int getSitesAccessedViaXMLRPCCount() {
-        return (int) SiteSqlUtils.getSitesAccessedViaXMLRPC().count();
-    }
+    val sitesAccessedViaXMLRPCCount: Int
+        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
      * Jetpack sites accessed via XMLRPC).
      */
-    public boolean hasSiteAccessedViaXMLRPC() {
-        return getSitesAccessedViaXMLRPCCount() != 0;
+    fun hasSiteAccessedViaXMLRPC(): Boolean {
+        return sitesAccessedViaXMLRPCCount != 0
     }
 
     /**
-     * Returns all visible sites as {@link SiteModel}s. All self-hosted sites over XML-RPC are visible by default.
+     * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
      */
-    public List<SiteModel> getVisibleSites() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).getAsModel();
-    }
+    val visibleSites: List<SiteModel>
+        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).asModel
 
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
-    public int getVisibleSitesCount() {
-        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count();
-    }
+    val visibleSitesCount: Int
+        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count().toInt()
 
     /**
-     * Returns all visible .COM sites as {@link SiteModel}s.
+     * Returns all visible .COM sites as [SiteModel]s.
      */
-    public List<SiteModel> getVisibleSitesAccessedViaWPCom() {
-        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsModel();
-    }
+    val visibleSitesAccessedViaWPCom: List<SiteModel>
+        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().asModel
 
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleSitesAccessedViaWPComCount() {
-        return (int) SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count();
-    }
+    val visibleSitesAccessedViaWPComCount: Int
+        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count().toInt()
 
     /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
-    public boolean isWPComSiteVisibleByLocalId(int id) {
-        return WellSql.select(SiteModel.class)
-                      .where().beginGroup()
-                      .equals(SiteModelTable.ID, id)
-                      .equals(SiteModelTable.IS_WPCOM, true)
-                      .equals(SiteModelTable.IS_VISIBLE, true)
-                      .endGroup().endWhere()
-                      .exists();
+    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
+        return WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .equals(SiteModelTable.IS_VISIBLE, true)
+                .endGroup().endWhere()
+                .exists()
     }
 
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
-    public int getLocalIdForRemoteSiteId(long siteId) {
-        List<SiteModel> sites = WellSql.select(SiteModel.class)
-                                       .where().beginGroup()
-                                       .equals(SiteModelTable.SITE_ID, siteId)
-                                       .or()
-                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                                       .endGroup().endWhere()
-                                       .getAsModel(new SelectMapper<SiteModel>() {
-                                           @Override
-                                           public SiteModel convert(Cursor cursor) {
-                                               SiteModel siteModel = new SiteModel();
-                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                                               return siteModel;
-                                           }
-                                       });
-        if (sites.size() > 0) {
-            return sites.get(0).getId();
-        }
-        return 0;
+    fun getLocalIdForRemoteSiteId(siteId: Long): Int {
+        val sites = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.SITE_ID, siteId)
+                .or()
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
+                .endGroup().endWhere()
+                .getAsModel { cursor ->
+                    val siteModel = SiteModel()
+                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
+                    siteModel
+                }
+        return if (sites.size > 0) {
+            sites[0].id
+        } else 0
     }
 
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
-    public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
-        List<SiteModel> sites = WellSql.select(SiteModel.class)
-                                       .where().beginGroup()
-                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                                       .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                                       .endGroup().endWhere()
-                                       .getAsModel(new SelectMapper<SiteModel>() {
-                                           @Override
-                                           public SiteModel convert(Cursor cursor) {
-                                               SiteModel siteModel = new SiteModel();
-                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                                               return siteModel;
-                                           }
-                                       });
-        if (sites.size() > 0) {
-            return sites.get(0).getId();
-        }
-        return 0;
+    fun getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId: Long, xmlRpcUrl: String?): Int {
+        val sites = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
+                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
+                .endGroup().endWhere()
+                .getAsModel { cursor ->
+                    val siteModel = SiteModel()
+                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
+                    siteModel
+                }
+        return if (sites.size > 0) {
+            sites[0].id
+        } else 0
     }
 
     /**
      * Given a (local) id, returns the (remote) site id. Searches first for .COM and Jetpack, then looks for self-hosted
      * sites.
      */
-    public long getSiteIdForLocalId(int id) {
-        List<SiteModel> result = WellSql.select(SiteModel.class)
-                                        .where().beginGroup()
-                                        .equals(SiteModelTable.ID, id)
-                                        .endGroup().endWhere()
-                                        .getAsModel(new SelectMapper<SiteModel>() {
-                                            @Override
-                                            public SiteModel convert(Cursor cursor) {
-                                                SiteModel siteModel = new SiteModel();
-                                                siteModel.setSiteId(
-                                                        cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                                                siteModel.setSelfHostedSiteId(cursor.getLong(
-                                                        cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
-                                                return siteModel;
-                                            }
-                                        });
+    fun getSiteIdForLocalId(id: Int): Long {
+        val result = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .endGroup().endWhere()
+                .getAsModel { cursor ->
+                    val siteModel = SiteModel()
+                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
+                    siteModel.selfHostedSiteId = cursor.getLong(
+                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
+                    )
+                    siteModel
+                }
         if (result.isEmpty()) {
-            return 0;
+            return 0
         }
-
-        if (result.get(0).getSiteId() > 0) {
-            return result.get(0).getSiteId();
+        return if (result[0].siteId > 0) {
+            result[0].siteId
         } else {
-            return result.get(0).getSelfHostedSiteId();
+            result[0].selfHostedSiteId
         }
     }
 
     /**
      * Given a .COM site ID (either a .COM site id, or the .COM id of a Jetpack site), returns the site as a
-     * {@link SiteModel}.
+     * [SiteModel].
      */
-    public SiteModel getSiteBySiteId(long siteId) {
-        if (siteId == 0) {
-            return null;
+    fun getSiteBySiteId(siteId: Long): SiteModel? {
+        if (siteId == 0L) {
+            return null
         }
-
-        List<SiteModel> sites = SiteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).getAsModel();
-
-        if (sites.isEmpty()) {
-            return null;
+        val sites = SiteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).asModel
+        return if (sites.isEmpty()) {
+            null
         } else {
-            return sites.get(0);
+            sites[0]
         }
     }
 
@@ -1548,8 +1121,8 @@ public class SiteStore extends Store {
      * @param slug the slug of the layout
      * @return the content or null if the content is not cached
      */
-    public @Nullable String getBlockLayoutContent(@NonNull SiteModel site, @NonNull String slug) {
-        return SiteSqlUtils.getBlockLayoutContent(site, slug);
+    fun getBlockLayoutContent(site: SiteModel, slug: String): String? {
+        return SiteSqlUtils.getBlockLayoutContent(site, slug)
     }
 
     /**
@@ -1559,710 +1132,585 @@ public class SiteStore extends Store {
      * @param slug the slug of the layout
      * @return the layout or null if the layout is not cached
      */
-    public @Nullable GutenbergLayout getBlockLayout(@NonNull SiteModel site, @NonNull String slug) {
-        return SiteSqlUtils.getBlockLayout(site, slug);
+    fun getBlockLayout(site: SiteModel, slug: String): GutenbergLayout? {
+        return SiteSqlUtils.getBlockLayout(site, slug)
     }
 
-    public List<PostFormatModel> getPostFormats(SiteModel site) {
-        return SiteSqlUtils.getPostFormats(site);
+    fun getPostFormats(site: SiteModel?): List<PostFormatModel> {
+        return SiteSqlUtils.getPostFormats(site!!)
     }
 
-    public List<RoleModel> getUserRoles(SiteModel site) {
-        return SiteSqlUtils.getUserRoles(site);
+    fun getUserRoles(site: SiteModel?): List<RoleModel> {
+        return SiteSqlUtils.getUserRoles(site!!)
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    @Override
-    public void onAction(Action action) {
-        IAction actionType = action.getType();
-        if (!(actionType instanceof SiteAction)) {
-            return;
-        }
-
-        switch ((SiteAction) actionType) {
-            case FETCH_PROFILE_XML_RPC:
-                fetchProfileXmlRpc((SiteModel) action.getPayload());
-                break;
-            case FETCHED_PROFILE_XML_RPC:
-                updateSiteProfile((SiteModel) action.getPayload());
-                break;
-            case FETCH_SITE:
-                fetchSite((SiteModel) action.getPayload());
-                break;
-            case FETCH_SITES:
-                fetchSites((FetchSitesPayload) action.getPayload());
-                break;
-            case FETCHED_SITES:
-                handleFetchedSitesWPComRest((SitesModel) action.getPayload());
-                break;
-            case FETCH_SITES_XML_RPC:
-                fetchSitesXmlRpc((RefreshSitesXMLRPCPayload) action.getPayload());
-                break;
-            case FETCHED_SITES_XML_RPC:
-                updateSites((SitesModel) action.getPayload());
-                break;
-            case UPDATE_SITE:
-                updateSite((SiteModel) action.getPayload());
-                break;
-            case UPDATE_SITES:
-                updateSites((SitesModel) action.getPayload());
-                break;
-            case DELETE_SITE:
-                deleteSite((SiteModel) action.getPayload());
-                break;
-            case DELETED_SITE:
-                handleDeletedSite((DeleteSiteResponsePayload) action.getPayload());
-                break;
-            case EXPORT_SITE:
-                exportSite((SiteModel) action.getPayload());
-                break;
-            case EXPORTED_SITE:
-                handleExportedSite((ExportSiteResponsePayload) action.getPayload());
-                break;
-            case REMOVE_SITE:
-                removeSite((SiteModel) action.getPayload());
-                break;
-            case REMOVE_ALL_SITES:
-                removeAllSites();
-                break;
-            case REMOVE_WPCOM_AND_JETPACK_SITES:
-                removeWPComAndJetpackSites();
-                break;
-            case SHOW_SITES:
-                toggleSitesVisibility((SitesModel) action.getPayload(), true);
-                break;
-            case HIDE_SITES:
-                toggleSitesVisibility((SitesModel) action.getPayload(), false);
-                break;
-            case CREATE_NEW_SITE:
-                createNewSite((NewSitePayload) action.getPayload());
-                break;
-            case CREATED_NEW_SITE:
-                handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
-                break;
-            case FETCH_POST_FORMATS:
-                fetchPostFormats((SiteModel) action.getPayload());
-                break;
-            case FETCHED_POST_FORMATS:
-                updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
-                break;
-            case FETCH_SITE_EDITORS:
-                fetchSiteEditors((SiteModel) action.getPayload());
-                break;
-            case FETCH_BLOCK_LAYOUTS:
-                fetchBlockLayouts((FetchBlockLayoutsPayload) action.getPayload());
-                break;
-            case FETCHED_BLOCK_LAYOUTS:
-                handleFetchedBlockLayouts((FetchedBlockLayoutsResponsePayload) action.getPayload());
-                break;
-            case DESIGNATE_MOBILE_EDITOR:
-                designateMobileEditor((DesignateMobileEditorPayload) action.getPayload());
-                break;
-            case DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES:
-                designateMobileEditorForAllSites((DesignateMobileEditorForAllSitesPayload) action.getPayload());
-                break;
-            case FETCHED_SITE_EDITORS:
-                updateSiteEditors((FetchedEditorsPayload) action.getPayload());
-                break;
-            case DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES:
-                handleDesignatedMobileEditorForAllSites(
-                        (DesignateMobileEditorForAllSitesResponsePayload) action.getPayload());
-                break;
-            case FETCH_USER_ROLES:
-                fetchUserRoles((SiteModel) action.getPayload());
-                break;
-            case FETCHED_USER_ROLES:
-                updateUserRoles((FetchedUserRolesPayload) action.getPayload());
-                break;
-            case FETCH_CONNECT_SITE_INFO:
-                fetchConnectSiteInfo((String) action.getPayload());
-                break;
-            case FETCHED_CONNECT_SITE_INFO:
-                handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
-                break;
-            case FETCH_WPCOM_SITE_BY_URL:
-                fetchWPComSiteByUrl((String) action.getPayload());
-                break;
-            case FETCHED_WPCOM_SITE_BY_URL:
-                handleFetchedWPComSiteByUrl((FetchWPComSiteResponsePayload) action.getPayload());
-                break;
-            case IS_WPCOM_URL:
-                checkUrlIsWPCom((String) action.getPayload());
-                break;
-            case CHECKED_IS_WPCOM_URL:
-                handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
-                break;
-            case SUGGEST_DOMAINS:
-                suggestDomains((SuggestDomainsPayload) action.getPayload());
-                break;
-            case SUGGESTED_DOMAINS:
-                handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
-                break;
-            case FETCH_PLANS:
-                fetchPlans((SiteModel) action.getPayload());
-                break;
-            case FETCHED_PLANS:
-                handleFetchedPlans((FetchedPlansPayload) action.getPayload());
-                break;
-            case CHECK_DOMAIN_AVAILABILITY:
-                checkDomainAvailability((String) action.getPayload());
-                break;
-            case CHECKED_DOMAIN_AVAILABILITY:
-                handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
-                break;
-            case FETCH_DOMAIN_SUPPORTED_STATES:
-                fetchSupportedStates((String) action.getPayload());
-                break;
-            case FETCHED_DOMAIN_SUPPORTED_STATES:
-                handleFetchedSupportedStates((DomainSupportedStatesResponsePayload) action.getPayload());
-                break;
-            case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
-                mSiteRestClient.fetchSupportedCountries();
-                break;
-            case FETCHED_DOMAIN_SUPPORTED_COUNTRIES:
-                handleFetchedSupportedCountries((DomainSupportedCountriesResponsePayload) action.getPayload());
-                break;
-            // Automated Transfer
-            case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
-                checkAutomatedTransferEligibility((SiteModel) action.getPayload());
-                break;
-            case INITIATE_AUTOMATED_TRANSFER:
-                initiateAutomatedTransfer((InitiateAutomatedTransferPayload) action.getPayload());
-                break;
-            case CHECK_AUTOMATED_TRANSFER_STATUS:
-                checkAutomatedTransferStatus((SiteModel) action.getPayload());
-                break;
-            case CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY:
-                handleCheckedAutomatedTransferEligibility((AutomatedTransferEligibilityResponsePayload)
-                        action.getPayload());
-                break;
-            case INITIATED_AUTOMATED_TRANSFER:
-                handleInitiatedAutomatedTransfer((InitiateAutomatedTransferResponsePayload) action.getPayload());
-                break;
-            case CHECKED_AUTOMATED_TRANSFER_STATUS:
-                handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
-                break;
-            case COMPLETE_QUICK_START:
-                completeQuickStart((CompleteQuickStartPayload) action.getPayload());
-                break;
-            case COMPLETED_QUICK_START:
-                handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
-                break;
-            case DESIGNATE_PRIMARY_DOMAIN:
-                designatePrimaryDomain((DesignatePrimaryDomainPayload) action.getPayload());
-                break;
-            case DESIGNATED_PRIMARY_DOMAIN:
-                handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
-                break;
-            case FETCH_PRIVATE_ATOMIC_COOKIE:
-                fetchPrivateAtomicCookie((FetchPrivateAtomicCookiePayload) action.getPayload());
-                break;
-            case FETCHED_PRIVATE_ATOMIC_COOKIE:
-                handleFetchedPrivateAtomicCookie((FetchedPrivateAtomicCookiePayload) action.getPayload());
-                break;
-            case FETCH_JETPACK_CAPABILITIES:
-                fetchJetpackCapabilities((FetchJetpackCapabilitiesPayload) action.getPayload());
-                break;
-            case FETCHED_JETPACK_CAPABILITIES:
-                handleFetchedJetpackCapabilities((FetchedJetpackCapabilitiesPayload) action.getPayload());
+    @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
+        val actionType = action.type as? SiteAction ?: return
+        when (actionType) {
+            FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
+            FETCHED_PROFILE_XML_RPC -> updateSiteProfile(action.payload as SiteModel)
+            FETCH_SITE -> fetchSite(action.payload as SiteModel)
+            FETCH_SITES -> fetchSites(action.payload as FetchSitesPayload)
+            FETCHED_SITES -> handleFetchedSitesWPComRest(action.payload as SitesModel)
+            FETCH_SITES_XML_RPC -> fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload)
+            FETCHED_SITES_XML_RPC -> updateSites(action.payload as SitesModel)
+            UPDATE_SITE -> updateSite(action.payload as SiteModel)
+            UPDATE_SITES -> updateSites(action.payload as SitesModel)
+            DELETE_SITE -> deleteSite(action.payload as SiteModel)
+            DELETED_SITE -> handleDeletedSite(action.payload as DeleteSiteResponsePayload)
+            EXPORT_SITE -> exportSite(action.payload as SiteModel)
+            EXPORTED_SITE -> handleExportedSite(action.payload as ExportSiteResponsePayload)
+            REMOVE_SITE -> removeSite(action.payload as SiteModel)
+            REMOVE_ALL_SITES -> removeAllSites()
+            REMOVE_WPCOM_AND_JETPACK_SITES -> removeWPComAndJetpackSites()
+            SHOW_SITES -> toggleSitesVisibility(action.payload as SitesModel, true)
+            HIDE_SITES -> toggleSitesVisibility(action.payload as SitesModel, false)
+            CREATE_NEW_SITE -> createNewSite(action.payload as NewSitePayload)
+            CREATED_NEW_SITE -> handleCreateNewSiteCompleted(action.payload as NewSiteResponsePayload)
+            FETCH_POST_FORMATS -> fetchPostFormats(action.payload as SiteModel)
+            FETCHED_POST_FORMATS -> updatePostFormats(action.payload as FetchedPostFormatsPayload)
+            FETCH_SITE_EDITORS -> fetchSiteEditors(action.payload as SiteModel)
+            FETCH_BLOCK_LAYOUTS -> fetchBlockLayouts(action.payload as FetchBlockLayoutsPayload)
+            FETCHED_BLOCK_LAYOUTS -> handleFetchedBlockLayouts(action.payload as FetchedBlockLayoutsResponsePayload)
+            DESIGNATE_MOBILE_EDITOR -> designateMobileEditor(action.payload as DesignateMobileEditorPayload)
+            DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES -> designateMobileEditorForAllSites(action.payload as DesignateMobileEditorForAllSitesPayload)
+            FETCHED_SITE_EDITORS -> updateSiteEditors(action.payload as FetchedEditorsPayload)
+            DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES -> handleDesignatedMobileEditorForAllSites(
+                    action.payload as DesignateMobileEditorForAllSitesResponsePayload
+            )
+            FETCH_USER_ROLES -> fetchUserRoles(action.payload as SiteModel)
+            FETCHED_USER_ROLES -> updateUserRoles(action.payload as FetchedUserRolesPayload)
+            FETCH_CONNECT_SITE_INFO -> fetchConnectSiteInfo(action.payload as String)
+            FETCHED_CONNECT_SITE_INFO -> handleFetchedConnectSiteInfo(action.payload as ConnectSiteInfoPayload)
+            FETCH_WPCOM_SITE_BY_URL -> fetchWPComSiteByUrl(action.payload as String)
+            FETCHED_WPCOM_SITE_BY_URL -> handleFetchedWPComSiteByUrl(action.payload as FetchWPComSiteResponsePayload)
+            IS_WPCOM_URL -> checkUrlIsWPCom(action.payload as String)
+            CHECKED_IS_WPCOM_URL -> handleCheckedIsWPComUrl(action.payload as IsWPComResponsePayload)
+            SUGGEST_DOMAINS -> suggestDomains(action.payload as SuggestDomainsPayload)
+            SUGGESTED_DOMAINS -> handleSuggestedDomains(action.payload as SuggestDomainsResponsePayload)
+            FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
+            FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
+            CHECK_DOMAIN_AVAILABILITY -> checkDomainAvailability(action.payload as String)
+            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(action.payload as DomainAvailabilityResponsePayload)
+            FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
+            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(action.payload as DomainSupportedStatesResponsePayload)
+            FETCH_DOMAIN_SUPPORTED_COUNTRIES -> mSiteRestClient.fetchSupportedCountries()
+            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(action.payload as DomainSupportedCountriesResponsePayload)
+            CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
+            INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
+            CHECK_AUTOMATED_TRANSFER_STATUS -> checkAutomatedTransferStatus(action.payload as SiteModel)
+            CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY -> handleCheckedAutomatedTransferEligibility(action.payload as AutomatedTransferEligibilityResponsePayload)
+            INITIATED_AUTOMATED_TRANSFER -> handleInitiatedAutomatedTransfer(action.payload as InitiateAutomatedTransferResponsePayload)
+            CHECKED_AUTOMATED_TRANSFER_STATUS -> handleCheckedAutomatedTransferStatus(action.payload as AutomatedTransferStatusResponsePayload)
+            COMPLETE_QUICK_START -> completeQuickStart(action.payload as CompleteQuickStartPayload)
+            COMPLETED_QUICK_START -> handleQuickStartCompleted(action.payload as QuickStartCompletedResponsePayload)
+            DESIGNATE_PRIMARY_DOMAIN -> designatePrimaryDomain(action.payload as DesignatePrimaryDomainPayload)
+            DESIGNATED_PRIMARY_DOMAIN -> handleDesignatedPrimaryDomain(action.payload as DesignatedPrimaryDomainPayload)
+            FETCH_PRIVATE_ATOMIC_COOKIE -> fetchPrivateAtomicCookie(action.payload as FetchPrivateAtomicCookiePayload)
+            FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(action.payload as FetchedPrivateAtomicCookiePayload)
+            FETCH_JETPACK_CAPABILITIES -> fetchJetpackCapabilities(action.payload as FetchJetpackCapabilitiesPayload)
+            FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(action.payload as FetchedJetpackCapabilitiesPayload)
         }
     }
 
-    private void fetchProfileXmlRpc(SiteModel site) {
-        mSiteXMLRPCClient.fetchProfile(site);
+    private fun fetchProfileXmlRpc(site: SiteModel) {
+        mSiteXMLRPCClient.fetchProfile(site)
     }
 
-    private void fetchSite(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchSite(site);
+    private fun fetchSite(site: SiteModel) {
+        if (site.isUsingWpComRestApi) {
+            mSiteRestClient.fetchSite(site)
         } else {
-            mSiteXMLRPCClient.fetchSite(site);
+            mSiteXMLRPCClient.fetchSite(site)
         }
     }
 
-    private void fetchSites(FetchSitesPayload payload) {
-        mSiteRestClient.fetchSites(payload.getFilters());
+    private fun fetchSites(payload: FetchSitesPayload) {
+        mSiteRestClient.fetchSites(payload.filters)
     }
 
-    private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
-        mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password);
+    private fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload) {
+        mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password)
     }
 
-    private void updateSiteProfile(SiteModel siteModel) {
-        OnProfileFetched event = new OnProfileFetched(siteModel);
-        if (siteModel.isError()) {
+    private fun updateSiteProfile(siteModel: SiteModel) {
+        val event = OnProfileFetched(siteModel)
+        if (siteModel.isError) {
             // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
+            event.error = SiteErrorUtils.genericToSiteError(siteModel.error)
         } else {
             try {
-                SiteSqlUtils.insertOrUpdateSite(siteModel);
-            } catch (DuplicateSiteException e) {
-                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+                SiteSqlUtils.insertOrUpdateSite(siteModel)
+            } catch (e: DuplicateSiteException) {
+                event.error = SiteError(DUPLICATE_SITE)
             }
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void updateSite(SiteModel siteModel) {
-        OnSiteChanged event = new OnSiteChanged(0);
-        if (siteModel.isError()) {
+    private fun updateSite(siteModel: SiteModel) {
+        val event = if (siteModel.isError) {
             // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
+            OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
             try {
                 // The REST API doesn't return info about the editor(s). Make sure to copy current values
                 // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
-                SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
+                val freshSiteFromDB = getSiteByLocalId(siteModel.id)
                 if (freshSiteFromDB != null) {
-                    siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
-                    siteModel.setWebEditor(freshSiteFromDB.getWebEditor());
+                    siteModel.mobileEditor = freshSiteFromDB.mobileEditor
+                    siteModel.webEditor = freshSiteFromDB.webEditor
                 }
-                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
-            } catch (DuplicateSiteException e) {
-                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+                OnSiteChanged(SiteSqlUtils.insertOrUpdateSite(siteModel))
+            } catch (e: DuplicateSiteException) {
+                OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void updateSites(SitesModel sitesModel) {
-        OnSiteChanged event = new OnSiteChanged(0);
-        if (sitesModel.isError()) {
+    private fun updateSites(sitesModel: SitesModel) {
+        val event = if (sitesModel.isError) {
             // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(sitesModel.error);
+            OnSiteChanged(SiteErrorUtils.genericToSiteError(sitesModel.error))
         } else {
-            UpdateSitesResult res = createOrUpdateSites(sitesModel);
-            event.rowsAffected = res.rowsAffected;
+            val res = createOrUpdateSites(sitesModel)
             if (res.duplicateSiteFound) {
-                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+                OnSiteChanged(res.rowsAffected, SiteError(DUPLICATE_SITE))
+            } else {
+                OnSiteChanged(res.rowsAffected)
             }
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void handleFetchedSitesWPComRest(SitesModel fetchedSites) {
-        OnSiteChanged event = new OnSiteChanged(0);
-        if (fetchedSites.isError()) {
+    private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel) {
+        val event = if (fetchedSites.isError) {
             // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(fetchedSites.error);
+            OnSiteChanged(SiteErrorUtils.genericToSiteError(fetchedSites.error))
         } else {
-            UpdateSitesResult res = createOrUpdateSites(fetchedSites);
-            event.rowsAffected = res.rowsAffected;
-            if (res.duplicateSiteFound) {
-                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            val res = createOrUpdateSites(fetchedSites)
+            val result = if (res.duplicateSiteFound) {
+                OnSiteChanged(res.rowsAffected, SiteError(DUPLICATE_SITE))
+            } else {
+                OnSiteChanged(res.rowsAffected)
             }
-            SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, fetchedSites.getSites());
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, fetchedSites.sites)
+            result
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private UpdateSitesResult createOrUpdateSites(SitesModel sites) {
-        UpdateSitesResult result = new UpdateSitesResult();
-        for (SiteModel site : sites.getSites()) {
+    private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
+        var rowsAffected = 0
+        var duplicateSiteFound = false
+        for (site in sites.sites) {
             try {
                 // The REST API doesn't return info about the editor(s). Make sure to copy current values
                 // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
-                SiteModel siteFromDB = getSiteBySiteId(site.getSiteId());
+                val siteFromDB = getSiteBySiteId(site.siteId)
                 if (siteFromDB != null) {
-                    site.setMobileEditor(siteFromDB.getMobileEditor());
-                    site.setWebEditor(siteFromDB.getWebEditor());
+                    site.mobileEditor = siteFromDB.mobileEditor
+                    site.webEditor = siteFromDB.webEditor
                 }
-                result.rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
-            } catch (DuplicateSiteException caughtException) {
-                result.duplicateSiteFound = true;
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+            } catch (caughtException: DuplicateSiteException) {
+                duplicateSiteFound = true
             }
         }
-        return result;
+        return UpdateSitesResult(rowsAffected, duplicateSiteFound)
     }
 
-    private void deleteSite(SiteModel site) {
+    private fun deleteSite(site: SiteModel) {
         // Not available for Jetpack sites
-        if (!site.isWPCom()) {
-            OnSiteDeleted event = new OnSiteDeleted(new DeleteSiteError(DeleteSiteErrorType.INVALID_SITE));
-            emitChange(event);
-            return;
+        if (!site.isWPCom) {
+            val event = OnSiteDeleted(DeleteSiteError(INVALID_SITE))
+            emitChange(event)
+            return
         }
-        mSiteRestClient.deleteSite(site);
+        mSiteRestClient.deleteSite(site)
     }
 
-    private void handleDeletedSite(DeleteSiteResponsePayload payload) {
-        OnSiteDeleted event = new OnSiteDeleted(payload.error);
-        if (!payload.isError()) {
-            SiteSqlUtils.deleteSite(payload.site);
+    private fun handleDeletedSite(payload: DeleteSiteResponsePayload) {
+        val event = OnSiteDeleted(payload.error)
+        if (!payload.isError) {
+            SiteSqlUtils.deleteSite(payload.site)
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void exportSite(SiteModel site) {
+    private fun exportSite(site: SiteModel) {
         // Not available for Jetpack sites
-        if (!site.isWPCom()) {
-            OnSiteExported event = new OnSiteExported();
-            event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
-            emitChange(event);
-            return;
+        if (!site.isWPCom) {
+            emitChange(OnSiteExported(ExportSiteError(ExportSiteErrorType.INVALID_SITE)))
+            return
         }
-        mSiteRestClient.exportSite(site);
+        mSiteRestClient.exportSite(site)
     }
 
-    private void handleExportedSite(ExportSiteResponsePayload payload) {
-        OnSiteExported event = new OnSiteExported();
-        if (payload.isError()) {
+    private fun handleExportedSite(payload: ExportSiteResponsePayload) {
+        val event = if (payload.isError) {
             // TODO: what kind of error could we get here?
-            event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
+            OnSiteExported(ExportSiteError(GENERIC_ERROR))
+        } else {
+            OnSiteExported()
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void removeSite(SiteModel site) {
-        int rowsAffected = SiteSqlUtils.deleteSite(site);
-        emitChange(new OnSiteRemoved(rowsAffected));
+    private fun removeSite(site: SiteModel) {
+        val rowsAffected = SiteSqlUtils.deleteSite(site)
+        emitChange(OnSiteRemoved(rowsAffected))
     }
 
-    private void removeAllSites() {
-        int rowsAffected = SiteSqlUtils.deleteAllSites();
-        OnAllSitesRemoved event = new OnAllSitesRemoved(rowsAffected);
-        emitChange(event);
+    private fun removeAllSites() {
+        val rowsAffected = SiteSqlUtils.deleteAllSites()
+        val event = OnAllSitesRemoved(rowsAffected)
+        emitChange(event)
     }
 
-    private void removeWPComAndJetpackSites() {
+    private fun removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
-        int rowsAffected = removeSites(wpcomAndJetpackSites);
-        emitChange(new OnSiteRemoved(rowsAffected));
+        val wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
+        val rowsAffected = removeSites(wpcomAndJetpackSites)
+        emitChange(OnSiteRemoved(rowsAffected))
     }
 
-    private int toggleSitesVisibility(SitesModel sites, boolean visible) {
-        int rowsAffected = 0;
-        for (SiteModel site : sites.getSites()) {
-            rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
+    private fun toggleSitesVisibility(sites: SitesModel, visible: Boolean): Int {
+        var rowsAffected = 0
+        for (site in sites.sites) {
+            rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible)
         }
-        return rowsAffected;
+        return rowsAffected
     }
 
-    private void createNewSite(NewSitePayload payload) {
-        mSiteRestClient.newSite(payload.siteName, payload.language, payload.visibility,
-                payload.segmentId, payload.siteDesign, payload.dryRun);
+    private fun createNewSite(payload: NewSitePayload) {
+        mSiteRestClient.newSite(
+                payload.siteName, payload.language, payload.visibility,
+                payload.segmentId, payload.siteDesign, payload.dryRun
+        )
     }
 
-    private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
-        OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
-        onNewSiteCreated.error = payload.error;
-        onNewSiteCreated.dryRun = payload.dryRun;
-        onNewSiteCreated.newSiteRemoteId = payload.newSiteRemoteId;
-        emitChange(onNewSiteCreated);
+    private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload) {
+        emitChange(OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error))
     }
 
-    private void fetchPostFormats(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchPostFormats(site);
+    private fun fetchPostFormats(site: SiteModel) {
+        if (site.isUsingWpComRestApi) {
+            mSiteRestClient.fetchPostFormats(site)
         } else {
-            mSiteXMLRPCClient.fetchPostFormats(site);
+            mSiteXMLRPCClient.fetchPostFormats(site)
         }
     }
 
-    private void updatePostFormats(FetchedPostFormatsPayload payload) {
-        OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
-        if (payload.isError()) {
-            event.error = payload.error;
+    private fun updatePostFormats(payload: FetchedPostFormatsPayload) {
+        val event = OnPostFormatsChanged(payload.site)
+        if (payload.isError) {
+            event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void fetchSiteEditors(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchSiteEditors(site);
+    private fun fetchSiteEditors(site: SiteModel) {
+        if (site.isUsingWpComRestApi) {
+            mSiteRestClient.fetchSiteEditors(site)
         }
     }
 
-    private void fetchBlockLayouts(FetchBlockLayoutsPayload payload) {
-        if (payload.preferCache != null && payload.preferCache && cachedLayoutsRetrieved(payload.site)) return;
-        if (payload.site.isUsingWpComRestApi()) {
+    private fun fetchBlockLayouts(payload: FetchBlockLayoutsPayload) {
+        if (payload.preferCache == true && cachedLayoutsRetrieved(payload.site)) return
+        if (payload.site.isUsingWpComRestApi) {
             mSiteRestClient
-                    .fetchWpComBlockLayouts(payload.site, payload.supportedBlocks,
-                            payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta);
+                    .fetchWpComBlockLayouts(
+                            payload.site, payload.supportedBlocks,
+                            payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta
+                    )
         } else {
-            mSiteRestClient.fetchSelfHostedBlockLayouts(payload.site, payload.supportedBlocks,
-                    payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta);
+            mSiteRestClient.fetchSelfHostedBlockLayouts(
+                    payload.site, payload.supportedBlocks,
+                    payload.previewWidth, payload.previewHeight, payload.scale, payload.isBeta
+            )
         }
     }
 
-    private void designateMobileEditor(DesignateMobileEditorPayload payload) {
+    private fun designateMobileEditor(payload: DesignateMobileEditorPayload) {
         // wpcom sites sync the new value with the backend
-        if (payload.site.isUsingWpComRestApi()) {
-            mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
+        if (payload.site.isUsingWpComRestApi) {
+            mSiteRestClient.designateMobileEditor(payload.site, payload.editor)
         }
 
         // Update the editor pref on the DB, and emit the change immediately
-        SiteModel site = payload.site;
-        site.setMobileEditor(payload.editor);
-        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
-        try {
-            event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
-        } catch (Exception e) {
-            event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+        val site = payload.site
+        site.mobileEditor = payload.editor
+        val event = try {
+            OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+        } catch (e: Exception) {
+            OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void designateMobileEditorForAllSites(DesignateMobileEditorForAllSitesPayload payload) {
-        int rowsAffected = 0;
-        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
-        boolean wpcomPostRequestRequired = false;
-        for (SiteModel site : getSites()) {
-            site.setMobileEditor(payload.editor);
-            if (!wpcomPostRequestRequired && site.isUsingWpComRestApi()) {
-                wpcomPostRequestRequired = true;
+    private fun designateMobileEditorForAllSites(payload: DesignateMobileEditorForAllSitesPayload) {
+        var rowsAffected = 0
+        var wpcomPostRequestRequired = false
+        var error: SiteEditorsError? = null
+        for (site in sites) {
+            site.mobileEditor = payload.editor
+            if (!wpcomPostRequestRequired && site.isUsingWpComRestApi) {
+                wpcomPostRequestRequired = true
             }
             try {
-                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
-            } catch (Exception e) {
-                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+            } catch (e: Exception) {
+                error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
             }
         }
-
-        if (wpcomPostRequestRequired) {
-            mSiteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty);
-            event.isNetworkResponse = false;
+        val isNetworkResponse = if (wpcomPostRequestRequired) {
+            mSiteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty)
+            false
         } else {
-            event.isNetworkResponse = true;
+            true
         }
 
-        event.rowsAffected = rowsAffected;
-        emitChange(event);
+        emitChange(OnAllSitesMobileEditorChanged(rowsAffected, isNetworkResponse, error))
     }
 
-    private void updateSiteEditors(FetchedEditorsPayload payload) {
-        SiteModel site = payload.site;
-        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
-        if (payload.isError()) {
-            event.error = payload.error;
+    private fun updateSiteEditors(payload: FetchedEditorsPayload) {
+        val site = payload.site
+        val event = if (payload.isError) {
+            OnSiteEditorsChanged(site, payload.error ?: SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
         } else {
-            site.setMobileEditor(payload.mobileEditor);
-            site.setWebEditor(payload.webEditor);
+            site.mobileEditor = payload.mobileEditor
+            site.webEditor = payload.webEditor
             try {
-                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
-            } catch (Exception e) {
-                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+            } catch (e: Exception) {
+                OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
             }
         }
-
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void handleDesignatedMobileEditorForAllSites(DesignateMobileEditorForAllSitesResponsePayload payload) {
-        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
-        if (payload.isError()) {
-            event.error = payload.error;
+    private fun handleDesignatedMobileEditorForAllSites(payload: DesignateMobileEditorForAllSitesResponsePayload) {
+        val event = if (payload.isError) {
+            OnAllSitesMobileEditorChanged(siteEditorsError = payload.error)
         } else {
+            var rowsAffected = 0
+            var error: SiteEditorsError? = null
             // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
-            for (Map.Entry<String, String> entry : payload.editors.entrySet()) {
-                SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
-
+            for ((key, value) in payload.editors) {
+                val currentModel = getSiteBySiteId(key.toLong())
                 if (currentModel == null) {
                     // this could happen when a site was added to the current account with another app, or on the web
-                    AppLog.e(T.API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
-                                    + "the following siteID " + entry.getKey() + " but there is no site with that "
-                                    + "remote ID in SiteStore.");
-                    continue;
+                    AppLog.e(
+                            API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
+                            + "the following siteID " + key + " but there is no site with that "
+                            + "remote ID in SiteStore."
+                    )
+                    continue
                 }
-
-                if (currentModel.getMobileEditor() == null
-                    || !currentModel.getMobileEditor().equals(entry.getValue())) {
+                if (currentModel.mobileEditor == null
+                        || currentModel.mobileEditor != value) {
                     // the current editor is either null or != from the value on the server. Update it
-                    currentModel.setMobileEditor(entry.getValue());
+                    currentModel.mobileEditor = value
                     try {
-                        event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
-                    } catch (Exception e) {
-                        event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                        rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel)
+                    } catch (e: Exception) {
+                        error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
                     }
                 }
             }
+            OnAllSitesMobileEditorChanged(rowsAffected, true, error)
         }
-        event.isNetworkResponse = true;
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void fetchUserRoles(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchUserRoles(site);
+    private fun fetchUserRoles(site: SiteModel) {
+        if (site.isUsingWpComRestApi) {
+            mSiteRestClient.fetchUserRoles(site)
         }
     }
 
-    private void updateUserRoles(FetchedUserRolesPayload payload) {
-        OnUserRolesChanged event = new OnUserRolesChanged(payload.site);
-        if (payload.isError()) {
-            event.error = payload.error;
+    private fun updateUserRoles(payload: FetchedUserRolesPayload) {
+        val event = OnUserRolesChanged(payload.site)
+        if (payload.isError) {
+            event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles);
+            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles)
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private int removeSites(List<SiteModel> sites) {
-        int rowsAffected = 0;
-        for (SiteModel site : sites) {
-            rowsAffected += SiteSqlUtils.deleteSite(site);
+    private fun removeSites(sites: List<SiteModel>): Int {
+        var rowsAffected = 0
+        for (site in sites) {
+            rowsAffected += SiteSqlUtils.deleteSite(site)
         }
-        return rowsAffected;
+        return rowsAffected
     }
 
-    private void fetchConnectSiteInfo(String payload) {
-        mSiteRestClient.fetchConnectSiteInfo(payload);
+    private fun fetchConnectSiteInfo(payload: String) {
+        mSiteRestClient.fetchConnectSiteInfo(payload)
     }
 
-    private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
-        OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
-        event.error = payload.error;
-        emitChange(event);
+    private fun handleFetchedConnectSiteInfo(payload: ConnectSiteInfoPayload) {
+        val event = OnConnectSiteInfoChecked(payload)
+        event.error = payload.error
+        emitChange(event)
     }
 
-    private void fetchWPComSiteByUrl(String payload) {
-        mSiteRestClient.fetchWPComSiteByUrl(payload);
+    private fun fetchWPComSiteByUrl(payload: String) {
+        mSiteRestClient.fetchWPComSiteByUrl(payload)
     }
 
-    private void handleFetchedWPComSiteByUrl(FetchWPComSiteResponsePayload payload) {
-        OnWPComSiteFetched event = new OnWPComSiteFetched(payload.checkedUrl, payload.site);
-        event.error = payload.error;
-        emitChange(event);
+    private fun handleFetchedWPComSiteByUrl(payload: FetchWPComSiteResponsePayload) {
+        val event = OnWPComSiteFetched(payload.checkedUrl, payload.site)
+        event.error = payload.error
+        emitChange(event)
     }
 
-    private void checkUrlIsWPCom(String payload) {
-        mSiteRestClient.checkUrlIsWPCom(payload);
+    private fun checkUrlIsWPCom(payload: String) {
+        mSiteRestClient.checkUrlIsWPCom(payload)
     }
 
-    private void handleCheckedIsWPComUrl(IsWPComResponsePayload payload) {
-        OnURLChecked event = new OnURLChecked(payload.url);
-        if (payload.isError()) {
+    private fun handleCheckedIsWPComUrl(payload: IsWPComResponsePayload) {
+        val error = if (payload.isError) {
             // Return invalid site for all errors (this endpoint seems a bit drunk).
             // Client likely needs to know if there was an error or not.
-            event.error = new SiteError(SiteErrorType.INVALID_SITE);
+            SiteError(SiteErrorType.INVALID_SITE)
+        } else {
+            null
         }
-        event.isWPCom = payload.isWPCom;
-        emitChange(event);
+        emitChange(OnURLChecked(payload.url, payload.isWPCom, error))
     }
 
-    private void suggestDomains(SuggestDomainsPayload payload) {
-        mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
+    private fun suggestDomains(payload: SuggestDomainsPayload) {
+        mSiteRestClient.suggestDomains(
+                payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
                 payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
-                payload.tlds);
+                payload.tlds
+        )
     }
 
-    private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
-        OnSuggestedDomains event = new OnSuggestedDomains(payload.query, payload.suggestions);
-        if (payload.isError()) {
-            event.error = payload.error;
+    private fun handleSuggestedDomains(payload: SuggestDomainsResponsePayload) {
+        val event = OnSuggestedDomains(payload.query, payload.suggestions)
+        if (payload.isError) {
+            event.error = payload.error
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void fetchPrivateAtomicCookie(FetchPrivateAtomicCookiePayload payload) {
-        SiteModel site = getSiteBySiteId(payload.siteId);
-
+    private fun fetchPrivateAtomicCookie(payload: FetchPrivateAtomicCookiePayload) {
+        val site = getSiteBySiteId(payload.siteId)
         if (site == null) {
-            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
-                    AccessCookieErrorType.SITE_MISSING_FROM_STORE,
-                    "Requested site is missing from the store.");
-            emitChange(new OnPrivateAtomicCookieFetched(null, false, cookieError));
-            return;
+            val cookieError = PrivateAtomicCookieError(
+                    SITE_MISSING_FROM_STORE,
+                    "Requested site is missing from the store."
+            )
+            emitChange(OnPrivateAtomicCookieFetched(null, false, cookieError))
+            return
         }
-
-        if (!site.isPrivateWPComAtomic()) {
-            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
-                    AccessCookieErrorType.NON_PRIVATE_AT_SITE,
-                    "Cookie can only be requested for private atomic site.");
-            emitChange(new OnPrivateAtomicCookieFetched(site, false, cookieError));
-            return;
+        if (!site.isPrivateWPComAtomic) {
+            val cookieError = PrivateAtomicCookieError(
+                    NON_PRIVATE_AT_SITE,
+                    "Cookie can only be requested for private atomic site."
+            )
+            emitChange(OnPrivateAtomicCookieFetched(site, false, cookieError))
+            return
         }
-
-        mSiteRestClient.fetchAccessCookie(site);
+        mSiteRestClient.fetchAccessCookie(site)
     }
 
-    private void handleFetchedPrivateAtomicCookie(FetchedPrivateAtomicCookiePayload payload) {
-        if (payload.cookie == null || payload.cookie.getCookies().isEmpty()) {
-            emitChange(new OnPrivateAtomicCookieFetched(payload.site, false,
-                    new PrivateAtomicCookieError(AccessCookieErrorType.INVALID_RESPONSE,
-                            "Cookie is missing from response.")));
-             mPrivateAtomicCookie.set(null);
-            return;
+    private fun handleFetchedPrivateAtomicCookie(payload: FetchedPrivateAtomicCookiePayload) {
+        if (payload.cookie == null || payload.cookie.cookies.isEmpty()) {
+            emitChange(
+                    OnPrivateAtomicCookieFetched(
+                            payload.site, false,
+                            PrivateAtomicCookieError(
+                                    INVALID_RESPONSE,
+                                    "Cookie is missing from response."
+                            )
+                    )
+            )
+            mPrivateAtomicCookie.set(null)
+            return
         }
-
-        AtomicCookie siteCookie = payload.cookie.getCookies().get(0);
-        mPrivateAtomicCookie.set(siteCookie);
-        emitChange(new OnPrivateAtomicCookieFetched(payload.site, true, payload.error));
+        mPrivateAtomicCookie.set(payload.cookie.cookies[0])
+        emitChange(OnPrivateAtomicCookieFetched(payload.site, true, payload.error))
     }
 
-    private void fetchJetpackCapabilities(FetchJetpackCapabilitiesPayload payload) {
-        mSiteRestClient.fetchJetpackCapabilities(payload.remoteSiteId);
+    private fun fetchJetpackCapabilities(payload: FetchJetpackCapabilitiesPayload) {
+        mSiteRestClient.fetchJetpackCapabilities(payload.remoteSiteId)
     }
 
-    private void handleFetchedJetpackCapabilities(FetchedJetpackCapabilitiesPayload payload) {
-        emitChange(new OnJetpackCapabilitiesFetched(payload.remoteSiteId, payload.capabilities, payload.error));
+    private fun handleFetchedJetpackCapabilities(payload: FetchedJetpackCapabilitiesPayload) {
+        emitChange(OnJetpackCapabilitiesFetched(payload.remoteSiteId, payload.capabilities, payload.error))
     }
 
-    private void fetchPlans(SiteModel siteModel) {
-        if (siteModel.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchPlans(siteModel);
+    private fun fetchPlans(siteModel: SiteModel) {
+        if (siteModel.isUsingWpComRestApi) {
+            mSiteRestClient.fetchPlans(siteModel)
         } else {
-            PlansError plansError = new PlansError(PlansErrorType.NOT_AVAILABLE);
-            handleFetchedPlans(new FetchedPlansPayload(siteModel, plansError));
+            val plansError = PlansError(NOT_AVAILABLE)
+            handleFetchedPlans(FetchedPlansPayload(siteModel, plansError))
         }
     }
 
-    private void handleFetchedPlans(FetchedPlansPayload payload) {
-        emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
+    private fun handleFetchedPlans(payload: FetchedPlansPayload) {
+        emitChange(OnPlansFetched(payload.site, payload.plans, payload.error))
     }
 
-    private void checkDomainAvailability(String domainName) {
+    private fun checkDomainAvailability(domainName: String) {
         if (TextUtils.isEmpty(domainName)) {
-            DomainAvailabilityError error =
-                    new DomainAvailabilityError(DomainAvailabilityErrorType.INVALID_DOMAIN_NAME);
-            handleCheckedDomainAvailability(new DomainAvailabilityResponsePayload(error));
+            val error = DomainAvailabilityError(INVALID_DOMAIN_NAME)
+            handleCheckedDomainAvailability(DomainAvailabilityResponsePayload(error))
         } else {
-            mSiteRestClient.checkDomainAvailability(domainName);
+            mSiteRestClient.checkDomainAvailability(domainName)
         }
     }
 
-    private void handleCheckedDomainAvailability(DomainAvailabilityResponsePayload payload) {
+    private fun handleCheckedDomainAvailability(payload: DomainAvailabilityResponsePayload) {
         emitChange(
-                new OnDomainAvailabilityChecked(
+                OnDomainAvailabilityChecked(
                         payload.status,
                         payload.mappable,
                         payload.supportsPrivacy,
-                        payload.error));
+                        payload.error
+                )
+        )
     }
 
-    private void fetchSupportedStates(String countryCode) {
+    private fun fetchSupportedStates(countryCode: String) {
         if (TextUtils.isEmpty(countryCode)) {
-            DomainSupportedStatesError error =
-                    new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
-            handleFetchedSupportedStates(new DomainSupportedStatesResponsePayload(error));
+            val error = DomainSupportedStatesError(INVALID_COUNTRY_CODE)
+            handleFetchedSupportedStates(DomainSupportedStatesResponsePayload(error))
         } else {
-            mSiteRestClient.fetchSupportedStates(countryCode);
+            mSiteRestClient.fetchSupportedStates(countryCode)
         }
     }
 
-    private void handleFetchedSupportedStates(DomainSupportedStatesResponsePayload payload) {
-        emitChange(new OnDomainSupportedStatesFetched(payload.supportedStates, payload.error));
+    private fun handleFetchedSupportedStates(payload: DomainSupportedStatesResponsePayload) {
+        emitChange(OnDomainSupportedStatesFetched(payload.supportedStates, payload.error))
     }
 
-    private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
-        emitChange(new OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error));
+    private fun handleFetchedSupportedCountries(payload: DomainSupportedCountriesResponsePayload) {
+        emitChange(OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error))
     }
 
-    private void handleFetchedBlockLayouts(FetchedBlockLayoutsResponsePayload payload) {
-        if (payload.isError()) {
+    private fun handleFetchedBlockLayouts(payload: FetchedBlockLayoutsResponsePayload) {
+        if (payload.isError) {
             // Return cached layouts on error
             if (!cachedLayoutsRetrieved(payload.site)) {
-                emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+                emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
             }
         } else {
-            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories, payload.layouts);
-            emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories!!, payload.layouts!!)
+            emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
         }
     }
 
@@ -2272,69 +1720,74 @@ public class SiteStore extends Store {
      * @param site the site for which the cached layouts should be retrieved
      * @return true if cached layouts were retrieved successfully
      */
-    private boolean cachedLayoutsRetrieved(SiteModel site) {
-        List<GutenbergLayout> layouts = SiteSqlUtils.getBlockLayouts(site);
-        List<GutenbergLayoutCategory> categories = SiteSqlUtils.getBlockLayoutCategories(site);
+    private fun cachedLayoutsRetrieved(site: SiteModel): Boolean {
+        val layouts = SiteSqlUtils.getBlockLayouts(site)
+        val categories = SiteSqlUtils.getBlockLayoutCategories(site)
         if (!layouts.isEmpty() && !categories.isEmpty()) {
-            emitChange(new OnBlockLayoutsFetched(layouts, categories, null));
-            return true;
+            emitChange(OnBlockLayoutsFetched(layouts, categories, null))
+            return true
         }
-        return false;
+        return false
     }
 
     // Automated Transfers
-
-    private void checkAutomatedTransferEligibility(SiteModel site) {
-        mSiteRestClient.checkAutomatedTransferEligibility(site);
+    private fun checkAutomatedTransferEligibility(site: SiteModel) {
+        mSiteRestClient.checkAutomatedTransferEligibility(site)
     }
 
-    private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
-        emitChange(new OnAutomatedTransferEligibilityChecked(payload.site, payload.isEligible, payload.errorCodes,
-                payload.error));
+    private fun handleCheckedAutomatedTransferEligibility(payload: AutomatedTransferEligibilityResponsePayload) {
+        emitChange(
+                OnAutomatedTransferEligibilityChecked(
+                        payload.site, payload.isEligible, payload.errorCodes,
+                        payload.error
+                )
+        )
     }
 
-    private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
-        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
+    private fun initiateAutomatedTransfer(payload: InitiateAutomatedTransferPayload) {
+        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall)
     }
 
-    private void handleInitiatedAutomatedTransfer(InitiateAutomatedTransferResponsePayload payload) {
-        emitChange(new OnAutomatedTransferInitiated(payload.site, payload.pluginSlugToInstall, payload.error));
+    private fun handleInitiatedAutomatedTransfer(payload: InitiateAutomatedTransferResponsePayload) {
+        emitChange(OnAutomatedTransferInitiated(payload.site, payload.pluginSlugToInstall, payload.error))
     }
 
-    private void checkAutomatedTransferStatus(SiteModel site) {
-        mSiteRestClient.checkAutomatedTransferStatus(site);
+    private fun checkAutomatedTransferStatus(site: SiteModel) {
+        mSiteRestClient.checkAutomatedTransferStatus(site)
     }
 
-    private void handleCheckedAutomatedTransferStatus(AutomatedTransferStatusResponsePayload payload) {
-        OnAutomatedTransferStatusChecked event;
-        if (!payload.isError()) {
+    private fun handleCheckedAutomatedTransferStatus(payload: AutomatedTransferStatusResponsePayload) {
+        val event: OnAutomatedTransferStatusChecked
+        event = if (!payload.isError) {
             // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
-            boolean isTransferCompleted = payload.status.equalsIgnoreCase("complete");
-            event = new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.currentStep,
-                    payload.totalSteps);
+            val isTransferCompleted = payload.status.equals("complete", ignoreCase = true)
+            OnAutomatedTransferStatusChecked(
+                    payload.site, isTransferCompleted, payload.currentStep,
+                    payload.totalSteps
+            )
         } else {
-            event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
+            OnAutomatedTransferStatusChecked(payload.site, payload.error)
         }
-        emitChange(event);
+        emitChange(event)
     }
 
-    private void completeQuickStart(@NonNull CompleteQuickStartPayload payload) {
-        mSiteRestClient.completeQuickStart(payload.site, payload.variant);
+    private fun completeQuickStart(payload: CompleteQuickStartPayload) {
+        mSiteRestClient.completeQuickStart(payload.site, payload.variant)
     }
 
-    private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
-        OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
-        event.error = payload.error;
-        emitChange(event);
+    private fun handleQuickStartCompleted(payload: QuickStartCompletedResponsePayload) {
+        val event = OnQuickStartCompleted(payload.site, payload.success)
+        event.error = payload.error
+        emitChange(event)
     }
 
-    private void designatePrimaryDomain(@NonNull DesignatePrimaryDomainPayload payload) {
-        mSiteRestClient.designatePrimaryDomain(payload.site, payload.domain);
+    private fun designatePrimaryDomain(payload: DesignatePrimaryDomainPayload) {
+        mSiteRestClient.designatePrimaryDomain(payload.site, payload.domain)
     }
 
-    private void handleDesignatedPrimaryDomain(@NonNull DesignatedPrimaryDomainPayload payload) {
-        OnPrimaryDomainDesignated event = new OnPrimaryDomainDesignated(payload.site, payload.success);
-        event.error = payload.error;
-        emitChange(event);
+    private fun handleDesignatedPrimaryDomain(payload: DesignatedPrimaryDomainPayload) {
+        val event = OnPrimaryDomainDesignated(payload.site, payload.success)
+        event.error = payload.error
+        emitChange(event)
     }
 }
