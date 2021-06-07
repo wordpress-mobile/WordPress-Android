@@ -21,6 +21,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
@@ -48,7 +49,8 @@ class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val supportHelper: SupportHelper,
-    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
@@ -134,7 +136,8 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper
+                        zendeskPlanFieldHelper,
+                        buildConfigWrapper
                     )
                 )
         }
@@ -165,7 +168,8 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper
+                        zendeskPlanFieldHelper,
+                        buildConfigWrapper
                     )
                 )
         }
@@ -335,19 +339,21 @@ class ZendeskHelper(
 /**
  * This is a helper function which builds a `UiConfig` through helpers to be used during ticket creation.
  */
+@Suppress("LongParameterList")
 private fun buildZendeskConfig(
     context: Context,
     allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
+    buildConfigWrapper: BuildConfigWrapper
 ): Configuration {
     val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
-            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
+            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper, buildConfigWrapper)
         )
         .withRequestSubject(ticketSubject)
         .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
@@ -362,12 +368,19 @@ private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
     selectedSite: SiteModel?,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
+    buildConfigWrapper: BuildConfigWrapper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
     } else {
         "not_selected"
+    }
+
+    val sourcePlatform = if (buildConfigWrapper.isJetpackApp) {
+        ZendeskConstants.jp_sourcePlatform
+    } else {
+        ZendeskConstants.wp_sourcePlatform
     }
 
     val customFields = arrayListOf(
@@ -378,7 +391,7 @@ private fun buildZendeskCustomFields(
         CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
         CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
         CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
-        CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
+        CustomField(TicketFieldIds.sourcePlatform, sourcePlatform)
     )
     allSites?.let {
         val planIds = it.map { site -> site.planId }.distinct()
@@ -449,6 +462,7 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     tags.add(origin.toString())
     // Add Android tag to make it easier to filter tickets by platform
     tags.add(ZendeskConstants.platformTag)
+
     extraTags?.let {
         tags.addAll(it)
     }
@@ -492,7 +506,8 @@ private object ZendeskConstants {
     const val noneValue = "none"
     // We rely on this platform tag to filter tickets in Zendesk
     const val platformTag = "Android"
-    const val sourcePlatform = "mobile_-_android"
+    const val jp_sourcePlatform = "mobile_-_jp_android"
+    const val wp_sourcePlatform = "mobile_-_android"
     const val wpComTag = "wpcom"
     const val unknownValue = "unknown"
 }
