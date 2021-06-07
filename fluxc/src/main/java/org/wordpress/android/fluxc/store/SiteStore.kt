@@ -37,7 +37,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_POST_FORMATS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PROFILE_XML_RPC
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
@@ -1163,8 +1162,9 @@ class SiteStore
             FETCH_SITES -> coroutineEngine.launch(T.MAIN, this, "Fetch sites") {
                 emitChange(fetchSites(action.payload as FetchSitesPayload))
             }
-            FETCH_SITES_XML_RPC -> fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload)
-            FETCHED_SITES_XML_RPC -> updateSites(action.payload as SitesModel)
+            FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
+                emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
+            }
             UPDATE_SITE -> updateSite(action.payload as SiteModel)
             UPDATE_SITES -> updateSites(action.payload as SitesModel)
             DELETE_SITE -> deleteSite(action.payload as SiteModel)
@@ -1241,8 +1241,8 @@ class SiteStore
         return handleFetchedSitesWPComRest(result)
     }
 
-    private fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload) {
-        siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password)
+    suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
+        return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
     }
 
     private fun updateSiteProfile(siteModel: SiteModel) {
@@ -1282,7 +1282,7 @@ class SiteStore
         emitChange(event)
     }
 
-    private fun updateSites(sitesModel: SitesModel) {
+    private fun updateSites(sitesModel: SitesModel): OnSiteChanged {
         val event = if (sitesModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(sitesModel.error))
@@ -1294,7 +1294,7 @@ class SiteStore
                 OnSiteChanged(res.rowsAffected)
             }
         }
-        emitChange(event)
+        return event
     }
 
     private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
