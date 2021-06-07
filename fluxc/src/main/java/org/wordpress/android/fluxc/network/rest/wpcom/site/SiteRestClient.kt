@@ -23,6 +23,9 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
@@ -102,6 +105,7 @@ class SiteRestClient @Inject constructor(
     dispatcher: Dispatcher?,
     @Named("regular") requestQueue: RequestQueue?,
     private val mAppSecrets: AppSecrets,
+    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     accessToken: AccessToken?,
     userAgent: UserAgent?
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
@@ -123,36 +127,29 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
-    fun fetchSites(filters: List<SiteFilter?>) {
+    suspend fun fetchSites(filters: List<SiteFilter?>): SitesModel {
         val params = getFetchSitesParams(filters)
         val url = WPCOMREST.me.sites.urlV1_2
-        val request = WPComGsonRequest.buildGetRequest(url, params,
-                SitesResponse::class.java,
-                { response ->
-                    if (response != null) {
-                        val siteArray: MutableList<SiteModel> = ArrayList()
-                        for (siteResponse in response.sites) {
-                            siteArray.add(siteResponseToSiteModel(siteResponse))
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(SitesModel(siteArray)))
-                    } else {
-                        AppLog.e(API, "Received empty response to /me/sites/")
-                        val payload = SitesModel(emptyList())
-                        payload.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val siteArray: MutableList<SiteModel> = ArrayList()
+                for (siteResponse in response.data.sites) {
+                    siteArray.add(siteResponseToSiteModel(siteResponse))
                 }
-        ) { error ->
-            val payload = SitesModel(emptyList())
-            payload.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
+                SitesModel(siteArray)
+            }
+            is Error -> {
+                val payload = SitesModel(emptyList())
+                payload.error = response.error
+                payload
+            }
         }
-        add(request)
     }
 
     private fun getFetchSitesParams(filters: List<SiteFilter?>): Map<String, String> {
         val params: MutableMap<String, String> = HashMap()
-        if (!filters.isEmpty()) params[FILTERS] = TextUtils.join(",", filters)
+        if (filters.isNotEmpty()) params[FILTERS] = TextUtils.join(",", filters)
         params[FIELDS] = SITE_FIELDS
         return params
     }

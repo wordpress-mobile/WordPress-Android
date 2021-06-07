@@ -103,8 +103,6 @@ public enum SiteAction implements IAction {
     @Action(payloadType = SiteModel.class)
     FETCHED_PROFILE_XML_RPC,
     @Action(payloadType = SitesModel.class)
-    FETCHED_SITES,
-    @Action(payloadType = SitesModel.class)
     FETCHED_SITES_XML_RPC,
     @Action(payloadType = NewSiteResponsePayload.class)
     CREATED_NEW_SITE,
