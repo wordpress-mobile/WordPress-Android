@@ -14,7 +14,6 @@ include ':libs:image-editor:ImageEditor'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
-include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
 
