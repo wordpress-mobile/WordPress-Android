@@ -16,6 +16,14 @@ android {
         versionName "0.1"
         minSdkVersion 18
         targetSdkVersion 29
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
     }
     buildTypes {
         release {
@@ -79,6 +87,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.apache.commons:commons-text:1.1'
     api "androidx.paging:paging-runtime:2.1.2"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
