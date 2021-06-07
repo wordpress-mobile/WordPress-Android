@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.TestSiteSqlUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
@@ -43,7 +44,7 @@ public class ThemeStoreUnitTest {
     @Test
     public void testActiveTheme() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        TestSiteSqlUtils.INSTANCE.getSiteSqlUtils().insertOrUpdateSite(site);
         assertNull(mThemeStore.getActiveThemeForSite(site));
 
         final ThemeModel firstTheme = generateTestTheme(site.getId(), "first-active", "First Active");
@@ -73,7 +74,7 @@ public class ThemeStoreUnitTest {
     @Test
     public void testInsertOrUpdateTheme() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        TestSiteSqlUtils.INSTANCE.getSiteSqlUtils().insertOrUpdateSite(site);
 
         final String testThemeId = "fluxc-ftw";
         final String testThemeName = "FluxC FTW";
@@ -119,7 +120,7 @@ public class ThemeStoreUnitTest {
     @Test
     public void testInsertOrReplaceInstalledThemes() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        TestSiteSqlUtils.INSTANCE.getSiteSqlUtils().insertOrUpdateSite(site);
 
         final List<ThemeModel> firstTestThemes = generateThemesTestList(5);
         final List<ThemeModel> secondTestThemes = generateThemesTestList(10);
@@ -155,7 +156,7 @@ public class ThemeStoreUnitTest {
     @Test
     public void testRemoveInstalledSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        TestSiteSqlUtils.INSTANCE.getSiteSqlUtils().insertOrUpdateSite(site);
 
         final List<ThemeModel> testThemes = generateThemesTestList(5);
 
