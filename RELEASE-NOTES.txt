@@ -2,7 +2,7 @@
 
 17.6
 -----
-
+* [*] Disables the ability to open the editor for Post Pages [#14523]
 
 17.5
 -----
