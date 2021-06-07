@@ -600,6 +600,7 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
+    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -3673,4 +3674,6 @@
     <string name="set_your_blogging_goals_title">Set your blogging goals</string>
     <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
     <string name="set_your_blogging_goals_button">Set goals</string>
+    <string name="blogging_goals_n_times_a_week">%d times a week</string>
+    <string name="blogging_goals_not_set">None set</string>
 </resources>

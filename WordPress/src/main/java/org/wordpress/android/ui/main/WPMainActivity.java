@@ -78,7 +78,7 @@ import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
@@ -574,21 +574,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mBloggingRemindersViewModel.isBottomSheetShowing().observe(this, event -> {
-            event.applyIfNotHandled(isShowing -> {
-                FragmentManager fm = getSupportFragmentManager();
-                BloggingReminderBottomSheetFragment bottomSheet =
-                        (BloggingReminderBottomSheetFragment) fm
-                                .findFragmentByTag(BLOGGING_REMINDERS_BOTTOM_SHEET_TAG);
-                if (isShowing && bottomSheet == null) {
-                    bottomSheet = new BloggingReminderBottomSheetFragment();
-                    bottomSheet.show(getSupportFragmentManager(), BLOGGING_REMINDERS_BOTTOM_SHEET_TAG);
-                } else if (!isShowing && bottomSheet != null) {
-                    bottomSheet.dismiss();
-                }
-                return null;
-            });
-        });
+        BloggingReminderUtils.observeBottomSheet(
+                mBloggingRemindersViewModel.isBottomSheetShowing(),
+                this,
+                BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
+                this::getSupportFragmentManager
+        );
 
         mMLPViewModel.isModalLayoutPickerShowing().observe(this, event -> {
             event.applyIfNotHandled(isShowing -> {
@@ -1099,7 +1090,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             });
                     boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
                     if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
-                        mBloggingRemindersViewModel.start(site.getId());
+                        mBloggingRemindersViewModel.showBottomSheet(site.getId());
                     }
                 }
                 break;

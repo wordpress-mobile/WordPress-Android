@@ -51,4 +51,9 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = BloggingReminderBottomSheetFragment()
+    }
 }

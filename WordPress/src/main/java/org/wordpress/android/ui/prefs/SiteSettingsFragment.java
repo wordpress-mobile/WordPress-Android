@@ -38,11 +38,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -73,6 +75,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
@@ -94,6 +98,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -147,6 +152,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
 
     private static final String TIMEZONE_BOTTOM_SHEET_TAG = "timezone-dialog-tag";
+    private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     /**
      * Request code used when creating the {@link RelatedPostsDialog}.
@@ -172,6 +178,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+
+    private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
     public SiteModel mSite;
 
@@ -208,6 +218,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mRelatedPostsPref;
     private Preference mTagsPref;
     private Preference mTimezonePref;
+    private Preference mBloggingRemindersPref;
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
 
@@ -477,6 +488,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initBloggingReminders();
+    }
+
+    private AppCompatActivity getAppCompatActivity() {
+        return (AppCompatActivity) getActivity();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
@@ -493,7 +514,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupJetpackSecurityScreen();
 
             SiteSettingsTimezoneBottomSheet bottomSheet =
-                    (SiteSettingsTimezoneBottomSheet) ((AppCompatActivity) getActivity())
+                    (SiteSettingsTimezoneBottomSheet) (getAppCompatActivity())
                             .getSupportFragmentManager().findFragmentByTag(TIMEZONE_BOTTOM_SHEET_TAG);
             if (bottomSheet != null) {
                 bottomSheet.setTimezoneSettingCallback(this);
@@ -546,6 +567,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
             setupTimezoneBottomSheet();
+        } else if (preference == mBloggingRemindersPref) {
+            setupBloggingRemindersBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -939,6 +962,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
+        mBloggingRemindersPref = getClickPref(R.string.pref_key_blogging_reminders);
         mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
         updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
@@ -1047,7 +1071,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mAllowlistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mDenylistPref, mWeekStartPref,
-                mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
+                mDateFormatPref, mTimeFormatPref, mTimezonePref, mBloggingRemindersPref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
                 mGutenbergDefaultForNewPosts, mHomepagePref
@@ -1156,13 +1180,45 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         SiteSettingsTimezoneBottomSheet bottomSheet = SiteSettingsTimezoneBottomSheet.newInstance();
         bottomSheet.setTimezoneSettingCallback(this);
-        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
+        bottomSheet.show((getAppCompatActivity()).getSupportFragmentManager(), TIMEZONE_BOTTOM_SHEET_TAG);
+    }
+
+    private void initBloggingReminders() {
+        if (mBloggingRemindersPref == null || !isAdded()) {
+            return;
+        }
+
+        if (!mBloggingRemindersFeatureConfig.isEnabled()) {
+            removeBloggingRemindersSettings();
+        } else {
+            mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
+                    .get(BloggingRemindersViewModel.class);
+            BloggingReminderUtils.observeBottomSheet(
+                    mBloggingRemindersViewModel.isBottomSheetShowing(),
+                    getAppCompatActivity(),
+                    BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
+                    () -> getAppCompatActivity().getSupportFragmentManager()
+            );
+            mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
+                if (mBloggingRemindersPref != null) {
+                    mBloggingRemindersPref.setSummary(s);
+                }
+            });
+        }
+    }
+
+    private void setupBloggingRemindersBottomSheet() {
+        if (mBloggingRemindersPref == null || !isAdded()) {
+            return;
+        }
+
+        mBloggingRemindersViewModel.showBottomSheet(mSite.getId());
     }
 
     private void showHomepageSettings() {
         HomepageSettingsDialog homepageSettingsDialog = HomepageSettingsDialog.Companion.newInstance(mSite);
         homepageSettingsDialog
-                .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "homepage-settings-dialog-tag");
+                .show((getAppCompatActivity()).getSupportFragmentManager(), "homepage-settings-dialog-tag");
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
@@ -1449,6 +1505,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else {
             mTimezonePref.setSummary(timezone);
         }
+    }
+
+    private void setBloggingRemindersValue(String value) {
+        if (value == null) {
+            return;
+        }
+        mBloggingRemindersPref.setSummary(value);
     }
 
     private void setCategories() {
@@ -1883,6 +1946,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeMoreJetpackSettings() {
         WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
                 R.string.pref_key_jetpack_performance_more_settings);
+    }
+
+    private void removeBloggingRemindersSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_blogging_reminders);
     }
 
     private void removePrivateOptionFromPrivacySetting() {
