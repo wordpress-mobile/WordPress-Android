@@ -79,6 +79,7 @@ import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -133,7 +134,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
@@ -227,7 +227,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingRemindersManager mBloggingRemindersManager;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1098,8 +1098,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 }
                             });
                     boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
-                    if (isNewPost && mBloggingRemindersFeatureConfig.isEnabled()) {
-                        mBloggingRemindersViewModel.start();
+                    if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
+                        mBloggingRemindersViewModel.start(site.getId());
                     }
                 }
                 break;
