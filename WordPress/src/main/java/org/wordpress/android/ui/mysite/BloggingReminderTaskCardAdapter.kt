@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.databinding.QuickStartTaskCardBinding
+import org.wordpress.android.databinding.BloggingReminderTaskCardBinding
 import org.wordpress.android.ui.mysite.BloggingReminderTaskCardAdapter.BloggingReminderTaskCardViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.BloggingReminderCard.BloggingReminderTaskCard
 import org.wordpress.android.ui.utils.UiHelpers
@@ -21,7 +21,7 @@ class BloggingReminderTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = BloggingReminderTaskCardViewHolder(
-            parent.viewBinding(QuickStartTaskCardBinding::inflate)
+            parent.viewBinding(BloggingReminderTaskCardBinding::inflate)
     )
 
     override fun onBindViewHolder(holder: BloggingReminderTaskCardViewHolder, position: Int) {
@@ -30,9 +30,8 @@ class BloggingReminderTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapte
 
     override fun getItemCount() = items.size
 
-    inner class BloggingReminderTaskCardViewHolder(val binding: QuickStartTaskCardBinding) : ViewHolder(binding.root) {
+    inner class BloggingReminderTaskCardViewHolder(val binding: BloggingReminderTaskCardBinding) : ViewHolder(binding.root) {
         fun bind(taskCard: BloggingReminderTaskCard) = with(binding) {
-            taskCardTitle.text = uiHelpers.getTextOfUiString(root.context, taskCard.title)
             taskCardDescription.text = uiHelpers.getTextOfUiString(root.context, taskCard.description)
             taskCardIllustration.setImageResource(taskCard.illustration)
 

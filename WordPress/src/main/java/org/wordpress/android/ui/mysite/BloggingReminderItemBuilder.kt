@@ -36,11 +36,11 @@ class BloggingReminderItemBuilder @Inject constructor() {
                         quickStartTask = PUBLISH_POST,
                         title = UiStringRes(R.string.set_your_blogging_goals_title),
                         description = UiStringRes(R.string.set_your_blogging_goals_body),
-                        illustration = android.R.drawable.ic_menu_my_calendar, // TODO: Replace with calendar vector
+                        illustration = R.drawable.img_illustration_add_media_150dp, // TODO: Replace with calendar vector
                         accentColor = R.color.colorAccent,
                         done = false,
                         onClick = ListItemInteraction.create {
-                            onBloggingReminderCardClick
+                            onBloggingReminderCardClick()
                         }
                 )
         )

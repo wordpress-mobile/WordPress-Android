@@ -1,17 +1,10 @@
 package org.wordpress.android.ui.mysite
 
-import android.animation.ObjectAnimator
-import android.content.res.ColorStateList
-import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartCardBinding
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.BloggingReminderCard
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.viewBinding
 
 class BloggingReminderCardViewHolder(
@@ -31,7 +23,6 @@ class BloggingReminderCardViewHolder(
     private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
     private var currentItem: BloggingReminderCard? = null
-    private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
 
     init {
         with(binding) {
@@ -60,23 +51,7 @@ class BloggingReminderCardViewHolder(
     fun bind(item: BloggingReminderCard) = with(binding) {
         currentItem = item
 
-        ObjectAnimator.ofInt(quickStartCardProgress, "progress", item.progress).setDuration(600).start()
-
-        val progressIndicatorColor = ContextCompat.getColor(root.context, item.accentColor)
-        val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            quickStartCardProgress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
-            quickStartCardProgress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
-        } else {
-            // Workaround for Lollipop
-            val progressDrawable = quickStartCardProgress.progressDrawable.mutate() as LayerDrawable
-            val backgroundLayer = progressDrawable.findDrawableByLayerId(android.R.id.background)
-            val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress)
-            backgroundLayer.colorFilter = createBlendModeColorFilterCompat(progressTrackColor, SRC_IN)
-            progressLayer.colorFilter = createBlendModeColorFilterCompat(progressIndicatorColor, SRC_IN)
-            quickStartCardProgress.progressDrawable = progressDrawable
-        }
-
+        quickStartCardProgress.visibility = View.GONE
         quickStartCardTitle.text = uiHelpers.getTextOfUiString(root.context, item.title)
         (quickStartCardRecyclerView.adapter as? BloggingReminderTaskCardAdapter)?.loadData(item.taskCards)
         restoreScrollState(quickStartCardRecyclerView, item.id.toString())
