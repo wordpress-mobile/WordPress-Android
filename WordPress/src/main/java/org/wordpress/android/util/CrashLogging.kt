@@ -3,9 +3,9 @@ package org.wordpress.android.util
 import android.content.Context
 import android.preference.PreferenceManager
 import io.sentry.android.core.SentryAndroid
-import io.sentry.core.Sentry
-import io.sentry.core.SentryLevel
-import io.sentry.core.protocol.User
+import io.sentry.Sentry
+import io.sentry.SentryLevel
+import io.sentry.protocol.User
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -28,7 +28,7 @@ class CrashLogging @Inject constructor(
         SentryAndroid.init(context) { options ->
             options.dsn = BuildConfig.SENTRY_DSN
             options.cacheDirPath = context.cacheDir.absolutePath
-            options.isEnableSessionTracking = true // Release Health tracking
+            options.isEnableAutoSessionTracking = true // Release Health tracking
             options.setBeforeSend { event, _ ->
 
                 if (!this.shouldSendEvents(context)) return@setBeforeSend null
@@ -41,17 +41,20 @@ class CrashLogging @Inject constructor(
                     event.user = user
                 }
 
-                if (event.exceptions.size > 1) {
-                    event.exceptions.lastOrNull()?.let { lastException ->
-                        // Remove the "Invoking subscriber failed" exception so that the main error will show up
-                        // in Sentry. This error only means that an exception occurred during an EventBus event and
-                        // it's not particularly useful for debugging.
-                        if (lastException.module == EVENT_BUS_MODULE &&
-                                lastException.type == EVENT_BUS_EXCEPTION &&
-                                lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
-                            event.exceptions.remove(lastException)
+                event.exceptions?.let { exceptions ->
+                    if (exceptions.size > 1) {
+                        exceptions.lastOrNull()?.let { lastException ->
+                            // Remove the "Invoking subscriber failed" exception so that the main error will show up
+                            // in Sentry. This error only means that an exception occurred during an EventBus event and
+                            // it's not particularly useful for debugging.
+                            if (lastException.module == EVENT_BUS_MODULE &&
+                                    lastException.type == EVENT_BUS_EXCEPTION &&
+                                    lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
+                                exceptions.remove(lastException)
+                            }
                         }
                     }
+                    event.exceptions = exceptions
                 }
                 /**
                  * If Sentry is unable to upload the event in its first attempt, it'll call the `setBeforeSend` callback
