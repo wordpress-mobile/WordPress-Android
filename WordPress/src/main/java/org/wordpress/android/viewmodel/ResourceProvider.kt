@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel
 
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -56,5 +57,9 @@ class ResourceProvider @Inject constructor(private val contextProvider: ContextP
 
     fun getDrawable(iconId: Int): Drawable? {
         return ContextCompat.getDrawable(contextProvider.getContext(), iconId)
+    }
+
+    fun getConfiguration(): Configuration {
+        return contextProvider.getContext().resources.configuration
     }
 }
