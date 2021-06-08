@@ -643,7 +643,9 @@ class SiteStore
     class PrivateAtomicCookieError(@JvmField val type: AccessCookieErrorType, @JvmField val message: String) :
             OnChangedError
 
-    class JetpackCapabilitiesError(@JvmField val type: JetpackCapabilitiesErrorType, @JvmField val message: String?) : OnChangedError
+    class JetpackCapabilitiesError(@JvmField val type: JetpackCapabilitiesErrorType, @JvmField val message: String?) :
+            OnChangedError
+
     class OnAutomatedTransferEligibilityChecked(
         @JvmField val site: SiteModel,
         @JvmField val isEligible: Boolean,
@@ -683,7 +685,11 @@ class SiteStore
         }
     }
 
-    class QuickStartCompletedResponsePayload(@JvmField val site: SiteModel, @JvmField val success: Boolean) : OnChanged<QuickStartError>()
+    class QuickStartCompletedResponsePayload(
+        @JvmField val site: SiteModel,
+        @JvmField val success: Boolean
+    ) : OnChanged<QuickStartError>()
+
     class OnQuickStartCompleted internal constructor(
         @JvmField val site: SiteModel,
         @JvmField val success: Boolean
