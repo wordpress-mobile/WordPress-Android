@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    The available functionality should be added in the following format:
+    Description|deeplink
+    -->
+    <string-array name="functionality_search_entries">
+        <item>Some Description|wordpress://post</item>
+        <item>Some Description|wordpress://pages</item>
+        <item>Some Description|wordpress://start</item>
+        <item>Some Description|wordpress://read</item>
+        <item>Some Description|wordpress://notifications</item>
+        <item>Some Description|wordpress://stats</item>
+    </string-array>
+</resources>

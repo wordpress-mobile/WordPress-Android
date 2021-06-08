@@ -156,14 +156,11 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             toolbar.menu.findItem(R.id.menu_search)?.let { searchMenu ->
                 searchMenu.isVisible = mySiteSearchFeatureConfig.isEnabled()
                 searchMenu.setOnMenuItemClickListener {
-                    val url =
-                    // "wordpress://post"
-                    // "wordpress://pages"
-                    // "wordpress://start"
-                    // "wordpress://read"
-                    // "wordpress://notifications"
-                    "wordpress://stats"
-                    deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
+                    val functionalities = context?.resources?.getStringArray(R.array.functionality_search_entries)
+                    val functionality = functionalities?.get(0)
+                    functionality?.split("|")?.get(1)?.let { url ->
+                        deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
+                    }
                     true
                 }
             }
