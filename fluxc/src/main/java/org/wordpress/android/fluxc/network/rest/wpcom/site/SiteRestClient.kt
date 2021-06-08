@@ -304,7 +304,7 @@ class SiteRestClient @Inject constructor(
                                     )
                                 },
                                 {
-                                    val payload = DesignateMobileEditorForAllSitesResponsePayload(null)
+                                    val payload = DesignateMobileEditorForAllSitesResponsePayload()
                                     payload.error = SiteEditorsError(GENERIC_ERROR)
                                     mDispatcher.dispatch(
                                             SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload)

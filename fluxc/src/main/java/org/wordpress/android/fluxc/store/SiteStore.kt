@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
-import com.wellsql.generated.SiteModelTable
-import com.yarolegovich.wellsql.WellSql
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -122,17 +120,18 @@ class SiteStore
     private val siteRestClient: SiteRestClient,
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val privateAtomicCookie: PrivateAtomicCookie,
+    private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     // Payloads
-    data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError?>()
+    data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError>()
     data class RefreshSitesXMLRPCPayload(
         @JvmField val username: String = "",
         @JvmField val password: String = "",
         @JvmField val url: String = ""
-    ) : Payload<BaseNetworkError?>()
+    ) : Payload<BaseNetworkError>()
 
-    data class FetchSitesPayload(val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError?>()
+    data class FetchSitesPayload(val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
 
     data class NewSitePayload(
         val siteName: String,
@@ -141,34 +140,41 @@ class SiteStore
         val segmentId: Long? = null,
         val siteDesign: String? = null,
         val dryRun: Boolean
-    ) : Payload<BaseNetworkError?>() {
-        constructor(
-            siteName: String, language: String,
-            visibility: SiteVisibility, dryRun: Boolean
-        ) : this(siteName, language, visibility, null, null, dryRun)
+    ) : Payload<BaseNetworkError>() {
+        constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
+                siteName,
+                language,
+                visibility,
+                null,
+                null,
+                dryRun
+        )
 
         constructor(
-            siteName: String, language: String,
-            visibility: SiteVisibility, segmentId: Long?, dryRun: Boolean
+            siteName: String,
+            language: String,
+            visibility: SiteVisibility,
+            segmentId: Long?,
+            dryRun: Boolean
         ) : this(siteName, language, visibility, segmentId, null, dryRun)
     }
 
     data class FetchedPostFormatsPayload(
         val site: SiteModel,
         val postFormats: List<PostFormatModel>
-    ) : Payload<PostFormatsError?>()
+    ) : Payload<PostFormatsError>()
 
     data class DesignateMobileEditorForAllSitesPayload(
         val editor: String,
         val setOnlyIfEmpty: Boolean = true
-    ) : Payload<SiteEditorsError?>()
+    ) : Payload<SiteEditorsError>()
 
-    data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError?>()
+    data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError>()
     data class FetchedEditorsPayload(
         val site: SiteModel,
         val webEditor: String,
         val mobileEditor: String
-    ) : Payload<SiteEditorsError?>()
+    ) : Payload<SiteEditorsError>()
 
     data class FetchBlockLayoutsPayload(
         val site: SiteModel,
@@ -178,24 +184,27 @@ class SiteStore
         val scale: Float?,
         val isBeta: Boolean?,
         val preferCache: Boolean?
-    ) : Payload<BaseNetworkError?>()
+    ) : Payload<BaseNetworkError>()
 
     data class FetchedBlockLayoutsResponsePayload(
         val site: SiteModel,
         val layouts: List<GutenbergLayout>? = null,
         val categories: List<GutenbergLayoutCategory>? = null
-    ) : Payload<SiteError?>() {
+    ) : Payload<SiteError>() {
         constructor(site: SiteModel, error: SiteError?) : this(site) {
             this.error = error
         }
     }
 
-    data class DesignateMobileEditorForAllSitesResponsePayload(val editors: Map<String, String>? = null) : Payload<SiteEditorsError>()
-    data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError?>()
+    data class DesignateMobileEditorForAllSitesResponsePayload(
+        val editors: Map<String, String>? = null
+    ) : Payload<SiteEditorsError>()
+
+    data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError>()
     data class FetchedPlansPayload(
         val site: SiteModel,
         val plans: List<PlanModel>? = null
-    ) : Payload<PlansError?>() {
+    ) : Payload<PlansError>() {
         constructor(site: SiteModel, error: PlansError) : this(site) {
             this.error = error
         }
@@ -204,38 +213,42 @@ class SiteStore
     data class FetchedPrivateAtomicCookiePayload(
         val site: SiteModel,
         val cookie: PrivateAtomicCookieResponse?
-    ) : Payload<PrivateAtomicCookieError?>()
+    ) : Payload<PrivateAtomicCookieError>()
 
     data class FetchPrivateAtomicCookiePayload(val siteId: Long)
     data class FetchJetpackCapabilitiesPayload(val remoteSiteId: Long)
     data class FetchedJetpackCapabilitiesPayload(
-        val remoteSiteId: Long,
-        val capabilities: List<JetpackCapability> = listOf()
-    ) : Payload<JetpackCapabilitiesError?>() {
+        @JvmField val remoteSiteId: Long,
+        @JvmField val capabilities: List<JetpackCapability> = listOf()
+    ) : Payload<JetpackCapabilitiesError>() {
         constructor(remoteSiteId: Long, error: JetpackCapabilitiesError) : this(remoteSiteId) {
             this.error = error
         }
     }
 
     data class OnJetpackCapabilitiesFetched(
-        val remoteSiteId: Long,
-        val capabilities: List<JetpackCapability> = listOf(),
-        val error: JetpackCapabilitiesError? = null
-    ) : OnChanged<JetpackCapabilitiesError?>()
+        @JvmField val remoteSiteId: Long,
+        @JvmField val capabilities: List<JetpackCapability> = listOf(),
+        @JvmField val error: JetpackCapabilitiesError? = null
+    ) : OnChanged<JetpackCapabilitiesError>()
 
     data class SuggestDomainsPayload(
-        val query: String,
-        val onlyWordpressCom: Boolean? = null,
-        val includeWordpressCom: Boolean? = null,
-        val includeDotBlogSubdomain: Boolean? = null,
-        val tlds: String? = null,
-        val segmentId: Long? = null,
-        val quantity: Int,
-        val includeVendorDot: Boolean = false
-    ) : Payload<BaseNetworkError?>() {
+        @JvmField val query: String,
+        @JvmField val onlyWordpressCom: Boolean? = null,
+        @JvmField val includeWordpressCom: Boolean? = null,
+        @JvmField val includeDotBlogSubdomain: Boolean? = null,
+        @JvmField val tlds: String? = null,
+        @JvmField val segmentId: Long? = null,
+        @JvmField val quantity: Int,
+        @JvmField val includeVendorDot: Boolean = false
+    ) : Payload<BaseNetworkError>() {
         constructor(
-            query: String, onlyWordpressCom: Boolean, includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean, quantity: Int, includeVendorDot: Boolean
+            query: String,
+            onlyWordpressCom: Boolean,
+            includeWordpressCom: Boolean,
+            includeDotBlogSubdomain: Boolean,
+            quantity: Int,
+            includeVendorDot: Boolean
         ) : this(
                 query = query,
                 onlyWordpressCom = onlyWordpressCom,
@@ -247,10 +260,7 @@ class SiteStore
                 tlds = null
         )
 
-        constructor(
-            query: String, segmentId: Long?,
-            quantity: Int, includeVendorDot: Boolean
-        ) : this(
+        constructor(query: String, segmentId: Long?, quantity: Int, includeVendorDot: Boolean) : this(
                 query = query,
                 segmentId = segmentId,
                 quantity = quantity,
@@ -267,9 +277,9 @@ class SiteStore
     }
 
     data class SuggestDomainsResponsePayload(
-        val query: String,
-        val suggestions: List<DomainSuggestionResponse> = listOf()
-    ) : Payload<SuggestDomainError?>() {
+        @JvmField val query: String,
+        @JvmField val suggestions: List<DomainSuggestionResponse> = listOf()
+    ) : Payload<SuggestDomainError>() {
         constructor(query: String, error: SuggestDomainError?) : this(query) {
             this.error = error
         }
@@ -285,7 +295,7 @@ class SiteStore
         @JvmField val isJetpackConnected: Boolean = false,
         @JvmField val isWPCom: Boolean = false,
         @JvmField val urlAfterRedirects: String? = null
-    ) : Payload<SiteError?>() {
+    ) : Payload<SiteError>() {
         constructor(url: String, error: SiteError?) : this(url) {
             this.error = error
         }
@@ -299,21 +309,21 @@ class SiteStore
     }
 
     data class DesignatePrimaryDomainPayload(
-        val site: SiteModel,
-        val domain: String
-    ) : Payload<DesignatePrimaryDomainError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val domain: String
+    ) : Payload<DesignatePrimaryDomainError>()
 
     data class InitiateAutomatedTransferPayload(
-        val site: SiteModel,
-        val pluginSlugToInstall: String
-    ) : Payload<AutomatedTransferError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val pluginSlugToInstall: String
+    ) : Payload<AutomatedTransferError>()
 
     data class AutomatedTransferEligibilityResponsePayload
     @JvmOverloads constructor(
-        val site: SiteModel,
-        val isEligible: Boolean = false,
-        val errorCodes: List<String> = listOf()
-    ) : Payload<AutomatedTransferError?>() {
+        @JvmField val site: SiteModel,
+        @JvmField val isEligible: Boolean = false,
+        @JvmField val errorCodes: List<String> = listOf()
+    ) : Payload<AutomatedTransferError>() {
         constructor(site: SiteModel, error: AutomatedTransferError) : this(site) {
             this.error = error
         }
@@ -321,43 +331,43 @@ class SiteStore
 
     data class InitiateAutomatedTransferResponsePayload
     @JvmOverloads constructor(
-        val site: SiteModel,
-        val pluginSlugToInstall: String,
-        val success: Boolean = false
-    ) : Payload<AutomatedTransferError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val pluginSlugToInstall: String,
+        @JvmField val success: Boolean = false
+    ) : Payload<AutomatedTransferError>()
 
     data class AutomatedTransferStatusResponsePayload(
-        val site: SiteModel,
-        val status: String? = null,
-        val currentStep: Int = 0,
-        val totalSteps: Int = 0
-    ) : Payload<AutomatedTransferError?>() {
+        @JvmField val site: SiteModel,
+        @JvmField val status: String? = null,
+        @JvmField val currentStep: Int = 0,
+        @JvmField val totalSteps: Int = 0
+    ) : Payload<AutomatedTransferError>() {
         constructor(site: SiteModel, error: AutomatedTransferError?) : this(site) {
             this.error = error
         }
     }
 
     data class DomainAvailabilityResponsePayload(
-        val status: DomainAvailabilityStatus? = null,
-        val mappable: DomainMappabilityStatus? = null,
-        val supportsPrivacy: Boolean = false
-    ) : Payload<DomainAvailabilityError?>() {
+        @JvmField val status: DomainAvailabilityStatus? = null,
+        @JvmField val mappable: DomainMappabilityStatus? = null,
+        @JvmField val supportsPrivacy: Boolean = false
+    ) : Payload<DomainAvailabilityError>() {
         constructor(error: DomainAvailabilityError) : this() {
             this.error = error
         }
     }
 
     data class DomainSupportedStatesResponsePayload(
-        val supportedStates: List<SupportedStateResponse>? = null
-    ) : Payload<DomainSupportedStatesError?>() {
+        @JvmField val supportedStates: List<SupportedStateResponse>? = null
+    ) : Payload<DomainSupportedStatesError>() {
         constructor(error: DomainSupportedStatesError) : this() {
             this.error = error
         }
     }
 
     data class DomainSupportedCountriesResponsePayload(
-        val supportedCountries: List<SupportedCountryResponse>? = null
-    ) : Payload<DomainSupportedCountriesError?>() {
+        @JvmField val supportedCountries: List<SupportedCountryResponse>? = null
+    ) : Payload<DomainSupportedCountriesError>() {
         constructor(error: DomainSupportedCountriesError) : this() {
             this.error = error
         }
@@ -368,17 +378,22 @@ class SiteStore
         @JvmField val message: String = ""
     ) : OnChangedError
 
-    data class SiteEditorsError internal constructor(val type: SiteEditorsErrorType?, val message: String) :
-            OnChangedError {
+    data class SiteEditorsError internal constructor(
+        @JvmField val type: SiteEditorsErrorType?,
+        @JvmField val message: String
+    ) : OnChangedError {
         constructor(type: SiteEditorsErrorType?) : this(type, "") {}
     }
 
-    data class PostFormatsError @JvmOverloads constructor(val type: PostFormatsErrorType, val message: String = "") :
+    data class PostFormatsError @JvmOverloads constructor(
+        @JvmField val type: PostFormatsErrorType,
+        @JvmField val message: String = ""
+    ) :
             OnChangedError
 
     data class UserRolesError internal constructor(
-        val type: UserRolesErrorType?,
-        val message: String
+        @JvmField val type: UserRolesErrorType?,
+        @JvmField val message: String
     ) : OnChangedError {
         constructor(type: UserRolesErrorType?) : this(type, "") {}
     }
@@ -392,7 +407,8 @@ class SiteStore
     }
 
     data class ExportSiteError(@JvmField val type: ExportSiteErrorType) : OnChangedError
-    data class AutomatedTransferError(val type: AutomatedTransferErrorType?, val message: String?) : OnChangedError {
+    data class AutomatedTransferError(@JvmField val type: AutomatedTransferErrorType?, @JvmField val message: String?) :
+            OnChangedError {
         constructor(type: String, message: String) : this(AutomatedTransferErrorType.fromString(type), message)
     }
 
@@ -411,17 +427,19 @@ class SiteStore
     ) : OnChangedError
 
     data class DomainSupportedCountriesError(
-        val type: DomainSupportedCountriesErrorType,
-        val message: String?
+        @JvmField val type: DomainSupportedCountriesErrorType,
+        @JvmField val message: String?
     ) : OnChangedError
 
-    data class QuickStartError(val type: QuickStartErrorType, val message: String?) : OnChangedError
-    data class DesignatePrimaryDomainError(val type: DesignatePrimaryDomainErrorType, val message: String?) :
-            OnChangedError
+    data class QuickStartError(@JvmField val type: QuickStartErrorType, @JvmField val message: String?) : OnChangedError
+    data class DesignatePrimaryDomainError(
+        @JvmField val type: DesignatePrimaryDomainErrorType,
+        @JvmField val message: String?
+    ) : OnChangedError
 
     // OnChanged Events
-    data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError?>()
-    data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError?>() {
+    data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
+    data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError>() {
         constructor(rowsAffected: Int = 0, siteError: SiteError) : this(rowsAffected) {
             this.error = siteError
         }
@@ -429,12 +447,12 @@ class SiteStore
         constructor(siteError: SiteError) : this()
     }
 
-    data class OnSiteRemoved(val mRowsAffected: Int) : OnChanged<SiteError?>()
-    data class OnAllSitesRemoved(val mRowsAffected: Int) : OnChanged<SiteError?>()
+    data class OnSiteRemoved(@JvmField val mRowsAffected: Int) : OnChanged<SiteError>()
+    data class OnAllSitesRemoved(@JvmField val mRowsAffected: Int) : OnChanged<SiteError>()
     data class OnBlockLayoutsFetched(
-        val layouts: List<GutenbergLayout>?,
-        val categories: List<GutenbergLayoutCategory>?
-    ) : OnChanged<SiteError?>() {
+        @JvmField val layouts: List<GutenbergLayout>?,
+        @JvmField val categories: List<GutenbergLayoutCategory>?
+    ) : OnChanged<SiteError>() {
         constructor(
             layouts: List<GutenbergLayout>?,
             categories: List<GutenbergLayoutCategory>?,
@@ -447,26 +465,26 @@ class SiteStore
     data class OnNewSiteCreated(
         @JvmField val dryRun: Boolean = false,
         @JvmField val newSiteRemoteId: Long = 0
-    ) : OnChanged<NewSiteError?>() {
+    ) : OnChanged<NewSiteError>() {
         constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError) : this(dryRun, newSiteRemoteId) {
             this.error = error
         }
     }
 
-    data class OnSiteDeleted(@JvmField val error: DeleteSiteError?) : OnChanged<DeleteSiteError?>() {
+    data class OnSiteDeleted(@JvmField val error: DeleteSiteError?) : OnChanged<DeleteSiteError>() {
         init {
             this.error = error
         }
     }
 
-    class OnSiteExported() : OnChanged<ExportSiteError?>() {
+    class OnSiteExported() : OnChanged<ExportSiteError>() {
         constructor(error: ExportSiteError) : this() {
             this.error = error
         }
     }
 
-    data class OnPostFormatsChanged(val site: SiteModel) : OnChanged<PostFormatsError?>()
-    data class OnSiteEditorsChanged(val site: SiteModel, val rowsAffected: Int = 0) : OnChanged<SiteEditorsError?>() {
+    data class OnPostFormatsChanged(val site: SiteModel) : OnChanged<PostFormatsError>()
+    data class OnSiteEditorsChanged(val site: SiteModel, val rowsAffected: Int = 0) : OnChanged<SiteEditorsError>() {
         constructor(site: SiteModel, error: SiteEditorsError) : this(site) {
             this.error = error
         }
@@ -477,17 +495,17 @@ class SiteStore
             // True when all sites are self-hosted or wpcom backend response
         val isNetworkResponse: Boolean = false,
         val siteEditorsError: SiteEditorsError? = null
-    ) : OnChanged<SiteEditorsError?>() {
+    ) : OnChanged<SiteEditorsError>() {
         init {
             this.error = siteEditorsError
         }
     }
 
-    data class OnUserRolesChanged(val site: SiteModel) : OnChanged<UserRolesError?>()
+    data class OnUserRolesChanged(val site: SiteModel) : OnChanged<UserRolesError>()
     data class OnPlansFetched(
         @JvmField val site: SiteModel,
         @JvmField val plans: List<PlanModel>?
-    ) : OnChanged<PlansError?>() {
+    ) : OnChanged<PlansError>() {
         constructor(
             site: SiteModel,
             plans: List<PlanModel>?,
@@ -501,7 +519,7 @@ class SiteStore
         val site: SiteModel?,
         val success: Boolean,
         val privateAtomicCookieError: PrivateAtomicCookieError? = null
-    ) : OnChanged<PrivateAtomicCookieError?>() {
+    ) : OnChanged<PrivateAtomicCookieError>() {
         init {
             this.error = privateAtomicCookieError
         }
@@ -511,18 +529,17 @@ class SiteStore
         @JvmField val url: String,
         @JvmField val isWPCom: Boolean = false,
         var siteError: SiteError? = null
-    ) :
-            OnChanged<SiteError?>() {
+    ) : OnChanged<SiteError>() {
         init {
             this.error = siteError
         }
     }
 
-    data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError?>()
+    data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError>()
     data class OnWPComSiteFetched(
         @JvmField val checkedUrl: String,
-        @JvmField val site: SiteModel?
-    ) : OnChanged<SiteError?>()
+        @JvmField val site: SiteModel? = null
+    ) : OnChanged<SiteError>()
 
     data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
             OnChangedError {
@@ -535,13 +552,13 @@ class SiteStore
     data class OnSuggestedDomains(
         val query: String,
         @JvmField val suggestions: List<DomainSuggestionResponse>
-    ) : OnChanged<SuggestDomainError?>()
+    ) : OnChanged<SuggestDomainError>()
 
     data class OnDomainAvailabilityChecked(
-        val status: DomainAvailabilityStatus?,
-        val mappable: DomainMappabilityStatus?,
-        val supportsPrivacy: Boolean
-    ) : OnChanged<DomainAvailabilityError?>() {
+        @JvmField val status: DomainAvailabilityStatus?,
+        @JvmField val mappable: DomainMappabilityStatus?,
+        @JvmField val supportsPrivacy: Boolean
+    ) : OnChanged<DomainAvailabilityError>() {
         constructor(
             status: DomainAvailabilityStatus?,
             mappable: DomainMappabilityStatus?,
@@ -593,8 +610,8 @@ class SiteStore
     }
 
     data class OnDomainSupportedStatesFetched(
-        val supportedStates: List<SupportedStateResponse>?
-    ) : OnChanged<DomainSupportedStatesError?>() {
+        @JvmField val supportedStates: List<SupportedStateResponse>?
+    ) : OnChanged<DomainSupportedStatesError>() {
         constructor(
             supportedStates: List<SupportedStateResponse>?,
             error: DomainSupportedStatesError?
@@ -604,9 +621,9 @@ class SiteStore
     }
 
     class OnDomainSupportedCountriesFetched(
-        val supportedCountries: List<SupportedCountryResponse>?,
+        @JvmField val supportedCountries: List<SupportedCountryResponse>?,
         error: DomainSupportedCountriesError?
-    ) : OnChanged<DomainSupportedCountriesError?>() {
+    ) : OnChanged<DomainSupportedCountriesError>() {
         init {
             this.error = error
         }
@@ -620,14 +637,17 @@ class SiteStore
         constructor(type: String?, message: String?) : this(PlansErrorType.fromString(type), message)
     }
 
-    class PrivateAtomicCookieError(val type: AccessCookieErrorType, val message: String) : OnChangedError
+    class PrivateAtomicCookieError(@JvmField val type: AccessCookieErrorType, @JvmField val message: String) :
+            OnChangedError
 
-    class JetpackCapabilitiesError(val type: JetpackCapabilitiesErrorType, val message: String?) : OnChangedError
+    class JetpackCapabilitiesError(@JvmField val type: JetpackCapabilitiesErrorType, @JvmField val message: String?) :
+            OnChangedError
+
     class OnAutomatedTransferEligibilityChecked(
-        val site: SiteModel,
-        val isEligible: Boolean,
-        val eligibilityErrorCodes: List<String>
-    ) : OnChanged<AutomatedTransferError?>() {
+        @JvmField val site: SiteModel,
+        @JvmField val isEligible: Boolean,
+        @JvmField val eligibilityErrorCodes: List<String>
+    ) : OnChanged<AutomatedTransferError>() {
         constructor(
             site: SiteModel,
             isEligible: Boolean,
@@ -639,9 +659,9 @@ class SiteStore
     }
 
     class OnAutomatedTransferInitiated(
-        val site: SiteModel,
-        val pluginSlugToInstall: String
-    ) : OnChanged<AutomatedTransferError?>() {
+        @JvmField val site: SiteModel,
+        @JvmField val pluginSlugToInstall: String
+    ) : OnChanged<AutomatedTransferError>() {
         constructor(
             site: SiteModel,
             pluginSlugToInstall: String,
@@ -656,27 +676,31 @@ class SiteStore
         @JvmField val isCompleted: Boolean = false,
         @JvmField val currentStep: Int = 0,
         @JvmField val totalSteps: Int = 0
-    ) : OnChanged<AutomatedTransferError?>() {
+    ) : OnChanged<AutomatedTransferError>() {
         constructor(site: SiteModel, error: AutomatedTransferError?) : this(site) {
             this.error = error
         }
     }
 
-    class QuickStartCompletedResponsePayload(val site: SiteModel, val success: Boolean) : OnChanged<QuickStartError?>()
+    class QuickStartCompletedResponsePayload(
+        @JvmField val site: SiteModel,
+        @JvmField val success: Boolean
+    ) : OnChanged<QuickStartError>()
+
     class OnQuickStartCompleted internal constructor(
-        val site: SiteModel,
-        val success: Boolean
-    ) : OnChanged<QuickStartError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val success: Boolean
+    ) : OnChanged<QuickStartError>()
 
     class DesignatedPrimaryDomainPayload(
-        val site: SiteModel,
-        val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val success: Boolean
+    ) : OnChanged<DesignatePrimaryDomainError>()
 
     class OnPrimaryDomainDesignated(
-        val site: SiteModel,
-        val success: Boolean
-    ) : OnChanged<DesignatePrimaryDomainError?>()
+        @JvmField val site: SiteModel,
+        @JvmField val success: Boolean
+    ) : OnChanged<DesignatePrimaryDomainError>()
 
     data class UpdateSitesResult(
         @JvmField val rowsAffected: Int = 0,
@@ -742,8 +766,8 @@ class SiteStore
     }
 
     enum class DeleteSiteErrorType {
-        INVALID_SITE, UNAUTHORIZED,  // user don't have permission to delete
-        AUTHORIZATION_REQUIRED,  // missing access token
+        INVALID_SITE, UNAUTHORIZED, // user don't have permission to delete
+        AUTHORIZATION_REQUIRED, // missing access token
         GENERIC_ERROR;
 
         companion object {
@@ -801,8 +825,8 @@ class SiteStore
     }
 
     enum class AutomatedTransferErrorType {
-        AT_NOT_ELIGIBLE,  // occurs if AT is initiated when the site is not eligible
-        NOT_FOUND,  // occurs if transfer status of a site with no active transfer is checked
+        AT_NOT_ELIGIBLE, // occurs if AT is initiated when the site is not eligible
+        NOT_FOUND, // occurs if transfer status of a site with no active transfer is checked
         GENERIC_ERROR;
 
         companion object {
@@ -884,13 +908,13 @@ class SiteStore
      * Returns all sites in the store as a [SiteModel] list.
      */
     val sites: List<SiteModel>
-        get() = WellSql.select(SiteModel::class.java).asModel
+        get() = siteSqlUtils.getSites()
 
     /**
      * Returns the number of sites of any kind in the store.
      */
     val sitesCount: Int
-        get() = WellSql.select(SiteModel::class.java).count().toInt()
+        get() = siteSqlUtils.getSites().count()
 
     /**
      * Checks whether the store contains any sites of any kind.
@@ -903,8 +927,8 @@ class SiteStore
      * Obtains the site with the given (local) id and returns it as a [SiteModel].
      */
     fun getSiteByLocalId(id: Int): SiteModel? {
-        val result = SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).asModel
-        return if (result.size > 0) {
+        val result = siteSqlUtils.getSitesWithLocalId(id)
+        return if (result.isNotEmpty()) {
             result[0]
         } else null
     }
@@ -913,27 +937,27 @@ class SiteStore
      * Checks whether the store contains a site matching the given (local) id.
      */
     fun hasSiteWithLocalId(id: Int): Boolean {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists()
+        return siteSqlUtils.getSitesWithLocalId(id).isNotEmpty()
     }
 
     /**
      * Returns all .COM sites in the store.
      */
     val wPComSites: List<SiteModel>
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).asModel
+        get() = siteSqlUtils.getWpComSites()
 
     /**
      * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
      */
     val sitesAccessedViaWPComRest: List<SiteModel>
-        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
+        get() = siteSqlUtils.sitesAccessedViaWPComRest.asModel
 
     /**
      * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
      * via WPCom REST API).
      */
     val sitesAccessedViaWPComRestCount: Int
-        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaWPComRest.count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via WPCom REST API (WPCom sites or Jetpack
@@ -947,19 +971,19 @@ class SiteStore
      * Returns the number of .COM sites in the store.
      */
     val wPComSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count().toInt()
+        get() = siteSqlUtils.getWpComSites().size
 
     /**
      * Returns the number of .COM Atomic sites in the store.
      */
     val wPComAtomicSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count().toInt()
+        get() = siteSqlUtils.getWpComAtomicSites().size
 
     /**
      * Returns sites with a name or url matching the search string.
      */
     fun getSitesByNameOrUrlMatching(searchString: String): List<SiteModel> {
-        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString)
+        return siteSqlUtils.getSitesByNameOrUrlMatching(searchString)
     }
 
     /**
@@ -967,7 +991,7 @@ class SiteStore
      * name or url matching the search string.
      */
     fun getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString: String): List<SiteModel> {
-        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString)
+        return siteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString)
     }
 
     /**
@@ -988,13 +1012,13 @@ class SiteStore
      * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPC: List<SiteModel>
-        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.asModel
 
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPCCount: Int
-        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
@@ -1008,76 +1032,45 @@ class SiteStore
      * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSites: List<SiteModel>
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).asModel
+        get() = siteSqlUtils.getVisibleSites()
 
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count().toInt()
+        get() = siteSqlUtils.getVisibleSites().size
 
     /**
      * Returns all visible .COM sites as [SiteModel]s.
      */
     val visibleSitesAccessedViaWPCom: List<SiteModel>
-        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().asModel
+        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.asModel
 
     /**
      * Returns the number of visible .COM sites.
      */
     val visibleSitesAccessedViaWPComCount: Int
-        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count().toInt()
+        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.count().toInt()
 
     /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
     fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .exists()
+        return siteSqlUtils.isWPComSiteVisibleByLocalId(id)
     }
 
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
-                .or()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForRemoteSiteId(siteId)
     }
 
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     fun getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId: Long, xmlRpcUrl: String?): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId, xmlRpcUrl)
     }
 
     /**
@@ -1085,26 +1078,7 @@ class SiteStore
      * sites.
      */
     fun getSiteIdForLocalId(id: Int): Long {
-        val result = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
-                    siteModel.selfHostedSiteId = cursor.getLong(
-                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
-                    )
-                    siteModel
-                }
-        if (result.isEmpty()) {
-            return 0
-        }
-        return if (result[0].siteId > 0) {
-            result[0].siteId
-        } else {
-            result[0].selfHostedSiteId
-        }
+        return siteSqlUtils.getSiteIdForLocalId(id)
     }
 
     /**
@@ -1115,7 +1089,7 @@ class SiteStore
         if (siteId == 0L) {
             return null
         }
-        val sites = SiteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).asModel
+        val sites = siteSqlUtils.getSitesWithRemoteId(siteId)
         return if (sites.isEmpty()) {
             null
         } else {
@@ -1131,7 +1105,7 @@ class SiteStore
      * @return the content or null if the content is not cached
      */
     fun getBlockLayoutContent(site: SiteModel, slug: String): String? {
-        return SiteSqlUtils.getBlockLayoutContent(site, slug)
+        return siteSqlUtils.getBlockLayoutContent(site, slug)
     }
 
     /**
@@ -1142,15 +1116,15 @@ class SiteStore
      * @return the layout or null if the layout is not cached
      */
     fun getBlockLayout(site: SiteModel, slug: String): GutenbergLayout? {
-        return SiteSqlUtils.getBlockLayout(site, slug)
+        return siteSqlUtils.getBlockLayout(site, slug)
     }
 
     fun getPostFormats(site: SiteModel?): List<PostFormatModel> {
-        return SiteSqlUtils.getPostFormats(site!!)
+        return siteSqlUtils.getPostFormats(site!!)
     }
 
     fun getUserRoles(site: SiteModel?): List<RoleModel> {
-        return SiteSqlUtils.getUserRoles(site!!)
+        return siteSqlUtils.getUserRoles(site!!)
     }
 
     @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
@@ -1184,7 +1158,9 @@ class SiteStore
             FETCH_BLOCK_LAYOUTS -> fetchBlockLayouts(action.payload as FetchBlockLayoutsPayload)
             FETCHED_BLOCK_LAYOUTS -> handleFetchedBlockLayouts(action.payload as FetchedBlockLayoutsResponsePayload)
             DESIGNATE_MOBILE_EDITOR -> designateMobileEditor(action.payload as DesignateMobileEditorPayload)
-            DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES -> designateMobileEditorForAllSites(action.payload as DesignateMobileEditorForAllSitesPayload)
+            DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES -> designateMobileEditorForAllSites(
+                    action.payload as DesignateMobileEditorForAllSitesPayload
+            )
             FETCHED_SITE_EDITORS -> updateSiteEditors(action.payload as FetchedEditorsPayload)
             DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES -> handleDesignatedMobileEditorForAllSites(
                     action.payload as DesignateMobileEditorForAllSitesResponsePayload
@@ -1202,25 +1178,41 @@ class SiteStore
             FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
             FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
             CHECK_DOMAIN_AVAILABILITY -> checkDomainAvailability(action.payload as String)
-            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(action.payload as DomainAvailabilityResponsePayload)
+            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(
+                    action.payload as DomainAvailabilityResponsePayload
+            )
             FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
-            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(action.payload as DomainSupportedStatesResponsePayload)
+            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(
+                    action.payload as DomainSupportedStatesResponsePayload
+            )
             FETCH_DOMAIN_SUPPORTED_COUNTRIES -> siteRestClient.fetchSupportedCountries()
-            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(action.payload as DomainSupportedCountriesResponsePayload)
+            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(
+                    action.payload as DomainSupportedCountriesResponsePayload
+            )
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
             CHECK_AUTOMATED_TRANSFER_STATUS -> checkAutomatedTransferStatus(action.payload as SiteModel)
-            CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY -> handleCheckedAutomatedTransferEligibility(action.payload as AutomatedTransferEligibilityResponsePayload)
-            INITIATED_AUTOMATED_TRANSFER -> handleInitiatedAutomatedTransfer(action.payload as InitiateAutomatedTransferResponsePayload)
-            CHECKED_AUTOMATED_TRANSFER_STATUS -> handleCheckedAutomatedTransferStatus(action.payload as AutomatedTransferStatusResponsePayload)
+            CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY -> handleCheckedAutomatedTransferEligibility(
+                    action.payload as AutomatedTransferEligibilityResponsePayload
+            )
+            INITIATED_AUTOMATED_TRANSFER -> handleInitiatedAutomatedTransfer(
+                    action.payload as InitiateAutomatedTransferResponsePayload
+            )
+            CHECKED_AUTOMATED_TRANSFER_STATUS -> handleCheckedAutomatedTransferStatus(
+                    action.payload as AutomatedTransferStatusResponsePayload
+            )
             COMPLETE_QUICK_START -> completeQuickStart(action.payload as CompleteQuickStartPayload)
             COMPLETED_QUICK_START -> handleQuickStartCompleted(action.payload as QuickStartCompletedResponsePayload)
             DESIGNATE_PRIMARY_DOMAIN -> designatePrimaryDomain(action.payload as DesignatePrimaryDomainPayload)
             DESIGNATED_PRIMARY_DOMAIN -> handleDesignatedPrimaryDomain(action.payload as DesignatedPrimaryDomainPayload)
             FETCH_PRIVATE_ATOMIC_COOKIE -> fetchPrivateAtomicCookie(action.payload as FetchPrivateAtomicCookiePayload)
-            FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(action.payload as FetchedPrivateAtomicCookiePayload)
+            FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(
+                    action.payload as FetchedPrivateAtomicCookiePayload
+            )
             FETCH_JETPACK_CAPABILITIES -> fetchJetpackCapabilities(action.payload as FetchJetpackCapabilitiesPayload)
-            FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(action.payload as FetchedJetpackCapabilitiesPayload)
+            FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(
+                    action.payload as FetchedJetpackCapabilitiesPayload
+            )
         }
     }
 
@@ -1252,7 +1244,7 @@ class SiteStore
             event.error = SiteErrorUtils.genericToSiteError(siteModel.error)
         } else {
             try {
-                SiteSqlUtils.insertOrUpdateSite(siteModel)
+                siteSqlUtils.insertOrUpdateSite(siteModel)
             } catch (e: DuplicateSiteException) {
                 event.error = SiteError(DUPLICATE_SITE)
             }
@@ -1274,7 +1266,7 @@ class SiteStore
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
                 }
-                OnSiteChanged(SiteSqlUtils.insertOrUpdateSite(siteModel))
+                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
@@ -1308,7 +1300,7 @@ class SiteStore
             } else {
                 OnSiteChanged(res.rowsAffected)
             }
-            SiteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
+            siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
         }
     }
@@ -1326,7 +1318,7 @@ class SiteStore
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
                 }
-                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true
             }
@@ -1347,7 +1339,7 @@ class SiteStore
     private fun handleDeletedSite(payload: DeleteSiteResponsePayload) {
         val event = OnSiteDeleted(payload.error)
         if (!payload.isError) {
-            SiteSqlUtils.deleteSite(payload.site)
+            siteSqlUtils.deleteSite(payload.site)
         }
         emitChange(event)
     }
@@ -1372,12 +1364,12 @@ class SiteStore
     }
 
     private fun removeSite(site: SiteModel) {
-        val rowsAffected = SiteSqlUtils.deleteSite(site)
+        val rowsAffected = siteSqlUtils.deleteSite(site)
         emitChange(OnSiteRemoved(rowsAffected))
     }
 
     private fun removeAllSites() {
-        val rowsAffected = SiteSqlUtils.deleteAllSites()
+        val rowsAffected = siteSqlUtils.deleteAllSites()
         val event = OnAllSitesRemoved(rowsAffected)
         emitChange(event)
     }
@@ -1385,7 +1377,7 @@ class SiteStore
     private fun removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        val wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
+        val wpcomAndJetpackSites = siteSqlUtils.sitesAccessedViaWPComRest.asModel
         val rowsAffected = removeSites(wpcomAndJetpackSites)
         emitChange(OnSiteRemoved(rowsAffected))
     }
@@ -1393,7 +1385,7 @@ class SiteStore
     private fun toggleSitesVisibility(sites: SitesModel, visible: Boolean): Int {
         var rowsAffected = 0
         for (site in sites.sites) {
-            rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible)
+            rowsAffected += siteSqlUtils.setSiteVisibility(site, visible)
         }
         return rowsAffected
     }
@@ -1422,7 +1414,7 @@ class SiteStore
         if (payload.isError) {
             event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
+            siteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
         }
         emitChange(event)
     }
@@ -1459,7 +1451,7 @@ class SiteStore
         val site = payload.site
         site.mobileEditor = payload.editor
         val event = try {
-            OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+            OnSiteEditorsChanged(site, siteSqlUtils.insertOrUpdateSite(site))
         } catch (e: Exception) {
             OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
         }
@@ -1476,7 +1468,7 @@ class SiteStore
                 wpcomPostRequestRequired = true
             }
             try {
-                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
             } catch (e: Exception) {
                 error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
             }
@@ -1499,7 +1491,7 @@ class SiteStore
             site.mobileEditor = payload.mobileEditor
             site.webEditor = payload.webEditor
             try {
-                OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+                OnSiteEditorsChanged(site, siteSqlUtils.insertOrUpdateSite(site))
             } catch (e: Exception) {
                 OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
             }
@@ -1519,18 +1511,17 @@ class SiteStore
                 if (currentModel == null) {
                     // this could happen when a site was added to the current account with another app, or on the web
                     AppLog.e(
-                            API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
-                            + "the following siteID " + key + " but there is no site with that "
-                            + "remote ID in SiteStore."
+                            API,
+                            "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
+                                    "following siteID $key but there is no site with that remote ID in SiteStore."
                     )
                     continue
                 }
-                if (currentModel.mobileEditor == null
-                        || currentModel.mobileEditor != value) {
+                if (currentModel.mobileEditor == null || currentModel.mobileEditor != value) {
                     // the current editor is either null or != from the value on the server. Update it
                     currentModel.mobileEditor = value
                     try {
-                        rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel)
+                        rowsAffected += siteSqlUtils.insertOrUpdateSite(currentModel)
                     } catch (e: Exception) {
                         error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
                     }
@@ -1552,7 +1543,7 @@ class SiteStore
         if (payload.isError) {
             event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles)
+            siteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles)
         }
         emitChange(event)
     }
@@ -1560,7 +1551,7 @@ class SiteStore
     private fun removeSites(sites: List<SiteModel>): Int {
         var rowsAffected = 0
         for (site in sites) {
-            rowsAffected += SiteSqlUtils.deleteSite(site)
+            rowsAffected += siteSqlUtils.deleteSite(site)
         }
         return rowsAffected
     }
@@ -1720,7 +1711,7 @@ class SiteStore
                 emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
             }
         } else {
-            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories!!, payload.layouts!!)
+            siteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories!!, payload.layouts!!)
             emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
         }
     }
@@ -1732,8 +1723,8 @@ class SiteStore
      * @return true if cached layouts were retrieved successfully
      */
     private fun cachedLayoutsRetrieved(site: SiteModel): Boolean {
-        val layouts = SiteSqlUtils.getBlockLayouts(site)
-        val categories = SiteSqlUtils.getBlockLayoutCategories(site)
+        val layouts = siteSqlUtils.getBlockLayouts(site)
+        val categories = siteSqlUtils.getBlockLayoutCategories(site)
         if (!layouts.isEmpty() && !categories.isEmpty()) {
             emitChange(OnBlockLayoutsFetched(layouts, categories, null))
             return true
@@ -1768,8 +1759,7 @@ class SiteStore
     }
 
     private fun handleCheckedAutomatedTransferStatus(payload: AutomatedTransferStatusResponsePayload) {
-        val event: OnAutomatedTransferStatusChecked
-        event = if (!payload.isError) {
+        val event: OnAutomatedTransferStatusChecked = if (!payload.isError) {
             // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
             val isTransferCompleted = payload.status.equals("complete", ignoreCase = true)
             OnAutomatedTransferStatusChecked(

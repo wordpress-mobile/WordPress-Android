@@ -33,21 +33,24 @@ class ReactNativeStore
     private val wpComRestClient: ReactNativeWPComRestClient,
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
+    private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine,
     private val nonceMap: MutableMap<SiteModel, Nonce>,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
-    private val sitePersistanceFunction: (site: SiteModel) -> Int = SiteSqlUtils::insertOrUpdateSite,
+    private val sitePersistanceFunction: (site: SiteModel) -> Int = siteSqlUtils::insertOrUpdateSite,
     private val uriParser: (string: String) -> Uri = Uri::parse
 ) {
     @Inject constructor(
         wpComRestClient: ReactNativeWPComRestClient,
         wpAPIRestClient: ReactNativeWPAPIRestClient,
         discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
+        siteSqlUtils: SiteSqlUtils,
         coroutineEngine: CoroutineEngine
     ) : this(
             wpComRestClient,
             wpAPIRestClient,
             discoveryWPAPIRestClient,
+            siteSqlUtils,
             coroutineEngine,
             mutableMapOf()
     )

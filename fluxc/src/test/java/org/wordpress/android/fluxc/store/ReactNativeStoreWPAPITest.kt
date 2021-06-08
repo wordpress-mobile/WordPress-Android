@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.wordpress.android.fluxc.TestSiteSqlUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
@@ -67,6 +68,7 @@ class ReactNativeStoreWPAPITest {
                 mock(),
                 wpApiRestClient,
                 discoveryWPAPIRestClient,
+                TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
                 nonceMap,
                 { currentTime },
@@ -435,6 +437,7 @@ class ReactNativeStoreWPAPITest {
                 mock(),
                 wpApiRestClient,
                 discoveryWPAPIRestClient,
+                TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
                 mutableMapOf(),
                 { currentTime },
