@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
-import com.wellsql.generated.SiteModelTable
-import com.yarolegovich.wellsql.WellSql
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -884,13 +882,13 @@ class SiteStore
      * Returns all sites in the store as a [SiteModel] list.
      */
     val sites: List<SiteModel>
-        get() = WellSql.select(SiteModel::class.java).asModel
+        get() = siteSqlUtils.getSites()
 
     /**
      * Returns the number of sites of any kind in the store.
      */
     val sitesCount: Int
-        get() = WellSql.select(SiteModel::class.java).count().toInt()
+        get() = siteSqlUtils.getSites().count()
 
     /**
      * Checks whether the store contains any sites of any kind.
@@ -903,8 +901,8 @@ class SiteStore
      * Obtains the site with the given (local) id and returns it as a [SiteModel].
      */
     fun getSiteByLocalId(id: Int): SiteModel? {
-        val result = siteSqlUtils.getSitesWith(SiteModelTable.ID, id).asModel
-        return if (result.size > 0) {
+        val result = siteSqlUtils.getSitesWithLocalId(id)
+        return if (result.isNotEmpty()) {
             result[0]
         } else null
     }
@@ -913,14 +911,14 @@ class SiteStore
      * Checks whether the store contains a site matching the given (local) id.
      */
     fun hasSiteWithLocalId(id: Int): Boolean {
-        return siteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists()
+        return siteSqlUtils.getSitesWithLocalId(id).isNotEmpty()
     }
 
     /**
      * Returns all .COM sites in the store.
      */
     val wPComSites: List<SiteModel>
-        get() = siteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).asModel
+        get() = siteSqlUtils.getWpComSites()
 
     /**
      * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
@@ -947,13 +945,13 @@ class SiteStore
      * Returns the number of .COM sites in the store.
      */
     val wPComSitesCount: Int
-        get() = siteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count().toInt()
+        get() = siteSqlUtils.getWpComSites().size
 
     /**
      * Returns the number of .COM Atomic sites in the store.
      */
     val wPComAtomicSitesCount: Int
-        get() = siteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count().toInt()
+        get() = siteSqlUtils.getWpComAtomicSites().size
 
     /**
      * Returns sites with a name or url matching the search string.
@@ -1008,13 +1006,13 @@ class SiteStore
      * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSites: List<SiteModel>
-        get() = siteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).asModel
+        get() = siteSqlUtils.getVisibleSites()
 
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSitesCount: Int
-        get() = siteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count().toInt()
+        get() = siteSqlUtils.getVisibleSites().size
 
     /**
      * Returns all visible .COM sites as [SiteModel]s.
@@ -1032,52 +1030,21 @@ class SiteStore
      * Checks whether the .COM site with the given (local) id is visible.
      */
     fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .exists()
+        return siteSqlUtils.isWPComSiteVisibleByLocalId(id)
     }
 
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
-                .or()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForRemoteSiteId(siteId)
     }
 
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     fun getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId: Long, xmlRpcUrl: String?): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId, xmlRpcUrl)
     }
 
     /**
@@ -1085,26 +1052,7 @@ class SiteStore
      * sites.
      */
     fun getSiteIdForLocalId(id: Int): Long {
-        val result = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
-                    siteModel.selfHostedSiteId = cursor.getLong(
-                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
-                    )
-                    siteModel
-                }
-        if (result.isEmpty()) {
-            return 0
-        }
-        return if (result[0].siteId > 0) {
-            result[0].siteId
-        } else {
-            result[0].selfHostedSiteId
-        }
+        return siteSqlUtils.getSiteIdForLocalId(id)
     }
 
     /**
@@ -1115,7 +1063,7 @@ class SiteStore
         if (siteId == 0L) {
             return null
         }
-        val sites = siteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).asModel
+        val sites = siteSqlUtils.getSitesWithRemoteId(siteId)
         return if (sites.isEmpty()) {
             null
         } else {
@@ -1766,8 +1714,7 @@ class SiteStore
     }
 
     private fun handleCheckedAutomatedTransferStatus(payload: AutomatedTransferStatusResponsePayload) {
-        val event: OnAutomatedTransferStatusChecked
-        event = if (!payload.isError) {
+        val event: OnAutomatedTransferStatusChecked = if (!payload.isError) {
             // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
             val isTransferCompleted = payload.status.equals("complete", ignoreCase = true)
             OnAutomatedTransferStatusChecked(

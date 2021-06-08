@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import com.wellsql.generated.AccountModelTable
 import com.wellsql.generated.GutenbergLayoutCategoriesModelTable
@@ -34,9 +35,24 @@ class SiteSqlUtils
         private const val serialVersionUID = -224883903136726226L
     }
 
-    fun getSitesWith(field: String?, value: Any?): SelectQuery<SiteModel> {
+    fun getSitesWithLocalId(id: Int): List<SiteModel> {
         return WellSql.select(SiteModel::class.java)
-                .where().equals(field, value).endWhere()
+                .where().equals(SiteModelTable.ID, id).endWhere().asModel
+    }
+
+    fun getSitesWithRemoteId(id: Long): List<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where().equals(SiteModelTable.SITE_ID, id).endWhere().asModel
+    }
+
+    fun getWpComSites(): List<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where().equals(SiteModelTable.IS_WPCOM, true).endWhere().asModel
+    }
+
+    fun getWpComAtomicSites(): List<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where().equals(SiteModelTable.IS_WPCOM_ATOMIC, true).endWhere().asModel
     }
 
     fun getSitesWith(field: String?, value: Boolean): SelectQuery<SiteModel> {
@@ -59,6 +75,16 @@ class SiteSqlUtils
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endWhere().asModel
+    }
+
+    fun getSites(): List<SiteModel> = WellSql.select(SiteModel::class.java).asModel
+
+    fun getVisibleSites(): List<SiteModel> {
+        return WellSql.select(SiteModel::class.java)
+                .where()
+                .equals(SiteModelTable.IS_VISIBLE, true)
+                .endWhere()
+                .asModel
     }
 
     /**
@@ -412,5 +438,79 @@ class SiteSqlUtils
             }
         }
         return localSites.size
+    }
+
+    fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
+        return WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .equals(SiteModelTable.IS_VISIBLE, true)
+                .endGroup().endWhere()
+                .exists()
+    }
+
+    /**
+     * Given a (remote) site id, returns the corresponding (local) id.
+     */
+    fun getLocalIdForRemoteSiteId(siteId: Long): Int {
+        val sites = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.SITE_ID, siteId)
+                .or()
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
+                .endGroup().endWhere()
+                .getAsModel(this::toSiteModel)
+        return if (sites.size > 0) {
+            sites[0].id
+        } else 0
+    }
+
+    private fun toSiteModel(cursor: Cursor): SiteModel {
+        val siteModel = SiteModel()
+        siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
+        return siteModel
+    }
+
+    /**
+     * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
+     */
+    fun getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId: Long, xmlRpcUrl: String?): Int {
+        val sites = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
+                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
+                .endGroup().endWhere()
+                .getAsModel(this::toSiteModel)
+        return if (sites.size > 0) {
+            sites[0].id
+        } else 0
+    }
+
+    /**
+     * Given a (local) id, returns the (remote) site id. Searches first for .COM and Jetpack, then looks for self-hosted
+     * sites.
+     */
+    fun getSiteIdForLocalId(id: Int): Long {
+        val result = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .endGroup().endWhere()
+                .getAsModel { cursor ->
+                    val siteModel = SiteModel()
+                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
+                    siteModel.selfHostedSiteId = cursor.getLong(
+                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
+                    )
+                    siteModel
+                }
+        if (result.isEmpty()) {
+            return 0
+        }
+        return if (result[0].siteId > 0) {
+            result[0].siteId
+        } else {
+            result[0].selfHostedSiteId
+        }
     }
 }
