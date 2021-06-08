@@ -67,4 +67,3 @@ class XMLRPCRequestBuilder
         data class Error(val error: BaseNetworkError) : Response()
     }
 }
-
