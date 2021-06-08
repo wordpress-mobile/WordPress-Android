@@ -99,6 +99,7 @@ import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
+import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -180,6 +181,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -221,6 +223,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mBloggingRemindersPref;
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
+    private Preference mCategoriesPref;
 
     // Media settings
     private EditTextPreference mSiteQuotaSpacePref;
@@ -612,6 +615,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             requestPurchasesForDeletionCheck();
         } else if (preference == mTagsPref) {
             SiteSettingsTagListActivity.showTagList(getActivity(), mSite);
+        } else if (preference == mCategoriesPref) {
+            Toast.makeText(getAppCompatActivity(), "The Categories pref was tapped", Toast.LENGTH_SHORT).show();
         } else {
             return false;
         }
@@ -996,6 +1001,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mJetpackPerformanceMoreSettings =
                 (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_performance_more_settings);
+        mCategoriesPref = getClickPref(R.string.pref_key_site_categories);
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -1035,6 +1041,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (SiteUtils.alwaysDefaultToGutenberg(mSite)) {
             removeEditorPreferences();
         }
+
+        // Hide "Manage" Categories if feature is not enabled
+        if (!mManageCategoriesFeatureConfig.isEnabled()) {
+            removeCategoriesPreference();
+        }
     }
 
     private void updateHomepageSummary() {
@@ -1066,7 +1077,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref, mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
-                mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
+                mPasswordPref, mCategoryPref, mCategoriesPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mAllowlistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
@@ -1975,6 +1986,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_gutenberg_default_for_new_posts);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_site_editor);
+    }
+
+    private void removeCategoriesPreference() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_categories);
     }
 
     private Preference getChangePref(int id) {
