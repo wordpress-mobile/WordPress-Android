@@ -141,14 +141,21 @@ class SiteStore
         val siteDesign: String? = null,
         val dryRun: Boolean
     ) : Payload<BaseNetworkError?>() {
-        constructor(
-            siteName: String, language: String,
-            visibility: SiteVisibility, dryRun: Boolean
-        ) : this(siteName, language, visibility, null, null, dryRun)
+        constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
+                siteName,
+                language,
+                visibility,
+                null,
+                null,
+                dryRun
+        )
 
         constructor(
-            siteName: String, language: String,
-            visibility: SiteVisibility, segmentId: Long?, dryRun: Boolean
+            siteName: String,
+            language: String,
+            visibility: SiteVisibility,
+            segmentId: Long?,
+            dryRun: Boolean
         ) : this(siteName, language, visibility, segmentId, null, dryRun)
     }
 
@@ -189,7 +196,10 @@ class SiteStore
         }
     }
 
-    data class DesignateMobileEditorForAllSitesResponsePayload(val editors: Map<String, String>) : Payload<SiteEditorsError?>()
+    data class DesignateMobileEditorForAllSitesResponsePayload(
+        val editors: Map<String, String>
+    ) : Payload<SiteEditorsError?>()
+
     data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError?>()
     data class FetchedPlansPayload(
         val site: SiteModel,
@@ -233,8 +243,12 @@ class SiteStore
         val includeVendorDot: Boolean = false
     ) : Payload<BaseNetworkError?>() {
         constructor(
-            query: String, onlyWordpressCom: Boolean, includeWordpressCom: Boolean,
-            includeDotBlogSubdomain: Boolean, quantity: Int, includeVendorDot: Boolean
+            query: String,
+            onlyWordpressCom: Boolean,
+            includeWordpressCom: Boolean,
+            includeDotBlogSubdomain: Boolean,
+            quantity: Int,
+            includeVendorDot: Boolean
         ) : this(
                 query = query,
                 onlyWordpressCom = onlyWordpressCom,
@@ -246,10 +260,7 @@ class SiteStore
                 tlds = null
         )
 
-        constructor(
-            query: String, segmentId: Long?,
-            quantity: Int, includeVendorDot: Boolean
-        ) : this(
+        constructor(query: String, segmentId: Long?, quantity: Int, includeVendorDot: Boolean) : this(
                 query = query,
                 segmentId = segmentId,
                 quantity = quantity,
@@ -362,7 +373,11 @@ class SiteStore
         }
     }
 
-    data class SiteError @JvmOverloads constructor(@JvmField val type: SiteErrorType, @JvmField val message: String = "") : OnChangedError
+    data class SiteError @JvmOverloads constructor(
+        @JvmField val type: SiteErrorType,
+        @JvmField val message: String = ""
+    ) : OnChangedError
+
     data class SiteEditorsError internal constructor(val type: SiteEditorsErrorType?, val message: String) :
             OnChangedError {
         constructor(type: SiteEditorsErrorType?) : this(type, "") {}
@@ -514,7 +529,11 @@ class SiteStore
     }
 
     data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError?>()
-    data class OnWPComSiteFetched(@JvmField val checkedUrl: String, @JvmField val site: SiteModel) : OnChanged<SiteError?>()
+    data class OnWPComSiteFetched(
+        @JvmField val checkedUrl: String,
+        @JvmField val site: SiteModel
+    ) : OnChanged<SiteError?>()
+
     data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
             OnChangedError {
         constructor(apiErrorType: String, message: String) : this(
@@ -733,8 +752,8 @@ class SiteStore
     }
 
     enum class DeleteSiteErrorType {
-        INVALID_SITE, UNAUTHORIZED,  // user don't have permission to delete
-        AUTHORIZATION_REQUIRED,  // missing access token
+        INVALID_SITE, UNAUTHORIZED, // user don't have permission to delete
+        AUTHORIZATION_REQUIRED, // missing access token
         GENERIC_ERROR;
 
         companion object {
@@ -792,8 +811,8 @@ class SiteStore
     }
 
     enum class AutomatedTransferErrorType {
-        AT_NOT_ELIGIBLE,  // occurs if AT is initiated when the site is not eligible
-        NOT_FOUND,  // occurs if transfer status of a site with no active transfer is checked
+        AT_NOT_ELIGIBLE, // occurs if AT is initiated when the site is not eligible
+        NOT_FOUND, // occurs if transfer status of a site with no active transfer is checked
         GENERIC_ERROR;
 
         companion object {
@@ -1173,7 +1192,9 @@ class SiteStore
             FETCH_BLOCK_LAYOUTS -> fetchBlockLayouts(action.payload as FetchBlockLayoutsPayload)
             FETCHED_BLOCK_LAYOUTS -> handleFetchedBlockLayouts(action.payload as FetchedBlockLayoutsResponsePayload)
             DESIGNATE_MOBILE_EDITOR -> designateMobileEditor(action.payload as DesignateMobileEditorPayload)
-            DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES -> designateMobileEditorForAllSites(action.payload as DesignateMobileEditorForAllSitesPayload)
+            DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES -> designateMobileEditorForAllSites(
+                    action.payload as DesignateMobileEditorForAllSitesPayload
+            )
             FETCHED_SITE_EDITORS -> updateSiteEditors(action.payload as FetchedEditorsPayload)
             DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES -> handleDesignatedMobileEditorForAllSites(
                     action.payload as DesignateMobileEditorForAllSitesResponsePayload
@@ -1191,25 +1212,41 @@ class SiteStore
             FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
             FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
             CHECK_DOMAIN_AVAILABILITY -> checkDomainAvailability(action.payload as String)
-            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(action.payload as DomainAvailabilityResponsePayload)
+            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(
+                    action.payload as DomainAvailabilityResponsePayload
+            )
             FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
-            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(action.payload as DomainSupportedStatesResponsePayload)
+            FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(
+                    action.payload as DomainSupportedStatesResponsePayload
+            )
             FETCH_DOMAIN_SUPPORTED_COUNTRIES -> siteRestClient.fetchSupportedCountries()
-            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(action.payload as DomainSupportedCountriesResponsePayload)
+            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(
+                    action.payload as DomainSupportedCountriesResponsePayload
+            )
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
             CHECK_AUTOMATED_TRANSFER_STATUS -> checkAutomatedTransferStatus(action.payload as SiteModel)
-            CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY -> handleCheckedAutomatedTransferEligibility(action.payload as AutomatedTransferEligibilityResponsePayload)
-            INITIATED_AUTOMATED_TRANSFER -> handleInitiatedAutomatedTransfer(action.payload as InitiateAutomatedTransferResponsePayload)
-            CHECKED_AUTOMATED_TRANSFER_STATUS -> handleCheckedAutomatedTransferStatus(action.payload as AutomatedTransferStatusResponsePayload)
+            CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY -> handleCheckedAutomatedTransferEligibility(
+                    action.payload as AutomatedTransferEligibilityResponsePayload
+            )
+            INITIATED_AUTOMATED_TRANSFER -> handleInitiatedAutomatedTransfer(
+                    action.payload as InitiateAutomatedTransferResponsePayload
+            )
+            CHECKED_AUTOMATED_TRANSFER_STATUS -> handleCheckedAutomatedTransferStatus(
+                    action.payload as AutomatedTransferStatusResponsePayload
+            )
             COMPLETE_QUICK_START -> completeQuickStart(action.payload as CompleteQuickStartPayload)
             COMPLETED_QUICK_START -> handleQuickStartCompleted(action.payload as QuickStartCompletedResponsePayload)
             DESIGNATE_PRIMARY_DOMAIN -> designatePrimaryDomain(action.payload as DesignatePrimaryDomainPayload)
             DESIGNATED_PRIMARY_DOMAIN -> handleDesignatedPrimaryDomain(action.payload as DesignatedPrimaryDomainPayload)
             FETCH_PRIVATE_ATOMIC_COOKIE -> fetchPrivateAtomicCookie(action.payload as FetchPrivateAtomicCookiePayload)
-            FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(action.payload as FetchedPrivateAtomicCookiePayload)
+            FETCHED_PRIVATE_ATOMIC_COOKIE -> handleFetchedPrivateAtomicCookie(
+                    action.payload as FetchedPrivateAtomicCookiePayload
+            )
             FETCH_JETPACK_CAPABILITIES -> fetchJetpackCapabilities(action.payload as FetchJetpackCapabilitiesPayload)
-            FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(action.payload as FetchedJetpackCapabilitiesPayload)
+            FETCHED_JETPACK_CAPABILITIES -> handleFetchedJetpackCapabilities(
+                    action.payload as FetchedJetpackCapabilitiesPayload
+            )
         }
     }
 
@@ -1508,14 +1545,13 @@ class SiteStore
                 if (currentModel == null) {
                     // this could happen when a site was added to the current account with another app, or on the web
                     AppLog.e(
-                            API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
-                            + "the following siteID " + key + " but there is no site with that "
-                            + "remote ID in SiteStore."
+                            API,
+                            "handleDesignatedMobileEditorForAllSites - The backend returned info for the " +
+                                    "following siteID $key but there is no site with that remote ID in SiteStore."
                     )
                     continue
                 }
-                if (currentModel.mobileEditor == null
-                        || currentModel.mobileEditor != value) {
+                if (currentModel.mobileEditor == null || currentModel.mobileEditor != value) {
                     // the current editor is either null or != from the value on the server. Update it
                     currentModel.mobileEditor = value
                     try {
