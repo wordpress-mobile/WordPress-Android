@@ -1,24 +1,10 @@
 apply plugin: 'kotlin'
 
-dependencies {
-    ext.kotlinVersion = '1.4.10'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-}
-
-sourceCompatibility = "7"
-targetCompatibility = "7"
-
 repositories {
     mavenCentral()
 }
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
+
