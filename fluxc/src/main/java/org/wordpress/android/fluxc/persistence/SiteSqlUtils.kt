@@ -196,8 +196,10 @@ class SiteSqlUtils
                         .put(site, UpdateAllExceptId(SiteModel::class.java)).execute()
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
-                        DB, "Error while updating site: siteId=" + site.siteId + " url=" + site.url
-                        + " xmlrpc=" + site.xmlRpcUrl, e
+                        DB,
+                        "Error while updating site: siteId=${site.siteId} url=${site.url} " +
+                                "xmlrpc=${site.xmlRpcUrl}",
+                        e
                 )
                 throw DuplicateSiteException
             }
