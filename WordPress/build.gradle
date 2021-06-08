@@ -112,6 +112,7 @@ android {
         buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
+        buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
