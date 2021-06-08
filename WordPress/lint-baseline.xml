@@ -1,364 +1,248 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="4" by="lint 3.1.3">
+<issues format="5" by="lint 4.0.2">
 
     <issue
         id="ObsoleteSdkInt"
-        severity="Error"
-        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `drawable-anydpi`."
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder.">
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `drawable-anydpi`.">
         <location
-            file="../libs/editor/WordPressEditor/src/main/res/drawable-anydpi-v21"/>
+            file="src/main/res/drawable-anydpi-v21"/>
     </issue>
 
     <issue
         id="ObsoleteSdkInt"
-        severity="Error"
-        message="This folder configuration (`v18`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `drawable-ldrtl`."
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        quickfix="studio">
+        message="This folder configuration (`v18`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `drawable-ldrtl`.">
         <location
-            file="../libs/editor/WordPressEditor/src/main/res/drawable-ldrtl-v18"/>
+            file="src/main/res/drawable-ldrtl-v18"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.prefs.AccountSettingsFragment.LoadSitesTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadSitesTask extends AsyncTask&lt;Void, Void, Void> {"
         errorLine2="                  ~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/prefs/AccountSettingsFragment.java"
-            line="411"
+            file="src/main/java/org/wordpress/android/ui/prefs/AccountSettingsFragment.java"
+            line="422"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (anonymous android.os.AsyncTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="        new AsyncTask&lt;Void, Void, Bitmap>() {"
         errorLine2="        ^">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/posts/services/AztecVideoLoader.java"
-            line="41"
+            file="src/main/java/org/wordpress/android/ui/posts/services/AztecVideoLoader.java"
+            line="47"
             column="9"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.comments.CommentAdapter.LoadCommentsTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
-        errorLine1="    private class LoadCommentsTask extends AsyncTask&lt;Void, Void, Boolean> {"
+        errorLine1="    private class LoadCommentsTask extends AsyncTask&lt;LoadCommentsTaskParameters, Void, Boolean> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/comments/CommentAdapter.java"
-            line="410"
+            file="src/main/java/org/wordpress/android/ui/comments/CommentAdapter.java"
+            line="310"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.notifications.adapters.NotesAdapter.ReloadNotesFromDBTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class ReloadNotesFromDBTask extends AsyncTask&lt;Void, Void, ArrayList&lt;Note>> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/notifications/adapters/NotesAdapter.java"
-            line="342"
+            file="src/main/java/org/wordpress/android/ui/notifications/adapters/NotesAdapter.java"
+            line="357"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.uploads.PostUploadHandler.UploadPostTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class UploadPostTask extends AsyncTask&lt;PostModel, Boolean, UploadPostTaskResult> {"
         errorLine2="                  ~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/uploads/PostUploadHandler.java"
-            line="194"
+            file="src/main/java/org/wordpress/android/ui/uploads/PostUploadHandler.java"
+            line="199"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.LoadServicesTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadServicesTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/publicize/adapters/PublicizeServiceAdapter.java"
+            file="src/main/java/org/wordpress/android/ui/publicize/adapters/PublicizeServiceAdapter.java"
             line="175"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.LoadBlogsTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadBlogsTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="                  ~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/reader/adapters/ReaderBlogAdapter.java"
-            line="207"
+            file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderBlogAdapter.java"
+            line="265"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter.LoadCommentsTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadCommentsTask extends AsyncTask&lt;Void, Void, Boolean> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/reader/adapters/ReaderCommentAdapter.java"
-            line="514"
+            file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderCommentAdapter.java"
+            line="541"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.LoadTagsTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadTagsTask extends AsyncTask&lt;Void, Void, ReaderTagList> {"
         errorLine2="                  ~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/reader/adapters/ReaderTagAdapter.java"
-            line="147"
+            file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderTagAdapter.java"
+            line="155"
             column="19"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        severity="Error"
         message="This `AsyncTask` class should be static or leaks might occur (org.wordpress.android.ui.main.SitePickerAdapter.LoadSitesTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
         errorLine1="    private class LoadSitesTask extends AsyncTask&lt;Void, Void, SiteList[]&gt; {"
         errorLine2="                  ~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="565"
+            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
+            line="657"
             column="19"/>
     </issue>
 
     <issue
         id="ClickableViewAccessibility"
-        severity="Error"
         message="Custom view ``EditTextWithKeyBackListener`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
         errorLine1="        mTitle.setOnTouchListener(this);"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="233"
+            file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
+            line="255"
             column="9"/>
     </issue>
 
     <issue
         id="ClickableViewAccessibility"
-        severity="Error"
         message="Custom view ``AztecText`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
         errorLine1="        mContent.setOnTouchListener(this);"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="234"
+            file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
+            line="256"
             column="9"/>
     </issue>
 
     <issue
         id="ClickableViewAccessibility"
-        severity="Error"
         message="Custom view ``SourceViewEditText`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
         errorLine1="        mSource.setOnTouchListener(this);"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="235"
+            file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
+            line="257"
             column="9"/>
     </issue>
 
     <issue
         id="ClickableViewAccessibility"
-        severity="Error"
         message="`AztecEditorFragment#onTouch` should call `View#performClick` when a click is detected"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
         errorLine1="    public boolean onTouch(View view, MotionEvent event) {"
         errorLine2="                   ~~~~~~~">
         <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="1361"
+            file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
+            line="1447"
             column="20"/>
     </issue>
 
     <issue
         id="ClickableViewAccessibility"
-        severity="Error"
         message="Custom view `RippleToggleButton` overrides `onTouchEvent` but not `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
         errorLine1="    public boolean onTouchEvent(@NonNull MotionEvent event) {"
         errorLine2="                   ~~~~~~~~~~~~">
         <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/RippleToggleButton.java"
-            line="83"
+            file="src/main/java/org/wordpress/android/editor/RippleToggleButton.java"
+            line="84"
             column="20"/>
     </issue>
 
     <issue
         id="RelativeOverlap"
-        severity="Error"
         message="`LinearLayout-1` can overlap `LinearLayout-3` if LinearLayout-1 grows due to localized text expansion"
-        category="Internationalization"
-        priority="3"
-        summary="Overlapping items in RelativeLayout"
-        explanation="If relative layout has text or button items aligned to left and right sides they can overlap each other due to localized text expansion unless they have mutual constraints like `toEndOf`/`toStartOf`."
         errorLine1="            &lt;LinearLayout"
-        errorLine2="            ^">
+        errorLine2="             ~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout-sw600dp/theme_grid_cardview_header.xml"
-            line="21"
-            column="13"/>
+            file="src/main/res/layout-sw600dp/theme_grid_cardview_header.xml"
+            line="20"
+            column="14"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
-        severity="Error"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
         errorLine1="        android:paddingStart=&quot;@dimen/start_over_preference_margin_small&quot;/>"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout/domain_removal_preference.xml"
+            file="src/main/res/layout/domain_removal_preference.xml"
             line="15"
             column="9"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
-        severity="Error"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
-        errorLine1="            android:paddingStart=&quot;@dimen/margin_small&quot;"
+        errorLine1="            android:paddingStart=&quot;@dimen/margin_small&quot; />"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout/site_settings_format_dialog.xml"
+            file="src/main/res/layout/site_settings_format_dialog.xml"
             line="37"
             column="13"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
-        severity="Error"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
-        errorLine1="            android:paddingStart=&quot;@dimen/margin_small&quot;/>"
+        errorLine1="            android:paddingStart=&quot;@dimen/margin_small&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout/site_settings_format_dialog.xml"
-            line="55"
+            file="src/main/res/layout/site_settings_format_dialog.xml"
+            line="48"
             column="13"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
-        severity="Error"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
-        errorLine1="            android:paddingStart=&quot;@dimen/start_over_title_margin&quot;/>"
+        errorLine1="            android:paddingStart=&quot;@dimen/start_over_title_margin&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout/start_over_preference.xml"
+            file="src/main/res/layout/start_over_preference.xml"
             line="39"
             column="13"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
-        severity="Error"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
         errorLine1="        android:paddingStart=&quot;@dimen/start_over_preference_margin_small&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../WordPress/src/main/res/layout/start_over_preference.xml"
-            line="51"
+            file="src/main/res/layout/start_over_preference.xml"
+            line="52"
             column="9"/>
     </issue>
 
