@@ -64,8 +64,6 @@ allOpen {
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
 
-android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
-
 android {
     useLibrary 'android.test.runner'
 
@@ -363,7 +361,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
