@@ -81,6 +81,7 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.config.MySiteSearchFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
@@ -99,6 +100,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
+    @Inject lateinit var mySiteSearchFeatureConfig: MySiteSearchFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -132,6 +134,9 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                     actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
+            }
+            toolbar.menu.findItem(R.id.menu_search)?.let { searchMenu ->
+                searchMenu.isVisible = mySiteSearchFeatureConfig.isEnabled()
             }
         }
 

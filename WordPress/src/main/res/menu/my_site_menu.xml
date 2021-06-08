@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/me_item"
         android:title="@string/me_section_screen_title"
         app:actionLayout="@layout/me_action_layout"
