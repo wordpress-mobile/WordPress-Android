@@ -145,6 +145,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
@@ -685,6 +686,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(UnifiedCommentListAdapter object);
 
     void inject(BloggingReminderBottomSheetFragment object);
+    
+    void inject(LocalePickerBottomSheet object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
