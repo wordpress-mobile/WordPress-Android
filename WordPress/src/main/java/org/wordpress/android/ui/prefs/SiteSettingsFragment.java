@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import kotlin.Triple;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -1631,15 +1632,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = LocaleManager
+        Triple<String[], String[], String[]> pair = LocaleManager
                 .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
         if (pair != null) {
-            String[] sortedEntries = pair.first;
-            String[] sortedValues = pair.second;
+            String[] sortedEntries = pair.component1();
+            String[] sortedValues = pair.component2();
+            String[] localizedEntries = pair.component3();
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(localizedEntries);
         }
     }
 
