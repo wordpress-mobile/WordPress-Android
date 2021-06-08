@@ -23,6 +23,8 @@ import org.wordpress.android.databinding.NewMySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.SitePickerActivity
@@ -101,6 +103,8 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var mySiteSearchFeatureConfig: MySiteSearchFeatureConfig
+    @Inject lateinit var deeplinkNavigator: DeepLinkNavigator
+    private lateinit var deepLinkingIntentReceiverViewModel: DeepLinkingIntentReceiverViewModel
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -115,6 +119,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                 .get(BasicDialogViewModel::class.java)
         dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(DynamicCardMenuViewModel::class.java)
+        setupDeepLinking()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,6 +129,19 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             setupContentViews(savedInstanceState)
             setupObservers()
         }
+    }
+
+    private fun setupDeepLinking() {
+        deepLinkingIntentReceiverViewModel = ViewModelProvider(this, viewModelFactory).get(
+                DeepLinkingIntentReceiverViewModel::class.java
+        )
+        deepLinkingIntentReceiverViewModel.navigateAction.observe(this) {
+            val activity = requireActivity()
+            it.applyIfNotHandled {
+                deeplinkNavigator.handleNavigationAction(this, activity)
+            }
+        }
+        deepLinkingIntentReceiverViewModel.start(null, null)
     }
 
     private fun NewMySiteFragmentBinding.setupToolbar() {
@@ -137,6 +155,17 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             }
             toolbar.menu.findItem(R.id.menu_search)?.let { searchMenu ->
                 searchMenu.isVisible = mySiteSearchFeatureConfig.isEnabled()
+                searchMenu.setOnMenuItemClickListener {
+                    val url =
+                    // "wordpress://post"
+                    // "wordpress://pages"
+                    // "wordpress://start"
+                    // "wordpress://read"
+                    // "wordpress://notifications"
+                    "wordpress://stats"
+                    deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
+                    true
+                }
             }
         }
 

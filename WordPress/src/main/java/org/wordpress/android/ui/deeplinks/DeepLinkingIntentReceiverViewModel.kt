@@ -56,6 +56,8 @@ class DeepLinkingIntentReceiverViewModel
         }
     }
 
+    fun handleUrlDeeplink(url: String) = handleUrl(UriWrapper(url))
+
     /**
      * Handles the following URLs
      * `wordpress.com/post...`

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.deeplinks
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class DeepLinkNavigator
 @Inject constructor() {
     @Suppress("ComplexMethod")
-    fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
+    fun handleNavigationAction(navigateAction: NavigateAction, activity: FragmentActivity) {
         when (navigateAction) {
             LoginForResult -> ActivityLauncher.loginForDeeplink(activity)
             StartCreateSiteFlow -> ActivityLauncher.showMainActivityAndSiteCreationActivity(activity)
