@@ -89,7 +89,6 @@ import org.wordpress.android.util.UrlUtils
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URLEncoder
-import java.util.ArrayList
 import java.util.HashMap
 import java.util.Locale
 import javax.inject.Inject
@@ -111,16 +110,16 @@ class SiteRestClient @Inject constructor(
         val dryRun: Boolean = false
     ) : Payload<NewSiteError>()
 
-    data class DeleteSiteResponsePayload(var site: SiteModel? = null) : Payload<DeleteSiteError>()
+    data class DeleteSiteResponsePayload(val site: SiteModel? = null) : Payload<DeleteSiteError>()
 
     class ExportSiteResponsePayload : Payload<BaseNetworkError>()
     data class IsWPComResponsePayload(
-        val url: String? = null,
+        val url: String,
         val isWPCom: Boolean = false
     ) : Payload<BaseNetworkError>()
 
     data class FetchWPComSiteResponsePayload(
-        val checkedUrl: String? = null,
+        val checkedUrl: String,
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
@@ -131,7 +130,7 @@ class SiteRestClient @Inject constructor(
                 SitesResponse::class.java,
                 { response ->
                     if (response != null) {
-                        val siteArray: MutableList<SiteModel> = ArrayList()
+                        val siteArray = mutableListOf<SiteModel>()
                         for (siteResponse in response.sites) {
                             siteArray.add(siteResponseToSiteModel(siteResponse))
                         }
@@ -152,14 +151,14 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun getFetchSitesParams(filters: List<SiteFilter?>): Map<String, String> {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         if (filters.isNotEmpty()) params[FILTERS] = TextUtils.join(",", filters)
         params[FIELDS] = SITE_FIELDS
         return params
     }
 
     fun fetchSite(site: SiteModel) {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         params[FIELDS] = SITE_FIELDS
         val url = WPCOMREST.sites.urlV1_1 + site.siteId
         val request = WPComGsonRequest.buildGetRequest(url, params,
@@ -238,7 +237,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchSiteEditors(site: SiteModel) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 SiteEditorsResponse::class.java,
@@ -345,7 +344,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest.buildGetRequest(url, null,
                 UserRolesResponse::class.java,
                 { response ->
-                    val roleArray: MutableList<RoleModel> = ArrayList()
+                    val roleArray = mutableListOf<RoleModel>()
                     for (roleResponse in response.roles) {
                         val roleModel = RoleModel()
                         roleModel.name = roleResponse.name
@@ -392,14 +391,12 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest.buildPostRequest(url, null,
                 SiteWPComRestResponse::class.java,
                 {
-                    val payload = DeleteSiteResponsePayload()
-                    payload.site = site
+                    val payload = DeleteSiteResponsePayload(site)
                     mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload))
                 }
         ) { error ->
-            val payload = DeleteSiteResponsePayload()
+            val payload = DeleteSiteResponsePayload(site)
             payload.error = DeleteSiteError(error.apiError, error.message)
-            payload.site = site
             mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload))
         }
         add(request)
@@ -449,8 +446,8 @@ class SiteRestClient @Inject constructor(
         if (includeVendorDot) {
             params["vendor"] = "dot"
         }
-        val request = WPComGsonRequest.buildGetRequest<ArrayList<DomainSuggestionResponse>>(url, params,
-                object : TypeToken<ArrayList<DomainSuggestionResponse?>?>() {}.type,
+        val request = WPComGsonRequest.buildGetRequest<List<DomainSuggestionResponse>>(url, params,
+                object : TypeToken<List<DomainSuggestionResponse>>() {}.type,
                 { response ->
                     val payload = SuggestDomainsResponsePayload(
                             query,
@@ -505,7 +502,7 @@ class SiteRestClient @Inject constructor(
         scale: Float?,
         isBeta: Boolean?
     ) {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         if (supportedBlocks != null && supportedBlocks.isNotEmpty()) {
             params["supported_blocks"] = TextUtils.join(",", supportedBlocks)
         }
@@ -532,10 +529,10 @@ class SiteRestClient @Inject constructor(
                     mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload))
                 }
         ) { error ->
-            var siteErrorType = SiteErrorType.GENERIC_ERROR
-            when (error.apiError) {
-                "unauthorized" -> siteErrorType = UNAUTHORIZED
-                "unknown_blog" -> siteErrorType = UNKNOWN_SITE
+            val siteErrorType = when (error.apiError) {
+                "unauthorized" -> UNAUTHORIZED
+                "unknown_blog" -> UNKNOWN_SITE
+                else -> SiteErrorType.GENERIC_ERROR
             }
             val siteError = SiteError(siteErrorType, error.message)
             val payload = FetchedBlockLayoutsResponsePayload(site, siteError)
@@ -599,10 +596,10 @@ class SiteRestClient @Inject constructor(
                 }
         ) { error ->
             val payload = FetchWPComSiteResponsePayload(siteUrl)
-            var siteErrorType = SiteErrorType.GENERIC_ERROR
-            when (error.apiError) {
-                "unauthorized" -> siteErrorType = UNAUTHORIZED
-                "unknown_blog" -> siteErrorType = UNKNOWN_SITE
+            val siteErrorType = when (error.apiError) {
+                "unauthorized" -> UNAUTHORIZED
+                "unknown_blog" -> UNKNOWN_SITE
+                else -> SiteErrorType.GENERIC_ERROR
             }
             payload.error = SiteError(siteErrorType)
             mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload))
@@ -665,7 +662,7 @@ class SiteRestClient @Inject constructor(
     fun fetchSupportedStates(countryCode: String) {
         val url = WPCOMREST.domains.supported_states.countryCode(countryCode).urlV1_1
         val request = WPComGsonRequest.buildGetRequest<List<SupportedStateResponse>>(url, null,
-                object : TypeToken<ArrayList<SupportedStateResponse?>?>() {}.type,
+                object : TypeToken<List<SupportedStateResponse>>() {}.type,
                 { response ->
                     val payload = DomainSupportedStatesResponsePayload(response)
                     mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload))
@@ -689,8 +686,8 @@ class SiteRestClient @Inject constructor(
      */
     fun fetchSupportedCountries() {
         val url = WPCOMREST.domains.supported_countries.urlV1_1
-        val request = WPComGsonRequest.buildGetRequest<ArrayList<SupportedCountryResponse>>(url, null,
-                object : TypeToken<ArrayList<SupportedCountryResponse?>?>() {}.type,
+        val request = WPComGsonRequest.buildGetRequest<List<SupportedCountryResponse>>(url, null,
+                object : TypeToken<List<SupportedCountryResponse>>() {}.type,
                 { response ->
                     val payload = DomainSupportedCountriesResponsePayload(response)
                     mDispatcher.dispatch(
@@ -713,7 +710,7 @@ class SiteRestClient @Inject constructor(
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
         val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["domain"] = domain
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, DesignatePrimaryDomainResponse::class.java,
@@ -741,7 +738,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest
                 .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse::class.java,
                         { response ->
-                            val strErrorCodes: MutableList<String> = ArrayList()
+                            val strErrorCodes = mutableListOf<String>()
                             if (response.errors != null) {
                                 for (eligibilityError in response.errors) {
                                     strErrorCodes.add(eligibilityError.code)
@@ -771,7 +768,7 @@ class SiteRestClient @Inject constructor(
 
     fun initiateAutomatedTransfer(site: SiteModel, pluginSlugToInstall: String) {
         val url = WPCOMREST.sites.site(site.siteId).automated_transfers.initiate.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["plugin"] = pluginSlugToInstall
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, InitiateAutomatedTransferResponse::class.java,
@@ -819,7 +816,7 @@ class SiteRestClient @Inject constructor(
 
     fun completeQuickStart(site: SiteModel, variant: String) {
         val url = WPCOMREST.sites.site(site.siteId).mobile_quick_start.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["variant"] = variant
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, QuickStartCompletedResponse::class.java,
@@ -842,7 +839,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchAccessCookie(site: SiteModel) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(site.siteId).atomic_auth_proxy.read_access_cookies.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 PrivateAtomicCookieResponse::class.java,
@@ -877,7 +874,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchJetpackCapabilities(remoteSiteId: Long) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(remoteSiteId).rewind.capabilities.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 JetpackCapabilitiesResponse::class.java,
@@ -1007,7 +1004,10 @@ class SiteRestClient @Inject constructor(
         return site
     }
 
-    private fun volleyErrorToAccountResponsePayload(error: VolleyError, dryRun: Boolean): NewSiteResponsePayload {
+    private fun volleyErrorToAccountResponsePayload(
+        error: VolleyError,
+        dryRun: Boolean
+    ): NewSiteResponsePayload {
         val payload = NewSiteResponsePayload(dryRun = dryRun)
         payload.error = NewSiteError(NewSiteErrorType.GENERIC_ERROR, "")
         if (error.networkResponse != null && error.networkResponse.data != null) {
@@ -1044,10 +1044,8 @@ class SiteRestClient @Inject constructor(
     private fun responseToJetpackCapabilitiesPayload(
         remoteSiteId: Long, response: JetpackCapabilitiesResponse
     ): FetchedJetpackCapabilitiesPayload {
-        val capabilities: MutableList<JetpackCapability> = ArrayList(
-                response.capabilities!!.size
-        )
-        for (item in response.capabilities) {
+        val capabilities = mutableListOf<JetpackCapability>()
+        for (item in response.capabilities ?: listOf()) {
             capabilities.add(JetpackCapability.fromString(item))
         }
         return FetchedJetpackCapabilitiesPayload(remoteSiteId, capabilities)
