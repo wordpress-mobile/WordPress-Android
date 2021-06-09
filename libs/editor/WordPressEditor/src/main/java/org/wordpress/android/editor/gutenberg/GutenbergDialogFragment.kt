@@ -59,7 +59,7 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
             mMessage = savedInstanceState.getCharSequence(STATE_KEY_MESSAGE)
             mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
-            mDataFromGutenberg = savedInstanceState.getSerializable(STATE_KEY_ID) as T?
+            mDataFromGutenberg = savedInstanceState.getSerializable(STATE_KEY_DATA_FROM_GUTENBERG) as T?
         }
     }
 
@@ -69,7 +69,7 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
         outState.putCharSequence(STATE_KEY_MESSAGE, mMessage)
         outState.putCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL, mPositiveButtonLabel)
         outState.putCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL, mNegativeButtonLabel)
-        outState.putSerializable(STATE_KEY_ID, mDataFromGutenberg)
+        outState.putSerializable(STATE_KEY_DATA_FROM_GUTENBERG, mDataFromGutenberg)
         super.onSaveInstanceState(outState)
     }
 
@@ -132,6 +132,6 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
         private const val STATE_KEY_MESSAGE = "state_key_message"
         private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
-        private const val STATE_KEY_ID = "state_key_id"
+        private const val STATE_KEY_DATA_FROM_GUTENBERG = "state_key_data_from_gutenberg"
     }
 }
