@@ -37,7 +37,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.BaseInputConnection;
@@ -122,7 +121,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
         AztecText.OnVideoInfoRequestedListener,
-        View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
         AztecTextChangeObserver,
@@ -252,9 +250,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
-        mTitle.setOnTouchListener(this);
-        mContent.setOnTouchListener(this);
-        mSource.setOnTouchListener(this);
 
         mTitle.setOnImeBackListener(new org.wordpress.android.editor.OnImeBackListener() {
             public void onImeBack() {
@@ -426,7 +421,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
             showClassicEditorDeprecationDialog();
         }
-        
+
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }
@@ -1441,18 +1436,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mHideActionBarOnSoftKeyboardUp = false;
             showActionBarIfNeeded();
         }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        // In landscape mode, if the title or content view has received a touch event, the keyboard will be
-        // displayed and the action bar should hide
-        if (event.getAction() == MotionEvent.ACTION_UP
-            && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        }
-        return false;
     }
 
     /**
