@@ -116,6 +116,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
     private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
+    private static final String TAG_CANCEL_MEDIA_UPLOAD_DIALOG = "CANCEL_MEDIA_UPLOAD_DIALOG";
 
     public static final int MEDIA_ID_NO_FEATURED_IMAGE_SET = 0;
 
@@ -1403,6 +1404,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             case TAG_REPLACE_FEATURED_DIALOG:
                 setFeaturedImage((int) dataFromGutenberg);
                 break;
+            case TAG_CANCEL_MEDIA_UPLOAD_DIALOG:
+                break;
         }
     }
 
@@ -1410,6 +1413,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
+            case TAG_CANCEL_MEDIA_UPLOAD_DIALOG:
                 // Dismiss dialog with no action.
                 break;
         }
