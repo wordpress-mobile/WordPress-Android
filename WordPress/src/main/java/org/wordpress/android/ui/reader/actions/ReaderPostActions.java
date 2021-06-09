@@ -181,19 +181,9 @@ public class ReaderPostActions {
             public void run() {
                 ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
 
-                // TODO: this temporary fix was added 25-Apr-2016 as a workaround for the fact that
-                // the read/sites/{blogId}/posts/{postId} endpoint doesn't contain the feedId or
-                // feedItemId of the post. because of this, we need to copy them from the local post
-                // before calling isSamePost (since the difference in those IDs causes it to return false)
-                if (serverPost.feedId == 0 && localPost.feedId != 0) {
-                    serverPost.feedId = localPost.feedId;
-                }
+                ReaderActions.UpdateResult updateResult = ReaderPostTable.comparePost(serverPost);
 
-                if (serverPost.feedItemId == 0 && localPost.feedItemId != 0) {
-                    serverPost.feedItemId = localPost.feedItemId;
-                }
-
-                boolean hasChanges = !serverPost.isSamePost(localPost);
+                boolean hasChanges = updateResult == UpdateResult.CHANGED;
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");

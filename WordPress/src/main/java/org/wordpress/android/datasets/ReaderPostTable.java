@@ -421,6 +421,15 @@ public class ReaderPostTable {
     }
 
     /*
+     * returns whether given post is new or changed - used when post is retrieved
+     */
+    public static ReaderActions.UpdateResult comparePost(ReaderPost post) {
+        ReaderPostList posts = new ReaderPostList();
+        posts.add(post);
+        return ReaderPostTable.comparePosts(posts);
+    }
+
+    /*
      * returns whether any of the passed posts are new or changed - used after posts are retrieved
      */
     public static ReaderActions.UpdateResult comparePosts(ReaderPostList posts) {
@@ -433,8 +442,20 @@ public class ReaderPostTable {
             ReaderPost existingPost = getBlogPost(post.blogId, post.postId, true);
             if (existingPost == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
-            } else if (!hasChanges && !post.isSamePost(existingPost)) {
-                hasChanges = true;
+            } else if (!hasChanges) {
+                // TODO: this temporary fix was added 25-Apr-2016 as a workaround for the fact that
+                // the read/sites/{blogId}/posts/{postId} endpoint doesn't contain the feedId or
+                // feedItemId of the post. because of this, we need to copy them from the local post
+                // before calling isSamePost (since the difference in those IDs causes it to return false)
+                if (post.feedId == 0 && existingPost.feedId != 0) {
+                    post.feedId = existingPost.feedId;
+                }
+
+                if (post.feedItemId == 0 && existingPost.feedItemId != 0) {
+                    post.feedItemId = existingPost.feedItemId;
+                }
+
+                hasChanges = !post.isSamePost(existingPost);
             }
         }
 
