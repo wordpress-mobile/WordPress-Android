@@ -85,7 +85,7 @@ class SiteXMLRPCClient @Inject constructor(
         }
     }
 
-    fun fetchSite(site: SiteModel) {
+    suspend fun fetchSite(site: SiteModel): SiteModel {
         val params = listOf(
                 site.selfHostedSiteId, site.username, site.password,
                 arrayOf(
@@ -102,19 +102,16 @@ class SiteXMLRPCClient @Inject constructor(
                         "jetpack_user_email"
                 )
         )
-        val request = xmlrpcRequestBuilder.buildGetRequest(
-                site.xmlRpcUrl, GET_OPTIONS, params,
-                Map::class.java,
-                { response ->
-                    val updatedSite = updateSiteFromOptions(response, site)
-                    mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite))
-                }
-        ) { error ->
-            val site = SiteModel()
-            site.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site))
+        val response = xmlrpcRequestBuilder.syncGetRequest(this, site.xmlRpcUrl, GET_OPTIONS, params, Map::class.java)
+        return when (response) {
+            is Success -> {
+                val updatedSite = updateSiteFromOptions(response.data, site)
+                updatedSite
+            }
+            is Error -> {
+                SiteModel().apply { error = response.error}
+            }
         }
-        add(request)
     }
 
     fun fetchPostFormats(site: SiteModel) {

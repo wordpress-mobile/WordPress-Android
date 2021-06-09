@@ -1136,7 +1136,9 @@ class SiteStore
         when (actionType) {
             FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
             FETCHED_PROFILE_XML_RPC -> updateSiteProfile(action.payload as SiteModel)
-            FETCH_SITE -> fetchSite(action.payload as SiteModel)
+            FETCH_SITE -> coroutineEngine.launch(T.MAIN, this, "Fetch site") {
+                fetchSite(action.payload as SiteModel)
+            }
             FETCH_SITES -> coroutineEngine.launch(T.MAIN, this, "Fetch sites") {
                 emitChange(fetchSites(action.payload as FetchSitesPayload))
             }
@@ -1224,12 +1226,13 @@ class SiteStore
         siteXMLRPCClient.fetchProfile(site)
     }
 
-    private fun fetchSite(site: SiteModel) {
-        if (site.isUsingWpComRestApi) {
+    suspend fun fetchSite(site: SiteModel) {
+        val updatedSite = if (site.isUsingWpComRestApi) {
             siteRestClient.fetchSite(site)
         } else {
             siteXMLRPCClient.fetchSite(site)
         }
+        updateSite(updatedSite)
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
