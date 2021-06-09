@@ -98,6 +98,7 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.math.max
 
 @Singleton
 class SiteRestClient @Inject constructor(
@@ -206,7 +207,7 @@ class SiteRestClient @Inject constructor(
         if (siteDesign != null) {
             options["template"] = siteDesign
         }
-        if (options.size > 0) {
+        if (options.isNotEmpty()) {
             body["options"] = options
         }
         val request = WPComGsonRequest.buildPostRequest(url, body,
@@ -220,14 +221,8 @@ class SiteRestClient @Inject constructor(
                             // No op: In dry run mode, returned newSiteRemoteId is "Array"
                         }
                     }
-                    mDispatcher.dispatch(
-                            SiteActionBuilder.newCreatedNewSiteAction(
-                                    NewSiteResponsePayload(
-                                            siteId,
-                                            dryRun
-                                    )
-                            )
-                    )
+                    val payload = NewSiteResponsePayload(siteId, dryRun)
+                    mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload))
                 }
         ) { error ->
             val payload = volleyErrorToAccountResponsePayload(error.volleyError, dryRun)
@@ -271,8 +266,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, SiteEditorsResponse::class.java,
                         { response ->
-                            val payload: FetchedEditorsPayload
-                            payload = FetchedEditorsPayload(site, response.editor_web, response.editor_mobile)
+                            val payload = FetchedEditorsPayload(site, response.editor_web, response.editor_mobile)
                             mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
                         }
                 ) {
@@ -304,7 +298,7 @@ class SiteRestClient @Inject constructor(
                                     )
                                 },
                                 {
-                                    val payload = DesignateMobileEditorForAllSitesResponsePayload()
+                                    val payload = DesignateMobileEditorForAllSitesResponsePayload(null)
                                     payload.error = SiteEditorsError(GENERIC_ERROR)
                                     mDispatcher.dispatch(
                                             SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload)
@@ -526,8 +520,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 BlockLayoutsResponse::class.java,
                 { (layouts, categories) ->
-                    val payload: FetchedBlockLayoutsResponsePayload
-                    payload = FetchedBlockLayoutsResponsePayload(
+                    val payload = FetchedBlockLayoutsResponsePayload(
                             site, layouts,
                             categories
                     )
@@ -882,7 +875,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 JetpackCapabilitiesResponse::class.java,
                 { response ->
-                    if (response != null && response.capabilities != null) {
+                    if (response?.capabilities != null) {
                         val payload = responseToJetpackCapabilitiesPayload(remoteSiteId, response)
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload))
                     } else {
@@ -950,7 +943,7 @@ class SiteRestClient @Inject constructor(
                 // Only update the value if we received one from the server - otherwise, the original value was
                 // probably not set ('false'), but we don't want to overwrite any existing value we stored earlier,
                 // as /me/sites/ and /sites/$site/ can return different responses for this
-                site.memoryLimit = Math.max(wpMemoryLimit, wpMaxMemoryLimit)
+                site.memoryLimit = max(wpMemoryLimit, wpMaxMemoryLimit)
             }
         }
         if (from.plan != null) {
