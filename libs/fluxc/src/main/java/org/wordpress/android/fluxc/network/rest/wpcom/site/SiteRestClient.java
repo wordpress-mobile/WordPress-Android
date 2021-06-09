@@ -659,8 +659,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 siteErrorType = SiteErrorType.UNKNOWN_SITE;
                                 break;
                         }
-                        SiteError siteError = new SiteError(siteErrorType);
-                        siteError.message = error.message;
+                        SiteError siteError = new SiteError(siteErrorType, error.message);
                         FetchedBlockLayoutsResponsePayload payload =
                                 new FetchedBlockLayoutsResponsePayload(site, siteError);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload));
@@ -697,7 +696,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(ConnectSiteInfoResponse response) {
                         ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
-                        info.url = siteUrl;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 },
@@ -975,8 +973,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onResponse(InitiateAutomatedTransferResponse response) {
                                 InitiateAutomatedTransferResponsePayload payload =
-                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
-                                payload.success = response.success;
+                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall,
+                                                response.success);
                                 mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         },
@@ -1231,8 +1229,8 @@ public class SiteRestClient extends BaseWPComRestClient {
             String jsonString = new String(error.networkResponse.data);
             try {
                 JSONObject errorObj = new JSONObject(jsonString);
-                payload.error.type = NewSiteErrorType.fromString((String) errorObj.get("error"));
-                payload.error.message = (String) errorObj.get("message");
+                payload.error = new NewSiteError(NewSiteErrorType.fromString((String) errorObj.get("error")),
+                        (String) errorObj.get("message"));
             } catch (JSONException e) {
                 // Do nothing (keep default error)
             }
@@ -1241,16 +1239,10 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
-        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
-        info.url = url;
-        info.exists = response.exists;
-        info.hasJetpack = response.hasJetpack;
-        info.isJetpackActive = response.isJetpackActive;
-        info.isJetpackConnected = response.isJetpackConnected;
-        info.isWordPress = response.isWordPress;
-        info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
-        info.urlAfterRedirects = response.urlAfterRedirects;
-        return info;
+        return new ConnectSiteInfoPayload(url, response.exists, response.isWordPress, response.hasJetpack,
+                response.isJetpackActive, response.isJetpackConnected,
+                response.isWordPressDotCom, // CHECKSTYLE IGNORE
+                response.urlAfterRedirects);
     }
 
     private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
