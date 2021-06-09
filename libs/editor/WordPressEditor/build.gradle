@@ -1,5 +1,9 @@
 buildscript {
     ext.aztecVersion = 'v1.3.45'
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
 }
 
 repositories {
