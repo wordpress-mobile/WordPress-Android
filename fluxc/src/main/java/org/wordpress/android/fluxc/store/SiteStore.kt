@@ -541,7 +541,7 @@ class SiteStore
 
     data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError>()
     data class OnWPComSiteFetched(
-        @JvmField val checkedUrl: String,
+        @JvmField val checkedUrl: String? = null,
         @JvmField val site: SiteModel? = null
     ) : OnChanged<SiteError>()
 
@@ -1592,7 +1592,7 @@ class SiteStore
         } else {
             null
         }
-        emitChange(OnURLChecked(payload.url, payload.isWPCom, error))
+        emitChange(OnURLChecked(payload.url ?: "", payload.isWPCom, error))
     }
 
     private fun suggestDomains(payload: SuggestDomainsPayload) {
