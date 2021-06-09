@@ -19,7 +19,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/header_card_left_side_linear_layout_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_large"
@@ -50,7 +49,6 @@
                 android:background="?android:attr/listDivider" />
 
             <LinearLayout
-                android:id="@+id/header_card_right_side_linear_layout_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
