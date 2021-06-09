@@ -164,9 +164,10 @@ class SiteStore
         val postFormats: List<PostFormatModel>
     ) : Payload<PostFormatsError>()
 
-    data class DesignateMobileEditorForAllSitesPayload(
-        val editor: String,
-        val setOnlyIfEmpty: Boolean = true
+    data class DesignateMobileEditorForAllSitesPayload
+    @JvmOverloads constructor(
+        @JvmField val editor: String,
+        @JvmField val setOnlyIfEmpty: Boolean = true
     ) : Payload<SiteEditorsError>()
 
     data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError>()
