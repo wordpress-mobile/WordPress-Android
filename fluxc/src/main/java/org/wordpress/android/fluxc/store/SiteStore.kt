@@ -491,10 +491,10 @@ class SiteStore
     }
 
     data class OnAllSitesMobileEditorChanged(
-        val rowsAffected: Int = 0,
+        @JvmField val rowsAffected: Int = 0,
             // True when all sites are self-hosted or wpcom backend response
-        val isNetworkResponse: Boolean = false,
-        val siteEditorsError: SiteEditorsError? = null
+        @JvmField val isNetworkResponse: Boolean = false,
+        @JvmField val siteEditorsError: SiteEditorsError? = null
     ) : OnChanged<SiteEditorsError>() {
         init {
             this.error = siteEditorsError
