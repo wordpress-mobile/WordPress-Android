@@ -7,19 +7,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.Serializable
 
-class GutenbergDialogFragment() : AppCompatDialogFragment() {
+class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
     private lateinit var mTag: String
     private lateinit var mMessage: CharSequence
     private lateinit var mPositiveButtonLabel: CharSequence
     private var mTitle: CharSequence? = null
     private var mNegativeButtonLabel: CharSequence? = null
-    private var mId: Int = 0
+    private var mDataFromGutenberg: T? = null
     private var dismissedByPositiveButton = false
     private var dismissedByNegativeButton = false
 
-    interface GutenbergDialogPositiveClickInterface {
-        fun onGutenbergDialogPositiveClicked(instanceTag: String, id: Int)
+    interface GutenbergDialogPositiveClickInterface<T> {
+        fun onGutenbergDialogPositiveClicked(instanceTag: String, dataFromGutenberg: Any?)
     }
 
     interface GutenbergDialogNegativeClickInterface {
@@ -36,14 +37,14 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         message: CharSequence,
         positiveButtonLabel: CharSequence,
         negativeButtonLabel: CharSequence? = null,
-        id: Int
+        dataFromGutenberg: T
     ) {
         mTag = tag
         mTitle = title
         mMessage = message
         mPositiveButtonLabel = positiveButtonLabel
         mNegativeButtonLabel = negativeButtonLabel
-        mId = id
+        mDataFromGutenberg = dataFromGutenberg
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +59,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
             mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
             mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
-            mId = savedInstanceState.getInt(STATE_KEY_ID)
+            mDataFromGutenberg = savedInstanceState.getSerializable(STATE_KEY_ID) as T?
         }
     }
 
@@ -68,7 +69,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         outState.putCharSequence(STATE_KEY_MESSAGE, mMessage)
         outState.putCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL, mPositiveButtonLabel)
         outState.putCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL, mNegativeButtonLabel)
-        outState.putInt(STATE_KEY_ID, mId)
+        outState.putSerializable(STATE_KEY_ID, mDataFromGutenberg)
         super.onSaveInstanceState(outState)
     }
 
@@ -83,8 +84,8 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
         mPositiveButtonLabel?.let {
             builder.setPositiveButton(mPositiveButtonLabel) { _, _ ->
                 dismissedByPositiveButton = true
-                (parentFragment as? GutenbergDialogPositiveClickInterface)?.let {
-                    it.onGutenbergDialogPositiveClicked(mTag, mId)
+                (parentFragment as? GutenbergDialogPositiveClickInterface<*>)?.let {
+                    it.onGutenbergDialogPositiveClicked(mTag, mDataFromGutenberg)
                 }
             }.setCancelable(true)
         }
@@ -104,7 +105,7 @@ class GutenbergDialogFragment() : AppCompatDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parentFragment: Fragment? = parentFragment
-        if (parentFragment !is GutenbergDialogPositiveClickInterface) {
+        if (parentFragment !is GutenbergDialogPositiveClickInterface<*>) {
             throw RuntimeException("Parent fragment must implement GutenbergDialogPositiveClickInterface")
         }
         if (mNegativeButtonLabel != null && parentFragment !is GutenbergDialogNegativeClickInterface) {

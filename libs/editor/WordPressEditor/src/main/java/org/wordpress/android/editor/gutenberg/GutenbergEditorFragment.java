@@ -1398,10 +1398,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
+    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, @org.jetbrains.annotations.Nullable Object dataFromGutenberg) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
-                setFeaturedImage(mediaId);
+                setFeaturedImage((int) dataFromGutenberg);
                 break;
         }
     }
