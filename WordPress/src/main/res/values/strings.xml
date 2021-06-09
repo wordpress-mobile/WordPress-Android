@@ -651,7 +651,6 @@
     <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
     <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
-    <string name="site_settings_categories_empty_title_search">No categories matching your search</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
