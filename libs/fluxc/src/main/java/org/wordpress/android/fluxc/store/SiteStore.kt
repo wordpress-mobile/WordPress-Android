@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_CO
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_POST_FORMATS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PROFILE_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITE_EDITORS
@@ -1156,11 +1155,11 @@ class SiteStore
             SHOW_SITES -> toggleSitesVisibility(action.payload as SitesModel, true)
             HIDE_SITES -> toggleSitesVisibility(action.payload as SitesModel, false)
             CREATE_NEW_SITE -> coroutineEngine.launch(T.MAIN, this, "Create a new site") {
-                val payload = createNewSite(action.payload as NewSitePayload)
-                emitChange(handleCreateNewSiteCompleted(payload = payload))
+                emitChange(createNewSite(action.payload as NewSitePayload))
             }
-            FETCH_POST_FORMATS -> fetchPostFormats(action.payload as SiteModel)
-            FETCHED_POST_FORMATS -> updatePostFormats(action.payload as FetchedPostFormatsPayload)
+            FETCH_POST_FORMATS -> coroutineEngine.launch(T.MAIN, this, "Fetch post formats") {
+                emitChange(fetchPostFormats(action.payload as SiteModel))
+            }
             FETCH_SITE_EDITORS -> fetchSiteEditors(action.payload as SiteModel)
             FETCH_BLOCK_LAYOUTS -> fetchBlockLayouts(action.payload as FetchBlockLayoutsPayload)
             FETCHED_BLOCK_LAYOUTS -> handleFetchedBlockLayouts(action.payload as FetchedBlockLayoutsResponsePayload)
@@ -1398,10 +1397,13 @@ class SiteStore
         return rowsAffected
     }
 
-    private suspend fun createNewSite(payload: NewSitePayload): NewSiteResponsePayload {
-        return siteRestClient.newSite(
+    suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
+        val result = siteRestClient.newSite(
                 payload.siteName, payload.language, payload.visibility,
                 payload.segmentId, payload.siteDesign, payload.dryRun
+        )
+        return handleCreateNewSiteCompleted(
+                payload = result
         )
     }
 
@@ -1409,22 +1411,19 @@ class SiteStore
         return OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error)
     }
 
-    private fun fetchPostFormats(site: SiteModel) {
-        if (site.isUsingWpComRestApi) {
+    suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
+        val payload = if (site.isUsingWpComRestApi) {
             siteRestClient.fetchPostFormats(site)
         } else {
             siteXMLRPCClient.fetchPostFormats(site)
         }
-    }
-
-    private fun updatePostFormats(payload: FetchedPostFormatsPayload) {
         val event = OnPostFormatsChanged(payload.site)
         if (payload.isError) {
             event.error = payload.error
         } else {
             siteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
         }
-        emitChange(event)
+        return event
     }
 
     private fun fetchSiteEditors(site: SiteModel) {
