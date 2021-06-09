@@ -416,14 +416,14 @@ class SiteStore
     @JvmOverloads
     constructor(
         @JvmField val type: DomainAvailabilityErrorType,
-        val message: String? = null
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class DomainSupportedStatesError
     @JvmOverloads
     constructor(
         @JvmField val type: DomainSupportedStatesErrorType,
-        val message: String? = null
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class DomainSupportedCountriesError(
@@ -483,8 +483,11 @@ class SiteStore
         }
     }
 
-    data class OnPostFormatsChanged(val site: SiteModel) : OnChanged<PostFormatsError>()
-    data class OnSiteEditorsChanged(val site: SiteModel, val rowsAffected: Int = 0) : OnChanged<SiteEditorsError>() {
+    data class OnPostFormatsChanged(@JvmField val site: SiteModel) : OnChanged<PostFormatsError>()
+    data class OnSiteEditorsChanged(
+        @JvmField val site: SiteModel,
+        @JvmField val rowsAffected: Int = 0
+    ) : OnChanged<SiteEditorsError>() {
         constructor(site: SiteModel, error: SiteEditorsError) : this(site) {
             this.error = error
         }
@@ -501,7 +504,7 @@ class SiteStore
         }
     }
 
-    data class OnUserRolesChanged(val site: SiteModel) : OnChanged<UserRolesError>()
+    data class OnUserRolesChanged(@JvmField val site: SiteModel) : OnChanged<UserRolesError>()
     data class OnPlansFetched(
         @JvmField val site: SiteModel,
         @JvmField val plans: List<PlanModel>?
@@ -516,9 +519,9 @@ class SiteStore
     }
 
     data class OnPrivateAtomicCookieFetched(
-        val site: SiteModel?,
-        val success: Boolean,
-        val privateAtomicCookieError: PrivateAtomicCookieError? = null
+        @JvmField val site: SiteModel?,
+        @JvmField val success: Boolean,
+        @JvmField val privateAtomicCookieError: PrivateAtomicCookieError? = null
     ) : OnChanged<PrivateAtomicCookieError>() {
         init {
             this.error = privateAtomicCookieError
