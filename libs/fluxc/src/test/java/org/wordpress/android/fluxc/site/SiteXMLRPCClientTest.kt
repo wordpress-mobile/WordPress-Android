@@ -47,7 +47,9 @@ class SiteXMLRPCClientTest {
         doAnswer { invocation ->
             val request = invocation.arguments[0] as XMLRPCRequest
             try {
-                val requestClass = Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest") as Class<XMLRPCRequest>
+                val requestClass = Class.forName(
+                        "org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest"
+                ) as Class<XMLRPCRequest>
                 // Reflection code equivalent to:
                 // Object o = request.parseNetworkResponse(data)
                 val parseNetworkResponse = requestClass.getDeclaredMethod(
