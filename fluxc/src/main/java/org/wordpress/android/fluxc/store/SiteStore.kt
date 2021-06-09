@@ -122,11 +122,15 @@ class SiteStore
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     // Payloads
-    data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError>()
+    data class CompleteQuickStartPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val variant: String
+    ) : Payload<BaseNetworkError>()
+
     data class RefreshSitesXMLRPCPayload(
-        @JvmField val username: String = "",
-        @JvmField val password: String = "",
-        @JvmField val url: String = ""
+        @JvmField var username: String = "",
+        @JvmField var password: String = "",
+        @JvmField var url: String = ""
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload(@JvmField val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
