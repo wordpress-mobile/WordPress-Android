@@ -1400,6 +1400,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 setFeaturedImage((int) dataFromGutenberg);
                 break;
             case TAG_CANCEL_MEDIA_UPLOAD_DIALOG:
+                cancelMediaUpload((int) dataFromGutenberg);
                 break;
         }
     }
