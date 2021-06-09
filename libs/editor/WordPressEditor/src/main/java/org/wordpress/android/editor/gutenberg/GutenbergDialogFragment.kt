@@ -11,7 +11,7 @@ import java.io.Serializable
 
 class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
     private lateinit var mTag: String
-    private lateinit var mMessage: CharSequence
+    private var mMessage: CharSequence? = null
     private lateinit var mPositiveButtonLabel: CharSequence
     private var mTitle: CharSequence? = null
     private var mNegativeButtonLabel: CharSequence? = null
@@ -34,7 +34,7 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
     fun initialize(
         tag: String,
         title: CharSequence?,
-        message: CharSequence,
+        message: CharSequence?,
         positiveButtonLabel: CharSequence,
         negativeButtonLabel: CharSequence? = null,
         dataFromGutenberg: T
@@ -56,7 +56,7 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
         if (savedInstanceState != null) {
             mTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
             mTitle = savedInstanceState.getCharSequence(STATE_KEY_TITLE)
-            mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
+            mMessage = savedInstanceState.getCharSequence(STATE_KEY_MESSAGE)
             mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
             mDataFromGutenberg = savedInstanceState.getSerializable(STATE_KEY_ID) as T?
@@ -75,10 +75,13 @@ class GutenbergDialogFragment<T : Serializable?>() : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = MaterialAlertDialogBuilder(requireActivity())
-        builder.setMessage(mMessage)
 
         mTitle?.let {
             builder.setTitle(mTitle)
+        }
+
+        mMessage?.let {
+            builder.setMessage(mMessage)
         }
 
         mPositiveButtonLabel?.let {
