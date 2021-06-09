@@ -1,1157 +1,942 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.site;
+package org.wordpress.android.fluxc.network.rest.wpcom.site
 
-import android.content.Context;
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.google.gson.reflect.TypeToken;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.action.SiteAction;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
-import org.wordpress.android.fluxc.model.JetpackCapability;
-import org.wordpress.android.fluxc.model.PlanModel;
-import org.wordpress.android.fluxc.model.PostFormatModel;
-import org.wordpress.android.fluxc.model.RoleModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
-import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
-import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
-import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
-import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError;
-import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
-import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError;
-import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
-import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.PlansError;
-import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
-import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
-import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.QuickStartError;
-import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError;
-import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.SiteError;
-import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
-import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
-import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
-import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
-import org.wordpress.android.fluxc.utils.SiteUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import android.content.Context
+import android.text.TextUtils
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.RequestQueue
+import com.android.volley.VolleyError
+import com.google.gson.reflect.TypeToken
+import org.apache.commons.text.StringEscapeUtils
+import org.json.JSONException
+import org.json.JSONObject
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
+import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.model.RoleModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.SitesModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType
+import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus
+import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteError
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType
+import org.wordpress.android.fluxc.store.SiteStore.PlansError
+import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
+import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
+import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartError
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.SiteStore.SiteError
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.INVALID_SITE
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType.EMPTY_RESULTS
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesError
+import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType
+import org.wordpress.android.fluxc.utils.SiteUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.UrlUtils
+import java.io.UnsupportedEncodingException
+import java.net.URI
+import java.net.URLEncoder
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
+import kotlin.math.max
 
 @Singleton
-public class SiteRestClient extends BaseWPComRestClient {
-    public static final int NEW_SITE_TIMEOUT_MS = 90000;
-    private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
-        + "capabilities,quota,icon,meta";
-    public static final String FIELDS = "fields";
-    public static final String FILTERS = "filters";
+class SiteRestClient @Inject constructor(
+    appContext: Context?,
+    dispatcher: Dispatcher?,
+    @Named("regular") requestQueue: RequestQueue?,
+    private val mAppSecrets: AppSecrets,
+    accessToken: AccessToken?,
+    userAgent: UserAgent?
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    data class NewSiteResponsePayload(
+        val newSiteRemoteId: Long = 0,
+        val dryRun: Boolean = false
+    ) : Payload<NewSiteError>()
 
-    private final AppSecrets mAppSecrets;
+    data class DeleteSiteResponsePayload(var site: SiteModel? = null) : Payload<DeleteSiteError>()
 
-    public static class NewSiteResponsePayload extends Payload<NewSiteError> {
-        public NewSiteResponsePayload() {}
-        public long newSiteRemoteId;
-        public boolean dryRun;
-    }
+    class ExportSiteResponsePayload : Payload<BaseNetworkError>()
+    data class IsWPComResponsePayload(
+        val url: String? = null,
+        val isWPCom: Boolean = false
+    ) : Payload<BaseNetworkError>()
 
-    public static class DeleteSiteResponsePayload extends Payload<DeleteSiteError> {
-        public DeleteSiteResponsePayload() {}
-        public SiteModel site;
-    }
+    data class FetchWPComSiteResponsePayload(
+        val checkedUrl: String? = null,
+        val site: SiteModel? = null
+    ) : Payload<SiteError>()
 
-    public static class ExportSiteResponsePayload extends Payload<BaseNetworkError> {
-        public ExportSiteResponsePayload() {}
-    }
-
-    public static class IsWPComResponsePayload extends Payload<BaseNetworkError> {
-        public IsWPComResponsePayload() {}
-        public String url;
-        public boolean isWPCom;
-    }
-
-    public static class FetchWPComSiteResponsePayload extends Payload<SiteError> {
-        public FetchWPComSiteResponsePayload() {}
-        public String checkedUrl;
-        public SiteModel site;
-    }
-
-    @Inject public SiteRestClient(Context appContext,
-                          Dispatcher dispatcher,
-                          @Named("regular") RequestQueue requestQueue,
-                          AppSecrets appSecrets,
-                          AccessToken accessToken,
-                          UserAgent userAgent) {
-        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mAppSecrets = appSecrets;
-    }
-
-    public void fetchSites(@NonNull List<SiteFilter> filters) {
-        Map<String, String> params = getFetchSitesParams(filters);
-
-        String url = WPCOMREST.me.sites.getUrlV1_2();
-        final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                SitesResponse.class,
-                new Listener<SitesResponse>() {
-                    @Override
-                    public void onResponse(SitesResponse response) {
-                        if (response != null) {
-                            List<SiteModel> siteArray = new ArrayList<>();
-
-                            for (SiteWPComRestResponse siteResponse : response.sites) {
-                                siteArray.add(siteResponseToSiteModel(siteResponse));
-                            }
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(new SitesModel(siteArray)));
-                        } else {
-                            AppLog.e(T.API, "Received empty response to /me/sites/");
-                            SitesModel payload = new SitesModel(Collections.<SiteModel>emptyList());
-                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
+    fun fetchSites(filters: List<SiteFilter?>) {
+        val params = getFetchSitesParams(filters)
+        val url = WPCOMREST.me.sites.urlV1_2
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                SitesResponse::class.java,
+                { response ->
+                    if (response != null) {
+                        val siteArray: MutableList<SiteModel> = ArrayList()
+                        for (siteResponse in response.sites) {
+                            siteArray.add(siteResponseToSiteModel(siteResponse))
                         }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        SitesModel payload = new SitesModel(Collections.<SiteModel>emptyList());
-                        payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(SitesModel(siteArray)))
+                    } else {
+                        AppLog.e(API, "Received empty response to /me/sites/")
+                        val payload = SitesModel(emptyList())
+                        payload.error = BaseNetworkError(INVALID_RESPONSE)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
                     }
                 }
-        );
-        add(request);
+        ) { error ->
+            val payload = SitesModel(emptyList())
+            payload.error = error
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
+        }
+        add(request)
     }
 
-    @NonNull
-    private Map<String, String> getFetchSitesParams(@NonNull List<SiteFilter> filters) {
-        Map<String, String> params = new HashMap<>();
-        if (!filters.isEmpty()) params.put(FILTERS, TextUtils.join(",", filters));
-        params.put(FIELDS, SITE_FIELDS);
-        return params;
+    private fun getFetchSitesParams(filters: List<SiteFilter?>): Map<String, String> {
+        val params: MutableMap<String, String> = HashMap()
+        if (filters.isNotEmpty()) params[FILTERS] = TextUtils.join(",", filters)
+        params[FIELDS] = SITE_FIELDS
+        return params
     }
 
-    public void fetchSite(final SiteModel site) {
-        Map<String, String> params = new HashMap<>();
-        params.put(FIELDS, SITE_FIELDS);
-        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        if (response != null) {
-                            SiteModel newSite = siteResponseToSiteModel(response);
-                            // local ID is not copied into the new model, let's make sure it is
-                            // otherwise the call that updates the DB can add a new row?
-                            if (site.getId() > 0) {
-                                newSite.setId(site.getId());
-                            }
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
-                        } else {
-                            AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
-                            SiteModel payload = new SiteModel();
-                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload));
+    fun fetchSite(site: SiteModel) {
+        val params: MutableMap<String, String> = HashMap()
+        params[FIELDS] = SITE_FIELDS
+        val url = WPCOMREST.sites.urlV1_1 + site.siteId
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                SiteWPComRestResponse::class.java,
+                { response ->
+                    if (response != null) {
+                        val newSite = siteResponseToSiteModel(response)
+                        // local ID is not copied into the new model, let's make sure it is
+                        // otherwise the call that updates the DB can add a new row?
+                        if (site.id > 0) {
+                            newSite.id = site.id
                         }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        SiteModel payload = new SiteModel();
-                        payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload));
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite))
+                    } else {
+                        AppLog.e(API, "Received empty response to /sites/\$site/ for " + site.url)
+                        val payload = SiteModel()
+                        payload.error = BaseNetworkError(INVALID_RESPONSE)
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
                     }
                 }
-        );
-        add(request);
+        ) { error ->
+            val payload = SiteModel()
+            payload.error = error
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
+        }
+        add(request)
     }
 
-    public void newSite(@NonNull String siteName, @NonNull String language,
-                        @NonNull SiteVisibility visibility, @Nullable Long segmentId, @Nullable String siteDesign,
-                        final boolean dryRun) {
-        String url = WPCOMREST.sites.new_.getUrlV1_1();
-        Map<String, Object> body = new HashMap<>();
-        body.put("blog_name", siteName);
-        body.put("lang_id", language);
-        body.put("public", String.valueOf(visibility.value()));
-        body.put("validate", dryRun ? "1" : "0");
-        body.put("client_id", mAppSecrets.getAppId());
-        body.put("client_secret", mAppSecrets.getAppSecret());
+    fun newSite(
+        siteName: String, language: String,
+        visibility: SiteVisibility, segmentId: Long?, siteDesign: String?,
+        dryRun: Boolean
+    ) {
+        val url = WPCOMREST.sites.new_.urlV1_1
+        val body: MutableMap<String, Any> = HashMap()
+        body["blog_name"] = siteName
+        body["lang_id"] = language
+        body["public"] = visibility.value().toString()
+        body["validate"] = if (dryRun) "1" else "0"
+        body["client_id"] = mAppSecrets.appId
+        body["client_secret"] = mAppSecrets.appSecret
 
         // Add site options if available
-        Map<String, Object> options = new HashMap<>();
+        val options: MutableMap<String, Any> = HashMap()
         if (segmentId != null) {
-            options.put("site_segment", segmentId);
+            options["site_segment"] = segmentId
         }
         if (siteDesign != null) {
-            options.put("template", siteDesign);
+            options["template"] = siteDesign
         }
-        if (options.size() > 0) {
-            body.put("options", options);
+        if (options.isNotEmpty()) {
+            body["options"] = options
         }
-
-        WPComGsonRequest<NewSiteResponse> request = WPComGsonRequest.buildPostRequest(url, body,
-                NewSiteResponse.class,
-                new Listener<NewSiteResponse>() {
-                    @Override
-                    public void onResponse(NewSiteResponse response) {
-                        NewSiteResponsePayload payload = new NewSiteResponsePayload();
-                        payload.dryRun = dryRun;
-                        long siteId = 0;
-                        if (response.blog_details != null) {
-                            try {
-                                siteId = Long.valueOf(response.blog_details.blogid);
-                            } catch (NumberFormatException e) {
-                                // No op: In dry run mode, returned newSiteRemoteId is "Array"
-                            }
+        val request = WPComGsonRequest.buildPostRequest(url, body,
+                NewSiteResponse::class.java,
+                { response ->
+                    var siteId: Long = 0
+                    if (response.blog_details != null) {
+                        try {
+                            siteId = java.lang.Long.valueOf(response.blog_details.blogid)
+                        } catch (e: NumberFormatException) {
+                            // No op: In dry run mode, returned newSiteRemoteId is "Array"
                         }
-                        payload.newSiteRemoteId = siteId;
-                        mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
-                        payload.dryRun = dryRun;
-                        mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
-                    }
+                    val payload = NewSiteResponsePayload(siteId, dryRun)
+                    mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload))
                 }
-        );
+        ) { error ->
+            val payload = volleyErrorToAccountResponsePayload(error.volleyError, dryRun)
+            mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload))
+        }
 
         // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
-        request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        add(request);
+        request.retryPolicy = DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        add(request)
     }
 
-    public void fetchSiteEditors(final SiteModel site) {
-        Map<String, String> params = new HashMap<>();
-        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
-        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                SiteEditorsResponse.class,
-                new Listener<SiteEditorsResponse>() {
-                    @Override
-                    public void onResponse(SiteEditorsResponse response) {
-                        if (response != null) {
-                            FetchedEditorsPayload payload;
-                            payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
-                        } else {
-                            AppLog.e(T.API, "Received empty response to /sites/$site/gutenberg for " + site.getUrl());
-                            FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
-                            payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
-                        }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
-                        payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+    fun fetchSiteEditors(site: SiteModel) {
+        val params: Map<String, String> = HashMap()
+        val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                SiteEditorsResponse::class.java,
+                { response ->
+                    if (response != null) {
+                        val payload = FetchedEditorsPayload(site, response.editor_web, response.editor_mobile)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
+                    } else {
+                        AppLog.e(API, "Received empty response to /sites/\$site/gutenberg for " + site.url)
+                        val payload = FetchedEditorsPayload(site, "", "")
+                        payload.error = SiteEditorsError(GENERIC_ERROR)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
                     }
                 }
-                );
-        add(request);
+        ) {
+            val payload = FetchedEditorsPayload(site, "", "")
+            payload.error = SiteEditorsError(GENERIC_ERROR)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
+        }
+        add(request)
     }
 
-    public void designateMobileEditor(final SiteModel site, final String mobileEditorName) {
-        Map<String, Object> params = new HashMap<>();
-        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
-        params.put("editor", mobileEditorName);
-        params.put("platform", "mobile");
-        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest
-                .buildPostRequest(url, params, SiteEditorsResponse.class,
-                        new Listener<SiteEditorsResponse>() {
-                            @Override
-                            public void onResponse(SiteEditorsResponse response) {
-                                FetchedEditorsPayload payload;
-                                payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
-                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
-                            }
-                        });
-        add(request);
+    fun designateMobileEditor(site: SiteModel, mobileEditorName: String) {
+        val params: MutableMap<String, Any> = HashMap()
+        val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
+        params["editor"] = mobileEditorName
+        params["platform"] = "mobile"
+        val request = WPComGsonRequest
+                .buildPostRequest(url, params, SiteEditorsResponse::class.java,
+                        { response ->
+                            val payload = FetchedEditorsPayload(site, response.editor_web, response.editor_mobile)
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
+                        }
+                ) {
+                    val payload = FetchedEditorsPayload(site, "", "")
+                    payload.error = SiteEditorsError(GENERIC_ERROR)
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload))
+                }
+        add(request)
     }
 
-    public void designateMobileEditorForAllSites(final String mobileEditorName, final boolean setOnlyIfEmpty) {
-        Map<String, Object> params = new HashMap<>();
-        String url = WPCOMV2.me.gutenberg.getUrl();
-        params.put("editor", mobileEditorName);
-        params.put("platform", "mobile");
+    fun designateMobileEditorForAllSites(mobileEditorName: String, setOnlyIfEmpty: Boolean) {
+        val params: MutableMap<String, Any> = HashMap()
+        val url = WPCOMV2.me.gutenberg.url
+        params["editor"] = mobileEditorName
+        params["platform"] = "mobile"
         if (setOnlyIfEmpty) {
-            params.put("set_only_if_empty", "true");
+            params["set_only_if_empty"] = "true"
         }
         // Else, omit the "set_only_if_empty" parameters.
         // There is an issue in the API implementation. It only checks
         // for "set_only_if_empty" presence but don't check for its value.
-
-        add(WPComGsonRequest
-                .buildPostRequest(url, params, Map.class,
-                        new Listener<Map<String, String>>() {
-                            @Override
-                            public void onResponse(Map<String, String> response) {
-                                DesignateMobileEditorForAllSitesResponsePayload payload =
-                                        new DesignateMobileEditorForAllSitesResponsePayload(response);
-                                mDispatcher.dispatch(
-                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                DesignateMobileEditorForAllSitesResponsePayload payload =
-                                        new DesignateMobileEditorForAllSitesResponsePayload(null);
-                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
-                                mDispatcher.dispatch(
-                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
-                            }
-                        })
-           );
+        add(
+                WPComGsonRequest
+                        .buildPostRequest<Map<String, String>>(url, params, MutableMap::class.java,
+                                { response ->
+                                    val payload = DesignateMobileEditorForAllSitesResponsePayload(response)
+                                    mDispatcher.dispatch(
+                                            SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload)
+                                    )
+                                },
+                                {
+                                    val payload = DesignateMobileEditorForAllSitesResponsePayload(null)
+                                    payload.error = SiteEditorsError(GENERIC_ERROR)
+                                    mDispatcher.dispatch(
+                                            SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload)
+                                    )
+                                })
+        )
     }
 
-    public void fetchPostFormats(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
-        final WPComGsonRequest<PostFormatsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                PostFormatsResponse.class,
-                new Listener<PostFormatsResponse>() {
-                    @Override
-                    public void onResponse(PostFormatsResponse response) {
-                        List<PostFormatModel> postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats);
-
-                        if (postFormats != null) {
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
-                                    FetchedPostFormatsPayload(site, postFormats)));
-                        } else {
-                            FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
-                                    Collections.<PostFormatModel>emptyList());
-                            payload.error = new PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
-                        }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
-                                Collections.<PostFormatModel>emptyList());
-                        // TODO: what other kind of error could we get here?
-                        payload.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
+    fun fetchPostFormats(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).post_formats.urlV1_1
+        val request = WPComGsonRequest.buildGetRequest(url, null,
+                PostFormatsResponse::class.java,
+                { response ->
+                    val postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats)
+                    if (postFormats != null) {
+                        mDispatcher.dispatch(
+                                SiteActionBuilder.newFetchedPostFormatsAction(
+                                        FetchedPostFormatsPayload(
+                                                site,
+                                                postFormats
+                                        )
+                                )
+                        )
+                    } else {
+                        val payload = FetchedPostFormatsPayload(site, emptyList())
+                        payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
                     }
                 }
-        );
-        add(request);
+        ) {
+            val payload = FetchedPostFormatsPayload(site, emptyList())
+            // TODO: what other kind of error could we get here?
+            payload.error = PostFormatsError(PostFormatsErrorType.GENERIC_ERROR)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
+        }
+        add(request)
     }
 
-    public void fetchUserRoles(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).roles.getUrlV1_1();
-        final WPComGsonRequest<UserRolesResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                UserRolesResponse.class,
-                new Listener<UserRolesResponse>() {
-                    @Override
-                    public void onResponse(UserRolesResponse response) {
-                        List<RoleModel> roleArray = new ArrayList<>();
-                        for (UserRoleWPComRestResponse roleResponse : response.roles) {
-                            RoleModel roleModel = new RoleModel();
-                            roleModel.setName(roleResponse.name);
-                            roleModel.setDisplayName(StringEscapeUtils.unescapeHtml4(roleResponse.display_name));
-                            roleArray.add(roleModel);
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(new
-                                FetchedUserRolesPayload(site, roleArray)));
+    fun fetchUserRoles(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).roles.urlV1_1
+        val request = WPComGsonRequest.buildGetRequest(url, null,
+                UserRolesResponse::class.java,
+                { response ->
+                    val roleArray: MutableList<RoleModel> = ArrayList()
+                    for (roleResponse in response.roles) {
+                        val roleModel = RoleModel()
+                        roleModel.name = roleResponse.name
+                        roleModel.displayName = StringEscapeUtils.unescapeHtml4(roleResponse.display_name)
+                        roleArray.add(roleModel)
                     }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        FetchedUserRolesPayload payload = new FetchedUserRolesPayload(site,
-                                Collections.<RoleModel>emptyList());
-                        // TODO: what other kind of error could we get here?
-                        payload.error = new UserRolesError(UserRolesErrorType.GENERIC_ERROR);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(payload));
-                    }
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newFetchedUserRolesAction(
+                                    FetchedUserRolesPayload(
+                                            site,
+                                            roleArray
+                                    )
+                            )
+                    )
                 }
-        );
-        add(request);
+        ) {
+            val payload = FetchedUserRolesPayload(site, emptyList())
+            // TODO: what other kind of error could we get here?
+            payload.error = UserRolesError(UserRolesErrorType.GENERIC_ERROR)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(payload))
+        }
+        add(request)
     }
 
-    public void fetchPlans(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plans.getUrlV1_3();
-        final WPComGsonRequest<PlansResponse> request =
-                WPComGsonRequest.buildGetRequest(url, null, PlansResponse.class,
-                        new Listener<PlansResponse>() {
-                            @Override
-                            public void onResponse(PlansResponse response) {
-                                List<PlanModel> plans = response.getPlansList();
-                                mDispatcher.dispatch(
-                                        SiteActionBuilder.newFetchedPlansAction(new FetchedPlansPayload(site, plans)));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                PlansError plansError = new PlansError(error.apiError, error.message);
-                                FetchedPlansPayload payload = new FetchedPlansPayload(site, plansError);
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
-                            }
-                        });
-        add(request);
-    }
-
-    public void deleteSite(final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
-        WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
-                        payload.site = site;
-                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
-                        payload.error = new DeleteSiteError(error.apiError, error.message);
-                        payload.site = site;
-                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
-                    }
+    fun fetchPlans(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).plans.urlV1_3
+        val request = WPComGsonRequest.buildGetRequest(url, null, PlansResponse::class.java,
+                { response ->
+                    val plans = response.plansList
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newFetchedPlansAction(FetchedPlansPayload(site, plans))
+                    )
                 }
-        );
-        add(request);
+        ) { error ->
+            val plansError = PlansError(error.apiError, error.message)
+            val payload = FetchedPlansPayload(site, plansError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload))
+        }
+        add(request)
     }
 
-    public void exportSite(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).exports.start.getUrlV1_1();
-        final WPComGsonRequest<ExportSiteResponse> request = WPComGsonRequest.buildPostRequest(url, null,
-                ExportSiteResponse.class,
-                new Listener<ExportSiteResponse>() {
-                    @Override
-                    public void onResponse(ExportSiteResponse response) {
-                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
-                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
-                        payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
-                    }
+    fun deleteSite(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).delete.urlV1_1
+        val request = WPComGsonRequest.buildPostRequest(url, null,
+                SiteWPComRestResponse::class.java,
+                {
+                    val payload = DeleteSiteResponsePayload()
+                    payload.site = site
+                    mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload))
                 }
-        );
-        add(request);
+        ) { error ->
+            val payload = DeleteSiteResponsePayload()
+            payload.error = DeleteSiteError(error.apiError, error.message)
+            payload.site = site
+            mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload))
+        }
+        add(request)
     }
 
-    public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
-                               final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
-                               final Long segmentId, final int quantity, final boolean includeVendorDot,
-                               final String tlds) {
-        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
-        Map<String, String> params = new HashMap<>(4);
-        params.put("query", query);
+    fun exportSite(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).exports.start.urlV1_1
+        val request = WPComGsonRequest.buildPostRequest(url, null,
+                ExportSiteResponse::class.java,
+                {
+                    val payload = ExportSiteResponsePayload()
+                    mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload))
+                }
+        ) { error ->
+            val payload = ExportSiteResponsePayload()
+            payload.error = error
+            mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload))
+        }
+        add(request)
+    }
+
+    fun suggestDomains(
+        query: String, onlyWordpressCom: Boolean?,
+        includeWordpressCom: Boolean?, includeDotBlogSubdomain: Boolean?,
+        segmentId: Long?, quantity: Int, includeVendorDot: Boolean,
+        tlds: String?
+    ) {
+        val url = WPCOMREST.domains.suggestions.urlV1_1
+        val params: MutableMap<String, String> = HashMap(4)
+        params["query"] = query
         if (onlyWordpressCom != null) {
-            params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
+            params["only_wordpressdotcom"] = onlyWordpressCom.toString() // CHECKSTYLE IGNORE
         }
         if (includeWordpressCom != null) {
-            params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
+            params["include_wordpressdotcom"] = includeWordpressCom.toString() // CHECKSTYLE IGNORE
         }
         if (includeDotBlogSubdomain != null) {
-            params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+            params["include_dotblogsubdomain"] = includeDotBlogSubdomain.toString()
         }
         if (segmentId != null) {
-            params.put("segment_id", String.valueOf(segmentId));
+            params["segment_id"] = segmentId.toString()
         }
         if (tlds != null) {
-            params.put("tlds", tlds);
+            params["tlds"] = tlds
         }
-        params.put("quantity", String.valueOf(quantity));
+        params["quantity"] = quantity.toString()
         if (includeVendorDot) {
-            params.put("vendor", "dot");
+            params["vendor"] = "dot"
         }
-        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
-                WPComGsonRequest.buildGetRequest(url, params,
-                        new TypeToken<ArrayList<DomainSuggestionResponse>>() {
-                        }.getType(),
-                        new Listener<ArrayList<DomainSuggestionResponse>>() {
-                            @Override
-                            public void onResponse(ArrayList<DomainSuggestionResponse> response) {
-                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
-                                        response);
-                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                SuggestDomainError suggestDomainError =
-                                        new SuggestDomainError(error.apiError, error.message);
-                                if (suggestDomainError.type == SuggestDomainErrorType.EMPTY_RESULTS) {
-                                    // Empty results is not an actual error, the API should return 200 for it
-                                    SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
-                                            Collections.<DomainSuggestionResponse>emptyList());
-                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                                } else {
-                                    SuggestDomainsResponsePayload payload =
-                                            new SuggestDomainsResponsePayload(query, suggestDomainError);
-                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                                }
-                            }
-                        }
-                                                );
-        add(request);
-    }
-
-    public void fetchWpComBlockLayouts(final SiteModel site,
-                                       List<String> supportedBlocks,
-                                       Float previewWidth,
-                                       Float previewHeight,
-                                       Float scale,
-                                       Boolean isBeta) {
-        String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta);
-    }
-
-    public void fetchSelfHostedBlockLayouts(final SiteModel site,
-                                            List<String> supportedBlocks,
-                                            Float previewWidth,
-                                            Float previewHeight,
-                                            Float scale,
-                                            Boolean isBeta) {
-        String url = WPCOMV2.common_block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta);
-    }
-
-    private void fetchBlockLayouts(final SiteModel site, String url,
-                                   List<String> supportedBlocks,
-                                   Float previewWidth,
-                                   Float previewHeight,
-                                   Float scale,
-                                   Boolean isBeta) {
-        Map<String, String> params = new HashMap<>();
-
-        if (supportedBlocks != null && !supportedBlocks.isEmpty()) {
-            params.put("supported_blocks", TextUtils.join(",", supportedBlocks));
-        }
-
-        if (previewWidth != null) {
-            params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
-        }
-
-        if (previewHeight != null) {
-            params.put("preview_height", String.format(Locale.US, "%.1f", previewHeight));
-        }
-
-        if (scale != null) {
-            params.put("scale", String.format(Locale.US, "%.1f", scale));
-        }
-
-        params.put("type", "mobile");
-
-        if (isBeta != null) {
-            params.put("is_beta", String.valueOf(isBeta));
-        }
-
-        final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                BlockLayoutsResponse.class,
-                new Listener<BlockLayoutsResponse>() {
-                    @Override
-                    public void onResponse(BlockLayoutsResponse response) {
-                        FetchedBlockLayoutsResponsePayload payload;
-                        payload = new FetchedBlockLayoutsResponsePayload(site, response.getLayouts(),
-                                response.getCategories());
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload));
-                    }
+        val request = WPComGsonRequest.buildGetRequest<ArrayList<DomainSuggestionResponse>>(url, params,
+                object : TypeToken<ArrayList<DomainSuggestionResponse?>?>() {}.type,
+                { response ->
+                    val payload = SuggestDomainsResponsePayload(
+                            query,
+                            response
+                    )
+                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
                 },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
-                        switch (error.apiError) {
-                            case "unauthorized":
-                                siteErrorType = SiteErrorType.UNAUTHORIZED;
-                                break;
-                            case "unknown_blog":
-                                siteErrorType = SiteErrorType.UNKNOWN_SITE;
-                                break;
-                        }
-                        SiteError siteError = new SiteError(siteErrorType, error.message);
-                        FetchedBlockLayoutsResponsePayload payload =
-                                new FetchedBlockLayoutsResponsePayload(site, siteError);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload));
+                { error ->
+                    val suggestDomainError = SuggestDomainError(error.apiError, error.message)
+                    if (suggestDomainError.type === EMPTY_RESULTS) {
+                        // Empty results is not an actual error, the API should return 200 for it
+                        val payload = SuggestDomainsResponsePayload(query, emptyList())
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
+                    } else {
+                        val payload = SuggestDomainsResponsePayload(query, suggestDomainError)
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload))
                     }
                 }
-                                                                                               );
-        add(request);
+        )
+        add(request)
+    }
+
+    fun fetchWpComBlockLayouts(
+        site: SiteModel,
+        supportedBlocks: List<String?>?,
+        previewWidth: Float?,
+        previewHeight: Float?,
+        scale: Float?,
+        isBeta: Boolean?
+    ) {
+        val url = WPCOMV2.sites.site(site.siteId).block_layouts.url
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
+    }
+
+    fun fetchSelfHostedBlockLayouts(
+        site: SiteModel,
+        supportedBlocks: List<String?>?,
+        previewWidth: Float?,
+        previewHeight: Float?,
+        scale: Float?,
+        isBeta: Boolean?
+    ) {
+        val url = WPCOMV2.common_block_layouts.url
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, previewHeight, scale, isBeta)
+    }
+
+    private fun fetchBlockLayouts(
+        site: SiteModel, url: String,
+        supportedBlocks: List<String?>?,
+        previewWidth: Float?,
+        previewHeight: Float?,
+        scale: Float?,
+        isBeta: Boolean?
+    ) {
+        val params: MutableMap<String, String> = HashMap()
+        if (supportedBlocks != null && supportedBlocks.isNotEmpty()) {
+            params["supported_blocks"] = TextUtils.join(",", supportedBlocks)
+        }
+        if (previewWidth != null) {
+            params["preview_width"] = String.format(Locale.US, "%.1f", previewWidth)
+        }
+        if (previewHeight != null) {
+            params["preview_height"] = String.format(Locale.US, "%.1f", previewHeight)
+        }
+        if (scale != null) {
+            params["scale"] = String.format(Locale.US, "%.1f", scale)
+        }
+        params["type"] = "mobile"
+        if (isBeta != null) {
+            params["is_beta"] = isBeta.toString()
+        }
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                BlockLayoutsResponse::class.java,
+                { (layouts, categories) ->
+                    val payload = FetchedBlockLayoutsResponsePayload(
+                            site, layouts,
+                            categories
+                    )
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload))
+                }
+        ) { error ->
+            var siteErrorType = SiteErrorType.GENERIC_ERROR
+            when (error.apiError) {
+                "unauthorized" -> siteErrorType = UNAUTHORIZED
+                "unknown_blog" -> siteErrorType = UNKNOWN_SITE
+            }
+            val siteError = SiteError(siteErrorType, error.message)
+            val payload = FetchedBlockLayoutsResponsePayload(site, siteError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload))
+        }
+        add(request)
     }
 
     //
     // Unauthenticated network calls
     //
-
-    public void fetchConnectSiteInfo(@NonNull final String siteUrl) {
+    fun fetchConnectSiteInfo(siteUrl: String) {
         // Get a proper URI to reliably retrieve the scheme.
-        URI uri;
-        try {
-            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
-        } catch (IllegalArgumentException e) {
-            SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
-            ConnectSiteInfoPayload payload = new ConnectSiteInfoPayload(siteUrl, siteError);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload));
-            return;
+        val uri: URI = try {
+            URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
+        } catch (e: IllegalArgumentException) {
+            val siteError = SiteError(INVALID_SITE)
+            val payload = ConnectSiteInfoPayload(siteUrl, siteError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload))
+            return
         }
-
-        Map<String, String> params = new HashMap<>(1);
-        params.put("url", uri.toString());
+        val params: MutableMap<String, String> = HashMap(1)
+        params["url"] = uri.toString()
 
         // Make the call.
-        String url = WPCOMREST.connect.site_info.getUrlV1_1();
-        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                ConnectSiteInfoResponse.class,
-                new Listener<ConnectSiteInfoResponse>() {
-                    @Override
-                    public void onResponse(ConnectSiteInfoResponse response) {
-                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
-                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
-                    }
+        val url = WPCOMREST.connect.site_info.urlV1_1
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                ConnectSiteInfoResponse::class.java,
+                { response ->
+                    val info = connectSiteInfoFromResponse(siteUrl, response)
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info))
                 }
-        );
-        addUnauthedRequest(request);
-    }
-
-    public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
-        String sanitizedUrl;
-        try {
-            URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
-            sanitizedUrl = URLEncoder.encode(UrlUtils.removeScheme(uri.toString()), "UTF-8");
-        } catch (IllegalArgumentException e) {
-            FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-            payload.checkedUrl = siteUrl;
-            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-            return;
-        } catch (UnsupportedEncodingException e) {
-            // This should be impossible (it means an Android device without UTF-8 support)
-            throw new IllegalStateException(e);
+        ) {
+            val siteError = SiteError(INVALID_SITE)
+            val info = ConnectSiteInfoPayload(siteUrl, siteError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info))
         }
-
-        String requestUrl = WPCOMREST.sites.siteUrl(sanitizedUrl).getUrlV1_1();
-
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(requestUrl, null,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-                        payload.checkedUrl = siteUrl;
-                        payload.site = siteResponseToSiteModel(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-                        payload.checkedUrl = siteUrl;
-
-                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
-                        switch (error.apiError) {
-                            case "unauthorized":
-                                siteErrorType = SiteErrorType.UNAUTHORIZED;
-                                break;
-                            case "unknown_blog":
-                                siteErrorType = SiteErrorType.UNKNOWN_SITE;
-                                break;
-                        }
-                        payload.error = new SiteError(siteErrorType);
-
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
+        addUnauthedRequest(request)
     }
 
-    public void checkUrlIsWPCom(@NonNull final String testedUrl) {
-        String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
-                        payload.url = testedUrl;
-                        payload.isWPCom = true;
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
-                        payload.url = testedUrl;
-                        // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
-                        // the WPCom REST API.
-                        if ("unauthorized".equals(error.apiError) || "unknown_blog".equals(error.apiError)) {
-                            payload.isWPCom = false;
-                        } else {
-                            payload.error = error;
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
-                    }
+    fun fetchWPComSiteByUrl(siteUrl: String) {
+        val sanitizedUrl: String
+        try {
+            val uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false))
+            sanitizedUrl = URLEncoder.encode(UrlUtils.removeScheme(uri.toString()), "UTF-8")
+        } catch (e: IllegalArgumentException) {
+            val payload = FetchWPComSiteResponsePayload(siteUrl)
+            payload.error = SiteError(INVALID_SITE)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload))
+            return
+        } catch (e: UnsupportedEncodingException) {
+            // This should be impossible (it means an Android device without UTF-8 support)
+            throw IllegalStateException(e)
+        }
+        val requestUrl = WPCOMREST.sites.siteUrl(sanitizedUrl).urlV1_1
+        val request = WPComGsonRequest.buildGetRequest(requestUrl, null,
+                SiteWPComRestResponse::class.java,
+                { response ->
+                    val payload = FetchWPComSiteResponsePayload(siteUrl, siteResponseToSiteModel(response))
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload))
                 }
-        );
-        addUnauthedRequest(request);
+        ) { error ->
+            val payload = FetchWPComSiteResponsePayload(siteUrl)
+            var siteErrorType = SiteErrorType.GENERIC_ERROR
+            when (error.apiError) {
+                "unauthorized" -> siteErrorType = UNAUTHORIZED
+                "unknown_blog" -> siteErrorType = UNKNOWN_SITE
+            }
+            payload.error = SiteError(siteErrorType)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload))
+        }
+        addUnauthedRequest(request)
+    }
+
+    fun checkUrlIsWPCom(testedUrl: String) {
+        val url = WPCOMREST.sites.urlV1_1 + testedUrl
+        val request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse::class.java,
+                {
+                    val payload = IsWPComResponsePayload(testedUrl, true)
+                    mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload))
+                }
+        ) { error ->
+            val payload = IsWPComResponsePayload(testedUrl)
+            // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
+            // the WPCom REST API.
+            if ("unauthorized" != error.apiError && "unknown_blog" != error.apiError) {
+                payload.error = error
+            }
+            mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload))
+        }
+        addUnauthedRequest(request)
     }
 
     /**
      * Performs an HTTP GET call to v1.3 /domains/$domainName/is-available/ endpoint. Upon receiving a response
-     * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
-     * payload of type {@link DomainAvailabilityResponsePayload}.
+     * (success or error) a [SiteAction.CHECKED_DOMAIN_AVAILABILITY] action is dispatched with a
+     * payload of type [DomainAvailabilityResponsePayload].
      *
-     * {@link DomainAvailabilityResponsePayload#isError()} can be used to check the request result.
+     * [DomainAvailabilityResponsePayload.isError] can be used to check the request result.
      */
-    public void checkDomainAvailability(@NonNull final String domainName) {
-        String url = WPCOMREST.domains.domainName(domainName).is_available.getUrlV1_3();
-        final WPComGsonRequest<DomainAvailabilityResponse> request =
-                WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse.class,
-                        new Listener<DomainAvailabilityResponse>() {
-                            @Override
-                            public void onResponse(DomainAvailabilityResponse response) {
-                                DomainAvailabilityResponsePayload payload =
-                                        responseToDomainAvailabilityPayload(response);
-                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                // Domain availability API should always return a response for a valid,
-                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
-                                DomainAvailabilityError domainAvailabilityError = new DomainAvailabilityError(
-                                        DomainAvailabilityErrorType.GENERIC_ERROR, error.message);
-                                DomainAvailabilityResponsePayload payload =
-                                        new DomainAvailabilityResponsePayload(domainAvailabilityError);
-                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
-                            }
-                        });
-        add(request);
+    fun checkDomainAvailability(domainName: String) {
+        val url = WPCOMREST.domains.domainName(domainName).is_available.urlV1_3
+        val request = WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse::class.java,
+                { response ->
+                    val payload = responseToDomainAvailabilityPayload(response)
+                    mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload))
+                }
+        ) { error -> // Domain availability API should always return a response for a valid,
+            // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+            val domainAvailabilityError = DomainAvailabilityError(
+                    DomainAvailabilityErrorType.GENERIC_ERROR, error.message
+            )
+            val payload = DomainAvailabilityResponsePayload(domainAvailabilityError)
+            mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload))
+        }
+        add(request)
     }
 
     /**
      * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
-     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_STATES} action is dispatched with a
-     * payload of type {@link DomainSupportedStatesResponsePayload}.
+     * (success or error) a [SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES] action is dispatched with a
+     * payload of type [DomainSupportedStatesResponsePayload].
      *
-     * {@link DomainSupportedStatesResponsePayload#isError()} can be used to check the request result.
+     * [DomainSupportedStatesResponsePayload.isError] can be used to check the request result.
      */
-    public void fetchSupportedStates(@NonNull final String countryCode) {
-        String url = WPCOMREST.domains.supported_states.countryCode(countryCode).getUrlV1_1();
-        final WPComGsonRequest<List<SupportedStateResponse>> request =
-                WPComGsonRequest.buildGetRequest(url, null,
-                        new TypeToken<ArrayList<SupportedStateResponse>>() {}.getType(),
-                        new Listener<List<SupportedStateResponse>>() {
-                            @Override
-                            public void onResponse(List<SupportedStateResponse> response) {
-                                DomainSupportedStatesResponsePayload payload =
-                                        new DomainSupportedStatesResponsePayload(response);
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                DomainSupportedStatesError domainSupportedStatesError = new DomainSupportedStatesError(
-                                        DomainSupportedStatesErrorType.fromString(error.apiError), error.message);
-                                DomainSupportedStatesResponsePayload payload =
-                                        new DomainSupportedStatesResponsePayload(domainSupportedStatesError);
-                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
-                            }
-                        });
-        add(request);
+    fun fetchSupportedStates(countryCode: String) {
+        val url = WPCOMREST.domains.supported_states.countryCode(countryCode).urlV1_1
+        val request = WPComGsonRequest.buildGetRequest<List<SupportedStateResponse>>(url, null,
+                object : TypeToken<ArrayList<SupportedStateResponse?>?>() {}.type,
+                { response ->
+                    val payload = DomainSupportedStatesResponsePayload(response)
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload))
+                },
+                { error ->
+                    val domainSupportedStatesError = DomainSupportedStatesError(
+                            DomainSupportedStatesErrorType.fromString(error.apiError), error.message
+                    )
+                    val payload = DomainSupportedStatesResponsePayload(domainSupportedStatesError)
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload))
+                })
+        add(request)
     }
 
     /**
      * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
-     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_COUNTRIES} action is dispatched with a
-     * payload of type {@link DomainSupportedCountriesResponsePayload}.
+     * (success or error) a [SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES] action is dispatched with a
+     * payload of type [DomainSupportedCountriesResponsePayload].
      *
-     * {@link DomainSupportedCountriesResponsePayload#isError()} can be used to check the request result.
+     * [DomainSupportedCountriesResponsePayload.isError] can be used to check the request result.
      */
-    public void fetchSupportedCountries() {
-        String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
-        final WPComGsonRequest<ArrayList<SupportedCountryResponse>> request =
-                WPComGsonRequest.buildGetRequest(url, null,
-                        new TypeToken<ArrayList<SupportedCountryResponse>>() {}.getType(),
-                        new Listener<ArrayList<SupportedCountryResponse>>() {
-                            @Override
-                            public void onResponse(ArrayList<SupportedCountryResponse> response) {
-                                DomainSupportedCountriesResponsePayload payload =
-                                        new DomainSupportedCountriesResponsePayload(response);
-                                mDispatcher.dispatch(
-                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                                // Supported Countries API should always return a response for a valid,
-                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
-                                DomainSupportedCountriesError domainSupportedCountriesError =
-                                        new DomainSupportedCountriesError(
-                                                DomainSupportedCountriesErrorType.GENERIC_ERROR,
-                                                error.message);
-                                DomainSupportedCountriesResponsePayload payload =
-                                        new DomainSupportedCountriesResponsePayload(domainSupportedCountriesError);
-                                mDispatcher.dispatch(
-                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
-                            }
-                        });
-        add(request);
+    fun fetchSupportedCountries() {
+        val url = WPCOMREST.domains.supported_countries.urlV1_1
+        val request = WPComGsonRequest.buildGetRequest<ArrayList<SupportedCountryResponse>>(url, null,
+                object : TypeToken<ArrayList<SupportedCountryResponse?>?>() {}.type,
+                { response ->
+                    val payload = DomainSupportedCountriesResponsePayload(response)
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload)
+                    )
+                },
+                { error -> // Supported Countries API should always return a response for a valid,
+                    // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                    val domainSupportedCountriesError = DomainSupportedCountriesError(
+                            DomainSupportedCountriesErrorType.GENERIC_ERROR,
+                            error.message
+                    )
+                    val payload = DomainSupportedCountriesResponsePayload(domainSupportedCountriesError)
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload)
+                    )
+                })
+        add(request)
     }
 
-    public void designatePrimaryDomain(@NonNull final SiteModel site, String domain) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).domains.primary.getUrlV1_1();
-        Map<String, Object> params = new HashMap<>();
-        params.put("domain", domain);
-        final WPComGsonRequest<DesignatePrimaryDomainResponse> request = WPComGsonRequest
-                .buildPostRequest(url, params, DesignatePrimaryDomainResponse.class,
-                        new Listener<DesignatePrimaryDomainResponse>() {
-                            @Override
-                            public void onResponse(DesignatePrimaryDomainResponse response) {
-                                mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(
-                                        new DesignatedPrimaryDomainPayload(site, response.getSuccess())));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                                DesignatePrimaryDomainError error = new DesignatePrimaryDomainError(
-                                        DesignatePrimaryDomainErrorType.GENERIC_ERROR, networkError.message);
-
-                                DesignatedPrimaryDomainPayload payload =
-                                        new DesignatedPrimaryDomainPayload(site, false);
-                                payload.error = error;
-
-                                mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(payload));
-                            }
-                        });
-        add(request);
+    fun designatePrimaryDomain(site: SiteModel, domain: String) {
+        val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
+        val params: MutableMap<String, Any> = HashMap()
+        params["domain"] = domain
+        val request = WPComGsonRequest
+                .buildPostRequest(url, params, DesignatePrimaryDomainResponse::class.java,
+                        { (success) ->
+                            mDispatcher.dispatch(
+                                    SiteActionBuilder.newDesignatedPrimaryDomainAction(
+                                            DesignatedPrimaryDomainPayload(site, success)
+                                    )
+                            )
+                        }
+                ) { networkError ->
+                    val error = DesignatePrimaryDomainError(
+                            DesignatePrimaryDomainErrorType.GENERIC_ERROR, networkError.message
+                    )
+                    val payload = DesignatedPrimaryDomainPayload(site, false)
+                    payload.error = error
+                    mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(payload))
+                }
+        add(request)
     }
 
     // Automated Transfers
-
-    public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.eligibility.getUrlV1_1();
-        final WPComGsonRequest<AutomatedTransferEligibilityCheckResponse> request = WPComGsonRequest
-                .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse.class,
-                new Listener<AutomatedTransferEligibilityCheckResponse>() {
-                    @Override
-                    public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
-                        List<String> strErrorCodes = new ArrayList<>();
-                        if (response.errors != null) {
-                            for (EligibilityError eligibilityError : response.errors) {
-                                strErrorCodes.add(eligibilityError.code);
+    fun checkAutomatedTransferEligibility(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).automated_transfers.eligibility.urlV1_1
+        val request = WPComGsonRequest
+                .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse::class.java,
+                        { response ->
+                            val strErrorCodes: MutableList<String> = ArrayList()
+                            if (response.errors != null) {
+                                for (eligibilityError in response.errors) {
+                                    strErrorCodes.add(eligibilityError.code)
+                                }
                             }
+                            mDispatcher.dispatch(
+                                    SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                            AutomatedTransferEligibilityResponsePayload(
+                                                    site, response.isEligible,
+                                                    strErrorCodes
+                                            )
+                                    )
+                            )
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible,
-                                        strErrorCodes)));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                        AutomatedTransferError payloadError = new AutomatedTransferError(
-                                networkError.apiError, networkError.message);
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
-                    }
-                });
-        add(request);
+                ) { networkError ->
+                    val payloadError = AutomatedTransferError(
+                            networkError.apiError, networkError.message
+                    )
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                    AutomatedTransferEligibilityResponsePayload(site, payloadError)
+                            )
+                    )
+                }
+        add(request)
     }
 
-    public void initiateAutomatedTransfer(@NonNull final SiteModel site, @NonNull final String pluginSlugToInstall) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.initiate.getUrlV1_1();
-        Map<String, Object> params = new HashMap<>();
-        params.put("plugin", pluginSlugToInstall);
-        final WPComGsonRequest<InitiateAutomatedTransferResponse> request = WPComGsonRequest
-                .buildPostRequest(url, params, InitiateAutomatedTransferResponse.class,
-                        new Listener<InitiateAutomatedTransferResponse>() {
-                            @Override
-                            public void onResponse(InitiateAutomatedTransferResponse response) {
-                                InitiateAutomatedTransferResponsePayload payload =
-                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall,
-                                                response.success);
-                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                                InitiateAutomatedTransferResponsePayload payload =
-                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
-                                payload.error = new AutomatedTransferError(networkError.apiError, networkError.message);
-                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
-                            }
-                        });
-        add(request);
-    }
-
-    public void checkAutomatedTransferStatus(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.status.getUrlV1_1();
-        final WPComGsonRequest<AutomatedTransferStatusResponse> request = WPComGsonRequest
-                .buildGetRequest(url, null, AutomatedTransferStatusResponse.class,
-                        new Listener<AutomatedTransferStatusResponse>() {
-                            @Override
-                            public void onResponse(AutomatedTransferStatusResponse response) {
-                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
-                                        new AutomatedTransferStatusResponsePayload(site, response.status,
-                                                response.currentStep, response.totalSteps)));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                                AutomatedTransferError error = new AutomatedTransferError(
-                                        networkError.apiError, networkError.message);
-                                mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
-                                        new AutomatedTransferStatusResponsePayload(site, error)));
-                            }
-                        });
-        add(request);
-    }
-
-    public void completeQuickStart(@NonNull final SiteModel site, String variant) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).mobile_quick_start.getUrlV1_1();
-        Map<String, Object> params = new HashMap<>();
-        params.put("variant", variant);
-        final WPComGsonRequest<QuickStartCompletedResponse> request = WPComGsonRequest
-                .buildPostRequest(url, params, QuickStartCompletedResponse.class,
-                        new Listener<QuickStartCompletedResponse>() {
-                            @Override
-                            public void onResponse(QuickStartCompletedResponse response) {
-                                mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(
-                                         new QuickStartCompletedResponsePayload(site, response.success)));
-                            }
-                        },
-                        new WPComErrorListener() {
-                            @Override
-                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
-                                QuickStartError error = new QuickStartError(
-                                        QuickStartErrorType.GENERIC_ERROR, networkError.message);
-
-                                QuickStartCompletedResponsePayload payload =
-                                        new QuickStartCompletedResponsePayload(site, false);
-                                payload.error = error;
-
-                                mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(payload));
-                            }
-                        });
-        add(request);
-    }
-
-    public void fetchAccessCookie(final SiteModel site) {
-        Map<String, String> params = new HashMap<>();
-        String url = WPCOMV2.sites.site(site.getSiteId()).atomic_auth_proxy.read_access_cookies.getUrl();
-        final WPComGsonRequest<PrivateAtomicCookieResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                PrivateAtomicCookieResponse.class,
-                new Listener<PrivateAtomicCookieResponse>() {
-                    @Override
-                    public void onResponse(PrivateAtomicCookieResponse response) {
-                        if (response != null) {
-                            mDispatcher.dispatch(SiteActionBuilder
-                                    .newFetchedPrivateAtomicCookieAction(
-                                            new FetchedPrivateAtomicCookiePayload(site, response)));
-                        } else {
-                            AppLog.e(T.API, "Failed to fetch private atomic cookie for " + site.getUrl());
-                            FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(
-                                    site, null);
-                            payload.error = new PrivateAtomicCookieError(
-                                    AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+    fun initiateAutomatedTransfer(site: SiteModel, pluginSlugToInstall: String) {
+        val url = WPCOMREST.sites.site(site.siteId).automated_transfers.initiate.urlV1_1
+        val params: MutableMap<String, Any> = HashMap()
+        params["plugin"] = pluginSlugToInstall
+        val request = WPComGsonRequest
+                .buildPostRequest(url, params, InitiateAutomatedTransferResponse::class.java,
+                        { response ->
+                            val payload = InitiateAutomatedTransferResponsePayload(
+                                    site, pluginSlugToInstall,
+                                    response.success
+                            )
+                            mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload))
                         }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
-                                AccessCookieErrorType.GENERIC_ERROR, error.message);
-                        FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(site, null);
-                        payload.error = cookieError;
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+                ) { networkError ->
+                    val payload = InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall)
+                    payload.error = AutomatedTransferError(networkError.apiError, networkError.message)
+                    mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload))
+                }
+        add(request)
+    }
+
+    fun checkAutomatedTransferStatus(site: SiteModel) {
+        val url = WPCOMREST.sites.site(site.siteId).automated_transfers.status.urlV1_1
+        val request = WPComGsonRequest
+                .buildGetRequest(url, null, AutomatedTransferStatusResponse::class.java,
+                        { response ->
+                            mDispatcher.dispatch(
+                                    SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
+                                            AutomatedTransferStatusResponsePayload(
+                                                    site, response.status,
+                                                    response.currentStep, response.totalSteps
+                                            )
+                                    )
+                            )
+                        }
+                ) { networkError ->
+                    val error = AutomatedTransferError(
+                            networkError.apiError, networkError.message
+                    )
+                    mDispatcher.dispatch(
+                            SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
+                                    AutomatedTransferStatusResponsePayload(site, error)
+                            )
+                    )
+                }
+        add(request)
+    }
+
+    fun completeQuickStart(site: SiteModel, variant: String) {
+        val url = WPCOMREST.sites.site(site.siteId).mobile_quick_start.urlV1_1
+        val params: MutableMap<String, Any> = HashMap()
+        params["variant"] = variant
+        val request = WPComGsonRequest
+                .buildPostRequest(url, params, QuickStartCompletedResponse::class.java,
+                        { response ->
+                            mDispatcher.dispatch(
+                                    SiteActionBuilder.newCompletedQuickStartAction(
+                                            QuickStartCompletedResponsePayload(site, response.success)
+                                    )
+                            )
+                        }
+                ) { networkError ->
+                    val error = QuickStartError(
+                            QuickStartErrorType.GENERIC_ERROR, networkError.message
+                    )
+                    val payload = QuickStartCompletedResponsePayload(site, false)
+                    payload.error = error
+                    mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(payload))
+                }
+        add(request)
+    }
+
+    fun fetchAccessCookie(site: SiteModel) {
+        val params: Map<String, String> = HashMap()
+        val url = WPCOMV2.sites.site(site.siteId).atomic_auth_proxy.read_access_cookies.url
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                PrivateAtomicCookieResponse::class.java,
+                { response ->
+                    if (response != null) {
+                        mDispatcher.dispatch(
+                                SiteActionBuilder
+                                        .newFetchedPrivateAtomicCookieAction(
+                                                FetchedPrivateAtomicCookiePayload(site, response)
+                                        )
+                        )
+                    } else {
+                        AppLog.e(API, "Failed to fetch private atomic cookie for " + site.url)
+                        val payload = FetchedPrivateAtomicCookiePayload(
+                                site, null
+                        )
+                        payload.error = PrivateAtomicCookieError(
+                                AccessCookieErrorType.INVALID_RESPONSE, "Empty response"
+                        )
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload))
                     }
                 }
-                                                                                                      );
-        add(request);
+        ) { error ->
+            val cookieError = PrivateAtomicCookieError(
+                    AccessCookieErrorType.GENERIC_ERROR, error.message
+            )
+            val payload = FetchedPrivateAtomicCookiePayload(site, null)
+            payload.error = cookieError
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload))
+        }
+        add(request)
     }
 
-    public void fetchJetpackCapabilities(final long remoteSiteId) {
-        Map<String, String> params = new HashMap<>();
-        String url = WPCOMV2.sites.site(remoteSiteId).rewind.capabilities.getUrl();
-        final WPComGsonRequest<JetpackCapabilitiesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                JetpackCapabilitiesResponse.class,
-                new Listener<JetpackCapabilitiesResponse>() {
-                    @Override
-                    public void onResponse(JetpackCapabilitiesResponse response) {
-                        if (response != null && response.getCapabilities() != null) {
-                            FetchedJetpackCapabilitiesPayload payload =
-                                    responseToJetpackCapabilitiesPayload(remoteSiteId, response);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
-                        } else {
-                            AppLog.e(T.API, "Failed to fetch jetpack capabilities for site with id: " + remoteSiteId);
-                            JetpackCapabilitiesError error =
-                                    new JetpackCapabilitiesError(JetpackCapabilitiesErrorType.GENERIC_ERROR,
-                                            "Empty response");
-                            FetchedJetpackCapabilitiesPayload payload =
-                                    new FetchedJetpackCapabilitiesPayload(remoteSiteId, error);
-                            mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
-                        }
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        JetpackCapabilitiesError jetpackError =
-                                new JetpackCapabilitiesError(JetpackCapabilitiesErrorType.GENERIC_ERROR, error.message);
-                        FetchedJetpackCapabilitiesPayload payload =
-                                new FetchedJetpackCapabilitiesPayload(remoteSiteId, jetpackError);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
+    fun fetchJetpackCapabilities(remoteSiteId: Long) {
+        val params: Map<String, String> = HashMap()
+        val url = WPCOMV2.sites.site(remoteSiteId).rewind.capabilities.url
+        val request = WPComGsonRequest.buildGetRequest(url, params,
+                JetpackCapabilitiesResponse::class.java,
+                { response ->
+                    if (response?.capabilities != null) {
+                        val payload = responseToJetpackCapabilitiesPayload(remoteSiteId, response)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload))
+                    } else {
+                        AppLog.e(API, "Failed to fetch jetpack capabilities for site with id: $remoteSiteId")
+                        val error = JetpackCapabilitiesError(
+                                JetpackCapabilitiesErrorType.GENERIC_ERROR,
+                                "Empty response"
+                        )
+                        val payload = FetchedJetpackCapabilitiesPayload(remoteSiteId, error)
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload))
                     }
                 }
-        );
-        add(request);
+        ) { error ->
+            val jetpackError = JetpackCapabilitiesError(JetpackCapabilitiesErrorType.GENERIC_ERROR, error.message)
+            val payload = FetchedJetpackCapabilitiesPayload(remoteSiteId, jetpackError)
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload))
+        }
+        add(request)
     }
 
     // Utils
-
-    private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
-        SiteModel site = new SiteModel();
-        site.setSiteId(from.ID);
-        site.setUrl(from.URL);
-        site.setName(StringEscapeUtils.unescapeHtml4(from.name));
-        site.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
-        site.setIsJetpackConnected(from.jetpack);
-        site.setIsJetpackInstalled(from.jetpack);
-        site.setIsVisible(from.visible);
-        site.setIsPrivate(from.is_private);
-        site.setIsComingSoon(from.is_coming_soon);
+    private fun siteResponseToSiteModel(from: SiteWPComRestResponse): SiteModel {
+        val site = SiteModel()
+        site.siteId = from.ID
+        site.url = from.URL
+        site.name = StringEscapeUtils.unescapeHtml4(from.name)
+        site.description = StringEscapeUtils.unescapeHtml4(from.description)
+        site.setIsJetpackConnected(from.jetpack)
+        site.setIsJetpackInstalled(from.jetpack)
+        site.setIsVisible(from.visible)
+        site.setIsPrivate(from.is_private)
+        site.setIsComingSoon(from.is_coming_soon)
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
-            site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
-            site.setIsVideoPressSupported(from.options.videopress_enabled);
-            site.setIsAutomatedTransfer(from.options.is_automated_transfer);
-            site.setIsWpComStore(from.options.is_wpcom_store);
-            site.setHasWooCommerce(from.options.woocommerce_is_active);
-            site.setAdminUrl(from.options.admin_url);
-            site.setLoginUrl(from.options.login_url);
-            site.setTimezone(from.options.gmt_offset);
-            site.setFrameNonce(from.options.frame_nonce);
-            site.setUnmappedUrl(from.options.unmapped_url);
-            site.setJetpackVersion(from.options.jetpack_version);
-            site.setSoftwareVersion(from.options.software_version);
-            site.setIsWPComAtomic(from.options.is_wpcom_atomic);
-            site.setIsWpForTeamsSite(from.options.is_wpforteams_site);
-            site.setShowOnFront(from.options.show_on_front);
-            site.setPageOnFront(from.options.page_on_front);
-            site.setPageForPosts(from.options.page_for_posts);
-
+            site.setIsFeaturedImageSupported(from.options.featured_images_enabled)
+            site.setIsVideoPressSupported(from.options.videopress_enabled)
+            site.setIsAutomatedTransfer(from.options.is_automated_transfer)
+            site.setIsWpComStore(from.options.is_wpcom_store)
+            site.hasWooCommerce = from.options.woocommerce_is_active
+            site.adminUrl = from.options.admin_url
+            site.loginUrl = from.options.login_url
+            site.timezone = from.options.gmt_offset
+            site.frameNonce = from.options.frame_nonce
+            site.unmappedUrl = from.options.unmapped_url
+            site.jetpackVersion = from.options.jetpack_version
+            site.softwareVersion = from.options.software_version
+            site.setIsWPComAtomic(from.options.is_wpcom_atomic)
+            site.setIsWpForTeamsSite(from.options.is_wpforteams_site)
+            site.showOnFront = from.options.show_on_front
+            site.pageOnFront = from.options.page_on_front
+            site.pageForPosts = from.options.page_for_posts
             try {
-                site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
-            } catch (NumberFormatException e) {
+                site.maxUploadSize = java.lang.Long.valueOf(from.options.max_upload_size)
+            } catch (e: NumberFormatException) {
                 // Do nothing - the value probably wasn't set ('false'), but we don't want to overwrite any existing
                 // value we stored earlier, as /me/sites/ and /sites/$site/ can return different responses for this
             }
@@ -1159,105 +944,120 @@ public class SiteRestClient extends BaseWPComRestClient {
             // Set the memory limit for media uploads on the site. Normally, this is just WP_MAX_MEMORY_LIMIT,
             // but it's possible for a site to have its php memory_limit > WP_MAX_MEMORY_LIMIT, and have
             // WP_MEMORY_LIMIT == memory_limit, in which WP_MEMORY_LIMIT reflects the real limit for media uploads.
-            long wpMemoryLimit = StringUtils.stringToLong(from.options.wp_memory_limit);
-            long wpMaxMemoryLimit = StringUtils.stringToLong(from.options.wp_max_memory_limit);
+            val wpMemoryLimit = StringUtils.stringToLong(from.options.wp_memory_limit)
+            val wpMaxMemoryLimit = StringUtils.stringToLong(from.options.wp_max_memory_limit)
             if (wpMemoryLimit > 0 || wpMaxMemoryLimit > 0) {
                 // Only update the value if we received one from the server - otherwise, the original value was
                 // probably not set ('false'), but we don't want to overwrite any existing value we stored earlier,
                 // as /me/sites/ and /sites/$site/ can return different responses for this
-                site.setMemoryLimit(Math.max(wpMemoryLimit, wpMaxMemoryLimit));
+                site.memoryLimit = max(wpMemoryLimit, wpMaxMemoryLimit)
             }
         }
         if (from.plan != null) {
             try {
-                site.setPlanId(Long.valueOf(from.plan.product_id));
-            } catch (NumberFormatException e) {
+                site.planId = java.lang.Long.valueOf(from.plan.product_id)
+            } catch (e: NumberFormatException) {
                 // VIP sites return a String plan ID ('vip') rather than a number
-                if (from.plan.product_id.equals("vip")) {
-                    site.setPlanId(SiteModel.VIP_PLAN_ID);
+                if (from.plan.product_id == "vip") {
+                    site.planId = SiteModel.VIP_PLAN_ID
                 }
             }
-            site.setPlanShortName(from.plan.product_name_short);
-            site.setHasFreePlan(from.plan.is_free);
+            site.planShortName = from.plan.product_name_short
+            site.hasFreePlan = from.plan.is_free
         }
         if (from.capabilities != null) {
-            site.setHasCapabilityEditPages(from.capabilities.edit_pages);
-            site.setHasCapabilityEditPosts(from.capabilities.edit_posts);
-            site.setHasCapabilityEditOthersPosts(from.capabilities.edit_others_posts);
-            site.setHasCapabilityEditOthersPages(from.capabilities.edit_others_pages);
-            site.setHasCapabilityDeletePosts(from.capabilities.delete_posts);
-            site.setHasCapabilityDeleteOthersPosts(from.capabilities.delete_others_posts);
-            site.setHasCapabilityEditThemeOptions(from.capabilities.edit_theme_options);
-            site.setHasCapabilityEditUsers(from.capabilities.edit_users);
-            site.setHasCapabilityListUsers(from.capabilities.list_users);
-            site.setHasCapabilityManageCategories(from.capabilities.manage_categories);
-            site.setHasCapabilityManageOptions(from.capabilities.manage_options);
-            site.setHasCapabilityActivateWordads(from.capabilities.activate_wordads);
-            site.setHasCapabilityPromoteUsers(from.capabilities.promote_users);
-            site.setHasCapabilityPublishPosts(from.capabilities.publish_posts);
-            site.setHasCapabilityUploadFiles(from.capabilities.upload_files);
-            site.setHasCapabilityDeleteUser(from.capabilities.delete_user);
-            site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
-            site.setHasCapabilityViewStats(from.capabilities.view_stats);
+            site.hasCapabilityEditPages = from.capabilities.edit_pages
+            site.hasCapabilityEditPosts = from.capabilities.edit_posts
+            site.hasCapabilityEditOthersPosts = from.capabilities.edit_others_posts
+            site.hasCapabilityEditOthersPages = from.capabilities.edit_others_pages
+            site.hasCapabilityDeletePosts = from.capabilities.delete_posts
+            site.hasCapabilityDeleteOthersPosts = from.capabilities.delete_others_posts
+            site.hasCapabilityEditThemeOptions = from.capabilities.edit_theme_options
+            site.hasCapabilityEditUsers = from.capabilities.edit_users
+            site.hasCapabilityListUsers = from.capabilities.list_users
+            site.hasCapabilityManageCategories = from.capabilities.manage_categories
+            site.hasCapabilityManageOptions = from.capabilities.manage_options
+            site.hasCapabilityActivateWordads = from.capabilities.activate_wordads
+            site.hasCapabilityPromoteUsers = from.capabilities.promote_users
+            site.hasCapabilityPublishPosts = from.capabilities.publish_posts
+            site.hasCapabilityUploadFiles = from.capabilities.upload_files
+            site.hasCapabilityDeleteUser = from.capabilities.delete_user
+            site.hasCapabilityRemoveUsers = from.capabilities.remove_users
+            site.hasCapabilityViewStats = from.capabilities.view_stats
         }
         if (from.quota != null) {
-            site.setSpaceAvailable(from.quota.space_available);
-            site.setSpaceAllowed(from.quota.space_allowed);
-            site.setSpaceUsed(from.quota.space_used);
-            site.setSpacePercentUsed(from.quota.percent_used);
+            site.spaceAvailable = from.quota.space_available
+            site.spaceAllowed = from.quota.space_allowed
+            site.spaceUsed = from.quota.space_used
+            site.spacePercentUsed = from.quota.percent_used
         }
         if (from.icon != null) {
-            site.setIconUrl(from.icon.img);
+            site.iconUrl = from.icon.img
         }
         if (from.meta != null) {
             if (from.meta.links != null) {
-                site.setXmlRpcUrl(from.meta.links.xmlrpc);
+                site.xmlRpcUrl = from.meta.links.xmlrpc
             }
         }
         // Only set the isWPCom flag for "pure" WPCom sites
         if (!from.jetpack) {
-            site.setIsWPCom(true);
+            site.setIsWPCom(true)
         }
-        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
-        return site;
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        return site
     }
 
-    private NewSiteResponsePayload volleyErrorToAccountResponsePayload(VolleyError error) {
-        NewSiteResponsePayload payload = new NewSiteResponsePayload();
-        payload.error = new NewSiteError(NewSiteErrorType.GENERIC_ERROR, "");
+    private fun volleyErrorToAccountResponsePayload(error: VolleyError, dryRun: Boolean): NewSiteResponsePayload {
+        val payload = NewSiteResponsePayload(dryRun = dryRun)
+        payload.error = NewSiteError(NewSiteErrorType.GENERIC_ERROR, "")
         if (error.networkResponse != null && error.networkResponse.data != null) {
-            String jsonString = new String(error.networkResponse.data);
+            val jsonString = String(error.networkResponse.data)
             try {
-                JSONObject errorObj = new JSONObject(jsonString);
-                payload.error = new NewSiteError(NewSiteErrorType.fromString((String) errorObj.get("error")),
-                        (String) errorObj.get("message"));
-            } catch (JSONException e) {
+                val errorObj = JSONObject(jsonString)
+                payload.error = NewSiteError(
+                        NewSiteErrorType.fromString((errorObj["error"] as String)),
+                        (errorObj["message"] as String)
+                )
+            } catch (e: JSONException) {
                 // Do nothing (keep default error)
             }
         }
-        return payload;
+        return payload
     }
 
-    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
-        return new ConnectSiteInfoPayload(url, response.exists, response.isWordPress, response.hasJetpack,
+    private fun connectSiteInfoFromResponse(url: String, response: ConnectSiteInfoResponse): ConnectSiteInfoPayload {
+        return ConnectSiteInfoPayload(
+                url, response.exists, response.isWordPress, response.hasJetpack,
                 response.isJetpackActive, response.isJetpackConnected,
-                response.isWordPressDotCom, // CHECKSTYLE IGNORE
-                response.urlAfterRedirects);
+                response.isWordPressDotCom,  // CHECKSTYLE IGNORE
+                response.urlAfterRedirects
+        )
     }
 
-    private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
-        DomainAvailabilityStatus status = DomainAvailabilityStatus.fromString(response.getStatus());
-        DomainMappabilityStatus mappable = DomainMappabilityStatus.fromString(response.getMappable());
-        boolean supportsPrivacy = response.getSupports_privacy();
-        return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
+    private fun responseToDomainAvailabilityPayload(response: DomainAvailabilityResponse): DomainAvailabilityResponsePayload {
+        val status = DomainAvailabilityStatus.fromString(response.status!!)
+        val mappable = DomainMappabilityStatus.fromString(response.mappable!!)
+        val supportsPrivacy = response.supports_privacy
+        return DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy)
     }
 
-    private FetchedJetpackCapabilitiesPayload responseToJetpackCapabilitiesPayload(
-            long remoteSiteId, JetpackCapabilitiesResponse response) {
-        List<JetpackCapability> capabilities = new ArrayList<>(response.getCapabilities().size());
-        for (String item : response.getCapabilities()) {
-            capabilities.add(JetpackCapability.Companion.fromString(item));
+    private fun responseToJetpackCapabilitiesPayload(
+        remoteSiteId: Long, response: JetpackCapabilitiesResponse
+    ): FetchedJetpackCapabilitiesPayload {
+        val capabilities: MutableList<JetpackCapability> = ArrayList(
+                response.capabilities!!.size
+        )
+        for (item in response.capabilities) {
+            capabilities.add(JetpackCapability.fromString(item))
         }
-        return new FetchedJetpackCapabilitiesPayload(remoteSiteId, capabilities);
+        return FetchedJetpackCapabilitiesPayload(remoteSiteId, capabilities)
+    }
+
+    companion object {
+        const val NEW_SITE_TIMEOUT_MS = 90000
+        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan,"
+                + "capabilities,quota,icon,meta")
+        const val FIELDS = "fields"
+        const val FILTERS = "filters"
     }
 }

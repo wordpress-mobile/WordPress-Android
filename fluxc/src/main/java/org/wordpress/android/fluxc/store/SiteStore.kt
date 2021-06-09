@@ -196,7 +196,7 @@ class SiteStore
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
-        val editors: Map<String, String>
+        val editors: Map<String, String>? = null
     ) : Payload<SiteEditorsError>()
 
     data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError>()
@@ -538,8 +538,8 @@ class SiteStore
 
     data class OnConnectSiteInfoChecked(@JvmField val info: ConnectSiteInfoPayload) : OnChanged<SiteError>()
     data class OnWPComSiteFetched(
-        @JvmField val checkedUrl: String,
-        @JvmField val site: SiteModel
+        @JvmField val checkedUrl: String? = null,
+        @JvmField val site: SiteModel? = null
     ) : OnChanged<SiteError>()
 
     data class SuggestDomainError(@JvmField val type: SuggestDomainErrorType, @JvmField val message: String) :
@@ -1505,7 +1505,7 @@ class SiteStore
             var rowsAffected = 0
             var error: SiteEditorsError? = null
             // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
-            for ((key, value) in payload.editors) {
+            for ((key, value) in payload.editors ?: mapOf()) {
                 val currentModel = getSiteBySiteId(key.toLong())
                 if (currentModel == null) {
                     // this could happen when a site was added to the current account with another app, or on the web
@@ -1587,7 +1587,7 @@ class SiteStore
         } else {
             null
         }
-        emitChange(OnURLChecked(payload.url, payload.isWPCom, error))
+        emitChange(OnURLChecked(payload.url ?: "", payload.isWPCom, error))
     }
 
     private fun suggestDomains(payload: SuggestDomainsPayload) {
