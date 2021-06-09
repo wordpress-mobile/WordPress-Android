@@ -92,7 +92,6 @@ import org.wordpress.android.util.UrlUtils
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URLEncoder
-import java.util.ArrayList
 import java.util.HashMap
 import java.util.Locale
 import javax.inject.Inject
@@ -134,7 +133,7 @@ class SiteRestClient @Inject constructor(
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
         return when (response) {
             is Success -> {
-                val siteArray: MutableList<SiteModel> = ArrayList()
+                val siteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     siteArray.add(siteResponseToSiteModel(siteResponse))
                 }
@@ -149,14 +148,14 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun getFetchSitesParams(filters: List<SiteFilter?>): Map<String, String> {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         if (filters.isNotEmpty()) params[FILTERS] = TextUtils.join(",", filters)
         params[FIELDS] = SITE_FIELDS
         return params
     }
 
     fun fetchSite(site: SiteModel) {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         params[FIELDS] = SITE_FIELDS
         val url = WPCOMREST.sites.urlV1_1 + site.siteId
         val request = WPComGsonRequest.buildGetRequest(url, params,
@@ -186,8 +185,11 @@ class SiteRestClient @Inject constructor(
     }
 
     fun newSite(
-        siteName: String, language: String,
-        visibility: SiteVisibility, segmentId: Long?, siteDesign: String?,
+        siteName: String,
+        language: String,
+        visibility: SiteVisibility,
+        segmentId: Long?,
+        siteDesign: String?,
         dryRun: Boolean
     ) {
         val url = WPCOMREST.sites.new_.urlV1_1
@@ -235,7 +237,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchSiteEditors(site: SiteModel) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 SiteEditorsResponse::class.java,
@@ -342,7 +344,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest.buildGetRequest(url, null,
                 UserRolesResponse::class.java,
                 { response ->
-                    val roleArray: MutableList<RoleModel> = ArrayList()
+                    val roleArray = mutableListOf<RoleModel>()
                     for (roleResponse in response.roles) {
                         val roleModel = RoleModel()
                         roleModel.name = roleResponse.name
@@ -417,9 +419,13 @@ class SiteRestClient @Inject constructor(
     }
 
     fun suggestDomains(
-        query: String, onlyWordpressCom: Boolean?,
-        includeWordpressCom: Boolean?, includeDotBlogSubdomain: Boolean?,
-        segmentId: Long?, quantity: Int, includeVendorDot: Boolean,
+        query: String,
+        onlyWordpressCom: Boolean?,
+        includeWordpressCom: Boolean?,
+        includeDotBlogSubdomain: Boolean?,
+        segmentId: Long?,
+        quantity: Int,
+        includeVendorDot: Boolean,
         tlds: String?
     ) {
         val url = WPCOMREST.domains.suggestions.urlV1_1
@@ -493,14 +499,15 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun fetchBlockLayouts(
-        site: SiteModel, url: String,
+        site: SiteModel,
+        url: String,
         supportedBlocks: List<String?>?,
         previewWidth: Float?,
         previewHeight: Float?,
         scale: Float?,
         isBeta: Boolean?
     ) {
-        val params: MutableMap<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         if (supportedBlocks != null && supportedBlocks.isNotEmpty()) {
             params["supported_blocks"] = TextUtils.join(",", supportedBlocks)
         }
@@ -682,7 +689,7 @@ class SiteRestClient @Inject constructor(
      */
     fun fetchSupportedCountries() {
         val url = WPCOMREST.domains.supported_countries.urlV1_1
-        val request = WPComGsonRequest.buildGetRequest<ArrayList<SupportedCountryResponse>>(url, null,
+        val request = WPComGsonRequest.buildGetRequest<List<SupportedCountryResponse>>(url, null,
                 object : TypeToken<List<SupportedCountryResponse>>() {}.type,
                 { response ->
                     val payload = DomainSupportedCountriesResponsePayload(response)
@@ -706,7 +713,7 @@ class SiteRestClient @Inject constructor(
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
         val url = WPCOMREST.sites.site(site.siteId).domains.primary.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["domain"] = domain
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, DesignatePrimaryDomainResponse::class.java,
@@ -734,7 +741,7 @@ class SiteRestClient @Inject constructor(
         val request = WPComGsonRequest
                 .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse::class.java,
                         { response ->
-                            val strErrorCodes: MutableList<String> = ArrayList()
+                            val strErrorCodes = mutableListOf<String>()
                             if (response.errors != null) {
                                 for (eligibilityError in response.errors) {
                                     strErrorCodes.add(eligibilityError.code)
@@ -764,7 +771,7 @@ class SiteRestClient @Inject constructor(
 
     fun initiateAutomatedTransfer(site: SiteModel, pluginSlugToInstall: String) {
         val url = WPCOMREST.sites.site(site.siteId).automated_transfers.initiate.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["plugin"] = pluginSlugToInstall
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, InitiateAutomatedTransferResponse::class.java,
@@ -812,7 +819,7 @@ class SiteRestClient @Inject constructor(
 
     fun completeQuickStart(site: SiteModel, variant: String) {
         val url = WPCOMREST.sites.site(site.siteId).mobile_quick_start.urlV1_1
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         params["variant"] = variant
         val request = WPComGsonRequest
                 .buildPostRequest(url, params, QuickStartCompletedResponse::class.java,
@@ -835,7 +842,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchAccessCookie(site: SiteModel) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(site.siteId).atomic_auth_proxy.read_access_cookies.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 PrivateAtomicCookieResponse::class.java,
@@ -870,7 +877,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun fetchJetpackCapabilities(remoteSiteId: Long) {
-        val params: Map<String, String> = HashMap()
+        val params = mutableMapOf<String, String>()
         val url = WPCOMV2.sites.site(remoteSiteId).rewind.capabilities.url
         val request = WPComGsonRequest.buildGetRequest(url, params,
                 JetpackCapabilitiesResponse::class.java,
@@ -1023,14 +1030,20 @@ class SiteRestClient @Inject constructor(
 
     private fun connectSiteInfoFromResponse(url: String, response: ConnectSiteInfoResponse): ConnectSiteInfoPayload {
         return ConnectSiteInfoPayload(
-                url, response.exists, response.isWordPress, response.hasJetpack,
-                response.isJetpackActive, response.isJetpackConnected,
-                response.isWordPressDotCom,  // CHECKSTYLE IGNORE
+                url,
+                response.exists,
+                response.isWordPress,
+                response.hasJetpack,
+                response.isJetpackActive,
+                response.isJetpackConnected,
+                response.isWordPressDotCom, // CHECKSTYLE IGNORE
                 response.urlAfterRedirects
         )
     }
 
-    private fun responseToDomainAvailabilityPayload(response: DomainAvailabilityResponse): DomainAvailabilityResponsePayload {
+    private fun responseToDomainAvailabilityPayload(
+        response: DomainAvailabilityResponse
+    ): DomainAvailabilityResponsePayload {
         val status = DomainAvailabilityStatus.fromString(response.status!!)
         val mappable = DomainMappabilityStatus.fromString(response.mappable!!)
         val supportsPrivacy = response.supports_privacy
@@ -1038,12 +1051,11 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun responseToJetpackCapabilitiesPayload(
-        remoteSiteId: Long, response: JetpackCapabilitiesResponse
+        remoteSiteId: Long,
+        response: JetpackCapabilitiesResponse
     ): FetchedJetpackCapabilitiesPayload {
-        val capabilities: MutableList<JetpackCapability> = ArrayList(
-                response.capabilities!!.size
-        )
-        for (item in response.capabilities) {
+        val capabilities = mutableListOf<JetpackCapability>()
+        for (item in response.capabilities ?: listOf()) {
             capabilities.add(JetpackCapability.fromString(item))
         }
         return FetchedJetpackCapabilitiesPayload(remoteSiteId, capabilities)
@@ -1051,8 +1063,8 @@ class SiteRestClient @Inject constructor(
 
     companion object {
         const val NEW_SITE_TIMEOUT_MS = 90000
-        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan,"
-                + "capabilities,quota,icon,meta")
+        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
+                "capabilities,quota,icon,meta")
         const val FIELDS = "fields"
         const val FILTERS = "filters"
     }
