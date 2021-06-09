@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
@@ -616,7 +617,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mTagsPref) {
             SiteSettingsTagListActivity.showTagList(getActivity(), mSite);
         } else if (preference == mCategoriesPref) {
-            Toast.makeText(getAppCompatActivity(), "The Categories pref was tapped", Toast.LENGTH_SHORT).show();
+            ActivityLauncher.showCategoriesList(getActivity(), mSite);
         } else {
             return false;
         }
