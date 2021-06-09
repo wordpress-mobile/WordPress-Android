@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_
 import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient
-import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Success
@@ -45,7 +44,7 @@ class SiteXMLRPCClient @Inject constructor(
         params.add(site.selfHostedSiteId)
         params.add(site.username)
         params.add(site.password)
-        val request = XMLRPCRequest(site.xmlRpcUrl, GET_PROFILE, params,
+        val request = xmlrpcRequestBuilder.buildGetRequest(site.xmlRpcUrl, GET_PROFILE, params, Map::class.java,
                 { response ->
                     val updatedSite = profileResponseToAccountModel(response, site)
                     mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(updatedSite))
@@ -60,8 +59,14 @@ class SiteXMLRPCClient @Inject constructor(
 
     suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
         val params = listOf(username, password)
-        val response = xmlrpcRequestBuilder.syncGetRequest(this, xmlrpcUrl, GET_USERS_SITES, params)
-        return when(response) {
+        val response = xmlrpcRequestBuilder.syncGetRequest(
+                this,
+                xmlrpcUrl,
+                GET_USERS_SITES,
+                params,
+                Array<Any>::class.java
+        )
+        return when (response) {
             is Success -> {
                 val sites = sitesResponseToSitesModel(response.data, username, password)
                 if (sites != null) {
@@ -97,17 +102,12 @@ class SiteXMLRPCClient @Inject constructor(
                         "jetpack_user_email"
                 )
         )
-        val request = XMLRPCRequest(
+        val request = xmlrpcRequestBuilder.buildGetRequest(
                 site.xmlRpcUrl, GET_OPTIONS, params,
+                Map::class.java,
                 { response ->
                     val updatedSite = updateSiteFromOptions(response, site)
-                    if (updatedSite != null) {
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite))
-                    } else {
-                        val site = SiteModel()
-                        site.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site))
-                    }
+                    mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite))
                 }
         ) { error ->
             val site = SiteModel()
@@ -119,8 +119,8 @@ class SiteXMLRPCClient @Inject constructor(
 
     fun fetchPostFormats(site: SiteModel) {
         val params = listOf(site.selfHostedSiteId, site.username, site.password)
-        val request = XMLRPCRequest(
-                site.xmlRpcUrl, GET_POST_FORMATS, params,
+        val request = xmlrpcRequestBuilder.buildGetRequest(
+                site.xmlRpcUrl, GET_POST_FORMATS, params, Map::class.java,
                 { response ->
                     val postFormats = responseToPostFormats(response, site)
                     if (postFormats != null) {
@@ -150,11 +150,10 @@ class SiteXMLRPCClient @Inject constructor(
         add(request)
     }
 
-    private fun profileResponseToAccountModel(response: Any?, site: SiteModel): SiteModel? {
+    private fun profileResponseToAccountModel(response: Map<*, *>?, site: SiteModel): SiteModel? {
         if (response == null) return null
-        val userMap = response as Map<*, *>
-        site.email = MapUtils.getMapStr(userMap, "email")
-        site.displayName = MapUtils.getMapStr(userMap, "display_name")
+        site.email = MapUtils.getMapStr(response, "email")
+        site.displayName = MapUtils.getMapStr(response, "display_name")
         return site
     }
 
@@ -239,59 +238,50 @@ class SiteXMLRPCClient @Inject constructor(
         )
     }
 
-    private fun updateSiteFromOptions(response: Any, oldModel: SiteModel): SiteModel? {
-        if (response !is Map<*, *>) {
-            reportParseError(response, oldModel.xmlRpcUrl, MutableMap::class.java)
-            return null
-        }
-        val siteOptions = response
-        val siteTitle = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_title", "")
+    private fun updateSiteFromOptions(response: Map<*, *>, oldModel: SiteModel): SiteModel {
+        val siteTitle = XMLRPCUtils.safeGetNestedMapValue(response, "blog_title", "")
         if (!siteTitle.isEmpty()) {
             oldModel.name = StringEscapeUtils.unescapeHtml4(siteTitle)
         }
 
         // TODO: set a canonical URL here
-        val homeUrl = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "home_url", "")
+        val homeUrl = XMLRPCUtils.safeGetNestedMapValue(response, "home_url", "")
         if (!homeUrl.isEmpty()) {
             oldModel.url = homeUrl
         }
         oldModel.softwareVersion = XMLRPCUtils.safeGetNestedMapValue(
-                siteOptions,
+                response,
                 "software_version",
                 ""
         )
-        oldModel.setIsFeaturedImageSupported(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "post_thumbnail", false))
+        oldModel.setIsFeaturedImageSupported(XMLRPCUtils.safeGetNestedMapValue(response, "post_thumbnail", false))
         oldModel.defaultCommentStatus = XMLRPCUtils.safeGetNestedMapValue(
-                siteOptions, "default_comment_status",
+                response, "default_comment_status",
                 "open"
         )
         oldModel.timezone = XMLRPCUtils.safeGetNestedMapValue(
-                siteOptions,
+                response,
                 "time_zone",
                 "0"
         )
         oldModel.loginUrl = XMLRPCUtils.safeGetNestedMapValue(
-                siteOptions,
+                response,
                 "login_url",
                 ""
         )
         oldModel.adminUrl = XMLRPCUtils.safeGetNestedMapValue(
-                siteOptions,
+                response,
                 "admin_url",
                 ""
         )
-        setJetpackStatus(siteOptions, oldModel)
+        setJetpackStatus(response, oldModel)
         // If the site is not public, it's private. Note: this field doesn't always exist.
-        val isPublic = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_public", true)
+        val isPublic = XMLRPCUtils.safeGetNestedMapValue(response, "blog_public", true)
         oldModel.setIsPrivate(!isPublic)
         return oldModel
     }
 
-    private fun responseToPostFormats(response: Any, site: SiteModel): List<PostFormatModel>? {
-        if (response !is Map<*, *>) {
-            reportParseError(response, site.xmlRpcUrl, MutableMap::class.java)
-            return null
-        }
+    private fun responseToPostFormats(response: Map<*, *>, site: SiteModel): List<PostFormatModel>? {
         return SiteUtils.getValidPostFormatsOrNull(response)
     }
 }
