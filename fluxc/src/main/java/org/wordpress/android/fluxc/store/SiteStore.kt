@@ -196,7 +196,7 @@ class SiteStore
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
-        val editors: Map<String, String>
+        val editors: Map<String, String>? = null
     ) : Payload<SiteEditorsError>()
 
     data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError>()
@@ -381,20 +381,19 @@ class SiteStore
         @JvmField val type: SiteEditorsErrorType?,
         @JvmField val message: String
     ) : OnChangedError {
-        constructor(type: SiteEditorsErrorType?) : this(type, "") {}
+        constructor(type: SiteEditorsErrorType?) : this(type, "")
     }
 
     data class PostFormatsError @JvmOverloads constructor(
         @JvmField val type: PostFormatsErrorType,
         @JvmField val message: String = ""
-    ) :
-            OnChangedError
+    ) : OnChangedError
 
     data class UserRolesError internal constructor(
         @JvmField val type: UserRolesErrorType?,
         @JvmField val message: String
     ) : OnChangedError {
-        constructor(type: UserRolesErrorType?) : this(type, "") {}
+        constructor(type: UserRolesErrorType?) : this(type, "")
     }
 
     data class NewSiteError(@JvmField val type: NewSiteErrorType, @JvmField val message: String) : OnChangedError
@@ -434,8 +433,7 @@ class SiteStore
     data class DesignatePrimaryDomainError(
         @JvmField val type: DesignatePrimaryDomainErrorType,
         @JvmField val message: String?
-    ) :
-            OnChangedError
+    ) : OnChangedError
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
@@ -529,8 +527,7 @@ class SiteStore
         @JvmField val url: String,
         @JvmField val isWPCom: Boolean = false,
         var siteError: SiteError? = null
-    ) :
-            OnChanged<SiteError>() {
+    ) : OnChanged<SiteError>() {
         init {
             this.error = siteError
         }
@@ -1505,7 +1502,7 @@ class SiteStore
             var rowsAffected = 0
             var error: SiteEditorsError? = null
             // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
-            for ((key, value) in payload.editors) {
+            for ((key, value) in payload.editors ?: mapOf()) {
                 val currentModel = getSiteBySiteId(key.toLong())
                 if (currentModel == null) {
                     // this could happen when a site was added to the current account with another app, or on the web
@@ -1724,7 +1721,7 @@ class SiteStore
     private fun cachedLayoutsRetrieved(site: SiteModel): Boolean {
         val layouts = siteSqlUtils.getBlockLayouts(site)
         val categories = siteSqlUtils.getBlockLayoutCategories(site)
-        if (!layouts.isEmpty() && !categories.isEmpty()) {
+        if (layouts.isNotEmpty() && categories.isNotEmpty()) {
             emitChange(OnBlockLayoutsFetched(layouts, categories, null))
             return true
         }
