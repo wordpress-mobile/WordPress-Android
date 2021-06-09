@@ -188,8 +188,11 @@ class SiteRestClient @Inject constructor(
     }
 
     fun newSite(
-        siteName: String, language: String,
-        visibility: SiteVisibility, segmentId: Long?, siteDesign: String?,
+        siteName: String,
+        language: String,
+        visibility: SiteVisibility,
+        segmentId: Long?,
+        siteDesign: String?,
         dryRun: Boolean
     ) {
         val url = WPCOMREST.sites.new_.urlV1_1
@@ -419,9 +422,13 @@ class SiteRestClient @Inject constructor(
     }
 
     fun suggestDomains(
-        query: String, onlyWordpressCom: Boolean?,
-        includeWordpressCom: Boolean?, includeDotBlogSubdomain: Boolean?,
-        segmentId: Long?, quantity: Int, includeVendorDot: Boolean,
+        query: String,
+        onlyWordpressCom: Boolean?,
+        includeWordpressCom: Boolean?,
+        includeDotBlogSubdomain: Boolean?,
+        segmentId: Long?,
+        quantity: Int,
+        includeVendorDot: Boolean,
         tlds: String?
     ) {
         val url = WPCOMREST.domains.suggestions.urlV1_1
@@ -495,7 +502,8 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun fetchBlockLayouts(
-        site: SiteModel, url: String,
+        site: SiteModel,
+        url: String,
         supportedBlocks: List<String?>?,
         previewWidth: Float?,
         previewHeight: Float?,
@@ -1027,14 +1035,20 @@ class SiteRestClient @Inject constructor(
 
     private fun connectSiteInfoFromResponse(url: String, response: ConnectSiteInfoResponse): ConnectSiteInfoPayload {
         return ConnectSiteInfoPayload(
-                url, response.exists, response.isWordPress, response.hasJetpack,
-                response.isJetpackActive, response.isJetpackConnected,
-                response.isWordPressDotCom,  // CHECKSTYLE IGNORE
+                url,
+                response.exists,
+                response.isWordPress,
+                response.hasJetpack,
+                response.isJetpackActive,
+                response.isJetpackConnected,
+                response.isWordPressDotCom, // CHECKSTYLE IGNORE
                 response.urlAfterRedirects
         )
     }
 
-    private fun responseToDomainAvailabilityPayload(response: DomainAvailabilityResponse): DomainAvailabilityResponsePayload {
+    private fun responseToDomainAvailabilityPayload(
+        response: DomainAvailabilityResponse
+    ): DomainAvailabilityResponsePayload {
         val status = DomainAvailabilityStatus.fromString(response.status!!)
         val mappable = DomainMappabilityStatus.fromString(response.mappable!!)
         val supportsPrivacy = response.supports_privacy
@@ -1042,7 +1056,8 @@ class SiteRestClient @Inject constructor(
     }
 
     private fun responseToJetpackCapabilitiesPayload(
-        remoteSiteId: Long, response: JetpackCapabilitiesResponse
+        remoteSiteId: Long,
+        response: JetpackCapabilitiesResponse
     ): FetchedJetpackCapabilitiesPayload {
         val capabilities = mutableListOf<JetpackCapability>()
         for (item in response.capabilities ?: listOf()) {
@@ -1053,8 +1068,8 @@ class SiteRestClient @Inject constructor(
 
     companion object {
         const val NEW_SITE_TIMEOUT_MS = 90000
-        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan,"
-                + "capabilities,quota,icon,meta")
+        private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
+                "capabilities,quota,icon,meta")
         const val FIELDS = "fields"
         const val FILTERS = "filters"
     }
