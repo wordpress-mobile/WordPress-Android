@@ -752,34 +752,29 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showCancelMediaUploadDialog(final int localMediaId) {
-        // Display 'cancel upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(getString(R.string.stop_upload_dialog_title));
-        builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
-                            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
-                            // remove from editor
-                            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
-                            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
-                            mCancelledMediaIds.put(String.valueOf(localMediaId), new Date());
-                            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
-                        }
-                        dialog.dismiss();
-                    }
-                });
+        GutenbergDialogFragment dialog = new GutenbergDialogFragment();
+        dialog.initialize(
+                TAG_CANCEL_MEDIA_UPLOAD_DIALOG,
+                getString(R.string.stop_upload_dialog_title),
+                null,
+                getString(R.string.stop_upload_dialog_button_yes),
+                getString(R.string.stop_upload_dialog_button_no),
+                localMediaId
+        );
+        dialog.show(getChildFragmentManager(), TAG_CANCEL_MEDIA_UPLOAD_DIALOG);
+    }
 
-        builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    private void cancelMediaUpload(final int localMediaId) {
+        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+            // remove from editor
+            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
+            mCancelledMediaIds.put(String.valueOf(localMediaId), new Date());
+            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
+        }
     }
 
     private void showRetryMediaUploadDialog(final int mediaId) {
