@@ -175,9 +175,9 @@ class PageListEventListener(
     fun onSiteChanged(event: OnSiteChanged) {
         if (!event.isError) {
             val updatedSite = siteStore.getSiteByLocalId(site.id)
-            if (updatedSite.showOnFront != site.showOnFront ||
-                    updatedSite.pageForPosts != site.pageForPosts ||
-                    updatedSite.pageOnFront != site.pageForPosts) {
+            if (updatedSite != null && (updatedSite.showOnFront != site.showOnFront ||
+                            updatedSite.pageForPosts != site.pageForPosts ||
+                            updatedSite.pageOnFront != site.pageForPosts)) {
                 handleHomepageSettingsChange(updatedSite)
             }
         }
