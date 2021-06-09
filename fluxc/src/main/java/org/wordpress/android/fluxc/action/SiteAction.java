@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Delete
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
@@ -30,7 +29,6 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePa
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
@@ -102,8 +100,6 @@ public enum SiteAction implements IAction {
     // Remote responses
     @Action(payloadType = SiteModel.class)
     FETCHED_PROFILE_XML_RPC,
-    @Action(payloadType = FetchedPostFormatsPayload.class)
-    FETCHED_POST_FORMATS,
     @Action(payloadType = FetchedEditorsPayload.class)
     FETCHED_SITE_EDITORS,
     @Action(payloadType = DesignateMobileEditorForAllSitesResponsePayload.class)

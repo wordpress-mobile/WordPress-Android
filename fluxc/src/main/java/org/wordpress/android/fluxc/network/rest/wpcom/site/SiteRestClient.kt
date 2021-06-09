@@ -304,34 +304,29 @@ class SiteRestClient @Inject constructor(
         )
     }
 
-    fun fetchPostFormats(site: SiteModel) {
+    suspend fun fetchPostFormats(site: SiteModel): FetchedPostFormatsPayload {
         val url = WPCOMREST.sites.site(site.siteId).post_formats.urlV1_1
-        val request = WPComGsonRequest.buildGetRequest(url, null,
-                PostFormatsResponse::class.java,
-                { response ->
-                    val postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats)
-                    if (postFormats != null) {
-                        mDispatcher.dispatch(
-                                SiteActionBuilder.newFetchedPostFormatsAction(
-                                        FetchedPostFormatsPayload(
-                                                site,
-                                                postFormats
-                                        )
-                                )
-                        )
-                    } else {
-                        val payload = FetchedPostFormatsPayload(site, emptyList())
-                        payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), PostFormatsResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val postFormats = SiteUtils.getValidPostFormatsOrNull(response.data.formats)
+                if (postFormats != null) {
+                    FetchedPostFormatsPayload(
+                            site,
+                            postFormats
+                    )
+                } else {
+                    val payload = FetchedPostFormatsPayload(site, emptyList())
+                    payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                    payload
                 }
-        ) {
-            val payload = FetchedPostFormatsPayload(site, emptyList())
-            // TODO: what other kind of error could we get here?
-            payload.error = PostFormatsError(PostFormatsErrorType.GENERIC_ERROR)
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
+            }
+            is Error -> {
+                val payload = FetchedPostFormatsPayload(site, emptyList())
+                payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                payload
+            }
         }
-        add(request)
     }
 
     fun fetchUserRoles(site: SiteModel) {
