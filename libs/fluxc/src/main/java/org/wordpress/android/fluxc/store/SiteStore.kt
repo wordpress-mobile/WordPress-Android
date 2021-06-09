@@ -129,15 +129,15 @@ class SiteStore
         @JvmField val url: String = ""
     ) : Payload<BaseNetworkError>()
 
-    data class FetchSitesPayload(val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
+    data class FetchSitesPayload(@JvmField val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
 
     data class NewSitePayload(
-        val siteName: String,
-        val language: String,
-        val visibility: SiteVisibility,
-        val segmentId: Long? = null,
-        val siteDesign: String? = null,
-        val dryRun: Boolean
+        @JvmField val siteName: String,
+        @JvmField val language: String,
+        @JvmField val visibility: SiteVisibility,
+        @JvmField val segmentId: Long? = null,
+        @JvmField val siteDesign: String? = null,
+        @JvmField val dryRun: Boolean
     ) : Payload<BaseNetworkError>() {
         constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
                 siteName,
@@ -158,8 +158,8 @@ class SiteStore
     }
 
     data class FetchedPostFormatsPayload(
-        val site: SiteModel,
-        val postFormats: List<PostFormatModel>
+        @JvmField val site: SiteModel,
+        @JvmField val postFormats: List<PostFormatModel>
     ) : Payload<PostFormatsError>()
 
     data class DesignateMobileEditorForAllSitesPayload
@@ -168,27 +168,31 @@ class SiteStore
         @JvmField val setOnlyIfEmpty: Boolean = true
     ) : Payload<SiteEditorsError>()
 
-    data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError>()
+    data class DesignateMobileEditorPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val editor: String
+    ) : Payload<SiteEditorsError>()
+
     data class FetchedEditorsPayload(
-        val site: SiteModel,
-        val webEditor: String,
-        val mobileEditor: String
+        @JvmField val site: SiteModel,
+        @JvmField val webEditor: String,
+        @JvmField val mobileEditor: String
     ) : Payload<SiteEditorsError>()
 
     data class FetchBlockLayoutsPayload(
-        val site: SiteModel,
-        val supportedBlocks: List<String>?,
-        val previewWidth: Float?,
-        val previewHeight: Float?,
-        val scale: Float?,
-        val isBeta: Boolean?,
-        val preferCache: Boolean?
+        @JvmField val site: SiteModel,
+        @JvmField val supportedBlocks: List<String>?,
+        @JvmField val previewWidth: Float?,
+        @JvmField val previewHeight: Float?,
+        @JvmField val scale: Float?,
+        @JvmField val isBeta: Boolean?,
+        @JvmField val preferCache: Boolean?
     ) : Payload<BaseNetworkError>()
 
     data class FetchedBlockLayoutsResponsePayload(
-        val site: SiteModel,
-        val layouts: List<GutenbergLayout>? = null,
-        val categories: List<GutenbergLayoutCategory>? = null
+        @JvmField val site: SiteModel,
+        @JvmField val layouts: List<GutenbergLayout>? = null,
+        @JvmField val categories: List<GutenbergLayoutCategory>? = null
     ) : Payload<SiteError>() {
         constructor(site: SiteModel, error: SiteError?) : this(site) {
             this.error = error
@@ -196,13 +200,17 @@ class SiteStore
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
-        val editors: Map<String, String>? = null
+        @JvmField val editors: Map<String, String>? = null
     ) : Payload<SiteEditorsError>()
 
-    data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError>()
+    data class FetchedUserRolesPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val roles: List<RoleModel>
+    ) : Payload<UserRolesError>()
+
     data class FetchedPlansPayload(
-        val site: SiteModel,
-        val plans: List<PlanModel>? = null
+        @JvmField val site: SiteModel,
+        @JvmField val plans: List<PlanModel>? = null
     ) : Payload<PlansError>() {
         constructor(site: SiteModel, error: PlansError) : this(site) {
             this.error = error
@@ -210,12 +218,12 @@ class SiteStore
     }
 
     data class FetchedPrivateAtomicCookiePayload(
-        val site: SiteModel,
-        val cookie: PrivateAtomicCookieResponse?
+        @JvmField val site: SiteModel,
+        @JvmField val cookie: PrivateAtomicCookieResponse?
     ) : Payload<PrivateAtomicCookieError>()
 
-    data class FetchPrivateAtomicCookiePayload(val siteId: Long)
-    data class FetchJetpackCapabilitiesPayload(val remoteSiteId: Long)
+    data class FetchPrivateAtomicCookiePayload(@JvmField val siteId: Long)
+    data class FetchJetpackCapabilitiesPayload(@JvmField val remoteSiteId: Long)
     data class FetchedJetpackCapabilitiesPayload(
         @JvmField val remoteSiteId: Long,
         @JvmField val capabilities: List<JetpackCapability> = listOf()
@@ -286,7 +294,7 @@ class SiteStore
 
     data class ConnectSiteInfoPayload
     @JvmOverloads constructor(
-        val url: String,
+        @JvmField val url: String,
         @JvmField val exists: Boolean = false,
         @JvmField val isWordPress: Boolean = false,
         @JvmField val hasJetpack: Boolean = false,
