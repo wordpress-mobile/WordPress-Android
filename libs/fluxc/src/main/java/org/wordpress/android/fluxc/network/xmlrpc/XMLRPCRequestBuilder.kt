@@ -53,7 +53,7 @@ class XMLRPCRequestBuilder
         restClient: BaseXMLRPCClient,
         url: String,
         method: XMLRPC,
-        params: List<String>,
+        params: List<Any>,
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,

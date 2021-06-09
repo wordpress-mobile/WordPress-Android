@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
@@ -154,34 +153,27 @@ class SiteRestClient @Inject constructor(
         return params
     }
 
-    fun fetchSite(site: SiteModel) {
+    suspend fun fetchSite(site: SiteModel): SiteModel {
         val params = mutableMapOf<String, String>()
         params[FIELDS] = SITE_FIELDS
         val url = WPCOMREST.sites.urlV1_1 + site.siteId
-        val request = WPComGsonRequest.buildGetRequest(url, params,
-                SiteWPComRestResponse::class.java,
-                { response ->
-                    if (response != null) {
-                        val newSite = siteResponseToSiteModel(response)
-                        // local ID is not copied into the new model, let's make sure it is
-                        // otherwise the call that updates the DB can add a new row?
-                        if (site.id > 0) {
-                            newSite.id = site.id
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite))
-                    } else {
-                        AppLog.e(API, "Received empty response to /sites/\$site/ for " + site.url)
-                        val payload = SiteModel()
-                        payload.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SiteWPComRestResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val newSite = siteResponseToSiteModel(response.data)
+                // local ID is not copied into the new model, let's make sure it is
+                // otherwise the call that updates the DB can add a new row?
+                if (site.id > 0) {
+                    newSite.id = site.id
                 }
-        ) { error ->
-            val payload = SiteModel()
-            payload.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
+                newSite
+            }
+            is Error -> {
+                val payload = SiteModel()
+                payload.error = response.error
+                payload
+            }
         }
-        add(request)
     }
 
     fun newSite(
