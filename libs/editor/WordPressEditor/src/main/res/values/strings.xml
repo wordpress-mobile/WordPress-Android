@@ -24,14 +24,6 @@
     <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
     <string name="stop_save_dialog_ok_button">OK</string>
 
-    <string name="format_bar_tag_bold" translatable="false">bold</string>
-    <string name="format_bar_tag_italic" translatable="false">italic</string>
-    <string name="format_bar_tag_blockquote" translatable="false">blockquote</string>
-    <string name="format_bar_tag_unorderedList" translatable="false">unorderedList</string>
-    <string name="format_bar_tag_orderedList" translatable="false">orderedList</string>
-    <string name="format_bar_tag_strikethrough" translatable="false">strikeThrough</string>
-    <string name="format_bar_tag_link" translatable="false">link</string>
-
     <!-- link view -->
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
@@ -75,25 +67,6 @@
         <item>@string/alignment_center</item>
         <item>@string/alignment_right</item>
     </string-array>
-
-    <!-- Accessibility - format bar button descriptions -->
-    <string name="format_bar_description_media">Media</string>
-    <string name="format_bar_description_heading">Heading</string>
-    <string name="format_bar_description_list">List</string>
-    <string name="format_bar_description_ol">Ordered List</string>
-    <string name="format_bar_description_ul">Unordered List</string>
-    <string name="format_bar_description_quote">Block Quote</string>
-    <string name="format_bar_description_bold">Bold</string>
-    <string name="format_bar_description_italic">Italic</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_underline">Underline</string>
-    <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
-    <string name="format_bar_description_more">Read More</string>
-    <string name="format_bar_description_page">Page Break</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
-    <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
 
     <string name="media_bar_description_camera">Take Photo or Video with camera</string>
     <string name="media_bar_description_gallery">Pick a media from gallery</string>
