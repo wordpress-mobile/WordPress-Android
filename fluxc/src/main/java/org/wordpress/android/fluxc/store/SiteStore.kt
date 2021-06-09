@@ -381,16 +381,14 @@ class SiteStore
     data class SiteEditorsError internal constructor(
         @JvmField val type: SiteEditorsErrorType?,
         @JvmField val message: String
-    ) :
-            OnChangedError {
+    ) : OnChangedError {
         constructor(type: SiteEditorsErrorType?) : this(type, "") {}
     }
 
     data class PostFormatsError @JvmOverloads constructor(
         @JvmField val type: PostFormatsErrorType,
         @JvmField val message: String = ""
-    ) :
-            OnChangedError
+    ) : OnChangedError
 
     data class UserRolesError internal constructor(
         @JvmField val type: UserRolesErrorType?,
@@ -436,8 +434,7 @@ class SiteStore
     data class DesignatePrimaryDomainError(
         @JvmField val type: DesignatePrimaryDomainErrorType,
         @JvmField val message: String?
-    ) :
-            OnChangedError
+    ) : OnChangedError
 
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
@@ -531,8 +528,7 @@ class SiteStore
         @JvmField val url: String,
         @JvmField val isWPCom: Boolean = false,
         var siteError: SiteError? = null
-    ) :
-            OnChanged<SiteError>() {
+    ) : OnChanged<SiteError>() {
         init {
             this.error = siteError
         }
@@ -1810,8 +1806,7 @@ class SiteStore
     }
 
     private fun handleCheckedAutomatedTransferStatus(payload: AutomatedTransferStatusResponsePayload) {
-        val event: OnAutomatedTransferStatusChecked
-        event = if (!payload.isError) {
+        val event: OnAutomatedTransferStatusChecked = if (!payload.isError) {
             // We can't rely on the currentStep and totalSteps as it may not be equal when the transfer is complete
             val isTransferCompleted = payload.status.equals("complete", ignoreCase = true)
             OnAutomatedTransferStatusChecked(
