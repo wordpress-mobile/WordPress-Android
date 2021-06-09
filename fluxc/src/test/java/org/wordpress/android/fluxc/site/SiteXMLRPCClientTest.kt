@@ -18,9 +18,6 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.shadows.ShadowLog
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
-import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
@@ -81,9 +78,8 @@ class SiteXMLRPCClientTest {
         config.reset()
     }
 
-    @Test @Throws(Exception::class) fun testFetchSite() {
+    @Test @Throws(Exception::class) fun testFetchSite() = test {
         val site = SiteUtils.generateSelfHostedNonJPSite()
-        mCountDownLatch = CountDownLatch(1)
         mMockedResponse = """<?xml version="1.0" encoding="UTF-8"?>
 <methodResponse><params><param><value>
   <struct>
@@ -127,11 +123,13 @@ class SiteXMLRPCClientTest {
   </value></member></struct></value></member>
   </struct>
 </value></param></params></methodResponse>"""
-        mSiteXMLRPCClient.fetchSite(site)
-        Assert.assertTrue(mCountDownLatch?.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS) == true)
+        val result = mSiteXMLRPCClient.fetchSite(site)
+
+        assertThat(result.isError).isFalse()
     }
 
-    @Test @Throws(Exception::class) fun testFetchSiteBadResponseFormat() {
+    @Test @Throws(Exception::class)
+    fun testFetchSiteBadResponseFormat() = test {
         // If wp.getOptions returns a String instead of a Map, make sure we:
         // 1. Don't crash
         // 2. Emit an UPDATE_SITE action with an INVALID_RESPONSE error
@@ -141,19 +139,11 @@ class SiteXMLRPCClientTest {
 <methodResponse><params><param><value>
   <string>whoops</string>
 </value></param></params></methodResponse>"""
-        Mockito.doAnswer { invocation -> // Expect UPDATE_SITE to be dispatched with an INVALID_RESPONSE error
-            val action = invocation.getArgument<Action<*>>(0)
-            Assert.assertEquals(UPDATE_SITE, action.type)
-            val result = action.payload as SiteModel
-            Assert.assertTrue(result.isError)
-            Assert.assertEquals(INVALID_RESPONSE, result.error.type)
-            mCountDownLatch?.countDown()
-            null
-        }.whenever(mDispatcher).dispatch(any())
-        mCountDownLatch = CountDownLatch(2)
-        mSiteXMLRPCClient.fetchSite(site)
 
-        Assert.assertTrue(mCountDownLatch?.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS) == true)
+        val result = mSiteXMLRPCClient.fetchSite(site)
+
+        Assert.assertTrue(result.isError)
+        Assert.assertEquals(INVALID_RESPONSE, result.error.type)
     }
 
     @Test

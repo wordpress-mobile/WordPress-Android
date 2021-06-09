@@ -102,8 +102,6 @@ public enum SiteAction implements IAction {
     // Remote responses
     @Action(payloadType = SiteModel.class)
     FETCHED_PROFILE_XML_RPC,
-    @Action(payloadType = NewSiteResponsePayload.class)
-    CREATED_NEW_SITE,
     @Action(payloadType = FetchedPostFormatsPayload.class)
     FETCHED_POST_FORMATS,
     @Action(payloadType = FetchedEditorsPayload.class)

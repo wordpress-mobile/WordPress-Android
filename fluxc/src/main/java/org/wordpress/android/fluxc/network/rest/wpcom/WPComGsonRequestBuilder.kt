@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
+import com.android.volley.RetryPolicy
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -91,13 +92,17 @@ class WPComGsonRequestBuilder
         url: String,
         params: Map<String, String>?,
         body: Map<String, Any>?,
-        clazz: Class<T>
+        clazz: Class<T>,
+            retryPolicy: RetryPolicy? = null
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildPostRequest(url, params, body, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
         })
+        retryPolicy?.let {
+            request.retryPolicy = retryPolicy
+        }
         cont.invokeOnCancellation { request.cancel() }
         restClient.add(request)
     }

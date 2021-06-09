@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_ST
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETED_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETE_QUICK_START
-import org.wordpress.android.fluxc.action.SiteAction.CREATED_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETE_SITE
@@ -1156,8 +1155,10 @@ class SiteStore
             REMOVE_WPCOM_AND_JETPACK_SITES -> removeWPComAndJetpackSites()
             SHOW_SITES -> toggleSitesVisibility(action.payload as SitesModel, true)
             HIDE_SITES -> toggleSitesVisibility(action.payload as SitesModel, false)
-            CREATE_NEW_SITE -> createNewSite(action.payload as NewSitePayload)
-            CREATED_NEW_SITE -> handleCreateNewSiteCompleted(action.payload as NewSiteResponsePayload)
+            CREATE_NEW_SITE -> coroutineEngine.launch(T.MAIN, this, "Create a new site") {
+                val payload = createNewSite(action.payload as NewSitePayload)
+                emitChange(handleCreateNewSiteCompleted(payload = payload))
+            }
             FETCH_POST_FORMATS -> fetchPostFormats(action.payload as SiteModel)
             FETCHED_POST_FORMATS -> updatePostFormats(action.payload as FetchedPostFormatsPayload)
             FETCH_SITE_EDITORS -> fetchSiteEditors(action.payload as SiteModel)
@@ -1397,15 +1398,15 @@ class SiteStore
         return rowsAffected
     }
 
-    private fun createNewSite(payload: NewSitePayload) {
-        siteRestClient.newSite(
+    private suspend fun createNewSite(payload: NewSitePayload): NewSiteResponsePayload {
+        return siteRestClient.newSite(
                 payload.siteName, payload.language, payload.visibility,
                 payload.segmentId, payload.siteDesign, payload.dryRun
         )
     }
 
-    private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload) {
-        emitChange(OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error))
+    private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload): OnNewSiteCreated {
+        return OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error)
     }
 
     private fun fetchPostFormats(site: SiteModel) {
