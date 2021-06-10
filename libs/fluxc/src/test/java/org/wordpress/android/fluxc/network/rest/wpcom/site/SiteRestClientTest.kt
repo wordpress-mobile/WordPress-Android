@@ -25,6 +25,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
+import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
@@ -58,14 +60,14 @@ class SiteRestClientTest {
     }
 
     @Test
-    fun `returns success when setting homepage to page`() = test {
+    fun `returns fetched site`() = test {
         val response = SiteWPComRestResponse()
         response.ID = siteId
         val name = "Updated name"
         response.name = name
         response.URL = "site.com"
 
-        initResponse(response)
+        initSiteResponse(response)
 
         val responseModel = restClient.fetchSite(site)
         assertThat(responseModel.name).isEqualTo(name)
@@ -81,9 +83,9 @@ class SiteRestClientTest {
     }
 
     @Test
-    fun `returns error when API call fails`() = test {
+    fun `fetchSite returns error when API call fails`() = test {
         val errorMessage = "message"
-        initResponse(
+        initSiteResponse(
                 error = WPComGsonNetworkError(
                         BaseNetworkError(
                                 GenericErrorType.NETWORK_ERROR,
@@ -99,11 +101,66 @@ class SiteRestClientTest {
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
 
-    private suspend fun initResponse(
+    @Test
+    fun `returns fetched sites`() = test {
+        val response = SiteWPComRestResponse()
+        response.ID = siteId
+        val name = "Updated name"
+        response.name = name
+        response.URL = "site.com"
+
+        val sitesResponse = SitesResponse()
+        sitesResponse.sites = listOf(response)
+
+        initSitesResponse(data = sitesResponse)
+
+        val responseModel = restClient.fetchSites(listOf(WPCOM))
+        assertThat(responseModel.sites).hasSize(1)
+        assertThat(responseModel.sites[0].name).isEqualTo(name)
+        assertThat(responseModel.sites[0].siteId).isEqualTo(siteId)
+
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.2/me/sites/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "filters" to "wpcom",
+                        "fields" to "ID,URL,name,description,jetpack," +
+                                "visible,is_private,options,plan,capabilities,quota,icon,meta"
+                )
+        )
+    }
+
+    @Test
+    fun `fetchSites returns error when API call fails`() = test {
+        val errorMessage = "message"
+        initSitesResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                GenericErrorType.NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+        val errorResponse = restClient.fetchSites(listOf())
+
+        assertThat(errorResponse.error).isNotNull()
+        assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
+        assertThat(errorResponse.error.message).isEqualTo(errorMessage)
+    }
+
+    private suspend fun initSiteResponse(
         data: SiteWPComRestResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<SiteWPComRestResponse> {
         return initResponse(SiteWPComRestResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initSitesResponse(
+        data: SitesResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<SitesResponse> {
+        return initResponse(SitesResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(
