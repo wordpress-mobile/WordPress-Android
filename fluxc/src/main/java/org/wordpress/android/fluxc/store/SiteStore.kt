@@ -451,11 +451,11 @@ class SiteStore
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
     data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError>() {
-        constructor(rowsAffected: Int = 0, siteError: SiteError) : this(rowsAffected) {
+        constructor(rowsAffected: Int = 0, siteError: SiteError?) : this(rowsAffected) {
             this.error = siteError
         }
 
-        constructor(siteError: SiteError) : this()
+        constructor(siteError: SiteError) : this(0, siteError)
     }
 
     data class OnSiteRemoved(@JvmField val mRowsAffected: Int) : OnChanged<SiteError>()
@@ -477,7 +477,7 @@ class SiteStore
         @JvmField val dryRun: Boolean = false,
         @JvmField val newSiteRemoteId: Long = 0
     ) : OnChanged<NewSiteError>() {
-        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError) : this(dryRun, newSiteRemoteId) {
+        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError?) : this(dryRun, newSiteRemoteId) {
             this.error = error
         }
     }
@@ -489,7 +489,7 @@ class SiteStore
     }
 
     class OnSiteExported() : OnChanged<ExportSiteError>() {
-        constructor(error: ExportSiteError) : this() {
+        constructor(error: ExportSiteError?) : this() {
             this.error = error
         }
     }
@@ -499,7 +499,7 @@ class SiteStore
         @JvmField val site: SiteModel,
         @JvmField val rowsAffected: Int = 0
     ) : OnChanged<SiteEditorsError>() {
-        constructor(site: SiteModel, error: SiteEditorsError) : this(site) {
+        constructor(site: SiteModel, error: SiteEditorsError?) : this(site) {
             this.error = error
         }
     }
