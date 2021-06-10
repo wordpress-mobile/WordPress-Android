@@ -349,7 +349,7 @@ public class ReaderPost {
     /**
      * copy changes over to the local post - this is done instead of simply overwriting
      * the local post with the server post because the server post was retrieved using
-     * the read/sites/$siteId/posts/$postId endpoint which is missing some information
+     * the read/sites/$siteId/posts/$postId or read/sites/$siteId/posts/ endpoints which are missing some information
      * https://github.com/wordpress-mobile/WordPress-Android/issues/3164
      */
     public void copyFieldsFromPost(ReaderPost post) {

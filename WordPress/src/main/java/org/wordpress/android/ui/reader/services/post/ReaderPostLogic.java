@@ -17,6 +17,8 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
@@ -261,7 +263,7 @@ public class ReaderPostLogic {
                                 break;
                         }
                     }
-                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+                    addOrUpdatePosts(serverPosts, updateResult);
 
                     // gap marker must be set after saving server posts
                     if (postWithGap != null) {
@@ -276,6 +278,34 @@ public class ReaderPostLogic {
                 }
                 AppLog.d(AppLog.T.READER, "requested posts response = " + updateResult.toString());
                 resultListener.onUpdateResult(updateResult);
+            }
+
+            private void addOrUpdatePosts(ReaderPostList serverPosts, ReaderActions.UpdateResult updateResult) {
+                /**
+                 * If tag is null, these are blog or feed posts and need to be updated differently
+                 * similar to single post update in {@link ReaderPostActions#handleUpdatePostResponse(
+                 * ReaderPost, JSONObject,UpdateResultListener)}.
+                 */
+                boolean isBlogOrFeedPostUpdated = tag == null && updateResult == ReaderActions.UpdateResult.CHANGED;
+                if (isBlogOrFeedPostUpdated) {
+                    for (ReaderPost serverPost : serverPosts) {
+                        ReaderPost localPost = getLocalPost(serverPost.blogId, serverPost.feedId, serverPost.postId);
+                        if (localPost != null) {
+                            localPost.copyFieldsFromPost(serverPost);
+                            ReaderPostTable.updatePost(localPost);
+                        } else {
+                            ReaderPostTable.addOrUpdatePosts(null, serverPosts);
+                        }
+                    }
+                } else {
+                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+                }
+            }
+
+            private ReaderPost getLocalPost(Long blogId, Long feedId, Long postId) {
+                boolean isExternalFeed = ReaderUtils.isExternalFeed(blogId, feedId);
+                return isExternalFeed ? ReaderPostTable.getFeedPost(feedId, postId, true)
+                        : ReaderPostTable.getBlogPost(blogId, postId, true);
             }
         }.start();
     }
