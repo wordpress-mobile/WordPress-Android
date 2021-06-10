@@ -18,7 +18,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
 import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
-import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
