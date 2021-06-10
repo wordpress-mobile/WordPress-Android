@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.language
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -40,8 +39,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(LocalePickerViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(LocalePickerViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -64,28 +62,30 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     private fun LocalePickerBottomSheetBinding.setupContentViews() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
+        recyclerView.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         recyclerView.adapter = localeAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
+                    viewModel.onListScrolled()
                 }
             }
         })
 
-        searchInputLayout.editText?.doOnTextChanged() { _, _, _, _ ->
-            searchTimezones()
+        searchInputLayout.editText?.doOnTextChanged { _, _, _, _ ->
+            onSearchStatusUpdated()
         }
 
         searchInputLayout.editText?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) expandBottomSheet()
+            if (hasFocus) {
+                viewModel.onSearchFieldFocused()
+            }
         }
 
         searchInputLayout.editText?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                searchTimezones()
+                onSearchStatusUpdated()
                 true
             } else {
                 false
@@ -94,7 +94,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
 
         searchInputLayout.editText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                searchTimezones()
+                onSearchStatusUpdated()
                 true
             } else {
                 false
@@ -102,58 +102,52 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         }
 
         searchInputLayout.setEndIconOnClickListener {
-            searchInputLayout.editText?.text?.clear()
-            searchInputLayout.editText?.clearFocus()
-            viewModel.onSearchCancelled()
-            ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
+            viewModel.onClearSearchFieldButtonClicked()
         }
 
-//            btnTimezoneSuggestion.setOnClickListener { it as MaterialButton
-//                timezoneViewModel.onTimezoneSelected(it.text.toString())
-//            }
+        btnLocaleSuggestion.setOnClickListener {
+            viewModel.onSuggestedLocaleSelected()
+        }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
-
             bottomSheet = sheetDialog?.findViewById<View>(
                     com.google.android.material.R.id.design_bottom_sheet
             ) as? FrameLayout
-
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) expandBottomSheet()
         }
     }
 
     private fun LocalePickerBottomSheetBinding.setupObservers() {
-        viewModel.locales.observe(viewLifecycleOwner, {
-            localeAdapter.submitList(it)
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+            uiState?.let {
+                localeAdapter.submitList(uiState.listData)
+                btnLocaleSuggestion.text = uiState.suggestedLocale?.label
+                emptyView.visibility = if (uiState.isEmptyViewVisible) View.VISIBLE else View.GONE
+            }
+        })
+
+        viewModel.hideKeyboard.observe(viewLifecycleOwner, {
+            ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
+        })
+
+        viewModel.expandBottomSheet.observe(viewLifecycleOwner, {
+            expandBottomSheet()
+        })
+
+        viewModel.clearSearchField.observe(viewLifecycleOwner, {
+            searchInputLayout.editText?.text?.clear()
+            searchInputLayout.editText?.clearFocus()
         })
 
         viewModel.selectedLocale.observe(viewLifecycleOwner, {
             callback?.onLocaleSelected(it)
-            dismiss()
         })
-
-        viewModel.showEmptyView.observe(viewLifecycleOwner, {
-            emptyView.visibility = if (it) View.VISIBLE else View.GONE
-        })
-
-
-        viewModel.suggestedLocale.observe(viewLifecycleOwner, {
-            btnLocaleSuggestion.text = it.localeCode
-        })
-
 
         viewModel.dismissBottomSheet.observe(viewLifecycleOwner, {
             dismiss()
         })
 
         viewModel.start()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) expandBottomSheet()
     }
 
     override fun onDestroyView() {
@@ -169,17 +163,14 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun searchTimezones() {
+    private fun onSearchStatusUpdated() {
         binding?.searchInputLayout?.editText?.text?.trim().let {
-            if (it?.isNotEmpty() == true) {
-                viewModel.searchLocales(it)
-            } else {
-                viewModel.onSearchCancelled()
-            }
+            viewModel.requestSearch(it)
         }
     }
 
     companion object {
+        const val TAG = "TIMEZONE_BOTTOM_SHEET_TAG"
         @JvmStatic
         fun newInstance(): LocalePickerBottomSheet = LocalePickerBottomSheet()
     }

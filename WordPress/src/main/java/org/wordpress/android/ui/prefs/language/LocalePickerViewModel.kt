@@ -11,8 +11,9 @@ import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.R.array
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.ClickAction
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
-import org.wordpress.android.ui.prefs.language.LocalePickerListItem.SubHeader
+import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -20,42 +21,69 @@ import javax.inject.Inject
 class LocalePickerViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val localesList = mutableListOf<LocalePickerListItem>()
+    private val cachedLocales = mutableListOf<LocalePickerListItem>()
 
-    private val _showEmptyView = SingleLiveEvent<Boolean>()
-    val showEmptyView: LiveData<Boolean> = _showEmptyView
+    private val _expandBottomSheet = SingleLiveEvent<Unit>()
+    val expandBottomSheet: LiveData<Unit> = _expandBottomSheet
+
+    private val _hideKeyboard = SingleLiveEvent<Unit>()
+    val hideKeyboard: LiveData<Unit> = _hideKeyboard
+
+    private val _clearSearchField = SingleLiveEvent<Unit>()
+    val clearSearchField: LiveData<Unit> = _clearSearchField
 
     private val _dismissBottomSheet = SingleLiveEvent<Unit>()
     val dismissBottomSheet: LiveData<Unit> = _dismissBottomSheet
 
+    private val _isEmptyViewVisible = SingleLiveEvent<Boolean>()
     private val _suggestedLocale = MutableLiveData<SuggestedLocale>()
-    val suggestedLocale = _suggestedLocale
 
     private val _selectedLocale = SingleLiveEvent<String>()
     val selectedLocale = _selectedLocale
 
-    private val _locales = MutableLiveData<List<LocalePickerListItem>>()
+    private val _loadedLocales = MutableLiveData<List<LocalePickerListItem>>()
 
     private val searchInput = MutableLiveData<String>()
-    private val localeSearch: LiveData<List<LocalePickerListItem>> = Transformations.switchMap(searchInput) { term ->
+    private val _filteredLocales: LiveData<List<LocalePickerListItem>> = Transformations.switchMap(searchInput) { term ->
         filterLocales(term)
     }
 
-    val locales = MediatorLiveData<List<LocalePickerListItem>>().apply {
-        addSource(_locales) {
+    private val locales = MediatorLiveData<List<LocalePickerListItem>>().apply {
+        addSource(_loadedLocales) {
             value = it
         }
-        addSource(localeSearch) {
+        addSource(_filteredLocales) {
             value = it
         }
     }.distinctUntilChanged()
 
-    fun searchLocales(query: CharSequence) {
-        searchInput.value = query.toString()
+    val uiState: LiveData<LocalePickerUiState> = merge(
+            locales,
+            _suggestedLocale,
+            _isEmptyViewVisible
+    ) { locales, suggestedLocale, emptyViewVisible ->
+        LocalePickerUiState(
+                locales,
+                suggestedLocale,
+                emptyViewVisible ?: false
+        )
     }
 
-    fun onTimezoneSelected(timezone: String) {
-        _selectedLocale.value = timezone
+    fun requestSearch(query: CharSequence?) {
+        if (query.isNullOrBlank()) {
+            clearSearch()
+        } else {
+            searchInput.value = query.toString()
+        }
+    }
+
+    private fun clearSearch() {
+        _isEmptyViewVisible.value = false
+        _loadedLocales.postValue(cachedLocales)
+    }
+
+    fun onSuggestedLocaleSelected() {
+        _selectedLocale.value = _suggestedLocale.value?.localeCode
         _dismissBottomSheet.asyncCall()
     }
 
@@ -63,7 +91,7 @@ class LocalePickerViewModel @Inject constructor(
     fun filterLocales(query: String): LiveData<List<LocalePickerListItem>> {
         val filteredTimezones = MutableLiveData<List<LocalePickerListItem>>()
 
-        localesList.filter { timezone ->
+        cachedLocales.filter { timezone ->
             when (timezone) {
                 is LocaleRow -> {
                     query.isBlank() or timezone.label.contains(query, true) or timezone.localizedLabel.contains(
@@ -74,16 +102,11 @@ class LocalePickerViewModel @Inject constructor(
                 else -> false
             }
         }.also {
-            _showEmptyView.value = it.isEmpty()
+            _isEmptyViewVisible.value = it.isEmpty()
             filteredTimezones.value = it
         }
 
         return filteredTimezones
-    }
-
-    fun onSearchCancelled() {
-        _showEmptyView.value = false
-        _locales.postValue(localesList)
     }
 
     var started = false
@@ -99,10 +122,9 @@ class LocalePickerViewModel @Inject constructor(
 
     fun getDeviceLocale(): SuggestedLocale {
         val deviceLocale = Resources.getSystem().configuration.locale
-        return SuggestedLocale(
-                deviceLocale.language + "_" + deviceLocale.country,
-                Resources.getSystem().configuration.locale.displayName
-        )
+        val displayLabel = LocaleManager.getLanguageString(deviceLocale.toString(), deviceLocale)
+
+        return SuggestedLocale(displayLabel, deviceLocale.language + "_" + deviceLocale.country)
     }
 
     data class SuggestedLocale(
@@ -111,57 +133,53 @@ class LocalePickerViewModel @Inject constructor(
     )
 
     private fun loadLocales() {
-        val languageCode = resourceProvider.getConfiguration().locale.toString()
+        val appLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode()
 
-        val languageLocale = LocaleManager.languageLocale(languageCode)
-        val availableLocales: Array<String> = resourceProvider.getStringArray(array.available_languages)
+        val languageLocale = LocaleManager.languageLocale(appLanguageCode)
+        val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()
 
-        val triple = LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale) ?: return
+        val triple = LocaleManager.createSortedLanguageDisplayStrings(availableLocales.toTypedArray(), languageLocale)
+                ?: return
 
         val sortedEntries = triple.first
         val sortedValues = triple.second
         val sortedLocalizedEntries = triple.third
 
-        val appLocale = resourceProvider.getConfiguration().locale.toString()
-        val indexOfCurrentLanguage = sortedValues.indexOf(appLocale)
-
-
-        if (indexOfCurrentLanguage >= 0) {
-            localesList.add(SubHeader("Current Language"))
-            localesList.add(
+        for (i in triple.first.indices) {
+            cachedLocales.add(
                     LocaleRow(
-                            sortedEntries[indexOfCurrentLanguage],
-                            sortedLocalizedEntries[indexOfCurrentLanguage],
-                            sortedValues[indexOfCurrentLanguage],
-                            ClickAction(sortedValues[indexOfCurrentLanguage], this::clickItem)
+                            sortedEntries[i],
+                            sortedLocalizedEntries[i],
+                            sortedValues[i],
+                            ClickAction(sortedValues[i], this::clickItem)
                     )
             )
-
-            localesList.add(SubHeader("All Languages"))
         }
 
-
-
-        for (i in triple.first.indices) {
-            val code = sortedValues[i]
-            if (code != appLocale) {
-                localesList.add(
-                        LocaleRow(
-                                sortedEntries[i],
-                                sortedLocalizedEntries[i],
-                                code,
-                                ClickAction(sortedValues[i], this::clickItem)
-                        )
-                )
-            }
-        }
-
-
-
-        _locales.postValue(localesList)
+        _loadedLocales.postValue(cachedLocales)
     }
 
     fun clickItem(localeCode: String) {
         _selectedLocale.postValue(localeCode)
     }
+
+    fun onListScrolled() {
+        _hideKeyboard.call()
+    }
+
+    fun onSearchFieldFocused() {
+        _expandBottomSheet.call()
+    }
+
+    fun onClearSearchFieldButtonClicked() {
+        clearSearch()
+        _hideKeyboard.call()
+        _clearSearchField.call()
+    }
+
+    data class LocalePickerUiState(
+        val listData: List<LocalePickerListItem>?,
+        val suggestedLocale: SuggestedLocale?,
+        val isEmptyViewVisible: Boolean
+    )
 }
