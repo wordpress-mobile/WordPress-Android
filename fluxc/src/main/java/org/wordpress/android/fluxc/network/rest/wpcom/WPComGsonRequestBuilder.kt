@@ -93,7 +93,7 @@ class WPComGsonRequestBuilder
         params: Map<String, String>?,
         body: Map<String, Any>?,
         clazz: Class<T>,
-            retryPolicy: RetryPolicy? = null
+        retryPolicy: RetryPolicy? = null
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildPostRequest(url, params, body, clazz, {
             cont.resume(Success(it))
