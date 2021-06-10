@@ -66,6 +66,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
+import org.wordpress.android.ui.mysite.search.SearchSuggestionAdapter
+import org.wordpress.android.ui.mysite.search.SearchSuggestionsProvider
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -79,7 +81,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -107,8 +108,9 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var mySiteSearchFeatureConfig: MySiteSearchFeatureConfig
     @Inject lateinit var deeplinkNavigator: DeepLinkNavigator
-    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Inject lateinit var searchSuggestionsProvider: SearchSuggestionsProvider
     private lateinit var deepLinkingIntentReceiverViewModel: DeepLinkingIntentReceiverViewModel
+    private lateinit var improvedMySiteSearchSuggestionAdapter: SearchSuggestionAdapter
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -132,6 +134,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            setupSearchObservers()
         }
     }
 
@@ -152,28 +155,25 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         searchMenuItem.isVisible = mySiteSearchFeatureConfig.isEnabled()
         val searchView = searchMenuItem.actionView as? SearchView
         searchView?.queryHint = getString(R.string.my_site_search_hint)
-        val improvedMySiteSearchSuggestionAdapter = ImprovedMySiteSearchSuggestionAdapter(
-                requireContext(),
-                localeManagerWrapper.getLocale()
-        )
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                improvedMySiteSearchSuggestionAdapter.setQuery(query)
+                viewModel.onSearchQueryChanged(query)
                 return true
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                improvedMySiteSearchSuggestionAdapter.setQuery(query)
+                viewModel.onSearchQueryChanged(query)
                 return true
             }
         })
+        improvedMySiteSearchSuggestionAdapter = SearchSuggestionAdapter(requireContext())
         searchView?.suggestionsAdapter = improvedMySiteSearchSuggestionAdapter
         searchView?.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(position: Int) = false
 
             override fun onSuggestionClick(position: Int): Boolean {
-                improvedMySiteSearchSuggestionAdapter.getDeepLink(position)?.let { url ->
-                    deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
+                improvedMySiteSearchSuggestionAdapter.getDeepLink(position)?.let { deeplink ->
+                    viewModel.onSearchResultSelected(deeplink)
                 }
                 return true
             }
@@ -290,6 +290,15 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
             viewModel.onQuickStartMenuInteraction(interaction)
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
+    }
+
+    private fun setupSearchObservers() {
+        viewModel.onSearchResultsChanged.observeEvent(viewLifecycleOwner, {
+            improvedMySiteSearchSuggestionAdapter.setSuggestions(it)
+        })
+        viewModel.onSearchResultSelected.observeEvent(viewLifecycleOwner, {
+            deepLinkingIntentReceiverViewModel.handleUrlDeeplink(it)
+        })
     }
 
     @Suppress("ComplexMethod")

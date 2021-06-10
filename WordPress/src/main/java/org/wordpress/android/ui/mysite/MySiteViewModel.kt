@@ -94,6 +94,8 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.search.Functionality
+import org.wordpress.android.ui.mysite.search.SearchSuggestionsProvider
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -148,7 +150,8 @@ class MySiteViewModel
     private val currentAvatarSource: CurrentAvatarSource,
     private val dynamicCardsSource: DynamicCardsSource,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
+    private val searchSuggestionsProvider: SearchSuggestionsProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -157,6 +160,8 @@ class MySiteViewModel
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
+    private val _onSearchResultsChanged = MutableLiveData<Event<List<Functionality>>>()
+    private val _onSearchResultSelected = MutableLiveData<Event<String>>()
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -176,6 +181,8 @@ class MySiteViewModel
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
+    val onSearchResultsChanged = _onSearchResultsChanged as LiveData<Event<List<Functionality>>>
+    val onSearchResultSelected = _onSearchResultSelected as LiveData<Event<String>>
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             viewModelScope,
@@ -473,6 +480,15 @@ class MySiteViewModel
                 }
             }
         }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        val suggestions = searchSuggestionsProvider.search(query)
+        _onSearchResultsChanged.value = Event(suggestions)
+    }
+
+    fun onSearchResultSelected(deeplink: String) {
+        _onSearchResultSelected.value = Event(deeplink)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
