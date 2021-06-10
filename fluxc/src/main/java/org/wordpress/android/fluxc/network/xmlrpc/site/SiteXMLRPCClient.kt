@@ -109,7 +109,7 @@ class SiteXMLRPCClient @Inject constructor(
                 updatedSite
             }
             is Error -> {
-                SiteModel().apply { error = response.error}
+                SiteModel().apply { error = response.error }
             }
         }
     }
@@ -123,7 +123,7 @@ class SiteXMLRPCClient @Inject constructor(
                 params,
                 Map::class.java
         )
-        return when(response) {
+        return when (response) {
             is Success -> {
                 val postFormats = responseToPostFormats(response.data)
                 if (postFormats != null) {
