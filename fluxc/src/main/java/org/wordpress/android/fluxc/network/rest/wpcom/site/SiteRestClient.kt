@@ -102,7 +102,7 @@ class SiteRestClient @Inject constructor(
     appContext: Context?,
     dispatcher: Dispatcher?,
     @Named("regular") requestQueue: RequestQueue?,
-    private val mAppSecrets: AppSecrets,
+    private val appSecrets: AppSecrets,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     accessToken: AccessToken?,
     userAgent: UserAgent?
@@ -189,8 +189,8 @@ class SiteRestClient @Inject constructor(
         body["lang_id"] = language
         body["public"] = visibility.value().toString()
         body["validate"] = if (dryRun) "1" else "0"
-        body["client_id"] = mAppSecrets.appId
-        body["client_secret"] = mAppSecrets.appSecret
+        body["client_id"] = appSecrets.appId
+        body["client_secret"] = appSecrets.appSecret
 
         // Add site options if available
         val options = mutableMapOf<String, Any>()
@@ -1052,10 +1052,10 @@ class SiteRestClient @Inject constructor(
     }
 
     companion object {
-        const val NEW_SITE_TIMEOUT_MS = 90000
+        private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
                 "capabilities,quota,icon,meta")
-        const val FIELDS = "fields"
-        const val FILTERS = "filters"
+        private const val FIELDS = "fields"
+        private const val FILTERS = "filters"
     }
 }
