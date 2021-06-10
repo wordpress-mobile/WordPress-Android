@@ -204,8 +204,7 @@ android {
     lintOptions{
         checkDependencies = true
         checkGeneratedSources = true
-        lintConfig file('lint.xml')
-        baseline file("lint-baseline.xml")
+        lintConfig file("${project.rootDir}/config/lint.xml")
     }
 
     packagingOptions {
