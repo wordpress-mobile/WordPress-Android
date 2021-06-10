@@ -5,8 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -77,6 +79,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -104,6 +107,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var mySiteSearchFeatureConfig: MySiteSearchFeatureConfig
     @Inject lateinit var deeplinkNavigator: DeepLinkNavigator
+    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var deepLinkingIntentReceiverViewModel: DeepLinkingIntentReceiverViewModel
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -144,6 +148,38 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
         deepLinkingIntentReceiverViewModel.start(null, null)
     }
 
+    private fun setupSearchView(searchMenuItem: MenuItem) {
+        searchMenuItem.isVisible = mySiteSearchFeatureConfig.isEnabled()
+        val searchView = searchMenuItem.actionView as? SearchView
+        searchView?.queryHint = getString(R.string.my_site_search_hint)
+        val improvedMySiteSearchSuggestionAdapter = ImprovedMySiteSearchSuggestionAdapter(
+                requireContext(),
+                localeManagerWrapper.getLocale()
+        )
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                improvedMySiteSearchSuggestionAdapter.setQuery(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                improvedMySiteSearchSuggestionAdapter.setQuery(query)
+                return true
+            }
+        })
+        searchView?.suggestionsAdapter = improvedMySiteSearchSuggestionAdapter
+        searchView?.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+            override fun onSuggestionSelect(position: Int) = false
+
+            override fun onSuggestionClick(position: Int): Boolean {
+                improvedMySiteSearchSuggestionAdapter.getDeepLink(position)?.let { url ->
+                    deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
+                }
+                return true
+            }
+        })
+    }
+
     private fun NewMySiteFragmentBinding.setupToolbar() {
         toolbarMain.let { toolbar ->
             toolbar.inflateMenu(R.menu.my_site_menu)
@@ -153,17 +189,7 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
             }
-            toolbar.menu.findItem(R.id.menu_search)?.let { searchMenu ->
-                searchMenu.isVisible = mySiteSearchFeatureConfig.isEnabled()
-                searchMenu.setOnMenuItemClickListener {
-                    val functionalities = context?.resources?.getStringArray(R.array.functionality_search_entries)
-                    val functionality = functionalities?.get(0)
-                    functionality?.split("|")?.get(1)?.let { url ->
-                        deepLinkingIntentReceiverViewModel.handleUrlDeeplink(url)
-                    }
-                    true
-                }
-            }
+            toolbar.menu.findItem(R.id.menu_search)?.let { setupSearchView(it) }
         }
 
         val avatar = root.findViewById<ImageView>(R.id.avatar)

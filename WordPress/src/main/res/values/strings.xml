@@ -2150,6 +2150,8 @@
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
 
+    <string name="my_site_search_hint">What do you want to do?</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
