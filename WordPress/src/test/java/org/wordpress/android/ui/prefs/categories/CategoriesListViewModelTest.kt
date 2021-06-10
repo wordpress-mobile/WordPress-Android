@@ -8,15 +8,15 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class CategoriesViewModelTest {
+class CategoriesListViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: CategoriesViewModel
+    private lateinit var viewModel: CategoriesListViewModel
 
     @Before
     fun setUp() {
-        viewModel = CategoriesViewModel()
+        viewModel = CategoriesListViewModel()
     }
 
     @Test

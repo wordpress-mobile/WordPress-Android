@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: CategoriesViewModel
+    private lateinit var viewModel: CategoriesListViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,7 +27,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
     private fun SiteSettingsCategoriesListFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@CategoriesListFragment, viewModelFactory)
-                .get(CategoriesViewModel::class.java)
+                .get(CategoriesListViewModel::class.java)
         viewModel.start()
     }
 }
