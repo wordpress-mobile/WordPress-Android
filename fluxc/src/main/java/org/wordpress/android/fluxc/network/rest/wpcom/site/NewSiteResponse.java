@@ -8,7 +8,7 @@ public class NewSiteResponse implements Response {
     public String error;
     public String message;
 
-    public class BlogDetails {
+    public static class BlogDetails {
         public String url;
         public String blogid;
     }

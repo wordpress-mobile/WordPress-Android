@@ -218,7 +218,7 @@ class SiteRestClient @Inject constructor(
                 var siteId: Long = 0
                 if (response.data.blog_details != null) {
                     try {
-                        siteId = java.lang.Long.valueOf(response.data.blog_details.blogid)
+                        siteId = response.data.blog_details.blogid.toLong()
                     } catch (e: NumberFormatException) {
                         // No op: In dry run mode, returned newSiteRemoteId is "Array"
                     }
@@ -323,7 +323,7 @@ class SiteRestClient @Inject constructor(
             }
             is Error -> {
                 val payload = FetchedPostFormatsPayload(site, emptyList())
-                payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                payload.error = PostFormatsError(PostFormatsErrorType.GENERIC_ERROR)
                 payload
             }
         }

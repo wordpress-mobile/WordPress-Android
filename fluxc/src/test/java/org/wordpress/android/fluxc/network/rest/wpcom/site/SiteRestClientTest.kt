@@ -4,6 +4,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -25,8 +26,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import org.wordpress.android.fluxc.network.rest.wpcom.site.NewSiteResponse.BlogDetails
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
+import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
@@ -40,6 +45,7 @@ class SiteRestClientTest {
     @Mock private lateinit var appSecrets: AppSecrets
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
+    private lateinit var bodyCaptor: KArgumentCaptor<Map<String, Any>>
     private lateinit var restClient: SiteRestClient
     private val siteId: Long = 12
 
@@ -47,6 +53,7 @@ class SiteRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
+        bodyCaptor = argumentCaptor()
         restClient = SiteRestClient(
                 null,
                 dispatcher,
@@ -149,26 +156,152 @@ class SiteRestClientTest {
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
 
+    @Test
+    fun `creates new site with all params`() = test {
+        val data = NewSiteResponse()
+        val blogDetails = BlogDetails()
+        blogDetails.blogid = siteId.toString()
+        data.blog_details = blogDetails
+        val appId = "app_id"
+        whenever(appSecrets.appId).thenReturn(appId)
+        val appSecret = "app_secret"
+        whenever(appSecrets.appSecret).thenReturn(appSecret)
+
+        initNewSiteResponse(data)
+
+        val dryRun = false
+        val siteName = "Site name"
+        val language = "CZ"
+        val visibility = PUBLIC
+        val segmentId = 123L
+        val siteDesign = "design"
+
+        val result = restClient.newSite(siteName, language, visibility, segmentId, siteDesign, dryRun)
+
+        assertThat(result.newSiteRemoteId).isEqualTo(siteId)
+        assertThat(result.dryRun).isEqualTo(dryRun)
+
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/new/")
+        assertThat(bodyCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "blog_name" to siteName,
+                        "lang_id" to language,
+                        "public" to "1",
+                        "validate" to "0",
+                        "client_id" to appId,
+                        "client_secret" to appSecret,
+                        "options" to mapOf<String, Any>("site_segment" to segmentId, "template" to siteDesign)
+                )
+        )
+    }
+
+    @Test
+    fun `creates new site without params with dry run`() = test {
+        val data = NewSiteResponse()
+        val blogDetails = BlogDetails()
+        blogDetails.blogid = siteId.toString()
+        data.blog_details = blogDetails
+        val appId = "app_id"
+        whenever(appSecrets.appId).thenReturn(appId)
+        val appSecret = "app_secret"
+        whenever(appSecrets.appSecret).thenReturn(appSecret)
+
+        initNewSiteResponse(data)
+
+        val dryRun = true
+        val siteName = "Site name"
+        val language = "CZ"
+        val visibility = SiteVisibility.PRIVATE
+
+        val result = restClient.newSite(siteName, language, visibility, null, null, dryRun)
+
+        assertThat(result.newSiteRemoteId).isEqualTo(siteId)
+        assertThat(result.dryRun).isEqualTo(dryRun)
+
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/new/")
+        assertThat(bodyCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "blog_name" to siteName,
+                        "lang_id" to language,
+                        "public" to "-1",
+                        "validate" to "1",
+                        "client_id" to appId,
+                        "client_secret" to appSecret
+                )
+        )
+    }
+
+    @Test
+    fun `returns fetched post formats`() = test {
+        val response = PostFormatsResponse()
+        val slug = "testSlug"
+        val displayName = "testDisplayName"
+        response.formats = mapOf(slug to displayName)
+
+        initPostFormatsResponse(response)
+
+        val responseModel = restClient.fetchPostFormats(site)
+        assertThat(responseModel.postFormats).hasSize(1)
+        assertThat(responseModel.postFormats[0].slug).isEqualTo(slug)
+        assertThat(responseModel.postFormats[0].displayName).isEqualTo(displayName)
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/post-formats/")
+    }
+
+    @Test
+    fun `fetchPostFormats returns error when API call fails`() = test {
+        val errorMessage = "message"
+        initPostFormatsResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                GenericErrorType.NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+        val errorResponse = restClient.fetchPostFormats(site)
+
+        assertThat(errorResponse.error).isNotNull()
+        assertThat(errorResponse.error.type).isEqualTo(PostFormatsErrorType.GENERIC_ERROR)
+    }
+
     private suspend fun initSiteResponse(
         data: SiteWPComRestResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<SiteWPComRestResponse> {
-        return initResponse(SiteWPComRestResponse::class.java, data ?: mock(), error)
+        return initGetResponse(SiteWPComRestResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun initSitesResponse(
         data: SitesResponse? = null,
         error: WPComGsonNetworkError? = null
     ): Response<SitesResponse> {
-        return initResponse(SitesResponse::class.java, data ?: mock(), error)
+        return initGetResponse(SitesResponse::class.java, data ?: mock(), error)
     }
 
-    private suspend fun <T> initResponse(
+    private suspend fun initNewSiteResponse(
+        data: NewSiteResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<NewSiteResponse> {
+        return initPostResponse(NewSiteResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initPostFormatsResponse(
+        data: PostFormatsResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<PostFormatsResponse> {
+        return initGetResponse(PostFormatsResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun <T> initGetResponse(
         kclass: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null
     ): Response<T> {
-        val response = if (error != null) Response.Error<T>(error) else Success(data)
+        val response = if (error != null) Response.Error(error) else Success(data)
         whenever(
                 wpComGsonRequestBuilder.syncGetRequest(
                         eq(restClient),
@@ -179,6 +312,25 @@ class SiteRestClientTest {
                         any(),
                         any()
 
+                )
+        ).thenReturn(response)
+        return response
+    }
+
+    private suspend fun <T> initPostResponse(
+        kclass: Class<T>,
+        data: T,
+        error: WPComGsonNetworkError? = null
+    ): Response<T> {
+        val response = if (error != null) Response.Error(error) else Success(data)
+        whenever(
+                wpComGsonRequestBuilder.syncPostRequest(
+                        eq(restClient),
+                        urlCaptor.capture(),
+                        paramsCaptor.capture(),
+                        bodyCaptor.capture(),
+                        eq(kclass),
+                        anyOrNull()
                 )
         ).thenReturn(response)
         return response
