@@ -28,6 +28,8 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
 class CommentViewHolder(
     parent: ViewGroup,
     private val clickListener: OnCommentPressedListener,

@@ -15,10 +15,12 @@ sealed class JetpackBackupRestoreListItemState(override val type: ViewType) : Je
 
     data class FootnoteState(
         @DrawableRes val iconRes: Int? = null,
+        @ColorRes val iconColorResId: Int? = null,
         @DimenRes val iconSizeResId: Int? = null,
         @DimenRes val textAlphaResId: Int? = null,
         val text: UiString,
-        val isVisible: Boolean = true
+        val isVisible: Boolean = true,
+        val onIconClick: (() -> Unit)? = null
     ) : JetpackListItemState(ViewType.BACKUP_RESTORE_FOOTNOTE)
 
     data class BulletState(

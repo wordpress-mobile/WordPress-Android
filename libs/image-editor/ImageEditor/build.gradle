@@ -1,18 +1,3 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-    }
-}
-
-repositories {
-    google()
-    jcenter()
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -55,10 +40,6 @@ android {
     }
 }
 
-ext {
-    viewpager2Version = '1.0.0'
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
@@ -67,7 +48,7 @@ dependencies {
     // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     // Material
     implementation "com.google.android.material:material:$materialVersion"
