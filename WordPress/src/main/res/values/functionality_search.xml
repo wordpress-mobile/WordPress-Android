@@ -2,14 +2,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--
     The available functionality should be added in the following format:
-    Description|deeplink
+    Description|Term|deeplink
     -->
     <string-array name="functionality_search_entries">
-        <item>New post|wordpress://post</item>
-        <item>Pages|wordpress://pages</item>
-        <item>New site|wordpress://start</item>
-        <item>Reader|wordpress://read</item>
-        <item>Notifs|wordpress://notifications</item>
-        <item>Stats|wordpress://stats</item>
+        <item>Create new post|new,post,write|wordpress://post</item>
+        <item>Site pages|page,homepage,create|https://wordpress.com/pages</item>
+        <item>Create new site|site,new,create,wordpress|https://wordpress.com/start</item>
+        <item>Discover content|reader,discover|wordpress://read</item>
+        <item>Check my notifications|notif,messages|wordpress://notifications</item>
+        <item>Check my statistics|stat,performance,views|wordpress://stats</item>
     </string-array>
 </resources>

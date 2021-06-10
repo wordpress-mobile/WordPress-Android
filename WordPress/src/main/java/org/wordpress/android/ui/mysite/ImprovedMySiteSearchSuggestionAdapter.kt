@@ -14,23 +14,33 @@ import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import java.util.Locale
 
-class ImprovedMySiteSearchSuggestionAdapter(context: Context, locale: Locale) : CursorAdapter(context, null, false) {
-    private val functions = context.resources.getStringArray(array.functionality_search_entries)
+class ImprovedMySiteSearchSuggestionAdapter(context: Context, val locale: Locale) : CursorAdapter(
+        context,
+        null,
+        false
+) {
+    private val functions: List<Functionality> = context.resources.getStringArray(array.functionality_search_entries)
+            .map {
+                val parts = it.split(DELIMITER)
+                Functionality(parts[0], parts[1].split(TERMS_DELIMITER), parts[2])
+            }
     private val fuzzyScore = FuzzyScore(locale)
 
-    private fun searchFunctions(query: String) = functions.filter { term ->
-        fuzzyScore.fuzzyScore(term, query) > fuzzyScoreThreshold
+    private fun searchFunctions(query: String) = functions.filter { f ->
+        f.terms.any { term ->
+            query.toLowerCase(locale).contains(term) ||
+                    fuzzyScore.fuzzyScore(query, term) > fuzzyScoreThreshold
+        }
     }
 
     fun setQuery(query: String) {
         val columnNames = arrayOf(COL_ID, COL_DESCR, COL_LINK)
         val cursor = MatrixCursor(columnNames)
         val temp = arrayOfNulls<String>(COLUMNS_NUMBER)
-        var id = 0
-        for (item in searchFunctions(query)) {
-            temp[0] = (id++).toString()
-            temp[1] = item.split(DELIMITER)[0]
-            temp[2] = item.split(DELIMITER)[1]
+        for ((id, function) in searchFunctions(query).withIndex()) {
+            temp[0] = (id).toString()
+            temp[1] = function.description
+            temp[2] = function.deeplink
             cursor.addRow(temp)
         }
         swapCursor(cursor)
@@ -40,8 +50,8 @@ class ImprovedMySiteSearchSuggestionAdapter(context: Context, locale: Locale) : 
             LayoutInflater.from(context).inflate(layout.my_site_search_item, parent, false)
 
     override fun bindView(view: View, context: Context, cursor: Cursor) {
-        val query = cursor.getString(cursor.getColumnIndex(COL_DESCR))
-        (view.findViewById(id.description) as TextView).text = query
+        val description = cursor.getString(cursor.getColumnIndex(COL_DESCR))
+        (view.findViewById(id.description) as TextView).text = description
     }
 
     fun getDeepLink(position: Int) = (getItem(position) as? Cursor)?.getString(cursor.getColumnIndex(COL_LINK))
@@ -52,6 +62,9 @@ class ImprovedMySiteSearchSuggestionAdapter(context: Context, locale: Locale) : 
         const val COL_DESCR = "description"
         const val COL_LINK = "deeplink"
         const val DELIMITER = "|"
-        const val fuzzyScoreThreshold = 5
+        const val TERMS_DELIMITER = ","
+        const val fuzzyScoreThreshold = 6
     }
+
+    private class Functionality(val description: String, val terms: List<String>, val deeplink: String)
 }
