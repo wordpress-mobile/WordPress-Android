@@ -94,6 +94,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
+import org.wordpress.android.ui.mysite.search.SearchSuggestionsProvider
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -133,6 +134,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Mock lateinit var searchSuggestionsProvider: SearchSuggestionsProvider
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -203,7 +205,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 currentAvatarSource,
                 dynamicCardsSource,
                 buildConfigWrapper,
-                unifiedCommentsListFeatureConfig
+                unifiedCommentsListFeatureConfig,
+                searchSuggestionsProvider
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
