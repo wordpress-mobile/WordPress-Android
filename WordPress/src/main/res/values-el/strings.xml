@@ -1263,4 +1263,5 @@ Language: el_GR
     <string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>
     <string name="on">ενεργό</string>
     <string name="notification_settings">Ρυθμίσεις Ειδοποιήσεων</string>
+    <string name="my_site_search_hint">Τι θες να κάνεις;</string>
 </resources>

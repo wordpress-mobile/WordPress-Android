@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    The available functionality should be added in the following format:
+    Description|Term|deeplink
+    -->
+    <string-array name="functionality_search_entries">
+        <item>Δημιουργία νέου ποστ|γράψω,γράψω,post,ποστ,καινουργιο|wordpress://post</item>
+        <item>Σελίδες|σελίδες,page|https://wordpress.com/pages</item>
+        <item>Δημιουργία νέου site|site,new,create,wordpress,σελίδα|https://wordpress.com/start</item>
+        <item>Αναγνώστης|reader,discover,περιεχόμενο,αναγνώση,ανακάλυψ|wordpress://read</item>
+        <item>Ειδοποιήσεις|notif,messages,ειδοπ|wordpress://notifications</item>
+        <item>Στατιστικά|stat,performance,views,στατιστ|wordpress://stats</item>
+    </string-array>
+</resources>
