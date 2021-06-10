@@ -262,8 +262,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        reattachLocalePickerCallback();
         // flush gathered events (if any)
         AnalyticsTracker.flush();
     }
@@ -421,7 +420,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
-        updateLanguagePreference(languageCode);
         mContextProvider.refreshContext();
 
         // Track language change on Analytics because we have both the device language and app selected language
@@ -442,33 +440,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
-    }
-
-    private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
-            return;
-        }
-
-        Locale languageLocale = LocaleManager.languageLocale(languageCode);
-        String[] availableLocales = getResources().getStringArray(R.array.available_languages);
-
-//        Pair<String[], String[]> pair =
-//                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
-//        // check for a possible NPE
-//        if (pair == null) {
-//            return;
-//        }
-//
-//        String[] sortedEntries = pair.first;
-//        String[] sortedValues = pair.second;
-//
-//        mLanguagePreference.setEntries(sortedEntries);
-//        mLanguagePreference.setEntryValues(sortedValues);
-//        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
-//
-//        mLanguagePreference.setValue(languageCode);
-//        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
-//        mLanguagePreference.refreshAdapter();
     }
 
     private boolean handleAboutPreferenceClick() {
@@ -583,17 +554,27 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAppLocalePickerClick() {
-
         if (getActivity() instanceof AppCompatActivity) {
             LocalePickerBottomSheet bottomSheet = LocalePickerBottomSheet.newInstance();
-        bottomSheet.setLocalePickerCallback(this);
+            bottomSheet.setLocalePickerCallback(this);
             bottomSheet
-                    .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "TIMEZONE_BOTTOM_SHEET_TAG");
+                    .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), LocalePickerBottomSheet.TAG);
             return true;
         } else {
             throw new IllegalArgumentException(
-                    "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
+                    "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
                     + "using support fragment manager from AppCompatActivity.");
+        }
+    }
+
+    private void reattachLocalePickerCallback() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet =
+                    (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
+                            .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setLocalePickerCallback(this);
+            }
         }
     }
 
