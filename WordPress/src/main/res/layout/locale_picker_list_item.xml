@@ -7,7 +7,7 @@
     android:background="?attr/selectableItemBackground"
     android:padding="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,9 +19,10 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="German" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/localized_label"
         android:layout_width="match_parent"
+        android:textAlignment="viewStart"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBody2"

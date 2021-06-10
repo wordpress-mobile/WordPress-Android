@@ -36,18 +36,6 @@
         tools:context=".ui.prefs.timezone.SiteSettingsTimezoneBottomSheet"
         tools:listitem="@layout/locale_picker_list_item" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_locale_suggestion"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small_medium"
-        android:gravity="start"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/label_locale_suggestion"
-        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
-        tools:text="English (Untied States)" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_input_layout"
@@ -71,6 +59,21 @@
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_locale_suggestion"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:layout_marginTop="@dimen/margin_small_medium"
+        android:gravity="start"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_locale_suggestion"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+        tools:text="English (Untied States)" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label_locale_suggestion"
