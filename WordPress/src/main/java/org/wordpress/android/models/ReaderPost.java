@@ -346,6 +346,24 @@ public class ReaderPost {
         post.setTags(tags);
     }
 
+    /**
+     * copy changes over to the local post - this is done instead of simply overwriting
+     * the local post with the server post because the server post was retrieved using
+     * the read/sites/$siteId/posts/$postId endpoint which is missing some information
+     * https://github.com/wordpress-mobile/WordPress-Android/issues/3164
+     */
+    public void copyFieldsFromPost(ReaderPost post) {
+        numReplies = post.numReplies;
+        numLikes = post.numLikes;
+        isFollowedByCurrentUser = post.isFollowedByCurrentUser;
+        isLikedByCurrentUser = post.isLikedByCurrentUser;
+        isCommentsOpen = post.isCommentsOpen;
+        useExcerpt = post.useExcerpt;
+        setTitle(post.getTitle());
+        setText(post.getText());
+        setExcerpt(post.getExcerpt());
+    }
+
     /*
      * extracts a title from a post's excerpt - used when the post has no title
      */

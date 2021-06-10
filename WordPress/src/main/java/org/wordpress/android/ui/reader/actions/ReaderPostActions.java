@@ -187,19 +187,7 @@ public class ReaderPostActions {
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // copy changes over to the local post - this is done instead of simply overwriting
-                    // the local post with the server post because the server post was retrieved using
-                    // the read/sites/$siteId/posts/$postId endpoint which is missing some information
-                    // https://github.com/wordpress-mobile/WordPress-Android/issues/3164
-                    localPost.numReplies = serverPost.numReplies;
-                    localPost.numLikes = serverPost.numLikes;
-                    localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
-                    localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
-                    localPost.isCommentsOpen = serverPost.isCommentsOpen;
-                    localPost.useExcerpt = serverPost.useExcerpt;
-                    localPost.setTitle(serverPost.getTitle());
-                    localPost.setText(serverPost.getText());
-                    localPost.setExcerpt(serverPost.getExcerpt());
+                    localPost.copyFieldsFromPost(serverPost);
                     ReaderPostTable.updatePost(localPost);
                 }
 
