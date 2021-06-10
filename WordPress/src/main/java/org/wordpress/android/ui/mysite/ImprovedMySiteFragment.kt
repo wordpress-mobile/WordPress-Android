@@ -67,7 +67,6 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJe
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.mysite.search.SearchSuggestionAdapter
-import org.wordpress.android.ui.mysite.search.SearchSuggestionsProvider
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -108,7 +107,6 @@ class ImprovedMySiteFragment : Fragment(R.layout.new_my_site_fragment),
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var mySiteSearchFeatureConfig: MySiteSearchFeatureConfig
     @Inject lateinit var deeplinkNavigator: DeepLinkNavigator
-    @Inject lateinit var searchSuggestionsProvider: SearchSuggestionsProvider
     private lateinit var deepLinkingIntentReceiverViewModel: DeepLinkingIntentReceiverViewModel
     private lateinit var improvedMySiteSearchSuggestionAdapter: SearchSuggestionAdapter
     private lateinit var viewModel: MySiteViewModel
