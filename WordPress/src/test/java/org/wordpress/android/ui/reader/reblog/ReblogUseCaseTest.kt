@@ -102,29 +102,4 @@ class ReblogUseCaseTest {
         Assertions.assertThat(peState?.site).isEqualTo(site)
         Assertions.assertThat(peState?.post).isEqualTo(post)
     }
-
-    @Test
-    fun `when user has only one visible WPCOM site but the selected site is not retrieved an error occurs`() = test {
-        val post = ReaderPost()
-        val visibleWPComSites = listOf(null) // One site
-
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
-
-        val state = reblogUseCase.onReblogButtonClicked(post)
-
-        Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
-    }
-
-    @Test
-    fun `when user has more than one visible WPCOM sites but the selected site is not retrieved an error occurs`() =
-            test {
-        val post = ReaderPost()
-        val visibleWPComSites = listOf(null, null) // More sites
-
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
-
-        val state = reblogUseCase.onReblogButtonClicked(post)
-
-        Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
-    }
 }
