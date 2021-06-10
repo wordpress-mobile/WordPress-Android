@@ -205,7 +205,6 @@ android {
         checkDependencies = true
         checkGeneratedSources = true
         lintConfig file('lint.xml')
-        baseline file("lint-baseline.xml")
     }
 
     packagingOptions {
