@@ -1147,7 +1147,7 @@ class SiteStore
             FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
             FETCHED_PROFILE_XML_RPC -> updateSiteProfile(action.payload as SiteModel)
             FETCH_SITE -> coroutineEngine.launch(T.MAIN, this, "Fetch site") {
-                fetchSite(action.payload as SiteModel)
+                emitChange(fetchSite(action.payload as SiteModel))
             }
             FETCH_SITES -> coroutineEngine.launch(T.MAIN, this, "Fetch sites") {
                 emitChange(fetchSites(action.payload as FetchSitesPayload))
@@ -1155,7 +1155,9 @@ class SiteStore
             FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
                 emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
             }
-            UPDATE_SITE -> updateSite(action.payload as SiteModel)
+            UPDATE_SITE -> {
+                emitChange(updateSite(action.payload as SiteModel))
+            }
             UPDATE_SITES -> updateSites(action.payload as SitesModel)
             DELETE_SITE -> deleteSite(action.payload as SiteModel)
             DELETED_SITE -> handleDeletedSite(action.payload as DeleteSiteResponsePayload)
@@ -1238,13 +1240,13 @@ class SiteStore
         siteXMLRPCClient.fetchProfile(site)
     }
 
-    suspend fun fetchSite(site: SiteModel) {
+    suspend fun fetchSite(site: SiteModel): OnSiteChanged {
         val updatedSite = if (site.isUsingWpComRestApi) {
             siteRestClient.fetchSite(site)
         } else {
             siteXMLRPCClient.fetchSite(site)
         }
-        updateSite(updatedSite)
+        return updateSite(updatedSite)
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
@@ -1271,8 +1273,8 @@ class SiteStore
         emitChange(event)
     }
 
-    private fun updateSite(siteModel: SiteModel) {
-        val event = if (siteModel.isError) {
+    private fun updateSite(siteModel: SiteModel): OnSiteChanged {
+        return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
@@ -1290,7 +1292,6 @@ class SiteStore
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
         }
-        emitChange(event)
     }
 
     private fun updateSites(sitesModel: SitesModel): OnSiteChanged {
