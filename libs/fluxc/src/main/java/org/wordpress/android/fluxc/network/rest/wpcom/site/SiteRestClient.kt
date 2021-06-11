@@ -118,7 +118,7 @@ class SiteRestClient @Inject constructor(
     data class IsWPComResponsePayload(
         val url: String,
         val isWPCom: Boolean = false
-    ) : Payload<BaseNetworkError?>()
+    ) : Payload<BaseNetworkError>()
 
     data class FetchWPComSiteResponsePayload(
         val checkedUrl: String,
