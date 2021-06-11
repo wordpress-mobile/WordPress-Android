@@ -646,6 +646,12 @@
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Selected homepage and page for posts cannot be the same.</string>
     <string name="site_settings_timezones_manual_offsets" translatable="false">Manual Offsets</string>
 
+    <!-- Categories -->
+    <string name="site_settings_categories_title">Categories</string>
+    <string name="site_settings_categories_empty_button">Create a category</string>
+    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
+    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
+
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
     <string name="site_settings_quota_space_title">Space Used</string>
@@ -807,6 +813,7 @@
     <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
     <string name="site_settings_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
     <string name="site_settings_denylist_hint">Comments that match a filter are marked as spam</string>
+    <string name="site_settings_categories_hint">Manage your site\'s categories</string>
 
     <!-- Related Posts -->
     <string name="site_settings_rp_switch_title">Show Related Posts</string>
@@ -2848,6 +2855,7 @@
     <string name="share_desc">Share</string>
     <string name="preview_type_desc">Select preview type</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
+    <string name="fab_add_category_desc">Create Category</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
@@ -3676,4 +3684,6 @@
     <string name="set_your_blogging_goals_button">Set goals</string>
     <string name="blogging_goals_n_times_a_week">%d times a week</string>
     <string name="blogging_goals_not_set">None set</string>
+    <string name="blogging_reminders_notify_me">Notify me</string>
+    <string name="blogging_reminders_done">Done</string>
 </resources>

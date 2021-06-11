@@ -5,12 +5,6 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-    }
-
-    lintOptions{
-        disable 'InvalidPackage'
     }
 }
 
@@ -24,3 +18,4 @@ dependencies {
     }
     implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 }
+

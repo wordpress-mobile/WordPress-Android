@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-21 05:43:16+0000
+Translation-Revision-Date: 2021-06-01 17:52:49+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Setări chenar</string>
+    <string name="storage_utils_dialog_dont_show_button">Nu arăta din nou</string>
+    <string name="storage_utils_dialog_ok_button">Vezi spațiul de stocare</string>
+    <string name="storage_utils_dialog_message">Înainte de a putea fi publicat, trebuie să salvăm conținutul pe dispozitivul tău. Examinează setările pentru spațiul de stocare și înlătură câteva fișiere pentru a elibera spațiu.</string>
+    <string name="storage_utils_dialog_title">Spațiu de stocare insuficient pe dispozitiv</string>
+    <string name="gutenberg_native_y_axis_position">Poziția axei Y</string>
+    <string name="gutenberg_native_x_axis_position">Poziția axei X</string>
+    <string name="gutenberg_native_type_a_url">Introdu un URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Atinge pentru a adăuga conținut</string>
+    <string name="gutenberg_native_slash_inserter_results">Rezultatele dispozitivului de inserare „/”</string>
+    <string name="gutenberg_native_show_media_on_right">Arată media în dreapta</string>
+    <string name="gutenberg_native_show_media_on_left">Arată media în stânga</string>
+    <string name="gutenberg_native_s_has_url_set">%s are setat un URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s nu are setat un URL</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s a fost convertit în blocuri normale</string>
+    <string name="gutenberg_native_s_block">Bloc %s</string>
+    <string name="gutenberg_native_overlay">Suprapunere</string>
+    <string name="gutenberg_native_optional_placeholder">Substituent opțional…</string>
+    <string name="gutenberg_native_opacity">Opacitate</string>
+    <string name="gutenberg_native_minimum_height">Înălțime minimă</string>
+    <string name="gutenberg_native_media_text_settings">Setări media și text</string>
+    <string name="gutenberg_native_media_options">Opțiuni media</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL invalid. Nu am găsit fișierul audio.</string>
+    <string name="gutenberg_native_insert_crosspost">Introdu crosspost</string>
+    <string name="gutenberg_native_fixed_background">Fundal fix</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Trage pentru a regla punctul de focalizare</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia de jos ca să adaugi o imagine sau un video</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia Acțiuni ca să adaugi o imagine sau un video</string>
+    <string name="gutenberg_native_dimensions">Dimensiuni</string>
+    <string name="gutenberg_native_current_unit_is_s">Unitatea curentă este %s</string>
+    <string name="gutenberg_native_crosspost">Crosspost</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Decupează imaginea pentru a umple întreaga coloană</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Convertește în blocuri normale</string>
+    <string name="gutenberg_native_columns_settings">Setări coloane</string>
+    <string name="gutenberg_native_clear_media">Șterge media</string>
+    <string name="gutenberg_native_button_width">Lățime buton</string>
+    <string name="gutenberg_native_add_link_to_s">Adaugă o legătură la %s</string>
+    <string name="gutenberg_native_add_link_text">Adaugă text la legătură</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Adaugă imagine sau video</string>
+    <string name="error_media_path_is_directory">Calea specificată este un director, ar trebui să fie un fișier media</string>
+    <string name="error_media_could_not_find_media_in_path">Nu am putut găsi fișierul media în calea furnizată</string>
+    <string name="error_media_unexpected_empty_media_file_path">Calea pentru fișierul media este goală, neașteptată</string>
+    <string name="error_media_file_type_not_allowed">Acest tip de fișier nu este permis</string>
+    <string name="error_media_unexpected_null_value">Elementul media a fost gol</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introdu datele de conectare la server&lt;/a&gt; pentru a înlătura amenințările.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introdu datele de conectare la server&lt;/a&gt; pentru a înlătura amenințarea.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Atinge de două ori pentru a adăuga o legătură.</string>
     <string name="gutenberg_native_add_link">ADAUGĂ LEGĂTURĂ</string>
     <string name="login_empty_view_try_another_account">Încearcă cu un alt cont</string>
     <string name="login_empty_view_see_instructions">Vezi instrucțiunile</string>
-    <string name="login_no_jetpack_sites_error_message">Dacă ai deja un sit, va trebui să instalezi modulul gratuit Jetpack și să îl conectezi la contul tău WordPress.com.</string>
+    <string name="login_no_jetpack_sites_error_message">Dacă ai deja un sit, trebuie să instalezi modulul gratuit Jetpack și să-l conectezi la contul tău WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Poza ta de profil</string>
-    <string name="login_not_a_jetpack_site">Ca să utilizezi această aplicație pentru %1$s, va trebui să ai instalat modulul Jetpack și să fie conectat la contul tău WordPress.com.</string>
+    <string name="login_not_a_jetpack_site">Ca să utilizezi această aplicație pentru %1$s, trebuie să instalezi modulul Jetpack și să-l conectezi la contul tău WordPress.com.</string>
     <string name="gutenberg_native_size">Dimensiune</string>
     <string name="gutenberg_native_move_image_forward">Mută imaginea înainte</string>
     <string name="gutenberg_native_move_image_backward">Mută imaginea înapoi</string>
+    <string name="gutenberg_native_width_settings">Setări lățime</string>
     <string name="gutenberg_native_image_settings">Setări imagine</string>
+    <string name="gutenberg_native_column_settings">Setări coloană</string>
     <string name="gutenberg_native_audio_settings">Setări audio</string>
     <string name="user_profile_untitled_site">(Fără titlu)</string>
     <string name="user_profile_site_section_header">Sit</string>
     <string name="user_profile_bottom_sheet_description">Informații din foaia de jos a profilului de utilizator</string>
     <string name="likes_list_screen_title">Lista aprecierilor %s</string>
+    <string name="gutenberg_native_write_title">Scrie titlul…</string>
     <string name="gutenberg_native_write_code">Scrie codul…</string>
     <string name="gutenberg_native_sorting_and_filtering">Sortare și filtrare</string>
+    <string name="gutenberg_native_s_social_icon">Icon social %s</string>
     <string name="gutenberg_native_show_download_button">Arată butonul de descărcare</string>
     <string name="gutenberg_native_shortcode">Scurtcod</string>
+    <string name="gutenberg_native_mention">Mențiune</string>
+    <string name="gutenberg_native_add_label">Adaugă etichetă…</string>
     <string name="gutenberg_native_read_more">Citește mai mult</string>
     <string name="gutenberg_native_preload">Pre-încarcă</string>
     <string name="gutenberg_native_post_meta_settings">Setări metadate articol</string>
@@ -35,15 +87,17 @@ Language: ro
     <string name="gutenberg_native_media_area">Zonă media</string>
     <string name="gutenberg_native_loop">Buclă</string>
     <string name="gutenberg_native_link_to_12d6f96a">Legătură la</string>
+    <string name="gutenberg_native_link_label">Etichetă legătură</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imaginea %1$d din %2$d din galerie</string>
     <string name="gutenberg_native_heading_d">Subtitlu %d</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Introdu URL-ul pentru a îngloba aici…</string>
     <string name="gutenberg_native_edit_image">Editează imaginea</string>
     <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
     <string name="gutenberg_native_code">Cod</string>
     <string name="gutenberg_native_change_heading_level">Schimbă nivelul subtitlului</string>
     <string name="gutenberg_native_browser_default">Navigator implicit</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrie pe scurt legătura pentru a ajuta utilizatorii care folosesc cititorul de ecran</string>
+    <string name="gutenberg_native_cover">Copertă</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blocul a fost șters sau este indisponibil.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Blocurile nu pot fi randate în interiorul lor.</string>
     <string name="gutenberg_native_autoplay">Redare automată</string>
@@ -64,27 +118,38 @@ Language: ro
     <string name="like_faces_singular_text">Un bloger apreciază asta.</string>
     <string name="like_title_plural">%d aprecieri</string>
     <string name="like_title_singular">O apreciere</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Pentru a înlătura amenințările, introdu datele de conectare la server.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Pentru a înlătura amenințarea, introdu datele de conectare la server.</string>
     <string name="suggestion">Sugestie:</string>
+    <string name="gutenberg_native_use_icon_button">Folosește butonul icon</string>
+    <string name="gutenberg_native_search_input_field">Câmp de intrare pentru căutare.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Buton Căutare. Textul actual al butonului este</string>
     <string name="gutenberg_native_search_blocks">Caută blocuri</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etichetă buton Căutare. Textul actual este</string>
     <string name="gutenberg_native_search_block">Bloc Căutare</string>
+    <string name="gutenberg_native_outside">În exterior</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Nu ai setat niciun substituent personalizat</string>
+    <string name="gutenberg_native_no_button">Niciun buton</string>
+    <string name="gutenberg_native_inside">În interior</string>
+    <string name="gutenberg_native_hide_search_heading">Ascunde subtitlul de căutare</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Atinge de două ori pentru a edita textul substituentului</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Atinge de două ori pentru a edita textul etichetei</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Atinge de două ori pentru a edita textul butonului</string>
     <string name="gutenberg_native_double_tap_to_change_unit">atinge de două ori pentru a schimba unitatea</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Textul actual pentru substituent este</string>
     <string name="gutenberg_native_clear_search">Șterge căutarea</string>
     <string name="gutenberg_native_cancel_search">Anulează căutarea</string>
+    <string name="gutenberg_native_button_position">Poziție buton</string>
+    <string name="gutenberg_native_button_outside">Buton în exterior</string>
+    <string name="gutenberg_native_button_inside">Buton în interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s este %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">A apărut o eroare în timpul primirii datelor pentru aprecieri</string>
     <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri.</string>
     <string name="get_likes_no_network_error">Nu este disponibilă nicio rețea.</string>
     <string name="comments_empty_list_filtered_unreplied">Niciun comentariu fără răspuns</string>
     <string name="comment_status_unreplied">Fără răspuns</string>
-    <string name="gutenberg_native_table_of_contents">Cuprins</string>
-    <string name="gutenberg_native_summary">rezumat</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Face un rezumat al articolului folosind o listă de subtitluri. Adaugă ancore HTML la blocurile Subtitlu pentru a le lega aici.</string>
-    <string name="gutenberg_native_document_outline">schiță document</string>
-    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_search_settings">Setări căutare</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
+    <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
     <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe situl tău.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
@@ -94,7 +159,7 @@ Language: ro
     <string name="scan_idle_threats_description_plural">Scanarea a găsit %1$s amenințări posibile pe %2$s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
     <string name="scan_fixing_threats_description_plural">Lucrăm din greu, în fundal, pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
     <string name="gutenberg_native_edit_focal_point">Editează punctul central</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia Jos pentru a edita, înlocui sau șterge imaginea</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia de jos pentru a edita, înlocui sau șterge imaginea</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia Acțiuni pentru a edita, înlocui sau șterge imaginea</string>
     <string name="new_site_creation_search_domain_example">exemplu.com</string>
     <string name="new_site_creation_search_domain_input_hint">Scrie un nume pentru situl tău</string>
@@ -488,7 +553,6 @@ Language: ro
     <string name="media_uploading_gif_library_photo">Încărcare GIF media</string>
     <string name="media_uploading_stock_library_photo">Încărcare stock media</string>
     <string name="media_uploading_default">Încărcare media</string>
-    <string name="gutenberg_native_select_item">Selectează un element</string>
     <string name="gutenberg_native_search_or_type_url">Caută sau tastează URL-ul</string>
     <string name="gutenberg_native_page_break">Sfârșit de pagină</string>
     <string name="gutenberg_native_add_this_telephone_link">Adaugă această legătură la telefon</string>
@@ -647,7 +711,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_select_the_option">Atinge de două ori pentru a selecta opțiunea</string>
     <string name="gutenberg_native_customize_gradient">Personalizează gradientul</string>
     <string name="pages_list_author">Autor pagină</string>
-    <string name="photo_picker_use_gif">Folosește acest GIF</string>
     <string name="error_media_thumbnail_not_loaded">Miniatura media nu a putut fi încărcată</string>
     <string name="menu_content_info">Structură conținut</string>
     <string name="everyone">Oricine</string>
@@ -681,10 +744,12 @@ Language: ro
     <string name="ccpa_privacy_notice_header">Notificări de confidențialitate pentru utilizatorii din California</string>
     <string name="status_and_visibility">Stare și vizibilitate</string>
     <string name="update_now">Actualizează acum</string>
+    <string name="gutenberg_native_remove">Înlătură</string>
     <string name="gutenberg_native_open_block_actions_menu">Deschide meniul acțiuni blocuri</string>
     <string name="gutenberg_native_move_to_top">Mută în sus</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide Foaia de jos cu opțiunile disponibile</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Atinge de două ori pentru a deschide Foaia acțiuni cu opțiunile disponibile</string>
+    <string name="gutenberg_native_insert_mention">Inserează mențiunea</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide foaia de jos cu opțiunile disponibile</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Atinge de două ori pentru a deschide foaia Acțiuni cu opțiunile disponibile</string>
     <string name="pages_cannot_be_started">Nu putem deschide paginile în acest moment. Te rog reîncearcă mai târziu.</string>
     <string name="pages_set_as_posts_page">Setează ca pagină articole</string>
     <string name="pages_set_as_homepage">Setează ca prima pagină</string>
@@ -735,6 +800,7 @@ Language: ro
     <string name="button_insert">Inserează</string>
     <string name="continue_label">Continuă</string>
     <string name="copy_text">Copiază</string>
+    <string name="gutenberg_native_number_of_columns">Număr de coloane</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mută blocul în dreapta din poziția %1$s în poziția %2$s</string>
     <string name="gutenberg_native_move_block_right">Mută blocul în dreapta</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mută blocul în stânga din poziția %1$s în poziția %2$s</string>
@@ -751,7 +817,6 @@ Language: ro
     <string name="pages_and_posts_cancel_auto_upload">Anulează încărcarea</string>
     <string name="gif_list_search_returned_unknown_error">A fost o problemă la gestionarea cererii</string>
     <string name="gif_powered_by_tenor">Propulsat de Tenor</string>
-    <string name="gif_picker_search_hint">Caută Tenor</string>
     <string name="photo_picker_gif">Alege din Tenor</string>
     <string name="weekday_saturday">Sâmbătă</string>
     <string name="weekday_friday">Vineri</string>
@@ -802,8 +867,11 @@ Language: ro
     <string name="gutenberg_native_link_to">Legătură la</string>
     <string name="gutenberg_native_link_settings">Setări legătură</string>
     <string name="gutenberg_native_excerpt_length_words">Lungime rezumat (cuvinte)</string>
+    <string name="gutenberg_native_edit_cover_media">Editează elementul media pentru copertă</string>
     <string name="gutenberg_native_customize">PERSONALIZEAZĂ</string>
+    <string name="gutenberg_native_button_link_url">URL legătură buton</string>
     <string name="gutenberg_native_video_settings">Setări video</string>
+    <string name="gutenberg_native_border_radius">Rotunjire chenar</string>
     <string name="gutenberg_native_add_paragraph_block">Adaugă un bloc Paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Creează un articol</string>
     <string name="post_list_tab_trashed_posts">Aruncate la gunoi</string>
@@ -843,6 +911,7 @@ Language: ro
     <string name="reader_filter_cta">Filtrează</string>
     <string name="gutenberg_native_video_caption_s">Text asociat video. %s</string>
     <string name="gutenberg_native_edit_video">Editează videoul</string>
+    <string name="gutenberg_native_edit_media">Editează media</string>
     <string name="gutenberg_native_add_a_shortcode">Adaugă un scurtcod…</string>
     <string name="post_list_author">Autor articol</string>
     <string name="fab_create_desc">Creează un articol</string>
@@ -901,14 +970,12 @@ Language: ro
     <string name="gutenberg_native_wordpress_media_library">Bibliotecă media WordPress</string>
     <string name="gutenberg_native_unsupported">Neacceptat</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
-    <string name="gutenberg_native_translate">Tradu</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Atinge pentru a ascunde tastatura</string>
     <string name="gutenberg_native_tap_here_to_show_help">Atinge aici pentru a afișa ajutorul</string>
     <string name="gutenberg_native_take_a_video">Fă un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
     <string name="gutenberg_native_start_writing">Începe să scrii…</string>
-    <string name="gutenberg_native_show_section">Arată secțiunea</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
     <string name="gutenberg_native_cut_block">Șterge blocul</string>
@@ -925,6 +992,8 @@ Language: ro
     <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mută blocul în jos de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_down">Mută blocul în jos</string>
+    <string name="gutenberg_native_link_text">Text legătură</string>
+    <string name="gutenberg_native_link_inserted">Legătură inserată</string>
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ascunde tastatura</string>
     <string name="gutenberg_native_help_icon">Icon pentru ajutor</string>
@@ -939,6 +1008,7 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Atinge de două ori pentru a muta blocul în jos</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Atinge de două ori pentru a edita această valoare</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Atinge de două ori pentru a adăuga un bloc</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Atinge de două ori și ține apăsat pentru a edita</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
     <string name="gutenberg_native_choose_from_device">Alege de pe dispozitiv</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
@@ -1299,7 +1369,6 @@ Language: ro
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
-    <string name="gif_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
     <string name="gif_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
     <string name="gif_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în biblioteca ta Media!</string>
     <string name="stats_author_views_label">Vizualizări</string>
@@ -1521,7 +1590,7 @@ Language: ro
     <string name="site_address_login_title">Autentificare prin adresa sitului</string>
     <string name="email_address_login_title">Autentificare prin adresa de email</string>
     <string name="reader_empty_saved_posts_description">Atinge %s pentru a salva un articol în lista ta.</string>
-    <string name="reader_empty_saved_posts_title">Niciun articol salvat — până acum!</string>
+    <string name="reader_empty_saved_posts_title">Niciun articol salvat - până acum!</string>
     <string name="reader_bookmark_snack_title">Publică salvate</string>
     <string name="reader_bookmark_snack_btn">Vezi tot</string>
     <string name="reader_remove_bookmark">Înlătură din articole salvate</string>
@@ -1866,7 +1935,7 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
-    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Poți marca o adresă IP (sau o serie de adrese IP) ca „Mereu permise”, pentru ca Jetpack să nu le blocheze vreodată. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare, separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi-pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
@@ -2472,7 +2541,7 @@ Language: ro
     <string name="post_published">Articol publicat</string>
     <string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
-    <string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
+    <string name="notifications_no_search_results">Niciun sit nu se potrivește cu „%s”</string>
     <string name="search_sites">Caută situri</string>
     <string name="notifications_empty_view_reader">Du-te la Cititor</string>
     <string name="notifications_empty_action_followers_likes">Remarcă-te: comentează la articolele pe care le-ai citit</string>

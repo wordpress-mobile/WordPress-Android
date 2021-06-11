@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-06 06:06:03+0000
+Translation-Revision-Date: 2021-05-28 17:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_double_tap_to_add_a_link">ダブルタップしてリンクを追加します。</string>
+    <string name="gutenberg_native_add_link">リンクを追加</string>
+    <string name="login_empty_view_try_another_account">別のアカウントで試行</string>
+    <string name="login_empty_view_see_instructions">手順を参照してください</string>
+    <string name="login_empty_view_avatar_content_description">自分のプロフィール写真</string>
+    <string name="login_not_a_jetpack_site">%1$sにこのアプリを使用するには、Jetpack プラグインをインストールし、自身の WordPress アカウントに接続する必要があります。</string>
     <string name="gutenberg_native_audio_settings">音声設定</string>
     <string name="gutenberg_native_image_settings">画像設定</string>
     <string name="gutenberg_native_size">サイズ</string>
+    <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
+    <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="user_profile_bottom_sheet_description">ユーザープロフィールボトムシート情報</string>
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="likes_list_screen_title">いいねリスト%s</string>
+    <string name="gutenberg_native_write_title">タイトルを入力…</string>
     <string name="gutenberg_native_write_code">コードを入力…</string>
     <string name="gutenberg_native_sorting_and_filtering">並べ替えと絞り込み</string>
     <string name="gutenberg_native_show_download_button">ダウンロードボタンを表示</string>
@@ -25,11 +34,11 @@ Language: ja_JP
     <string name="gutenberg_native_media_file">メディアファイル</string>
     <string name="gutenberg_native_metadata">メタデータ</string>
     <string name="gutenberg_native_loop">ループ</string>
+    <string name="gutenberg_native_link_label">リンクラベル</string>
     <string name="gutenberg_native_link_to_12d6f96a">リンク先</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">ギャラリー内の画像%1$d件中%2$d件</string>
     <string name="gutenberg_native_heading_d">見出し%d</string>
     <string name="gutenberg_native_featured">おすすめ</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">埋め込む URL をここに入力…</string>
     <string name="gutenberg_native_edit_image">画像を編集</string>
     <string name="gutenberg_native_display_post_date">投稿日を表示</string>
     <string name="gutenberg_native_change_heading_level">見出しレベルを変更</string>
@@ -42,6 +51,7 @@ Language: ja_JP
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">ブロックは削除されたか、利用できません。</string>
     <string name="gutenberg_native_add_text">テキストを追加…</string>
     <string name="gutenberg_native_add_caption">キャプションを追加</string>
+    <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
     <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
     <string name="gutenberg_native_transform_block">ブロックを変換…</string>
     <string name="gutenberg_native_transform_s_to">%sを変換:</string>
@@ -55,26 +65,35 @@ Language: ja_JP
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$sを%2$sに変換しました</string>
     <string name="suggestion">提案:</string>
     <string name="like_title_singular">1個の「いいね」</string>
-    <string name="threat_fix_enter_server_creds_message_plural">脅威を修正するにはサーバーの認証情報を入力してください。</string>
-    <string name="threat_fix_enter_server_creds_message_singular">脅威を修正するにはサーバーの認証情報を入力してください。</string>
+    <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
+    <string name="gutenberg_native_search_input_field">検索入力フィールドです。</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">検索ボタンです。 現在のボタンテキストは</string>
     <string name="gutenberg_native_search_blocks">検索ブロック</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">検索ブロックラベルです。 現在のテキストは</string>
     <string name="gutenberg_native_search_block">検索ブロック</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">カスタムプレースホルダーの設定なし</string>
+    <string name="gutenberg_native_no_button">ボタンなし</string>
+    <string name="gutenberg_native_inside">内側</string>
+    <string name="gutenberg_native_hide_search_heading">検索見出しを非表示</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">ダブルタップしてラベルテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">ダブルタップしてボタンテキストを編集</string>
     <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
+    <string name="gutenberg_native_current_placeholder_text_is">現在のプレースホルダーテキストは</string>
     <string name="gutenberg_native_clear_search">検索をクリア</string>
     <string name="gutenberg_native_cancel_search">検索をキャンセル</string>
+    <string name="gutenberg_native_button_position">ボタンの位置</string>
+    <string name="gutenberg_native_button_outside">ボタンの外側</string>
+    <string name="gutenberg_native_button_inside">ボタンの内側</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$sです。%2$sは%3$s %4$sです。</string>
     <string name="get_likes_empty_state_title">「いいね」データの取得中にエラーが発生</string>
     <string name="get_likes_unknown_error">「いいね」の取得中に不明なエラーが発生しました。</string>
     <string name="get_likes_no_network_error">利用可能なネットワークがありません。</string>
     <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
     <string name="comment_status_unreplied">未返信</string>
-    <string name="gutenberg_native_table_of_contents">目次</string>
-    <string name="gutenberg_native_summary">要約</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">見出しリストを使って投稿を要約します。ここにリンクするには、見出しブロックに HTML アンカーを追加してください。</string>
-    <string name="gutenberg_native_document_outline">文書アウトライン</string>
-    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
+    <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
     <string name="reader_title_interests">トピックをフォロー</string>
     <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
@@ -154,7 +173,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">ダブルタップして音声ファイルを再生</string>
     <string name="gutenberg_native_choose_audio">音声ファイルを選択</string>
     <string name="gutenberg_native_audio_player">音声プレーヤー</string>
-    <string name="gutenberg_native_audio_file">音声ファイル</string>
     <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
     <string name="gutenberg_native_add_audio">音声を追加</string>
@@ -479,7 +497,6 @@ Language: ja_JP
     <string name="media_uploading_stock_library_photo">ストックメディアをアップロード中</string>
     <string name="media_uploading_default">メディアをアップロード中</string>
     <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
-    <string name="gutenberg_native_select_item">項目を選択</string>
     <string name="gutenberg_native_page_break">改ページ</string>
     <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
     <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
@@ -636,7 +653,6 @@ Language: ja_JP
     <string name="gutenberg_native_gradient_type">グラデーションタイプ</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">ダブルタップしてオプションを選択</string>
     <string name="gutenberg_native_customize_gradient">グラデーションをカスタマイズ</string>
-    <string name="photo_picker_use_gif">この GIF を使う</string>
     <string name="pages_list_author">ページ作成者</string>
     <string name="me">自分</string>
     <string name="error_media_thumbnail_not_loaded">メディアサムネイルを読み込めませんでした</string>
@@ -673,6 +689,7 @@ Language: ja_JP
     <string name="update_now">今すぐ更新</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
     <string name="gutenberg_native_move_to_top">トップに移動</string>
+    <string name="gutenberg_native_insert_mention">メンションを挿入</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">ダブルタップして「アクションシート」と利用可能オプションを開く</string>
     <string name="site_settings_select_page">ページを選択</string>
@@ -737,10 +754,10 @@ Language: ja_JP
     <string name="new_site_creation_creating_site_loading_1">サイト URL を取得</string>
     <string name="new_site_creation_creating_site_loading_subtitle">まもなくサイトの準備が完了します</string>
     <string name="new_site_creation_creating_site_loading_title">成功しました。\nほぼ終了</string>
+    <string name="gutenberg_native_block_settings">ブロックの設定</string>
     <string name="pages_and_posts_cancel_auto_upload">アップロードのキャンセル</string>
     <string name="gif_list_search_returned_unknown_error">リクエストの処理中に問題が発生しました</string>
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
-    <string name="gif_picker_search_hint">Tenor を検索</string>
     <string name="photo_picker_gif">Choose から選択</string>
     <string name="weekday_saturday">土曜日</string>
     <string name="weekday_friday">金曜日</string>
@@ -791,7 +808,10 @@ Language: ja_JP
     <string name="gutenberg_native_link_to">リンク先</string>
     <string name="gutenberg_native_link_settings">リンク設定</string>
     <string name="gutenberg_native_excerpt_length_words">抜粋の長さ (単語数)</string>
+    <string name="gutenberg_native_edit_cover_media">カバーメディアを編集</string>
     <string name="gutenberg_native_customize">カスタマイズ</string>
+    <string name="gutenberg_native_button_link_url">ボタンへのリンク用 URL</string>
+    <string name="gutenberg_native_border_radius">境界の半径</string>
     <string name="gutenberg_native_add_paragraph_block">段落ブロックを追加</string>
     <string name="gutenberg_native_video_settings">動画設定</string>
     <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
@@ -832,6 +852,7 @@ Language: ja_JP
     <string name="reader_filter_cta">フィルター</string>
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
     <string name="gutenberg_native_edit_video">動画を編集</string>
+    <string name="gutenberg_native_edit_media">メディアを編集</string>
     <string name="gutenberg_native_add_a_shortcode">ショートコードを追加…</string>
     <string name="post_list_author">投稿作成者</string>
     <string name="fab_create_desc">投稿を作成</string>
@@ -889,7 +910,6 @@ Language: ja_JP
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress メディアライブラリ</string>
     <string name="gutenberg_native_ungroup">グループ解除</string>
-    <string name="gutenberg_native_translate">翻訳</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">タップしてキーボードを非表示</string>
     <string name="gutenberg_native_tap_here_to_show_help">タップしてヘルプを表示</string>
     <string name="gutenberg_native_take_a_video">動画を撮る</string>
@@ -897,7 +917,6 @@ Language: ja_JP
     <string name="gutenberg_native_take_a_photo">写真を撮る</string>
     <string name="gutenberg_native_start_writing">執筆を開始…</string>
     <string name="gutenberg_native_unsupported">非サポート</string>
-    <string name="gutenberg_native_show_section">セクションを表示</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
     <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
     <string name="gutenberg_native_cut_block">ブロックを切り取る</string>
@@ -914,6 +933,7 @@ Language: ja_JP
     <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
     <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
+    <string name="gutenberg_native_link_inserted">リンクを挿入しました</string>
     <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
     <string name="gutenberg_native_hide_keyboard">キーボードを非表示</string>
     <string name="gutenberg_native_help_icon">ヘルプアイコン</string>
@@ -928,6 +948,7 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_move_the_block_down">ダブルタップしてブロックを下に移動</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">ダブルタップしてこの値を編集</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">ダブルタップと長押しで編集</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
     <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
@@ -1313,7 +1334,6 @@ Language: ja_JP
     <string name="stats_insights_share_post">投稿をシェア</string>
     <string name="stats_insights_create_post">投稿を作成</string>
     <string name="stats_insights_latest_post_message">「%2$s」を公開してから%1$sが経過しました。投稿のこれまでのパフォーマンスは次のとおりです。</string>
-    <string name="gif_picker_endless_scroll_network_error">ネットワークエラーのため、一部のメディアを読み込めませんでした。</string>
     <string name="gif_picker_initial_empty_text">GIF を検索してメディアライブラリに追加しましょう。</string>
     <string name="stats_referrer_views_label">表示数</string>
     <string name="stats_country_views_label">表示数</string>

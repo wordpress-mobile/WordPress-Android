@@ -82,6 +82,7 @@ import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.categories.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -1524,5 +1525,11 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_RESTORE_ACTIVITY_ID_KEY, activityId);
         activity.startActivityForResult(intent, resultCode);
+    }
+
+    public static void showCategoriesList(@NonNull Context context, @NonNull SiteModel site) {
+        Intent intent = new Intent(context, CategoriesListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 }
