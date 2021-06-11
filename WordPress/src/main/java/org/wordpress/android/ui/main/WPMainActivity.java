@@ -81,6 +81,7 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -1090,7 +1091,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             });
                     boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
                     if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
-                        mBloggingRemindersViewModel.showBottomSheet(site.getId());
+                        mBloggingRemindersViewModel.showBottomSheet(site.getId(), Screen.PROLOGUE);
                     }
                 }
                 break;

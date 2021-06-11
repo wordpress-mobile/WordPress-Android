@@ -3684,4 +3684,6 @@
     <string name="set_your_blogging_goals_button">Set goals</string>
     <string name="blogging_goals_n_times_a_week">%d times a week</string>
     <string name="blogging_goals_not_set">None set</string>
+    <string name="blogging_reminders_notify_me">Notify me</string>
+    <string name="blogging_reminders_done">Done</string>
 </resources>
