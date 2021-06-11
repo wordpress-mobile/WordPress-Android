@@ -35,7 +35,7 @@ GEM
     colored2 (3.1.2)
     commander (4.6.0)
       highline (~> 2.0.0)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     declarative (0.0.20)
     diffy (3.4.0)
     digest-crc (0.6.3)
@@ -101,7 +101,7 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-wpmreleasetoolkit (1.1.0)
+    fastlane-plugin-wpmreleasetoolkit (1.2.0)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
@@ -258,7 +258,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane (~> 2)
-  fastlane-plugin-wpmreleasetoolkit (~> 1.1)
+  fastlane-plugin-wpmreleasetoolkit (~> 1.2)
   nokogiri
   rmagick (~> 4.1)
 
