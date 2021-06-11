@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_ST
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETED_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETE_QUICK_START
-import org.wordpress.android.fluxc.action.SiteAction.CREATED_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.DELETE_SITE
@@ -32,11 +31,8 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_CO
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_POST_FORMATS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PROFILE_XML_RPC
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
@@ -101,8 +97,10 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorTyp
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.API
 import java.util.ArrayList
 import java.util.Locale
@@ -120,25 +118,30 @@ class SiteStore
     private val siteRestClient: SiteRestClient,
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val privateAtomicCookie: PrivateAtomicCookie,
-    private val siteSqlUtils: SiteSqlUtils
+    private val siteSqlUtils: SiteSqlUtils,
+    private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     // Payloads
-    data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError>()
-    data class RefreshSitesXMLRPCPayload(
-        @JvmField val username: String = "",
-        @JvmField val password: String = "",
-        @JvmField val url: String = ""
+    data class CompleteQuickStartPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val variant: String
     ) : Payload<BaseNetworkError>()
 
-    data class FetchSitesPayload(val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
+    data class RefreshSitesXMLRPCPayload(
+        @JvmField var username: String = "",
+        @JvmField var password: String = "",
+        @JvmField var url: String = ""
+    ) : Payload<BaseNetworkError>()
+
+    data class FetchSitesPayload(@JvmField val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
 
     data class NewSitePayload(
-        val siteName: String,
-        val language: String,
-        val visibility: SiteVisibility,
-        val segmentId: Long? = null,
-        val siteDesign: String? = null,
-        val dryRun: Boolean
+        @JvmField val siteName: String,
+        @JvmField val language: String,
+        @JvmField val visibility: SiteVisibility,
+        @JvmField val segmentId: Long? = null,
+        @JvmField val siteDesign: String? = null,
+        @JvmField val dryRun: Boolean
     ) : Payload<BaseNetworkError>() {
         constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
                 siteName,
@@ -159,36 +162,41 @@ class SiteStore
     }
 
     data class FetchedPostFormatsPayload(
-        val site: SiteModel,
-        val postFormats: List<PostFormatModel>
+        @JvmField val site: SiteModel,
+        @JvmField val postFormats: List<PostFormatModel>
     ) : Payload<PostFormatsError>()
 
-    data class DesignateMobileEditorForAllSitesPayload(
-        val editor: String,
-        val setOnlyIfEmpty: Boolean = true
+    data class DesignateMobileEditorForAllSitesPayload
+    @JvmOverloads constructor(
+        @JvmField val editor: String,
+        @JvmField val setOnlyIfEmpty: Boolean = true
     ) : Payload<SiteEditorsError>()
 
-    data class DesignateMobileEditorPayload(val site: SiteModel, val editor: String) : Payload<SiteEditorsError>()
+    data class DesignateMobileEditorPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val editor: String
+    ) : Payload<SiteEditorsError>()
+
     data class FetchedEditorsPayload(
-        val site: SiteModel,
-        val webEditor: String,
-        val mobileEditor: String
+        @JvmField val site: SiteModel,
+        @JvmField val webEditor: String,
+        @JvmField val mobileEditor: String
     ) : Payload<SiteEditorsError>()
 
     data class FetchBlockLayoutsPayload(
-        val site: SiteModel,
-        val supportedBlocks: List<String>?,
-        val previewWidth: Float?,
-        val previewHeight: Float?,
-        val scale: Float?,
-        val isBeta: Boolean?,
-        val preferCache: Boolean?
+        @JvmField val site: SiteModel,
+        @JvmField val supportedBlocks: List<String>?,
+        @JvmField val previewWidth: Float?,
+        @JvmField val previewHeight: Float?,
+        @JvmField val scale: Float?,
+        @JvmField val isBeta: Boolean?,
+        @JvmField val preferCache: Boolean?
     ) : Payload<BaseNetworkError>()
 
     data class FetchedBlockLayoutsResponsePayload(
-        val site: SiteModel,
-        val layouts: List<GutenbergLayout>? = null,
-        val categories: List<GutenbergLayoutCategory>? = null
+        @JvmField val site: SiteModel,
+        @JvmField val layouts: List<GutenbergLayout>? = null,
+        @JvmField val categories: List<GutenbergLayoutCategory>? = null
     ) : Payload<SiteError>() {
         constructor(site: SiteModel, error: SiteError?) : this(site) {
             this.error = error
@@ -196,13 +204,17 @@ class SiteStore
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
-        val editors: Map<String, String>? = null
+        @JvmField val editors: Map<String, String>? = null
     ) : Payload<SiteEditorsError>()
 
-    data class FetchedUserRolesPayload(val site: SiteModel, val roles: List<RoleModel>) : Payload<UserRolesError>()
+    data class FetchedUserRolesPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val roles: List<RoleModel>
+    ) : Payload<UserRolesError>()
+
     data class FetchedPlansPayload(
-        val site: SiteModel,
-        val plans: List<PlanModel>? = null
+        @JvmField val site: SiteModel,
+        @JvmField val plans: List<PlanModel>? = null
     ) : Payload<PlansError>() {
         constructor(site: SiteModel, error: PlansError) : this(site) {
             this.error = error
@@ -210,12 +222,12 @@ class SiteStore
     }
 
     data class FetchedPrivateAtomicCookiePayload(
-        val site: SiteModel,
-        val cookie: PrivateAtomicCookieResponse?
+        @JvmField val site: SiteModel,
+        @JvmField val cookie: PrivateAtomicCookieResponse?
     ) : Payload<PrivateAtomicCookieError>()
 
-    data class FetchPrivateAtomicCookiePayload(val siteId: Long)
-    data class FetchJetpackCapabilitiesPayload(val remoteSiteId: Long)
+    data class FetchPrivateAtomicCookiePayload(@JvmField val siteId: Long)
+    data class FetchJetpackCapabilitiesPayload(@JvmField val remoteSiteId: Long)
     data class FetchedJetpackCapabilitiesPayload(
         @JvmField val remoteSiteId: Long,
         @JvmField val capabilities: List<JetpackCapability> = listOf()
@@ -286,7 +298,7 @@ class SiteStore
 
     data class ConnectSiteInfoPayload
     @JvmOverloads constructor(
-        val url: String,
+        @JvmField val url: String,
         @JvmField val exists: Boolean = false,
         @JvmField val isWordPress: Boolean = false,
         @JvmField val hasJetpack: Boolean = false,
@@ -374,7 +386,7 @@ class SiteStore
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
-        @JvmField val message: String = ""
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class SiteEditorsError internal constructor(
@@ -414,14 +426,14 @@ class SiteStore
     @JvmOverloads
     constructor(
         @JvmField val type: DomainAvailabilityErrorType,
-        val message: String? = null
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class DomainSupportedStatesError
     @JvmOverloads
     constructor(
         @JvmField val type: DomainSupportedStatesErrorType,
-        val message: String? = null
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class DomainSupportedCountriesError(
@@ -438,11 +450,11 @@ class SiteStore
     // OnChanged Events
     data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
     data class OnSiteChanged(@JvmField val rowsAffected: Int = 0) : OnChanged<SiteError>() {
-        constructor(rowsAffected: Int = 0, siteError: SiteError) : this(rowsAffected) {
+        constructor(rowsAffected: Int = 0, siteError: SiteError?) : this(rowsAffected) {
             this.error = siteError
         }
 
-        constructor(siteError: SiteError) : this()
+        constructor(siteError: SiteError) : this(0, siteError)
     }
 
     data class OnSiteRemoved(@JvmField val mRowsAffected: Int) : OnChanged<SiteError>()
@@ -464,7 +476,7 @@ class SiteStore
         @JvmField val dryRun: Boolean = false,
         @JvmField val newSiteRemoteId: Long = 0
     ) : OnChanged<NewSiteError>() {
-        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError) : this(dryRun, newSiteRemoteId) {
+        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError?) : this(dryRun, newSiteRemoteId) {
             this.error = error
         }
     }
@@ -476,30 +488,33 @@ class SiteStore
     }
 
     class OnSiteExported() : OnChanged<ExportSiteError>() {
-        constructor(error: ExportSiteError) : this() {
+        constructor(error: ExportSiteError?) : this() {
             this.error = error
         }
     }
 
-    data class OnPostFormatsChanged(val site: SiteModel) : OnChanged<PostFormatsError>()
-    data class OnSiteEditorsChanged(val site: SiteModel, val rowsAffected: Int = 0) : OnChanged<SiteEditorsError>() {
-        constructor(site: SiteModel, error: SiteEditorsError) : this(site) {
+    data class OnPostFormatsChanged(@JvmField val site: SiteModel) : OnChanged<PostFormatsError>()
+    data class OnSiteEditorsChanged(
+        @JvmField val site: SiteModel,
+        @JvmField val rowsAffected: Int = 0
+    ) : OnChanged<SiteEditorsError>() {
+        constructor(site: SiteModel, error: SiteEditorsError?) : this(site) {
             this.error = error
         }
     }
 
     data class OnAllSitesMobileEditorChanged(
-        val rowsAffected: Int = 0,
+        @JvmField val rowsAffected: Int = 0,
             // True when all sites are self-hosted or wpcom backend response
-        val isNetworkResponse: Boolean = false,
-        val siteEditorsError: SiteEditorsError? = null
+        @JvmField val isNetworkResponse: Boolean = false,
+        @JvmField val siteEditorsError: SiteEditorsError? = null
     ) : OnChanged<SiteEditorsError>() {
         init {
             this.error = siteEditorsError
         }
     }
 
-    data class OnUserRolesChanged(val site: SiteModel) : OnChanged<UserRolesError>()
+    data class OnUserRolesChanged(@JvmField val site: SiteModel) : OnChanged<UserRolesError>()
     data class OnPlansFetched(
         @JvmField val site: SiteModel,
         @JvmField val plans: List<PlanModel>?
@@ -514,9 +529,9 @@ class SiteStore
     }
 
     data class OnPrivateAtomicCookieFetched(
-        val site: SiteModel?,
-        val success: Boolean,
-        val privateAtomicCookieError: PrivateAtomicCookieError? = null
+        @JvmField val site: SiteModel?,
+        @JvmField val success: Boolean,
+        @JvmField val privateAtomicCookieError: PrivateAtomicCookieError? = null
     ) : OnChanged<PrivateAtomicCookieError>() {
         init {
             this.error = privateAtomicCookieError
@@ -1130,12 +1145,18 @@ class SiteStore
         when (actionType) {
             FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
             FETCHED_PROFILE_XML_RPC -> updateSiteProfile(action.payload as SiteModel)
-            FETCH_SITE -> fetchSite(action.payload as SiteModel)
-            FETCH_SITES -> fetchSites(action.payload as FetchSitesPayload)
-            FETCHED_SITES -> handleFetchedSitesWPComRest(action.payload as SitesModel)
-            FETCH_SITES_XML_RPC -> fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload)
-            FETCHED_SITES_XML_RPC -> updateSites(action.payload as SitesModel)
-            UPDATE_SITE -> updateSite(action.payload as SiteModel)
+            FETCH_SITE -> coroutineEngine.launch(T.MAIN, this, "Fetch site") {
+                emitChange(fetchSite(action.payload as SiteModel))
+            }
+            FETCH_SITES -> coroutineEngine.launch(T.MAIN, this, "Fetch sites") {
+                emitChange(fetchSites(action.payload as FetchSitesPayload))
+            }
+            FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
+                emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
+            }
+            UPDATE_SITE -> {
+                emitChange(updateSite(action.payload as SiteModel))
+            }
             UPDATE_SITES -> updateSites(action.payload as SitesModel)
             DELETE_SITE -> deleteSite(action.payload as SiteModel)
             DELETED_SITE -> handleDeletedSite(action.payload as DeleteSiteResponsePayload)
@@ -1146,10 +1167,12 @@ class SiteStore
             REMOVE_WPCOM_AND_JETPACK_SITES -> removeWPComAndJetpackSites()
             SHOW_SITES -> toggleSitesVisibility(action.payload as SitesModel, true)
             HIDE_SITES -> toggleSitesVisibility(action.payload as SitesModel, false)
-            CREATE_NEW_SITE -> createNewSite(action.payload as NewSitePayload)
-            CREATED_NEW_SITE -> handleCreateNewSiteCompleted(action.payload as NewSiteResponsePayload)
-            FETCH_POST_FORMATS -> fetchPostFormats(action.payload as SiteModel)
-            FETCHED_POST_FORMATS -> updatePostFormats(action.payload as FetchedPostFormatsPayload)
+            CREATE_NEW_SITE -> coroutineEngine.launch(T.MAIN, this, "Create a new site") {
+                emitChange(createNewSite(action.payload as NewSitePayload))
+            }
+            FETCH_POST_FORMATS -> coroutineEngine.launch(T.MAIN, this, "Fetch post formats") {
+                emitChange(fetchPostFormats(action.payload as SiteModel))
+            }
             FETCH_SITE_EDITORS -> fetchSiteEditors(action.payload as SiteModel)
             FETCH_BLOCK_LAYOUTS -> fetchBlockLayouts(action.payload as FetchBlockLayoutsPayload)
             FETCHED_BLOCK_LAYOUTS -> handleFetchedBlockLayouts(action.payload as FetchedBlockLayoutsResponsePayload)
@@ -1216,20 +1239,22 @@ class SiteStore
         siteXMLRPCClient.fetchProfile(site)
     }
 
-    private fun fetchSite(site: SiteModel) {
-        if (site.isUsingWpComRestApi) {
+    suspend fun fetchSite(site: SiteModel): OnSiteChanged {
+        val updatedSite = if (site.isUsingWpComRestApi) {
             siteRestClient.fetchSite(site)
         } else {
             siteXMLRPCClient.fetchSite(site)
         }
+        return updateSite(updatedSite)
     }
 
-    private fun fetchSites(payload: FetchSitesPayload) {
-        siteRestClient.fetchSites(payload.filters)
+    suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
+        val result = siteRestClient.fetchSites(payload.filters)
+        return handleFetchedSitesWPComRest(result)
     }
 
-    private fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload) {
-        siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password)
+    suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
+        return updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
     }
 
     private fun updateSiteProfile(siteModel: SiteModel) {
@@ -1247,8 +1272,8 @@ class SiteStore
         emitChange(event)
     }
 
-    private fun updateSite(siteModel: SiteModel) {
-        val event = if (siteModel.isError) {
+    private fun updateSite(siteModel: SiteModel): OnSiteChanged {
+        return if (siteModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
@@ -1266,10 +1291,9 @@ class SiteStore
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
         }
-        emitChange(event)
     }
 
-    private fun updateSites(sitesModel: SitesModel) {
+    private fun updateSites(sitesModel: SitesModel): OnSiteChanged {
         val event = if (sitesModel.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(sitesModel.error))
@@ -1281,11 +1305,11 @@ class SiteStore
                 OnSiteChanged(res.rowsAffected)
             }
         }
-        emitChange(event)
+        return event
     }
 
-    private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel) {
-        val event = if (fetchedSites.isError) {
+    private fun handleFetchedSitesWPComRest(fetchedSites: SitesModel): OnSiteChanged {
+        return if (fetchedSites.isError) {
             // TODO: what kind of error could we get here?
             OnSiteChanged(SiteErrorUtils.genericToSiteError(fetchedSites.error))
         } else {
@@ -1298,7 +1322,6 @@ class SiteStore
             siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
         }
-        emitChange(event)
     }
 
     private fun createOrUpdateSites(sites: SitesModel): UpdateSitesResult {
@@ -1386,33 +1409,33 @@ class SiteStore
         return rowsAffected
     }
 
-    private fun createNewSite(payload: NewSitePayload) {
-        siteRestClient.newSite(
+    suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
+        val result = siteRestClient.newSite(
                 payload.siteName, payload.language, payload.visibility,
                 payload.segmentId, payload.siteDesign, payload.dryRun
         )
+        return handleCreateNewSiteCompleted(
+                payload = result
+        )
     }
 
-    private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload) {
-        emitChange(OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error))
+    private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload): OnNewSiteCreated {
+        return OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error)
     }
 
-    private fun fetchPostFormats(site: SiteModel) {
-        if (site.isUsingWpComRestApi) {
+    suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
+        val payload = if (site.isUsingWpComRestApi) {
             siteRestClient.fetchPostFormats(site)
         } else {
             siteXMLRPCClient.fetchPostFormats(site)
         }
-    }
-
-    private fun updatePostFormats(payload: FetchedPostFormatsPayload) {
         val event = OnPostFormatsChanged(payload.site)
         if (payload.isError) {
             event.error = payload.error
         } else {
             siteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
         }
-        emitChange(event)
+        return event
     }
 
     private fun fetchSiteEditors(site: SiteModel) {

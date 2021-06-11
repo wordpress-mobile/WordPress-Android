@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError
@@ -55,32 +57,35 @@ class SiteXMLRPCClient @Inject constructor(
         add(request)
     }
 
-    fun fetchSites(xmlrpcUrl: String, username: String, password: String) {
+    suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
         val params = listOf(username, password)
-        val request = xmlrpcRequestBuilder.buildGetRequest(
+        val response = xmlrpcRequestBuilder.syncGetRequest(
+                this,
                 xmlrpcUrl,
                 GET_USERS_SITES,
                 params,
-                Array<Any>::class.java,
-                { data ->
-                    val sites = sitesResponseToSitesModel(data, username, password)
-                    if (sites != null) {
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites))
-                    } else {
-                        val result = SitesModel()
-                        result.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(result))
-                    }
+                Array<Any>::class.java
+        )
+        return when (response) {
+            is Success -> {
+                val sites = sitesResponseToSitesModel(response.data, username, password)
+                if (sites != null) {
+                    sites
+                } else {
+                    val result = SitesModel()
+                    result.error = BaseNetworkError(INVALID_RESPONSE)
+                    result
                 }
-        ) { error ->
-            val sites = SitesModel()
-            sites.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesXmlRpcAction(sites))
+            }
+            is Error -> {
+                val sites = SitesModel()
+                sites.error = response.error
+                sites
+            }
         }
-        add(request)
     }
 
-    fun fetchSite(site: SiteModel) {
+    suspend fun fetchSite(site: SiteModel): SiteModel {
         val params = listOf(
                 site.selfHostedSiteId, site.username, site.password,
                 arrayOf(
@@ -97,52 +102,55 @@ class SiteXMLRPCClient @Inject constructor(
                         "jetpack_user_email"
                 )
         )
-        val request = xmlrpcRequestBuilder.buildGetRequest(
-                site.xmlRpcUrl, GET_OPTIONS, params,
-                Map::class.java,
-                { response ->
-                    val updatedSite = updateSiteFromOptions(response, site)
-                    mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite))
-                }
-        ) { error ->
-            val site = SiteModel()
-            site.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site))
+        val response = xmlrpcRequestBuilder.syncGetRequest(this, site.xmlRpcUrl, GET_OPTIONS, params, Map::class.java)
+        return when (response) {
+            is Success -> {
+                val updatedSite = updateSiteFromOptions(response.data, site)
+                updatedSite
+            }
+            is Error -> {
+                SiteModel().apply { error = response.error }
+            }
         }
-        add(request)
     }
 
-    fun fetchPostFormats(site: SiteModel) {
+    suspend fun fetchPostFormats(site: SiteModel): FetchedPostFormatsPayload {
         val params = listOf(site.selfHostedSiteId, site.username, site.password)
-        val request = xmlrpcRequestBuilder.buildGetRequest(
-                site.xmlRpcUrl, GET_POST_FORMATS, params, Map::class.java,
-                { response ->
-                    val postFormats = responseToPostFormats(response, site)
-                    if (postFormats != null) {
-                        val payload = FetchedPostFormatsPayload(site, postFormats)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
-                    } else {
-                        val payload = FetchedPostFormatsPayload(site, emptyList())
-                        payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
-                    }
+        val response = xmlrpcRequestBuilder.syncGetRequest(
+                this,
+                site.xmlRpcUrl,
+                GET_POST_FORMATS,
+                params,
+                Map::class.java
+        )
+        return when (response) {
+            is Success -> {
+                val postFormats = responseToPostFormats(response.data)
+                if (postFormats != null) {
+                    val payload = FetchedPostFormatsPayload(site, postFormats)
+                    payload
+                } else {
+                    val payload = FetchedPostFormatsPayload(site, emptyList())
+                    payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                    payload
                 }
-        ) { error ->
-            val postFormatsError: PostFormatsError = when (error.type) {
-                INVALID_RESPONSE -> PostFormatsError(
-                        PostFormatsErrorType.INVALID_RESPONSE,
-                        error.message
-                )
-                else -> PostFormatsError(
-                        GENERIC_ERROR,
-                        error.message
-                )
             }
-            val payload = FetchedPostFormatsPayload(site, emptyList())
-            payload.error = postFormatsError
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
+            is Error -> {
+                val postFormatsError: PostFormatsError = when (response.error.type) {
+                    INVALID_RESPONSE -> PostFormatsError(
+                            PostFormatsErrorType.INVALID_RESPONSE,
+                            response.error.message
+                    )
+                    else -> PostFormatsError(
+                            GENERIC_ERROR,
+                            response.error.message
+                    )
+                }
+                val payload = FetchedPostFormatsPayload(site, emptyList())
+                payload.error = postFormatsError
+                payload
+            }
         }
-        add(request)
     }
 
     private fun profileResponseToAccountModel(response: Map<*, *>?, site: SiteModel): SiteModel? {
@@ -276,7 +284,7 @@ class SiteXMLRPCClient @Inject constructor(
         return oldModel
     }
 
-    private fun responseToPostFormats(response: Map<*, *>, site: SiteModel): List<PostFormatModel>? {
+    private fun responseToPostFormats(response: Map<*, *>): List<PostFormatModel>? {
         return SiteUtils.getValidPostFormatsOrNull(response)
     }
 }
