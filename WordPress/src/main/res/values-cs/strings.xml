@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-01 07:46:34+0000
+Translation-Revision-Date: 2021-06-08 08:26:09+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Nastavení okrajů</string>
+    <string name="storage_utils_dialog_dont_show_button">Neptat se znovu</string>
+    <string name="storage_utils_dialog_ok_button">Zobrazit úložiště</string>
+    <string name="storage_utils_dialog_message">Před zveřejněním musíme obsah uložit do zařízení. Zkontrolujte své nastavení úložiště a odeberte soubory, abyste uvolnili místo.</string>
+    <string name="storage_utils_dialog_title">Na zařízení není dostatek místa</string>
+    <string name="gutenberg_native_y_axis_position">Pozice na ose Y</string>
+    <string name="gutenberg_native_x_axis_position">Pozice na ose X</string>
+    <string name="gutenberg_native_type_a_url">Vložte URL</string>
+    <string name="gutenberg_native_show_media_on_right">Zobrazit média vpravo</string>
+    <string name="gutenberg_native_show_media_on_left">Zobrazit média vlevo</string>
+    <string name="gutenberg_native_s_has_url_set">%s má nastavenou URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s nemá nastavenou URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Přidejte obsah kliknutím</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s převeden na běžné bloky</string>
+    <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_overlay">Překryv</string>
+    <string name="gutenberg_native_optional_placeholder">Volitelný zástupný text…</string>
+    <string name="gutenberg_native_opacity">Průhlednost</string>
+    <string name="gutenberg_native_minimum_height">Minimální výška</string>
+    <string name="gutenberg_native_media_text_settings">Nastavení médií a textu</string>
+    <string name="gutenberg_native_media_options">Nastavení médií</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">Neplatná URL. Audio soubor se nepodařilo nalézt.</string>
+    <string name="gutenberg_native_insert_crosspost">Vložit crosspost</string>
+    <string name="gutenberg_native_fixed_background">Statické pozadí</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Potáhnutím upravíte ohnisko</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Dvojitým klepnutím otevřete spodní list pro přídání obrázku nebo videa</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Dvojitým klepnutím otevřete akční list pro přidání obrázku nebo videa</string>
+    <string name="gutenberg_native_dimensions">Rozměry</string>
+    <string name="gutenberg_native_current_unit_is_s">Aktuální jednotka je %s</string>
+    <string name="gutenberg_native_crosspost">Crosspost</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Oříznout obrázek, aby zaplnil celý sloupec</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Převést na běžné bloky</string>
+    <string name="gutenberg_native_columns_settings">Nastavení sloupců</string>
+    <string name="gutenberg_native_clear_media">Vymazat média</string>
+    <string name="gutenberg_native_button_width">Šířka tlačítka</string>
+    <string name="gutenberg_native_add_link_to_s">Přídat odkaz na %s</string>
+    <string name="gutenberg_native_add_link_text">Přidat text odkazu</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Přidat obrázek nebo video</string>
+    <string name="error_media_path_is_directory">Cesta vede ke složce místo k média souboru</string>
+    <string name="error_media_could_not_find_media_in_path">Na cestě se nám nepodařilo najít média soubor</string>
+    <string name="error_media_unexpected_empty_media_file_path">Cesta k média souboru je neočekávaně prázdná</string>
+    <string name="error_media_file_type_not_allowed">Tento typ souboru není povolen</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="gutenberg_native_add_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
@@ -19,14 +63,19 @@ Language: cs_CZ
     <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
     <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
     <string name="gutenberg_native_width_settings">Nastavení šířky</string>
+    <string name="gutenberg_native_column_settings">Nastavení sloupců</string>
     <string name="user_profile_untitled_site">(bez názvu)</string>
     <string name="user_profile_site_section_header">Web</string>
     <string name="user_profile_bottom_sheet_description">Informace spodního listu profilu uživatele</string>
     <string name="likes_list_screen_title">Seznam to se mi líbí %s</string>
+    <string name="gutenberg_native_write_title">Zadejte název…</string>
     <string name="gutenberg_native_write_code">Napsat kód…</string>
     <string name="gutenberg_native_sorting_and_filtering">Filtry a řazení</string>
     <string name="gutenberg_native_show_download_button">Zobrazit tlačítko pro stažení</string>
+    <string name="gutenberg_native_s_social_icon">%s ikona sociální sítě</string>
     <string name="gutenberg_native_shortcode">Zdrojový kód</string>
+    <string name="gutenberg_native_mention">Zmínit</string>
+    <string name="gutenberg_native_add_label">Přidejte štítek…</string>
     <string name="gutenberg_native_read_more">Číst dále</string>
     <string name="gutenberg_native_preload">Předběžně načíst</string>
     <string name="gutenberg_native_post_meta_settings">Nastavení dalších informací příspěvku</string>
@@ -36,6 +85,7 @@ Language: cs_CZ
     <string name="gutenberg_native_media_area">Oblast média</string>
     <string name="gutenberg_native_loop">Smyčka</string>
     <string name="gutenberg_native_link_to_12d6f96a">Odkaz na</string>
+    <string name="gutenberg_native_link_label">Popisek odkazu</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">%1$d obrázek z %2$d v galerii</string>
     <string name="gutenberg_native_heading_d">Nadpis %d</string>
     <string name="gutenberg_native_featured">Doporučené</string>
@@ -44,11 +94,13 @@ Language: cs_CZ
     <string name="gutenberg_native_code">Zdrojový kód</string>
     <string name="gutenberg_native_change_heading_level">Změnit úroveň nadpisu</string>
     <string name="gutenberg_native_browser_default">Určeno prohlížečem</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Stručně popište odkaz, abyste pomohli uživatelům s čtečkou obrazovky.</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blok byl odstraněn nebo není k dispozici.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Blok nelze vykreslit uvnitř sebe.</string>
     <string name="gutenberg_native_autoplay">Automatické přehrávání</string>
     <string name="gutenberg_native_auto">Auto</string>
     <string name="gutenberg_native_attachment_page">Stránka přílohy</string>
+    <string name="gutenberg_native_cover">Pokrýt</string>
     <string name="gutenberg_native_add_text">Přidat text…</string>
     <string name="gutenberg_native_add_caption">Přidat titulek</string>
     <string name="login_no_jetpack_sites">Nebyly nalezeny žádné stránky Jetpack</string>
@@ -692,8 +744,10 @@ Language: cs_CZ
     <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
     <string name="gutenberg_native_open_block_actions_menu">Otevřete nabídku blokovat akce</string>
     <string name="gutenberg_native_move_to_top">Přesunout nahoru</string>
+    <string name="gutenberg_native_remove">Odebrat</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dvojitým klepnutím otevřete spodní list s dostupnými možnostmi</string>
+    <string name="gutenberg_native_insert_mention">Vložit zmínku</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Vybraná domovská stránka a stránka pro příspěvky nemohou být stejné.</string>
     <string name="site_settings_classic_blog">Klasický blog</string>
     <string name="site_settings_static_homepage">Statická domovská stránka</string>
@@ -744,6 +798,7 @@ Language: cs_CZ
     <string name="reader_no_site_to_reblog_detail">Jakmile vytvoříte web na WordPress.com, můžete přesdílet obsah, který se vám líbí, na svůj vlastní web.</string>
     <string name="reader_no_site_to_reblog_action">Spravovat weby</string>
     <string name="reader_reblog_error">Reblog se nezdařil</string>
+    <string name="gutenberg_native_number_of_columns">Počet sloupců</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dvojitým klepnutím přesunete blok doleva</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dvojitým klepnutím přesunete blok doprava</string>
     <string name="gutenberg_native_move_block_left">Přesuňte blok doleva</string>
@@ -813,6 +868,7 @@ Language: cs_CZ
     <string name="gutenberg_native_customize">PŘIZPŮSOBIT</string>
     <string name="gutenberg_native_add_paragraph_block">Přidat blok odstavců</string>
     <string name="gutenberg_native_video_settings">Nastavení videa</string>
+    <string name="gutenberg_native_border_radius">Zaoblení okrajů</string>
     <string name="create_post_page_fab_tooltip_contributors">Vytvořit příspěvek</string>
     <string name="post_list_tab_trashed_posts">Smazané</string>
     <string name="post_list_tab_scheduled_posts">Naplánováno</string>
@@ -936,6 +992,8 @@ Language: cs_CZ
     <string name="gutenberg_native_hide_keyboard">Skrýt klávesnici</string>
     <string name="gutenberg_native_image_caption_s">Titulek obrázku. %s</string>
     <string name="gutenberg_native_move_block_down">Přesuňte blok dolů</string>
+    <string name="gutenberg_native_link_text">Text odkazu</string>
+    <string name="gutenberg_native_link_inserted">Odkaz vložen</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Poslední změnu provedete dvojitým klepnutím</string>
     <string name="gutenberg_native_double_tap_to_select">Vyberte dvojitým klepnutím</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Dvojitým klepnutím vyberte video</string>
@@ -1477,8 +1535,8 @@ Language: cs_CZ
     <string name="people_empty_list_filtered_email_followers">Zatím žádné e-mailové následovníci</string>
     <string name="reader_empty_followed_blogs_title">Žádné sledované weby</string>
     <string name="reader_empty_followed_blogs_button_discover">Objevte weby</string>
-    <string name="reader_empty_followed_blogs_button_followed">Přejít na sledování</string>
     <string name="reader_empty_posts_liked_title">Zatím se nic nelíbilo</string>
+    <string name="reader_empty_followed_blogs_button_followed">Přejít na sledované</string>
     <string name="activity_log_limited_content_on_free_plan">Jelikož máte bezplatný plán, uvidíte ve své aktivitě omezené události.</string>
     <string name="notifications_empty_followers">Zatím žádní fanoušci</string>
     <string name="notifications_empty_likes">Zatím žádné to se mi líbí</string>
@@ -1911,7 +1969,7 @@ Language: cs_CZ
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Zvolit zvuk</string>
     <string name="notification_settings_category_sights_and_sounds">Zobrazení a zvuky</string>
     <string name="notification_settings_item_other_account_emails">E-mail z WordPress.com</string>
-    <string name="notification_settings_item_other_pending_drafts">Upozorňovat jestliže jsou nevyřízené koncepty</string>
+    <string name="notification_settings_item_other_pending_drafts">Upozorňovat na nedokončené koncepty</string>
     <string name="notification_settings_item_other_comments_other_blogs">Komentáře na jiných webech</string>
     <string name="notification_settings_category_other">Jiné</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Všechny moje weby</string>
