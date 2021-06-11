@@ -86,6 +86,7 @@ class WPComGsonRequestBuilder
      * @param url the request URL
      * @param body the content body, which will be converted to JSON using [Gson][com.google.gson.Gson]
      * @param clazz the class defining the expected response
+     * @param retryPolicy optional retry policy for the request
      */
     suspend fun <T> syncPostRequest(
         restClient: BaseWPComRestClient,
