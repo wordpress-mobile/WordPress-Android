@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -654,6 +655,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
+    @SuppressLint("StaticFieldLeak")
     private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
         @Override
         protected void onPreExecute() {

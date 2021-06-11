@@ -1,8 +1,11 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.6
+-----
+* [*] Disables the ability to open the editor for Post Pages [#14523]
+
 17.5
 -----
-* [**] Block Editor:a11y: Bug fix: Allow stepper cell to be selected by screenreader [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3362]
 * [**] Block Editor: Audio block: Add Insert from URL functionality. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3031]
 * [***] Block Editor: Slash command to insert new blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3250]
 * [***] Block Editor: New Block: Reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3490]

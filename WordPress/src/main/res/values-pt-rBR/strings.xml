@@ -10,7 +10,6 @@ Language: pt_BR
     <string name="gutenberg_native_add_link">ADICIONAR LINK</string>
     <string name="login_empty_view_try_another_account">Tente com outra conta</string>
     <string name="login_empty_view_see_instructions">Ver instruções</string>
-    <string name="login_no_jetpack_sites_error_message">Se você já tem um site, precisará instalar o plugin gratuito Jetpack e conectá-lo à sua conta do WordPress.</string>
     <string name="login_empty_view_avatar_content_description">Sua foto de perfil</string>
     <string name="login_not_a_jetpack_site">Para utilizar este aplicativo em %1$s você precisa ter o plugin Jetpack instalado e conectado à sua conta do WordPress.com. </string>
     <string name="gutenberg_native_size">Tamanho</string>
@@ -22,6 +21,7 @@ Language: pt_BR
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Informação de perfil do usuário no final da página</string>
     <string name="likes_list_screen_title">Lista de likes %s</string>
+    <string name="gutenberg_native_write_title">Insira o título…</string>
     <string name="gutenberg_native_write_code">Insira o código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordem e filtros</string>
     <string name="gutenberg_native_show_download_button">Mostrar botão de download</string>
@@ -35,10 +35,10 @@ Language: pt_BR
     <string name="gutenberg_native_media_area">Área de mídia</string>
     <string name="gutenberg_native_loop">Loop</string>
     <string name="gutenberg_native_link_to_12d6f96a">Link para</string>
+    <string name="gutenberg_native_link_label">Rótulo do link</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imagem %1$d de %2$d na galeria</string>
     <string name="gutenberg_native_heading_d">Título %d</string>
     <string name="gutenberg_native_featured">Em destaque</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Digite aqui o URL da mídia a ser incorporada…</string>
     <string name="gutenberg_native_edit_image">Editar imagem</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
     <string name="gutenberg_native_code">Código</string>
@@ -64,8 +64,6 @@ Language: pt_BR
     <string name="like_faces_singular_text">Um blogueiro curtiu disso.</string>
     <string name="like_title_plural">%d curtidas</string>
     <string name="like_title_singular">1 curtida</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Digite as credenciais de seu servidor para corrigir ameaças.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Digite as credenciais de seu servidor para corrigir a ameaça.</string>
     <string name="suggestion">Sugestão:</string>
     <string name="gutenberg_native_search_blocks">Pesquisar blocos</string>
     <string name="gutenberg_native_search_block">Pesquisar bloco</string>
@@ -78,11 +76,6 @@ Language: pt_BR
     <string name="get_likes_no_network_error">Nenhuma rede disponível</string>
     <string name="comments_empty_list_filtered_unreplied">Nenhum comentário não respondido</string>
     <string name="comment_status_unreplied">Não respondido</string>
-    <string name="gutenberg_native_table_of_contents">Tabela de conteúdos</string>
-    <string name="gutenberg_native_summary">sumário</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Exiba uma lista resumida com os títulos de seu post. Adicione âncoras HTML aos blocos de Título para adicionar links aqui.</string>
-    <string name="gutenberg_native_document_outline">visão geral do documento</string>
-    <string name="gutenberg_native_buttongroup">Grupo de botões</string>
     <string name="jetpack_brute_force_allowlist_title">Endereços IP sempre permitidos</string>
     <string name="site_settings_denylist_title">Comentários não permitidos</string>
     <string name="reader_title_interests">Seguir tópicos</string>
@@ -164,7 +157,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Dois cliques para ouvir arquivo de áudio</string>
     <string name="gutenberg_native_choose_audio">Escolher áudio</string>
     <string name="gutenberg_native_audio_player">Tocador de áudio</string>
-    <string name="gutenberg_native_audio_file">arquivo de áudio</string>
     <string name="gutenberg_native_audio_caption_s">Legenda do áudio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Legenda de áudio. Vazia</string>
     <string name="gutenberg_native_add_audio">ADICIONAR ÁUDIO</string>
@@ -488,7 +480,6 @@ Language: pt_BR
     <string name="media_uploading_gif_library_photo">Enviando o arquivo gif</string>
     <string name="media_uploading_stock_library_photo">Enviando mídia</string>
     <string name="media_uploading_default">Enviando mídia</string>
-    <string name="gutenberg_native_select_item">Selecionar item</string>
     <string name="gutenberg_native_search_or_type_url">Pesquisar ou digitar o URL</string>
     <string name="gutenberg_native_page_break">Quebra de página</string>
     <string name="gutenberg_native_add_this_telephone_link">Adicionar este telefone como link</string>
@@ -647,7 +638,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
     <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
     <string name="pages_list_author">Autor da página</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">Não foi possível carregar a miniatura do arquivo</string>
     <string name="menu_content_info">Estrutura do conteúdo</string>
     <string name="everyone">Todos</string>
@@ -683,6 +673,7 @@ Language: pt_BR
     <string name="update_now">Atualizar agora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
     <string name="gutenberg_native_move_to_top">Mover para o topo</string>
+    <string name="gutenberg_native_insert_mention">Inserir menção</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toque duas vezes para abrir a janela de ações com as opções disponíveis</string>
     <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
@@ -751,7 +742,6 @@ Language: pt_BR
     <string name="pages_and_posts_cancel_auto_upload">Cancelar envio</string>
     <string name="gif_list_search_returned_unknown_error">Houve um problema durante a solicitação</string>
     <string name="gif_powered_by_tenor">Desenvolvido por Tenor</string>
-    <string name="gif_picker_search_hint">Pesquisar no Tenor</string>
     <string name="photo_picker_gif">Escolher do Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Sexta-feira</string>
@@ -843,6 +833,7 @@ Language: pt_BR
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Legenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar vídeo</string>
+    <string name="gutenberg_native_edit_media">Editar mídia</string>
     <string name="gutenberg_native_add_a_shortcode">Adicionar um shortcode…</string>
     <string name="post_list_author">Autor do post</string>
     <string name="fab_create_desc">Criar um post</string>
@@ -901,14 +892,12 @@ Language: pt_BR
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de mídia do WordPress</string>
     <string name="gutenberg_native_unsupported">Não compatível</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traduzir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
     <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
     <string name="gutenberg_native_start_writing">Comece a escrever…</string>
-    <string name="gutenberg_native_show_section">Mostrar seção</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
     <string name="gutenberg_native_cut_block">Recortar bloco</string>
@@ -925,6 +914,7 @@ Language: pt_BR
     <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
+    <string name="gutenberg_native_link_inserted">Link adicionado</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
     <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
@@ -939,6 +929,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toque duas vezes para mover o bloco para baixo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toque duas vezes e segure para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
     <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu um erro desconhecido. Tente novamente.</string>
@@ -1299,7 +1290,6 @@ Language: pt_BR
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
     <string name="stats_cannot_be_started">Não conseguimos abrir as estatísticas agora. Tente novamente mais tarde.</string>
-    <string name="gif_picker_endless_scroll_network_error">Alguns arquivos não puderam ser enviados devido a problemas com a conexão.</string>
     <string name="gif_picker_empty_search_list">Nenhuma mídia corresponde à sua pesquisa</string>
     <string name="gif_picker_initial_empty_text">Pesquisar para encontrar gifs para adicionar à sua biblioteca de mídias.</string>
     <string name="stats_author_views_label">Visualizações</string>
@@ -1866,7 +1856,7 @@ Language: pt_BR
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">Tem certeza de que quer desconectar o Jetpack do site?</string>
     <string name="jetpack_disconnect_pref_title">\"Desconectar do WordPress.com\"</string>
-    <string name="site_settings_jetpack_allowlist_description">Você pode configurar um endereço IP ou diversos endereços como \"Sempre permitidos\" para evitar que sejam bloqueados pelo Jetpack. IPv4 e IPv6 são aceitos. Para especificar um intervalo, insira o menor e o maior valor separados por um traço. Exemplo: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Você pode configurar um endereço IP ou diversos endereços como \"Sempre permitidos\" para evitar que sejam bloqueados pelo Jetpack. IPv4 e IPv6 são aceitos. Para especificar um intervalo, insira o menor e o maior valor separados por um traço. Exemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Exigir autenticação em duas etapas</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar contas usando o e-mail</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir login com o WordPress.com</string>

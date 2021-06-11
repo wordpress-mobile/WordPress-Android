@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-27 13:54:09+0000
+Translation-Revision-Date: 2021-06-02 11:01:35+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
-    <string name="gutenberg_native_double_tap_to_add_a_link">انقر نقرًا مزدوجًا لإضافة رابط.</string>
     <string name="gutenberg_native_add_link">إضافة رابط</string>
     <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
-    <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تثبيت إضافة Jetpack المجانية وربطها بحسابك على ووردبريس.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
+    <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تنصيب إضافة Jetpack المجانية وربطها بحسابك على WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">صورة ملفك الشخصي</string>
-    <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على ووردبريس.كوم.</string>
+    <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على WordPress.com.</string>
     <string name="gutenberg_native_audio_settings">إعدادات الصوت</string>
     <string name="gutenberg_native_image_settings">إعدادات الصورة</string>
     <string name="gutenberg_native_size">حجم</string>
     <string name="gutenberg_native_move_image_backward">تحريك الصورة إلى الخلف</string>
     <string name="gutenberg_native_move_image_forward">تحريك الصورة إلى الأمام</string>
+    <string name="gutenberg_native_column_settings">إعدادات العمود</string>
+    <string name="gutenberg_native_width_settings">إعدادات العرض</string>
     <string name="user_profile_site_section_header">الموقع</string>
     <string name="user_profile_untitled_site">(بدون عنوان)</string>
     <string name="user_profile_bottom_sheet_description">معلومات الورقة السفلية لملف المستخدم الشخصي</string>
     <string name="likes_list_screen_title">قائمة الإعجابات %s</string>
+    <string name="gutenberg_native_write_title">كتابة عنوان…</string>
     <string name="gutenberg_native_write_code">كتابة كود…</string>
     <string name="gutenberg_native_sorting_and_filtering">الفرز والتصفية</string>
     <string name="gutenberg_native_show_download_button">عرض زر التنزيل</string>
+    <string name="gutenberg_native_s_social_icon">أيقونة %s الاجتماعية</string>
     <string name="gutenberg_native_shortcode">الكود القصير</string>
+    <string name="gutenberg_native_mention">الإشارة</string>
+    <string name="gutenberg_native_add_label">إضافة تسمية…</string>
     <string name="gutenberg_native_read_more">قراءة المزيد</string>
     <string name="gutenberg_native_post_content_settings">إعدادات محتوى المقالة</string>
     <string name="gutenberg_native_post_meta_settings">إعدادات البيانات الوصفية للمقالة</string>
@@ -34,21 +40,23 @@ Language: ar
     <string name="gutenberg_native_media_file">ملف الوسائط</string>
     <string name="gutenberg_native_metadata">البيانات الوصفية</string>
     <string name="gutenberg_native_loop">حلقة</string>
+    <string name="gutenberg_native_link_label">تسمية الرابط</string>
     <string name="gutenberg_native_link_to_12d6f96a">رابط لـ</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">صورة %1$d من %2$d في المعرض</string>
     <string name="gutenberg_native_heading_d">العنوان %d</string>
     <string name="gutenberg_native_featured">مميز</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">أدخل الرابط لتضمينه هنا…</string>
     <string name="gutenberg_native_edit_image">تحرير الصورة</string>
     <string name="gutenberg_native_display_post_date">عرض تاريخ النشر</string>
     <string name="gutenberg_native_change_heading_level">تغيير مستوى العنوان</string>
     <string name="gutenberg_native_code">شفرة</string>
     <string name="gutenberg_native_browser_default">المتصفح الافتراضي</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
     <string name="gutenberg_native_attachment_page">صفحة المرفق</string>
     <string name="gutenberg_native_auto">تلقائي</string>
     <string name="gutenberg_native_autoplay">تشغيل تلقائي</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">لا يمكن تقديم المكوّن داخل نفسه.</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">لقد تم حذف المكوّن أو أنه غير متاح.</string>
+    <string name="gutenberg_native_cover">غلاف</string>
     <string name="gutenberg_native_add_text">إضافة نص…</string>
     <string name="gutenberg_native_add_caption">إضاقة تسمية توضيحية</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
@@ -65,26 +73,37 @@ Language: ar
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">وصف الغرض من الصورة. اتركه فارغًا إذا كانت الصورة زخرفية أو عنصر تزيين بشكل عام. </string>
     <string name="suggestion">اقتراح:</string>
     <string name="like_title_singular">إعجاب واحد</string>
-    <string name="threat_fix_enter_server_creds_message_singular">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديد.</string>
-    <string name="threat_fix_enter_server_creds_message_plural">أدخل بيانات اعتماد الخادم الخاص بك لإصلاح التهديدات.</string>
+    <string name="gutenberg_native_use_icon_button">استخدام زر الأيقونة</string>
     <string name="gutenberg_native_search_blocks">البحث في المكوّنات</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">زر البحث. نص الزر الحالي هو</string>
+    <string name="gutenberg_native_search_input_field">حقل إدخال البحث.</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">تسمية مكون البحث. النص الحالي هو</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">لم يتم تعيين عنصر نائب مخصص</string>
+    <string name="gutenberg_native_hide_search_heading">إخفاء عنوان البحث</string>
     <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
+    <string name="gutenberg_native_no_button">بدون زر</string>
     <string name="gutenberg_native_search_block">مكوّن بحث</string>
+    <string name="gutenberg_native_inside">داخلي</string>
+    <string name="gutenberg_native_outside">خارجي</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">أنقر نقرًا مزدوجًا لتحرير نص الزر</string>
     <string name="gutenberg_native_clear_search">مسح البحث</string>
     <string name="gutenberg_native_cancel_search">إلغاء البحث</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
+    <string name="gutenberg_native_current_placeholder_text_is">نص العنصر النائب الحالي هو</string>
+    <string name="gutenberg_native_button_position">موضع الزر</string>
+    <string name="gutenberg_native_button_outside">زر خارجي</string>
+    <string name="gutenberg_native_button_inside">زر داخلي</string>
     <string name="get_likes_empty_state_title">حدث خطأ أثناء الحصول على بيانات الإعجابات</string>
     <string name="get_likes_unknown_error">حدث خطأ غير معروف أثناء الحصول على الإعجابات.</string>
     <string name="comments_empty_list_filtered_unreplied">لا توجد تعليقات لم يتم الرد عليها</string>
     <string name="comment_status_unreplied">لم يتم الرد عليها</string>
     <string name="get_likes_no_network_error">لا توجد شبكة متاحة.</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">تلخيص مقالتك بقائمة من العناوين. أضف روابط القفز HTML إلى مكوّنات العناوين لربطها هنا.</string>
-    <string name="gutenberg_native_summary">ملخّص (موجز)</string>
-    <string name="gutenberg_native_table_of_contents">جدول المحتويات</string>
-    <string name="gutenberg_native_buttongroup">مجموعة أزرار</string>
-    <string name="gutenberg_native_document_outline">ملخص عناوين المستند</string>
+    <string name="gutenberg_native_search_settings">إعدادات البحث</string>
     <string name="site_settings_denylist_title">التعليقات غير المسموح بها</string>
     <string name="jetpack_brute_force_allowlist_title">عناوين IP المسموح بها دائمًا</string>
+    <string name="gutenberg_native_add_button_text">إضافة نصّ للزر</string>
     <string name="reader_title_interests">متابعة المواضيع</string>
     <string name="activity_log_backup_download_notice_download_action">تنزيل</string>
     <string name="activity_log_backup_download_notice_dismiss_action">تجاهل</string>
@@ -167,11 +186,11 @@ Language: ar
     <string name="gutenberg_native_add_audio">أضف ملف صوتي</string>
     <string name="gutenberg_native_audio_caption_empty">تسمية الملف الصوتي. فارغة</string>
     <string name="gutenberg_native_audio_caption_s">تسمية الملف الصوتي. %s</string>
-    <string name="gutenberg_native_audio_file">ملف صوت</string>
     <string name="gutenberg_native_audio_player">مشغل الصوت</string>
     <string name="gutenberg_native_choose_audio">اختيار الصوت</string>
     <string name="people_optional_custom_message_helper_text">اختياري: أدخل رسالة مخصصة يتم إرسالها مع دعوتك.</string>
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">أنقر نقرًا مزدوجًا للاستماع إلى ملف الصوت</string>
+    <string name="gutenberg_native_audio_file">ملف صوت</string>
     <string name="scan_here_to_help">نحن هنا لمساعدتك</string>
     <string name="threat_found_header">المعثور عليه</string>
     <string name="threat_status_fixed">تمت المعالجة</string>
@@ -488,7 +507,6 @@ Language: ar
     <string name="media_uploading_gif_library_photo">رفع وسائط بتنسيق gif</string>
     <string name="media_uploading_stock_library_photo">رفع وسائط المخزون</string>
     <string name="media_uploading_default">رفع الوسائط</string>
-    <string name="gutenberg_native_select_item">تحديد عنصر</string>
     <string name="gutenberg_native_search_or_type_url">ابحث أو اكتب رابطًا</string>
     <string name="gutenberg_native_page_break">فاصل الصفحة</string>
     <string name="gutenberg_native_add_this_telephone_link">أضف رابط الهاتف هذا</string>
@@ -647,7 +665,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
     <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
     <string name="everyone">الجميع</string>
-    <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
     <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
     <string name="me">أنا</string>
     <string name="pages_list_author">كاتب الصفحة</string>
@@ -683,6 +700,8 @@ Language: ar
     <string name="update_now">قم بالتحديث الآن</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
     <string name="gutenberg_native_move_to_top">تحريك للأعلى</string>
+    <string name="gutenberg_native_remove">إزالة</string>
+    <string name="gutenberg_native_insert_mention">إدراج إشارة</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">النقر المزدوج لفتح ورقة الإجراءات التي تحتوي على خيارات متوافرة</string>
     <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
@@ -735,6 +754,7 @@ Language: ar
     <string name="copy_text">نسخ</string>
     <string name="reader_no_site_to_reblog_title">لا تتوافر مواقع WordPress.com</string>
     <string name="reader_no_site_to_reblog_detail">بمجرد إنشاء موقع WordPress.com، يمكنك إعادة تدوين المحتوى الذي أعجبك على موقعك الخاص.</string>
+    <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
@@ -751,7 +771,6 @@ Language: ar
     <string name="pages_and_posts_cancel_auto_upload">إلغاء الرفع</string>
     <string name="gif_list_search_returned_unknown_error">حدثت مشكلة في أثناء معالجة الطلب</string>
     <string name="gif_powered_by_tenor">مدعوم من Tenor</string>
-    <string name="gif_picker_search_hint">البحث في Tenor</string>
     <string name="photo_picker_gif">الاختيار من Tenor</string>
     <string name="weekday_saturday">السبت</string>
     <string name="weekday_friday">الجمعة</string>
@@ -801,9 +820,12 @@ Language: ar
     <string name="gutenberg_native_link_to">رابط لـ</string>
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
     <string name="gutenberg_native_link_settings">إعدادات الرابط</string>
+    <string name="gutenberg_native_edit_cover_media">تحرير غلاف الوسائط</string>
     <string name="gutenberg_native_excerpt_length_words">طول المقتطف (كلمات)</string>
+    <string name="gutenberg_native_button_link_url">رابط الزر URL</string>
     <string name="gutenberg_native_customize">تخصيص</string>
     <string name="gutenberg_native_add_paragraph_block">إضافة مكوّن فقرة</string>
+    <string name="gutenberg_native_border_radius">زوايا الحدود</string>
     <string name="gutenberg_native_video_settings">إعدادات الفيديو</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">غير متصل</string>
     <string name="sharing_facebook_account_must_have_pages">يتعذر الاتصال بـ Facebook العثور على أي صفحات. لا يمكن لآلية النشر الاتصال بملفات تعريف Facebook الشخصية، فقط للصفحات المنشورة.</string>
@@ -843,6 +865,7 @@ Language: ar
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
+    <string name="gutenberg_native_edit_media">تحرير الوسائط</string>
     <string name="gutenberg_native_add_a_shortcode">إضافة كود قصير…</string>
     <string name="fab_create_desc">إنشاء مقالة</string>
     <string name="stats_posting_activity_end_description">لقد استمعت إلى جميع الإحصاءت لهذه الفترة.\n بالنقر مرة أخرى سيجرى إعادة التشغيل من البداية.</string>
@@ -903,12 +926,10 @@ Language: ar
     <string name="gutenberg_native_take_a_video">تسجيل مقطع فيديو</string>
     <string name="gutenberg_native_take_a_photo_or_video">التقاط صورة أو تسجيل فيديو</string>
     <string name="gutenberg_native_take_a_photo">التقاط صورة</string>
-    <string name="gutenberg_native_translate">الترجمة</string>
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
     <string name="gutenberg_native_tap_here_to_show_help">أنقر هنا لإظهار المساعدة</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">أنقر لإخفاء لوحة المفاتيح</string>
     <string name="gutenberg_native_unsupported">غير مدعوم</string>
-    <string name="gutenberg_native_show_section">إظهار القسم</string>
     <string name="gutenberg_native_s_block_empty">مكوِّن %s. فارغ</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">مكوِّن %s. يحتوي هذا المكوِّن على محتوى غير صالح</string>
     <string name="gutenberg_native_cut_block">قص المكوِّن</string>
@@ -926,10 +947,12 @@ Language: ar
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
     <string name="gutenberg_native_help_icon">أيقونة المساعدة</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
+    <string name="gutenberg_native_link_inserted">تمّ إدراج الرابط</string>
     <string name="gutenberg_native_move_block_down">تحريك المكوّن لأسفل</string>
     <string name="gutenberg_native_image_caption_s">تسمية توضيحية للصورة. %s</string>
     <string name="gutenberg_native_hide_keyboard">إخفاء لوحة المفاتيح</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">الضغط المزدوج للتراجع عن آخر تغيير</string>
+    <string name="gutenberg_native_link_text">نص الرابط</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">الضغط المزدوج لتبديل الإعداد</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">الضغط المزدوج لتحديد صورة</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">الضغط المزدوج لتحديد مقطع الفيديو</string>
@@ -939,6 +962,7 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_move_the_block_down">الضغط المزدوج لنقل المكوِّن إلى أسفل</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">الضغط المزدوج لتحرير هذه القيمة</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">الضغط المزدوج لإضافة مكوِّن</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">الضغط المزدوج مع الاستمرار للتحرير</string>
     <string name="gutenberg_native_choose_from_device">الاختيار من الجهاز</string>
     <string name="gutenberg_native_current_value_is_s">القيمة الحالية هي %s</string>
     <string name="gutenberg_native_add_image">إضافة صورة</string>
@@ -1328,7 +1352,6 @@ Language: ar
     <string name="stats_insights_share_post">مشاركة المقالة</string>
     <string name="stats_insights_create_post">إنشاء مقالة</string>
     <string name="stats_insights_latest_post_message">لقد مرّ %1$s منذ نشر %2$s. إليك حالة أداء المقالة حتى الآن…</string>
-    <string name="gif_picker_endless_scroll_network_error">فشل تحميل بعض الوسائط بسبب وجود خطأ في الشبكة.</string>
     <string name="gif_picker_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
     <string name="gif_picker_initial_empty_text">ابحث للعثور على صور بتنسيق GIF لإضافتها إلى مكتبة الوسائط الخاصة بك!</string>
     <string name="stats_insights_tags_and_categories">العلامات والتصنيفات</string>
@@ -1866,7 +1889,7 @@ Language: ar
     <string name="jetpack_disconnect_confirm">قطع الاتصال</string>
     <string name="jetpack_disconnect_confirmation_message">هل تريد بالتأكيد قطع اتصال Jetpack بهذا الموقع؟</string>
     <string name="jetpack_disconnect_pref_title">\"قطع الاتصال بـ WordPress.com\"</string>
-    <string name="site_settings_jetpack_allowlist_description">يمكنك وضع علامة على عنوان IP أو (مجموعة من العناوين) كـ \"غير مسموح دائمًا\"، ما يمنع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">يمكنك وضع علامة على عنوان IP أو (مجموعة من العناوين) كـ \"غير مسموح دائمًا\"، ما يمنع حظرها بواسطة Jetpack. IPv4 وIPv6 مقبولان. لتحديد نطاق، أدخل القيمة المنخفضة والقيمة المرتفعة مفصولاً بينهما بشرطة. على سبيل المثال: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">يلزم إجراء مصادقة من خطوتين</string>
     <string name="jetpack_match_wpcom_via_email_title">مطابقة الحسابات باستخدام البريد الإلكتروني</string>
     <string name="jetpack_allow_wpcom_sign_in_title">السماح بتسجيل الدخول إلى WordPress.com</string>
