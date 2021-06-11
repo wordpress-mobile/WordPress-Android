@@ -28,33 +28,35 @@
         android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@+id/handle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/primary_button_container"
+        app:layout_constraintBottom_toTopOf="@+id/primary_button"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/primary_button_container"
+    <View
+        android:id="@+id/bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_container_shadow_height"
+        app:layout_constraintBottom_toTopOf="@+id/primary_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/login_shadow" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primary_button"
+        style="@style/BloggingRemindersPrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:cardElevation="@dimen/margin_large"
-        app:cardCornerRadius="0dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@+id/content_recycler_view"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:text="@string/set_your_blogging_goals_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/primary_button"
-            style="@style/BloggingRemindersPrimaryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_extra_large"
-            android:gravity="center"
-            android:text="@string/set_your_blogging_goals_button" />
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content_recycler_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
