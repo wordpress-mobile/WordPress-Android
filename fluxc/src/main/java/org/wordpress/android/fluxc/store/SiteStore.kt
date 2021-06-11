@@ -386,7 +386,7 @@ class SiteStore
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
-        @JvmField val message: String = ""
+        @JvmField val message: String? = null
     ) : OnChangedError
 
     data class SiteEditorsError internal constructor(
@@ -399,8 +399,7 @@ class SiteStore
     data class PostFormatsError @JvmOverloads constructor(
         @JvmField val type: PostFormatsErrorType,
         @JvmField val message: String = ""
-    ) :
-            OnChangedError
+    ) : OnChangedError
 
     data class UserRolesError internal constructor(
         @JvmField val type: UserRolesErrorType?,
