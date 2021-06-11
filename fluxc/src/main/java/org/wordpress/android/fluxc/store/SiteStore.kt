@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
-import com.wellsql.generated.SiteModelTable
-import com.yarolegovich.wellsql.WellSql
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -121,7 +119,8 @@ class SiteStore
     private val postSqlUtils: PostSqlUtils,
     private val siteRestClient: SiteRestClient,
     private val siteXMLRPCClient: SiteXMLRPCClient,
-    private val privateAtomicCookie: PrivateAtomicCookie
+    private val privateAtomicCookie: PrivateAtomicCookie,
+    private val siteSqlUtils: SiteSqlUtils
 ) : Store(dispatcher) {
     // Payloads
     data class CompleteQuickStartPayload(val site: SiteModel, val variant: String) : Payload<BaseNetworkError>()
@@ -907,13 +906,13 @@ class SiteStore
      * Returns all sites in the store as a [SiteModel] list.
      */
     val sites: List<SiteModel>
-        get() = WellSql.select(SiteModel::class.java).asModel
+        get() = siteSqlUtils.getSites()
 
     /**
      * Returns the number of sites of any kind in the store.
      */
     val sitesCount: Int
-        get() = WellSql.select(SiteModel::class.java).count().toInt()
+        get() = siteSqlUtils.getSites().count()
 
     /**
      * Checks whether the store contains any sites of any kind.
@@ -926,8 +925,8 @@ class SiteStore
      * Obtains the site with the given (local) id and returns it as a [SiteModel].
      */
     fun getSiteByLocalId(id: Int): SiteModel? {
-        val result = SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).asModel
-        return if (result.size > 0) {
+        val result = siteSqlUtils.getSitesWithLocalId(id)
+        return if (result.isNotEmpty()) {
             result[0]
         } else null
     }
@@ -936,27 +935,27 @@ class SiteStore
      * Checks whether the store contains a site matching the given (local) id.
      */
     fun hasSiteWithLocalId(id: Int): Boolean {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists()
+        return siteSqlUtils.getSitesWithLocalId(id).isNotEmpty()
     }
 
     /**
      * Returns all .COM sites in the store.
      */
     val wPComSites: List<SiteModel>
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).asModel
+        get() = siteSqlUtils.getWpComSites()
 
     /**
      * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
      */
     val sitesAccessedViaWPComRest: List<SiteModel>
-        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
+        get() = siteSqlUtils.sitesAccessedViaWPComRest.asModel
 
     /**
      * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
      * via WPCom REST API).
      */
     val sitesAccessedViaWPComRestCount: Int
-        get() = SiteSqlUtils.getSitesAccessedViaWPComRest().count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaWPComRest.count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via WPCom REST API (WPCom sites or Jetpack
@@ -970,19 +969,19 @@ class SiteStore
      * Returns the number of .COM sites in the store.
      */
     val wPComSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count().toInt()
+        get() = siteSqlUtils.getWpComSites().size
 
     /**
      * Returns the number of .COM Atomic sites in the store.
      */
     val wPComAtomicSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM_ATOMIC, true).count().toInt()
+        get() = siteSqlUtils.getWpComAtomicSites().size
 
     /**
      * Returns sites with a name or url matching the search string.
      */
     fun getSitesByNameOrUrlMatching(searchString: String): List<SiteModel> {
-        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString)
+        return siteSqlUtils.getSitesByNameOrUrlMatching(searchString)
     }
 
     /**
@@ -990,7 +989,7 @@ class SiteStore
      * name or url matching the search string.
      */
     fun getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString: String): List<SiteModel> {
-        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString)
+        return siteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString)
     }
 
     /**
@@ -1011,13 +1010,13 @@ class SiteStore
      * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPC: List<SiteModel>
-        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().asModel
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.asModel
 
     /**
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     val sitesAccessedViaXMLRPCCount: Int
-        get() = SiteSqlUtils.getSitesAccessedViaXMLRPC().count().toInt()
+        get() = siteSqlUtils.sitesAccessedViaXMLRPC.count().toInt()
 
     /**
      * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
@@ -1031,76 +1030,45 @@ class SiteStore
      * Returns all visible sites as [SiteModel]s. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSites: List<SiteModel>
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).asModel
+        get() = siteSqlUtils.getVisibleSites()
 
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     val visibleSitesCount: Int
-        get() = SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count().toInt()
+        get() = siteSqlUtils.getVisibleSites().size
 
     /**
      * Returns all visible .COM sites as [SiteModel]s.
      */
     val visibleSitesAccessedViaWPCom: List<SiteModel>
-        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().asModel
+        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.asModel
 
     /**
      * Returns the number of visible .COM sites.
      */
     val visibleSitesAccessedViaWPComCount: Int
-        get() = SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count().toInt()
+        get() = siteSqlUtils.visibleSitesAccessedViaWPCom.count().toInt()
 
     /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
     fun isWPComSiteVisibleByLocalId(id: Int): Boolean {
-        return WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .exists()
+        return siteSqlUtils.isWPComSiteVisibleByLocalId(id)
     }
 
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     fun getLocalIdForRemoteSiteId(siteId: Long): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
-                .or()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForRemoteSiteId(siteId)
     }
 
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     fun getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId: Long, xmlRpcUrl: String?): Int {
-        val sites = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
-                    siteModel
-                }
-        return if (sites.size > 0) {
-            sites[0].id
-        } else 0
+        return siteSqlUtils.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(selfHostedSiteId, xmlRpcUrl)
     }
 
     /**
@@ -1108,26 +1076,7 @@ class SiteStore
      * sites.
      */
     fun getSiteIdForLocalId(id: Int): Long {
-        val result = WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsModel { cursor ->
-                    val siteModel = SiteModel()
-                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
-                    siteModel.selfHostedSiteId = cursor.getLong(
-                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
-                    )
-                    siteModel
-                }
-        if (result.isEmpty()) {
-            return 0
-        }
-        return if (result[0].siteId > 0) {
-            result[0].siteId
-        } else {
-            result[0].selfHostedSiteId
-        }
+        return siteSqlUtils.getSiteIdForLocalId(id)
     }
 
     /**
@@ -1138,7 +1087,7 @@ class SiteStore
         if (siteId == 0L) {
             return null
         }
-        val sites = SiteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).asModel
+        val sites = siteSqlUtils.getSitesWithRemoteId(siteId)
         return if (sites.isEmpty()) {
             null
         } else {
@@ -1154,7 +1103,7 @@ class SiteStore
      * @return the content or null if the content is not cached
      */
     fun getBlockLayoutContent(site: SiteModel, slug: String): String? {
-        return SiteSqlUtils.getBlockLayoutContent(site, slug)
+        return siteSqlUtils.getBlockLayoutContent(site, slug)
     }
 
     /**
@@ -1165,15 +1114,15 @@ class SiteStore
      * @return the layout or null if the layout is not cached
      */
     fun getBlockLayout(site: SiteModel, slug: String): GutenbergLayout? {
-        return SiteSqlUtils.getBlockLayout(site, slug)
+        return siteSqlUtils.getBlockLayout(site, slug)
     }
 
     fun getPostFormats(site: SiteModel?): List<PostFormatModel> {
-        return SiteSqlUtils.getPostFormats(site!!)
+        return siteSqlUtils.getPostFormats(site!!)
     }
 
     fun getUserRoles(site: SiteModel?): List<RoleModel> {
-        return SiteSqlUtils.getUserRoles(site!!)
+        return siteSqlUtils.getUserRoles(site!!)
     }
 
     @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
@@ -1290,7 +1239,7 @@ class SiteStore
             event.error = SiteErrorUtils.genericToSiteError(siteModel.error)
         } else {
             try {
-                SiteSqlUtils.insertOrUpdateSite(siteModel)
+                siteSqlUtils.insertOrUpdateSite(siteModel)
             } catch (e: DuplicateSiteException) {
                 event.error = SiteError(DUPLICATE_SITE)
             }
@@ -1312,7 +1261,7 @@ class SiteStore
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
                 }
-                OnSiteChanged(SiteSqlUtils.insertOrUpdateSite(siteModel))
+                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
@@ -1346,7 +1295,7 @@ class SiteStore
             } else {
                 OnSiteChanged(res.rowsAffected)
             }
-            SiteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
+            siteSqlUtils.removeWPComRestSitesAbsentFromList(postSqlUtils, fetchedSites.sites)
             result
         }
         emitChange(event)
@@ -1365,7 +1314,7 @@ class SiteStore
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
                 }
-                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true
             }
@@ -1386,7 +1335,7 @@ class SiteStore
     private fun handleDeletedSite(payload: DeleteSiteResponsePayload) {
         val event = OnSiteDeleted(payload.error)
         if (!payload.isError) {
-            SiteSqlUtils.deleteSite(payload.site)
+            siteSqlUtils.deleteSite(payload.site)
         }
         emitChange(event)
     }
@@ -1411,12 +1360,12 @@ class SiteStore
     }
 
     private fun removeSite(site: SiteModel) {
-        val rowsAffected = SiteSqlUtils.deleteSite(site)
+        val rowsAffected = siteSqlUtils.deleteSite(site)
         emitChange(OnSiteRemoved(rowsAffected))
     }
 
     private fun removeAllSites() {
-        val rowsAffected = SiteSqlUtils.deleteAllSites()
+        val rowsAffected = siteSqlUtils.deleteAllSites()
         val event = OnAllSitesRemoved(rowsAffected)
         emitChange(event)
     }
@@ -1424,7 +1373,7 @@ class SiteStore
     private fun removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        val wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().asModel
+        val wpcomAndJetpackSites = siteSqlUtils.sitesAccessedViaWPComRest.asModel
         val rowsAffected = removeSites(wpcomAndJetpackSites)
         emitChange(OnSiteRemoved(rowsAffected))
     }
@@ -1432,7 +1381,7 @@ class SiteStore
     private fun toggleSitesVisibility(sites: SitesModel, visible: Boolean): Int {
         var rowsAffected = 0
         for (site in sites.sites) {
-            rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible)
+            rowsAffected += siteSqlUtils.setSiteVisibility(site, visible)
         }
         return rowsAffected
     }
@@ -1461,7 +1410,7 @@ class SiteStore
         if (payload.isError) {
             event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
+            siteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats)
         }
         emitChange(event)
     }
@@ -1498,7 +1447,7 @@ class SiteStore
         val site = payload.site
         site.mobileEditor = payload.editor
         val event = try {
-            OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+            OnSiteEditorsChanged(site, siteSqlUtils.insertOrUpdateSite(site))
         } catch (e: Exception) {
             OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
         }
@@ -1515,7 +1464,7 @@ class SiteStore
                 wpcomPostRequestRequired = true
             }
             try {
-                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site)
+                rowsAffected += siteSqlUtils.insertOrUpdateSite(site)
             } catch (e: Exception) {
                 error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
             }
@@ -1538,7 +1487,7 @@ class SiteStore
             site.mobileEditor = payload.mobileEditor
             site.webEditor = payload.webEditor
             try {
-                OnSiteEditorsChanged(site, SiteSqlUtils.insertOrUpdateSite(site))
+                OnSiteEditorsChanged(site, siteSqlUtils.insertOrUpdateSite(site))
             } catch (e: Exception) {
                 OnSiteEditorsChanged(site, SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR))
             }
@@ -1568,7 +1517,7 @@ class SiteStore
                     // the current editor is either null or != from the value on the server. Update it
                     currentModel.mobileEditor = value
                     try {
-                        rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel)
+                        rowsAffected += siteSqlUtils.insertOrUpdateSite(currentModel)
                     } catch (e: Exception) {
                         error = SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR)
                     }
@@ -1590,7 +1539,7 @@ class SiteStore
         if (payload.isError) {
             event.error = payload.error
         } else {
-            SiteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles)
+            siteSqlUtils.insertOrReplaceUserRoles(payload.site, payload.roles)
         }
         emitChange(event)
     }
@@ -1598,7 +1547,7 @@ class SiteStore
     private fun removeSites(sites: List<SiteModel>): Int {
         var rowsAffected = 0
         for (site in sites) {
-            rowsAffected += SiteSqlUtils.deleteSite(site)
+            rowsAffected += siteSqlUtils.deleteSite(site)
         }
         return rowsAffected
     }
@@ -1758,7 +1707,7 @@ class SiteStore
                 emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
             }
         } else {
-            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories!!, payload.layouts!!)
+            siteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories!!, payload.layouts!!)
             emitChange(OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error))
         }
     }
@@ -1770,8 +1719,8 @@ class SiteStore
      * @return true if cached layouts were retrieved successfully
      */
     private fun cachedLayoutsRetrieved(site: SiteModel): Boolean {
-        val layouts = SiteSqlUtils.getBlockLayouts(site)
-        val categories = SiteSqlUtils.getBlockLayoutCategories(site)
+        val layouts = siteSqlUtils.getBlockLayouts(site)
+        val categories = siteSqlUtils.getBlockLayoutCategories(site)
         if (layouts.isNotEmpty() && categories.isNotEmpty()) {
             emitChange(OnBlockLayoutsFetched(layouts, categories, null))
             return true
