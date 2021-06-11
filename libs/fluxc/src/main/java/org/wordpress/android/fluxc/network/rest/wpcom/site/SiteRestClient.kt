@@ -19,10 +19,12 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
@@ -89,7 +91,6 @@ import org.wordpress.android.util.UrlUtils
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URLEncoder
-import java.util.HashMap
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -101,7 +102,8 @@ class SiteRestClient @Inject constructor(
     appContext: Context?,
     dispatcher: Dispatcher?,
     @Named("regular") requestQueue: RequestQueue?,
-    private val mAppSecrets: AppSecrets,
+    private val appSecrets: AppSecrets,
+    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     accessToken: AccessToken?,
     userAgent: UserAgent?
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
@@ -123,31 +125,24 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
-    fun fetchSites(filters: List<SiteFilter?>) {
+    suspend fun fetchSites(filters: List<SiteFilter?>): SitesModel {
         val params = getFetchSitesParams(filters)
         val url = WPCOMREST.me.sites.urlV1_2
-        val request = WPComGsonRequest.buildGetRequest(url, params,
-                SitesResponse::class.java,
-                { response ->
-                    if (response != null) {
-                        val siteArray = mutableListOf<SiteModel>()
-                        for (siteResponse in response.sites) {
-                            siteArray.add(siteResponseToSiteModel(siteResponse))
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(SitesModel(siteArray)))
-                    } else {
-                        AppLog.e(API, "Received empty response to /me/sites/")
-                        val payload = SitesModel(emptyList())
-                        payload.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val siteArray = mutableListOf<SiteModel>()
+                for (siteResponse in response.data.sites) {
+                    siteArray.add(siteResponseToSiteModel(siteResponse))
                 }
-        ) { error ->
-            val payload = SitesModel(emptyList())
-            payload.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload))
+                SitesModel(siteArray)
+            }
+            is Error -> {
+                val payload = SitesModel(emptyList())
+                payload.error = response.error
+                payload
+            }
         }
-        add(request)
     }
 
     private fun getFetchSitesParams(filters: List<SiteFilter?>): Map<String, String> {
@@ -157,55 +152,48 @@ class SiteRestClient @Inject constructor(
         return params
     }
 
-    fun fetchSite(site: SiteModel) {
+    suspend fun fetchSite(site: SiteModel): SiteModel {
         val params = mutableMapOf<String, String>()
         params[FIELDS] = SITE_FIELDS
         val url = WPCOMREST.sites.urlV1_1 + site.siteId
-        val request = WPComGsonRequest.buildGetRequest(url, params,
-                SiteWPComRestResponse::class.java,
-                { response ->
-                    if (response != null) {
-                        val newSite = siteResponseToSiteModel(response)
-                        // local ID is not copied into the new model, let's make sure it is
-                        // otherwise the call that updates the DB can add a new row?
-                        if (site.id > 0) {
-                            newSite.id = site.id
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite))
-                    } else {
-                        AppLog.e(API, "Received empty response to /sites/\$site/ for " + site.url)
-                        val payload = SiteModel()
-                        payload.error = BaseNetworkError(INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SiteWPComRestResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val newSite = siteResponseToSiteModel(response.data)
+                // local ID is not copied into the new model, let's make sure it is
+                // otherwise the call that updates the DB can add a new row?
+                if (site.id > 0) {
+                    newSite.id = site.id
                 }
-        ) { error ->
-            val payload = SiteModel()
-            payload.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload))
+                newSite
+            }
+            is Error -> {
+                val payload = SiteModel()
+                payload.error = response.error
+                payload
+            }
         }
-        add(request)
     }
 
-    fun newSite(
+    suspend fun newSite(
         siteName: String,
         language: String,
         visibility: SiteVisibility,
         segmentId: Long?,
         siteDesign: String?,
         dryRun: Boolean
-    ) {
+    ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
-        val body: MutableMap<String, Any> = HashMap()
+        val body = mutableMapOf<String, Any>()
         body["blog_name"] = siteName
         body["lang_id"] = language
         body["public"] = visibility.value().toString()
         body["validate"] = if (dryRun) "1" else "0"
-        body["client_id"] = mAppSecrets.appId
-        body["client_secret"] = mAppSecrets.appSecret
+        body["client_id"] = appSecrets.appId
+        body["client_secret"] = appSecrets.appSecret
 
         // Add site options if available
-        val options: MutableMap<String, Any> = HashMap()
+        val options = mutableMapOf<String, Any>()
         if (segmentId != null) {
             options["site_segment"] = segmentId
         }
@@ -215,28 +203,32 @@ class SiteRestClient @Inject constructor(
         if (options.isNotEmpty()) {
             body["options"] = options
         }
-        val request = WPComGsonRequest.buildPostRequest(url, body,
-                NewSiteResponse::class.java,
-                { response ->
-                    var siteId: Long = 0
-                    if (response.blog_details != null) {
-                        try {
-                            siteId = java.lang.Long.valueOf(response.blog_details.blogid)
-                        } catch (e: NumberFormatException) {
-                            // No op: In dry run mode, returned newSiteRemoteId is "Array"
-                        }
-                    }
-                    val payload = NewSiteResponsePayload(siteId, dryRun)
-                    mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload))
-                }
-        ) { error ->
-            val payload = volleyErrorToAccountResponsePayload(error.volleyError, dryRun)
-            mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload))
-        }
 
         // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
-        request.retryPolicy = DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        add(request)
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                null,
+                body,
+                NewSiteResponse::class.java,
+                DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        )
+        return when (response) {
+            is Success -> {
+                var siteId: Long = 0
+                if (response.data.blog_details != null) {
+                    try {
+                        siteId = response.data.blog_details.blogid.toLong()
+                    } catch (e: NumberFormatException) {
+                        // No op: In dry run mode, returned newSiteRemoteId is "Array"
+                    }
+                }
+                NewSiteResponsePayload(siteId, dryRun)
+            }
+            is Error -> {
+                volleyErrorToAccountResponsePayload(response.error.volleyError, dryRun)
+            }
+        }
     }
 
     fun fetchSiteEditors(site: SiteModel) {
@@ -264,7 +256,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun designateMobileEditor(site: SiteModel, mobileEditorName: String) {
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         val url = WPCOMV2.sites.site(site.siteId).gutenberg.url
         params["editor"] = mobileEditorName
         params["platform"] = "mobile"
@@ -283,7 +275,7 @@ class SiteRestClient @Inject constructor(
     }
 
     fun designateMobileEditorForAllSites(mobileEditorName: String, setOnlyIfEmpty: Boolean) {
-        val params: MutableMap<String, Any> = HashMap()
+        val params = mutableMapOf<String, Any>()
         val url = WPCOMV2.me.gutenberg.url
         params["editor"] = mobileEditorName
         params["platform"] = "mobile"
@@ -312,34 +304,29 @@ class SiteRestClient @Inject constructor(
         )
     }
 
-    fun fetchPostFormats(site: SiteModel) {
+    suspend fun fetchPostFormats(site: SiteModel): FetchedPostFormatsPayload {
         val url = WPCOMREST.sites.site(site.siteId).post_formats.urlV1_1
-        val request = WPComGsonRequest.buildGetRequest(url, null,
-                PostFormatsResponse::class.java,
-                { response ->
-                    val postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats)
-                    if (postFormats != null) {
-                        mDispatcher.dispatch(
-                                SiteActionBuilder.newFetchedPostFormatsAction(
-                                        FetchedPostFormatsPayload(
-                                                site,
-                                                postFormats
-                                        )
-                                )
-                        )
-                    } else {
-                        val payload = FetchedPostFormatsPayload(site, emptyList())
-                        payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
-                    }
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), PostFormatsResponse::class.java)
+        return when (response) {
+            is Success -> {
+                val postFormats = SiteUtils.getValidPostFormatsOrNull(response.data.formats)
+                if (postFormats != null) {
+                    FetchedPostFormatsPayload(
+                            site,
+                            postFormats
+                    )
+                } else {
+                    val payload = FetchedPostFormatsPayload(site, emptyList())
+                    payload.error = PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE)
+                    payload
                 }
-        ) {
-            val payload = FetchedPostFormatsPayload(site, emptyList())
-            // TODO: what other kind of error could we get here?
-            payload.error = PostFormatsError(PostFormatsErrorType.GENERIC_ERROR)
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload))
+            }
+            is Error -> {
+                val payload = FetchedPostFormatsPayload(site, emptyList())
+                payload.error = PostFormatsError(PostFormatsErrorType.GENERIC_ERROR)
+                payload
+            }
         }
-        add(request)
     }
 
     fun fetchUserRoles(site: SiteModel) {
@@ -432,7 +419,7 @@ class SiteRestClient @Inject constructor(
         tlds: String?
     ) {
         val url = WPCOMREST.domains.suggestions.urlV1_1
-        val params: MutableMap<String, String> = HashMap(4)
+        val params = mutableMapOf<String, String>()
         params["query"] = query
         if (onlyWordpressCom != null) {
             params["only_wordpressdotcom"] = onlyWordpressCom.toString() // CHECKSTYLE IGNORE
@@ -562,7 +549,7 @@ class SiteRestClient @Inject constructor(
             mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload))
             return
         }
-        val params: MutableMap<String, String> = HashMap(1)
+        val params = mutableMapOf<String, String>()
         params["url"] = uri.toString()
 
         // Make the call.
@@ -625,8 +612,6 @@ class SiteRestClient @Inject constructor(
                 }
         ) { error ->
             val payload = IsWPComResponsePayload(testedUrl)
-            // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
-            // the WPCom REST API.
             if ("unauthorized" != error.apiError && "unknown_blog" != error.apiError) {
                 payload.error = error
             }
@@ -1014,7 +999,7 @@ class SiteRestClient @Inject constructor(
 
     private fun volleyErrorToAccountResponsePayload(
         error: VolleyError,
-        dryRun: Boolean
+        dryRun: Boolean = false
     ): NewSiteResponsePayload {
         val payload = NewSiteResponsePayload(dryRun = dryRun)
         payload.error = NewSiteError(NewSiteErrorType.GENERIC_ERROR, "")
@@ -1067,10 +1052,10 @@ class SiteRestClient @Inject constructor(
     }
 
     companion object {
-        const val NEW_SITE_TIMEOUT_MS = 90000
+        private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
                 "capabilities,quota,icon,meta")
-        const val FIELDS = "fields"
-        const val FILTERS = "filters"
+        private const val FIELDS = "fields"
+        private const val FILTERS = "filters"
     }
 }

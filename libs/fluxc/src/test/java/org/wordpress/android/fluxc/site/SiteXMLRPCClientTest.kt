@@ -18,11 +18,6 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.shadows.ShadowLog
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITES_XML_RPC
-import org.wordpress.android.fluxc.action.SiteAction.UPDATE_SITE
-import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.HTTPAuthManager
 import org.wordpress.android.fluxc.network.UserAgent
@@ -31,6 +26,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
@@ -82,9 +78,8 @@ class SiteXMLRPCClientTest {
         config.reset()
     }
 
-    @Test @Throws(Exception::class) fun testFetchSite() {
+    @Test @Throws(Exception::class) fun testFetchSite() = test {
         val site = SiteUtils.generateSelfHostedNonJPSite()
-        mCountDownLatch = CountDownLatch(1)
         mMockedResponse = """<?xml version="1.0" encoding="UTF-8"?>
 <methodResponse><params><param><value>
   <struct>
@@ -128,11 +123,13 @@ class SiteXMLRPCClientTest {
   </value></member></struct></value></member>
   </struct>
 </value></param></params></methodResponse>"""
-        mSiteXMLRPCClient.fetchSite(site)
-        Assert.assertTrue(mCountDownLatch?.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS) == true)
+        val result = mSiteXMLRPCClient.fetchSite(site)
+
+        assertThat(result.isError).isFalse()
     }
 
-    @Test @Throws(Exception::class) fun testFetchSiteBadResponseFormat() {
+    @Test @Throws(Exception::class)
+    fun testFetchSiteBadResponseFormat() = test {
         // If wp.getOptions returns a String instead of a Map, make sure we:
         // 1. Don't crash
         // 2. Emit an UPDATE_SITE action with an INVALID_RESPONSE error
@@ -142,19 +139,11 @@ class SiteXMLRPCClientTest {
 <methodResponse><params><param><value>
   <string>whoops</string>
 </value></param></params></methodResponse>"""
-        Mockito.doAnswer { invocation -> // Expect UPDATE_SITE to be dispatched with an INVALID_RESPONSE error
-            val action = invocation.getArgument<Action<*>>(0)
-            Assert.assertEquals(UPDATE_SITE, action.type)
-            val result = action.payload as SiteModel
-            Assert.assertTrue(result.isError)
-            Assert.assertEquals(INVALID_RESPONSE, result.error.type)
-            mCountDownLatch?.countDown()
-            null
-        }.whenever(mDispatcher).dispatch(any())
-        mCountDownLatch = CountDownLatch(2)
-        mSiteXMLRPCClient.fetchSite(site)
 
-        Assert.assertTrue(mCountDownLatch?.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS) == true)
+        val result = mSiteXMLRPCClient.fetchSite(site)
+
+        Assert.assertTrue(result.isError)
+        Assert.assertEquals(INVALID_RESPONSE, result.error.type)
     }
 
     @Test
@@ -173,10 +162,9 @@ class SiteXMLRPCClientTest {
 </value></member></struct></value></data></array>
 </value></param></params></methodResponse>"""
         val xmlrpcUrl = "http://docbrown.url/xmlrpc.php"
+        val fetchedSites = mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt")
 
-        mCountDownLatch = CountDownLatch(1)
-        mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt")
-        assertThat(mCountDownLatch!!.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS)).isTrue()
+        assertThat(fetchedSites.sites).isNotEmpty
     }
 
     @Test
@@ -188,18 +176,23 @@ class SiteXMLRPCClientTest {
 </value></param></params></methodResponse>"""
         val xmlrpcUrl = "http://docbrown.url/xmlrpc.php"
 
-        Mockito.doAnswer { invocation -> // Expect UPDATE_SITES to be dispatched with an INVALID_RESPONSE error
-            val action = invocation.getArgument<Action<*>>(0)
-            Assert.assertEquals(FETCHED_SITES_XML_RPC, action.type)
-            val result = action.payload as SitesModel
-            Assert.assertTrue(result.isError)
-            Assert.assertEquals(INVALID_RESPONSE, result.error.type)
-            mCountDownLatch!!.countDown()
+        doAnswer { invocation -> // Expect an OnUnexpectedError to be emitted with a parse error
+            val event = invocation.getArgument<OnUnexpectedError>(0)
+            Assert.assertEquals(xmlrpcUrl, event.extras[OnUnexpectedError.KEY_URL])
+            Assert.assertEquals("disaster!", event.extras[OnUnexpectedError.KEY_RESPONSE])
+            Assert.assertEquals(java.lang.ClassCastException::class.java, event.exception.javaClass)
+            mCountDownLatch?.countDown()
             null
-        }.whenever(mDispatcher).dispatch(any())
+        }.whenever(mDispatcher).emitChange(any())
 
         mCountDownLatch = CountDownLatch(2)
+
         mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt")
-        assertThat(mCountDownLatch!!.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS)).isTrue()
+
+        val result = mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt")
+
+        assertThat(result.isError).isTrue()
+        assertThat(result.error.type).isEqualTo(INVALID_RESPONSE)
+        Assert.assertTrue(mCountDownLatch!!.await(UnitTestUtils.DEFAULT_TIMEOUT_MS.toLong(), MILLISECONDS))
     }
 }

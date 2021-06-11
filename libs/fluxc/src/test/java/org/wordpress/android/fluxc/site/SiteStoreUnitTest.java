@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteExcepti
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.UpdateSitesResult;
+import org.wordpress.android.fluxc.tools.CoroutineEngineUtilsKt;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,7 +55,8 @@ public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private SiteSqlUtils mSiteSqlUtils = new SiteSqlUtils();
     private SiteStore mSiteStore = new SiteStore(new Dispatcher(), mPostSqlUtils, Mockito.mock(SiteRestClient.class),
-            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class), mSiteSqlUtils);
+            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class), mSiteSqlUtils,
+            CoroutineEngineUtilsKt.initCoroutineEngine());
 
     @Before
     public void setUp() {
