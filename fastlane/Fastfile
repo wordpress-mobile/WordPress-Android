@@ -275,7 +275,8 @@ REPOSITORY_NAME="WordPress-Android"
   lane :finalize_release do | options |
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    unless android_current_branch_is_hotfix
+    hotfix = android_current_branch_is_hotfix
+    unless hotfix
       check_translation_progress(
         glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
         abort_on_violations: false
