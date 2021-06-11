@@ -28,7 +28,9 @@ import org.wordpress.android.util.AppLog.T.DB
 import org.wordpress.android.util.UrlUtils
 import java.util.ArrayList
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SiteSqlUtils
 @Inject constructor() {
     object DuplicateSiteException : Exception() {
