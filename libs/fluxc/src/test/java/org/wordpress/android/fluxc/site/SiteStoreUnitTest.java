@@ -52,8 +52,9 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
+    private SiteSqlUtils mSiteSqlUtils = new SiteSqlUtils();
     private SiteStore mSiteStore = new SiteStore(new Dispatcher(), mPostSqlUtils, Mockito.mock(SiteRestClient.class),
-            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class));
+            Mockito.mock(SiteXMLRPCClient.class), Mockito.mock(PrivateAtomicCookie.class), mSiteSqlUtils);
 
     @Before
     public void setUp() {
@@ -80,7 +81,7 @@ public class SiteStoreUnitTest {
         WellSqlTestUtils.setupWordPressComAccount();
 
         SiteModel site = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        mSiteSqlUtils.insertOrUpdateSite(site);
 
         assertTrue(mSiteStore.hasSiteWithLocalId(site.getId()));
         assertEquals(site.getSiteId(), mSiteStore.getSiteByLocalId(site.getId()).getSiteId());
@@ -95,7 +96,7 @@ public class SiteStoreUnitTest {
 
         // Test counts with .COM site
         SiteModel wpComSite = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -106,7 +107,7 @@ public class SiteStoreUnitTest {
 
         // Test counts with one .COM and one self-hosted site
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -119,7 +120,7 @@ public class SiteStoreUnitTest {
 
         // Test counts with one .COM, one self-hosted and one Jetpack site
         SiteModel jetpackSiteOverRest = generateJetpackSiteOverRestOnly();
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRest);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRest);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -141,7 +142,7 @@ public class SiteStoreUnitTest {
         ponySite.setSiteId(1);
         ponySite.setIsWPCom(false);
         ponySite.setOrigin(SiteModel.ORIGIN_XMLRPC);
-        SiteSqlUtils.insertOrUpdateSite(ponySite);
+        mSiteSqlUtils.insertOrUpdateSite(ponySite);
 
         SiteModel jetpackOverXMLRPC = new SiteModel();
         jetpackOverXMLRPC.setXmlRpcUrl("http://pony2.com/xmlrpc.php");
@@ -150,7 +151,7 @@ public class SiteStoreUnitTest {
         jetpackOverXMLRPC.setIsJetpackInstalled(true);
         jetpackOverXMLRPC.setIsJetpackConnected(true);
         jetpackOverXMLRPC.setOrigin(SiteModel.ORIGIN_XMLRPC);
-        SiteSqlUtils.insertOrUpdateSite(jetpackOverXMLRPC);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackOverXMLRPC);
 
         SiteModel jetpackOverRest = new SiteModel();
         jetpackOverRest.setXmlRpcUrl("http://pony3.com/xmlrpc.php");
@@ -159,7 +160,7 @@ public class SiteStoreUnitTest {
         jetpackOverRest.setIsJetpackInstalled(true);
         jetpackOverRest.setIsJetpackConnected(true);
         jetpackOverRest.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
-        SiteSqlUtils.insertOrUpdateSite(jetpackOverRest);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackOverRest);
 
         assertEquals(3, mSiteStore.getSitesCount());
         assertEquals(0, mSiteStore.getWPComSitesCount());
@@ -171,7 +172,7 @@ public class SiteStoreUnitTest {
         ponySite.setIsJetpackInstalled(true);
         ponySite.setIsJetpackConnected(true);
         ponySite.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
-        SiteSqlUtils.insertOrUpdateSite(ponySite);
+        mSiteSqlUtils.insertOrUpdateSite(ponySite);
 
         assertEquals(3, mSiteStore.getSitesCount());
         assertEquals(0, mSiteStore.getWPComSitesCount());
@@ -186,22 +187,22 @@ public class SiteStoreUnitTest {
 
         // Should not cause any errors
         mSiteStore.isWPComSiteVisibleByLocalId(45);
-        SiteSqlUtils.setSiteVisibility(null, true);
+        mSiteSqlUtils.setSiteVisibility(null, true);
 
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
-        SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
         // Attempt to use with id of self-hosted site
-        SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
+        mSiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
         // The self-hosted site should not be affected
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
 
 
         SiteModel wpComSite = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
 
         // Attempt to use with legitimate .com site
-        SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
+        mSiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
         assertFalse(mSiteStore.getSiteByLocalId(wpComSite.getId()).isVisible());
         assertFalse(mSiteStore.isWPComSiteVisibleByLocalId(wpComSite.getId()));
     }
@@ -211,11 +212,11 @@ public class SiteStoreUnitTest {
         WellSqlTestUtils.setupWordPressComAccount();
 
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
-        SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
         // Attempt to use with id of self-hosted site
         for (SiteModel site : mSiteStore.getWPComSites()) {
-            SiteSqlUtils.setSiteVisibility(site, false);
+            mSiteSqlUtils.setSiteVisibility(site, false);
         }
         // The self-hosted site should not be affected
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
@@ -225,12 +226,12 @@ public class SiteStoreUnitTest {
         wpComSite2.setId(44);
         wpComSite2.setSiteId(284);
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite2);
 
         // Attempt to use with legitimate .com site
         for (SiteModel site : mSiteStore.getWPComSites()) {
-            SiteSqlUtils.setSiteVisibility(site, false);
+            mSiteSqlUtils.setSiteVisibility(site, false);
         }
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
         assertFalse(mSiteStore.getSiteByLocalId(wpComSite1.getId()).isVisible());
@@ -248,9 +249,9 @@ public class SiteStoreUnitTest {
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteModel wpComSite = generateWPComSite();
         SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
         assertEquals(selfHostedSite.getId(),
                 mSiteStore.getLocalIdForRemoteSiteId(selfHostedSite.getSelfHostedSiteId()));
@@ -279,11 +280,11 @@ public class SiteStoreUnitTest {
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteModel wpComSite = generateWPComSite();
         SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
 
-        assertEquals(1, SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
+        assertEquals(1, mSiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
         assertNotNull(mSiteStore.getSiteBySiteId(wpComSite.getSiteId()));
         assertNotNull(mSiteStore.getSiteBySiteId(jetpackSiteOverXMLRPC.getSiteId()));
         assertNull(mSiteStore.getSiteBySiteId(selfHostedSite.getSiteId()));
@@ -296,10 +297,10 @@ public class SiteStoreUnitTest {
         SiteModel wpComSite = generateWPComSite();
 
         // Should not cause any errors
-        SiteSqlUtils.deleteSite(wpComSite);
+        mSiteSqlUtils.deleteSite(wpComSite);
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        int affectedRows = SiteSqlUtils.deleteSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
+        int affectedRows = mSiteSqlUtils.deleteSite(wpComSite);
 
         assertEquals(1, affectedRows);
         assertEquals(0, mSiteStore.getSitesCount());
@@ -313,13 +314,13 @@ public class SiteStoreUnitTest {
         SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
-        assertEquals(2, SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
+        assertEquals(2, mSiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
 
-        List<SiteModel> wpComSites = SiteSqlUtils.getWPComSites().getAsModel();
+        List<SiteModel> wpComSites = mSiteSqlUtils.getWPComSites().getAsModel();
         assertEquals(1, wpComSites.size());
         for (SiteModel site : wpComSites) {
             assertNotEquals(jetpackSiteOverXMLRPC.getId(), site.getId());
@@ -334,20 +335,20 @@ public class SiteStoreUnitTest {
         SiteModel jetpack = generateJetpackSiteOverRestOnly();
 
         // Insert a self hosted site that will later be converted to Jetpack
-        SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+        mSiteSqlUtils.insertOrUpdateSite(futureJetpack);
 
         // Insert the same site but Jetpack powered this time
-        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        mSiteSqlUtils.insertOrUpdateSite(jetpack);
 
         // Previous site should be converted to a Jetpack site and we should see only one site
         int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
         assertEquals(1, sitesCount);
 
-        List<SiteModel> wpComSites = SiteSqlUtils.getWPComSites().getAsModel();
+        List<SiteModel> wpComSites = mSiteSqlUtils.getWPComSites().getAsModel();
         assertEquals(0, wpComSites.size());
-        assertEquals(1, SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
+        assertEquals(1, mSiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount());
         List<SiteModel> jetpackSites =
-                SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
+                mSiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
         assertEquals(jetpack.getSiteId(), jetpackSites.get(0).getSiteId());
         assertTrue(jetpackSites.get(0).isJetpackConnected());
         assertFalse(jetpackSites.get(0).isWPCom());
@@ -361,11 +362,11 @@ public class SiteStoreUnitTest {
         SiteModel jetpack = generateJetpackSiteOverRestOnly();
 
         // Insert a Jetpack powered site
-        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        mSiteSqlUtils.insertOrUpdateSite(jetpack);
         boolean duplicate = false;
         try {
             // Insert the same site but via self hosted this time (this should fail)
-            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+            mSiteSqlUtils.insertOrUpdateSite(futureJetpack);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -386,11 +387,11 @@ public class SiteStoreUnitTest {
         jetpack.setXmlRpcUrl("http://pony.com/xmlrpc.php");
 
         // Insert a Jetpack powered site
-        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        mSiteSqlUtils.insertOrUpdateSite(jetpack);
         boolean duplicate = false;
         try {
             // Insert the same site but via self hosted this time (this should fail)
-            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+            mSiteSqlUtils.insertOrUpdateSite(futureJetpack);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -411,11 +412,11 @@ public class SiteStoreUnitTest {
         jetpack.setXmlRpcUrl("https://pony.com/xmlrpc.php");
 
         // Insert a Jetpack powered site
-        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        mSiteSqlUtils.insertOrUpdateSite(jetpack);
         boolean duplicate = false;
         try {
             // Insert the same site but via self hosted this time (this should fail)
-            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+            mSiteSqlUtils.insertOrUpdateSite(futureJetpack);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -432,7 +433,7 @@ public class SiteStoreUnitTest {
         jetpackXmlRpcSite.setUrl("http://some.url");
 
         // Insert a Jetpack powered site over XML-RPC
-        SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite);
 
         // Set up the same site (by URL/XML-RPC URL), but don't identify it as a Jetpack site
         // This simulates sites resulting from wp.getUsersBlogs, which don't have the site ID and can't be identified
@@ -448,7 +449,7 @@ public class SiteStoreUnitTest {
         try {
             // Insert the same site but not identified as a Jetpack site
             // (this should succeed, replacing the existing site, because the site replaced is not using the REST API)
-            SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite2);
+            mSiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite2);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -461,15 +462,15 @@ public class SiteStoreUnitTest {
     @Test
     public void testGetPostFormats() throws DuplicateSiteException {
         SiteModel site = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(site);
+        mSiteSqlUtils.insertOrUpdateSite(site);
 
         // Set 3 post formats
-        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Video", "Image", "Standard"));
+        mSiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Video", "Image", "Standard"));
         List<PostFormatModel> postFormats = mSiteStore.getPostFormats(site);
         assertEquals(3, postFormats.size());
 
         // Set 1 post format
-        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Standard"));
+        mSiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Standard"));
         postFormats = mSiteStore.getPostFormats(site);
         assertEquals("Standard", postFormats.get(0).getDisplayName());
     }
@@ -487,14 +488,14 @@ public class SiteStoreUnitTest {
         wpComSite3.setName("I remember when this was all farmland as far as the eye could see");
         wpComSite2.setSiteId(558);
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite3);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite3);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("eye");
+        List<SiteModel> matchingSites = mSiteSqlUtils.getSitesByNameOrUrlMatching("eye");
         assertEquals(2, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
+        matchingSites = mSiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
         assertEquals(2, matchingSites.size());
     }
 
@@ -509,14 +510,14 @@ public class SiteStoreUnitTest {
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         selfHostedSite.setName("I remember when this was all farmland as far as the eye could see.");
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("eye");
+        List<SiteModel> matchingSites = mSiteSqlUtils.getSitesByNameOrUrlMatching("eye");
         assertEquals(2, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
+        matchingSites = mSiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
         assertEquals(2, matchingSites.size());
     }
 
@@ -531,14 +532,14 @@ public class SiteStoreUnitTest {
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         selfHostedSite.setName("I remember when this was all farmland as far as the eye could see.");
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
-        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching("eye");
+        List<SiteModel> matchingSites = mSiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching("eye");
         assertEquals(1, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching("EYE");
+        matchingSites = mSiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching("EYE");
         assertEquals(1, matchingSites.size());
     }
 
@@ -551,15 +552,15 @@ public class SiteStoreUnitTest {
         SiteModel jetpackRestSite = generateJetpackSiteOverRestOnly();
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
 
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackXMLRPCSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackRestSite);
-        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackXMLRPCSite);
+        mSiteSqlUtils.insertOrUpdateSite(jetpackRestSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         // first make sure sites are inserted successfully
         assertEquals(4, mSiteStore.getSitesCount());
 
-        SiteSqlUtils.deleteAllSites();
+        mSiteSqlUtils.deleteAllSites();
 
         assertEquals(0, mSiteStore.getSitesCount());
     }
@@ -569,7 +570,7 @@ public class SiteStoreUnitTest {
         WellSqlTestUtils.setupWordPressComAccount();
 
         SiteModel wpComSite = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        mSiteSqlUtils.insertOrUpdateSite(wpComSite);
 
         // Turn WP.com site into an Automated Transfer (Jetpack) site
         SiteModel automatedTransferSite = generateWPComSite();
@@ -578,7 +579,7 @@ public class SiteStoreUnitTest {
         automatedTransferSite.setIsWPCom(false);
         automatedTransferSite.setIsAutomatedTransfer(true);
 
-        SiteSqlUtils.insertOrUpdateSite(automatedTransferSite);
+        mSiteSqlUtils.insertOrUpdateSite(automatedTransferSite);
 
         assertEquals(1, mSiteStore.getSitesCount());
         assertEquals(0, mSiteStore.getWPComSitesCount());
@@ -673,7 +674,7 @@ public class SiteStoreUnitTest {
         SiteModel selfhostedSite = generateSelfHostedNonJPSite();
         selfhostedSite.setUrl("http://some.url");
 
-        SiteSqlUtils.insertOrUpdateSite(selfhostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfhostedSite);
 
         SiteModel selfhostedSite2 = generateSelfHostedNonJPSite();
         selfhostedSite2.setUrl("http://some.url/");
@@ -681,7 +682,7 @@ public class SiteStoreUnitTest {
         boolean duplicate = false;
         try {
             // Insert the same site with a trailing slash (this should succeed, replacing the existing site)
-            SiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
+            mSiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -700,7 +701,7 @@ public class SiteStoreUnitTest {
         selfhostedSite.setUrl("http://some.url");
         selfhostedSite.setXmlRpcUrl("http://some.url/xmlrpc.php");
 
-        SiteSqlUtils.insertOrUpdateSite(selfhostedSite);
+        mSiteSqlUtils.insertOrUpdateSite(selfhostedSite);
 
         SiteModel selfhostedSite2 = generateSelfHostedNonJPSite();
         selfhostedSite2.setUrl("http://user5242.stagingsite.url");
@@ -710,7 +711,7 @@ public class SiteStoreUnitTest {
         try {
             // Insert the same site with a different URL, but the same XML-RPC URL
             // (this should succeed, replacing the existing site)
-            SiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
+            mSiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
         } catch (DuplicateSiteException e) {
             // Caught !
             duplicate = true;
@@ -724,15 +725,15 @@ public class SiteStoreUnitTest {
     public void testUpdateSiteUniqueConstraintFail() throws DuplicateSiteException {
         // Create 2 test sites
         SiteModel site1 = generateTestSite(0, "https://pony1.com", "https://pony1.com/xmlrpc.php", false, true);
-        SiteSqlUtils.insertOrUpdateSite(site1);
+        mSiteSqlUtils.insertOrUpdateSite(site1);
         SiteModel site2 = generateTestSite(0, "https://pony2.com", "https://pony2.com/xmlrpc.php", false, true);
-        SiteSqlUtils.insertOrUpdateSite(site2);
+        mSiteSqlUtils.insertOrUpdateSite(site2);
 
         // Update the second site and reuse the site url and id from the first
         site2.setUrl("https://pony1.com");
         boolean duplicate = false;
         try {
-            SiteSqlUtils.insertOrUpdateSite(site2);
+            mSiteSqlUtils.insertOrUpdateSite(site2);
         } catch (DuplicateSiteException e) {
             duplicate = true;
         }
@@ -749,10 +750,10 @@ public class SiteStoreUnitTest {
         GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
         List<GutenbergLayout> layouts = Collections.singletonList(layout);
         // Store
-        SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
+        mSiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
         // Retrieve
-        List<GutenbergLayoutCategory> retrievedCategories = SiteSqlUtils.getBlockLayoutCategories(site);
-        List<GutenbergLayout> retrievedLayouts = SiteSqlUtils.getBlockLayouts(site);
+        List<GutenbergLayoutCategory> retrievedCategories = mSiteSqlUtils.getBlockLayoutCategories(site);
+        List<GutenbergLayout> retrievedLayouts = mSiteSqlUtils.getBlockLayouts(site);
         // Check
         assertEquals(categories, retrievedCategories);
         assertEquals(layouts, retrievedLayouts);
@@ -767,9 +768,9 @@ public class SiteStoreUnitTest {
         GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
         List<GutenbergLayout> layouts = Collections.singletonList(layout);
         // Store
-        SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
+        mSiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
         // Retrieve
-        List<GutenbergLayoutCategory> retrievedCategories = SiteSqlUtils.getBlockLayoutCategories(site);
+        List<GutenbergLayoutCategory> retrievedCategories = mSiteSqlUtils.getBlockLayoutCategories(site);
         // Check
         assertEquals(retrievedCategories.get(0).getEmoji(), "");
     }
@@ -853,7 +854,7 @@ public class SiteStoreUnitTest {
         sitesToKeep.addAll(allSites.subList(0, 6));
 
         // remove six sites (2/3 * (15 - 6))
-        SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, sitesToKeep);
+        mSiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, sitesToKeep);
 
         assertTrue(mSiteStore.getSitesCount() == 9);
 
