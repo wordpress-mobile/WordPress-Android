@@ -33,6 +33,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -43,6 +44,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var prologueBuilder: PrologueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
+    @Mock lateinit var dayLabelUtils: DayLabelUtils
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -57,7 +59,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 bloggingRemindersStore,
                 resourceProvider,
                 prologueBuilder,
-                daySelectionBuilder
+                daySelectionBuilder,
+                dayLabelUtils
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -101,25 +104,24 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `inits blogging reminders state`() {
+        val model = BloggingRemindersModel(
+                siteId,
+                setOf(MONDAY, SUNDAY)
+        )
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
                 flowOf(
-                        BloggingRemindersModel(
-                                siteId,
-                                setOf(MONDAY, SUNDAY)
-                        )
+                        model
                 )
         )
+        val dayLabel = UiStringText("Blogging reminders 2 times a week")
         whenever(
-                resourceProvider.getString(
-                        R.string.blogging_goals_n_times_a_week,
-                        2
-                )
-        ).thenReturn("Blogging reminders 2 times a week")
-        var uiState: String? = null
+                dayLabelUtils.buildNTimesLabel(model)
+        ).thenReturn(dayLabel)
+        var uiState: UiString? = null
 
         viewModel.getSettingsState(siteId).observeForever { uiState = it }
 
-        assertThat(uiState).isEqualTo("Blogging reminders 2 times a week")
+        assertThat(uiState).isEqualTo(dayLabel)
     }
 
     @Test
@@ -210,12 +212,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         doAnswer {
             val model = it.getArgument<BloggingRemindersModel>(0)
-            val onConfirm: (BloggingRemindersModel?) -> Unit = it.getArgument(1)
+            val isFirstTimeFlow = it.getArgument<Boolean>(1)
+            val onConfirm: (BloggingRemindersModel?) -> Unit = it.getArgument(2)
             PrimaryButton(
                     UiStringText("Confirm"),
-                    true,
+                    !isFirstTimeFlow || model.enabledDays.isNotEmpty(),
                     ListItemInteraction.create { onConfirm.invoke(model) })
-        }.whenever(daySelectionBuilder).buildPrimaryButton(any(), any())
+        }.whenever(daySelectionBuilder).buildPrimaryButton(any(), any(), any())
     }
 
     private fun initPrologueBuilder(): List<BloggingRemindersItem> {

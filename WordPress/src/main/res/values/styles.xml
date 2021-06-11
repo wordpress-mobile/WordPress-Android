@@ -1574,7 +1574,7 @@
     <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:backgroundTint">?attr/colorSecondary</item>
+        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
     </style>
 
     <style name="BloggingRemindersTipTitle">
