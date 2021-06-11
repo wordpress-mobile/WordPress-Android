@@ -3,6 +3,8 @@
 17.6
 -----
 * [*] Disables the ability to open the editor for Post Pages [#14523]
+* [*] Block Editor: "Set as featured" button within image block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3116]
+* [***] Block Editor: Audio block now available on WP.com sites on the free plan. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3523]
 
 17.5
 -----
