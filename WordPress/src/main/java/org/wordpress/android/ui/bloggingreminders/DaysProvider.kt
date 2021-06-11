@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 class DaysProvider
 @Inject constructor(private val dateProvider: DateProvider) {
+    // TODO replace all the calendar references with DayOfWeek interface
     private val days = listOf(
             Calendar.SUNDAY to SUNDAY,
             Calendar.MONDAY to MONDAY,
