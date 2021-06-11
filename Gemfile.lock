@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: d1e095e937b0ea253661ba0ffcd91939289e0a47
+  revision: 842dec004fd4cb1ba817fb542ebb91fa317c1abf
   branch: update/jetpack
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.18.1)
+    fastlane-plugin-wpmreleasetoolkit (1.2.0)
       activesupport (~> 5)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
@@ -54,7 +54,7 @@ GEM
     colored2 (3.1.2)
     commander (4.6.0)
       highline (~> 2.0.0)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     declarative (0.0.20)
     diffy (3.4.0)
     digest-crc (0.6.3)
@@ -181,13 +181,13 @@ GEM
     memoist (0.16.2)
     mini_magick (4.11.0)
     mini_mime (1.1.0)
-    mini_portile2 (2.5.1)
+    mini_portile2 (2.5.3)
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.1)
-    nokogiri (1.11.5)
+    nokogiri (1.11.7)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     octokit (4.21.0)
