@@ -59,7 +59,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 behavior.addBottomSheetCallback(object : BottomSheetCallback() {
                     override fun onStateChanged(view: View, newState: Int) {
                         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                            behavior.state = BottomSheetBehavior.STATE_HIDDEN;
+                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
                         }
                     }
 

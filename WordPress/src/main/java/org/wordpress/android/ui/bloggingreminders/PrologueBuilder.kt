@@ -14,8 +14,7 @@ class PrologueBuilder
     fun buildUiItems(): List<BloggingRemindersItem> {
         return listOf(Illustration(R.drawable.img_illustration_celebration_150dp),
                 Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message)),
-
+                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message))
         )
     }
 

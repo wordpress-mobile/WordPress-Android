@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
@@ -106,7 +105,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun buildEpiloguePrimaryButton(): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(string.blogging_reminders_done),
+                UiStringRes(R.string.blogging_reminders_done),
                 enabled = true,
                 ListItemInteraction.create(finish)
         )

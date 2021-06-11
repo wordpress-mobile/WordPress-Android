@@ -153,7 +153,9 @@ class DaySelectionBuilderTest {
     ) {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_calendar))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.blogging_reminders_select_days)))
-        assertThat(uiModel[2]).isEqualTo(MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)))
+        assertThat(uiModel[2]).isEqualTo(
+                MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message))
+        )
         assertThat(uiModel[3]).isEqualTo(
                 DayButtons(
                         Day.values().map {

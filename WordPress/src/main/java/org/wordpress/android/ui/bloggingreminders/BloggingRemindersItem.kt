@@ -21,13 +21,13 @@ sealed class BloggingRemindersItem(val type: Type) {
     data class HighEmphasisText(val text: EmphasizedText) : BloggingRemindersItem(
             HIGH_EMPHASIS_TEXT
     ) {
-        constructor(uiString: UiString): this(EmphasizedText(uiString))
+        constructor(uiString: UiString) : this(EmphasizedText(uiString))
     }
 
     data class MediumEmphasisText(val text: EmphasizedText?, val isInvisible: Boolean = false) : BloggingRemindersItem(
             LOW_EMPHASIS_TEXT
     ) {
-        constructor(uiString: UiString): this(EmphasizedText(uiString, false))
+        constructor(uiString: UiString) : this(EmphasizedText(uiString, false))
     }
 
     data class EmphasizedText(val text: UiString, val emphasizeTextParams: Boolean = true)
@@ -42,5 +42,5 @@ sealed class BloggingRemindersItem(val type: Type) {
         data class DayItem(val text: UiString, val isSelected: Boolean, val onClick: ListItemInteraction)
     }
 
-    data class Tip(val title: UiString, val message: UiString): BloggingRemindersItem(TIP)
+    data class Tip(val title: UiString, val message: UiString) : BloggingRemindersItem(TIP)
 }
