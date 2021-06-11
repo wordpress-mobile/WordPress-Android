@@ -64,6 +64,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                     }
 
                     override fun onSlide(view: View, v: Float) {
+                        // Not needed
                     }
                 })
             }
