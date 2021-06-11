@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
@@ -47,7 +46,7 @@ class DaySelectionBuilder
         onConfirm: (BloggingRemindersModel?) -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(string.blogging_reminders_notify_me),
+                UiStringRes(R.string.blogging_reminders_notify_me),
                 enabled = bloggingRemindersModel?.enabledDays?.isNotEmpty() == true,
                 ListItemInteraction.create(bloggingRemindersModel, onConfirm)
         )

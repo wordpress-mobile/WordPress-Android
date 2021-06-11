@@ -9,13 +9,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import org.wordpress.android.R
 import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTipBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
@@ -110,7 +110,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                             BloggingRemindersDayButtonsBinding::inflate
                     )
             ) {
-        fun onBind(item: DayButtons) = with(binding) {
+        fun onBind(item: DayButtons, payload: DayButtonsPayload?) = with(binding) {
             listOf(
                     dayOne,
                     dayTwo,
@@ -119,7 +119,13 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     dayFive,
                     daySix,
                     daySeven
-            ).forEachIndexed { index, day -> day.initDay(item.dayItems[index]) }
+            ).forEachIndexed { index, day ->
+                if (payload == null) {
+                    day.initDay(item.dayItems[index])
+                } else if (payload.changedDays[index]) {
+                    day.isSelected = item.dayItems[index].isSelected
+                }
+            }
         }
 
         private fun TextView.initDay(dayItem: DayItem) {

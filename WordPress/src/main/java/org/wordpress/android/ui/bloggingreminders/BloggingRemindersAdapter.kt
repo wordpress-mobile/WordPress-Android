@@ -3,6 +3,7 @@ package org.wordpress.android.ui.bloggingreminders
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
@@ -44,13 +45,17 @@ class BloggingRemindersAdapter
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int) {
+        onBindViewHolder(holder, position, listOf())
+    }
+
+    override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int, payloads: List<Any>) {
         val item = items[position]
         when (holder) {
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
             is TitleViewHolder -> holder.onBind(item as Title)
             is HighEmphasisTextViewHolder -> holder.onBind(item as HighEmphasisText)
             is MediumEmphasisTextViewHolder -> holder.onBind(item as MediumEmphasisText)
-            is DayButtonsViewHolder -> holder.onBind(item as DayButtons)
+            is DayButtonsViewHolder -> holder.onBind(item as DayButtons, payloads.firstOrNull() as? DayButtonsPayload)
             is TipViewHolder -> holder.onBind(item as Tip)
         }
     }
