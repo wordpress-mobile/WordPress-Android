@@ -11,13 +11,19 @@ buildscript {
     ext.gutenbergMobileVersion = 'v1.55.0'
 
     repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+            }
+        }
         google()
         jcenter()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.2'
-        //classpath 'com.automattic.android:fetchstyle:1.1'
+        classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
@@ -26,7 +32,7 @@ buildscript {
     }
 }
 
-//apply plugin: 'com.automattic.android.fetchstyle'
+apply plugin: 'com.automattic.android.fetchstyle'
 
 allprojects {
     apply plugin: 'checkstyle'
