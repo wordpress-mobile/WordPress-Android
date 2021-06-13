@@ -16,7 +16,7 @@
       }],
       "most_recent": {
         "is_initial": false,
-        "timestamp": "2021-05-18T06:20:06+00:00",
+        "timestamp": "{{now offset='-2 days' format='yyyy-MM-dd'}}T{{now offset='-2 days' format='HH:mm:ssZ'}}",
         "duration": 17,
         "progress": 100,
         "error": false
