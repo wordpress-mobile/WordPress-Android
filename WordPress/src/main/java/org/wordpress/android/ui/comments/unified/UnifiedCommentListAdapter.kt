@@ -9,15 +9,19 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentL
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) :
-        PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
-        DIFF_CALLBACK
+class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
+        diffCallback
 ) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var commentListUiUtils: CommentListUiUtils
+    @Inject lateinit var resourceProvider: ResourceProvider
+    @Inject lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -26,7 +30,14 @@ class UnifiedCommentListAdapter(context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnifiedCommentListViewHolder<*> {
         return when (viewType) {
             SUB_HEADER.ordinal -> UnifiedCommentSubHeaderViewHolder(parent)
-            COMMENT.ordinal -> UnifiedCommentViewHolder(parent, imageManager, uiHelpers)
+            COMMENT.ordinal -> UnifiedCommentViewHolder(
+                    parent,
+                    imageManager,
+                    uiHelpers,
+                    commentListUiUtils,
+                    resourceProvider,
+                    gravatarUtilsWrapper
+            )
             else -> throw IllegalArgumentException("Unexpected view holder in UnifiedCommentListAdapter")
         }
     }
@@ -44,6 +55,6 @@ class UnifiedCommentListAdapter(context: Context) :
     }
 
     companion object {
-        private val DIFF_CALLBACK = UnifiedCommentsListDiffCallback()
+        private val diffCallback = UnifiedCommentsListDiffCallback()
     }
 }
