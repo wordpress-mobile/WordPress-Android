@@ -58,6 +58,11 @@
             android:key="@string/pref_key_site_timezone"
             android:title="@string/site_settings_timezone_title" />
 
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_blogging_reminders"
+            android:key="@string/pref_key_blogging_reminders"
+            android:title="@string/site_settings_blogging_reminders_title" />
+
     </PreferenceCategory>
 
     <!-- Homepage settings -->
@@ -127,6 +132,12 @@
             android:key="@string/pref_key_site_category"
             android:title="@string/site_settings_default_category_title"
             app:longClickHint="@string/site_settings_category_hint" />
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_categories"
+            android:key="@string/pref_key_site_categories"
+            android:title="@string/site_settings_categories_title"
+            app:longClickHint="@string/site_settings_categories_hint" />
 
         <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_tags"

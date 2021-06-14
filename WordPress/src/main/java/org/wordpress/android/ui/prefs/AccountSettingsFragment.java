@@ -419,6 +419,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
+    @SuppressLint("StaticFieldLeak")
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
