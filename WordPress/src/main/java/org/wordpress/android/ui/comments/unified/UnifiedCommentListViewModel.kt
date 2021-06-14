@@ -108,7 +108,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         companion object {
             fun buildInitialState(): CommentsUiModel {
                 return CommentsUiModel(
-                        commentsListUiModel = CommentsListUiModel.Initial,
+                        commentsListUiModel = CommentsListUiModel.Initial
                 )
             }
         }

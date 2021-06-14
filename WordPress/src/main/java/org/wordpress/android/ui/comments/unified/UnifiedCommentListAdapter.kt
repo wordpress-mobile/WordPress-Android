@@ -14,9 +14,10 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) : PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
-        diffCallback
-) {
+class UnifiedCommentListAdapter(context: Context) :
+        PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
+                diffCallback
+        ) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var commentListUiUtils: CommentListUiUtils

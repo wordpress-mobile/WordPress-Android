@@ -43,10 +43,12 @@ class CommentPagingSource : PagingSource<Int, CommentModel>() {
             commentModel.authorProfileImageUrl = ""
             if (i % 3 == 0) {
                 commentModel.status = CommentStatus.UNAPPROVED.toString()
-                commentModel.authorProfileImageUrl = "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                commentModel.authorProfileImageUrl =
+                        "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
             } else {
                 commentModel.status = CommentStatus.APPROVED.toString()
-                commentModel.authorProfileImageUrl = "https://0.gravatar.com/avatar/cdc72cf084621e5cf7e42913f3197c13?s=256&d=identicon&r=G"
+                commentModel.authorProfileImageUrl =
+                        "https://0.gravatar.com/avatar/cdc72cf084621e5cf7e42913f3197c13?s=256&d=identicon&r=G"
             }
 
             commentListItems.add(commentModel)
