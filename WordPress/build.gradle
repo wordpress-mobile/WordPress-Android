@@ -1,11 +1,12 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.google.gms:google-services:4.3.8'
         classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.28'
     }
@@ -64,8 +65,6 @@ allOpen {
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
 
-android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
-
 android {
     useLibrary 'android.test.runner'
 
@@ -87,9 +86,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-297"
+            versionName "alpha-298"
         }
-        versionCode 1057
+        versionCode 1060
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -112,6 +111,7 @@ android {
         buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
+        buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -151,9 +151,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "17.5-rc-1"
+                versionName "17.6-rc-1"
             }
-            versionCode 1056
+            versionCode 1059
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
@@ -204,8 +204,7 @@ android {
     lintOptions{
         checkDependencies = true
         checkGeneratedSources = true
-        lintConfig file('lint.xml')
-        baseline file("lint-baseline.xml")
+        lintConfig file("${project.rootDir}/config/lint.xml")
     }
 
     packagingOptions {
@@ -331,7 +330,11 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    testImplementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
+    testImplementation('org.bouncycastle:bcprov-jdk15on') {
+        version {
+            strictly '1.64'
+        }
+    }
 
     androidTestImplementation 'com.squareup.okio:okio:2.8.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
@@ -359,7 +362,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
