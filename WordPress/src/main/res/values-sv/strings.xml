@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-01 11:02:23+0000
+Translation-Revision-Date: 2021-06-04 21:51:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
@@ -9,19 +9,34 @@ Language: sv_SE
     <string name="gutenberg_native_border_settings">Raminställningar</string>
     <string name="storage_utils_dialog_dont_show_button">Visa inte igen</string>
     <string name="storage_utils_dialog_ok_button">Visa lagring</string>
+    <string name="storage_utils_dialog_message">Vi behöver spara innehållet på din enhet innan det kan publiceras. Kontrollera dina inställningar för lagring av data och radera filer för att frigöra utrymme.</string>
+    <string name="storage_utils_dialog_title">För lite minnesutrymme på enheten</string>
+    <string name="gutenberg_native_y_axis_position">Läge på Y-axeln</string>
+    <string name="gutenberg_native_x_axis_position">Läge på X-axeln</string>
     <string name="gutenberg_native_type_a_url">Skriv en URL</string>
     <string name="gutenberg_native_tap_to_add_content">Tryck för att lägga till innehåll</string>
+    <string name="gutenberg_native_slash_inserter_results">Resultat från ”snedstrecksinfogaren”</string>
     <string name="gutenberg_native_show_media_on_right">Visa media till höger</string>
     <string name="gutenberg_native_show_media_on_left">Visa media till vänster</string>
+    <string name="gutenberg_native_s_has_url_set">URL angiven för %s</string>
+    <string name="gutenberg_native_s_has_no_url_set">Ingen URL angiven för %s</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s konverterades till vanliga block</string>
+    <string name="gutenberg_native_s_block">%s-block</string>
     <string name="gutenberg_native_overlay">Överlägg</string>
+    <string name="gutenberg_native_optional_placeholder">Platsmarkör (valfri) …</string>
     <string name="gutenberg_native_opacity">Opacitet</string>
     <string name="gutenberg_native_minimum_height">Minsta höjd</string>
     <string name="gutenberg_native_media_text_settings">Media- och textinställningar</string>
     <string name="gutenberg_native_media_options">Mediaalternativ</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Ogiltig URL. Ljudfil hittades inte.</string>
+    <string name="gutenberg_native_insert_crosspost">Infoga korspublicering</string>
     <string name="gutenberg_native_fixed_background">Fixerad bakgrund</string>
-    <string name="gutenberg_native_dimensions">Dimensioner</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Dra för att flytta bildfokus</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Dubbeltryck för att öppna det nedre arket och lägga till bild eller video</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Dubbeltryck för att öppna åtgärdsbladet och lägga till bild eller video</string>
+    <string name="gutenberg_native_dimensions">Mått</string>
+    <string name="gutenberg_native_current_unit_is_s">Aktuell enhet är %s</string>
+    <string name="gutenberg_native_crosspost">Korspublicera</string>
     <string name="gutenberg_native_crop_image_to_fill_entire_column">Beskär bilden så att den fyller hela kolumnen</string>
     <string name="gutenberg_native_convert_to_regular_blocks">Konvertera till vanliga block</string>
     <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
@@ -32,8 +47,11 @@ Language: sv_SE
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Lägg till bild eller video</string>
     <string name="error_media_path_is_directory">Den specificerade sökvägen är en katalog istället för en mediafil</string>
     <string name="error_media_could_not_find_media_in_path">Kunde inte hitta mediafil i sökvägen</string>
+    <string name="error_media_unexpected_empty_media_file_path">Oväntad tom sökväg till mediafilen</string>
     <string name="error_media_file_type_not_allowed">Denna filtyp är inte tillåten</string>
     <string name="error_media_unexpected_null_value">Media var tom</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hoten.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hotet.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltryck för att lägga till en länk.</string>
     <string name="gutenberg_native_add_link">LÄGG TILL LÄNK</string>
     <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
@@ -55,6 +73,7 @@ Language: sv_SE
     <string name="gutenberg_native_write_title">Skriv rubrik …</string>
     <string name="gutenberg_native_write_code">Skriv kod …</string>
     <string name="gutenberg_native_sorting_and_filtering">Sortering och filtrering</string>
+    <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_show_download_button">Visa nedladdningsknapp</string>
     <string name="gutenberg_native_shortcode">Kortkod</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
@@ -77,6 +96,7 @@ Language: sv_SE
     <string name="gutenberg_native_code">Kod</string>
     <string name="gutenberg_native_change_heading_level">Ändra rubriknivå</string>
     <string name="gutenberg_native_browser_default">Standardinställning för webbläsare</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="gutenberg_native_cover">Omslag</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Block har tagits bort eller är inte tillgängligt.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Block kan inte visas inuti sig självt.</string>
@@ -100,7 +120,7 @@ Language: sv_SE
     <string name="like_title_singular">1 gillamarkering</string>
     <string name="suggestion">Förslag:</string>
     <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
-    <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning</string>
+    <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
     <string name="gutenberg_native_search_blocks">Sök block</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
@@ -110,10 +130,10 @@ Language: sv_SE
     <string name="gutenberg_native_no_button">Ingen knapp</string>
     <string name="gutenberg_native_inside">Inuti</string>
     <string name="gutenberg_native_hide_search_heading">Dölj sökrubrik</string>
-    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbelklicka för att redigera platshållartexten</string>
-    <string name="gutenberg_native_double_tap_to_edit_label_text">Dubbelklicka för att redigera etikettexten</string>
-    <string name="gutenberg_native_double_tap_to_edit_button_text">Dubbelklicka för att redigera knapptexten</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Dubbelklicka för att ändra enhet</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dubbeltryck för att redigera platshållartexten</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Dubbeltryck för att redigera etikettens text</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Dubbeltryck för att redigera knapptexten</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Dubbeltryck för att ändra enhet</string>
     <string name="gutenberg_native_current_placeholder_text_is">Den nuvarande platshållartexten är</string>
     <string name="gutenberg_native_clear_search">Rensa sökning</string>
     <string name="gutenberg_native_cancel_search">Avbryt sök</string>

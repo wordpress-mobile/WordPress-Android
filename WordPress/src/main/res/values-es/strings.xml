@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-04 12:04:18+0000
+Translation-Revision-Date: 2021-06-05 11:08:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Ajustes del borde</string>
+    <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
+    <string name="storage_utils_dialog_ok_button">Ver el almacenamiento</string>
+    <string name="storage_utils_dialog_message">Tenemos que guardar tu contenido en tu dispositivo antes de que pueda ser publicado. Revisa tus ajustes de almacenamiento y elimina archivos para ganar espacio.</string>
+    <string name="storage_utils_dialog_title">Insuficiente almacenamiento en el dispositivo</string>
+    <string name="gutenberg_native_y_axis_position">Posición del eje Y</string>
+    <string name="gutenberg_native_x_axis_position">Posición del eje X</string>
+    <string name="gutenberg_native_type_a_url">Teclea una URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Toca para añadir contenido</string>
+    <string name="gutenberg_native_slash_inserter_results">Resultados del insertador de corte</string>
+    <string name="gutenberg_native_show_media_on_right">Mostrar medios a la derecha</string>
+    <string name="gutenberg_native_show_media_on_left">Mostrar medios a la izquierda</string>
+    <string name="gutenberg_native_s_has_url_set">%s tiene una URL configurada</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL configurada</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
+    <string name="gutenberg_native_s_block">Bloque %s</string>
+    <string name="gutenberg_native_overlay">Superposición</string>
+    <string name="gutenberg_native_optional_placeholder">Marcador de posición opcional…</string>
+    <string name="gutenberg_native_opacity">Opacidad</string>
+    <string name="gutenberg_native_minimum_height">Altura mínima</string>
+    <string name="gutenberg_native_media_text_settings">Ajustes de medios y texto</string>
+    <string name="gutenberg_native_media_options">Opciones de medios</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL no válida. Archivo de audio no encontrado.</string>
+    <string name="gutenberg_native_insert_crosspost">Insertar entrada cruzada</string>
+    <string name="gutenberg_native_fixed_background">Fondo fijo</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Arrastra para ajustar el punto focal</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Toca dos veces para abrir la hoja inferior para añadir imagen o vídeo</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toca dos veces para abrir la hoja de acción para añadir imagen o vídeo</string>
+    <string name="gutenberg_native_dimensions">Dimensiones</string>
+    <string name="gutenberg_native_current_unit_is_s">La unidad actual es %s</string>
+    <string name="gutenberg_native_crosspost">Entrada cruzada</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Recortar imagen para rellenar toda la columna</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Convertir a bloques normales</string>
+    <string name="gutenberg_native_columns_settings">Ajustes de columnas</string>
+    <string name="gutenberg_native_clear_media">Vaciar los medios</string>
+    <string name="gutenberg_native_button_width">Ancho del botón</string>
+    <string name="gutenberg_native_add_link_to_s">Añadir enlace a %s</string>
+    <string name="gutenberg_native_add_link_text">Añadir texto del enlace</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Añadir una imagen o vídeo</string>
+    <string name="error_media_path_is_directory">La ruta especificada es un directorio y no un archivo de medios</string>
+    <string name="error_media_could_not_find_media_in_path">No se pudo encontrar el archivo de medios en la ruta</string>
+    <string name="error_media_unexpected_empty_media_file_path">Ruta de archivo de medios vacía inesperada</string>
+    <string name="error_media_file_type_not_allowed">El tipo de archivo no está permitido</string>
+    <string name="error_media_unexpected_null_value">El medio estaba vacío</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir las amenazas.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir la amenaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dos veces para añadir un enlace.</string>
     <string name="gutenberg_native_add_link">AÑADIR ENLACE</string>
     <string name="login_empty_view_try_another_account">Probar con otra cuenta</string>
