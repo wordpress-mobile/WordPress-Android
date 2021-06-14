@@ -11,7 +11,6 @@ sealed class LocalePickerListItem(val type: LocalePickerListViewType) {
     ) : LocalePickerListItem(LOCALE)
 
     enum class LocalePickerListViewType {
-        SUB_HEADER,
         LOCALE;
     }
 
