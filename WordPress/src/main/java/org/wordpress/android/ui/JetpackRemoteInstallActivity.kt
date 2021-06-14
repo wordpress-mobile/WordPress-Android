@@ -2,19 +2,19 @@ package org.wordpress.android.ui
 
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
+import org.wordpress.android.databinding.JetpackRemoteInstallActivityBinding
 import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
 import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_SOURCE_KEY
 
 class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = JetpackRemoteInstallActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setContentView(R.layout.jetpack_remote_install_activity)
-
-        setSupportActionBar(toolbar_main)
+        setSupportActionBar(binding.toolbarLayout.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
