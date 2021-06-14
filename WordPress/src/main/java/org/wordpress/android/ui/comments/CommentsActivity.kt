@@ -101,8 +101,8 @@ class CommentsActivity : LocaleAwareActivity(),
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 val properties: MutableMap<String, String?> = HashMap()
-                properties["selected_filter"] = commentListFilters[position].name.toLowerCase(Locale.ENGLISH)
-                        .capitalize(Locale.ENGLISH)
+                properties["selected_filter"] = commentListFilters[position].name.toLowerCase(Locale.ROOT)
+                        .capitalize(Locale.ROOT)
                 AnalyticsTracker.track(COMMENT_FILTER_CHANGED, properties)
                 super.onPageSelected(position)
             }
