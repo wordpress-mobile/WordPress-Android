@@ -557,8 +557,8 @@ public class AppSettingsFragment extends PreferenceFragment
         if (getActivity() instanceof AppCompatActivity) {
             LocalePickerBottomSheet bottomSheet = LocalePickerBottomSheet.newInstance();
             bottomSheet.setLocalePickerCallback(this);
-            bottomSheet
-                    .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), LocalePickerBottomSheet.TAG);
+            bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                    LocalePickerBottomSheet.TAG);
             return true;
         } else {
             throw new IllegalArgumentException(

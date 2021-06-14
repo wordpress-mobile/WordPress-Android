@@ -119,12 +119,12 @@ class LocalePickerViewModel @Inject constructor(
     }
 
     private fun filterLocales(query: String): LiveData<List<LocalePickerListItem>> {
-        val filteredTimezones = MutableLiveData<List<LocalePickerListItem>>()
+        val filteredLocales = MutableLiveData<List<LocalePickerListItem>>()
 
-        cachedLocales.filter { timezone ->
-            when (timezone) {
+        cachedLocales.filter { locale ->
+            when (locale) {
                 is LocaleRow -> {
-                    query.isBlank() or timezone.label.contains(query, true) or timezone.localizedLabel.contains(
+                    query.isBlank() or locale.label.contains(query, true) or locale.localizedLabel.contains(
                             query,
                             true
                     )
@@ -132,10 +132,10 @@ class LocalePickerViewModel @Inject constructor(
             }
         }.also {
             _isEmptyViewVisible.value = it.isEmpty()
-            filteredTimezones.value = it
+            filteredLocales.value = it
         }
 
-        return filteredTimezones
+        return filteredLocales
     }
 
     private fun loadLocales() {
@@ -146,16 +146,16 @@ class LocalePickerViewModel @Inject constructor(
 
         val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()
 
-        val triple = localeProvider.createSortedLocalizedLanguageDisplayStrings(
+        val availableLocalesData = localeProvider.createSortedLocalizedLanguageDisplayStrings(
                 availableLocales.toTypedArray(),
                 appLocale
         ) ?: return
 
-        val sortedEntries = triple.first
-        val sortedValues = triple.second
-        val sortedLocalizedEntries = triple.third
+        val sortedEntries = availableLocalesData.first
+        val sortedValues = availableLocalesData.second
+        val sortedLocalizedEntries = availableLocalesData.third
 
-        for (i in triple.first.indices) {
+        for (i in availableLocalesData.first.indices) {
             cachedLocales.add(
                     LocaleRow(
                             sortedEntries[i],

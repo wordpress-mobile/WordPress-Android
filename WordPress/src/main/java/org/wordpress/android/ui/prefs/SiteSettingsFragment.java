@@ -1632,12 +1632,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Triple<String[], String[], String[]> pair = LocaleManager
+        Triple<String[], String[], String[]> supportedLocales = LocaleManager
                 .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
-        if (pair != null) {
-            String[] sortedEntries = pair.component1();
-            String[] sortedValues = pair.component2();
-            String[] localizedEntries = pair.component3();
+        if (supportedLocales != null) {
+            String[] sortedEntries = supportedLocales.component1();
+            String[] sortedValues = supportedLocales.component2();
+            String[] localizedEntries = supportedLocales.component3();
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);

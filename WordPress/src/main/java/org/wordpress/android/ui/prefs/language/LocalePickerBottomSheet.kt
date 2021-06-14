@@ -151,9 +151,9 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
         binding = null
         callback = null
-        super.onDestroyView()
     }
 
     private fun expandBottomSheet() {
@@ -170,7 +170,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "TIMEZONE_BOTTOM_SHEET_TAG"
+        const val TAG = "LOCALE_PICKER_TAG"
         @JvmStatic
         fun newInstance(): LocalePickerBottomSheet = LocalePickerBottomSheet()
     }

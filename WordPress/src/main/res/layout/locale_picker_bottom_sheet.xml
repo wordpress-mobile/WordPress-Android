@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_locale_suggestion"
-        tools:context=".ui.prefs.timezone.SiteSettingsTimezoneBottomSheet"
+        tools:context=".ui.prefs.language.LocalePickerBottomSheet"
         tools:listitem="@layout/locale_picker_list_item" />
 
 
