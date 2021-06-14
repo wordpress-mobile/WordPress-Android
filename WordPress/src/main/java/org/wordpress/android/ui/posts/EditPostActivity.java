@@ -123,7 +123,6 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -174,10 +173,10 @@ import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.ProgressEvent;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
@@ -199,6 +198,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StorageUtilsProvider.Source;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -214,6 +214,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -404,6 +405,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
+    private StorageUtilsViewModel mStorageUtilsViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -482,6 +484,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
+        mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -699,6 +702,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
 
         mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
+
+        // The check on savedInstanceState should allow to show the dialog only on first start
+        // (even in cases when the VM could be re-created like when activity is destroyed in the background)
+        mStorageUtilsViewModel.start(savedInstanceState == null);
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -855,6 +862,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
+        mStorageUtilsViewModel.getCheckStorageWarning().observe(this, event ->
+                event.applyIfNotHandled(unit -> {
+                    mStorageUtilsViewModel.onStorageWarningCheck(getSupportFragmentManager(), Source.EDITOR);
+                    return null;
+                })
+        );
     }
 
     private void initializePostObject() {
@@ -2276,6 +2289,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
+        boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
         boolean canViewEditorOnboarding = (
                 mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
@@ -2289,6 +2303,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
+                // Only enable reusable block in WP.com sites until the issue
+                // (https://github.com/wordpress-mobile/gutenberg-mobile/issues/3457) in self-hosted sites is fixed
+                isWPComSite,
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
@@ -2618,8 +2635,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
-                    } else if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         int postId = getImmutablePost().getId();
                         for (int localId : localIds) {
                             MediaModel media = mMediaStore.getMediaWithLocalId(localId);
@@ -2671,8 +2688,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.GIF_PICKER_SINGLE_SELECT:
                 case RequestCodes.GIF_PICKER_MULTI_SELECT:
-                    if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         mEditorMedia.addGifMediaToPostAsync(localIds);
                     }
                     break;
@@ -3471,7 +3488,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
+    public void onEventMainThread(ProgressEvent event) {
         if (!isFinishing()) {
             // use upload progress rather than optimizer progress since the former includes upload+optimization
             float progress = UploadService.getUploadProgressForMedia(event.media);

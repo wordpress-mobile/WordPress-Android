@@ -17,5 +17,6 @@ enum class ListItemAction {
     STATS,
     MEDIA,
     COMMENTS,
+    UNIFIED_COMMENTS,
     VIEW_SITE
 }

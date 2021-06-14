@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
@@ -76,7 +77,6 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
-import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -90,6 +90,7 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -262,11 +263,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListMainViewModel.class)
     abstract ViewModel postListMainViewModel(PostListMainViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(GifPickerViewModel.class)
-    abstract ViewModel gifPickerViewModel(GifPickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -513,6 +509,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(LoginEpilogueViewModel.class)
+    abstract ViewModel loginEpilogueViewModel(LoginEpilogueViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(LoginPrologueViewModel.class)
     abstract ViewModel loginPrologueViewModel(LoginPrologueViewModel viewModel);
 
@@ -530,4 +531,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginSiteCheckErrorViewModel.class)
     abstract ViewModel loginSiteCheckErrorViewModel(LoginSiteCheckErrorViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StorageUtilsViewModel.class)
+    abstract ViewModel storageUtilsViewModel(StorageUtilsViewModel viewModel);
 }

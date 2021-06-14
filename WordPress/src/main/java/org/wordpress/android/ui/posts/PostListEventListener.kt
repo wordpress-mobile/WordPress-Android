@@ -32,8 +32,8 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostRemotePreviewSnackbarError
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -275,7 +275,7 @@ class PostListEventListener(
 
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
-    fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
+    fun onEventBackgroundThread(event: ProgressEvent) {
         uploadStatusChanged(event.media.localPostId)
     }
 
