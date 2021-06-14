@@ -26,8 +26,4 @@ public class AppConfigModule {
         return new UserAgent(appContext, WordPress.USER_AGENT_APPNAME);
     }
 
-    @Provides
-    public EncryptedLoggingKey provideEncryptedLoggingKey() {
-        return new EncryptedLoggingKey(Key.fromBytes(Base64.decode(BuildConfig.ENCRYPTED_LOGGING_KEY, Base64.DEFAULT)));
-    }
 }
