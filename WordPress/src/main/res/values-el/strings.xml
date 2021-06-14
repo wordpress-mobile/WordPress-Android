@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 07:26:52+0000
+Translation-Revision-Date: 2021-06-01 07:46:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -11,8 +11,19 @@ Language: el_GR
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
     <string name="gutenberg_native_audio_settings">Ρυθμίσεις ήχου</string>
+    <string name="gutenberg_native_column_settings">Ρυθμίσεις στήλης</string>
+    <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
+    <string name="gutenberg_native_shortcode">Σύντομος κωδικός</string>
+    <string name="gutenberg_native_mention">Αναφορά</string>
+    <string name="gutenberg_native_read_more">Διαβάστε περισσότερα</string>
+    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">εικόνα %1$d από  %2$d στην συλλογή</string>
+    <string name="gutenberg_native_heading_d">Κεφαλίδα %d</string>
+    <string name="gutenberg_native_cover">Κάλυψη</string>
+    <string name="gutenberg_native_auto">Αυτόματο</string>
+    <string name="gutenberg_native_autoplay">Αυτόματη αναπαραγωγή</string>
+    <string name="gutenberg_native_cancel_search">Ακύρωση αναζήτησης</string>
     <string name="gutenberg_native_error">Σφάλμα </string>
     <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
     <string name="button_copy">Διπλότυπο</string>
@@ -45,13 +56,12 @@ Language: el_GR
     <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
     <string name="reader_filter_tags_title">Θέματα</string>
-    <string name="gutenberg_native_translate">Μετάφραση</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
+    <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>

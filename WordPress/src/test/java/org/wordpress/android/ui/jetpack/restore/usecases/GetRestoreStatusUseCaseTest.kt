@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
@@ -296,6 +297,30 @@ class GetRestoreStatusUseCaseTest {
                         Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
+
+    @Test
+    fun `given awaiting creds state, when awaiting creds is checked, then creds are awaited in result`() =
+            test {
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(rewindId = null, state = State.AWAITING_CREDENTIALS))
+
+                val result = useCase.getRestoreStatus(site, restoreId = null, checkIfAwaitingCredentials = true)
+                        .toList()
+
+                assertThat(result).contains(AwaitingCredentials(true))
+            }
+
+    @Test
+    fun `given non awaiting creds state, when awaiting creds is checked, then creds are not awaited in result`() =
+            test {
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED, state = State.ACTIVE))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID, checkIfAwaitingCredentials = true)
+                        .toList()
+
+                assertThat(result).contains(AwaitingCredentials(false))
+            }
     /* PRIVATE */
 
     private fun activityLogModel() = ActivityLogModel(
@@ -314,14 +339,15 @@ class GetRestoreStatusUseCaseTest {
 
     private fun rewindStatusModel(
         rewindId: String?,
-        status: Rewind.Status
+        status: Rewind.Status? = null,
+        state: State = State.ACTIVE
     ) = RewindStatusModel(
-            state = State.ACTIVE,
+            state = state,
             reason = null,
             lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
-            rewind = rewind(rewindId, status)
+            rewind = if (state != State.AWAITING_CREDENTIALS) rewind(rewindId, status as Rewind.Status) else null
     )
 
     private fun rewind(

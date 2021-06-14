@@ -1,21 +1,15 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-    }
-}
-
 apply plugin: 'com.android.application'
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror" }
 }
 
 android {

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.publicize.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
@@ -172,6 +173,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList mTmpServices = new PublicizeServiceList();
         private final PublicizeConnectionList mTmpConnections = new PublicizeConnectionList();
