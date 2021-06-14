@@ -25,7 +25,6 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val logFileProvider: LogFileProviderWrapper,
     private val buildConfig: BuildConfigWrapper
 ) : CrashLoggingDataProvider {
-
     override val buildType: String = BuildConfig.BUILD_TYPE
     override val enableCrashLoggingLogs: Boolean = BuildConfig.DEBUG
     override val locale: Locale

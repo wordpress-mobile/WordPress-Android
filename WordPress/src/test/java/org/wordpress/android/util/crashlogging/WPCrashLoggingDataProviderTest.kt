@@ -32,7 +32,6 @@ import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class WPCrashLoggingDataProviderTest {
-
     lateinit var sut: WPCrashLoggingDataProvider
 
     private val mockedFile: File = mock { on { exists() } doReturn true }
