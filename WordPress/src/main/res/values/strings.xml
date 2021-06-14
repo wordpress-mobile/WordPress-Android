@@ -890,6 +890,7 @@
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
+    <string name="locale_picker_current_language">Current language:</string>
 
     <!-- Feature configuration -->
     <string name="preference_open_feature_config" translatable="false">Test feature configuration</string>

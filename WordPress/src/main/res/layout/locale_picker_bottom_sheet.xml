@@ -68,6 +68,7 @@
         android:layout_height="wrap_content"
         android:minHeight="0dp"
         android:layout_marginTop="@dimen/margin_small_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:gravity="start"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large"
-        android:text="@string/suggestion"
+        android:text="@string/locale_picker_current_language"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_input_layout" />
 
