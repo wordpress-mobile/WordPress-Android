@@ -6,7 +6,6 @@
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
-    <issue id="TypographyDashes" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
@@ -24,9 +23,6 @@
     <issue id="IconDipSize" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
-
-    <issue id="TypographyEllipsis" severity="error"/>
-
     <issue id="ScrollViewSize" severity="error" />
     <issue id="ApplySharedPref" severity="error" />
     <issue id="CustomViewStyleable" severity="error" />
@@ -52,6 +48,7 @@
     <issue id="UnusedResources" severity="error" />
     <issue id="UselessParent" severity="error" />
     <issue id="UnusedNamespace" severity="error" />
+    <issue id="TypographyDashes" severity="error" />
     <issue id="TypographyEllipsis" severity="error" />
     <issue id="IconLocation" severity="error" />
     <issue id="TextFields" severity="error" />
