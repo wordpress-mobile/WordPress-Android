@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import kotlin.Triple;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -17,7 +16,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.HapticFeedbackConstants;
@@ -110,6 +108,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
+
+import kotlin.Triple;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).

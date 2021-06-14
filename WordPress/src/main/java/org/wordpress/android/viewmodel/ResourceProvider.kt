@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel
 
-import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes

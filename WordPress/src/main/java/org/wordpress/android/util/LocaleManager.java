@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import kotlin.Triple;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +19,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import kotlin.Triple;
 
 /**
  * Helper class for working with localized strings. Ensures updates to the users
