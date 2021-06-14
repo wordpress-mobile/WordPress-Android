@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mlp
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.layout_picker_preview_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment
@@ -27,7 +27,7 @@ class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chooseButton.setText(R.string.mlp_create_page)
+        (view.findViewById(R.id.chooseButton) as Button).setText(R.string.mlp_create_page)
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
         setViewModel(viewModel)
