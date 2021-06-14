@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 import org.wordpress.android.R.dimen
-import org.wordpress.android.ui.comments.unified.CommentListLoadingStateAdapter.LoadStateViewHolder
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
 
 /**
- * CommentListItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
+ * UnifiedCommentListItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
  * Based on DividerItemDecoration.
  */
 class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() {
@@ -45,7 +44,7 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
             val viewHolder = parent.getChildViewHolder(child)
-            if (viewHolder !is UnifiedCommentSubHeaderViewHolder && viewHolder !is LoadStateViewHolder) {
+            if (viewHolder !is UnifiedCommentSubHeaderViewHolder) {
                 parent.getDecoratedBoundsWithMargins(child, bounds)
                 val bottom = bounds.bottom + child.translationY.roundToInt()
                 val top = bottom - divider.intrinsicHeight

@@ -44,7 +44,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
         commentsRecyclerView.adapter = adapter
     }
 
-    private fun setupObservers() {
+    private fun CommentListFragmentBinding.setupObservers() {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
@@ -52,7 +52,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
         }
     }
 
-    private fun setupCommentsList(commentsListUiModel: CommentsListUiModel) {
+    private fun CommentListFragmentBinding.setupCommentsList(commentsListUiModel: CommentsListUiModel) {
         when (commentsListUiModel) {
             is CommentsListUiModel.Data -> {
                 adapter.submitData(lifecycle, commentsListUiModel.pagingData)
