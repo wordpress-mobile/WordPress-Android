@@ -10,7 +10,7 @@ import androidx.paging.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -33,7 +33,6 @@ class UnifiedCommentListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
-    private val uiStateFlowStopTimeoutMs = 5000L
 
     // TODO we would like to explore moving PagingSource into the repository
     val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) { CommentPagingSource() }
@@ -78,7 +77,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         CommentsUiModel(Data(mappedCommentListItems))
     }.stateIn(
             scope = viewModelScope,
-            started = Companion.WhileSubscribed(uiStateFlowStopTimeoutMs),
+            started = SharingStarted.Companion.WhileSubscribed(UI_STATE_FLOW_TIMEOUT_MS),
             initialValue = CommentsUiModel.buildInitialState()
     )
 
@@ -120,5 +119,9 @@ class UnifiedCommentListViewModel @Inject constructor(
                 CommentsListUiModel()
 
         object Initial : CommentsListUiModel()
+    }
+
+    companion object {
+        private const val UI_STATE_FLOW_TIMEOUT_MS = 5000L
     }
 }
