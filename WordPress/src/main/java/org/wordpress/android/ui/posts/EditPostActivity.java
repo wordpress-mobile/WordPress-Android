@@ -210,6 +210,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
+import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -1760,9 +1761,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                             "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
                     );
                 } else {
-                    final Map<String, String> tags = new HashMap<>();
-                    tags.put("tag", T.EDITOR.toString());
-                    mCrashLogging.sendReport(exception, tags, null);
+                    CrashLoggingExtKt.sendReportWithTag(mCrashLogging, exception, T.EDITOR);
                     AppLog.e(T.EDITOR, exception.getMessage());
                 }
             } else {
