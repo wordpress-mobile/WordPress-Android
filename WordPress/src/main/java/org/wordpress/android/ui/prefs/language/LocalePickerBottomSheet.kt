@@ -106,7 +106,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         }
 
         btnLocaleSuggestion.setOnClickListener {
-            viewModel.onSuggestedLocaleSelected()
+            viewModel.onCurrentLocaleSelected()
         }
 
         dialog?.setOnShowListener { dialogInterface ->
@@ -121,7 +121,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiState?.let {
                 localeAdapter.submitList(uiState.listData)
-                btnLocaleSuggestion.text = uiState.suggestedLocale?.label
+                btnLocaleSuggestion.text = uiState.currentLocale?.label
                 emptyView.visibility = if (uiState.isEmptyViewVisible) View.VISIBLE else View.GONE
             }
         })
@@ -165,7 +165,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
 
     private fun onSearchStatusUpdated() {
         binding?.searchInputLayout?.editText?.text?.trim().let {
-            viewModel.requestSearch(it)
+            viewModel.onSearchQueryChanged(it)
         }
     }
 
