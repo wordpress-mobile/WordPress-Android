@@ -112,15 +112,25 @@ class LocalePickerViewModelTest : BaseUnitTest() {
         viewModel.start()
 
         viewModel.onSearchQueryChanged("Ita")
-        val lastState = uiStates.last()
+        val filteredItalianLocaleState = uiStates.last()
 
-        assertThat(lastState.listData?.size).isEqualTo(1)
+        assertThat(filteredItalianLocaleState.listData?.size).isEqualTo(1)
 
-        val localeInTheList = lastState.listData?.get(0)
-        assertThat(localeInTheList is LocaleRow).isTrue()
-        assertThat((localeInTheList as LocaleRow).label).isEqualTo("Italian")
-        assertThat(localeInTheList.localeCode).isEqualTo("it")
-        assertThat(localeInTheList.localizedLabel).isEqualTo("Italiano")
+        val italianLocale = filteredItalianLocaleState.listData?.get(0)
+        assertThat(italianLocale is LocaleRow).isTrue()
+        assertThat((italianLocale as LocaleRow).label).isEqualTo("Italian")
+        assertThat(italianLocale.localeCode).isEqualTo("it")
+        assertThat(italianLocale.localizedLabel).isEqualTo("Italiano")
+
+        // searching localized label
+        viewModel.onSearchQueryChanged("Русс")
+
+        val filteredRussianLocaleState = uiStates.last()
+
+        val russianLocale = filteredRussianLocaleState.listData?.get(0)
+        assertThat(russianLocale is LocaleRow).isTrue()
+        assertThat((russianLocale as LocaleRow).label).isEqualTo("Russian")
+        assertThat(russianLocale.localeCode).isEqualTo("ru")
     }
 
     @Test
