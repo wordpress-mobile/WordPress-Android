@@ -10,7 +10,7 @@ import java.util.Date
 class CommentPagingSource : PagingSource<Int, CommentModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentModel> {
         return LoadResult.Page(
-                data = generateComments(params.loadSize, 0),
+                data = generateComments(params.loadSize),
                 prevKey = null, // Only paging forward
                 nextKey = null // Only one page for now
         )
@@ -25,12 +25,11 @@ class CommentPagingSource : PagingSource<Int, CommentModel>() {
 
     // TODO for testing purposes only. Remove after attaching real data source.
     @Suppress("MagicNumber")
-    fun generateComments(num: Int, page: Int): List<CommentModel> {
+    fun generateComments(num: Int): List<CommentModel> {
         val commentListItems = ArrayList<CommentModel>()
-        val startIndex = num * page
-        var startTimestamp = System.currentTimeMillis() / 1000 - (30000 * startIndex)
+        var startTimestamp = System.currentTimeMillis() / 1000 - (30000 * num)
 
-        for (i in startIndex..startIndex + num) {
+        for (i in 0..num) {
             val commentModel = CommentModel()
             commentModel.id = i
             commentModel.remoteCommentId = i.toLong()
