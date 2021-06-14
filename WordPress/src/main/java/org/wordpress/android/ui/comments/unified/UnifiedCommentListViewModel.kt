@@ -33,6 +33,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
+    private val uiStateFlowStopTimeoutMs = 5000L
 
     // TODO we would like to explore moving PagingSource into the repository
     val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) { CommentPagingSource() }
@@ -77,7 +78,7 @@ class UnifiedCommentListViewModel @Inject constructor(
         CommentsUiModel(Data(mappedCommentListItems))
     }.stateIn(
             scope = viewModelScope,
-            started = Companion.WhileSubscribed(5000),
+            started = Companion.WhileSubscribed(uiStateFlowStopTimeoutMs),
             initialValue = CommentsUiModel.buildInitialState()
     )
 
