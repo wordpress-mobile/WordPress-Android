@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -75,6 +76,8 @@ class CommentsActivity : LocaleAwareActivity(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var commentStore: CommentStore
 
+    // for unknown reason lint complaints about implicit locale, even through we use Locale.US
+    @SuppressLint("DefaultLocale")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -101,8 +104,8 @@ class CommentsActivity : LocaleAwareActivity(),
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 val properties: MutableMap<String, String?> = HashMap()
-                properties["selected_filter"] = commentListFilters[position].name.toLowerCase(Locale.ROOT)
-                        .capitalize(Locale.ROOT)
+                properties["selected_filter"] = commentListFilters[position].name.toLowerCase(Locale.US)
+                        .capitalize(Locale.US)
                 AnalyticsTracker.track(COMMENT_FILTER_CHANGED, properties)
                 super.onPageSelected(position)
             }
