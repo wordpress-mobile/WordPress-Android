@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mlp
 
 import android.content.Context
-import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -15,7 +13,6 @@ import javax.inject.Inject
  */
 class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ModalLayoutPickerViewModel
 
     companion object {
         const val BLOCK_LAYOUT_PREVIEW_TAG = "BLOCK_LAYOUT_PREVIEW_TAG"
@@ -25,11 +22,8 @@ class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
 
     override fun getChooseButtonText() = R.string.mlp_create_page
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
-        setViewModel(viewModel)
-    }
+    override fun getViewModel() =
+            ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

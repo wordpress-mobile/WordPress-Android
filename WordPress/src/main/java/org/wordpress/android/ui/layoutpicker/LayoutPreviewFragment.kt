@@ -59,11 +59,14 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         binding.webView.settings.useWideViewPort = true
         binding.webView.setInitialScale(INITIAL_SCALE)
         binding.chooseButton.setText(getChooseButtonText())
+        setViewModel(getViewModel())
     }
 
     abstract fun getChooseButtonText(): Int
 
-    fun setViewModel(viewModel: LayoutPickerViewModel) {
+    abstract fun getViewModel(): LayoutPickerViewModel
+
+    private fun setViewModel(viewModel: LayoutPickerViewModel) {
         this.viewModel = viewModel
 
         viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
