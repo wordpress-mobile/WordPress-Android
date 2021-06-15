@@ -18,12 +18,6 @@ parameters:
   release_build:
     type: boolean
     default: false
-  app_name:
-    type: string
-    default: WordPress
-  product_key:
-    type: string
-    default: wordpress
 
 commands:
   copy-gradle-properties:
@@ -159,11 +153,19 @@ jobs:
           path: Artifacts
           destination: Artifacts
   Release Build:
+    parameters:
+      app_name:
+        type: string
+        default: "WordPress"
+      product_key:
+        type: string
+        default: "wordpress"
     executor:
       name: android/default
       api-version: "29"
     environment:
       JVM_OPTS: -Xmx2048m
+
     steps:
       - run:
           name: Init messages
