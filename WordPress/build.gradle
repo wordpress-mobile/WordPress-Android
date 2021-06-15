@@ -65,6 +65,9 @@ allOpen {
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
 
+def versionProperties = new Properties()
+file("../version.properties").withInputStream { versionProperties.load(it) }
+
 android {
     useLibrary 'android.test.runner'
 
@@ -75,9 +78,6 @@ android {
         jumboMode = true
         dexInProcess = true
     }
-
-    def versionProperties = new Properties()
-    file("../version.properties").withInputStream { versionProperties.load(it) }
 
     compileSdkVersion rootProject.compileSdkVersion
 
@@ -509,6 +509,16 @@ task "updateVersionProperties" {
     }
 }
 
+task "printVersionName" {
+    doLast {
+        def key = "$productKey" + "."
+        if(project.hasProperty('alpha')) {
+            key += "alpha."
+        }
+        key += "versionName"
+        println versionProperties.getProperty(key)
+    }
+}
 
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
