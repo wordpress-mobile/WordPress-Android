@@ -11,10 +11,11 @@ import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_
 class JetpackRemoteInstallActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = JetpackRemoteInstallActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        with(JetpackRemoteInstallActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarLayout.toolbarMain)
+        }
 
-        setSupportActionBar(binding.toolbarLayout.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

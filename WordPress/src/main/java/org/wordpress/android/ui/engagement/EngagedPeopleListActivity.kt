@@ -17,8 +17,10 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
-        val binding = EngagedPeopleListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        with(EngagedPeopleListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
 
         val listScenario = intent.getParcelableExtra<ListScenario>(KEY_LIST_SCENARIO)
                 ?: throw IllegalArgumentException(
@@ -30,7 +32,6 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
                 ListScenarioType.getSourceDescription(listScenario.type)
         )
 
-        setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

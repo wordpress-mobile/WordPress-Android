@@ -9,10 +9,11 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = UnifiedCommentActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        with(UnifiedCommentActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
 
-        setSupportActionBar(binding.toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
