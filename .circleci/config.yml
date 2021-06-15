@@ -18,6 +18,13 @@ parameters:
   release_build:
     type: boolean
     default: false
+  parameters:
+    app_name:
+      type: string
+      default: "WordPress"
+    product_key:
+      type: string
+      default: "wordpress"
 
 commands:
   copy-gradle-properties:
@@ -511,6 +518,8 @@ workflows:
     jobs:
       - lint
       - Release Build:
+          app_name: << pipeline.parameters.app_name >>
+          product_key: << pipeline.parameters.product_key >>
           requires:
             - lint
 
