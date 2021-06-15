@@ -13,14 +13,10 @@ class HistoryDetailActivity : LocaleAwareActivity() {
         const val KEY_HISTORY_DETAIL_FRAGMENT = "history_detail_fragment"
     }
 
-    private var binding: HistoryDetailActivityBinding? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(HistoryDetailActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            binding = this
-
             setSupportActionBar(toolbarMain)
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -52,10 +48,5 @@ class HistoryDetailActivity : LocaleAwareActivity() {
     override fun onBackPressed() {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
         super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 }
