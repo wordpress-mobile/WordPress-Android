@@ -41,10 +41,17 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.update(it ?: listOf())
             }
 
+            savedInstanceState?.let { viewModel.restoreState(it) }
+
             (dialog as? BottomSheetDialog)?.apply {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
     }
 
     override fun onAttach(context: Context) {
