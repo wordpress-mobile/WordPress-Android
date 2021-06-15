@@ -183,7 +183,7 @@ jobs:
           name: Prepare build
           command: |
             echo "export APP_VERSION=$(./gradlew -q printVersionName -PproductKey='<< parameters.product_key >>' | tail -1)" >> $BASH_ENV
-            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey='<< parameters.product_key >>' | tail -1)
+            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey="<< parameters.product_key >>" | tail -1)
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app_name >> Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
             echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app_name >> Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
