@@ -190,14 +190,14 @@ jobs:
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
       - run:
-          name: Build WordPress Zalpha
+          name: Build Zalpha
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
               bundle exec fastlane build_alpha app:<< parameters.product_key >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - run:
-          name: Build WordPress Vanilla
+          name: Build Vanilla
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
               bundle exec fastlane build_beta app:wordpress skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
