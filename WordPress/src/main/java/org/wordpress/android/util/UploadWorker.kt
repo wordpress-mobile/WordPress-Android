@@ -52,8 +52,11 @@ class UploadWorker(
             workerClassName: String,
             workerParameters: WorkerParameters
         ): ListenableWorker? {
-            // TODO This should use the [workerClassName] if there are other of Worker subclasses in the project
-            return UploadWorker(appContext, workerParameters, uploadStarter, siteStore)
+            return if (workerClassName == UploadWorker::class.java.name) {
+                UploadWorker(appContext, workerParameters, uploadStarter, siteStore)
+            } else {
+                null
+            }
         }
     }
 }

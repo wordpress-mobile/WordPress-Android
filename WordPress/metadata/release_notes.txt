@@ -1,7 +1,4 @@
-We’ve added 3 new updates to Stories in this update:
+* [*] Disables the ability to open the editor for Post Pages [#14523]
+* [*] Block Editor: "Set as featured" button within image block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3116]
+* [***] Block Editor: Audio block now available on WP.com sites on the free plan. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3523]
 
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
-
-Story previews now render as expected in the Reader.
-
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!

@@ -134,6 +134,12 @@
             app:longClickHint="@string/site_settings_category_hint" />
 
         <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_categories"
+            android:key="@string/pref_key_site_categories"
+            android:title="@string/site_settings_categories_title"
+            app:longClickHint="@string/site_settings_categories_hint" />
+
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_tags"
             android:key="@string/pref_key_site_tags"
             android:title="@string/site_settings_tags_title"

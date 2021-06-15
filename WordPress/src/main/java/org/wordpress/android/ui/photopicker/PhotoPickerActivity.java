@@ -276,7 +276,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             final String mimeType = getContentResolver().getType(mediaUri);
 
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                     mLocalPostId
             );
 
@@ -330,7 +330,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 // if user chose a featured image, track image picked event
                 if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
                     mFeaturedImageHelper.trackFeaturedImageEvent(
-                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                             mLocalPostId
                     );
                 }

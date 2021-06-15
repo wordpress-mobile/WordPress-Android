@@ -628,9 +628,6 @@
             android:label=""
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".ui.gif.GifPickerActivity"
-            android:theme="@style/WordPress.NoActionBar" />
-        <activity
             android:name=".util.config.manual.ManualFeatureConfigActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar" />
@@ -716,6 +713,12 @@
         <activity
             android:name=".ui.jetpack.restore.RestoreActivity"
             android:label="@string/restore"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Site Settings Categories -->
+        <activity
+            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:label="@string/categories"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->

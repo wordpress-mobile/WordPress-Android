@@ -182,8 +182,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     private fun initEmptyStore() {
-        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId))
-                .thenReturn(flowOf(BloggingRemindersModel(siteId)))
+        val emptyModel = BloggingRemindersModel(siteId)
+        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
     }
 
     private fun assertPrologue() {

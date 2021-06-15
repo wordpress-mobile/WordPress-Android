@@ -6,9 +6,16 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
 -->
 <resources>
+    <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
+    <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
     <string name="gutenberg_native_search_blocks">Блокови претраге</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Натпис блока претраге. Тренутни текст је</string>
     <string name="gutenberg_native_search_block">Блок претраге</string>
+    <string name="gutenberg_native_no_button">Без дугмета</string>
+    <string name="gutenberg_native_inside">Унутар</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s је %3$s %4$s.</string>
+    <string name="gutenberg_native_add_button_text">Додај текст дугмета</string>
     <string name="activity_log_backup_download_notice_download_action">Преузми</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Одбаци</string>
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
@@ -27,7 +34,6 @@ Language: sr_RS
     <string name="gutenberg_native_open">ОТВОРИ</string>
     <string name="gutenberg_native_lock_icon">Иконица за закључавање</string>
     <string name="gutenberg_native_choose_audio">Одабери звучни запис</string>
-    <string name="gutenberg_native_audio_file">Датотека звучног записа</string>
     <string name="gutenberg_native_add_audio">ДОДАЈ ЗВУЧНИ ЗАПИС</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
@@ -240,7 +246,6 @@ Language: sr_RS
     <string name="gutenberg_native_open_link_in_a_browser">Отвори везу у прегледачу</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Двапут тапни за одабир опције</string>
     <string name="pages_list_author">Аутор странице</string>
-    <string name="photo_picker_use_gif">Користи овај GIF</string>
     <string name="everyone">Сви</string>
     <string name="me">Ја</string>
     <string name="menu_content_info">Структура садржаја</string>
@@ -391,7 +396,6 @@ Language: sr_RS
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_ungroup">Разгрупиши</string>
-    <string name="gutenberg_native_translate">Преведи</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Додирни да сакријеш тастатуру</string>
     <string name="gutenberg_native_tap_here_to_show_help">Додирни овде да се прикаже помоћ</string>
     <string name="gutenberg_native_start_writing">Почни да пишеш…</string>
@@ -399,7 +403,6 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
     <string name="gutenberg_native_cut_block">Исеци блок</string>
-    <string name="gutenberg_native_show_section">Прикажи одељак</string>
     <string name="gutenberg_native_s_block_empty">%s блок. Празно</string>
     <string name="gutenberg_native_post_title_s">Наслов чланка. %s</string>
     <string name="gutenberg_native_post_title_empty">Наслов чланка. Празно</string>

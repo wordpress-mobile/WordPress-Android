@@ -19,7 +19,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowJetpackSettings
@@ -42,11 +42,13 @@ import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
-private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 2
-private const val ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION = 3
-private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 4
-private const val ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION = 5
+private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 3
+private const val ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION = 4
+private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 5
+private const val ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION = 6
 private const val TEST_SITE_NAME = "test site name"
+private const val TEST_SITE_ID = 1L
+private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID}"
 
 @InternalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
@@ -85,10 +87,11 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), any())).thenReturn(mock())
         whenever(getThreatModelUseCase.get(anyLong())).thenReturn(fakeThreatModel)
-        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any())).thenAnswer {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
                     it.getArgument(ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION)
+                    it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
             )
         }
         whenever(builder.buildFixableThreatDescription(any())).thenAnswer {
@@ -143,7 +146,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when get free estimate button is clicked, then ShowGetFreeEstimate event is triggered`() = test {
-        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any())).thenAnswer {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
                     it.getArgument(ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION)
             )
@@ -158,22 +161,20 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when enter server creds msg is clicked, then app opens site's jetpack settings external url`() = test {
-        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any())).thenAnswer {
+    fun `when enter server creds icon is clicked, then app opens site's jetpack settings external url`() = test {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any(), any(), any(), any())).thenAnswer {
             createDummyThreatDetailsListItems(
-                    onEnterServerCredsMessageClicked = it
-                            .getArgument(ON_ENTER_SERVER_CREDS_MESSAGE_CLICKED_PARAM_POSITION)
+                    onEnterServerCredsIconClicked = it
+                            .getArgument(ON_ENTER_SERVER_CREDS_ICON_CLICKED_PARAM_POSITION)
             )
         }
         val observers = init()
 
         (observers.uiStates.last() as Content)
                 .items
-                .filterIsInstance(DescriptionState::class.java)
-                .firstOrNull { it.text == UiStringRes(R.string.threat_fix_enter_server_creds_message_singular) }
-                ?.clickableTextsInfo
-                ?.firstOrNull()
-                ?.onClick
+                .filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_LINK) }
+                ?.onIconClick
                 ?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(
@@ -348,7 +349,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     private fun createDummyThreatDetailsListItems(
         primaryAction: (() -> Unit)? = null,
         secondaryAction: (() -> Unit)? = null,
-        onEnterServerCredsMessageClicked: (() -> Unit)? = null
+        onEnterServerCredsIconClicked: (() -> Unit)? = null
     ): List<JetpackListItemState> {
         val items = ArrayList<JetpackListItemState>()
         primaryAction?.let {
@@ -371,17 +372,13 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
                     )
             )
         }
-        onEnterServerCredsMessageClicked?.let {
+        onEnterServerCredsIconClicked?.let {
             items.add(
-                    DescriptionState(
-                            text = UiStringRes(R.string.threat_fix_enter_server_creds_message_singular),
-                            clickableTextsInfo = listOf(
-                                    ClickableTextInfo(
-                                            startIndex = 0,
-                                            endIndex = 1,
-                                            onClick = onEnterServerCredsMessageClicked
-                                    )
-                            )
+                    FootnoteState(
+                            iconResId = R.drawable.ic_plus_white_24dp,
+                            iconColorResId = R.color.primary,
+                            text = UiStringText(SERVER_CREDS_LINK),
+                            onIconClick = onEnterServerCredsIconClicked
                     )
             )
         }
