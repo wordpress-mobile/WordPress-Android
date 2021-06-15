@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-27 11:54:09+0000
+Translation-Revision-Date: 2021-06-11 14:23:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
+    <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
+    <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
+    <string name="storage_utils_dialog_message">Zum Veröffentlichen müssen die Inhalte auf deinem Gerät gespeichert werden. Überprüfe deine Speichereinstellungen und entferne Dateien, um Platz zu schaffen.</string>
+    <string name="storage_utils_dialog_title">Unzureichender Gerätespeicher</string>
+    <string name="gutenberg_native_y_axis_position">Position auf der y-Achse</string>
+    <string name="gutenberg_native_x_axis_position">Position auf der x-Achse</string>
+    <string name="gutenberg_native_type_a_url">URL eingeben</string>
+    <string name="gutenberg_native_tap_to_add_content">Tippen, um Inhalte hinzuzufügen</string>
+    <string name="gutenberg_native_slash_inserter_results">Ergebnisse der Schrägstrich-Eingabe</string>
+    <string name="gutenberg_native_show_media_on_right">Medien rechts anzeigen</string>
+    <string name="gutenberg_native_show_media_on_left">Medien links anzeigen</string>
+    <string name="gutenberg_native_s_has_url_set">Für %s wurde eine URL festgelegt</string>
+    <string name="gutenberg_native_s_has_no_url_set">Für %s wurde keine URL festgelegt</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s wurde in normale Blöcke umgewandelt</string>
+    <string name="gutenberg_native_s_block">%s blockieren</string>
+    <string name="gutenberg_native_overlay">Overlay</string>
+    <string name="gutenberg_native_optional_placeholder">Optionaler Platzhalter …</string>
+    <string name="gutenberg_native_opacity">Deckkraft</string>
+    <string name="gutenberg_native_minimum_height">Mindesthöhe</string>
+    <string name="gutenberg_native_media_text_settings">Medien- und Text-Einstellungen</string>
+    <string name="gutenberg_native_media_options">Medien-Optionen</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">Ungültige URL. Audiodatei nicht gefunden.</string>
+    <string name="gutenberg_native_insert_crosspost">Beitrag erneut einfügen</string>
+    <string name="gutenberg_native_fixed_background">Fixierter Hintergrund</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Ziehen, um Fokuspunkt anzupassen</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Doppelt tippen, um Bottom Sheet zu öffnen und Bild oder Video hinzuzufügen</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Doppelt tippen, um Action Sheet zu öffnen und Bild oder Video hinzuzufügen</string>
+    <string name="gutenberg_native_dimensions">Abmessungen</string>
+    <string name="gutenberg_native_current_unit_is_s">Aktuelle Einheit ist %s</string>
+    <string name="gutenberg_native_crosspost">Mehrfach posten</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Bild zuschneiden, um gesamte Spalte auszufüllen</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">In normale Blöcke umwandeln</string>
+    <string name="gutenberg_native_columns_settings">Spalten-Einstellungen</string>
+    <string name="gutenberg_native_clear_media">Medien entfernen</string>
+    <string name="gutenberg_native_button_width">Breite des Buttons</string>
+    <string name="gutenberg_native_add_link_to_s">Link hinzufügen zu %s</string>
+    <string name="gutenberg_native_add_link_text">Linktext hinzufügen</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Bild oder Video hinzufügen</string>
+    <string name="error_media_path_is_directory">Der angegebene Pfad führt zu einem Verzeichnis statt deiner Mediendatei</string>
+    <string name="error_media_could_not_find_media_in_path">Keine Mediendatei im Pfad gefunden</string>
+    <string name="error_media_unexpected_empty_media_file_path">Unerwarteter leerer Dateipfad für Medien</string>
+    <string name="error_media_file_type_not_allowed">Dieser Dateityp ist nicht zulässig</string>
+    <string name="error_media_unexpected_null_value">Medien waren leer</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um Bedrohungen zu beheben.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um die Bedrohung zu beheben.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Zum Hinzufügen eines Links zweimal tippen</string>
     <string name="gutenberg_native_add_link">LINK HINZUFÜGEN</string>
     <string name="login_empty_view_try_another_account">Mit einem anderen Konto probieren</string>
     <string name="login_empty_view_see_instructions">Anweisungen anzeigen</string>
+    <string name="login_no_jetpack_sites_error_message">Wenn du bereits eine Website hast, musst du das kostenlose Jetpack-Plugin installieren und es mit deinem WordPress.com-Konto verbinden.</string>
     <string name="login_empty_view_avatar_content_description">Dein Profilfoto</string>
     <string name="login_not_a_jetpack_site">Um diese App für %1$s zu verwenden, muss das Jetpack-Plugin installiert und mit einem WordPress.com-Konto verbunden sein.</string>
     <string name="gutenberg_native_audio_settings">Audio-Einstellungen</string>
@@ -17,6 +64,8 @@ Language: de
     <string name="gutenberg_native_size">Größe</string>
     <string name="gutenberg_native_move_image_backward">Bild nach hinten verschieben</string>
     <string name="gutenberg_native_move_image_forward">Bild nach vorne verschieben</string>
+    <string name="gutenberg_native_column_settings">Spalten-Einstellungen</string>
+    <string name="gutenberg_native_width_settings">Breite-Einstellungen</string>
     <string name="user_profile_site_section_header">Website</string>
     <string name="user_profile_untitled_site">(Ohne Titel)</string>
     <string name="user_profile_bottom_sheet_description">Benutzerprofil Bottom Sheet-Informationen</string>
@@ -25,7 +74,10 @@ Language: de
     <string name="gutenberg_native_write_code">Schreibe etwas Code…</string>
     <string name="gutenberg_native_sorting_and_filtering">Sortieren und filtern</string>
     <string name="gutenberg_native_show_download_button">Download-Button anzeigen</string>
+    <string name="gutenberg_native_s_social_icon">Social-Media-Symbol für %s</string>
     <string name="gutenberg_native_shortcode">Shortcode</string>
+    <string name="gutenberg_native_add_label">Label hinzufügen …</string>
+    <string name="gutenberg_native_mention">Erwähnung</string>
     <string name="gutenberg_native_read_more">Weiterlesen</string>
     <string name="gutenberg_native_post_content_settings">Einstellungen für Beitragsinhalte</string>
     <string name="gutenberg_native_post_meta_settings">Beitrags-Meta-Einstellungen</string>
@@ -44,11 +96,13 @@ Language: de
     <string name="gutenberg_native_change_heading_level">Überschriften-Ebene ändern</string>
     <string name="gutenberg_native_code">Code</string>
     <string name="gutenberg_native_browser_default">Browser-Standard</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Gib eine kurze Beschreibung des Links für Benutzer von Screenreadern an</string>
     <string name="gutenberg_native_attachment_page">Anhang-Seite</string>
     <string name="gutenberg_native_auto">Automatisch</string>
     <string name="gutenberg_native_autoplay">Autoplay</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Ein Block kann nicht in sich selbst ausgeführt werden.</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Block wurde gelöscht oder ist nicht verfügbar.</string>
+    <string name="gutenberg_native_cover">Cover</string>
     <string name="gutenberg_native_add_text">Text hinzufügen…</string>
     <string name="gutenberg_native_add_caption">Überschrift hinzufügen</string>
     <string name="login_no_jetpack_sites">Keine Jetpack-Websites gefunden</string>
@@ -689,6 +743,7 @@ Language: de
     <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_move_to_top">Nach oben verschieben</string>
+    <string name="gutenberg_native_remove">Entfernen</string>
     <string name="gutenberg_native_insert_mention">Erwähnung einfügen</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tippe zweimal, um das Action Sheet mit den verfügbaren Optionen zu öffnen</string>
@@ -742,6 +797,7 @@ Language: de
     <string name="reader_reblog_error">Rebloggen ist fehlgeschlagen</string>
     <string name="reader_no_site_to_reblog_action">Websites verwalten</string>
     <string name="reader_no_site_to_reblog_detail">Sobald du eine Website bei WordPress.com erstellt hast, kannst du Inhalte, die dir gefallen, auf deiner eigenen Website rebloggen.</string>
+    <string name="gutenberg_native_number_of_columns">Anzahl an Spalten</string>
     <string name="gutenberg_native_move_block_right">Block nach rechts verschieben</string>
     <string name="gutenberg_native_move_block_left">Block nach links verschieben</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Zum Verschieben des Blocks nach rechts zweimal tippen</string>
@@ -939,6 +995,7 @@ Language: de
     <string name="gutenberg_native_help_icon">Hilfe-Icon</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Zum Rückgängigmachen der letzten Änderung zweimal tippen</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Das Einfügen von Medien ist fehlgeschlagen.\nFür Optionen bitte hier tippen.</string>
+    <string name="gutenberg_native_link_text">Linktext</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Zum Umschalten der Einstellung zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Zum Auswählen eines Bilds zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Zum Auswählen eines Videos zweimal tippen</string>

@@ -100,7 +100,6 @@ import "./ScreenshotFastfile"
 Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]=File.dirname(File.expand_path(__dir__)) + "/"
-ENV["PROJECT_NAME"]="WordPress"
 REPOSITORY_NAME="WordPress-Android"
 
 ########################################################################
@@ -700,7 +699,9 @@ REPOSITORY_NAME="WordPress-Android"
   lane :build_bundle do | options |
     # Create the file names
     version=android_get_release_version(app: options[:app])
-    #TODO: change this to prefix and use wpandroid vs jpandroid
+    if version.nil?
+      UI.crash!("Unable to get version for #{options[:app]}")
+    end
     name="#{options[:prefix]}-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
 
@@ -721,9 +722,14 @@ REPOSITORY_NAME="WordPress-Android"
       sh("./gradlew clean >> #{logfile_path} 2>&1")
 
       sh("mkdir -p #{build_dir}")
-      UI.message("Running lint...")
-      sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
+      if options[:skip_lint].nil?
+        UI.message("Running lint...")
+        sh("echo \"Running lint...\" >> #{logfile_path}")
+        sh("./gradlew lint#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
+      else
+        UI.message("Skipping lint...")
+      end
+
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
       sh("./gradlew bundle#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")

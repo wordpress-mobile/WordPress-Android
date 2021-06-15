@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 842dec004fd4cb1ba817fb542ebb91fa317c1abf
+  revision: cb939d6f00ed0483eb4baf107361b7281bf9feac
   branch: update/jetpack
   specs:
     fastlane-plugin-wpmreleasetoolkit (1.2.0)
@@ -193,7 +193,7 @@ GEM
     octokit (4.21.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
-    oj (3.11.5)
+    oj (3.11.6)
     optimist (3.0.1)
     options (2.3.2)
     os (1.1.1)

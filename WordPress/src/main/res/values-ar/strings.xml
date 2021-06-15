@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-02 11:01:35+0000
+Translation-Revision-Date: 2021-06-10 20:35:14+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
+    <string name="storage_utils_dialog_dont_show_button">عدم العرض مرة أخرى</string>
+    <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>
+    <string name="storage_utils_dialog_message">يتعين علينا حفظ محتواك على جهازك قبل التمكن من نشره. راجع إعدادات التخزين الخاصة بك، وأزل الملفات لتوفير مساحة.</string>
+    <string name="storage_utils_dialog_title">مساحة التخزين على الجهاز غير كافية</string>
+    <string name="gutenberg_native_y_axis_position">موضع المحور الصادي</string>
+    <string name="gutenberg_native_x_axis_position">موضع المحور السيني</string>
+    <string name="gutenberg_native_type_a_url">كتابة عنوان URL</string>
+    <string name="gutenberg_native_tap_to_add_content">الضغط لإضافة محتوى</string>
+    <string name="gutenberg_native_slash_inserter_results">نتائج أداة إدراج الشرطة المائلة</string>
+    <string name="gutenberg_native_show_media_on_right">إظهار الوسائط على اليمين</string>
+    <string name="gutenberg_native_show_media_on_left">إظهار الوسائط على اليسار</string>
+    <string name="gutenberg_native_s_has_url_set">لدى %s عنوان URL معين</string>
+    <string name="gutenberg_native_s_has_no_url_set">ليس لدى %s عنوان URL معين</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">تم تحويل %s إلى مكوِّنات عادية</string>
+    <string name="gutenberg_native_s_block">%s مكوِّن</string>
+    <string name="gutenberg_native_overlay">غطاء Overlay</string>
+    <string name="gutenberg_native_optional_placeholder">عنصر نائب اختياري…</string>
+    <string name="gutenberg_native_opacity">الشفافية</string>
+    <string name="gutenberg_native_minimum_height">أدنى ارتفاع</string>
+    <string name="gutenberg_native_media_text_settings">إعدادات الوسائط والنص</string>
+    <string name="gutenberg_native_media_options">خيارات الوسائط</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">رابط غير صالح. لم يتم العثور على ملف صوت.</string>
+    <string name="gutenberg_native_insert_crosspost">إدراج مقالة في عدد من المجموعات الإخبارية في وقت واحد</string>
+    <string name="gutenberg_native_fixed_background">خلفية ثابتة</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">السحب لضبط نقطة التركيز</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">الضغط المزدوج لفتح الورقة السفلية لإضافة صورة أو مقطع فيديو</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">الضغط المزدوج لفتح ورقة الإجراءات لإضافة صورة أو مقطع فيديو</string>
+    <string name="gutenberg_native_dimensions">الأبعاد</string>
+    <string name="gutenberg_native_current_unit_is_s">الوحدة الحالي هي %s</string>
+    <string name="gutenberg_native_crosspost">النشر المتعدد</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">قص الصورة لملء العمود بالكامل</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">التحويل إلى مكوِّنات عادية</string>
+    <string name="gutenberg_native_columns_settings">إعدادات الأعمدة</string>
+    <string name="gutenberg_native_clear_media">مسح الوسائط</string>
+    <string name="gutenberg_native_button_width">عرض الزر</string>
+    <string name="gutenberg_native_add_link_to_s">إضافة رابط إلى %s</string>
+    <string name="gutenberg_native_add_link_text">إضافة نصّ للرابط</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">إضافة صورة أو فيديو</string>
+    <string name="error_media_path_is_directory">يُعد المسار المحدَّد دليلاً بدلاً من ملف الوسائط</string>
+    <string name="error_media_could_not_find_media_in_path">يتعذر العثور على ملف الوسائط في المسار</string>
+    <string name="error_media_unexpected_empty_media_file_path">مسار ملف فارغ غير متوقع خاص بالوسائط</string>
+    <string name="error_media_file_type_not_allowed">غير مسموح بنوع الملف هذا</string>
+    <string name="error_media_unexpected_null_value">كانت الوسائط فارغة</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديدات.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديد.</string>
     <string name="gutenberg_native_add_link">إضافة رابط</string>
     <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
@@ -111,24 +157,24 @@ Language: ar
     <string name="threat_fix_all_confirmation_message_plural">يرجى التأكيد على رغبتك في معالجة جميع التهديدات النشطة التي تصل إلى %s.</string>
     <string name="threat_fix_all_status_success_message_plural">تم معالجة التهديدات بنجاح.</string>
     <string name="scan_idle_threats_description_plural">عثر الفحص على %1$s من التهديدات المحتملة من خلال %2$s. يرجى مراجعتها أدناه واتخاذ الإجراءات أو الضغط على زر إصلاح الكل. نحن ⁦%3$s⁩ إذا كنت بحاجة إلينا.</string>
-    <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
-    <string name="gutenberg_native_edit_focal_point">Edit focal point</string>
+    <string name="scan_fixing_threats_description_plural">نعمل بجد في الخلفية لإصلاح هذه التهديدات. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
+    <string name="gutenberg_native_edit_focal_point">تحرير نقطة التركيز</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
-    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Action Sheet to edit, replace, or clear the image</string>
-    <string name="quick_start_completed_type_grow_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ll reach more people. Nice job!</string>
     <string name="new_site_creation_search_domain_input_hint">اكتب اسمًا لموقعك (اسم للنطاق)</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. أحسنت!</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">الضغط المزدوج لفتح الورقة السفلية لتحريرها أو استبدالها أو مسح الصورة</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">الضغط المزدوج لفتح ورقة الإجراءات لتحريرها أو استبدالها أو مسح الصورة</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b&gt;اكتملت جميع المهام&lt;/b&gt;&lt;br/&gt;ستتواصل مع مزيد من الأشخاص. عمل رائع!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b&gt;اكتملت جميع المهام&lt;/b&gt;&lt;br/&gt;لقد قمت بتخصيص موقعك. أحسنت!</string>
     <string name="invite_links_disable_dialog_message">بمجرد تعطيل رابط الدعوة هذا، لن يتمكن أي شخص من استخدامه للانضمام إلى فريقك. هل أنتَ متأكد؟</string>
     <string name="magic_link_not_meaning_to_create_account">ألم تقصد إنشاء حساب جديد؟ العودة للخلف لإعادة إدخال عنوان بريدك الإلكتروني.</string>
     <string name="quick_start_card_menu_hide">إخفاء حاليًا</string>
     <string name="invite_links_null_response">لم يتم تلقي أي ردّ</string>
     <string name="invite_links_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="invite_links_disable_dialog_title">تعطيل رابط الدعوة</string>
-    <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
-    <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
-    <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
-    <string name="invite_links_helper_text">استخدم هذا الرابط لضم أعضاء فريقك من دون دعوتهم واحدًا تلو الآخر. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
+    <string name="invite_links_cannot_get_role_data_error">حدث خطأ في أثناء الحصول على بيانات الخاصة بالدور ⁦%1$s⁩</string>
+    <string name="invite_links_cannot_get_roles_error">حدث خطأ في أثناء الحصول على الأدوار</string>
+    <string name="invite_links_generic_get_data_error">حدث خطأ غير معروف في أثناء إحضار بيانات روابط الدعوة</string>
+    <string name="invite_links_helper_text">استخدم هذا الرابط لضم أعضاء فريقك من دون دعوتهم واحدًا تلو الآخر. سيتمكن أي شخص يزور عنوان URL هذا من التسجيل في مؤسستك، حتى إذا تلقى الرابط من شخص آخر، لذا تأكَّد من مشاركته مع أشخاص موثوق بهم.</string>
     <string name="invite_links_section_title">رابط الدعوة</string>
     <string name="invite_links_get_status_retry">تحديث حالة الروابط</string>
     <string name="invite_links_generate">إنشاء رابط جديد</string>

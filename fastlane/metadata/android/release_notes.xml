@@ -1,170 +1,180 @@
 <ar>
-17.4:
-لقد أضفنا 3 تحديثات جديدة في هذا التحديث:
+17.5:
+ما الجديد في الإصدار 17.5؟
 
-سترى الآن أداة انتقاء الوسائط عند إضافة مكوِّن القصة من محرِّر المكوِّن، ما يسهِّل البدء.
+تسمح لك المكوِّنات القابلة لإعادة الاستخدام بإنشاء محتوى المكوِّن مرة واحدة وإعادة استخدامه عدد مرات غير محدود، مباشرةً من أداة إدراج المكوِّن.
 
-تعرض معاينات القصة الآن كما هو متوقع في القارئ.
+تجعل الأوامر التي تبدأ بشرطة إضافة المكوِّنات أمرًا سهلاً: ما عليك سوى الضغط على شرطة مائلة إلى الأمام واسم المكوِّن في المحرِّر.
 
-وأخيرًا، عند فشل رفع الشرائح، سيقوم التطبيق بإعادة المحاولة تلقائيًا، ما يوفِّر عليك نقرة إضافية!
+يمكنك الآن الاحتفاظ بالصوت عبر عنوان URL باستخدام مكوِّن الصوت.
+
+وأخيرًا، يمكن لقراء الشاشة الآن تحديد خلية السائر.
 </ar>
 <de-DE>
-17.4:
-Wir haben bei diesem Update 3 neue Updates für Geschichten hinzugefügt:
+17.5:
+Was ist neu in 17.5?
 
-Dir wird nun eine Medienauswahl angezeigt, wenn du einen Geschichtenblock vom Block-Editor hinzufügst, um dir den Start zu erleichtern.
+Mit wiederverwendbaren Blöcken musst du Blockinhalte nur einmal erstellen. Dann kannst du sie direkt über den Block-Inserter beliebig oft wiederverwenden.
 
-Die Geschichtenvorschau wird im Reader nun wie erwartet wiedergegeben.
+Schrägstrichbefehle erleichtern dir das Hinzufügen von Blöcken: Gib dazu einfach einen Schrägstrich gefolgt vom Blocknamen in den Editor ein.
 
-Und zuletzt versucht die App nun automatisch erneut, Slides hochzuladen, wenn dies fehlgeschlagen ist.
+Mit dem Audioblock kannst du nun Audiodateien per URL einbinden.
+
+Und nicht zuletzt können Screenreader ab sofort die Stepper-Zelle auswählen.
 </de-DE>
 <en-US>
-17.4:
-We’ve added 3 new updates to Stories in this update:
+17.5:
+What’s new in 17.5?
 
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
+Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
 
-Story previews now render as expected in the Reader.
+Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
 
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
+You can now pull in audio via URL with the Audio block.
+
+Finally, screen readers can now select the stepper cell.
 </en-US>
-<es-ES>
-17.4:
-Hemos añadido 3 nuevas actualizaciones a las historias en esta actualización:
-
-Ahora verás un selector de medios cuando añadas un bloque de historias desde el editor de bloques, haciendo más fácil empezar.
-
-Las vistas previas de las historias ahora se muestran en el lector como se espera.
-
-Y, por último, cuando las diapositivas fallan al subir, la aplicación volverá a intentarlo automáticamente, ¡ahorrándote un toque adicional!
-</es-ES>
-<fr-CA>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
-
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
-
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
-</fr-CA>
-<fr-FR>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
-
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
-
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
-</fr-FR>
 <iw-IL>
-17.4:
-בעדכון הזה הוספנו שלושה עדכונים חדשים לסטוריז:
+17.5:
+מה חדש בגרסת 17.5?
 
-בורר המדיה מוצג כעת כאשר מוסיפים בלוק של סטורי מעורך הבלוקים, כך שאפשר להתחיל לפרסם בקלות רבה יותר.
+בלוקים לשימוש חוזר מאפשרים לך ליצור תוכן של בלוק פעם אחת ולהשתמש בו שוב ושוב, ללא הגבלה, ישירות מתוך מוסיף הבלוקים.
 
-התצוגות המקדימות של הסטורי כעת מעובדות באופן תקין ב-Reader.
+פקודות של קו נטוי מאפשרות לך להוסיף בלוקים בקלות: אפשר להקיש על הקו הנטוי לפנים ולהקליד את שם הבלוק בעורך.
 
-ואחרון חביב, אם טעינת השקופיות נכשלת, האפליקציה תמשיך לנסות שוב באופן אוטומטי כדי לחסוך לך את ההקשה הנוספת!
+אפשר להוסיף אודיו דרך כתובת URL באמצעות בלוק האודיו.
+
+אחרון חביב, קוראי מסכים כעת בוחרים את התא של השלבים.
 </iw-IL>
 <id>
-17.4:
-Kami menambahkan 3 pembaruan untuk Cerita pada pembaruan ini:
+17.5:
+Apa yang baru di versi 17.5?
 
-Pemilih media akan ditampilkan saat menambahkan blok Cerita dari editor blok, sehingga proses memulai menjadi lebih mudah.
+Blok pakai ulang memungkinkan Anda membuat konten blok satu kali dan menggunakannya berulang kali, langsung dari penyisip blok.
 
-Pratinjau Cerita kini ditampilkan dengan pas di Pembaca.
+Perintah garis miring mempermudah penambahan blok: cukup ketik garis miring dan nama blok ke dalam editor.
 
-Akhirnya, jika slide gagal diunggah, aplikasi akan otomatis mencoba ulang, sehingga tidak perlu mengetuk layar lagi.
+Sekarang Anda dapat menambahkan audio melalui URL dengan blok Audio.
+
+Terakhir, sekarang pembaca layar dapat memilih sel yang lebih rumit.
 </id>
+<it-IT>
+17.5
+:Novità nella versione 17.5?
+
+I blocchi Riutilizzabili ti consentono di creare il contenuto del blocco una volta e riutilizzarlo infinite volte, direttamente dallo strumento per l'inserimento dei blocchi.
+
+I comandi slash semplificano l'aggiunta di blocchi: basta toccare una barra e il nome del blocco nell'editor.
+
+Ora puoi inserire l'audio tramite URL con il blocco Audio.
+
+Infine, i lettori di schermo possono ora selezionare la casella passo passo.
+</it-IT>
 <ja-JP>
-17.4:
-今回のアップデートでは、ストーリーに3件の新しいアップデートを追加しました。
+17.5:
+17.5の新機能
 
-ブロックエディターからストーリーブロックを追加する際に、メディアピッカーが表示されるようになり、開始が簡単になりました。
+再利用可能ブロックでブロックコンテンツを一度作成しておくと、「ブロック挿入」から何度でも再使用できるようになりました。
 
-Reader でストーリーのプレビューが期待どおりに表示されるようになりました。
+スラッシュコマンドでブロック追加操作が簡単になりました。スラッシュとブロック名をタップしてエディターに入力するだけです。
 
-さらに、スライドのアップロードに失敗するとアプリが自動的に再試行するため、再びタップする必要がなくなりました。
+音声ブロックを使用することで URL を介して音声を取り込めるようになりました。
+
+ついに、スクリーンリーダーではステッパーセルを選択できるようになりました。
 </ja-JP>
 <ko-KR>
-17.4:
-이 업데이트에서 새 업데이트 3가지를 스토리에 추가했습니다.
+17.5:
+17.5의 새로운 기능
 
-이제는 더 쉽게 시작할 수 있도록 블록 편집기의 스토리 블록을 추가할 때 미디어 선택기가 표시됩니다.
+재활용 가능한 블록을 통해 블록 콘텐츠를 한 번 생성하면 횟수 제한 없이 블록 편집기에서 바로 재활용할 수 있습니다.
 
-이제는 스토리 미리보기가 뉴스피드에서 예상대로 렌더링됩니다.
+슬래시 명령을 통해 블록을 쉽게 추가할 수 있습니다. 편집기에서 슬래시와 블록 이름을 활용하면 됩니다.
 
-그리고 마지막으로, 슬라이드가 업로드되지 않으면 앱에서 자동으로 다시 시도되므로 다시 누르지 않아도 됩니다.
+이제 오디오 블록으로 URL을 통해 오디오를 가져올 수 있습니다.
+
+마지막으로, 이제 화면 리더에서 스텝퍼 셀을 선택할 수 있습니다.
 </ko-KR>
 <nl-NL>
-17.4:
-We hebben in deze update drie nieuwe updates aan Verhalen toegevoegd:
+17.5:
+Wat is er nieuw in 17.5?
 
-Je ziet nu een mediakiezer wanneer je een verhaalblok toevoegt vanuit de blok-editor, waardoor het gemakkelijker wordt om aan de slag te gaan.
+Met herbruikbare blokken kun je eenmaal blokinhoud maken en deze oneindig vaak hergebruiken, rechtstreeks vanuit de blok inserter.
 
-Verhaal voorbeelden worden nu weergegeven zoals verwacht in de Reader.
+Slash opdrachten maken het toevoegen van blokken eenvoudig: tik gewoon op een voorwaartse schuine streep en bloknaam in de editor.
 
-En tot slot, wanneer slides niet kunnen worden geüpload, zal de app het automatisch opnieuw proberen, waardoor je een extra tik bespaart!
+Je kunt nu audio via URL ophalen met het audioblok.
+
+Ten slotte kunnen schermlezers nu de stepper cel selecteren.
 </nl-NL>
 <pt-BR>
-17.4:
-Adicionamos 3 novas atualizações às Stories:
+17.5:
+Quais as novidades da versão 17.5?
 
-Um seletor de mídia agora é exibido ao adicionar o bloco Story no editor de blocos, facilitando a criação.
+Blocos reutilizáveis permitem que você crie o conteúdo de blocos apenas uma vez e reutilize infinitas vezes diretamente no adicionador de blocos.
 
-A visualização de Story agora é exibida como esperado no leitor.
+Comandos com barra facilitam a adição de blocos: digite uma barra e depois o nome de um bloco no editor.
 
-Por fim, quando slides não são enviados corretamente, o aplicativo tentará novamente economizando um toque adicional.
+Agora você pode adicionar arquivos de áudio com um URL no bloco de áudio.
+
+Por fim, leitores de tela agora podem selecionar células de passagem no editor.
 </pt-BR>
 <ru-RU>
-17,4:
-В этой версии мы добавили 3 новых обновления для историй:
+17,5:
+Что нового в версии 17.5?
 
-Теперь при добавлении блока истории из редактора блоков вы увидите средство выбора мультимедиа, что позволит начать гораздо проще.
+Библиотека "Мои блоки" позволяет создавать содержимое блока один раз и повторно использовать его бесконечное количество раз прямо из панели для вставки блоков.
 
-Предварительный просмотр истории теперь отображается в Чтиве должным образом.
+Команды с косой чертой (слеш) упрощают добавление блоков: просто коснитесь слеша и имени блока в редакторе.
 
-И, наконец, когда слайды не загружаются, приложение автоматически повторит попытку, экономя вам дополнительное нажатие!
+Теперь вы можете вставлять аудио через URL-адрес с помощью блока Audio.
+
+Наконец, программы чтения с экрана теперь могут выбирать шаговую ячейку.
 </ru-RU>
 <sv-SE>
-17.4:
-Vi har lagt till 3 nya uppdateringar för berättelser i denna uppdatering:
+17.5:
+Nytt i 17.5.
 
-Nu visas en mediaväljare när du lägger till ett berättelseblock i blockredigeraren, så att du enklare kommer igång.
+Återanvändbara block låter dig skapa blockinnehåll en gång och sedan återanvända det gång på gång, direkt från blockinfogaren.
 
-Nu visas förhandsvisningar av berättelser på förväntat sätt i läsaren.
+Snedstreckskommandon gör enkelt att lägga till block: tryck på snedstreck och skriv in blocknamnet i redigeraren.
 
-Slutligen: Om en bildspelsbild inte laddas upp korrekt kommer appen automatiskt att göra ett nytt försök, så att du inte behöver trycka en extra gång!
+Nu kan du lägga in ljudfiler via en URL i ljudblocket.
+
+Slutligen har skärmläsare nu möjlighet att markera stegningscellen.
 </sv-SE>
 <tr-TR>
-17.4:
-Bu güncellemede Hikayeler'e 3 yeni güncelleme ekledik:
+17.5:
+17.5 sürümündeki yenilikler neler?
 
-Artık blok düzenleyiciden bir Hikaye bloku eklerken, başlamayı kolaylaştıran bir medya seçici göreceksiniz.
+Yeniden kullanılabilir bloklar, doğrudan blok yerleştiriciden blok içeriğini bir kez oluşturup sonsuz kez yeniden kullanmanıza olanak tanır.
 
-Hikaye önizlemeleri artık Okuyucu'da beklendiği gibi çalışıyor.
+Eğik çizgi komutları blok eklemeyi kolaylaştırır: Düzenleyicide bir eğik çizgiye ve blok adına dokunmanız yeterlidir.
 
-Son olarak, slaytlar yüklenemediğinde, uygulama otomatik olarak yeniden dener ve size fazladan bir dokunuş kazandırır.
+Artık Ses bloku ile URL üzerinden ses alabilirsiniz.
+
+Son olarak, ekran okuyucular artık adım hücresini seçebilir.
 </tr-TR>
 <zh-CN>
-17.4
-在本次更新中，我们向故事功能新增了3项更新。
+17.5：
+17.5 有什么新特性？
 
-现在，您使用区块编辑器添加故事区块时会看到一个媒体选择器，让您更容易上手。
+可重用区块让您只需创建一次区块内容，就可以在区块插入器中无限次重复使用。
 
-在阅读器中，故事的预览渲染已经达到预期。
+斜线命令使添加区块变得简单：只需在编辑器中点按一下正斜线和区块名称。
 
-当幻灯片上传失败，应用程序将自动重试，减少您的操作负担。
+您现在可以用音频区块通过URL嵌入音频。
+
+最后，屏幕阅读器现以可选择单元格。
 </zh-CN>
 <zh-TW>
-17.4:
-我們在此次更新中為「故事」新增了 3 個更新：
+17.5：
+17.5 版有哪些新功能？
 
-現在從區塊編輯器新增故事區塊會看到媒體選擇器，讓你更容易上手。
+可重複使用區塊讓你只要建立一次區塊內容，就能直接從區塊插入工具重複使用，不限次數。
 
-故事預覽現在可在閱讀器中正常顯示。
+斜線指令可輕鬆新增區塊：只要在編輯器中點選斜線和區塊名稱即可。
 
-若投影片無法上傳，該應用程式將自動重試，為你省去按按鍵的麻煩！
+你現在可使用音訊區塊透過 URL 嵌入音訊。
+
+最後，螢幕閱讀器現在可以選取步進器欄位。
 </zh-TW>
