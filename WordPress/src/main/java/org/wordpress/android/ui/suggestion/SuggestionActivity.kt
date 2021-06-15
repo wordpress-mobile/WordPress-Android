@@ -35,8 +35,10 @@ class SuggestionActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        binding = SuggestUsersActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        with(SuggestUsersActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
+        }
 
         val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
         val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
