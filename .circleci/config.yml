@@ -168,7 +168,7 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.jvmargs >> Android failed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app_name >> Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
