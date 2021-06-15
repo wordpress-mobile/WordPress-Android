@@ -1,32 +1,29 @@
 package org.wordpress.android.ui.layoutpicker
 
 import android.graphics.drawable.Drawable
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
-import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
+import org.wordpress.android.databinding.ModalLayoutPickerLayoutsCardBinding
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.viewBinding
 
 /**
  * Renders the Layout card
  */
-class LayoutViewHolder(internal val parent: ViewGroup) :
-        RecyclerView.ViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        R.layout.modal_layout_picker_layouts_card,
-                        parent,
-                        false
-                )
-        ) {
-    private val container: MaterialCardView = itemView.layout_container
-    private val preview: ImageView = itemView.preview
-    private val selected: ImageView = itemView.selected_overlay
+class LayoutViewHolder(
+    internal val parent: ViewGroup,
+    internal val binding: ModalLayoutPickerLayoutsCardBinding =
+            parent.viewBinding(ModalLayoutPickerLayoutsCardBinding::inflate)
+) : RecyclerView.ViewHolder(binding.root) {
+    private val container: MaterialCardView = binding.layoutContainer
+    private val preview: ImageView = binding.preview
+    private val selected: ImageView = binding.selectedOverlay
 
     fun onBind(
         uiState: LayoutListItemUiState,

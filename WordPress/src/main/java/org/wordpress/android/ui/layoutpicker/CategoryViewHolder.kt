@@ -1,31 +1,28 @@
 package org.wordpress.android.ui.layoutpicker
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.modal_layout_picker_category.view.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ModalLayoutPickerCategoryBinding
 import org.wordpress.android.login.util.getColorStateListFromAttribute
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.viewBinding
 
 /**
  * Renders the Layout Category header buttons
  */
-class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-                R.layout.modal_layout_picker_category,
-                parent,
-                false
-        )
-) {
-    val container: View = itemView.category_container
-    val category: TextView = itemView.category
-    val emoji: TextView = itemView.emoji
-    val check: ImageView = itemView.check
+class CategoryViewHolder(
+    internal val parent: ViewGroup,
+    internal val binding: ModalLayoutPickerCategoryBinding =
+            parent.viewBinding(ModalLayoutPickerCategoryBinding::inflate)
+) : RecyclerView.ViewHolder(binding.root) {
+    val container: View = binding.categoryContainer
+    val category: TextView = binding.category
+    val emoji: TextView = binding.emoji
+    val check: ImageView = binding.check
 
     fun onBind(uiState: CategoryListItemUiState) {
         category.text = uiState.title
