@@ -3,8 +3,8 @@ package org.wordpress.android.ui.sitecreation.theme
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.layout_picker_preview_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment
@@ -26,7 +26,7 @@ class DesignPreviewFragment : LayoutPreviewFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chooseButton.setText(R.string.hpp_choose_button)
+        (view.findViewById(R.id.chooseButton) as Button).setText(R.string.hpp_choose_button)
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
         setViewModel(viewModel)
