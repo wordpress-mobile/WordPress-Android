@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.layoutpicker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity.CENTER_HORIZONTAL
@@ -13,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.LayoutPickerPreviewFragmentBinding
@@ -36,6 +38,7 @@ private const val JS_EVALUATION_DELAY = 250L
 
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -59,15 +62,15 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         binding.webView.settings.useWideViewPort = true
         binding.webView.setInitialScale(INITIAL_SCALE)
         binding.chooseButton.setText(getChooseButtonText())
-        setViewModel(getViewModel())
+        initViewModel()
     }
 
     abstract fun getChooseButtonText(): Int
 
     abstract fun getViewModel(): LayoutPickerViewModel
 
-    private fun setViewModel(viewModel: LayoutPickerViewModel) {
-        this.viewModel = viewModel
+    private fun initViewModel() {
+        this.viewModel = getViewModel()
 
         viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
@@ -152,6 +155,11 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         } else {
             LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     override fun onDestroyView() {
