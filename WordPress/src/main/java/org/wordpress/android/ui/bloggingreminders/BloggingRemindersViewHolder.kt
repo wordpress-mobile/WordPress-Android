@@ -1,33 +1,37 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.view.ViewGroup
-import android.widget.ImageView.ScaleType.CENTER
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersCaptionBinding
+import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
 import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
-import org.wordpress.android.databinding.BloggingRemindersTextBinding
+import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
+import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.viewBinding
 
 sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding: T) :
         RecyclerView.ViewHolder(binding.root) {
-    class IllustrationViewHolder(parentView: ViewGroup, private val imageManager: ImageManager) :
+    class IllustrationViewHolder(parentView: ViewGroup) :
             BloggingRemindersViewHolder<BloggingRemindersIllustrationBinding>(
                     parentView.viewBinding(
                             BloggingRemindersIllustrationBinding::inflate
                     )
             ) {
         fun onBind(item: Illustration) = with(binding) {
-            imageManager.load(illustrationView, item.illustration, CENTER)
+            illustrationView.setImageResource(item.illustration)
         }
     }
 
@@ -42,13 +46,24 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         }
     }
 
-    class TextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-            BloggingRemindersViewHolder<BloggingRemindersTextBinding>(
+    class HighEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTextHighEmphasisBinding>(
                     parentView.viewBinding(
-                            BloggingRemindersTextBinding::inflate
+                            BloggingRemindersTextHighEmphasisBinding::inflate
                     )
             ) {
-        fun onBind(item: Text) = with(binding) {
+        fun onBind(item: HighEmphasisText) = with(binding) {
+            uiHelpers.setTextOrHide(text, item.text)
+        }
+    }
+
+    class MediumEmphasisTextViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTextMediumEmphasisBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTextMediumEmphasisBinding::inflate
+                    )
+            ) {
+        fun onBind(item: MediumEmphasisText) = with(binding) {
             uiHelpers.setTextOrHide(text, item.text)
         }
     }
@@ -74,6 +89,31 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                 item.onClick.click()
             }
             primaryButton.isEnabled = item.enabled
+        }
+    }
+
+    class DayButtonsViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersDayButtonsBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersDayButtonsBinding::inflate
+                    )
+            ) {
+        fun onBind(item: DayButtons) = with(binding) {
+            listOf(
+                    dayOne,
+                    dayTwo,
+                    dayThree,
+                    dayFour,
+                    dayFive,
+                    daySix,
+                    daySeven
+            ).forEachIndexed { index, day -> day.initDay(item.dayItems[index]) }
+        }
+
+        private fun TextView.initDay(dayItem: DayItem) {
+            uiHelpers.setTextOrHide(this, dayItem.text)
+            setOnClickListener { dayItem.onClick.click() }
+            isSelected = dayItem.isSelected
         }
     }
 }

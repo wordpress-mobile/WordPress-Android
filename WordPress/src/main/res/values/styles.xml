@@ -1549,6 +1549,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="BloggingRemindersTextLowEmphasis" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
     <style name="BloggingRemindersTitle" parent="BloggingRemindersText">
@@ -1560,6 +1567,13 @@
 
     <style name="BloggingRemindersCaption" parent="BloggingRemindersText">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+
+    <style name="BloggingRemindersDayBubble">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_lowest</item>
+        <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
     </style>
 
     <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
