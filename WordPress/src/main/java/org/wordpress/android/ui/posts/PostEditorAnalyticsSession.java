@@ -101,7 +101,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
-            properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding != null && canViewEditorOnboarding);
+            if (canViewEditorOnboarding != null) {
+                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
+            }
             // Note that start time only counts when the analytics session was created and not when the editor
             // activity started. We are mostly interested in measuring the loading times for the block editor,
             // where the main bottleneck seems to be initializing React Native and doing the initial load of Gutenberg.
@@ -150,7 +152,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
-            properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding != null && canViewEditorOnboarding);
+            if (canViewEditorOnboarding != null) {
+                properties.put(KEY_CAN_VIEW_EDITOR_ONBOARDING, canViewEditorOnboarding);
+            }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
