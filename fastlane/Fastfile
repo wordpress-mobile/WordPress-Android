@@ -324,19 +324,12 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = options[:app]
     version=android_get_release_version(app: app)
-    # define these globally
-    prefix = "wpandroid"
-    package_name = "org.wordpress.android"
-    if (app.downcase == "jetpack")
-      prefix = "jetpack"
-      package_name = "com.jetpack.android"
-    end
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "release", prefix: prefix)
+    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "release")
 
     upload_build_to_play_store(version: version, track: "production", app: app)
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, app: app)
     end
   end
 
@@ -386,14 +379,14 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = options[:app]
     version=android_get_alpha_version(app: app)
-    build_bundle(version: version, app:app, flavor:"Zalpha", buildType: "release", prefix: app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
+    build_bundle(version: version, app:app, flavor:"Zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "alpha", app: app)
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true)
+      create_gh_release(version: version, prerelease: true, app: app)
     end
   end
 
@@ -418,14 +411,14 @@ REPOSITORY_NAME="WordPress-Android"
     # Create the file names
     app = options[:app]
     version=android_get_release_version(app: app)
-    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "release", prefix:app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
+    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
        upload_build_to_play_store(version: version, track: "beta", app: app)
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true)
+      create_gh_release(version: version, prerelease: true, app: app)
     end
   end
 
@@ -448,15 +441,16 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_preflight() unless (options[:skip_prechecks])
 
     # Create the file names
-    version=android_get_release_version(app: options[:app])
-    build_bundle(version: version, app: options[:app], flavor:"Zalpha", buildType: "debug", prefix:options[:app].downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
+    app = options[:app]
+    version=android_get_release_version(app: app)
+    build_bundle(version: version, app: app, flavor:"Zalpha", buildType: "debug")
 
     if (options[:upload_to_play_store]) then
-       upload_build_to_play_store(version: version, track: "internal", app: options[:app])
+       upload_build_to_play_store(version: version, track: "internal", app: app)
     end
 
     if (options[:create_release])
-      create_gh_release(version: version, prerelease: true)
+      create_gh_release(version: version, prerelease: true, app: app)
     end
   end
 
@@ -477,7 +471,6 @@ REPOSITORY_NAME="WordPress-Android"
   lane :upload_build_to_play_store do | options |
 
     app = options[:app]
-    prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     package_name = app.downcase == "jetpack" ? JP_PACKAGE_NAME : WP_PACKAGE_NAME
 
     version=options[:version]
@@ -487,7 +480,7 @@ REPOSITORY_NAME="WordPress-Android"
       next
     end
 
-    aab_file_path = bundle_file_path(prefix, version)
+    aab_file_path = bundle_file_path(app, version)
 
     if File.exists? aab_file_path then
       upload_to_play_store(
@@ -874,7 +867,7 @@ REPOSITORY_NAME="WordPress-Android"
     end
 
     apk_file_path = universal_apk_file_path(version)
-    aab_file_path = bundle_file_path(options[:prefix], version)
+    aab_file_path = bundle_file_path(options[:app], version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
     release_assets = [aab_file_path]
     release_assets.append(apk_file_path) unless is_ci
@@ -913,7 +906,8 @@ REPOSITORY_NAME="WordPress-Android"
     "wpandroid-#{version["name"]}-universal.apk"
   end
 
-  def bundle_file_path(prefix, version)
+  def bundle_file_path(app, version)
+    prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
     File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
   end
