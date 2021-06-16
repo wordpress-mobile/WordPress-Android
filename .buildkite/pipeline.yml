@@ -2,7 +2,7 @@ steps:
   - label: "🧹 Lint & Checkstyle"
     command: |
         cp gradle.properties-example gradle.properties
-        ./gradlew lintWordpressVanillaRelease
+        ./gradlew lintWordpressVanillaRelease -Porg.gradle.jvmargs=-Xmx4g
     plugins:
       - docker#v3.8.0:
           image: "oguzkocer/android-image:latest"
