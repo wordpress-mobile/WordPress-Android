@@ -114,7 +114,7 @@ import javax.inject.Singleton;
 public class SiteRestClient extends BaseWPComRestClient {
     public static final int NEW_SITE_TIMEOUT_MS = 90000;
     private static final String SITE_FIELDS = "ID,URL,name,description,jetpack,visible,is_private,options,plan,"
-        + "capabilities,quota,icon,meta";
+        + "capabilities,quota,icon,meta,zendesk_site_meta";
     public static final String FIELDS = "fields";
     public static final String FILTERS = "filters";
 
