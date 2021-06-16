@@ -331,7 +331,7 @@ REPOSITORY_NAME="WordPress-Android"
       prefix = "jetpack"
       package_name = "com.jetpack.android"
     end
-    build_bundle(version: version, app: "wordpress", flavor:"Vanilla", buildType: "release", prefix: prefix)
+    build_bundle(version: version, app: app, flavor:"Vanilla", buildType: "release", prefix: prefix)
 
     upload_build_to_play_store(version: version, track: "production", app: app)
 
@@ -385,7 +385,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     # Create the file names
     app = options[:app]
-    version=android_get_alpha_version()
+    version=android_get_alpha_version(app: app)
     build_bundle(version: version, app:app, flavor:"Zalpha", buildType: "release", prefix: app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX)
 
     if (options[:upload_to_play_store]) then
@@ -479,7 +479,15 @@ REPOSITORY_NAME="WordPress-Android"
     app = options[:app]
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     package_name = app.downcase == "jetpack" ? JP_PACKAGE_NAME : WP_PACKAGE_NAME
-    aab_file_path = bundle_file_path(prefix, android_get_release_version(app: app))
+
+    version=options[:version]
+
+    if version.nil?
+      UI.message("No version available for #{options[:track]} track for #{app}")
+      next
+    end
+
+    aab_file_path = bundle_file_path(prefix, version)
 
     if File.exists? aab_file_path then
       upload_to_play_store(
@@ -704,20 +712,25 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Builds an app bundle"
   lane :build_bundle do | options |
     # Create the file names
-    version=android_get_release_version(app: options[:app])
+    version=options[:version]
+    app = options[:app]
+
     if version.nil?
-      UI.crash!("Unable to get version for #{options[:app]}")
+      UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
+      next
     end
-    name="#{options[:prefix]}-#{version["name"]}.aab"
+
+    prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
+    name="#{prefix}-#{version["name"]}.aab"
     apk_name=universal_apk_name(version)
 
-    aab_file="org.wordpress.android-#{options[:app]}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
+    aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
     logfile_path="#{build_dir}build.log"
 
     # Intermediate Variables
-    bundle_path = "#{output_dir}#{options[:app]}#{options[:flavor]}#{options[:buildType]}/#{aab_file}"
+    bundle_path = "#{output_dir}#{app}#{options[:flavor]}#{options[:buildType]}/#{aab_file}"
 
     # Build
     Dir.chdir("..") do
@@ -731,14 +744,14 @@ REPOSITORY_NAME="WordPress-Android"
       if options[:skip_lint].nil?
         UI.message("Running lint...")
         sh("echo \"Running lint...\" >> #{logfile_path}")
-        sh("./gradlew lint#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
+        sh("./gradlew lint#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1") unless is_ci
       else
         UI.message("Skipping lint...")
       end
 
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:app]}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
@@ -854,6 +867,12 @@ REPOSITORY_NAME="WordPress-Android"
   private_lane :create_gh_release do | options |
     set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
     version = options[:version]
+
+    if version.nil?
+      UI.message("Ignoring request to create GH version since version specified is nil")
+      next
+    end
+
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(options[:prefix], version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
