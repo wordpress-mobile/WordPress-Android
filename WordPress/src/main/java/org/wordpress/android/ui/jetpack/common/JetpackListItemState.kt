@@ -49,6 +49,7 @@ open class JetpackListItemState(open val type: ViewType) {
         val label: UiString,
         val labelSpannable: CharSequence? = null,
         val checked: Boolean = false,
+        val isEnabled: Boolean = true,
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)
 

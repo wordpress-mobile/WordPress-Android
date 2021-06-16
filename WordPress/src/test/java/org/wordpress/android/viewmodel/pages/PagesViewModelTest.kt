@@ -408,6 +408,7 @@ class PagesViewModelTest {
     ) {
         val site = SiteModel()
         site.showOnFront = showOnFront.value
+        site.pageForPosts = updatedPageForPostsId
         setUpPageStoreWithASinglePage(site)
         viewModel.start(site)
         val settings = StaticPage(updatedPageForPostsId, -1)
@@ -525,5 +526,26 @@ class PagesViewModelTest {
 
         // Assert
         assertThat(viewModel.authorUIState.value?.authorFilterSelection).isEqualTo(EVERYONE)
+    }
+
+    @Test
+    fun `when the user taps on the posts page a warning is shown`() = test {
+        // Arrange
+        val pageForPostsId = 1L
+        val page: PageItem.Page = mock()
+        whenever(page.remoteId).thenReturn(pageForPostsId)
+        val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
+        setupPageForPostsUpdate(
+                snackbarMessages = snackbarMessages,
+                showOnFront = PAGE,
+                updatedPageForPostsId = pageForPostsId
+        )
+
+        // Act
+        viewModel.onItemTapped(page)
+
+        // Assert
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_is_posts_page_warning)
     }
 }

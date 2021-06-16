@@ -715,6 +715,12 @@
             android:label="@string/restore"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!-- Site Settings Categories -->
+        <activity
+            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:label="@string/categories"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
