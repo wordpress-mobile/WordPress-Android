@@ -1,13 +1,10 @@
 steps:
   - label: "🧹 Lint & Checkstyle"
     command: |
-      apt-get -y install lshw
-      lshw -short
-      echo "---------"
       cp gradle.properties-example gradle.properties
       ./gradlew lintWordpressVanillaRelease
     plugins:
       - docker#v3.8.0:
-          image: "oguzkocer/android-image:latest"
+          image: "wordpressmobile/android-build-image:wpandroid"
           environment:
             - "CI=true"
