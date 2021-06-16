@@ -10,7 +10,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.SoftAssertions
+import org.assertj.core.api.SoftAssertions.assertSoftly
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -77,11 +77,11 @@ class WPCrashLoggingDataProviderTest {
 
         val user = sut.userProvider()
 
-        SoftAssertions().apply {
-            assertThat(user?.username).isEqualTo(TEST_ACCOUNT.userName)
-            assertThat(user?.email).isEqualTo(TEST_ACCOUNT.email)
-            assertThat(user?.userID).isEqualTo(TEST_ACCOUNT.userId.toString())
-        }.assertAll()
+        assertSoftly { softly ->
+            softly.assertThat(user?.username).isEqualTo(TEST_ACCOUNT.userName)
+            softly.assertThat(user?.email).isEqualTo(TEST_ACCOUNT.email)
+            softly.assertThat(user?.userID).isEqualTo(TEST_ACCOUNT.userId.toString())
+        }
     }
 
     @Test
