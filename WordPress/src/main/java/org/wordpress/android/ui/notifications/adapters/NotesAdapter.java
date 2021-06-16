@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -354,6 +355,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
         @Override
         protected ArrayList<Note> doInBackground(Void... voids) {

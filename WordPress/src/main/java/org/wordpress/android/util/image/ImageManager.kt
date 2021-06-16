@@ -452,6 +452,10 @@ class ImageManager @Inject constructor(
      * loaded for the view.
      */
     fun cancelRequestAndClearImageView(imageView: ImageView) {
+        val context = imageView.context
+        if (context is Activity && (context.isFinishing || context.isDestroyed)) {
+            return
+        }
         GlideApp.with(imageView.context).clear(imageView)
     }
 

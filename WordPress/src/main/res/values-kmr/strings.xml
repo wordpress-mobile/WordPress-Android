@@ -92,7 +92,6 @@ Language: ku_TR
     <string name="media_uploading_default">Medya tê hilxistin</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ev şander wekî spam nayê nîşankirin</string>
     <string name="stats_referrer_popup_unmark_as_spam">Wekî Spam nîşan neke</string>
-    <string name="gutenberg_native_select_item">Hêmanê hilbijêre</string>
     <string name="gutenberg_native_search_or_type_url">Li URL\'yê bigere an jî binivîse</string>
     <string name="gutenberg_native_add_this_telephone_link">Girêdana vê telefonê tevlî bike</string>
     <string name="gutenberg_native_add_this_link">Vê girêdanê tevlî bike</string>
@@ -253,7 +252,6 @@ Language: ku_TR
     <string name="menu_content_info">Awaya naverokê</string>
     <string name="everyone">Hemû kes</string>
     <string name="me">Ez</string>
-    <string name="photo_picker_use_gif">Vê GIF\'ê bi kar bîne</string>
     <string name="gutenberg_native_dismiss">Veşêre</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nesazkirî</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Demweşan</string>
@@ -282,6 +280,7 @@ Language: ku_TR
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
     <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
+    <string name="gutenberg_native_insert_mention">Behskirinê tevlî bike</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="pages_set_as_posts_page">Bike Rûpela Şandiyan</string>
@@ -355,7 +354,6 @@ Language: ku_TR
     <string name="weekday_monday">Duşem</string>
     <string name="weekday_sunday">Yekşem</string>
     <string name="gif_powered_by_tenor">Bihêzkirin ji aliyê Tenor</string>
-    <string name="gif_picker_search_hint">Di Tenor\'ê de lê bigere</string>
     <string name="photo_picker_gif">Ji Tenor\'ê hilbijêre</string>
     <string name="media_accessing_failed">Gihînî naveroka malpereke taybet nebû. Dibe ku hinek medya neyên bikaranîn</string>
     <string name="media_accessing_progress">Gihînî naveroka malpereke taybet dibe</string>
@@ -492,7 +490,6 @@ Language: ku_TR
     <string name="reader_save_for_later_display_name">Hat tomarkirin</string>
     <string name="reader_filter_tags_title">Mijar</string>
     <string name="gutenberg_native_wordpress_media_library">Medyageha WordPress\'ê</string>
-    <string name="gutenberg_native_translate">Wergerîne</string>
     <string name="gutenberg_native_start_writing">Dest bi nivîsandinê bike…</string>
     <string name="gutenberg_native_take_a_photo_or_video">Vîdyo an jî Wêne Bikişîne</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Ji bo klavyeyê veşêrî, bitikîne</string>
@@ -500,7 +497,6 @@ Language: ku_TR
     <string name="gutenberg_native_take_a_video">Vîdyo Bikişîne</string>
     <string name="gutenberg_native_take_a_photo">Wêneyekî Bikişîne</string>
     <string name="gutenberg_native_ungroup">Komê belav bike</string>
-    <string name="gutenberg_native_show_section">Beşê nîşan bide</string>
     <string name="gutenberg_native_cut_block">Blokê jê bike</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloka %s. Di vê blokê de naveroka nederbasdar heye</string>
     <string name="gutenberg_native_s_block_empty">Bloka %s. Vala</string>
@@ -516,6 +512,7 @@ Language: ku_TR
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Blokê ji rêzika %1$sem veguhezîne rêzika %2$sem</string>
     <string name="gutenberg_native_move_block_up">Blokê veguhezîne jorê</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blokê ji rêzika %1$sem bi jêr ve veguhezîne rêzika %2$sem</string>
+    <string name="gutenberg_native_link_inserted">Girêdan hat tevlîkirin</string>
     <string name="gutenberg_native_image_caption_s">Sernivîsa wêneyê. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyê veşêre</string>
     <string name="gutenberg_native_help_icon">Îkona alîkariyê</string>
@@ -904,7 +901,6 @@ Language: ku_TR
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_view_more">Zêdetir bibîne</string>
     <string name="stats_posts_and_pages">Şandî û Rûpel</string>
-    <string name="gif_picker_endless_scroll_network_error">Ji ber çewtiya torê hinek medya nehatin barkirin.</string>
     <string name="gif_picker_initial_empty_text">Ji bo tu GIF\'an tevlî Medyageha xwe bikî, lê bigere!</string>
     <string name="stats_search_terms_label">Têgiha Lêgerînê</string>
     <string name="stats_search_terms">Têgihên Lêgerînê</string>

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
@@ -307,6 +308,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentListViewHolder> 
      */
     private boolean mIsLoadTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<LoadCommentsTaskParameters, Void, Boolean> {
         private ArrayList<CommentListItem> mTmpComments;
         final CommentStatus mStatusFilter;

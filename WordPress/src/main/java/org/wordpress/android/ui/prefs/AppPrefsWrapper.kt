@@ -175,6 +175,14 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
+    fun setBloggingRemindersShown(siteId: Int) {
+        AppPrefs.setBloggingRemindersShown(siteId)
+    }
+
+    fun isBloggingRemindersShown(siteId: Int): Boolean {
+        return AppPrefs.isBloggingRemindersShown(siteId)
+    }
+
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
             AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 

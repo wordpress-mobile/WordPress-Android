@@ -1,29 +1,40 @@
 buildscript {
+    ext.aztecVersion = 'v1.3.45'
+
     repositories {
-        google()
         jcenter()
     }
 
-    ext {
-        aztecVersion = 'v1.3.45'
-    }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
 repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+        content {
+            includeGroup "com.facebook.react"
+        }
+    }
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror"
+        content {
+            includeGroup "org.wordpress-mobile"
+        }
+    }
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -86,58 +97,3 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.1'
 }
 
-signing {
-    required {
-        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
-    }
-    sign configurations.archives
-}
-
-version android.defaultConfig.versionName
-group = "org.wordpress"
-archivesBaseName = "editor"
-
-// http://central.sonatype.org/pages/gradle.html
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: project.properties.ossrhUsername, password: project.properties.ossrhPassword)
-            }
-
-            pom.project {
-                name 'WordPress-Android-Editor'
-                packaging 'aar'
-                description 'A reusable Android rich text editor component'
-                url 'https://github.com/wordpress-mobile/WordPress-Android-Editor'
-                scm {
-                    connection 'scm:git:https://github.com/wordpress-mobile/WordPress-Android-Editor.git'
-                    developerConnection 'scm:git:https://github.com/wordpress-mobile/WordPress-Android-Editor.git'
-                    url 'https://github.com/wordpress-mobile/WordPress-Android-Editor'
-                }
-
-                licenses {
-                    license {
-                        name 'The MIT License (MIT)'
-                        url 'http://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'maxme'
-                        name 'Maxime Biais'
-                        email 'maxime@automattic.com'
-                    }
-                }
-            }
-        }
-    }
-}

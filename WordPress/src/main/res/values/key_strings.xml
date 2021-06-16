@@ -42,12 +42,14 @@
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_categories" translatable="false">wp_pref_site_categories</string>
     <string name="pref_key_site_tags" translatable="false">wp_pref_site_tags</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
     <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
+    <string name="pref_key_blogging_reminders" translatable="false">wp_pref_blogging_reminders</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
     <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
     <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
