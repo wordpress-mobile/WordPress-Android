@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
@@ -43,7 +42,7 @@ import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
-class PreviewImageFragment : Fragment() {
+class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var parentViewModel: EditImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
@@ -74,12 +73,6 @@ class PreviewImageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.preview_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
