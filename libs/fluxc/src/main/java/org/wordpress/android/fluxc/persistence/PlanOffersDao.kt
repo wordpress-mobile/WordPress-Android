@@ -56,7 +56,7 @@ abstract class PlanOffersDao {
         val shortName: String? = null,
         val tagline: String? = null,
         val description: String? = null,
-        val icon: String? = null,
+        val icon: String? = null
     )
 
     @Entity(
