@@ -17,7 +17,6 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -159,9 +158,9 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     }
 
     private fun PreviewImageFragmentBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { state -> updateUiState(state) })
+        viewModel.uiState.observe(viewLifecycleOwner, { state -> updateUiState(state) })
 
-        viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
+        viewModel.loadIntoFile.observe(viewLifecycleOwner, { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
                 when (fileState) {
                     is ImageLoadToFileIdleState -> { // Do nothing
@@ -178,13 +177,13 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
             }
         })
 
-        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner, Observer { fileInfoEvent ->
+        viewModel.navigateToCropScreenWithFileInfo.observe(viewLifecycleOwner, { fileInfoEvent ->
             fileInfoEvent?.getContentIfNotHandled()?.let { fileInfo ->
                 navigateToCropScreenWithFileInfo(fileInfo)
             }
         })
 
-        parentViewModel.cropResult.observe(viewLifecycleOwner, Observer { cropResult ->
+        parentViewModel.cropResult.observe(viewLifecycleOwner, { cropResult ->
             cropResult?.getContentIfNotHandled()?.let {
                 if (it.resultCode == RESULT_OK) {
                     val data: Intent = it.data
@@ -198,7 +197,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
             }
         })
 
-        viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.finishAction.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
                 requireActivity().setResult(RESULT_OK, intent)
