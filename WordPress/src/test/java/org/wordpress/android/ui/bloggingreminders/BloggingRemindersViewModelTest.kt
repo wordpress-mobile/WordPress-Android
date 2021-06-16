@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -207,12 +208,12 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     private fun assertTextWithParams(item: BloggingRemindersItem, @StringRes textRes: Int) {
-        val title = item as HighEmphasisText
+        val title = item as MediumEmphasisText
         assertThat((title.text as UiStringResWithParams).stringRes).isEqualTo(textRes)
     }
 
     private fun assertCaption(item: BloggingRemindersItem, @StringRes textRes: Int) {
-        val caption = item as MediumEmphasisText
+        val caption = item as Caption
         assertThat((caption.text as UiStringRes).stringRes).isEqualTo(textRes)
     }
 
