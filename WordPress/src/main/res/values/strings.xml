@@ -3640,4 +3640,6 @@
     <string name="blogging_goals_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_done">Done</string>
+    <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
+    <string name="blogging_reminders_select_days_message">You can update this anytime</string>
 </resources>

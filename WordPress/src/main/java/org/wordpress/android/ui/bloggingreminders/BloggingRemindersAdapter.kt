@@ -3,25 +3,30 @@ package org.wordpress.android.ui.bloggingreminders
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Text
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY_BUTTONS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.DayButtonsViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.IllustrationViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.MediumEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.PrimaryButtonViewHolder
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TextViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TitleViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BloggingRemindersAdapter
-@Inject constructor(private val imageManager: ImageManager, private val uiHelpers: UiHelpers) :
+@Inject constructor(private val uiHelpers: UiHelpers) :
     Adapter<BloggingRemindersViewHolder<*>>() {
     private var items: List<BloggingRemindersItem> = listOf()
 
@@ -43,17 +48,21 @@ class BloggingRemindersAdapter
         when (holder) {
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
             is TitleViewHolder -> holder.onBind(item as Title)
-            is TextViewHolder -> holder.onBind(item as Text)
+            is HighEmphasisTextViewHolder -> holder.onBind(item as HighEmphasisText)
+            is MediumEmphasisTextViewHolder -> holder.onBind(item as MediumEmphasisText)
             is PrimaryButtonViewHolder -> holder.onBind(item as PrimaryButton)
+            is DayButtonsViewHolder -> holder.onBind(item as DayButtons)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BloggingRemindersViewHolder<*> {
         return when (Type.values()[viewType]) {
             TITLE -> TitleViewHolder(parent, uiHelpers)
-            ILLUSTRATION -> IllustrationViewHolder(parent, imageManager)
-            TEXT -> TextViewHolder(parent, uiHelpers)
+            ILLUSTRATION -> IllustrationViewHolder(parent)
+            HIGH_EMPHASIS_TEXT -> HighEmphasisTextViewHolder(parent, uiHelpers)
+            LOW_EMPHASIS_TEXT -> MediumEmphasisTextViewHolder(parent, uiHelpers)
             PRIMARY_BUTTON -> PrimaryButtonViewHolder(parent, uiHelpers)
+            DAY_BUTTONS -> DayButtonsViewHolder(parent, uiHelpers)
         }
     }
 
