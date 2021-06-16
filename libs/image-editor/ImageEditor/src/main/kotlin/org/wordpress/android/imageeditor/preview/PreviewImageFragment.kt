@@ -26,11 +26,11 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.EditImageViewModel
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
+import org.wordpress.android.imageeditor.databinding.PreviewImageFragmentBinding
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -43,6 +43,7 @@ import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
 class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
+    private var binding: PreviewImageFragmentBinding? = null
     private lateinit var viewModel: PreviewImageViewModel
     private lateinit var parentViewModel: EditImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
@@ -76,18 +77,20 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val nonNullIntent = checkNotNull(requireActivity().intent)
-        initializeViewModels(nonNullIntent)
-        initializeViews()
+        with(PreviewImageFragmentBinding.bind(view)) {
+            binding = this
+            val nonNullIntent = checkNotNull(requireActivity().intent)
+            initializeViewModels(nonNullIntent)
+            initializeViews()
+        }
     }
 
-    private fun initializeViews() {
+    private fun PreviewImageFragmentBinding.initializeViews() {
         initializeViewPager()
         initializeInsertButton()
     }
 
-    private fun initializeViewPager() {
+    private fun PreviewImageFragmentBinding.initializeViewPager() {
         val previewImageAdapter = PreviewImageAdapter(
             loadIntoImageViewWithResultListener = { imageData, imageView, position ->
                 loadIntoImageViewWithResultListener(imageData, imageView, position)
@@ -139,15 +142,15 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         viewModel.uiState.value?.let { updateUiState(it) }
     }
 
-    private fun initializeInsertButton() {
+    private fun PreviewImageFragmentBinding.initializeInsertButton() {
         insertButton.text = getString(R.string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
             viewModel.onInsertClicked()
         }
     }
 
-    private fun initializeViewModels(nonNullIntent: Intent) {
-        viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
+    private fun PreviewImageFragmentBinding.initializeViewModels(nonNullIntent: Intent) {
+        viewModel = ViewModelProvider(this@PreviewImageFragment).get(PreviewImageViewModel::class.java)
         parentViewModel = ViewModelProvider(requireActivity()).get(EditImageViewModel::class.java)
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
@@ -155,7 +158,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         viewModel.onCreateView(inputData, ImageEditor.instance)
     }
 
-    private fun setupObservers() {
+    private fun PreviewImageFragmentBinding.setupObservers() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { state -> updateUiState(state) })
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
@@ -204,7 +207,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         })
     }
 
-    private fun updateUiState(state: UiState) {
+    private fun PreviewImageFragmentBinding.updateUiState(state: UiState) {
         (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
         cropActionMenu?.isEnabled = state.editActionsEnabled
         UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
@@ -294,10 +297,11 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
     override fun onDestroyView() {
         super.onDestroyView()
         pagerAdapterObserver?.let {
-            previewImageViewPager.adapter?.unregisterAdapterDataObserver(it)
+            binding?.previewImageViewPager?.adapter?.unregisterAdapterDataObserver(it)
         }
         pagerAdapterObserver = null
         tabLayoutMediator.detach()
-        previewImageViewPager.unregisterOnPageChangeCallback(pageChangeCallback)
+        binding?.previewImageViewPager?.unregisterOnPageChangeCallback(pageChangeCallback)
+        binding = null
     }
 }
