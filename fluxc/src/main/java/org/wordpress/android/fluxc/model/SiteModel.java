@@ -123,6 +123,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mSpaceUsed;
     @Column private double mSpacePercentUsed;
 
+    // Zendesk meta
+    @Column private String mZendeskPlan;
+    @Column private String mZendeskAddOns;
+
     @Override
     public int getId() {
         return mId;
@@ -705,5 +709,21 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPageForPosts(long pageForPosts) {
         mPageForPosts = pageForPosts;
+    }
+
+    public String getZendeskPlan() {
+        return mZendeskPlan;
+    }
+
+    public void setZendeskPlan(String zendeskPlan) {
+        mZendeskPlan = zendeskPlan;
+    }
+
+    public String getZendeskAddOns() {
+        return mZendeskAddOns;
+    }
+
+    public void setZendeskAddOns(String zendeskAddOns) {
+        mZendeskAddOns = zendeskAddOns;
     }
 }

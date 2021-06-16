@@ -1216,6 +1216,12 @@ public class SiteRestClient extends BaseWPComRestClient {
                 site.setXmlRpcUrl(from.meta.links.xmlrpc);
             }
         }
+        if (from.zendesk_site_meta != null) {
+            site.setZendeskPlan(from.zendesk_site_meta.plan);
+            String addOns = from.zendesk_site_meta.addon != null
+                    ? TextUtils.join(",", from.zendesk_site_meta.addon) : "";
+            site.setZendeskAddOns(addOns);
+        }
         // Only set the isWPCom flag for "pure" WPCom sites
         if (!from.jetpack) {
             site.setIsWPCom(true);
