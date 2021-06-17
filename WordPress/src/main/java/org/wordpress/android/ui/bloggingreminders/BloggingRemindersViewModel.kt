@@ -42,7 +42,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
-    private val dayLabelUtils: DayLabelUtils
+    private val dayLabelUtils: DayLabelUtils,
+    private val analyticsTracker: BloggingRemindersAnalyticsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -91,6 +92,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     fun showBottomSheet(siteId: Int, screen: Screen) {
+        analyticsTracker.setSite(siteId)
         if (screen == PROLOGUE) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
         } else {
@@ -118,7 +120,8 @@ class BloggingRemindersViewModel @Inject constructor(
             SEVEN_DAYS -> UiStringRes(R.string.blogging_reminders_epilogue_body)
             else -> UiStringResWithParams(
                     R.string.blogging_reminders_epilogue_body_days,
-                    listOf(numberOfTimes, UiStringText(selectedDays.toString())))
+                    listOf(numberOfTimes, UiStringText(selectedDays.toString()))
+            )
         }
 
         return listOf(

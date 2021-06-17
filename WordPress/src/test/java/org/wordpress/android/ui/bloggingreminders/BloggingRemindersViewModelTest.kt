@@ -45,6 +45,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var prologueBuilder: PrologueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
+    @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -61,7 +62,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
-                dayLabelUtils
+                dayLabelUtils,
+                analyticsTracker
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
