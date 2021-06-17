@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -73,14 +74,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `sets blogging reminders as shown on PROLOGUE`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
     }
 
     @Test
     fun `shows bottom sheet on showBottomSheet`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         assertThat(events).containsExactly(true)
     }
@@ -89,7 +90,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `shows prologue ui state on PROLOGUE`() {
         val uiItems = initPrologueBuilder()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -100,7 +101,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val daySelectionScreen = listOf<BloggingRemindersItem>()
         whenever(daySelectionBuilder.buildSelection(eq(model), any())).thenReturn(daySelectionScreen)
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(daySelectionScreen)
     }
@@ -131,7 +132,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `switches from prologue do day selection on primary button click`() {
         initPrologueBuilder()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         clickPrimaryButton()
 
@@ -151,7 +152,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         )
         initDaySelectionBuilder()
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
 
         clickPrimaryButton()
 
@@ -160,7 +161,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `closes bottom sheet from epilogue on primary button click`() {
-        viewModel.showBottomSheet(siteId, EPILOGUE)
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
 
         assertEpilogue()
 

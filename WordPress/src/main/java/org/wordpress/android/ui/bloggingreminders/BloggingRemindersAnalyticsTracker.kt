@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Button.CONTINUE
@@ -36,6 +37,11 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
             )
     )
 
+    fun trackFlowStart(source: Source) = track(
+            BLOGGING_REMINDERS_FLOW_START,
+            mapOf(SOURCE_KEY to source.trackingName)
+    )
+
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
             stat,
             properties + (BLOG_TYPE_KEY to siteType?.trackingName)
@@ -51,9 +57,15 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         CONTINUE("continue")
     }
 
+    enum class Source(val trackingName: String) {
+        PUBLISH_FLOW("publish_flow"),
+        BLOG_SETTINGS("blog_settings")
+    }
+
     companion object {
         private const val BLOG_TYPE_KEY = "blog_type"
         private const val SCREEN_KEY = "screen"
         private const val BUTTON_KEY = "button"
+        private const val SOURCE_KEY = "source"
     }
 }

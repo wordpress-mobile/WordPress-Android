@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
@@ -99,8 +100,9 @@ class BloggingRemindersViewModel @Inject constructor(
         }.asLiveData(mainDispatcher)
     }
 
-    fun showBottomSheet(siteId: Int, screen: Screen) {
+    fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
+        analyticsTracker.trackFlowStart(source)
         if (screen == PROLOGUE) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
         } else {
