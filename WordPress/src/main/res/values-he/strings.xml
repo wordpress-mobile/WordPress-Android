@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-28 09:54:08+0000
+Translation-Revision-Date: 2021-06-11 14:16:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">הגדרות גבול</string>
+    <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>
+    <string name="storage_utils_dialog_ok_button">להציג את שטח האחסון</string>
+    <string name="storage_utils_dialog_message">אנחנו צריכים לשמור את התוכן במכשיר שלך לפני שנוכל לפרסם אותו. יש לבדוק את הגדרות האחסון שלך כדי להסיר קבצים ולפנות שטח אחסון.</string>
+    <string name="storage_utils_dialog_title">אין מספיק שטח אחסון במכשיר</string>
+    <string name="gutenberg_native_y_axis_position">מיקום של ציר Y</string>
+    <string name="gutenberg_native_x_axis_position">מיקום של ציר X</string>
+    <string name="gutenberg_native_type_a_url">יש להקליד כתובת URL</string>
+    <string name="gutenberg_native_tap_to_add_content">יש להקיש כדי להוסיף תוכן</string>
+    <string name="gutenberg_native_slash_inserter_results">תוצאות להוספה של קו נטוי</string>
+    <string name="gutenberg_native_show_media_on_right">להציג את המדיה מימין</string>
+    <string name="gutenberg_native_show_media_on_left">להציג את המדיה משמאל</string>
+    <string name="gutenberg_native_s_has_url_set">ב-%s הוגדרה כתובת URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">ב-%s לא הוגדרה כתובת URL</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">התוכן של %s הומר לבלוקים רגילים</string>
+    <string name="gutenberg_native_s_block">בלוק %s</string>
+    <string name="gutenberg_native_overlay">שכבת רקע</string>
+    <string name="gutenberg_native_optional_placeholder">מציין מיקום אופציונלי…</string>
+    <string name="gutenberg_native_opacity">שקיפות</string>
+    <string name="gutenberg_native_minimum_height">גובה מינימלי</string>
+    <string name="gutenberg_native_media_text_settings">הגדרות מדיה וטקסט</string>
+    <string name="gutenberg_native_media_options">אפשרויות מדיה</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">כתובת URL לא תקינה. לא נמצא קובץ אודיו.</string>
+    <string name="gutenberg_native_insert_crosspost">להוסיף למספר פוסטים</string>
+    <string name="gutenberg_native_fixed_background">רקע קבוע</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">יש לגרור כדי להתאים את נקודת המוקד</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">יש להקיש פעמיים כדי לפתוח את הגיליון התחתון ולהוסיף תמונה או סרטון</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות ולהוסיף תמונה או סרטון</string>
+    <string name="gutenberg_native_dimensions">מידות</string>
+    <string name="gutenberg_native_current_unit_is_s">היחידה הנוכחית היא %s</string>
+    <string name="gutenberg_native_crosspost">במספר פוסטים</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">לחתוך את התמונה כדי למלא את הטור</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">להמיר לבלוקים רגילים</string>
+    <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
+    <string name="gutenberg_native_clear_media">למחוק את המדיה</string>
+    <string name="gutenberg_native_button_width">הרוחב של הכפתור</string>
+    <string name="gutenberg_native_add_link_to_s">להוסיף קישור אל %s</string>
+    <string name="gutenberg_native_add_link_text">להוסיף טקסט לקישור</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">להוסיף תמונה או וידאו</string>
+    <string name="error_media_path_is_directory">הנתיב שצוין הוא ספריה ולא קובץ מדיה</string>
+    <string name="error_media_could_not_find_media_in_path">לא ניתן היה למצוא קובץ מדיה בנתיב</string>
+    <string name="error_media_unexpected_empty_media_file_path">שגיאה לא צפויה בהעלאת המדיה עקב נתיב ריק לקובץ</string>
+    <string name="error_media_file_type_not_allowed">סוג הקובץ לא מורשה</string>
+    <string name="error_media_unexpected_null_value">קובץ המדיה היה ריק</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיומים האלה.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי לתקן את האיום הזה.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">יש להקיש פעמיים כדי להוסיף קישור.</string>
     <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="login_empty_view_try_another_account">לנסות עם חשבון אחר</string>
     <string name="login_empty_view_see_instructions">להציג את ההוראות</string>
+    <string name="login_no_jetpack_sites_error_message">אם כבר יש לך אתר, יהיה עליך להתקין את התוסף החינמי של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">תמונת הפרופיל שלך</string>
     <string name="login_not_a_jetpack_site">כדי להשתמש באפליקציה הזאת עבור ⁦%1$s⁩ עליך להתקין את התוסף של Jetpack ולחבר אותו לחשבון שלך ב-WordPress.com.</string>
     <string name="gutenberg_native_audio_settings">הגדרות אודיו</string>
@@ -17,6 +64,8 @@ Language: he_IL
     <string name="gutenberg_native_size">גודל</string>
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
+    <string name="gutenberg_native_column_settings">הגדרות טור</string>
+    <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
     <string name="user_profile_site_section_header">אתר</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
@@ -25,7 +74,10 @@ Language: he_IL
     <string name="gutenberg_native_write_code">הוספת קוד…</string>
     <string name="gutenberg_native_sorting_and_filtering">מיון וסינון</string>
     <string name="gutenberg_native_show_download_button">הצג כפתור הורדה</string>
+    <string name="gutenberg_native_s_social_icon">סמל של הרשת החברתית %s</string>
     <string name="gutenberg_native_shortcode">שורטקוד</string>
+    <string name="gutenberg_native_add_label">להוסיף תווית…</string>
+    <string name="gutenberg_native_mention">אזכור</string>
     <string name="gutenberg_native_read_more">קרא עוד</string>
     <string name="gutenberg_native_post_content_settings">הגדרות תוכן פוסט</string>
     <string name="gutenberg_native_post_meta_settings">הגדרות פוסט מטא</string>
@@ -44,11 +96,13 @@ Language: he_IL
     <string name="gutenberg_native_change_heading_level">שינוי רמת כותרת</string>
     <string name="gutenberg_native_code">קוד</string>
     <string name="gutenberg_native_browser_default">ברירת המחדל של הדפדפן</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
     <string name="gutenberg_native_attachment_page">עמוד הקובץ</string>
     <string name="gutenberg_native_auto">אוטומטי</string>
     <string name="gutenberg_native_autoplay">הפעלה אוטומטית</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">בלוק שלא יכול להופיע בתוך עצמו.</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">הבלוק נמחק או לא זמין.</string>
+    <string name="gutenberg_native_cover">כיסוי</string>
     <string name="gutenberg_native_add_text">הוספת טקסט…</string>
     <string name="gutenberg_native_add_caption">להוסיף כיתוב</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
@@ -687,6 +741,7 @@ Language: he_IL
     <string name="update_now">לעדכן עכשיו</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
     <string name="gutenberg_native_move_to_top">להעביר לחלק העליון</string>
+    <string name="gutenberg_native_remove">להסיר</string>
     <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות עם האפשרויות הזמינות</string>
@@ -740,6 +795,7 @@ Language: he_IL
     <string name="button_insert">להוסיף</string>
     <string name="continue_label">המשך</string>
     <string name="copy_text">להעתיק</string>
+    <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
     <string name="gutenberg_native_move_block_right">להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">להזיז את הבלוק שמאלה מהמיקום %1$s למיקום %2$s</string>
@@ -937,6 +993,7 @@ Language: he_IL
     <string name="gutenberg_native_help_icon">סמל עזרה</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">יש להקיש פעמיים כדי לבטל את השינוי האחרון</string>
+    <string name="gutenberg_native_link_text">טקסט לקישור</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">יש להקיש פעמיים כדי לשנות את ההגדרות</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">יש להקיש פעמיים כדי לבחור תמונה</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">יש להקיש פעמיים כדי לבחור וידאו</string>

@@ -38,6 +38,10 @@ android {
             returnDefaultValues = true
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {

@@ -72,7 +72,7 @@ class SubFilterViewModelTest {
     @Before
     fun setUp() {
         whenever(initialTag.label).thenReturn("tag-label")
-        whenever(savedTag.tagTitle).thenReturn("tag-title")
+        whenever(savedTag.label).thenReturn("tag-label")
 
         viewModel = SubFilterViewModel(
                 TEST_DISPATCHER,
