@@ -145,6 +145,8 @@ ext {
     lifecycleVersion = '2.2.0'
     tracksVersion = '2.1.0'
 
+    coreLibraryDesugaringVersion = '1.1.5'
+
     // testing
     jUnitVersion = '4.13'
     androidxTestVersion = '1.1.0'
