@@ -2,6 +2,7 @@ package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.store.SiteStore
@@ -39,6 +40,11 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackFlowStart(source: Source) = track(
             BLOGGING_REMINDERS_FLOW_START,
+            mapOf(SOURCE_KEY to source.trackingName)
+    )
+
+    fun trackFlowDismissed(source: Screen) = track(
+            BLOGGING_REMINDERS_FLOW_DISMISSED,
             mapOf(SOURCE_KEY to source.trackingName)
     )
 

@@ -197,6 +197,14 @@ class BloggingRemindersViewModel @Inject constructor(
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
 
+    fun onBottomSheetDismissed() {
+        when (val screen = selectedScreen.value) {
+            PROLOGUE -> analyticsTracker.trackFlowDismissed(screen)
+            SELECTION -> analyticsTracker.trackFlowDismissed(screen)
+            EPILOGUE -> TODO()
+        }
+    }
+
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"),
         SELECTION("day_picker"),

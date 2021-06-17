@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +81,11 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onBottomSheetDismissed()
     }
 
     companion object {
