@@ -1,5 +1,6 @@
 package org.wordpress.android.editor;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -116,6 +117,7 @@ import java.util.UUID;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
+@SuppressLint("ClickableViewAccessibility")
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImeBackListener,
         AztecText.OnImageTappedListener,
@@ -426,7 +428,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
             showClassicEditorDeprecationDialog();
         }
-        
+
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -538,6 +539,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
+    @SuppressLint("StaticFieldLeak")
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList mTmpComments;
         private boolean mTmpMoreCommentsExist;

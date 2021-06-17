@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -540,6 +542,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(UnifiedCommentListViewModel.class)
+    abstract ViewModel unifiedCommentListViewModel(UnifiedCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(BloggingRemindersViewModel.class)
     abstract ViewModel bloggingRemindersViewModel(BloggingRemindersViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoriesListViewModel.class)
+    abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
 }
