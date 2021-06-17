@@ -5,6 +5,6 @@ steps:
       ./gradlew lintWordpressVanillaRelease
     plugins:
       - docker#v3.8.0:
-          image: "wordpressmobile/android-build-image:wpandroid"
+          image: "oguzkocer/android-image"
           environment:
             - "CI=true"
