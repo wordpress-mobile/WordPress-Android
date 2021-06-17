@@ -13,7 +13,7 @@ import org.wordpress.android.util.ActivityUtils
 import android.os.Handler
 
 class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, onClear: () -> Unit) {
-    private val headerLayout = rootView.findViewById<ViewGroup>(R.id.header_layout)
+    private val headerLayout = rootView.findViewById<ViewGroup>(R.id.site_creation_header_item)
     private val headerTitle = rootView.findViewById<TextView>(R.id.title)
     private val headerSubtitle = rootView.findViewById<TextView>(R.id.subtitle)
     private val searchInput = rootView.findViewById<EditText>(R.id.input)
