@@ -1,8 +1,11 @@
 steps:
   - label: "🧹 Lint & Checkstyle"
-    command: |
-      cp gradle.properties-example gradle.properties
-      ./gradlew lintWordpressVanillaRelease
+    commands:
+      - cp gradle.properties-example gradle.properties
+      - ./gradlew checkstyle
+      - ./gradlew ciktlint
+      - ./gradlew WordPress:detekt
+      - ./gradlew lintWordpressVanillaRelease
     plugins:
       - docker#v3.8.0:
           image: "oguzkocer/android-image"
