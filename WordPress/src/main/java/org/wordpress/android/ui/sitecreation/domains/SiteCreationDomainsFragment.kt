@@ -80,7 +80,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent() {
-        with (checkNotNull(binding)) {
+        with(checkNotNull(binding)) {
                 searchInputWithHeader = SearchInputWithHeader(
                         uiHelpers = uiHelpers,
                         rootView = root as ViewGroup,

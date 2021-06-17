@@ -25,7 +25,7 @@ abstract class SiteCreationBaseFormFragment : Fragment(R.layout.site_creation_fo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with (SiteCreationFormScreenBinding.bind(view)) {
+        with(SiteCreationFormScreenBinding.bind(view)) {
             siteCreationFormContentStub.layoutResource = getContentLayout()
             setBindingViewStubListener(this)
             siteCreationFormContentStub.inflate()
