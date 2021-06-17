@@ -201,7 +201,7 @@ class BloggingRemindersViewModel @Inject constructor(
         when (val screen = selectedScreen.value) {
             PROLOGUE -> analyticsTracker.trackFlowDismissed(screen)
             SELECTION -> analyticsTracker.trackFlowDismissed(screen)
-            EPILOGUE -> TODO()
+            EPILOGUE -> analyticsTracker.trackFlowCompleted()
         }
     }
 
