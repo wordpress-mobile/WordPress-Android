@@ -186,8 +186,10 @@ class BloggingRemindersViewModel @Inject constructor(
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
 
-    enum class Screen {
-        PROLOGUE, SELECTION, EPILOGUE
+    enum class Screen(val trackingName: String) {
+        PROLOGUE("main"),
+        SELECTION("day_picker"),
+        EPILOGUE("all_set")
     }
 
     data class UiState(val uiItems: List<BloggingRemindersItem>, val primaryButton: PrimaryButton? = null) {
