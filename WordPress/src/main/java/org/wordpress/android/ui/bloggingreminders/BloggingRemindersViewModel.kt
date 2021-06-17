@@ -27,6 +27,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -48,10 +49,11 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
     private val _selectedScreen = MutableLiveData<Screen>()
+    private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
     val uiState: LiveData<UiState> = merge(
-            _selectedScreen,
+            selectedScreen,
             _bloggingRemindersModel,
             _isFirstTimeFlow
     ) { screen, bloggingRemindersModel, isFirstTimeFlow ->
@@ -83,6 +85,10 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private val finish: () -> Unit = {
         _isBottomSheetShowing.value = Event(false)
+    }
+
+    private fun onScreenChanged(screen: Screen) {
+        analyticsTracker.trackScreenShown(screen)
     }
 
     fun getSettingsState(siteId: Int): LiveData<UiString> {
