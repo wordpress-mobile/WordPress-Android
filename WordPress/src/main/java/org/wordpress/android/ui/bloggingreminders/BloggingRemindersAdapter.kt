@@ -4,26 +4,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.CAPTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY_BUTTONS
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PRIMARY_BUTTON
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TIP
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TITLE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.CaptionViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.DayButtonsViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.IllustrationViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.MediumEmphasisTextViewHolder
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.PrimaryButtonViewHolder
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.HighEmphasisTextViewHolder
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TipViewHolder
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.TitleViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
@@ -47,6 +48,10 @@ class BloggingRemindersAdapter
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int) {
+        onBindViewHolder(holder, position, listOf())
+    }
+
+    override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int, payloads: List<Any>) {
         val item = items[position]
         when (holder) {
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
@@ -54,8 +59,8 @@ class BloggingRemindersAdapter
             is HighEmphasisTextViewHolder -> holder.onBind(item as HighEmphasisText)
             is MediumEmphasisTextViewHolder -> holder.onBind(item as MediumEmphasisText)
             is CaptionViewHolder -> holder.onBind(item as Caption)
-            is PrimaryButtonViewHolder -> holder.onBind(item as PrimaryButton)
-            is DayButtonsViewHolder -> holder.onBind(item as DayButtons)
+            is DayButtonsViewHolder -> holder.onBind(item as DayButtons, payloads.firstOrNull() as? DayButtonsPayload)
+            is TipViewHolder -> holder.onBind(item as Tip)
         }
     }
 
@@ -66,8 +71,8 @@ class BloggingRemindersAdapter
             HIGH_EMPHASIS_TEXT -> HighEmphasisTextViewHolder(parent, uiHelpers)
             LOW_EMPHASIS_TEXT -> MediumEmphasisTextViewHolder(parent, uiHelpers)
             CAPTION -> CaptionViewHolder(parent, uiHelpers)
-            PRIMARY_BUTTON -> PrimaryButtonViewHolder(parent, uiHelpers)
             DAY_BUTTONS -> DayButtonsViewHolder(parent, uiHelpers)
+            TIP -> TipViewHolder(parent, uiHelpers)
         }
     }
 
