@@ -5,6 +5,7 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.BulletState
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreUiState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -33,13 +35,18 @@ import javax.inject.Inject
 
 @Reusable
 class RestoreStateListItemBuilder @Inject constructor(
-    private val checkboxSpannableLabel: CheckboxSpannableLabel
+    private val checkboxSpannableLabel: CheckboxSpannableLabel,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) {
+    @Suppress("LongParameterList")
     fun buildDetailsListStateItems(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
+        siteId: Long,
+        isAwaitingCredentials: Boolean,
         onCreateDownloadClick: () -> Unit,
-        onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit
+        onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit,
+        onEnterServerCredsIconClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf(
                 buildIconState(
@@ -52,17 +59,30 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildActionButtonState(
                         titleRes = R.string.restore_details_action_button,
                         contentDescRes = R.string.restore_details_action_button_content_description,
+                        isEnabled = !isAwaitingCredentials,
                         onClick = onCreateDownloadClick
-                ),
-                buildSubHeaderState(R.string.restore_details_choose_items_header)
+                )
         )
+        if (isAwaitingCredentials) {
+            items.add(
+                    buildEnterServerCredsMessageState(
+                            onEnterServerCredsIconClicked,
+                            siteId = siteId,
+                            iconResId = R.drawable.ic_plus_white_24dp,
+                            iconColorResId = R.color.colorPrimary,
+                            iconSizeResId = R.dimen.jetpack_backup_restore_footnote_enter_server_creds_icon_size
+                    )
+            )
+        }
+        items.add(buildSubHeaderState(R.string.restore_details_choose_items_header))
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
             CheckboxState(
                     availableItemType = it.availableItemType,
                     label = UiStringRes(it.labelResId),
                     labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
-                    checked = true,
+                    checked = !isAwaitingCredentials,
+                    isEnabled = !isAwaitingCredentials,
                     onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
         }
@@ -231,6 +251,27 @@ class RestoreStateListItemBuilder @Inject constructor(
             onClick = onClick,
             isEnabled = isEnabled
     )
+
+    private fun buildEnterServerCredsMessageState(
+        onEnterServerCredsIconClicked: () -> Unit,
+        siteId: Long,
+        @DrawableRes iconResId: Int? = null,
+        @ColorRes iconColorResId: Int? = null,
+        @DimenRes iconSizeResId: Int? = null
+    ): FootnoteState {
+        return FootnoteState(
+                iconRes = iconResId,
+                iconColorResId = iconColorResId,
+                iconSizeResId = iconSizeResId,
+                text = UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                R.string.restore_details_enter_server_creds_msg,
+                                "${Constants.URL_JETPACK_SETTINGS}/$siteId"
+                        )
+                ),
+                onIconClick = onEnterServerCredsIconClicked
+        )
+    }
 
     private fun buildSubHeaderState(
         @StringRes textResId: Int,

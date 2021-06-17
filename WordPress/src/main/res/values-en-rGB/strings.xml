@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 07:23:28+0000
+Translation-Revision-Date: 2021-06-01 10:33:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Border settings</string>
+    <string name="storage_utils_dialog_dont_show_button">Don\'t show again</string>
+    <string name="storage_utils_dialog_ok_button">View storage</string>
+    <string name="storage_utils_dialog_message">We need to save your content on the device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="storage_utils_dialog_title">Insufficient device storage</string>
+    <string name="gutenberg_native_y_axis_position">Y–axis position</string>
+    <string name="gutenberg_native_x_axis_position">X–axis position</string>
+    <string name="gutenberg_native_type_a_url">Type a URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Tap to add content</string>
+    <string name="gutenberg_native_slash_inserter_results">Slash inserter results</string>
+    <string name="gutenberg_native_show_media_on_right">Show media on right</string>
+    <string name="gutenberg_native_show_media_on_left">Show media on left</string>
+    <string name="gutenberg_native_s_has_url_set">%s has URL set</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to normal blocks</string>
+    <string name="gutenberg_native_s_block">%s block</string>
+    <string name="gutenberg_native_overlay">Overlay</string>
+    <string name="gutenberg_native_optional_placeholder">Optional placeholder…</string>
+    <string name="gutenberg_native_opacity">Opacity</string>
+    <string name="gutenberg_native_minimum_height">Minimum height</string>
+    <string name="gutenberg_native_media_text_settings">Media and text settings</string>
+    <string name="gutenberg_native_media_options">Media options</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
+    <string name="gutenberg_native_insert_crosspost">Insert crosspost</string>
+    <string name="gutenberg_native_fixed_background">Fixed background</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Drag to adjust focal point</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Double tap to open bottom sheet to add image or video</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Double tap to open action sheet to add image or video</string>
+    <string name="gutenberg_native_dimensions">Dimensions</string>
+    <string name="gutenberg_native_current_unit_is_s">Current unit is %s</string>
+    <string name="gutenberg_native_crosspost">Crosspost</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Crop image to fill entire column</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Convert to normal blocks</string>
+    <string name="gutenberg_native_columns_settings">Columns settings</string>
+    <string name="gutenberg_native_clear_media">Clear media</string>
+    <string name="gutenberg_native_button_width">Button width</string>
+    <string name="gutenberg_native_add_link_to_s">Add link to %s</string>
+    <string name="gutenberg_native_add_link_text">Add link text</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Add image or video</string>
+    <string name="error_media_path_is_directory">The specified path is a directory instead of a media file</string>
+    <string name="error_media_could_not_find_media_in_path">Could not find media file in path</string>
+    <string name="error_media_unexpected_empty_media_file_path">Unexpected empty file path for media</string>
+    <string name="error_media_file_type_not_allowed">This file type is not allowed</string>
+    <string name="error_media_unexpected_null_value">Media was empty</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threats.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threat.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Double tap to add a link.</string>
     <string name="gutenberg_native_add_link">ADD LINK</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
-    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress account.</string>
+    <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
     <string name="login_empty_view_avatar_content_description">Your profile photo</string>
     <string name="login_not_a_jetpack_site">To use this app for %1$s you\'ll need to have the Jetpack plugin installed and connected to your WordPress.com account.</string>
     <string name="gutenberg_native_size">Size</string>
     <string name="gutenberg_native_move_image_forward">Move image forwards</string>
     <string name="gutenberg_native_move_image_backward">Move image backwards</string>
+    <string name="gutenberg_native_width_settings">Width settings</string>
     <string name="gutenberg_native_image_settings">Image settings</string>
+    <string name="gutenberg_native_column_settings">Column settings</string>
     <string name="gutenberg_native_audio_settings">Audio settings</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="likes_list_screen_title">Likes list %s</string>
+    <string name="gutenberg_native_write_title">Write title…</string>
     <string name="gutenberg_native_write_code">Write code…</string>
     <string name="gutenberg_native_sorting_and_filtering">Sorting and filtering</string>
+    <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_show_download_button">Show download button</string>
     <string name="gutenberg_native_shortcode">Shortcode</string>
+    <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_add_label">Add label…</string>
     <string name="gutenberg_native_read_more">Read more</string>
     <string name="gutenberg_native_preload">Preload</string>
     <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
@@ -35,15 +87,17 @@ Language: en_GB
     <string name="gutenberg_native_media_area">Media area</string>
     <string name="gutenberg_native_loop">Loop</string>
     <string name="gutenberg_native_link_to_12d6f96a">Link to</string>
+    <string name="gutenberg_native_link_label">Link label</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">image %1$d of %2$d in gallery</string>
     <string name="gutenberg_native_heading_d">Heading %d</string>
     <string name="gutenberg_native_featured">Featured</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Enter URL to embed here…</string>
     <string name="gutenberg_native_edit_image">Edit image</string>
     <string name="gutenberg_native_display_post_date">Display post date</string>
     <string name="gutenberg_native_code">Code</string>
     <string name="gutenberg_native_change_heading_level">Change heading level</string>
     <string name="gutenberg_native_browser_default">Browser default</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
+    <string name="gutenberg_native_cover">Cover</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Block has been deleted or is unavailable.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Block cannot be rendered inside itself.</string>
     <string name="gutenberg_native_autoplay">Autoplay</string>
@@ -64,27 +118,38 @@ Language: en_GB
     <string name="like_faces_singular_text">One blogger likes this.</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_title_singular">One Like</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Enter your server credentials to fix threats.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Enter your server credentials to fix threat.</string>
     <string name="suggestion">Suggestion:</string>
+    <string name="gutenberg_native_use_icon_button">Use icon button</string>
+    <string name="gutenberg_native_search_input_field">Search input field.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
     <string name="gutenberg_native_search_blocks">Search blocks</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
     <string name="gutenberg_native_search_block">Search block</string>
+    <string name="gutenberg_native_outside">Outside</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
+    <string name="gutenberg_native_no_button">No button</string>
+    <string name="gutenberg_native_inside">Inside</string>
+    <string name="gutenberg_native_hide_search_heading">Hide search heading</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Double tap to edit placeholder text</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Double tap to edit label text</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Double tap to edit button text</string>
     <string name="gutenberg_native_double_tap_to_change_unit">double tap to change unit</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Current placeholder text is</string>
     <string name="gutenberg_native_clear_search">Clear search</string>
     <string name="gutenberg_native_cancel_search">Cancel search</string>
+    <string name="gutenberg_native_button_position">Button position</string>
+    <string name="gutenberg_native_button_outside">Button outside</string>
+    <string name="gutenberg_native_button_inside">Button inside</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s is %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comment_status_unreplied">Unreplied</string>
-    <string name="gutenberg_native_table_of_contents">Table of Contents</string>
-    <string name="gutenberg_native_summary">summary</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Summarise your post with a list of headings. Add HTML anchors to Heading blocks to link them here.</string>
-    <string name="gutenberg_native_document_outline">document outline</string>
-    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
+    <string name="gutenberg_native_add_button_text">Add button text</string>
     <string name="reader_title_interests">Follow topics</string>
     <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
@@ -164,7 +229,7 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Double tap to listen to the audio file</string>
     <string name="gutenberg_native_choose_audio">Choose audio</string>
     <string name="gutenberg_native_audio_player">Audio Player</string>
-    <string name="gutenberg_native_audio_file"> audio file</string>
+    <string name="gutenberg_native_audio_file">audio file</string>
     <string name="gutenberg_native_audio_caption_s">Audio caption. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audio caption. Empty</string>
     <string name="gutenberg_native_add_audio">ADD AUDIO</string>
@@ -488,7 +553,6 @@ Language: en_GB
     <string name="media_uploading_gif_library_photo">Uploading gif media</string>
     <string name="media_uploading_stock_library_photo">Uploading stock media</string>
     <string name="media_uploading_default">Uploading media</string>
-    <string name="gutenberg_native_select_item">Select item</string>
     <string name="gutenberg_native_search_or_type_url">Search or type URL</string>
     <string name="gutenberg_native_page_break">Page break</string>
     <string name="gutenberg_native_add_this_telephone_link">Add this telephone link</string>
@@ -647,7 +711,6 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_select_the_option">Double tap to select the option</string>
     <string name="gutenberg_native_customize_gradient">Customise Gradient</string>
     <string name="pages_list_author">Page author</string>
-    <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="error_media_thumbnail_not_loaded">Media thumbnail could not be loaded</string>
     <string name="menu_content_info">Content structure</string>
     <string name="everyone">Everyone</string>
@@ -681,8 +744,10 @@ Language: en_GB
     <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
     <string name="status_and_visibility">Status and Visibility</string>
     <string name="update_now">Update Now</string>
+    <string name="gutenberg_native_remove">Remove</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
     <string name="gutenberg_native_move_to_top">Move to top</string>
+    <string name="gutenberg_native_insert_mention">Insert mention</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Double tap to open Bottom Sheet with available options</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Double tap to open Action Sheet with available options</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
@@ -735,6 +800,7 @@ Language: en_GB
     <string name="button_insert">Insert</string>
     <string name="continue_label">Continue</string>
     <string name="copy_text">Copy</string>
+    <string name="gutenberg_native_number_of_columns">Number of columns</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Move block right from position %1$s to position %2$s</string>
     <string name="gutenberg_native_move_block_right">Move block right</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Move block left from position %1$s to position %2$s</string>
@@ -751,7 +817,6 @@ Language: en_GB
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="gif_list_search_returned_unknown_error">There was a problem handling the request</string>
     <string name="gif_powered_by_tenor">Powered by Tenor</string>
-    <string name="gif_picker_search_hint">Search Tenor</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="weekday_saturday">Saturday</string>
     <string name="weekday_friday">Friday</string>
@@ -802,8 +867,11 @@ Language: en_GB
     <string name="gutenberg_native_link_to">Link To</string>
     <string name="gutenberg_native_link_settings">Link Settings</string>
     <string name="gutenberg_native_excerpt_length_words">Excerpt length (words)</string>
+    <string name="gutenberg_native_edit_cover_media">Edit cover media</string>
     <string name="gutenberg_native_customize">CUSTOMISE</string>
+    <string name="gutenberg_native_button_link_url">Button Link URL</string>
     <string name="gutenberg_native_video_settings">Video settings</string>
+    <string name="gutenberg_native_border_radius">Border Radius</string>
     <string name="gutenberg_native_add_paragraph_block">Add Paragraph Block</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
     <string name="post_list_tab_trashed_posts">Binned</string>
@@ -843,6 +911,7 @@ Language: en_GB
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Video caption. %s</string>
     <string name="gutenberg_native_edit_video">Edit video</string>
+    <string name="gutenberg_native_edit_media">Edit media</string>
     <string name="gutenberg_native_add_a_shortcode">Add a shortcode…</string>
     <string name="post_list_author">Post author</string>
     <string name="fab_create_desc">Create a post</string>
@@ -901,14 +970,12 @@ Language: en_GB
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Library</string>
     <string name="gutenberg_native_unsupported">Unsupported</string>
     <string name="gutenberg_native_ungroup">Ungroup</string>
-    <string name="gutenberg_native_translate">Translate</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap to hide the keyboard</string>
     <string name="gutenberg_native_tap_here_to_show_help">Tap here to show help</string>
     <string name="gutenberg_native_take_a_video">Take a Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_photo">Take a Photo</string>
     <string name="gutenberg_native_start_writing">Start writing…</string>
-    <string name="gutenberg_native_show_section">Show section</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>
     <string name="gutenberg_native_s_block_empty">%s block. Empty</string>
     <string name="gutenberg_native_cut_block">Cut block</string>
@@ -925,6 +992,8 @@ Language: en_GB
     <string name="gutenberg_native_move_block_up">Move block up</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Move block down from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_block_down">Move block down</string>
+    <string name="gutenberg_native_link_text">Link text</string>
+    <string name="gutenberg_native_link_inserted">Link inserted</string>
     <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
     <string name="gutenberg_native_hide_keyboard">Hide keyboard</string>
     <string name="gutenberg_native_help_icon">Help icon</string>
@@ -939,6 +1008,7 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Double tap to move the block down</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Double tap to edit this value</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Double tap to add a block</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Double tap and hold to edit</string>
     <string name="gutenberg_native_current_value_is_s">Current value is %s</string>
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
@@ -1299,7 +1369,6 @@ Language: en_GB
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
     <string name="gif_picker_empty_search_list">No media matching your search</string>
     <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
     <string name="stats_author_views_label">Views</string>

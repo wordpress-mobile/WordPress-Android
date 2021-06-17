@@ -39,6 +39,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.automattic.android.tracks.crashlogging.CrashLogging;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -185,7 +186,6 @@ import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -210,6 +210,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
+import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -239,6 +240,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -403,6 +405,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
+    @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -1673,7 +1676,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                     .getId()) {
-                setFeaturedImageId(media.getMediaId(), false);
+                setFeaturedImageId(media.getMediaId(), false, false);
             }
         }
     }
@@ -1758,7 +1761,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                             "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
                     );
                 } else {
-                    mCrashLogging.reportException(exception, T.EDITOR.toString());
+                    CrashLoggingExtKt.sendReportWithTag(mCrashLogging, exception, T.EDITOR);
                     AppLog.e(T.EDITOR, exception.getMessage());
                 }
             } else {
@@ -2302,9 +2305,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
-                !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
-                // Only enable reusable block in WP.com sites until the issue
-                // (https://github.com/wordpress-mobile/gutenberg-mobile/issues/3457) in self-hosted sites is fixed
+                !isFreeWPCom,
                 isWPComSite,
                 wpcomLocaleSlug,
                 postType,
@@ -2484,12 +2485,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked, final boolean isGutenbergEditor) {
+        if (isGutenbergEditor) {
+            EditPostRepository postRepository = getEditPostRepository();
+            if (postRepository == null) {
+                return;
             }
+
+            int postId = getEditPostRepository().getId();
+            if (mediaId == MEDIA_ID_NO_FEATURED_IMAGE_SET) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_REMOVED_GUTENBERG_EDITOR,
+                        postId
+                );
+            } else {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_GUTENBERG_EDITOR,
+                        postId
+                );
+            }
+            mUpdateFeaturedImageUseCase.updateFeaturedImage(mediaId, postRepository,
+                    postModel -> null);
+        } else if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
+        }
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId((int) mediaId);
         }
     }
 
@@ -2600,13 +2621,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId, true);
+                        setFeaturedImageId(mediaId, true, false);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
                         int postId = getImmutablePost().getId();
                         mFeaturedImageHelper.trackFeaturedImageEvent(
-                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
                                 postId
                         );
                         for (Uri mediaUri : uris) {
@@ -2892,6 +2913,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditorFragment instanceof GutenbergEditorFragment) {
             ((GutenbergEditorFragment) mEditorFragment).sendToJSFeaturedImageId(0);
         }
+    }
+
+    @Override
+    public void updateFeaturedImage(final long mediaId, final boolean imagePicked) {
+        setFeaturedImageId(mediaId, imagePicked, true);
     }
 
     @Override
