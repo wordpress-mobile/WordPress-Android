@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_BUTTON_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Button.CONTINUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.SELF_HOSTED
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.WORDPRESS_COM
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen
@@ -24,6 +26,16 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
             mapOf(SCREEN_KEY to screen.trackingName)
     )
 
+    fun trackPrimaryButtonPressed(screen: Screen) = trackButtonPressed(screen, CONTINUE)
+
+    private fun trackButtonPressed(screen: Screen, button: Button) = track(
+            BLOGGING_REMINDERS_BUTTON_PRESSED,
+            mapOf(
+                    SCREEN_KEY to screen.trackingName,
+                    BUTTON_KEY to button.trackingName
+            )
+    )
+
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
             stat,
             properties + (BLOG_TYPE_KEY to siteType?.trackingName)
@@ -34,8 +46,14 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         SELF_HOSTED("self_hosted")
     }
 
+    // We only track the primary button for now, as we don't have a dismiss button like WPiOS does.
+    private enum class Button(val trackingName: String) {
+        CONTINUE("continue")
+    }
+
     companion object {
         private const val BLOG_TYPE_KEY = "blog_type"
         private const val SCREEN_KEY = "screen"
+        private const val BUTTON_KEY = "button"
     }
 }

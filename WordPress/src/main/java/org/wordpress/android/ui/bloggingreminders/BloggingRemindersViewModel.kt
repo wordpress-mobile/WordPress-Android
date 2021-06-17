@@ -79,11 +79,13 @@ class BloggingRemindersViewModel @Inject constructor(
     }.distinctUntilChanged()
 
     private val startDaySelection: () -> Unit = {
+        analyticsTracker.trackPrimaryButtonPressed(PROLOGUE)
         _isFirstTimeFlow.value = true
         _selectedScreen.value = SELECTION
     }
 
     private val finish: () -> Unit = {
+        analyticsTracker.trackPrimaryButtonPressed(EPILOGUE)
         _isBottomSheetShowing.value = Event(false)
     }
 
@@ -158,6 +160,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
+        analyticsTracker.trackPrimaryButtonPressed(SELECTION)
         if (bloggingRemindersModel != null) {
             launch {
                 bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
