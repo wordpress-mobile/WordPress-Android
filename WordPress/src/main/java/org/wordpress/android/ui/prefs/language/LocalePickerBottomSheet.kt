@@ -60,8 +60,6 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun LocalePickerBottomSheetBinding.setupContentViews() {
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
         recyclerView.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         recyclerView.adapter = localeAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
