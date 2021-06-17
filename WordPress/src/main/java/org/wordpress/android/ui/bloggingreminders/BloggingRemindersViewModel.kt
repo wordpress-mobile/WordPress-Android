@@ -31,7 +31,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.ArrayList
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,7 +49,7 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _selectedScreen = MutableLiveData<Screen>()
     private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
-    @ExperimentalStdlibApi val uiState: LiveData<UiState> = merge(
+    val uiState: LiveData<UiState> = merge(
             _selectedScreen,
             _bloggingRemindersModel,
             _isFirstTimeFlow
@@ -59,7 +58,7 @@ class BloggingRemindersViewModel @Inject constructor(
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
                 SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay)
-                EPILOGUE -> buildEpilogue(bloggingRemindersModel)
+                EPILOGUE -> buildEpilogue()
             }
             val primaryButton = when (screen) {
                 PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
@@ -106,33 +105,20 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    @ExperimentalStdlibApi
-    private fun buildEpilogue(bloggingRemindersModel: BloggingRemindersModel?): List<BloggingRemindersItem> {
-        val numberOfDays = bloggingRemindersModel?.enabledDays?.size ?: 0
-
-        val selectedDays = when {
-            numberOfDays <= THREE_DAYS -> {
-                bloggingRemindersModel?.enabledDays?.map { day ->
-                    day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
-                        it.toUpperCase()
-                    }.plus(" and ")
-                }.toString()
-            }
-            numberOfDays in FOUR_DAYS..SIX_DAYS -> {
-                bloggingRemindersModel?.enabledDays?.map { day ->
-                    day.name.toLowerCase(Locale.ROOT).replaceFirstChar {
-                        it.toUpperCase()
-                    }.take(FIRST_THREE_CHARS).plus(", ")
-                }.toString()
-            }
-            else -> "everyday"
+    private fun buildEpilogue(): List<BloggingRemindersItem> {
+        val numberOfTimes = dayLabelUtils.buildNTimesLabel(_bloggingRemindersModel.value)
+        val enabledDays = _bloggingRemindersModel.value?.let { model ->
+            model.enabledDays.map { it.name }
         }
 
-        val body = when (numberOfDays) {
+        // TODO: Format number of times and selected days properly after PRs leading upto this are merged
+        val selectedDays = enabledDays?.joinToString(separator = ", ") { it }
+
+        val body = when (enabledDays?.count()) {
             SEVEN_DAYS -> UiStringRes(R.string.blogging_reminders_epilogue_body)
             else -> UiStringResWithParams(
                     R.string.blogging_reminders_epilogue_body_days,
-                    listOf(UiStringText(numberOfDays.toString()), UiStringText(selectedDays)))
+                    listOf(numberOfTimes, UiStringText(selectedDays.toString())))
         }
 
         return listOf(
@@ -210,10 +196,6 @@ class BloggingRemindersViewModel @Inject constructor(
         private const val SELECTED_DAYS = "key_selected_days"
         private const val IS_FIRST_TIME_FLOW = "is_first_time_flow"
         private const val SITE_ID = "key_site_id"
-        private const val FIRST_THREE_CHARS = 3
-        private const val THREE_DAYS = 3
-        private const val FOUR_DAYS = 4
-        private const val SIX_DAYS = 6
         private const val SEVEN_DAYS = 7
     }
 }
