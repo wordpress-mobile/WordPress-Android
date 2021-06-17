@@ -175,9 +175,9 @@ public class UploadUtils {
         MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR, null, null);
 
         if (uploadModel != null) {
-            MediaError errorFromMediaModel = uploadModel.getMediaError();
-            if (errorFromMediaModel != null) {
-                error = errorFromMediaModel;
+            MediaError errorFromUploadModel = uploadModel.getMediaError();
+            if (errorFromUploadModel != null) {
+                error = errorFromUploadModel;
             }
         }
 
