@@ -6,10 +6,12 @@
     android:orientation="vertical">
 
     <include
+        android:id="@+id/fullscreen_error_with_retry"
         layout="@layout/fullscreen_error_with_retry"
         tools:visibility="gone" />
 
     <include
+        android:id="@+id/site_creation_progress_creating_site"
         layout="@layout/site_creation_progress_creating_site"
         tools:visibility="gone"/>
 
@@ -28,10 +30,12 @@
             android:clipToPadding="false"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingStart="@dimen/margin_large"
-            android:paddingEnd="@dimen/margin_large">
+            android:paddingEnd="@dimen/margin_large"
+            android:paddingStart="@dimen/margin_large">
 
-            <include layout="@layout/site_creation_preview_header_item" />
+            <include
+                android:id="@+id/site_creation_preview_header_item"
+                layout="@layout/site_creation_preview_header_item" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/okButton"
@@ -44,13 +48,13 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/webviewContainer"
+            android:id="@+id/site_creation_preview_web_view_container"
             layout="@layout/site_creation_preview_web_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_medium_large"
-            android:layout_marginEnd="@dimen/margin_large"
             android:layout_toStartOf="@+id/sitePreviewTitleAndButtonContainer" />
     </RelativeLayout>
 </RelativeLayout>
