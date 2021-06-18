@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
@@ -155,7 +154,7 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
         modalLayoutPickerCategoriesSkeleton.categoriesSkeleton.setVisible(skeleton)
         categoriesRecyclerView.setVisible(!skeleton && !error)
-        layoutsSkeleton.setVisible(skeleton)
+        modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
         errorView.setVisible(error)
     }
