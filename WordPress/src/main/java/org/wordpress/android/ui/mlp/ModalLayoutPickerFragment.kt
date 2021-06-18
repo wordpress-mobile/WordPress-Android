@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ModalLayoutPickerFragmentBinding
@@ -76,7 +75,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                 adapter = LayoutCategoryAdapter()
             }
 
-            backButton.setOnClickListener {
+            modalLayoutPickerTitlebar.backButton.setOnClickListener {
                 closeModal()
             }
 
@@ -92,7 +91,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             modalLayoutPickerBottomToolbar.retryButton.setOnClickListener {
                 viewModel.onRetryClicked()
             }
-            previewTypeSelectorButton.setOnClickListener {
+            modalLayoutPickerTitlebar.previewTypeSelectorButton.setOnClickListener {
                 viewModel.onThumbnailModePressed()
             }
 
@@ -100,7 +99,10 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
             setupViewModel(savedInstanceState)
 
-            previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+            previewModeSelectorPopup = PreviewModeSelectorPopup(
+                    requireActivity(),
+                    modalLayoutPickerTitlebar.previewTypeSelectorButton
+            )
         }
     }
 
@@ -161,7 +163,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     private fun ModalLayoutPickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
-        uiHelper.fadeInfadeOutViews(title, header, visible)
+        uiHelper.fadeInfadeOutViews(
+                modalLayoutPickerTitlebar.title,
+                header,
+                visible
+        )
     }
 
     /**

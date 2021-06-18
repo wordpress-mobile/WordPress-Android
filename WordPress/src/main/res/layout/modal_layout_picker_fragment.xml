@@ -49,6 +49,7 @@
                         android:layout_gravity="top" />
 
                     <include
+                        android:id="@+id/modal_layout_picker_titlebar"
                         layout="@layout/modal_layout_picker_titlebar"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
