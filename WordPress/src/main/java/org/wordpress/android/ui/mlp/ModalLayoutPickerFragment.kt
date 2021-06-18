@@ -28,13 +28,13 @@ import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
-import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
-import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
-import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -47,8 +47,9 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     private lateinit var viewModel: ModalLayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
-    companion object {
-        const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     override fun onCreateView(
@@ -113,28 +114,6 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         })
     }
 
-    /**
-     * Sets the header description visibility
-     * @param visible if true the description is visible else invisible
-     */
-    private fun setDescriptionVisibility(visible: Boolean) {
-        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
-    }
-
-    override fun closeModal() {
-        viewModel.dismiss()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewModel.writeToBundle(outState)
-    }
-
     private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
@@ -183,12 +162,12 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         })
     }
 
-    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
-        categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton && !error)
-        layoutsSkeleton.setVisible(skeleton)
-        layoutsRecyclerView.setVisible(!skeleton && !error)
-        errorLayout.setVisible(error)
+    /**
+     * Sets the header description visibility
+     * @param visible if true the description is visible else invisible
+     */
+    private fun setDescriptionVisibility(visible: Boolean) {
+        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun setButtonsVisibility(uiState: ButtonsUiState) {
@@ -197,5 +176,26 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         previewButton.setVisible(uiState.previewVisible)
         retryButton.setVisible(uiState.retryVisible)
         createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
+    }
+
+    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
+        categoriesSkeleton.setVisible(skeleton)
+        categoriesRecyclerView.setVisible(!skeleton && !error)
+        layoutsSkeleton.setVisible(skeleton)
+        layoutsRecyclerView.setVisible(!skeleton && !error)
+        errorLayout.setVisible(error)
+    }
+
+    override fun closeModal() {
+        viewModel.dismiss()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
+    companion object {
+        const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
     }
 }
