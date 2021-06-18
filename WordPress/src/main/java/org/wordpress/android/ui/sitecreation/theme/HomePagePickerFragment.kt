@@ -11,8 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
@@ -88,8 +86,8 @@ class HomePagePickerFragment : Fragment() {
 
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
-        header?.setText(R.string.hpp_title)
-        description?.setText(R.string.hpp_subtitle)
+        modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
+        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
@@ -142,13 +140,14 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
                 homePagePickerTitlebar.title,
-                header,
+                modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
                 visible
         )
     }
 
     private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
-        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
+                if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
