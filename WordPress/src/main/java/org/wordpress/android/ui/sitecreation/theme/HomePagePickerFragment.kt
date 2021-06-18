@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
@@ -82,12 +81,15 @@ class HomePagePickerFragment : Fragment() {
             setupUi()
             setupViewModel()
             setupActionListeners()
-            previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+            previewModeSelectorPopup = PreviewModeSelectorPopup(
+                    requireActivity(),
+                    homePagePickerTitlebar.previewTypeSelectorButton
+            )
         }
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
-        title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
+        homePagePickerTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
@@ -140,7 +142,11 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
-        uiHelper.fadeInfadeOutViews(title, header, visible)
+        uiHelper.fadeInfadeOutViews(
+                homePagePickerTitlebar.title,
+                header,
+                visible
+        )
     }
 
     private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
@@ -162,10 +168,10 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setupActionListeners() {
         homePagePickerBottomToolbar.previewButton.setOnClickListener { viewModel.onPreviewTapped() }
         homePagePickerBottomToolbar.chooseButton.setOnClickListener { viewModel.onChooseTapped() }
-        skipButton.setOnClickListener { viewModel.onSkippedTapped() }
+        homePagePickerTitlebar.skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
-        backButton.setOnClickListener { viewModel.onBackPressed() }
-        previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
+        homePagePickerTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
+        homePagePickerTitlebar.previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 
