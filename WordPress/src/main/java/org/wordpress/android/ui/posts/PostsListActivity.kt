@@ -136,31 +136,31 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        val binding = PostListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        this.binding = binding
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+        with(PostListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
+
+            site = if (savedInstanceState == null) {
+                checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
+                    "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+                }
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             }
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
 
-        val initPreviewState = if (savedInstanceState == null) {
-            PostListRemotePreviewState.NONE
-        } else {
-            PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
-        }
+            val initPreviewState = if (savedInstanceState == null) {
+                PostListRemotePreviewState.NONE
+            } else {
+                PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
+            }
 
-        val currentBottomSheetPostId = if (savedInstanceState == null) {
-            LocalId(0)
-        } else {
-            LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
-        }
+            val currentBottomSheetPostId = if (savedInstanceState == null) {
+                LocalId(0)
+            } else {
+                LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
+            }
 
-        with(binding) {
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
