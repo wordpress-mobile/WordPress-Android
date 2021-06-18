@@ -97,7 +97,7 @@ class HomePagePickerFragment : Fragment() {
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
-            description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
+            setDescriptionVisibility(uiState.isDescriptionVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
@@ -140,6 +140,10 @@ class HomePagePickerFragment : Fragment() {
 
     private fun setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(title, header, visible)
+    }
+
+    private fun setDescriptionVisibility(visible: Boolean) {
+        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
