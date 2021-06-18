@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-16 16:20:41+0000
+Translation-Revision-Date: 2021-06-18 13:14:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -836,10 +836,10 @@ Language: pl
     <string name="stats_insights_total_likes">Suma polubień</string>
     <string name="stats_insights_average_comments">Średnio koment./wpis</string>
     <string name="stats_insights_total_comments">Suma komentarzy</string>
-    <string name="stats_insights_posts">Wpisów</string>
     <string name="stats_insights_year">Rok</string>
     <string name="stats_insights_this_year_site_stats">Ten rok</string>
     <string name="no_site_error">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
+    <string name="stats_insights_posts">Wpisy</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Sprawdzanie środków domeny</string>
     <string name="plugin_check_domain_credit_error">Nie udało się sprawdzić dostępnych środków w ramach domeny</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Zarejestruj domenę</string>
@@ -1928,7 +1928,7 @@ Language: pl
     <string name="editor_remove_failed_uploads">Usuń nieudane próby przesyłania</string>
     <string name="site_settings_advanced_header">Zaawansowane</string>
     <string name="comments_empty_list_filtered_trashed">Brak komentarzy w koszu</string>
-    <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących</string>
+    <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących na moderację</string>
     <string name="comments_empty_list_filtered_approved">Brak zatwierdzonych komentarzy</string>
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
@@ -1997,7 +1997,7 @@ Language: pl
     <string name="site_settings_threading_dialog_header">Wątek do</string>
     <string name="remove">Usuń</string>
     <string name="search">Szukaj</string>
-    <string name="disabled">Wyłączone</string>
+    <string name="disabled">Wyłączono</string>
     <string name="site_settings_image_original_size">Oryginalny rozmiar</string>
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
     <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nieindeksowanie jej</string>
