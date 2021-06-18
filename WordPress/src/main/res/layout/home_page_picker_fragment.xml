@@ -56,6 +56,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <include
+            android:id="@+id/modal_layout_picker_categories_skeleton"
             layout="@layout/modal_layout_picker_categories_skeleton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
