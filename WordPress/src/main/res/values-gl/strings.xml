@@ -6,43 +6,16 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
-    <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_image_settings">Axustes de imaxe</string>
-    <string name="gutenberg_native_audio_settings">Axustes de audio</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
-    <string name="gutenberg_native_write_title">Escribe o título…</string>
-    <string name="gutenberg_native_write_code">Escribe código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordenación e filtrado</string>
-    <string name="gutenberg_native_show_download_button">Amosar o botón de descarga</string>
-    <string name="gutenberg_native_shortcode">Shortcode</string>
-    <string name="gutenberg_native_read_more">Ler máis</string>
-    <string name="gutenberg_native_preload">Precarga</string>
     <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
-    <string name="gutenberg_native_metadata">Metadatos</string>
-    <string name="gutenberg_native_media_file">Arquivo de medios</string>
-    <string name="gutenberg_native_media_area">Área de medios</string>
-    <string name="gutenberg_native_loop">Repetir</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Enlazar a</string>
-    <string name="gutenberg_native_link_label">Etiqueta do enlace</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imaxe %1$d de %2$d na biblioteca</string>
-    <string name="gutenberg_native_heading_d">Encabezado %d</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_edit_image">Editar a imaxe</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
-    <string name="gutenberg_native_code">Código</string>
-    <string name="gutenberg_native_change_heading_level">Cambiar o nivel do encabezado</string>
-    <string name="gutenberg_native_browser_default">Navegador por defecto</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">O bloque borrouse ou non está dispoñible.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">O bloque non se pode procesar dentro de si mesmo.</string>
-    <string name="gutenberg_native_autoplay">Reprodución automática</string>
-    <string name="gutenberg_native_auto">Automático</string>
-    <string name="gutenberg_native_attachment_page">Páxina de adxuntos</string>
-    <string name="gutenberg_native_add_text">Engadir texto…</string>
-    <string name="gutenberg_native_add_caption">Engadir lenda</string>
     <string name="gutenberg_native_what_is_alt_text">Que é o texto alt?</string>
     <string name="gutenberg_native_failed_to_insert_media">Fallo ao insertar os medios.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Fallo ao insertar o arquivo de audio.</string>
@@ -441,7 +414,6 @@ Language: gl_ES
     <string name="media_uploading_stock_library_photo">Subindo medios de inventarios</string>
     <string name="media_uploading_default">Subindo medios</string>
     <string name="gutenberg_native_search_or_type_url">Busca ou escribe a URL</string>
-    <string name="gutenberg_native_page_break">Salto de páxina</string>
     <string name="gutenberg_native_add_this_telephone_link">Engadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_link">Engadir este enlace</string>
     <string name="gutenberg_native_add_this_email_link">Engadir este enlace de correo electrónico</string>
@@ -741,7 +713,6 @@ Language: gl_ES
     <string name="gutenberg_native_link_settings">Axustes da ligazón</string>
     <string name="gutenberg_native_excerpt_length_words">Lonxitude do extracto (palabras)</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
-    <string name="gutenberg_native_video_settings">Axustes de vídeo</string>
     <string name="gutenberg_native_add_paragraph_block">Engadir un bloque de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear unha entrada</string>
     <string name="post_list_tab_trashed_posts">Na papeleira</string>
@@ -796,7 +767,6 @@ Language: gl_ES
     <string name="stats_box_type_low">baixas</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  e %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Substituír imaxe</string>
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
     <string name="content_description_person_building_website">Creador da web</string>

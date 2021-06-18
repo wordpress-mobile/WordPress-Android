@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-05 11:08:40+0000
+Translation-Revision-Date: 2021-06-15 08:44:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="set_your_blogging_goals_button">Establecer los objetivos</string>
+    <string name="blogging_goals_n_times_a_week">%d veces a la semana</string>
+    <string name="blogging_goals_not_set">Ninguno establecido</string>
+    <string name="blogging_reminders_notify_me">Avísame</string>
+    <string name="blogging_reminders_done">Hecho</string>
+    <string name="set_your_blogging_goals_message">Tu entrada se está publicando… Mientras tanto, configura tus objetivos de blogueo para recibir recordatorios y seguir tu progreso.</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
+    <string name="set_your_blogging_goals_title">Establece tus objetivos de blogueo</string>
+    <string name="support_ticket_subject">Soporte de WordPress for Android</string>
+    <string name="fab_add_category_desc">Crear una categoría</string>
+    <string name="gutenberg_native_remove_as_featured_image">Eliminar como imagen destacada</string>
+    <string name="gutenberg_native_set_as_featured_image">Establecer como imagen destacada</string>
+    <string name="site_settings_categories_empty_subtitle">Añade aquí las categorías que uses frecuentemente para que puedan ser seleccionadas rápidamente al categorizar tus entradas </string>
+    <string name="site_settings_categories_empty_title">Aún no tienes categorías</string>
+    <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
+    <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
+    <string name="site_settings_blogging_reminders_title">Objetivos de blogueo</string>
+    <string name="site_settings_categories_title">Categorías</string>
+    <string name="site_settings_categories_empty_button">Crear una categoría</string>
     <string name="gutenberg_native_border_settings">Ajustes del borde</string>
     <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
     <string name="storage_utils_dialog_ok_button">Ver el almacenamiento</string>
@@ -16,32 +35,20 @@ Language: es
     <string name="gutenberg_native_type_a_url">Teclea una URL</string>
     <string name="gutenberg_native_tap_to_add_content">Toca para añadir contenido</string>
     <string name="gutenberg_native_slash_inserter_results">Resultados del insertador de corte</string>
-    <string name="gutenberg_native_show_media_on_right">Mostrar medios a la derecha</string>
-    <string name="gutenberg_native_show_media_on_left">Mostrar medios a la izquierda</string>
     <string name="gutenberg_native_s_has_url_set">%s tiene una URL configurada</string>
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL configurada</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
     <string name="gutenberg_native_s_block">Bloque %s</string>
-    <string name="gutenberg_native_overlay">Superposición</string>
-    <string name="gutenberg_native_optional_placeholder">Marcador de posición opcional…</string>
-    <string name="gutenberg_native_opacity">Opacidad</string>
     <string name="gutenberg_native_minimum_height">Altura mínima</string>
-    <string name="gutenberg_native_media_text_settings">Ajustes de medios y texto</string>
     <string name="gutenberg_native_media_options">Opciones de medios</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL no válida. Archivo de audio no encontrado.</string>
     <string name="gutenberg_native_insert_crosspost">Insertar entrada cruzada</string>
-    <string name="gutenberg_native_fixed_background">Fondo fijo</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Arrastra para ajustar el punto focal</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Toca dos veces para abrir la hoja inferior para añadir imagen o vídeo</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toca dos veces para abrir la hoja de acción para añadir imagen o vídeo</string>
-    <string name="gutenberg_native_dimensions">Dimensiones</string>
     <string name="gutenberg_native_current_unit_is_s">La unidad actual es %s</string>
     <string name="gutenberg_native_crosspost">Entrada cruzada</string>
-    <string name="gutenberg_native_crop_image_to_fill_entire_column">Recortar imagen para rellenar toda la columna</string>
-    <string name="gutenberg_native_convert_to_regular_blocks">Convertir a bloques normales</string>
     <string name="gutenberg_native_columns_settings">Ajustes de columnas</string>
-    <string name="gutenberg_native_clear_media">Vaciar los medios</string>
-    <string name="gutenberg_native_button_width">Ancho del botón</string>
     <string name="gutenberg_native_add_link_to_s">Añadir enlace a %s</string>
     <string name="gutenberg_native_add_link_text">Añadir texto del enlace</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Añadir una imagen o vídeo</string>
@@ -59,52 +66,22 @@ Language: es
     <string name="login_no_jetpack_sites_error_message">Si ya tienes un sitio, tendrás que instalar el plugin gratuito de Jetpack y conectarlo a tu cuenta de WordPress.</string>
     <string name="login_empty_view_avatar_content_description">Tu foto de perfil</string>
     <string name="login_not_a_jetpack_site">Si quieres usar esta aplicación para %1$s, deberás tener el plugin de Jetpack configurado y conectado a una cuenta de WordPress.com.</string>
-    <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
-    <string name="gutenberg_native_audio_settings">Ajustes de audio</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
-    <string name="gutenberg_native_column_settings">Ajustes de columna</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
-    <string name="gutenberg_native_write_title">Escribe el título…</string>
-    <string name="gutenberg_native_write_code">Escribe código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordenación y filtrado</string>
-    <string name="gutenberg_native_show_download_button">Mostrar el botón de descarga</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
-    <string name="gutenberg_native_shortcode">Shortcode </string>
-    <string name="gutenberg_native_add_label">Añadir etiqueta…</string>
     <string name="gutenberg_native_mention">Mención</string>
-    <string name="gutenberg_native_read_more">Leer más</string>
     <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_post_meta_settings">Ajustes meta de la entrada</string>
-    <string name="gutenberg_native_preload">Precarga</string>
-    <string name="gutenberg_native_media_area">Área de medios</string>
-    <string name="gutenberg_native_media_file">Archivo de medios</string>
-    <string name="gutenberg_native_metadata">Metadatos</string>
-    <string name="gutenberg_native_loop">Repetir</string>
-    <string name="gutenberg_native_link_label">Etiqueta del enlace</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Enlazar a</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imagen %1$d de %2$d en la biblioteca</string>
-    <string name="gutenberg_native_heading_d">Encabezado %d</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_edit_image">Editar la imagen</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
-    <string name="gutenberg_native_change_heading_level">Cambiar el nivel del encabezado</string>
-    <string name="gutenberg_native_code">Código</string>
-    <string name="gutenberg_native_browser_default">Navegador por defecto</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
-    <string name="gutenberg_native_attachment_page">Página de adjuntos</string>
-    <string name="gutenberg_native_auto">Automático</string>
-    <string name="gutenberg_native_autoplay">Reproducción automática</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">El bloque no se puede procesar dentro de sí mismo.</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">El bloque se ha borrado o no está disponible.</string>
-    <string name="gutenberg_native_cover">Fondo</string>
-    <string name="gutenberg_native_add_text">Añade texto…</string>
-    <string name="gutenberg_native_add_caption">Añadir leyenda</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">¿Qué es el texto alt?</string>
     <string name="gutenberg_native_transform_s_to">Transformar %s a</string>
@@ -245,8 +222,8 @@ Language: es
     <string name="scan_idle_manual_scan_description">Para revisar tu sitio de nuevo ejecuta una exploración manual, o espera a que Jetpack explore tu sitio más tarde hoy mismo. </string>
     <string name="scan_provisioning_description">¡Bienvenido a la exploración de Jetpack! Le estamos echando un vistazo a tu web para dejarlo todo a punto para el primer análisis completo. Te informaremos si encontramos algún problema que le pueda afectar y después comenzará tu primer análisis.</string>
     <string name="scan_scanning_is_initial_description">Bienvenido a la herramienta de exploración de Jetpack, estamos echándole un primer vistazo a tu web en estos momentos, te mostraremos los resultados enseguida.</string>
-    <string name="scan_scanning_description">Te enviaremos un email cuando se haya completado la exploración. Mientras tanto puedes continuar usando tu web como siempre. Puedes volver a revisar cómo va el proceso de exploración en cualquier momento.</string>
     <string name="scan_fixing_threats_description_singular">Trabajamos duro para corregir estas amenazas en segundo plano. Mientras tanto puedes seguir usando tu sitio como siempre, puedes volver a comprobar el progreso en cualquier momento.</string>
+    <string name="scan_scanning_description">Te enviaremos un aviso si se encuentra una amenaza. Mientras tanto, no dudes en seguir usando tu sitio con normalidad, puede comprobar el progreso en cualquier momento.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan no ha podido realizar un análisis de tu sitio. Comprueba si tu sitio está caído. Si no, vuelve a intentarlo. Si tu sitio está caído o si Jetpack Scan sigue teniendo problemas, ponte en contacto con nuestro equipo de soporte.</string>
     <string name="scan_fixing_threats_title_plural">Corrigiendo amenazas</string>
     <string name="scan_request_failed_title">Algo ha salido mal</string>
@@ -554,7 +531,6 @@ Language: es
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
-    <string name="gutenberg_native_page_break">Salto de página</string>
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
@@ -746,7 +722,6 @@ Language: es
     <string name="update_now">Actualizar ahora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
-    <string name="gutenberg_native_remove">Eliminar</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
     <string name="gutenberg_native_insert_mention">Insertar una mención</string>
@@ -872,7 +847,6 @@ Language: es
     <string name="gutenberg_native_button_link_url">URL del enlace del botón</string>
     <string name="gutenberg_native_border_radius">Radio del borde</string>
     <string name="gutenberg_native_add_paragraph_block">Añadir un bloque de párrafo</string>
-    <string name="gutenberg_native_video_settings">Ajustes de vídeo</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear una entrada</string>
     <string name="post_list_tab_trashed_posts">En la papelera</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
@@ -928,7 +902,6 @@ Language: es
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">Leyenda de la galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
-    <string name="gutenberg_native_replace_image">Reemplazar imagen</string>
     <string name="content_description_person_building_website">Creador de la web</string>
     <string name="post_signup_interstitial_not_right_now">Ahora no</string>
     <string name="post_signup_interstitial_subtitle">Cualquier cosa que quieras crear o compartir, te ayudaremos a hacerlo aquí mismo.</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-01 04:11:32+0000
+Translation-Revision-Date: 2021-06-14 16:14:27+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="blogging_reminders_done">Готово</string>
+    <string name="blogging_reminders_notify_me">Уведомить меня</string>
+    <string name="blogging_goals_not_set">Не установлены</string>
+    <string name="blogging_goals_n_times_a_week">%d раз в неделю</string>
+    <string name="set_your_blogging_goals_button">Установите цели</string>
+    <string name="set_your_blogging_goals_message">Ваша запись в процессе публикации, а пока вы можете установить цели блога для получения напоминаний и отслеживания прогресса.</string>
+    <string name="set_your_blogging_goals_title">Установите цели вашего блога</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Введите учетные данные сервера&lt;/a&gt;, чтобы включить восстановление из резервных копий в одно нажатие.</string>
+    <string name="gutenberg_native_set_as_featured_image">Установить как избранное изображение</string>
+    <string name="gutenberg_native_remove_as_featured_image">Удалить как избранное изображение</string>
+    <string name="fab_add_category_desc">Создать рубрику</string>
+    <string name="support_ticket_subject">Поддержка WordPress для Android</string>
+    <string name="site_settings_categories_hint">Управлять рубриками сайта</string>
+    <string name="site_settings_categories_empty_title">Нет рубрик</string>
+    <string name="site_settings_categories_empty_subtitle">Добавьте сюда часто используемые рубрики, чтобы быстро выбирать их для записей</string>
+    <string name="site_settings_categories_empty_button">Создать рубрику</string>
+    <string name="site_settings_categories_title">Рубрики</string>
+    <string name="site_settings_blogging_reminders_title">Цели блога</string>
+    <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
     <string name="gutenberg_native_border_settings">Настройки границы</string>
     <string name="storage_utils_dialog_dont_show_button">Не показывать снова</string>
     <string name="storage_utils_dialog_ok_button">Просмотр хранилища</string>
@@ -16,32 +35,20 @@ Language: ru
     <string name="gutenberg_native_type_a_url">Введите URL</string>
     <string name="gutenberg_native_tap_to_add_content">Нажмите для добавления содержимого</string>
     <string name="gutenberg_native_slash_inserter_results">Результат вставки по слешу</string>
-    <string name="gutenberg_native_show_media_on_right">Показать медиа справа</string>
-    <string name="gutenberg_native_show_media_on_left">Показать медиа слева</string>
     <string name="gutenberg_native_s_has_url_set">Для %s установлен URL</string>
     <string name="gutenberg_native_s_has_no_url_set">URL для %s не установлен</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s сконвертирован в обычные блоки</string>
     <string name="gutenberg_native_s_block">Блок %s</string>
-    <string name="gutenberg_native_overlay">Наложение</string>
-    <string name="gutenberg_native_optional_placeholder">Необязательный заполнитель…</string>
-    <string name="gutenberg_native_opacity">Прозрачность</string>
     <string name="gutenberg_native_minimum_height">Минимальная высота</string>
-    <string name="gutenberg_native_media_text_settings">Настройки мультимедиа и текста</string>
     <string name="gutenberg_native_media_options">Параметры медиафайлов</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Неверный URL. Аудиофайл не найден.</string>
     <string name="gutenberg_native_insert_crosspost">Вставить кросспост</string>
-    <string name="gutenberg_native_fixed_background">Фиксированный фон</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Перетащите для изменения фокальной точки</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Нажмите дважды для того, чтобы открыть нижнюю панель действий для добавления изображения или видео</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Нажмите дважды для того, чтобы открыть панель действий для добавления изображения или видео</string>
-    <string name="gutenberg_native_dimensions">Размеры</string>
     <string name="gutenberg_native_current_unit_is_s">Текущая единица - %s</string>
     <string name="gutenberg_native_crosspost">Кросспост</string>
-    <string name="gutenberg_native_crop_image_to_fill_entire_column">Обрезать изображение для заполнения всего столбца</string>
-    <string name="gutenberg_native_convert_to_regular_blocks">Преобразовать в обычные блоки</string>
     <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
-    <string name="gutenberg_native_clear_media">Очистить медиа</string>
-    <string name="gutenberg_native_button_width">Ширина кнопки</string>
     <string name="gutenberg_native_add_link_to_s">Добавить ссылку к %s</string>
     <string name="gutenberg_native_add_link_text">Добавить текст ссылки</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Добавить изображение или видео</string>
@@ -59,52 +66,22 @@ Language: ru
     <string name="login_no_jetpack_sites_error_message">Если у вас уже есть сайт, вам необходимо установить бесплатный плагин Jetpack и подключить его к вашей учетной записи WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Фотография вашего профиля</string>
     <string name="login_not_a_jetpack_site">Чтобы использовать это приложение для %1$s, нужно установить и настроить плагин Jetpack и подключить его к учетной записи WordPress.com</string>
-    <string name="gutenberg_native_size">Размер</string>
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперёд</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
     <string name="gutenberg_native_width_settings">Настройки ширины</string>
     <string name="gutenberg_native_image_settings">Настройки изображения</string>
-    <string name="gutenberg_native_column_settings">Настройки столбцов</string>
-    <string name="gutenberg_native_audio_settings">Настройки аудио</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
-    <string name="gutenberg_native_write_title">Введите заголовок…</string>
-    <string name="gutenberg_native_write_code">Введите код…</string>
     <string name="gutenberg_native_sorting_and_filtering">Сортировка и фильтрация</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
-    <string name="gutenberg_native_show_download_button">Показать кнопку скачивания</string>
-    <string name="gutenberg_native_shortcode">Шорткод</string>
     <string name="gutenberg_native_mention">Упоминание</string>
-    <string name="gutenberg_native_add_label">Добавить ярлык…</string>
-    <string name="gutenberg_native_read_more">Читать далее</string>
-    <string name="gutenberg_native_preload">Предварительная загрузка</string>
     <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
     <string name="gutenberg_native_post_content_settings">Настройки содержимого записи</string>
-    <string name="gutenberg_native_metadata">Метаданные</string>
-    <string name="gutenberg_native_media_file">Медиафайл</string>
-    <string name="gutenberg_native_media_area">Область мультимедиа</string>
-    <string name="gutenberg_native_loop">Цикл</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Ссылка на</string>
-    <string name="gutenberg_native_link_label">Ярлык ссылки</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">изображение %1$d из %2$d в галерее</string>
-    <string name="gutenberg_native_heading_d">Заголовок %d</string>
     <string name="gutenberg_native_featured">Избранное</string>
-    <string name="gutenberg_native_edit_image">Редактировать изображение</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
-    <string name="gutenberg_native_code">Код</string>
-    <string name="gutenberg_native_change_heading_level">Изменение уровня заголовка</string>
-    <string name="gutenberg_native_browser_default">Браузер по умолчанию</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
-    <string name="gutenberg_native_cover">Обложка</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Блок удален или недоступен.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Блок не может быть отображен внутри себя же.</string>
-    <string name="gutenberg_native_autoplay">Автовоспроизведение</string>
-    <string name="gutenberg_native_auto">Авто</string>
-    <string name="gutenberg_native_attachment_page">Страница вложения</string>
-    <string name="gutenberg_native_add_text">Добавить текст…</string>
-    <string name="gutenberg_native_add_caption">Добавить подпись</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Что такое текст alt?</string>
     <string name="gutenberg_native_transform_s_to">Преобразовать %s в</string>
@@ -246,7 +223,7 @@ Language: ru
     <string name="scan_provisioning_description">Вас приветствует Jetpack Scan! Сейчас мы анализируем ваш сайт для проведения полного сканирования. Мы обязательно сообщим вам, если обнаружим потенциальные проблемы. После этого начнётся первое полное сканирование.</string>
     <string name="scan_scanning_is_initial_description">Добро пожаловать в Jetpack Scan! Мы изучаем ваш сайт и скоро поделимся с вами результатами.</string>
     <string name="scan_fixing_threats_description_singular">Мы сейчас стараемся исправить эти угрозы в фоновом режиме, вы можете продолжать использовать ваш сайт как обычно, проверить состояние вы сможете в любое время.</string>
-    <string name="scan_scanning_description">Мы пришлем уведомление после завершения сканирования. Вы можете продолжать работать со своим сайтом как обычно — прогресс сканирования можно проверить в любое удобное время. </string>
+    <string name="scan_scanning_description">Мы пришлем уведомление, если при сканировании будут найдены угрозы. Вы можете продолжать работать со своим сайтом как обычно — прогресс сканирования можно проверить в любое удобное время. </string>
     <string name="scan_fixing_threats_title_plural">Устранение угроз</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan не удалось завершить проверку вашего сайта. Пожалуйста, проверьте, доступен ли ваш сайт в принципе. Если всё в порядке, то повторите попытку. Если нет, а также если Jetpack Scan по-прежнему не работает, обратитесь в службу поддержки.</string>
     <string name="scan_request_failed_title">Что-то пошло не так</string>
@@ -554,7 +531,6 @@ Language: ru
     <string name="media_uploading_stock_library_photo">Загрузка стоковых медиафайлов</string>
     <string name="media_uploading_default">Загрузка медиафайлов</string>
     <string name="gutenberg_native_search_or_type_url">Введите поисковый запрос или URL</string>
-    <string name="gutenberg_native_page_break">Разрыв страницы</string>
     <string name="gutenberg_native_add_this_telephone_link">Добавить ссылку на номер телефона</string>
     <string name="gutenberg_native_add_this_link">Добавить ссылку</string>
     <string name="gutenberg_native_add_this_email_link">Добавить ссылку на email</string>
@@ -744,7 +720,6 @@ Language: ru
     <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="update_now">Обновить сейчас</string>
-    <string name="gutenberg_native_remove">Удалить</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
     <string name="gutenberg_native_move_to_top">Сдвинуть наверх</string>
     <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
@@ -870,7 +845,6 @@ Language: ru
     <string name="gutenberg_native_edit_cover_media">Редактировать изображение обложки</string>
     <string name="gutenberg_native_customize">НАСТРОИТЬ</string>
     <string name="gutenberg_native_button_link_url">URL ссылки кнопки</string>
-    <string name="gutenberg_native_video_settings">Настройки видео</string>
     <string name="gutenberg_native_border_radius">Радиус границ</string>
     <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
     <string name="create_post_page_fab_tooltip_contributors">Создать запись</string>
@@ -926,7 +900,6 @@ Language: ru
     <string name="stats_box_type_low">низкий</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Заменить изображение</string>
     <string name="gutenberg_native_gallery_caption_s">Подпись галереи. %s</string>
     <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
     <string name="content_description_person_building_website">Личность, создающая сайт</string>

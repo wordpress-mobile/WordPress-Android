@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-25 10:52:41+0000
+Translation-Revision-Date: 2021-06-16 16:20:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -9,7 +9,6 @@ Language: pl
     <string name="login_empty_view_try_another_account">Spróbuj z innym kontem</string>
     <string name="login_empty_view_see_instructions">Sprawdź instrukcje</string>
     <string name="gutenberg_native_image_settings">Ustawienia obrazka</string>
-    <string name="gutenberg_native_audio_settings">Ustawienia pliku dźwiękowego</string>
     <string name="user_profile_site_section_header">Witryna</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
@@ -138,15 +137,14 @@ Language: pl
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
     <string name="reader_discover_empty_subtitle">Obserwuj tematy aby odkryć nowe blogi</string>
-    <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako Spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Oznacz jako Nie Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Otwórz witrynę</string>
     <string name="media_uploading_gif_library_photo">Przesyłanie plików gif</string>
     <string name="media_uploading_default">Przesyłanie plików mediów</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ten polecający nie może być oznaczony jako Spam</string>
     <string name="media_uploading_stock_library_photo">Przesyłanie stockowych mediów</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako spam</string>
     <string name="gutenberg_native_search_or_type_url">Przeszukaj lub wpisz adres URL</string>
-    <string name="gutenberg_native_page_break">Podział strony</string>
     <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
@@ -461,7 +459,6 @@ Language: pl
     <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
-    <string name="gutenberg_native_video_settings">Ustawienia wideo</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_trashed_posts">Usunięto do kosza</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
@@ -517,7 +514,6 @@ Language: pl
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
     <string name="gutenberg_native_gallery_caption_s">Podpis galerii. %s</string>
-    <string name="gutenberg_native_replace_image">Zastąp obrazek</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="content_description_person_building_website">Osoba budująca witrynę</string>
     <string name="post_signup_interstitial_subtitle">Cokolwiek chcesz stworzyć lub udostępnić, pomożemy tobie do zrobić właśnie tu.</string>
@@ -750,7 +746,6 @@ Language: pl
     <string name="stats_widget_site_caption">Wybierz swoją witrynę</string>
     <string name="stats_widget_all_time_title">Od początku</string>
     <string name="stats_widget_views_title">Wyświetlenia w tym tygodniu</string>
-    <string name="stats_widget_add">Dodaj widget</string>
     <string name="stats_widget_select_your_site">Wybierz swoją witrynę</string>
     <string name="stats_widget_select_color">Kolor</string>
     <string name="stats_widget_select_type">Typ</string>
@@ -758,6 +753,7 @@ Language: pl
     <string name="stats_widget_log_in_message">Proszę zalogować się do aplikacji WordPress aby dodać widget.</string>
     <string name="stats_widget_weekly_views_name">Wyświetleń w tym tygodniu</string>
     <string name="stats_widget_error_no_network">Brak dostępu do sieci</string>
+    <string name="stats_widget_add">Dodaj widżet</string>
     <string name="plugin_fetching_error_after_at">Odświeżenie szczegółów wtyczki trwa dłużej niż zwykle. Proszę spróbować później.</string>
     <string name="plugin_install_site_ineligible_default_error">Jeśli właśnie zarejestrowałe(a)ś nazwę domeny, poczekaj aż ukończymy konfigurację i wówczas spróbuj ponownie.\n\nJeśli nie zarejestrowałe(a)ś domeny, wygląda na to że coś poszło nie tak i funkcjonalność wtyczki może być w tym momencie niedostępna dla tej witryny.</string>
     <string name="domain_contact_information_state_not_available_hint">Stan (niedostępne)</string>
@@ -1048,9 +1044,9 @@ Language: pl
     <string name="pages_empty_published">Nie opublikowałeś jeszcze żadnych stron</string>
     <string name="pages_search_suggestion">Przeszukaj strony</string>
     <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
-    <string name="pages_delete_permanently">Usuń permanentnie</string>
     <string name="pages_move_to_trash">Przesuń do kosza</string>
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
+    <string name="pages_delete_permanently">Usuń na zawsze</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
     <string name="pages_view">Podgląd</string>
     <string name="pages_trashed">Przesunięto do kosza</string>
@@ -1411,7 +1407,7 @@ Language: pl
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>
     <string name="plugin_info_requires_version">Wymagana wersja WordPressa</string>
-    <string name="plugin_info_lastupdated">Ostatnio zaktualizowano</string>
+    <string name="plugin_info_lastupdated">Ostatnia aktualizacja</string>
     <string name="plugin_info_version">Wersja </string>
     <string name="plugin_five_stars">5 gwiazdek</string>
     <string name="plugin_four_stars">4 gwiazdki</string>
