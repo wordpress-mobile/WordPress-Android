@@ -143,19 +143,19 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        binding.apply {
+        binding.appbarMain.apply {
             if (containerId == R.id.domain_suggestions_list) {
-                appbarMain.post {
-                    appbarMain.isLiftOnScroll = false
-                    appbarMain.setLifted(false)
-                    appbarMain.elevation = 0F
-                    appbarMain.requestLayout()
+                post {
+                    isLiftOnScroll = false
+                    setLifted(false)
+                    elevation = 0F
+                    requestLayout()
                 }
             } else {
-                appbarMain.post {
-                    appbarMain.isLiftOnScroll = true
-                    appbarMain.liftOnScrollTargetViewId = containerId
-                    appbarMain.requestLayout()
+                post {
+                    isLiftOnScroll = true
+                    liftOnScrollTargetViewId = containerId
+                    requestLayout()
                 }
             }
         }
