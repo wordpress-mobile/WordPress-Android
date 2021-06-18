@@ -24,9 +24,9 @@ import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
-import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -46,6 +46,11 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,17 +85,10 @@ class HomePagePickerFragment : Fragment() {
         previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
-    }
-
-    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
-        categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton && !error)
-        layoutsSkeleton.setVisible(skeleton)
-        layoutsRecyclerView.setVisible(!skeleton && !error)
-        errorView.setVisible(error)
+    private fun setupUi() {
+        title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
+        header?.setText(R.string.hpp_title)
+        description?.setText(R.string.hpp_subtitle)
     }
 
     private fun setupViewModel() {
@@ -134,16 +132,18 @@ class HomePagePickerFragment : Fragment() {
         })
 
         viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
-                layoutsRecyclerView?.smoothScrollToPosition(0)
+            layoutsRecyclerView?.smoothScrollToPosition(0)
         })
 
         viewModel.start(displayUtils.isTablet())
     }
 
-    private fun setupUi() {
-        title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
-        header?.setText(R.string.hpp_title)
-        description?.setText(R.string.hpp_subtitle)
+    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
+        categoriesSkeleton.setVisible(skeleton)
+        categoriesRecyclerView.setVisible(!skeleton && !error)
+        layoutsSkeleton.setVisible(skeleton)
+        layoutsRecyclerView.setVisible(!skeleton && !error)
+        errorView.setVisible(error)
     }
 
     private fun setupActionListeners() {
