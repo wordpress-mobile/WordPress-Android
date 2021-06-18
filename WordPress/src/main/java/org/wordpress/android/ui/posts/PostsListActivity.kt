@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -393,7 +392,7 @@ class PostsListActivity : LocaleAwareActivity(),
                             holder.buttonTitle?.let {
                                 SnackbarItem.Action(
                                         textRes = holder.buttonTitle,
-                                        clickListener = OnClickListener { holder.buttonAction() }
+                                        clickListener = { holder.buttonAction() }
                                 )
                             },
                             dismissCallback = { _, _ -> holder.onDismissAction() }
