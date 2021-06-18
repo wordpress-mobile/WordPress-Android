@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
-import kotlinx.android.synthetic.main.home_page_picker_fragment.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
@@ -20,6 +19,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.HomePagePickerFragmentBinding
 import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
@@ -63,35 +63,37 @@ class HomePagePickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(
-                    context,
-                    RecyclerView.HORIZONTAL,
-                    false
-            )
-            setRecycledViewPool(RecyclerView.RecycledViewPool())
-            adapter = CategoriesAdapter()
-            ViewCompat.setNestedScrollingEnabled(this, false)
-        }
+        with(HomePagePickerFragmentBinding.bind(view)) {
+            categoriesRecyclerView.apply {
+                layoutManager = LinearLayoutManager(
+                        context,
+                        RecyclerView.HORIZONTAL,
+                        false
+                )
+                setRecycledViewPool(RecyclerView.RecycledViewPool())
+                adapter = CategoriesAdapter()
+                ViewCompat.setNestedScrollingEnabled(this, false)
+            }
 
-        layoutsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = LayoutCategoryAdapter()
-        }
+            layoutsRecyclerView.apply {
+                layoutManager = LinearLayoutManager(requireActivity())
+                adapter = LayoutCategoryAdapter()
+            }
 
-        setupUi()
-        setupViewModel()
-        setupActionListeners()
-        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+            setupUi()
+            setupViewModel()
+            setupActionListeners()
+            previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+        }
     }
 
-    private fun setupUi() {
+    private fun HomePagePickerFragmentBinding.setupUi() {
         title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
 
-    private fun setupViewModel() {
+    private fun HomePagePickerFragmentBinding.setupViewModel() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
@@ -105,7 +107,7 @@ class HomePagePickerFragment : Fragment() {
                 }
                 is LayoutPickerUiState.Content -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
-                    (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
+                    (layoutsRecyclerView.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
                 is LayoutPickerUiState.Error -> {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
@@ -132,21 +134,21 @@ class HomePagePickerFragment : Fragment() {
         })
 
         viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
-            layoutsRecyclerView?.smoothScrollToPosition(0)
+            layoutsRecyclerView.smoothScrollToPosition(0)
         })
 
         viewModel.start(displayUtils.isTablet())
     }
 
-    private fun setHeaderVisibility(visible: Boolean) {
+    private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(title, header, visible)
     }
 
-    private fun setDescriptionVisibility(visible: Boolean) {
+    private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
         description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
-    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
+    private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
         categoriesSkeleton.setVisible(skeleton)
         categoriesRecyclerView.setVisible(!skeleton && !error)
         layoutsSkeleton.setVisible(skeleton)
@@ -154,11 +156,11 @@ class HomePagePickerFragment : Fragment() {
         errorView.setVisible(error)
     }
 
-    private fun setToolbarVisibility(visible: Boolean) {
+    private fun HomePagePickerFragmentBinding.setToolbarVisibility(visible: Boolean) {
         AniUtils.animateBottomBar(bottomToolbar, visible)
     }
 
-    private fun setupActionListeners() {
+    private fun HomePagePickerFragmentBinding.setupActionListeners() {
         previewButton.setOnClickListener { viewModel.onPreviewTapped() }
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
@@ -168,7 +170,7 @@ class HomePagePickerFragment : Fragment() {
         setScrollListener()
     }
 
-    private fun setScrollListener() {
+    private fun HomePagePickerFragmentBinding.setScrollListener() {
         if (isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
