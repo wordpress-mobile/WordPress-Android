@@ -18,9 +18,11 @@ parameters:
   release_build:
     type: boolean
     default: false
+  # Display name of the app and should match the usual public facing name (e.g. WordPress, Jetpack)
   app_name:
     type: string
     default: "WordPress"
+  # The key used to reference the app in the Fastfile
   product_key:
     type: string
     default: "wordpress"
