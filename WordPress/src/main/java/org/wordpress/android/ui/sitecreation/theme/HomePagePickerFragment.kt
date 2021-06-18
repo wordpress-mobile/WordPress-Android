@@ -145,6 +145,10 @@ class HomePagePickerFragment : Fragment() {
         )
     }
 
+    /**
+     * Sets the header description visibility
+     * @param visible if true the description is visible else invisible
+     */
     private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
         modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
                 if (visible) View.VISIBLE else View.INVISIBLE
