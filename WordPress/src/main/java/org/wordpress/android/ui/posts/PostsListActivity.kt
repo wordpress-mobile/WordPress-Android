@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -581,7 +582,7 @@ class PostsListActivity : LocaleAwareActivity(),
     // Menu PostListViewLayoutType handling
 
     private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-        getDrawable(iconRes)?.let { drawable ->
+        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
             menuItem.setIcon(drawable)
         }
     }
