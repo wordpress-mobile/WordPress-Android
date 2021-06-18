@@ -427,7 +427,7 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # build_internal
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for restricted internal testing and optionally uploads it
+  # This lane builds the app for restricted internal testing, and optionally uploads it to PlayStore's Internal track
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_internal [app:<name of app>] [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
