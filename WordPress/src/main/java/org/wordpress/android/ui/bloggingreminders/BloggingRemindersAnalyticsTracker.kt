@@ -5,6 +5,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_COMPLETED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCHEDULED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Button.CONTINUE
@@ -51,6 +52,11 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackFlowCompleted() = track(BLOGGING_REMINDERS_FLOW_COMPLETED)
 
+    fun trackRemindersScheduled(daysCount: Int) = track(
+            BLOGGING_REMINDERS_SCHEDULED,
+            mapOf(DAYS_OF_WEEK_COUNT_KEY to daysCount)
+    )
+
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
             stat,
             properties + (BLOG_TYPE_KEY to siteType?.trackingName)
@@ -76,5 +82,6 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         private const val SCREEN_KEY = "screen"
         private const val BUTTON_KEY = "button"
         private const val SOURCE_KEY = "source"
+        private const val DAYS_OF_WEEK_COUNT_KEY = "days_of_week_count"
     }
 }

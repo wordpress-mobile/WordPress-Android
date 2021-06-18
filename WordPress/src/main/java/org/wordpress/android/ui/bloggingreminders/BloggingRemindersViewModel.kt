@@ -167,6 +167,12 @@ class BloggingRemindersViewModel @Inject constructor(
             launch {
                 bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
                 // TODO Add logic to save state and schedule notifications here
+                val daysCount = bloggingRemindersModel.enabledDays.size
+                if (daysCount > 0) {
+                    analyticsTracker.trackRemindersScheduled(daysCount)
+                } else {
+                    // TODO Track cancelled
+                }
                 _selectedScreen.value = EPILOGUE
             }
         }
