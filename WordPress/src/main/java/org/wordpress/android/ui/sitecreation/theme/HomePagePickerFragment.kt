@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
@@ -157,12 +156,12 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setToolbarVisibility(visible: Boolean) {
-        AniUtils.animateBottomBar(bottomToolbar, visible)
+        AniUtils.animateBottomBar(homePagePickerBottomToolbar.bottomToolbar, visible)
     }
 
     private fun HomePagePickerFragmentBinding.setupActionListeners() {
-        previewButton.setOnClickListener { viewModel.onPreviewTapped() }
-        chooseButton.setOnClickListener { viewModel.onChooseTapped() }
+        homePagePickerBottomToolbar.previewButton.setOnClickListener { viewModel.onPreviewTapped() }
+        homePagePickerBottomToolbar.chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         backButton.setOnClickListener { viewModel.onBackPressed() }
