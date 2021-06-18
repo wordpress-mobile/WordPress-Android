@@ -229,7 +229,7 @@ REPOSITORY_NAME="WordPress-Android"
     app = options[:app]
     # android_betabuild_prechecks(options)
     send_strings_for_translation()
-    android_update_metadata(options)
+    download_translations(app: app)
     android_bump_version_beta(app: app)
     new_version = android_get_app_version(app: app)
     trigger_release_build(branch_to_build: "release/#{new_version}", app: app)
@@ -286,7 +286,7 @@ REPOSITORY_NAME="WordPress-Android"
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
     hotfix = android_current_branch_is_hotfix
-    android_update_metadata(options) unless hotfix
+    download_translations(options) unless hotfix
     android_bump_version_final_release(app: options[:app]) unless hotfix
     version = android_get_release_version(app: options[:app])
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
@@ -763,15 +763,16 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane download the string translations from GlotPress
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane download_translations
+  # bundle exec fastlane download_translations [app:<wordpress|jetpack>]
   #####################################################################################
   lane :download_translations do |options|
-    # Adapt the GP project URL and lint_task as needed if testing a project other than WordPress
+    # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
+    # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
     android_download_translations(
-      res_dir: File.join(ENV['PROJECT_NAME'], 'src', 'main', 'res'),
+      res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
       locales: ALL_LOCALES,
-      lint_task: 'lintWordpressVanillaRelease'
+      lint_task: "lint#{options[:app]}VanillaRelease" # TODO: Should we adapt this
     )
   end
 
