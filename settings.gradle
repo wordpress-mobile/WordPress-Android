@@ -82,6 +82,7 @@ if (localBuilds.exists()) {
 buildCache {
     remote(HttpBuildCache) {
         url = "http://3.14.253.236:5071/cache/"
+        allowUntrustedServer = true
         push = true
     }
 }
