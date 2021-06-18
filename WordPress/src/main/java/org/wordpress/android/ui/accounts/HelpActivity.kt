@@ -98,8 +98,8 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     override fun onDestroy() {
-        binding = null
         super.onDestroy()
+        binding = null
     }
 
     override fun onResume() {
