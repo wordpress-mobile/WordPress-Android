@@ -121,7 +121,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         viewModel.loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this, { uiState ->
-            uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
+            setHeaderVisibility(uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
@@ -160,6 +160,10 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         viewModel.onCategorySelectionChanged.observeEvent(this, {
             layoutsRecyclerView?.smoothScrollToPosition(0)
         })
+    }
+
+    private fun setHeaderVisibility(visible: Boolean) {
+        uiHelper.fadeInfadeOutViews(title, header, visible)
     }
 
     /**
