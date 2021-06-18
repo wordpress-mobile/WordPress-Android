@@ -81,6 +81,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/modal_layout_picker_layouts_skeleton"
         layout="@layout/modal_layout_picker_layouts_skeleton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
