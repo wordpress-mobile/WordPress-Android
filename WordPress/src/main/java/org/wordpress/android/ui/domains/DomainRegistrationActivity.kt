@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -54,7 +53,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel.start()
 
-        viewModel.domainSuggestionsVisible.observe(this, Observer { isVisible ->
+        viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
                 if (fragment == null) {
@@ -69,7 +68,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.selectedDomain.observe(this, Observer { selectedDomain ->
+        viewModel.selectedDomain.observe(this, { selectedDomain ->
             selectedDomain?.let {
                 var fragment = supportFragmentManager.findFragmentByTag(
                         DomainRegistrationDetailsFragment.TAG
@@ -82,7 +81,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.domainRegistrationCompleted.observe(this, Observer { event ->
+        viewModel.domainRegistrationCompleted.observe(this, { event ->
             event?.let {
                 if (shouldShowCongratsScreen()) {
                     var fragment = supportFragmentManager.findFragmentByTag(
