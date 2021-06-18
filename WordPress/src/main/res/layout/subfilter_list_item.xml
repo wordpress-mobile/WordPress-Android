@@ -35,7 +35,7 @@
         android:id="@+id/unseen_count"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/reader_subfilter_unseen_count_height"
-        android:background="@drawable/bg_oval_surface_overlay_emphasis_lowest"
+        android:background="@drawable/bg_rectangle_surface_overlay_emphasis_lowest"
         android:ellipsize="end"
         android:gravity="center"
         android:importantForAccessibility="no"
