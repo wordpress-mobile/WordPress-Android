@@ -34,6 +34,7 @@ import javax.inject.Inject
 /**
  * Implements the Modal Layout Picker UI
  */
+@Suppress("TooManyFunctions")
 class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory

@@ -33,6 +33,7 @@ import javax.inject.Inject
 /**
  * Implements the Home Page Picker UI
  */
+@Suppress("TooManyFunctions")
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
