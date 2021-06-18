@@ -183,7 +183,9 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         modalLayoutPickerBottomToolbar.createPageButton.setVisible(uiState.createPageVisible)
         modalLayoutPickerBottomToolbar.previewButton.setVisible(uiState.previewVisible)
         modalLayoutPickerBottomToolbar.retryButton.setVisible(uiState.retryVisible)
-        modalLayoutPickerBottomToolbar.createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
+        modalLayoutPickerBottomToolbar.createOrRetryContainer.setVisible(
+                uiState.createBlankPageVisible || uiState.retryVisible
+        )
     }
 
     private fun ModalLayoutPickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
