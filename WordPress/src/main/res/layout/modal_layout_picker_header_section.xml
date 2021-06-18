@@ -5,11 +5,13 @@
     android:orientation="vertical">
 
     <include
+        android:id="@+id/modal_layout_picker_title_row"
         layout="@layout/modal_layout_picker_title_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <include
+        android:id="@+id/modal_layout_picker_subtitle_row"
         layout="@layout/modal_layout_picker_subtitle_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

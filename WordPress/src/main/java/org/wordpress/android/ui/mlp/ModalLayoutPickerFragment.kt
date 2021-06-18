@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ModalLayoutPickerFragmentBinding
@@ -165,7 +163,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     private fun ModalLayoutPickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
                 modalLayoutPickerTitlebar.title,
-                header,
+                modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
                 visible
         )
     }
@@ -175,7 +173,8 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
      * @param visible if true the description is visible else invisible
      */
     private fun ModalLayoutPickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
-        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
+                if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun ModalLayoutPickerFragmentBinding.setButtonsVisibility(uiState: ButtonsUiState) {
