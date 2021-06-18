@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
@@ -84,16 +83,16 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                 closeModal()
             }
 
-            createBlankPageButton.setOnClickListener {
+            modalLayoutPickerBottomToolbar.createBlankPageButton.setOnClickListener {
                 viewModel.onCreatePageClicked()
             }
-            createPageButton.setOnClickListener {
+            modalLayoutPickerBottomToolbar.createPageButton.setOnClickListener {
                 viewModel.onCreatePageClicked()
             }
-            previewButton.setOnClickListener {
+            modalLayoutPickerBottomToolbar.previewButton.setOnClickListener {
                 viewModel.onPreviewTapped()
             }
-            retryButton.setOnClickListener {
+            modalLayoutPickerBottomToolbar.retryButton.setOnClickListener {
                 viewModel.onRetryClicked()
             }
             previewTypeSelectorButton.setOnClickListener {
@@ -177,11 +176,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     private fun ModalLayoutPickerFragmentBinding.setButtonsVisibility(uiState: ButtonsUiState) {
-        createBlankPageButton.setVisible(uiState.createBlankPageVisible)
-        createPageButton.setVisible(uiState.createPageVisible)
-        previewButton.setVisible(uiState.previewVisible)
-        retryButton.setVisible(uiState.retryVisible)
-        createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
+        modalLayoutPickerBottomToolbar.createBlankPageButton.setVisible(uiState.createBlankPageVisible)
+        modalLayoutPickerBottomToolbar.createPageButton.setVisible(uiState.createPageVisible)
+        modalLayoutPickerBottomToolbar.previewButton.setVisible(uiState.previewVisible)
+        modalLayoutPickerBottomToolbar.retryButton.setVisible(uiState.retryVisible)
+        modalLayoutPickerBottomToolbar.createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
     }
 
     private fun ModalLayoutPickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {

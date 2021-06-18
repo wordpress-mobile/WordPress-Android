@@ -114,6 +114,7 @@
             android:background="@drawable/modal_layout_picker_bottom_shadow" />
 
         <include
+            android:id="@+id/modal_layout_picker_bottom_toolbar"
             layout="@layout/modal_layout_picker_bottom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
