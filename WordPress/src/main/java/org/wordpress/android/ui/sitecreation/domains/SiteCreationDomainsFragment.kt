@@ -80,15 +80,17 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent() {
-        with(checkNotNull(binding)) {
-                searchInputWithHeader = SearchInputWithHeader(
-                        uiHelpers = uiHelpers,
-                        rootView = root as ViewGroup,
-                        onClear = { viewModel.onClearTextBtnClicked() }
-                )
-                createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
+        binding?.let {
+            searchInputWithHeader = SearchInputWithHeader(
+                    uiHelpers = uiHelpers,
+                    rootView = it.root as ViewGroup,
+                    onClear = { viewModel.onClearTextBtnClicked() }
+            )
+            it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
+            with (it) {
                 initRecyclerView()
                 initViewModel()
+            }
         }
     }
 
