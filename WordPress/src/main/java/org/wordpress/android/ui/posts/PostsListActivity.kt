@@ -33,8 +33,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -249,8 +248,11 @@ class PostsListActivity : LocaleAwareActivity(),
 
         postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
             when (createAction) {
-                CREATE_NEW_POST -> viewModel.newPost()
-                CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_POST -> viewModel.newPost()
+                ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_PAGE -> Unit
+                ActionType.NO_ACTION -> Unit
+                null -> Unit
             }
         })
 
