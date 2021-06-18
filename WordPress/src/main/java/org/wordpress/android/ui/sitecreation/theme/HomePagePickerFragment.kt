@@ -99,7 +99,7 @@ class HomePagePickerFragment : Fragment() {
             setHeaderVisibility(uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
-            AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
+            setToolbarVisibility(uiState.isToolbarVisible)
             when (uiState) {
                 is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
@@ -152,6 +152,10 @@ class HomePagePickerFragment : Fragment() {
         layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
         errorView.setVisible(error)
+    }
+
+    private fun setToolbarVisibility(visible: Boolean) {
+        AniUtils.animateBottomBar(bottomToolbar, visible)
     }
 
     private fun setupActionListeners() {
