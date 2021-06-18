@@ -596,10 +596,8 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        with(binding) {
-            appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-            appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
-        }
+        binding.appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 
     companion object {
