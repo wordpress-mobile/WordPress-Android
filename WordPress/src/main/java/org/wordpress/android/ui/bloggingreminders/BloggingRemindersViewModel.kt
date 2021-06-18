@@ -171,7 +171,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 if (daysCount > 0) {
                     analyticsTracker.trackRemindersScheduled(daysCount)
                 } else {
-                    // TODO Track cancelled
+                    analyticsTracker.trackRemindersCancelled()
                 }
                 _selectedScreen.value = EPILOGUE
             }
