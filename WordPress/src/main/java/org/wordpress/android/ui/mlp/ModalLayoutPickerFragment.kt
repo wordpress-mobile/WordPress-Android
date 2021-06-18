@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
@@ -184,7 +183,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     private fun ModalLayoutPickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
-        categoriesSkeleton.setVisible(skeleton)
+        modalLayoutPickerCategoriesSkeleton.categoriesSkeleton.setVisible(skeleton)
         categoriesRecyclerView.setVisible(!skeleton && !error)
         layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
