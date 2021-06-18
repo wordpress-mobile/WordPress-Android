@@ -88,7 +88,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 
     private lateinit var site: SiteModel
-    private var binding: PostListActivityBinding? = null
+    private lateinit var binding: PostListActivityBinding
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
@@ -168,11 +168,6 @@ class PostsListActivity : LocaleAwareActivity(),
             initCreateMenuViewModel()
             loadIntentData(intent)
         }
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 
     private fun setupActionBar() {
@@ -476,7 +471,7 @@ class PostsListActivity : LocaleAwareActivity(),
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
             initSearchFragment()
-            binding!!.initSearchView()
+            binding.initSearchView()
         }
         return true
     }
@@ -599,7 +594,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        with(binding!!) {
+        with(binding) {
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
             appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
         }
