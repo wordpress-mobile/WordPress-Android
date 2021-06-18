@@ -393,16 +393,8 @@ private fun buildZendeskCustomFields(
         CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
         CustomField(TicketFieldIds.sourcePlatform, sourcePlatform)
     )
-    allSites?.let {
-        val planIds = it.map { site -> site.planId }.distinct()
-            .filter { planId -> planId != 0L }
-        if (planIds.isNotEmpty()) {
-            val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
-            if (highestPlan != UNKNOWN_PLAN) {
-                customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
-            }
-        }
-    }
+
+    selectedSite?.zendeskPlan?.let { customFields.add(CustomField(TicketFieldIds.highestPlan, it)) }
 
     return customFields
 }
