@@ -50,7 +50,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private lateinit var events: MutableList<Boolean>
     private lateinit var uiState: MutableList<UiState>
 
-    @ExperimentalStdlibApi
     @InternalCoroutinesApi
     @Before
     fun setUp() {
