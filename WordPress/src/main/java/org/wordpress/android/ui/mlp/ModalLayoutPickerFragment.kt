@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -133,8 +132,8 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     (layoutsRecyclerView.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
                 is Error -> {
-                    uiState.title?.let { actionableEmptyView.title.setText(it) }
-                    uiState.subtitle?.let { actionableEmptyView.subtitle.setText(it) }
+                    uiState.title?.let { modalLayoutPickerError.actionableEmptyView.title.setText(it) }
+                    uiState.subtitle?.let { modalLayoutPickerError.actionableEmptyView.subtitle.setText(it) }
                 }
             }
         })
@@ -187,7 +186,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         categoriesRecyclerView.setVisible(!skeleton && !error)
         layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
-        errorLayout.setVisible(error)
+        modalLayoutPickerError.errorLayout.setVisible(error)
     }
 
     override fun closeModal() {

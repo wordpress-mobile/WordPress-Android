@@ -98,6 +98,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include
+        android:id="@+id/modal_layout_picker_error"
         layout="@layout/modal_layout_picker_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
