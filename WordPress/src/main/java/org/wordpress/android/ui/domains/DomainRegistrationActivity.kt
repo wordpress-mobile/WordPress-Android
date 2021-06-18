@@ -28,7 +28,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
-    private var binding: DomainSuggestionsActivityBinding? = null
+    private lateinit var binding: DomainSuggestionsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +47,6 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
             setupViewModel()
         }
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 
     private fun setupViewModel() {
@@ -148,7 +143,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        binding?.apply {
+        binding.apply {
             if (containerId == R.id.domain_suggestions_list) {
                 appbarMain.post {
                     appbarMain.isLiftOnScroll = false
