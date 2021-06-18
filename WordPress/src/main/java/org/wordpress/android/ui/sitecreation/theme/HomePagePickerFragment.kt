@@ -96,7 +96,7 @@ class HomePagePickerFragment : Fragment() {
                 .get(HomePagePickerViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-            uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
+            setHeaderVisibility(uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
@@ -136,6 +136,10 @@ class HomePagePickerFragment : Fragment() {
         })
 
         viewModel.start(displayUtils.isTablet())
+    }
+
+    private fun setHeaderVisibility(visible: Boolean) {
+        uiHelper.fadeInfadeOutViews(title, header, visible)
     }
 
     private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
