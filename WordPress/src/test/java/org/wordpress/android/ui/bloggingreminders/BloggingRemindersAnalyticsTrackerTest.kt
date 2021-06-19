@@ -13,9 +13,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_BUTTON_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_CANCELLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_COMPLETED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_RECEIVED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCHEDULED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -121,6 +124,31 @@ class BloggingRemindersAnalyticsTrackerTest {
     fun `trackFlowCompleted tracks correct event and properties`() {
         bloggingRemindersAnalyticsTracker.trackFlowCompleted()
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_FLOW_COMPLETED), checkMap {
+            assertThat(it).containsKey("blog_type")
+        })
+    }
+
+    @Test
+    fun `trackRemindersScheduled tracks correct event and properties`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersScheduled(3)
+        verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_SCHEDULED), checkMap {
+            assertThat(it).containsEntry("days_of_week_count", 3)
+            assertThat(it).containsKey("blog_type")
+        })
+    }
+
+    @Test
+    fun `trackRemindersCancelled tracks correct event and properties`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersCancelled()
+        verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_CANCELLED), checkMap {
+            assertThat(it).containsKey("blog_type")
+        })
+    }
+
+    @Test
+    fun `trackNotificationReceived tracks correct event and properties`() {
+        bloggingRemindersAnalyticsTracker.trackNotificationReceived()
+        verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED), checkMap {
             assertThat(it).containsKey("blog_type")
         })
     }
