@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -24,6 +25,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -170,6 +172,97 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         clickPrimaryButton()
 
         assertThat(events.last()).isFalse()
+    }
+
+    @Test
+    fun `showBottomSheet sets tracker site id`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        verify(analyticsTracker).setSite(siteId)
+    }
+
+    @Test
+    fun `showBottomSheet tracks flow start with correct source`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+
+        verify(analyticsTracker).trackFlowStart(BLOG_SETTINGS)
+        verify(analyticsTracker).trackFlowStart(PUBLISH_FLOW)
+    }
+
+    @Test
+    fun `showBottomSheet tracks screen shown with correct screen`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        verify(analyticsTracker).trackScreenShown(PROLOGUE)
+        verify(analyticsTracker).trackScreenShown(SELECTION)
+    }
+
+    @Test
+    fun `showBottomSheet tracks screen shown more than once`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        verify(analyticsTracker, times(2)).trackScreenShown(PROLOGUE)
+    }
+
+    @Test
+    fun `clicking primary button on prologue screen tracks correct events`() {
+        initPrologueBuilder()
+
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(PROLOGUE)
+        verify(analyticsTracker).trackScreenShown(SELECTION)
+    }
+
+    @Test
+    fun `clicking primary button on selection screen tracks correct events`() {
+        initEmptyStore()
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(SELECTION)
+        verify(analyticsTracker).trackScreenShown(EPILOGUE)
+    }
+
+    @Test
+    fun `clicking primary button on epilogue screen tracks correct events`() {
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(EPILOGUE)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on prologue screen tracks dismiss event`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowDismissed(PROLOGUE)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on selection screen tracks dismiss event`() {
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowDismissed(SELECTION)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on epilogue screen tracks completed event`() {
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowCompleted()
     }
 
     private fun initEmptyStore(): BloggingRemindersModel {
