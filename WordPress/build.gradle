@@ -251,21 +251,15 @@ dependencies {
 
     implementation "androidx.core:core:$coreVersion"
     implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
-    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.media:media:1.0.1'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "com.google.android.material:material:$materialVersion"
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
@@ -280,8 +274,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     // ProcessLifecycleOwner
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
-    // Paging Library
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -298,9 +290,7 @@ dependencies {
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
-    implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'

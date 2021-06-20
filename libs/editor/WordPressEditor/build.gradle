@@ -72,14 +72,10 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.25'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
         exclude group: "com.android.volley"
     }
@@ -92,7 +88,6 @@ dependencies {
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
-    implementation "org.jsoup:jsoup:1.10.3"
 
     implementation 'com.google.code.gson:gson:2.6.2'
 
