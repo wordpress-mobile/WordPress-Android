@@ -356,7 +356,7 @@ private fun buildZendeskConfig(
             buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper, buildConfigWrapper)
         )
         .withRequestSubject(ticketSubject)
-        .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
+        .withTags(buildZendeskTags(allSites, selectedSite, origin ?: Origin.UNKNOWN, extraTags))
         .config()
 }
 
@@ -437,7 +437,12 @@ private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String
  * This is a helper function which returns a set of pre-defined tags depending on some conditions. It accepts a list of
  * custom tags to be added for special cases.
  */
-private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
+private fun buildZendeskTags(
+    allSites: List<SiteModel>?,
+    selectedSite: SiteModel? = null,
+    origin: Origin,
+    extraTags: List<String>?
+): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -458,6 +463,9 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     extraTags?.let {
         tags.addAll(it)
     }
+
+    selectedSite?.zendeskAddOns?.takeIf { it.isNotEmpty() }?.let { tags.addAll(it.split(",")) }
+
     return tags
 }
 
