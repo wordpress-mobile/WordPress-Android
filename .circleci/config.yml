@@ -154,7 +154,6 @@ jobs:
       api-version: "29"
     environment:
       JVM_OPTS: -Xmx2048m
-
     steps:
       - run:
           name: Init messages
