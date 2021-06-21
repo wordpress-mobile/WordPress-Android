@@ -509,7 +509,7 @@ tasks.register("updateVersionProperties") {
     }
 }
 
-task "printVersionName" {
+tasks.register("printVersionName") {
     doLast {
         def key = "$productKey" + "."
         if(project.hasProperty('alpha')) {
