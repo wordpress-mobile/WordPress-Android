@@ -64,22 +64,22 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
-    private var binding: SiteCreationPreviewScreenBinding? = null
+    private lateinit var binding: SiteCreationPreviewScreenBinding
 
-    private val siteCreationPreviewScreenDefaultBinding: SiteCreationPreviewScreenDefaultBinding?
-        get() = binding?.siteCreationPreviewScreenDefault
+    private val siteCreationPreviewScreenDefaultBinding: SiteCreationPreviewScreenDefaultBinding
+        get() = binding.siteCreationPreviewScreenDefault
 
-    private val fullscreenErrorWithRetryBinding: FullscreenErrorWithRetryBinding?
-        get() = binding?.siteCreationPreviewScreenDefault?.fullscreenErrorWithRetry
+    private val fullscreenErrorWithRetryBinding: FullscreenErrorWithRetryBinding
+        get() = binding.siteCreationPreviewScreenDefault.fullscreenErrorWithRetry
 
-    private val siteCreationProgressCreatingSiteBinding: SiteCreationProgressCreatingSiteBinding?
-        get() = binding?.siteCreationPreviewScreenDefault?.siteCreationProgressCreatingSite
+    private val siteCreationProgressCreatingSiteBinding: SiteCreationProgressCreatingSiteBinding
+        get() = binding.siteCreationPreviewScreenDefault.siteCreationProgressCreatingSite
 
-    private val siteCreationPreviewHeaderItemBinding: SiteCreationPreviewHeaderItemBinding?
-        get() = binding?.siteCreationPreviewScreenDefault?.siteCreationPreviewHeaderItem
+    private val siteCreationPreviewHeaderItemBinding: SiteCreationPreviewHeaderItemBinding
+        get() = binding.siteCreationPreviewScreenDefault.siteCreationPreviewHeaderItem
 
-    private val siteCreationPreviewWebViewContainer: SiteCreationPreviewWebViewContainerBinding?
-        get() = binding?.siteCreationPreviewScreenDefault?.siteCreationPreviewWebViewContainer
+    private val siteCreationPreviewWebViewContainer: SiteCreationPreviewWebViewContainerBinding
+        get() = binding.siteCreationPreviewScreenDefault.siteCreationPreviewWebViewContainer
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
@@ -442,10 +442,5 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         if (animatorSet?.isRunning == true) {
             animatorSet?.cancel()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 }
