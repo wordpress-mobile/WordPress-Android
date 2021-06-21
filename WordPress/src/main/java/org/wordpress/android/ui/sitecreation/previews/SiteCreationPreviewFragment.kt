@@ -78,7 +78,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private val siteCreationPreviewHeaderItemBinding: SiteCreationPreviewHeaderItemBinding
         get() = binding.siteCreationPreviewScreenDefault.siteCreationPreviewHeaderItem
 
-    private val siteCreationPreviewWebViewContainer: SiteCreationPreviewWebViewContainerBinding
+    private val siteCreationPreviewWebViewContainerBinding: SiteCreationPreviewWebViewContainerBinding
         get() = binding.siteCreationPreviewScreenDefault.siteCreationPreviewWebViewContainer
 
     companion object {
@@ -157,33 +157,31 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                siteCreationProgressCreatingSiteBinding?.let {
-                    uiHelpers.updateVisibility(it.progressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(
+                        siteCreationProgressCreatingSiteBinding.progressLayout,
+                        uiState.fullscreenProgressLayoutVisibility
+                )
+                uiHelpers.updateVisibility(
+                        siteCreationPreviewScreenDefaultBinding.contentLayout,
+                        uiState.contentLayoutVisibility
+                )
+                with(siteCreationPreviewWebViewContainerBinding) {
+                    uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
+                    uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
                 }
-
-                siteCreationPreviewScreenDefaultBinding?.let {
-                    uiHelpers.updateVisibility(it.contentLayout, uiState.contentLayoutVisibility)
-                }
-
-                siteCreationPreviewWebViewContainer?.let {
-                    uiHelpers.updateVisibility(it.sitePreviewWebView, uiState.webViewVisibility)
-                    uiHelpers.updateVisibility(it.sitePreviewWebError, uiState.webViewErrorVisibility)
-                    uiHelpers.updateVisibility(it.sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
-                }
-
-                fullscreenErrorWithRetryBinding?.let {
-                    uiHelpers.updateVisibility(it.errorLayout, uiState.fullscreenErrorLayoutVisibility)
-                }
+                uiHelpers.updateVisibility(
+                        fullscreenErrorWithRetryBinding.errorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
 
         viewModel.preloadPreview.observe(this, { url ->
             url?.let { urlString ->
-                siteCreationPreviewWebViewContainer?.let {
-                    it.sitePreviewWebView.webViewClient =
+                with(siteCreationPreviewWebViewContainerBinding) {
+                    sitePreviewWebView.webViewClient =
                             URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
-                    it.sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
-                    it.sitePreviewWebView.loadUrl(urlString)
+                    sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
+                    sitePreviewWebView.loadUrl(urlString)
                 }
             }
         })
@@ -221,31 +219,31 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun initRetryButton() {
-        fullscreenErrorWithRetryBinding?.errorRetry?.setOnClickListener { viewModel.retry() }
+        fullscreenErrorWithRetryBinding.errorRetry.setOnClickListener { viewModel.retry() }
     }
 
     private fun initOkButton() {
-        siteCreationPreviewScreenDefaultBinding?.okButton?.setOnClickListener { viewModel.onOkButtonClicked() }
+        siteCreationPreviewScreenDefaultBinding.okButton.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
     private fun initCancelWizardButton() {
-        fullscreenErrorWithRetryBinding?.cancelWizardButton?.setOnClickListener { viewModel.onCancelWizardClicked() }
+        fullscreenErrorWithRetryBinding.cancelWizardButton.setOnClickListener { viewModel.onCancelWizardClicked() }
     }
 
     private fun initContactSupportButton() {
-        fullscreenErrorWithRetryBinding?.contactSupport?.setOnClickListener { viewModel.onHelpClicked() }
+        fullscreenErrorWithRetryBinding.contactSupport.setOnClickListener { viewModel.onHelpClicked() }
     }
 
     private fun updateContentLayout(sitePreviewData: SitePreviewData) {
         sitePreviewData.apply {
-            siteCreationPreviewWebViewContainer?.sitePreviewWebUrlTitle?.text = createSpannableUrl(
+            siteCreationPreviewWebViewContainerBinding.sitePreviewWebUrlTitle.text = createSpannableUrl(
                     requireNotNull(activity),
                     shortUrl,
                     subDomainIndices,
                     domainIndices
             )
         }
-        if (siteCreationPreviewScreenDefaultBinding?.contentLayout?.visibility == View.GONE) {
+        if (siteCreationPreviewScreenDefaultBinding.contentLayout.visibility == View.GONE) {
             animateContentTransition()
             view?.announceForAccessibility(
                     getString(R.string.new_site_creation_preview_title) +
@@ -256,28 +254,35 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
         progressUiState.apply {
-            siteCreationProgressCreatingSiteBinding?.let {
-                val newText = uiHelpers.getTextOfUiString(it.progressText.context, loadingTextResId)
+            with(siteCreationProgressCreatingSiteBinding) {
+                val newText = uiHelpers.getTextOfUiString(progressText.context, loadingTextResId)
                 AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
                 if (animate) {
                     updateLoadingTextWithFadeAnimation(newText)
                 } else {
-                    it.progressText.text = newText
+                    progressText.text = newText
                 }
             }
         }
     }
 
     private fun updateLoadingTextWithFadeAnimation(newText: CharSequence) {
-        siteCreationProgressCreatingSiteBinding?.let {
+        with(siteCreationProgressCreatingSiteBinding) {
             val animationDuration = AniUtils.Duration.SHORT
-            val fadeOut = AniUtils.getFadeOutAnim(it.progressTextLayout, animationDuration, View.VISIBLE)
-            val fadeIn = AniUtils.getFadeInAnim(it.progressTextLayout, animationDuration)
+            val fadeOut = AniUtils.getFadeOutAnim(
+                    progressTextLayout,
+                    animationDuration,
+                    View.VISIBLE
+            )
+            val fadeIn = AniUtils.getFadeInAnim(
+                    progressTextLayout,
+                    animationDuration
+            )
 
             // update the text when the view isn't visible
             fadeIn.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    it.progressText.text = newText
+                    progressText.text = newText
                 }
 
                 override fun onAnimationEnd(animation: Animator?) {
@@ -286,7 +291,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 }
             })
             // Start the fade-in animation right after the view fades out
-            fadeIn.startDelay = animationDuration.toMillis(it.progressTextLayout.context)
+            fadeIn.startDelay = animationDuration.toMillis(progressTextLayout.context)
 
             animatorSet = AnimatorSet().apply {
                 playSequentially(fadeOut, fadeIn)
@@ -296,12 +301,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
-        fullscreenErrorWithRetryBinding?.let {
+        with(fullscreenErrorWithRetryBinding) {
             errorUiStateState.apply {
-                uiHelpers.setTextOrHide(it.errorTitle, titleResId)
-                uiHelpers.setTextOrHide(it.errorSubtitle, subtitleResId)
-                uiHelpers.updateVisibility(it.contactSupport, errorUiStateState.showContactSupport)
-                uiHelpers.updateVisibility(it.cancelWizardButton, errorUiStateState.showCancelWizardButton)
+                uiHelpers.setTextOrHide(errorTitle, titleResId)
+                uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
+                uiHelpers.updateVisibility(contactSupport, errorUiStateState.showContactSupport)
+                uiHelpers.updateVisibility(cancelWizardButton, errorUiStateState.showCancelWizardButton)
             }
         }
     }
@@ -351,64 +356,56 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun animateContentTransition() {
-        siteCreationPreviewScreenDefaultBinding?.let { defaultBinding ->
-            defaultBinding.contentLayout.addOnLayoutChangeListener(
-                    object : OnLayoutChangeListener {
-                        override fun onLayoutChange(
-                            v: View?,
-                            left: Int,
-                            top: Int,
-                            right: Int,
-                            bottom: Int,
-                            oldLeft: Int,
-                            oldTop: Int,
-                            oldRight: Int,
-                            oldBottom: Int
-                        ) {
-                            if (meetsHeightWidthForAnimation()) {
-                                defaultBinding.contentLayout.removeOnLayoutChangeListener(this)
-                                val contentHeight = defaultBinding.contentLayout.measuredHeight.toFloat()
+        with(siteCreationPreviewScreenDefaultBinding) {
+            contentLayout.addOnLayoutChangeListener(
+            object : OnLayoutChangeListener {
+                override fun onLayoutChange(
+                    v: View?,
+                    left: Int,
+                    top: Int,
+                    right: Int,
+                    bottom: Int,
+                    oldLeft: Int,
+                    oldTop: Int,
+                    oldRight: Int,
+                    oldBottom: Int
+                ) {
+                    if (meetsHeightWidthForAnimation()) {
+                        contentLayout.removeOnLayoutChangeListener(this)
+                        val contentHeight = contentLayout.measuredHeight.toFloat()
+                        val titleAnim = createFadeInAnimator(siteCreationPreviewHeaderItemBinding.sitePreviewTitle)
+                        val webViewAnim = createSlideInFromBottomAnimator(
+                                siteCreationPreviewWebViewContainer.webViewContainer,
+                                contentHeight
+                        )
 
-                                val titleAnim = siteCreationPreviewHeaderItemBinding?.sitePreviewTitle?.let { it ->
-                                    createFadeInAnimator(it)
-                                }
+                        // OK button should slide in if the container exists and fade in otherwise
+                        // difference between land & portrait
+                        val okAnim = if (isLandscape) {
+                            createFadeInAnimator(okButton)
+                        } else {
+                            createSlideInFromBottomAnimator(sitePreviewOkButtonContainer as View, contentHeight)
+                        }
 
-                                val webViewAnim = createSlideInFromBottomAnimator(
-                                        defaultBinding.siteCreationPreviewWebViewContainer.webViewContainer,
-                                        contentHeight
-                                )
-
-                                // OK button should slide in if the container exists and fade in otherwise
-                                // difference between land & portrait
-                                val okAnim = if (isLandscape) {
-                                    createFadeInAnimator(defaultBinding.okButton)
-                                } else {
-                                    createSlideInFromBottomAnimator(
-                                            defaultBinding.sitePreviewOkButtonContainer as View, contentHeight
-                                    )
-                                }
-
-                                // There is a chance that either of the following fields can be null,
-                                // so to avoid a NPE, we only execute playTogether if they are both not null
-                                if (titleAnim != null && okAnim != null) {
-                                    AnimatorSet().apply {
-                                        interpolator = DecelerateInterpolator()
-                                        duration = SLIDE_IN_ANIMATION_DURATION
-                                        playTogether(titleAnim, webViewAnim, okAnim)
-                                        start()
-                                    }
-                                }
+                        // There is a chance that either of the following fields can be null,
+                        // so to avoid a NPE, we only execute playTogether if they are both not null
+                        if (titleAnim != null && okAnim != null) {
+                            AnimatorSet().apply {
+                                interpolator = DecelerateInterpolator()
+                                duration = SLIDE_IN_ANIMATION_DURATION
+                                playTogether(titleAnim, webViewAnim, okAnim)
+                                start()
                             }
                         }
-                    })
+                    }
+                }
+            })
         }
     }
 
-    private fun meetsHeightWidthForAnimation(): Boolean {
-        return siteCreationPreviewScreenDefaultBinding?.let {
-            (it.contentLayout.measuredWidth > 0 && it.contentLayout.measuredHeight > 0)
-        } ?: false
-    }
+    private fun meetsHeightWidthForAnimation() =
+        siteCreationPreviewScreenDefaultBinding.contentLayout.measuredWidth > 0 &&
+                siteCreationPreviewScreenDefaultBinding.contentLayout.measuredHeight > 0
 
     private fun createSlideInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(
