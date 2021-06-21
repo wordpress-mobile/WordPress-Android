@@ -149,13 +149,6 @@ jobs:
           path: Artifacts
           destination: Artifacts
   Release Build:
-    parameters:
-      app_name:
-        type: string
-        default: "WordPress"
-      product_key:
-        type: string
-        default: "wordpress"
     executor:
       name: android/default
       api-version: "29"
