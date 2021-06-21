@@ -29,19 +29,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
 
-    private var binding: SiteCreationDomainsScreenBinding? = null
-
-    companion object {
-        const val TAG = "site_creation_domains_fragment_tag"
-
-        fun newInstance(screenTitle: String): SiteCreationDomainsFragment {
-            val fragment = SiteCreationDomainsFragment()
-            val bundle = Bundle()
-            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
+    private lateinit var binding: SiteCreationDomainsScreenBinding
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,13 +44,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
-        // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        searchInputWithHeader?.onTextChanged = { viewModel.updateQuery(it) }
     }
 
     override fun getContentLayout(): Int {
@@ -80,17 +61,15 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent() {
-        binding?.let {
+        with(binding) {
             searchInputWithHeader = SearchInputWithHeader(
                     uiHelpers = uiHelpers,
-                    rootView = it.root as ViewGroup,
+                    rootView = root as ViewGroup,
                     onClear = { viewModel.onClearTextBtnClicked() }
             )
-            it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
-            with(it) {
+            createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
                 initRecyclerView()
                 initViewModel()
-            }
         }
     }
 
@@ -131,12 +110,12 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
-        binding?.let {
-            uiHelpers.updateVisibility(it.domainListEmptyView, contentState.emptyViewVisibility)
+        with(binding) {
+            uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
             uiHelpers.updateVisibility(
-                    it.siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility
+                    siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility
             )
-            (it.recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
+            (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
         }
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
@@ -152,9 +131,27 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         viewModel.onHelpClicked()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
+        // is called when the system sets the restored value to the EditText which results in an unnecessary request
+        searchInputWithHeader?.onTextChanged = { viewModel.updateQuery(it) }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         searchInputWithHeader = null
-        binding = null
+    }
+
+    companion object {
+        const val TAG = "site_creation_domains_fragment_tag"
+
+        fun newInstance(screenTitle: String): SiteCreationDomainsFragment {
+            val fragment = SiteCreationDomainsFragment()
+            val bundle = Bundle()
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }
