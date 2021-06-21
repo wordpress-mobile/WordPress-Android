@@ -21,11 +21,9 @@ parameters:
   # Display name of the app and should match the usual public facing name (e.g. WordPress, Jetpack)
   app_name:
     type: string
-    default: "WordPress"
   # The key used to reference the app in the Fastfile
   product_key:
     type: string
-    default: "wordpress"
 
 commands:
   copy-gradle-properties:
@@ -123,7 +121,7 @@ jobs:
       - update-gradle-memory
       - android/restore-gradle-cache
       - run:
-          name: Build WordPress APK
+          name: Set version environment variable
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
@@ -134,22 +132,12 @@ jobs:
 
             VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-
-            ./gradlew --stacktrace assembleWordpressJalapenoDebug -PversionName="$VERSION_NAME"
+      - run:
+          name: Build WordPress APK
+          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PversionName="$VERSION_NAME"
       - run:
           name: Build Jetpack APK
-          command: |
-            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
-              PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
-              PREFIX="pr-${PR_NUMBER}"
-            else
-              PREFIX="$CIRCLE_BRANCH"
-            fi
-
-            VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
-            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-
-            ./gradlew --stacktrace assembleJetpackJalapenoDebug -PversionName="$VERSION_NAME"
+          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PversionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
@@ -178,7 +166,7 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app_name >> Android failed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -192,10 +180,10 @@ jobs:
       - run:
           name: Prepare build
           command: |
-            echo "export APP_VERSION=$(./gradlew -q printVersionName -PproductKey='<< parameters.product_key >>' | tail -1)" >> $BASH_ENV
-            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey="<< parameters.product_key >>" | tail -1)
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app_name >> Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app_name >> Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            echo "export APP_VERSION=$(./gradlew -q printVersionName -PproductKey='<< pipeline.parameters.product_key >>' | tail -1)" >> $BASH_ENV
+            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName -PproductKey="<< pipeline.parameters.product_key >>" | tail -1)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: << pipeline.parameters.app_name >> Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
@@ -203,16 +191,16 @@ jobs:
           name: Build Zalpha
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_alpha app:"<< parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_alpha app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - run:
           name: Build Vanilla
           command: |
             if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-              bundle exec fastlane build_beta app:"<< parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_beta app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             else
-              bundle exec fastlane build_and_upload_release app:"<< parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+              bundle exec fastlane build_and_upload_release app:"<< pipeline.parameters.product_key >>" skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
             fi
           no_output_timeout: 15m
       - android/save-gradle-cache
@@ -519,8 +507,6 @@ workflows:
     jobs:
       - lint
       - Release Build:
-          app_name: "<< pipeline.parameters.app_name >>"
-          product_key: "<< pipeline.parameters.product_key >>"
           requires:
             - lint
 
