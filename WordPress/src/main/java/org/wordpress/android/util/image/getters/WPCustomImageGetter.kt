@@ -64,8 +64,12 @@ class WPCustomImageGetter(
      * This method is called when the HTML parser encounters an
      * img tag.
      */
-    override fun getDrawable(url: String): Drawable? {
-        var source = url
+    override fun getDrawable(url: String?): Drawable? {
+        if(url.isNullOrEmpty()){
+            return null
+        }
+
+        var source = url!!
 
         // images in reader comments may skip "http:" (no idea why) so make sure to add protocol here
         if (source.startsWith("//")) {
