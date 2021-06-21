@@ -1,11 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.CombinedLoadStates
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
-import androidx.paging.LoadState.NotLoading
-import androidx.paging.LoadStates
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -21,7 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import org.wordpress.android.R
+import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
@@ -31,6 +26,13 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ClickAct
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ToggleAction
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Empty
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.EmptyError
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Error
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Idle
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Loading
+import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Refreshing
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -51,34 +53,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private var isStarted = false
 
     // TODO we would like to explore moving PagingSource into the repository
-//    @OptIn(ExperimentalPagingApi::class)
-//    val commentListItemPager = Pager(
-//            config = PagingConfig(pageSize = 30, initialLoadSize = 30),
-//            remoteMediator = CommentRemoteMediator(networkUtilsWrapper),
-//            pagingSourceFactory = {
-//                val source =  CommentPagingSource()
-//                mediator.addListener { source.invalidate() } // <-- listening and calling invalidate
-//                source
-//            }
-//    )
-
-    @OptIn(ExperimentalPagingApi::class)
-    fun createFlow(): Flow<PagingData<CommentModel>> {
-        val mediator = CommentRemoteMediator(networkUtilsWrapper)
-        val config = PagingConfig(pageSize = 30, initialLoadSize = 30)
-        val pager = Pager(
-                config = config,
-                remoteMediator = mediator,
-                pagingSourceFactory = {
-                    val source = CommentPagingSource()
-                    mediator.addListener { source.invalidate() }
-                    source
-                }
+    val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) {
+        CommentPagingSource(
+                networkUtilsWrapper
         )
-        return pager.flow.cachedIn(viewModelScope)
     }
 
-    private val _commentListLoadingState = MutableStateFlow(CommentsListLoadingState(idleLoadState, true))
+    private val _commentListLoadingState: MutableStateFlow<PagedListLoadingState> = MutableStateFlow(Loading)
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedIds = MutableStateFlow(emptyList<Long>())
 
@@ -92,7 +73,7 @@ class UnifiedCommentListViewModel @Inject constructor(
             initialValue = CommentsUiModel.buildInitialState()
     )
 
-    private val commentModels: Flow<PagingData<CommentModel>> = createFlow()
+    private val commentModels: Flow<PagingData<CommentModel>> = commentListItemPager.flow.cachedIn(viewModelScope)
 
     val commentListData: StateFlow<PagingData<UnifiedCommentListItem>> = combine(
             commentModels,
@@ -156,15 +137,15 @@ class UnifiedCommentListViewModel @Inject constructor(
         // TODO open comment details
     }
 
-    fun onLoadStateChanged(loadState: CombinedLoadStates, isAdapterEmpty: Boolean) {
+    fun onLoadStateChanged(loadingState: PagedListLoadingState) {
         launch(bgDispatcher) {
-            if (loadState.refresh is LoadState.Error && !isAdapterEmpty) {
-                val errorMessage = (loadState.refresh as LoadState.Error).error.message
+            if (loadingState is Error) {
+                val errorMessage = loadingState.throwable.message
                 if (!errorMessage.isNullOrEmpty()) {
                     _onSnackbarMessage.emit(SnackbarMessageHolder(UiStringText(errorMessage)))
                 }
             }
-            _commentListLoadingState.emit(CommentsListLoadingState(loadState, isAdapterEmpty))
+            _commentListLoadingState.value = loadingState
         }
     }
 
@@ -174,16 +155,11 @@ class UnifiedCommentListViewModel @Inject constructor(
         companion object {
             fun buildInitialState(): CommentsUiModel {
                 return CommentsUiModel(
-                        commentsListUiModel = CommentsListUiModel.Empty(UiStringRes(string.comments_fetching), null)
+                        commentsListUiModel = CommentsListUiModel.Loading
                 )
             }
         }
     }
-
-    data class CommentsListLoadingState(
-        val loadState: CombinedLoadStates,
-        val isAdapterEmpty: Boolean
-    )
 
     sealed class CommentsListUiModel {
         object WithData : CommentsListUiModel()
@@ -200,64 +176,41 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     fun buildCommentsListUiModel(
-        commentListLoadingState: CommentsListLoadingState
+        commentListLoadingState: PagedListLoadingState
     ): CommentsListUiModel {
-        val isAdapterEmpty = commentListLoadingState.isAdapterEmpty
-        val loadState = commentListLoadingState.loadState
-
-        val isLoading = loadState.refresh is LoadState.Loading && isAdapterEmpty
-        val isRefreshing = loadState.refresh is LoadState.Loading && !isAdapterEmpty
-        val isNothingToShow = loadState.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && isAdapterEmpty
-        val isError = loadState.refresh is LoadState.Error
-        val loadingSuccessful = !isLoading && !isNothingToShow && !isError
-
-        when {
-            isLoading -> {
-                return CommentsListUiModel.Loading
+        return when (commentListLoadingState) {
+            is Loading -> {
+                CommentsListUiModel.Loading
             }
-            isRefreshing -> {
-                return CommentsListUiModel.Refreshing
+            is Refreshing -> {
+                CommentsListUiModel.Refreshing
             }
-            isNothingToShow -> {
-                return CommentsListUiModel.Empty(
+            is Empty -> {
+                CommentsListUiModel.Empty(
                         UiStringRes(string.comments_empty_list),
-                        R.drawable.img_illustration_empty_results_216dp
+                        drawable.img_illustration_empty_results_216dp
                 )
             }
-            isError -> {
-                val errorMessage = (loadState.refresh as LoadState.Error).error.localizedMessage
+            is EmptyError -> {
+                val errorMessage = commentListLoadingState.throwable.localizedMessage
                 val errorString = if (errorMessage.isNullOrEmpty()) {
-                    UiStringRes(R.string.error_refresh_comments)
+                    UiStringRes(string.error_refresh_comments)
                 } else {
                     UiStringText(errorMessage)
                 }
-                return if (isAdapterEmpty) {
-                    CommentsListUiModel.Empty(
-                            errorString,
-                            R.drawable.img_illustration_empty_results_216dp
-                    )
-                } else {
-                    CommentsListUiModel.WithData
-                }
+                CommentsListUiModel.Empty(
+                        errorString,
+                        drawable.img_illustration_empty_results_216dp
+                )
             }
-            loadingSuccessful -> {
-                return CommentsListUiModel.WithData
+            is Error,
+            is Idle -> {
+                WithData
             }
         }
-        return CommentsListUiModel.Empty(UiStringRes(string.comments_fetching), null)
     }
 
     companion object {
-        private const val UI_STATE_FLOW_TIMEOUT_MS = 5000L
-        private val idleLoadState = CombinedLoadStates(
-                refresh = LoadState.Loading,
-                prepend = NotLoading(endOfPaginationReached = false),
-                append = NotLoading(endOfPaginationReached = false),
-                source = LoadStates(
-                        refresh = LoadState.Loading,
-                        prepend = NotLoading(endOfPaginationReached = false),
-                        append = NotLoading(endOfPaginationReached = false)
-                )
-        )
+        private const val UI_STATE_FLOW_TIMEOUT_MS = 50000L
     }
 }

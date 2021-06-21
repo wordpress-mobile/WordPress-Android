@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -80,8 +79,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
 
         lifecycleScope.launchWhenStarted {
             adapter.loadStateFlow.collectLatest { loadState ->
-                Log.v("Comment Loading","Med:  ${loadState.mediator?.refresh} ; Reg: ${loadState.source?.refresh} ; Comb: ${loadState.refresh}")
-                viewModel.onLoadStateChanged(loadState, adapter.itemCount < 1)
+                viewModel.onLoadStateChanged(loadState.toPagedListLoadingState(adapter.itemCount > 0))
             }
         }
 
