@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stories
 
 import android.text.TextUtils
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.gson.Gson
 import com.wordpress.stories.compose.frame.FrameIndex
 import com.wordpress.stories.compose.story.StoryFrameItem
@@ -13,8 +14,8 @@ import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.EDITOR
-import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
@@ -136,7 +137,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         if (shouldLogContent(siteModel, postModel)) {
             AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
         }
-        crashLogging.reportException(exception, EDITOR.toString())
+        crashLogging.sendReportWithTag(exception = exception, tag = EDITOR)
     }
 
     // See: https://git.io/JqfhK

@@ -78,10 +78,10 @@ public class CommentsListFragment extends ViewPagerFragment {
 
     public enum CommentStatusCriteria implements FilterCriteria {
         ALL(R.string.comment_status_all),
-        UNAPPROVED(R.string.comment_status_unapproved),
+        PENDING(R.string.comment_status_unapproved),
         APPROVED(R.string.comment_status_approved),
         UNREPLIED(R.string.comment_status_unreplied),
-        TRASH(R.string.comment_status_trash),
+        TRASHED(R.string.comment_status_trash),
         SPAM(R.string.comment_status_spam),
         DELETE(R.string.comment_status_trash);
 
@@ -220,7 +220,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case APPROVED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_approved;
                     break;
-                case UNAPPROVED:
+                case PENDING:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_pending;
                     break;
                 case UNREPLIED:
@@ -229,7 +229,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case SPAM:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_spam;
                     break;
-                case TRASH:
+                case TRASHED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_trashed;
                     break;
                 case DELETE:
@@ -410,7 +410,7 @@ public class CommentsListFragment extends ViewPagerFragment {
     }
 
     private void confirmDeleteComments() {
-        if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
+        if (mCommentStatusFilter == CommentStatusCriteria.TRASHED) {
             AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments
@@ -606,7 +606,7 @@ public class CommentsListFragment extends ViewPagerFragment {
             setItemEnabled(menu, R.id.menu_trash, hasSelection, true);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASH) {
+            if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASHED) {
                 trashItem.setTitle(R.string.mnu_comment_delete_permanently);
             }
             return true;
