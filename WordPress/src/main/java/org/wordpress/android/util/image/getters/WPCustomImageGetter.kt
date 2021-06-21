@@ -65,7 +65,7 @@ class WPCustomImageGetter(
      * img tag.
      */
     override fun getDrawable(url: String?): Drawable? {
-        if(url.isNullOrEmpty()){
+        if (url.isNullOrEmpty()) {
             return null
         }
 
