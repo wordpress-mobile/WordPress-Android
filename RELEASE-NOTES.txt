@@ -2,7 +2,7 @@
 
 17.7
 -----
-
+* [*] Fixed a bug where the web version of the editor did not load when using an account created before December 2018. [#14762]
 
 17.6
 -----
