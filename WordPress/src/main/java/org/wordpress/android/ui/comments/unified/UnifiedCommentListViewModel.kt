@@ -62,6 +62,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val _commentListLoadingState: MutableStateFlow<PagedListLoadingState> = MutableStateFlow(Loading)
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedIds = MutableStateFlow(emptyList<Long>())
+    private val _rawComments: Flow<PagingData<CommentModel>> = commentListItemPager.flow.cachedIn(viewModelScope)
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
@@ -73,10 +74,8 @@ class UnifiedCommentListViewModel @Inject constructor(
             initialValue = CommentsUiModel.buildInitialState()
     )
 
-    private val commentModels: Flow<PagingData<CommentModel>> = commentListItemPager.flow.cachedIn(viewModelScope)
-
     val commentListData: StateFlow<PagingData<UnifiedCommentListItem>> = combine(
-            commentModels,
+            _rawComments,
             _selectedIds
     ) { commentModels, selectedIds ->
         commentModels.map { commentModel ->
@@ -211,6 +210,6 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     companion object {
-        private const val UI_STATE_FLOW_TIMEOUT_MS = 50000L
+        private const val UI_STATE_FLOW_TIMEOUT_MS = 5000L
     }
 }
