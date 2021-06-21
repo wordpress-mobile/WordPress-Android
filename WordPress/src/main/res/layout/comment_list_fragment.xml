@@ -9,6 +9,7 @@
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
+        app:layout_dodgeInsetEdges="bottom"
         android:layout_height="match_parent">
 
         <RelativeLayout
