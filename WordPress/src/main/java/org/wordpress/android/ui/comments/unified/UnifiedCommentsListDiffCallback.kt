@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.comments.CommentListItem
-import org.wordpress.android.ui.comments.CommentListItemDiffCallback.Payload
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 
