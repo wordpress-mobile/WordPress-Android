@@ -20,7 +20,6 @@ import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.PHOTO_PICKER
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
-import org.wordpress.android.ui.gif.GifPickerActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
@@ -37,6 +36,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS
@@ -273,7 +273,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         mediaLocalIds: List<Int>
     ) {
         this.putExtra(
-                GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS,
+                MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS,
                 mediaLocalIds.toIntArray()
         )
     }

@@ -1,22 +1,29 @@
 buildscript {
-    ext.kotlinVersion = '1.4.10'
+    ext.kotlinVersion = '1.4.20'
     ext.serializationVersion = '1.0-M1-1.4.0-rc'
-    ext.navComponentVersion = '2.0.0'
+    ext.navComponentVersion = '2.3.5'
     ext.kotlin_coroutines_version = '1.3.9'
     ext.coroutinesVersion = '1.3.9'
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = 'develop-bb54ee34c5fec5fa7375ce90a356adb5adbdcae0'
+    ext.wordPressLoginVersion = '0.0.2'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = '3573-41eefea4fcdf31a46436387b64790aabc0334e72'
+    ext.gutenbergMobileVersion = '3573-ee977ff2ef9ff77d08dbb953976e3760a16180e1'
 
     repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+            }
+        }
         google()
         jcenter()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.2'
-        //classpath 'com.automattic.android:fetchstyle:1.1'
+        classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
@@ -25,7 +32,7 @@ buildscript {
     }
 }
 
-//apply plugin: 'com.automattic.android.fetchstyle'
+apply plugin: 'com.automattic.android.fetchstyle'
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -35,15 +42,6 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-
-        if (gradle.ext.includedBuildGutenbergMobilePath) {
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
-            }
-        } else {
-            maven { url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror" }
-        }
 
         flatDir {
             dirs '../aars'
@@ -133,17 +131,19 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.17.0'
+    fluxCVersion = '1.19.0'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
     lifecycleVersion = '2.2.0'
+    pagingVersion = '3.0.0'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
     preferenceVersion = '1.1.0'
     swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
+    tracksVersion = '2.1.0'
 
     // testing
     jUnitVersion = '4.13'

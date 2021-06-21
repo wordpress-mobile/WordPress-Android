@@ -24,9 +24,6 @@ Language: nb_NO
     <string name="gutenberg_native_cancel_search">Avbryt søk</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s er %3$s %4$s.</string>
     <string name="comment_status_unreplied">Ubesvart</string>
-    <string name="gutenberg_native_table_of_contents">Innholdsfortegnelse</string>
-    <string name="gutenberg_native_summary">sammendrag</string>
-    <string name="gutenberg_native_buttongroup">dokumentomriss</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid er tillatt</string>
     <string name="site_settings_denylist_title">Ikke tillatte kommentarer</string>
     <string name="reader_title_interests">Følg emner</string>
@@ -55,7 +52,6 @@ Language: nb_NO
     <string name="gutenberg_native_lock_icon">Låse-ikon</string>
     <string name="gutenberg_native_choose_audio">Velg lyd</string>
     <string name="gutenberg_native_audio_player">Lydavspiller</string>
-    <string name="gutenberg_native_audio_file">lydfil</string>
     <string name="continue_with_wpcom">Logg inn eller registrer deg på WordPress.com</string>
     <string name="photo_picker_use_audio">Bruk denne lyden</string>
     <string name="photo_picker_choose_audio">Velg lyd fra enheten</string>
@@ -178,7 +174,6 @@ Language: nb_NO
     <string name="stats_referrer_popup_menu_mark_as_spam">Merk som spam</string>
     <string name="stats_referrer_popup_menu_open_website">Åpne nettstedet</string>
     <string name="media_uploading_gif_library_photo">Laster opp gif-media</string>
-    <string name="gutenberg_native_select_item">Velg element</string>
     <string name="gutenberg_native_search_or_type_url">Søk eller skriv inn URL</string>
     <string name="gutenberg_native_add_this_telephone_link">Legg til denne telefonlenken</string>
     <string name="gutenberg_native_add_this_link">Legg til denne lenken</string>
@@ -299,7 +294,6 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_list_author">Sideforfatter</string>
-    <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="menu_content_info">Innholdsstruktur</string>
     <string name="everyone">Alle</string>
     <string name="me">Meg</string>
@@ -330,6 +324,7 @@ Language: nb_NO
     <string name="update_now">Oppdater nå</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
     <string name="gutenberg_native_move_to_top">Flytt til toppen</string>
+    <string name="gutenberg_native_insert_mention">Sett inn omtale</string>
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
@@ -383,7 +378,6 @@ Language: nb_NO
     <string name="pages_and_posts_cancel_auto_upload">Avbryt opplastning</string>
     <string name="gif_list_search_returned_unknown_error">Det oppsto et problem med å håndtere forespørselen</string>
     <string name="gif_powered_by_tenor">Drevet av Tenor</string>
-    <string name="gif_picker_search_hint">Søk i Tenor</string>
     <string name="photo_picker_gif">Velg fra Tenor</string>
     <string name="weekday_saturday">Lørdag</string>
     <string name="weekday_friday">Fredag</string>
@@ -466,6 +460,7 @@ Language: nb_NO
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
+    <string name="gutenberg_native_edit_media">Rediger media</string>
     <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
     <string name="post_list_author">Innleggsforfatter</string>
     <string name="fab_create_desc">Lag et innlegg</string>
@@ -517,14 +512,12 @@ Language: nb_NO
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
     <string name="gutenberg_native_unsupported">Ikke støttet</string>
     <string name="gutenberg_native_ungroup">Fjern fra gruppe</string>
-    <string name="gutenberg_native_translate">Oversett</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Trykk for å skjule tatstaturet</string>
     <string name="gutenberg_native_tap_here_to_show_help">Trykk her for å vise hjelp</string>
     <string name="gutenberg_native_take_a_video">Ta en video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Ta et bilde eller en video</string>
     <string name="gutenberg_native_take_a_photo">Ta et foto</string>
     <string name="gutenberg_native_start_writing">Start å skrive…</string>
-    <string name="gutenberg_native_show_section">Vis seksjon</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_cut_block">Kutt blokk</string>
@@ -541,6 +534,7 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
+    <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
@@ -555,6 +549,7 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dobbelttrykk for å flytte blokken ned</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dobbelttrykk for å redigere denne verdien</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dobbelttrykk for å legge til en blokk</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Dobbelttrykk og hold for å redigere</string>
     <string name="gutenberg_native_current_value_is_s">Nåværende verdi er %s</string>
     <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">En ukjent feil oppstod. Vennligst prøv igjen.</string>
@@ -911,7 +906,6 @@ Language: nb_NO
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
-    <string name="gif_picker_endless_scroll_network_error">Noen media kunne ikke lastes på grunn av en nettverksfeil.</string>
     <string name="gif_picker_empty_search_list">Ingen media passet til ditt søk</string>
     <string name="gif_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visninger</string>

@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
+import org.wordpress.android.fluxc.module.DatabaseModule
 import org.wordpress.android.fluxc.module.OkHttpClientModule
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule
 import org.wordpress.android.fluxc.module.ReleaseToolsModule
@@ -23,6 +24,7 @@ import javax.inject.Singleton
             ReleaseNetworkModule::class,
             LegacyModule::class,
             ReleaseToolsModule::class,
+            DatabaseModule::class,
             AndroidSupportInjectionModule::class,
             ViewModelModule::class,
             StatsModule::class,
@@ -34,7 +36,8 @@ import javax.inject.Singleton
             SupportModule::class,
             ThreadModule::class,
             SuggestionSourceModule::class,
-            ExperimentModule::class
+            ExperimentModule::class,
+            CrashLoggingModule::class
         ]
 )
 interface AppComponentTest : AppComponent {

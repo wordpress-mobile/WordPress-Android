@@ -1,22 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-11 11:54:48+0000
+Translation-Revision-Date: 2021-06-08 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
+    <string name="storage_utils_dialog_dont_show_button">Tekrar Gösterme</string>
+    <string name="storage_utils_dialog_ok_button">Depolamayı Görüntüle</string>
+    <string name="storage_utils_dialog_message">Yayınlanabilmesi için içeriğinizi önce cihaza kaydetmemiz gerekiyor. Depolama ayarlarınızı gözden geçirin ve yer açmak için bazı dosyaları kaldırın.</string>
+    <string name="storage_utils_dialog_title">Yetersiz cihaz depolama alanı</string>
+    <string name="gutenberg_native_y_axis_position">Y Ekseni Konumu</string>
+    <string name="gutenberg_native_x_axis_position">X Ekseni Konumu</string>
+    <string name="gutenberg_native_type_a_url">Bir URL yazın</string>
+    <string name="gutenberg_native_tap_to_add_content">İçerik eklemek için dokunun</string>
+    <string name="gutenberg_native_slash_inserter_results">Eğik çizgi yerleştirici sonuçları</string>
+    <string name="gutenberg_native_show_media_on_right">Medyayı sağda göster</string>
+    <string name="gutenberg_native_show_media_on_left">Medyayı solda göster</string>
+    <string name="gutenberg_native_s_has_url_set">%s için URL ayarlanmış</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s için ayarlanmış bir URL yok</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s normal bloklara dönüştürüldü</string>
+    <string name="gutenberg_native_s_block">%s blok</string>
+    <string name="gutenberg_native_overlay">Kaplama</string>
+    <string name="gutenberg_native_optional_placeholder">İsteğe bağlı yer tutucu…</string>
+    <string name="gutenberg_native_opacity">Opaklık</string>
+    <string name="gutenberg_native_minimum_height">Minimum yükseklik</string>
+    <string name="gutenberg_native_media_text_settings">Medya ve Metin ayarları</string>
+    <string name="gutenberg_native_media_options">Medya seçenekleri</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">Geçersiz URL. Ses dosyası bulunamadı.</string>
+    <string name="gutenberg_native_insert_crosspost">Çapraz gönderi ekle</string>
+    <string name="gutenberg_native_fixed_background">Sabit arka plan</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Odak noktasını ayarlamak için sürükleyin</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Resim veya video eklemek üzere Alt Sayfayı açmak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Resim veya video eklemek üzere Eylem Sayfası\'nı açmak için iki kez dokunun</string>
+    <string name="gutenberg_native_dimensions">Ölçüler</string>
+    <string name="gutenberg_native_current_unit_is_s">Geçerli birim %s</string>
+    <string name="gutenberg_native_crosspost">Çapraz posta</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Tüm sütunu doldurmak için resmi kırpın</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Normal bloklara dönüştür</string>
+    <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
+    <string name="gutenberg_native_clear_media">Medyayı Temizle</string>
+    <string name="gutenberg_native_button_width">Düğme genişliği</string>
+    <string name="gutenberg_native_add_link_to_s">Bağlantı ekle: %s</string>
+    <string name="gutenberg_native_add_link_text">Bağlantı metni ekle</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Görsel veya video ekle.</string>
+    <string name="error_media_path_is_directory">Belirtilen yol bir Medya dosyası değil, bir dizin</string>
+    <string name="error_media_could_not_find_media_in_path">Belirtilen yolda medya dosyası bulunamadı</string>
+    <string name="error_media_unexpected_empty_media_file_path">Medya için beklenmeyen boş dosya yolu</string>
+    <string name="error_media_file_type_not_allowed">Bu dosya türüne izin verilmiyor</string>
+    <string name="error_media_unexpected_null_value">Medya boştu</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">Tehditleri gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">Tehdidi gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Bağlantı eklemek için iki kez dokunun.</string>
+    <string name="gutenberg_native_add_link">BAĞLANTI EKLE</string>
+    <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
+    <string name="login_empty_view_see_instructions">Talimatlara bakın</string>
+    <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini yüklemeniz ve WordPress.com hesabınıza bağlamanız gerekir.</string>
+    <string name="login_empty_view_avatar_content_description">Profil fotoğrafınız</string>
+    <string name="login_not_a_jetpack_site">Bu uygulamayı %1$s için kullanmak istiyorsanız Jetpack eklentisi kurulmuş ve bir WordPress.com hesabınıza bağlanmış olmalıdır</string>
     <string name="gutenberg_native_size">Boyut</string>
+    <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
     <string name="gutenberg_native_image_settings">Görsel ayarları</string>
+    <string name="gutenberg_native_column_settings">Sütun ayarları</string>
     <string name="gutenberg_native_audio_settings">Ses ayarları</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
+    <string name="gutenberg_native_write_title">Başlık yaz…</string>
     <string name="gutenberg_native_write_code">Kod yaz…</string>
     <string name="gutenberg_native_sorting_and_filtering">Sıralama ve filtreleme</string>
+    <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_show_download_button">İndirme düğmesini göster</string>
     <string name="gutenberg_native_shortcode">Kısa kod</string>
+    <string name="gutenberg_native_mention">Bahsetme</string>
+    <string name="gutenberg_native_add_label">Etiket ekle…</string>
     <string name="gutenberg_native_read_more">Devamını Oku</string>
     <string name="gutenberg_native_preload">Ön yükleme</string>
     <string name="gutenberg_native_post_meta_settings">Yazı meta ayarları</string>
@@ -26,15 +85,17 @@ Language: tr
     <string name="gutenberg_native_media_area">Ortam alanı</string>
     <string name="gutenberg_native_loop">Döngü</string>
     <string name="gutenberg_native_link_to_12d6f96a">Bağlantı</string>
+    <string name="gutenberg_native_link_label">Bağlantı etiketi</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">galeri içinde görsel %1$d / %2$d</string>
     <string name="gutenberg_native_heading_d">Başlık %d</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Buraya gömülecek bağlantıyı girin…</string>
     <string name="gutenberg_native_edit_image">Görseli düzenle</string>
     <string name="gutenberg_native_display_post_date">Yazı tarihini göster</string>
     <string name="gutenberg_native_code">Kod</string>
     <string name="gutenberg_native_change_heading_level">Başlık seviyesini değiştir</string>
     <string name="gutenberg_native_browser_default">Tarayıcı varsayılanı</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
+    <string name="gutenberg_native_cover">Manşet</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blok silindi veya kullanılamıyor.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Blok kendi içinde oluşturulamaz.</string>
     <string name="gutenberg_native_autoplay">Otomatik oynat</string>
@@ -42,6 +103,7 @@ Language: tr
     <string name="gutenberg_native_attachment_page">Ek sayfası</string>
     <string name="gutenberg_native_add_text">Metin ekle…</string>
     <string name="gutenberg_native_add_caption">Başlık ekle</string>
+    <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
     <string name="gutenberg_native_what_is_alt_text">Alternatif metin nedir?</string>
     <string name="gutenberg_native_transform_s_to">%s öğesini şuna dönüştür:</string>
     <string name="gutenberg_native_transform_block">Bloku dönüştür…</string>
@@ -54,27 +116,36 @@ Language: tr
     <string name="like_faces_singular_text">1 blog yazarı bunu beğendi.</string>
     <string name="like_title_plural">%d Beğenilenler</string>
     <string name="like_title_singular">1 beğeni</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Tehditleri gidermek için sunucu kimlik bilgilerinizi girin.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Tehdidi gidermek için sunucu kimlik bilgilerinizi girin.</string>
     <string name="suggestion">Öneri:</string>
+    <string name="gutenberg_native_use_icon_button">Simge düğmesini kullan</string>
+    <string name="gutenberg_native_search_input_field">Arama giriş alanı.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Arama düğmesi. Geçerli düğme metni</string>
     <string name="gutenberg_native_search_blocks">Arama blokları</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Arama bloğu etiketi. Mevcut metin</string>
     <string name="gutenberg_native_search_block">Arama bloğu</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Özel yer tutucu ayarlanmadı</string>
+    <string name="gutenberg_native_no_button">Düğme yok</string>
+    <string name="gutenberg_native_inside">İçeride</string>
+    <string name="gutenberg_native_hide_search_heading">Arama başlığını gizle</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Yer tutucu metni düzenlemek için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Etiket metnini düzenlemek için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Düğme metnini düzenlemek için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_change_unit">birimi değiştirmek için iki kez dokunun</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Mevcut yer tutucu metin</string>
     <string name="gutenberg_native_clear_search">Aramayı temizle</string>
     <string name="gutenberg_native_cancel_search">Aramayı iptal et</string>
+    <string name="gutenberg_native_button_position">Düğme konumu</string>
+    <string name="gutenberg_native_button_outside">Düğme dışı</string>
+    <string name="gutenberg_native_button_inside">Düğme içi</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s, %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Beğeni verileri alınırken bir hata oluştu</string>
     <string name="get_likes_unknown_error">Beğeniler alınırken bilinmeyen bir hata oluştu.</string>
     <string name="get_likes_no_network_error">Kullanılabilir ağ yok.</string>
     <string name="comments_empty_list_filtered_unreplied">Cevaplanmamış yorum yok</string>
     <string name="comment_status_unreplied">Cevaplanmamış</string>
-    <string name="gutenberg_native_table_of_contents">İçerik tablosu</string>
-    <string name="gutenberg_native_summary">özet</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Gönderinizi bir başlık listesiyle özetleyin.  HTML bağlantılarını buraya bağlamak için Başlık bloklarına ekleyin.</string>
-    <string name="gutenberg_native_document_outline">belge taslağı</string>
-    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>
+    <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
     <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
@@ -154,7 +225,7 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Ses dosyasını dinlemek için iki kez dokunun</string>
     <string name="gutenberg_native_choose_audio">Ses seç</string>
     <string name="gutenberg_native_audio_player">Ses oynatıcı</string>
-    <string name="gutenberg_native_audio_file"> ses dosyası</string>
+    <string name="gutenberg_native_audio_file">ses dosyası</string>
     <string name="gutenberg_native_audio_caption_s">Ses yazısı. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Ses yazısı. Boş</string>
     <string name="gutenberg_native_add_audio">SES EKLE</string>
@@ -478,7 +549,6 @@ Language: tr
     <string name="media_uploading_gif_library_photo">Gif medyası yükleme</string>
     <string name="media_uploading_stock_library_photo">Stok medya yükleme</string>
     <string name="media_uploading_default">Ortam dosyası yükleniyor</string>
-    <string name="gutenberg_native_select_item">Öğeyi seç</string>
     <string name="gutenberg_native_search_or_type_url">URL arayın veya yazın</string>
     <string name="gutenberg_native_page_break">Sayfa arası</string>
     <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
@@ -637,7 +707,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
     <string name="gutenberg_native_customize_gradient">Gradyanı Özelleştir</string>
     <string name="pages_list_author">Sayfa yazarı</string>
-    <string name="photo_picker_use_gif">Bu GIF\'i kullan</string>
     <string name="error_media_thumbnail_not_loaded">Medya küçük resmi yüklenemedi</string>
     <string name="menu_content_info">İçerik yapısı</string>
     <string name="everyone">Herkes</string>
@@ -671,8 +740,10 @@ Language: tr
     <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="update_now">Şimdi güncelle</string>
+    <string name="gutenberg_native_remove">Kaldır</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
     <string name="gutenberg_native_move_to_top">Üste taşı</string>
+    <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Uygun seçenekleri içeren Eylem Sayfasını açmak için iki kez dokunun</string>
     <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
@@ -725,12 +796,14 @@ Language: tr
     <string name="button_insert">Ekle</string>
     <string name="continue_label">Devam</string>
     <string name="copy_text">Kopyala</string>
+    <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
     <string name="gutenberg_native_move_block_right">Bloğu sağa taşı</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
     <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_block_settings">Blok ayarları</string>
     <string name="new_site_creation_creating_site_loading_4">Pano oluşturma</string>
     <string name="new_site_creation_creating_site_loading_3">Tema ayarlama</string>
     <string name="new_site_creation_creating_site_loading_2">Site özellikleri ekleme</string>
@@ -740,7 +813,6 @@ Language: tr
     <string name="pages_and_posts_cancel_auto_upload">Yüklemeyi iptal et</string>
     <string name="gif_list_search_returned_unknown_error">İstek işlenirken bir sorun oluştu</string>
     <string name="gif_powered_by_tenor">Destekleyen: Tenor</string>
-    <string name="gif_picker_search_hint">Tenor\'da Ara</string>
     <string name="photo_picker_gif">Tenor\'dan Seç</string>
     <string name="weekday_saturday">Cumartesi</string>
     <string name="weekday_friday">Cuma</string>
@@ -791,8 +863,11 @@ Language: tr
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
     <string name="gutenberg_native_link_settings">Bağlantı ayarları</string>
     <string name="gutenberg_native_excerpt_length_words">Alıntı uzunluğu (sözcük)</string>
+    <string name="gutenberg_native_edit_cover_media">Kapak ortamını düzenle</string>
     <string name="gutenberg_native_customize">ÖZELLEŞTİR</string>
+    <string name="gutenberg_native_button_link_url">Düğme Bağlantı URL\'si</string>
     <string name="gutenberg_native_video_settings">Video ayarları</string>
+    <string name="gutenberg_native_border_radius">Kenarlık Yarıçapı</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraf bloku ekle</string>
     <string name="create_post_page_fab_tooltip_contributors">Bir yazı oluştur</string>
     <string name="post_list_tab_trashed_posts">Çöpe taşındı</string>
@@ -832,6 +907,7 @@ Language: tr
     <string name="reader_filter_cta">Filtrele</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
     <string name="gutenberg_native_edit_video">Videoyu düzenle</string>
+    <string name="gutenberg_native_edit_media">Ortamı düzenle</string>
     <string name="gutenberg_native_add_a_shortcode">Kısa kod ekle…</string>
     <string name="post_list_author">Gönderi Yazarı</string>
     <string name="fab_create_desc">Gönderi oluştur</string>
@@ -890,14 +966,12 @@ Language: tr
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
     <string name="gutenberg_native_unsupported">Desteklenmeyen</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
-    <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klavyeyi gizlemek için dokunun</string>
     <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
     <string name="gutenberg_native_take_a_photo">Fotoğraf Çek</string>
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
-    <string name="gutenberg_native_show_section">Bölümü göster</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
     <string name="gutenberg_native_cut_block">Bloğu kes</string>
@@ -914,6 +988,8 @@ Language: tr
     <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
+    <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
+    <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
     <string name="gutenberg_native_help_icon">Yardım simgesi</string>
@@ -928,6 +1004,7 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Bloğu aşağı taşımak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Bu değeri düzenlemek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Blok eklemek için çift dokunun</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Düzenlemek için çift dokunup basılı tutun</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
@@ -1288,7 +1365,6 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="gif_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
     <string name="gif_picker_empty_search_list">Aramanızla eşleşen ortam yok</string>
     <string name="gif_picker_initial_empty_text">Medya Kitaplığınıza eklemek için GIF\'ler arayın!</string>
     <string name="stats_author_views_label">Görüntülemeler</string>

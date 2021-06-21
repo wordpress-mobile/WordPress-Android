@@ -1,7 +1,5 @@
-We’ve added 3 new updates to Stories in this update:
+The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
 
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
+Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
 
-Story previews now render as expected in the Reader.
-
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
+Finally, we made it clearer that you can’t edit the automatically generated post archives page.

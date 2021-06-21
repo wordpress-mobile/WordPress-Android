@@ -17,4 +17,5 @@ ext {
     //localFluxCPath = "../WordPress-FluxC-Android"
     //localWPUtilsPath = "../WordPress-Utils-Android"
     //localGutenbergMobilePath = "../gutenberg-mobile"
+    //localLoginFlowPath = "../WordPress-Login-Flow-Android"
 }

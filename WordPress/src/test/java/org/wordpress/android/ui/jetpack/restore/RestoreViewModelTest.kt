@@ -11,9 +11,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.clearInvocations
 import org.mockito.Mockito.verify
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -21,6 +23,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
@@ -30,7 +33,9 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.ROOTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
+import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Success
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
@@ -55,11 +60,19 @@ import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
+
+private const val TEST_SITE_ID = 1L
+private const val SERVER_CREDS_LINK = "${Constants.URL_JETPACK_SETTINGS}/$TEST_SITE_ID"
+private const val SERVER_CREDS_MSG_WITH_CLICKABLE_LINK =
+        "<a href=\"$SERVER_CREDS_LINK\">Enter your server credentials&lt</a> " +
+                "to enable one click site restores from backups."
 
 @InternalCoroutinesApi
 class RestoreViewModelTest : BaseUnitTest() {
@@ -70,6 +83,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -98,7 +112,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel)
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel, htmlMessageUtils)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -131,6 +145,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 .thenReturn("contents")
         whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
                 .thenReturn("sqls")
+        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(flowOf(AwaitingCredentials(false)))
     }
 
     @Test
@@ -153,6 +169,29 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates.last()).isInstanceOf(DetailsState::class.java)
         assertThat(uiStates.last().toolbarState).isInstanceOf(DetailsToolbarState::class.java)
+    }
+
+    @Test
+    fun `when server creds icon is clicked, then app opens site's jetpack settings link`() = test {
+        val observers = initObservers()
+        whenever(site.siteId).thenReturn(TEST_SITE_ID)
+        whenever(wizardManager.showNextStep()).then {
+            wizardManagerNavigatorLiveData.value = DETAILS
+            Unit
+        }
+        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(flowOf(AwaitingCredentials(true)))
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
+                .thenReturn(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK)
+
+        startViewModel()
+        (observers.uiStates.last() as DetailsState).items
+                .filterIsInstance(FootnoteState::class.java)
+                .firstOrNull { it.text == UiStringText(SERVER_CREDS_MSG_WITH_CLICKABLE_LINK) }
+                ?.onIconClick
+                ?.invoke()
+
+        assertThat(observers.navigationEvents.last()).isEqualTo(ShowJetpackSettings(SERVER_CREDS_LINK))
     }
 
     @Test
@@ -280,7 +319,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postSuccess)
-        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull()))
+        whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(flowOf(Complete("Id", 100L, Date(1609690147756))))
 
         startViewModelForStep(PROGRESS)

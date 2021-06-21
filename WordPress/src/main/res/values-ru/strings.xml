@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-19 04:50:36+0000
+Translation-Revision-Date: 2021-06-01 04:11:32+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">Настройки границы</string>
+    <string name="storage_utils_dialog_dont_show_button">Не показывать снова</string>
+    <string name="storage_utils_dialog_ok_button">Просмотр хранилища</string>
+    <string name="storage_utils_dialog_message">Требуется сохранить историю на вашем устройстве перед публикацией. Посмотрите настройки хранилища данных и удалите что-нибудь для освобождения места.</string>
+    <string name="storage_utils_dialog_title">Недостаточно места в хранилище устройства</string>
+    <string name="gutenberg_native_y_axis_position">Позиция по оси Y</string>
+    <string name="gutenberg_native_x_axis_position">Позиция по оси X</string>
+    <string name="gutenberg_native_type_a_url">Введите URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Нажмите для добавления содержимого</string>
+    <string name="gutenberg_native_slash_inserter_results">Результат вставки по слешу</string>
+    <string name="gutenberg_native_show_media_on_right">Показать медиа справа</string>
+    <string name="gutenberg_native_show_media_on_left">Показать медиа слева</string>
+    <string name="gutenberg_native_s_has_url_set">Для %s установлен URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">URL для %s не установлен</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s сконвертирован в обычные блоки</string>
+    <string name="gutenberg_native_s_block">Блок %s</string>
+    <string name="gutenberg_native_overlay">Наложение</string>
+    <string name="gutenberg_native_optional_placeholder">Необязательный заполнитель…</string>
+    <string name="gutenberg_native_opacity">Прозрачность</string>
+    <string name="gutenberg_native_minimum_height">Минимальная высота</string>
+    <string name="gutenberg_native_media_text_settings">Настройки мультимедиа и текста</string>
+    <string name="gutenberg_native_media_options">Параметры медиафайлов</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">Неверный URL. Аудиофайл не найден.</string>
+    <string name="gutenberg_native_insert_crosspost">Вставить кросспост</string>
+    <string name="gutenberg_native_fixed_background">Фиксированный фон</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Перетащите для изменения фокальной точки</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Нажмите дважды для того, чтобы открыть нижнюю панель действий для добавления изображения или видео</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Нажмите дважды для того, чтобы открыть панель действий для добавления изображения или видео</string>
+    <string name="gutenberg_native_dimensions">Размеры</string>
+    <string name="gutenberg_native_current_unit_is_s">Текущая единица - %s</string>
+    <string name="gutenberg_native_crosspost">Кросспост</string>
+    <string name="gutenberg_native_crop_image_to_fill_entire_column">Обрезать изображение для заполнения всего столбца</string>
+    <string name="gutenberg_native_convert_to_regular_blocks">Преобразовать в обычные блоки</string>
+    <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
+    <string name="gutenberg_native_clear_media">Очистить медиа</string>
+    <string name="gutenberg_native_button_width">Ширина кнопки</string>
+    <string name="gutenberg_native_add_link_to_s">Добавить ссылку к %s</string>
+    <string name="gutenberg_native_add_link_text">Добавить текст ссылки</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Добавить изображение или видео</string>
+    <string name="error_media_path_is_directory">Указанный путь является папкой, а не файлом мультимедиа</string>
+    <string name="error_media_could_not_find_media_in_path">По заданному пути медиафайл не найден</string>
+    <string name="error_media_unexpected_empty_media_file_path">Задан пустой путь к файлу мультимедиа</string>
+    <string name="error_media_file_type_not_allowed">Этот тип файла не допускается</string>
+    <string name="error_media_unexpected_null_value">Медиафайл пуст</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозы.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозу.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Нажмите дважды для добавления ссылки.</string>
     <string name="gutenberg_native_add_link">ДОБАВИТЬ ССЫЛКУ</string>
     <string name="login_empty_view_try_another_account">Использовать другую учётную запись</string>
@@ -16,16 +62,22 @@ Language: ru
     <string name="gutenberg_native_size">Размер</string>
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперёд</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
+    <string name="gutenberg_native_width_settings">Настройки ширины</string>
     <string name="gutenberg_native_image_settings">Настройки изображения</string>
+    <string name="gutenberg_native_column_settings">Настройки столбцов</string>
     <string name="gutenberg_native_audio_settings">Настройки аудио</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
+    <string name="gutenberg_native_write_title">Введите заголовок…</string>
     <string name="gutenberg_native_write_code">Введите код…</string>
     <string name="gutenberg_native_sorting_and_filtering">Сортировка и фильтрация</string>
+    <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_show_download_button">Показать кнопку скачивания</string>
     <string name="gutenberg_native_shortcode">Шорткод</string>
+    <string name="gutenberg_native_mention">Упоминание</string>
+    <string name="gutenberg_native_add_label">Добавить ярлык…</string>
     <string name="gutenberg_native_read_more">Читать далее</string>
     <string name="gutenberg_native_preload">Предварительная загрузка</string>
     <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
@@ -35,15 +87,17 @@ Language: ru
     <string name="gutenberg_native_media_area">Область мультимедиа</string>
     <string name="gutenberg_native_loop">Цикл</string>
     <string name="gutenberg_native_link_to_12d6f96a">Ссылка на</string>
+    <string name="gutenberg_native_link_label">Ярлык ссылки</string>
     <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">изображение %1$d из %2$d в галерее</string>
     <string name="gutenberg_native_heading_d">Заголовок %d</string>
     <string name="gutenberg_native_featured">Избранное</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Укажите URL для вставки…</string>
     <string name="gutenberg_native_edit_image">Редактировать изображение</string>
     <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
     <string name="gutenberg_native_code">Код</string>
     <string name="gutenberg_native_change_heading_level">Изменение уровня заголовка</string>
     <string name="gutenberg_native_browser_default">Браузер по умолчанию</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
+    <string name="gutenberg_native_cover">Обложка</string>
     <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Блок удален или недоступен.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Блок не может быть отображен внутри себя же.</string>
     <string name="gutenberg_native_autoplay">Автовоспроизведение</string>
@@ -64,27 +118,38 @@ Language: ru
     <string name="like_faces_singular_text">Одному блогеру это нравится.</string>
     <string name="like_title_plural">%d отметок \"нравится\"</string>
     <string name="like_title_singular">Нравится 1 пользователю</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Введите данные для входа на сервер для исправления угроз.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Введите данные для входа на сервер для исправления угрозы.</string>
     <string name="suggestion">Предложение:</string>
+    <string name="gutenberg_native_use_icon_button">Использовать кнопку со значком</string>
+    <string name="gutenberg_native_search_input_field">Поле ввода для поиска.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Кнопка поиска. Текущий текст кнопки -</string>
     <string name="gutenberg_native_search_blocks">Блоки поиска</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Ярлык блока поиска. Сейчас -</string>
     <string name="gutenberg_native_search_block">Блок поиска</string>
+    <string name="gutenberg_native_outside">Снаружи</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Пользовательский заполнитель не назначен</string>
+    <string name="gutenberg_native_no_button">Нет кнопки</string>
+    <string name="gutenberg_native_inside">Внутри</string>
+    <string name="gutenberg_native_hide_search_heading">Скрыть заголовок поиска</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Нажмите дважды для редактирования текста заполнителя</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Нажмите дважды для редактирования текста ярлыка</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Нажмите дважды для редактирования текста кнопки</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Нажмите дважды для смены единиц</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Текущий текст для заполнителя -</string>
     <string name="gutenberg_native_clear_search">Очистить поиск</string>
     <string name="gutenberg_native_cancel_search">Отменить поиск</string>
+    <string name="gutenberg_native_button_position">Положение кнопки</string>
+    <string name="gutenberg_native_button_outside">Кнопка снаружи</string>
+    <string name="gutenberg_native_button_inside">Кнопка внутри</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s - %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">При получении данных отметок \"нравится\" произошла ошибка.</string>
     <string name="get_likes_unknown_error">При получении отметок \"нравится\" произошла неизвестная ошибка. </string>
     <string name="get_likes_no_network_error">Сеть недоступна.</string>
     <string name="comments_empty_list_filtered_unreplied">Нет комментариев без ответа</string>
     <string name="comment_status_unreplied">Без ответов</string>
-    <string name="gutenberg_native_table_of_contents">Оглавление</string>
-    <string name="gutenberg_native_summary">итог</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Завершите вашу запись списком заголовков, добавьте HTML-якоря к блокам заголовков, чтобы создать ссылки на них здесь.</string>
-    <string name="gutenberg_native_document_outline">структура документа</string>
-    <string name="gutenberg_native_buttongroup">Группа кнопок</string>
+    <string name="gutenberg_native_search_settings">Настройки поиска</string>
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
+    <string name="gutenberg_native_add_button_text">Добавить текст кнопки</string>
     <string name="reader_title_interests">Подписаться на темы</string>
     <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
@@ -164,7 +229,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Нажмите дважды для прослушивания аудиозаписи</string>
     <string name="gutenberg_native_choose_audio">Выберите аудиозапись</string>
     <string name="gutenberg_native_audio_player">Аудиоплеер</string>
-    <string name="gutenberg_native_audio_file">Аудио файл</string>
+    <string name="gutenberg_native_audio_file">аудио файл</string>
     <string name="gutenberg_native_audio_caption_s">Подпись к аудиозаписи. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Подпись к аудиозаписи. Пустая</string>
     <string name="gutenberg_native_add_audio">ДОБАВИТЬ АУДИО</string>
@@ -488,7 +553,6 @@ Language: ru
     <string name="media_uploading_gif_library_photo">Загузка GIF медиафайла</string>
     <string name="media_uploading_stock_library_photo">Загрузка стоковых медиафайлов</string>
     <string name="media_uploading_default">Загрузка медиафайлов</string>
-    <string name="gutenberg_native_select_item">Выбрать элемент</string>
     <string name="gutenberg_native_search_or_type_url">Введите поисковый запрос или URL</string>
     <string name="gutenberg_native_page_break">Разрыв страницы</string>
     <string name="gutenberg_native_add_this_telephone_link">Добавить ссылку на номер телефона</string>
@@ -647,7 +711,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
     <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
     <string name="pages_list_author">Автор страницы</string>
-    <string name="photo_picker_use_gif">Использовать этот GIF</string>
     <string name="error_media_thumbnail_not_loaded">Миниатюра не может быть загружена</string>
     <string name="menu_content_info">Структура содержимого</string>
     <string name="everyone">Все</string>
@@ -681,8 +744,10 @@ Language: ru
     <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="update_now">Обновить сейчас</string>
+    <string name="gutenberg_native_remove">Удалить</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
     <string name="gutenberg_native_move_to_top">Сдвинуть наверх</string>
+    <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Нажмите дважды для того, чтобы открыть нижнюю панель действий с доступными возможностями</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Нажмите дважды для того, чтобы открыть панель действий со всеми доступными возможностями</string>
     <string name="pages_cannot_be_started">Невозможно открыть страницы в данный момент. Пожалуйста, попробуйте позже.</string>
@@ -735,6 +800,7 @@ Language: ru
     <string name="button_insert">Вставить</string>
     <string name="continue_label">Продолжить</string>
     <string name="copy_text">Копировать</string>
+    <string name="gutenberg_native_number_of_columns">Число столбцов</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Переместить блок вправо из позиции %1$s в позицию %2$s</string>
     <string name="gutenberg_native_move_block_right">Переместить блок вправо</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Переместить блок влево из позиции %1$s в позицию %2$s</string>
@@ -751,7 +817,6 @@ Language: ru
     <string name="pages_and_posts_cancel_auto_upload">Отменить загрузку</string>
     <string name="gif_list_search_returned_unknown_error">Возникла проблема с вашим запросом.</string>
     <string name="gif_powered_by_tenor">GIF с сервиса Tenor</string>
-    <string name="gif_picker_search_hint">Поиск в Tenor</string>
     <string name="photo_picker_gif">Выберите из Tenor</string>
     <string name="weekday_saturday">Суббота</string>
     <string name="weekday_friday">Пятница</string>
@@ -802,8 +867,11 @@ Language: ru
     <string name="gutenberg_native_link_to">Ссылка на</string>
     <string name="gutenberg_native_link_settings">Настройки ссылок</string>
     <string name="gutenberg_native_excerpt_length_words">Длина отрывка (слов)</string>
+    <string name="gutenberg_native_edit_cover_media">Редактировать изображение обложки</string>
     <string name="gutenberg_native_customize">НАСТРОИТЬ</string>
+    <string name="gutenberg_native_button_link_url">URL ссылки кнопки</string>
     <string name="gutenberg_native_video_settings">Настройки видео</string>
+    <string name="gutenberg_native_border_radius">Радиус границ</string>
     <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
     <string name="create_post_page_fab_tooltip_contributors">Создать запись</string>
     <string name="post_list_tab_trashed_posts">В корзине</string>
@@ -843,6 +911,7 @@ Language: ru
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
     <string name="gutenberg_native_edit_video">Изменить видео</string>
+    <string name="gutenberg_native_edit_media">Изменить мультимедиа</string>
     <string name="gutenberg_native_add_a_shortcode">Добавить шорткод…</string>
     <string name="post_list_author">Автор записи</string>
     <string name="fab_create_desc">Создать запись</string>
@@ -901,14 +970,12 @@ Language: ru
     <string name="gutenberg_native_wordpress_media_library">Медиатека WordPress</string>
     <string name="gutenberg_native_unsupported">Не поддерживается</string>
     <string name="gutenberg_native_ungroup">Разгруппировать</string>
-    <string name="gutenberg_native_translate">Перевести</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Нажмите, чтобы скрыть клавиатуру</string>
     <string name="gutenberg_native_tap_here_to_show_help">Нажмите тут для показа справки</string>
     <string name="gutenberg_native_take_a_video">Записать видео</string>
     <string name="gutenberg_native_take_a_photo_or_video">Сделать фото или записать видео</string>
     <string name="gutenberg_native_take_a_photo">Сделать фото</string>
     <string name="gutenberg_native_start_writing">Начните писать…</string>
-    <string name="gutenberg_native_show_section">Показать раздел</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_s_block_empty">Блок %s. Пустой</string>
     <string name="gutenberg_native_cut_block">Вырезать блок</string>
@@ -925,6 +992,8 @@ Language: ru
     <string name="gutenberg_native_move_block_up">Переместить блок вверх</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Переместить блок вниз из ряда %1$s в ряд %2$s</string>
     <string name="gutenberg_native_move_block_down">Переместить блок ниже</string>
+    <string name="gutenberg_native_link_text">Текст ссылки</string>
+    <string name="gutenberg_native_link_inserted">Ссылка вставлена</string>
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
     <string name="gutenberg_native_hide_keyboard">Скрыть клавиатуру</string>
     <string name="gutenberg_native_help_icon">Значок справки</string>
@@ -939,6 +1008,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Нажмите дважды для перемещения блока вниз</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Нажмите дважды для изменения</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Нажмите дважды для добавления блока</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Нажмите дважды и удерживайте для изменения</string>
     <string name="gutenberg_native_current_value_is_s">Текущее значение - %s</string>
     <string name="gutenberg_native_choose_from_device">Выбрать с устройства</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Произошла неизвестная ошибка. Повторите попытку.</string>
@@ -1299,7 +1369,6 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
-    <string name="gif_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
     <string name="gif_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
     <string name="gif_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
     <string name="stats_author_views_label">Просмотры</string>

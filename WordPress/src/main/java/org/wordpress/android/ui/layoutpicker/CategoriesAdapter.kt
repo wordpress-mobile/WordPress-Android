@@ -16,7 +16,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CategoryViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CategoryViewHolder.from(parent)
 
     override fun getItemCount(): Int = categories.size
 

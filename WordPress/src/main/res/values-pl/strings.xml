@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-01-11 07:13:31+0000
+Translation-Revision-Date: 2021-05-25 10:52:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="login_empty_view_try_another_account">Spróbuj z innym kontem</string>
+    <string name="login_empty_view_see_instructions">Sprawdź instrukcje</string>
+    <string name="gutenberg_native_image_settings">Ustawienia obrazka</string>
+    <string name="gutenberg_native_audio_settings">Ustawienia pliku dźwiękowego</string>
+    <string name="user_profile_site_section_header">Witryna</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
     <string name="backup_item_themes">Motywy WordPressa</string>
     <string name="backup_download_details_icon_content_description">Utwórz ikonę dla kopii zapasowej, którą można pobrać</string>
+    <string name="backup_item_sqls">Baza danych witryny</string>
+    <string name="backup_item_roots_hint">(zawiera wp-config.php oraz pliki nie należące do WordPressa)</string>
     <string name="gutenberg_native_error">Błąd</string>
     <string name="gutenberg_native_choose_file">Wybierz plik</string>
+    <string name="activity_log_activity_type_filter_label">Typ aktywności</string>
+    <string name="activity_log_date_range_filter_label">Zakres dat</string>
     <string name="backup_download_details_action_button">Utwórz plik do pobrania</string>
     <string name="backup_download_details_header">Utwórz kopię zapasową, która można pobrać</string>
     <string name="backup_download_details_page_title">Pobierz kopię zapasową</string>
@@ -32,11 +41,13 @@ Language: pl
     <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
     <string name="gutenberg_native_choose_a_file">WYBIERZ PLIK</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
+    <string name="my_site_btn_jetpack_settings">Ustawienia Jetpacka</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nie można było cofnąć subskrypcji komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nie można było subskrybować komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_get_status_error">Błąd pobierania statusu subskrypcji dla wpisu</string>
     <string name="reader_follow_comments_unsubscribe_success">Udało się cofnąć subskrypcję komentarzy</string>
+    <string name="reader_btn_follow_comments">Obserwuj konwersację przez email</string>
     <string name="activity_log_activity_type_filter_clear">Wyczyść</string>
     <string name="activity_log_activity_type_filter_apply">Zastosuj</string>
     <string name="reader_follow_comments_subscribe_success">Udało się zasubskrybować komentarze</string>
@@ -134,11 +145,12 @@ Language: pl
     <string name="media_uploading_default">Przesyłanie plików mediów</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ten polecający nie może być oznaczony jako Spam</string>
     <string name="media_uploading_stock_library_photo">Przesyłanie stockowych mediów</string>
-    <string name="gutenberg_native_select_item">Wybierz element</string>
     <string name="gutenberg_native_search_or_type_url">Przeszukaj lub wpisz adres URL</string>
+    <string name="gutenberg_native_page_break">Podział strony</string>
     <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
+    <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
     <string name="typeface_label_shrikhand">Pogrubiona</string>
     <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
@@ -291,7 +303,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_select_the_option">Stuknij dwukrotnie aby wybrać opcję</string>
     <string name="gutenberg_native_customize_gradient">Personalizuj gradient</string>
     <string name="pages_list_author">Autor strony</string>
-    <string name="photo_picker_use_gif">Użyj tego GIFa</string>
     <string name="error_media_thumbnail_not_loaded">Nie można było wczytać miniatury tego pliku mediów</string>
     <string name="menu_content_info">Struktura treści</string>
     <string name="everyone">Wszyscy</string>
@@ -312,6 +323,8 @@ Language: pl
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publikacji</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
+    <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
+    <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
     <string name="reader_btn_done">Gotowe</string>
     <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>
     <string name="post_status_post_published">Opublikowano</string>
@@ -324,6 +337,8 @@ Language: pl
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
+    <string name="gutenberg_native_move_to_top">Przenieś na górę</string>
+    <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
@@ -334,6 +349,7 @@ Language: pl
     <string name="site_settings_classic_blog">Klasyczny blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Wybrana strona główna i strony dla wpisów nie mogą być te same.</string>
     <string name="pages_set_as_posts_page">Ustaw jako Stronę z wpisami</string>
+    <string name="suggestion_invalid">%s nie jest prawidłową nazwą %s</string>
     <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
     <string name="site_settings_failed_to_save_homepage_settings">NIe można było zapisać ustawień strony głównej</string>
@@ -387,6 +403,7 @@ Language: pl
     <string name="new_site_creation_creating_site_loading_1">Pobieranie adresu URL witryny</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Twoja witryna będzie niebawem gotowa</string>
     <string name="new_site_creation_creating_site_loading_2">Dodawanie funkcji witryny</string>
+    <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
     <string name="weekday_saturday">Sobota</string>
@@ -397,7 +414,6 @@ Language: pl
     <string name="weekday_monday">Poniedziałek</string>
     <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
-    <string name="gif_picker_search_hint">Przeszukaj Tenor</string>
     <string name="photo_picker_gif">Wybierz z Tenor</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
@@ -439,9 +455,13 @@ Language: pl
     <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
+    <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
     <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
+    <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
+    <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
+    <string name="gutenberg_native_video_settings">Ustawienia wideo</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_trashed_posts">Usunięto do kosza</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
@@ -479,6 +499,7 @@ Language: pl
     <string name="reader_filter_main_title">Obserwowane</string>
     <string name="reader_filter_cta">Filtr</string>
     <string name="gutenberg_native_edit_video">Edytuj film</string>
+    <string name="gutenberg_native_edit_media">Edytuj media</string>
     <string name="gutenberg_native_add_a_shortcode">Dodaj krótki kod (shortcode)…</string>
     <string name="gutenberg_native_video_caption_s">Podpis pod filmem. %s</string>
     <string name="post_list_author">Autor wpisu</string>
@@ -496,6 +517,7 @@ Language: pl
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
     <string name="gutenberg_native_gallery_caption_s">Podpis galerii. %s</string>
+    <string name="gutenberg_native_replace_image">Zastąp obrazek</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="content_description_person_building_website">Osoba budująca witrynę</string>
     <string name="post_signup_interstitial_subtitle">Cokolwiek chcesz stworzyć lub udostępnić, pomożemy tobie do zrobić właśnie tu.</string>
@@ -521,6 +543,7 @@ Language: pl
     <string name="login_discovery_error_xmlrpc">Nie byliśmy w stanie uzyskać dostępu do &lt;b&gt;pliku XMLRPC&lt;/b&gt; na twojej witrynie. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b&gt;%1$s&lt;/b&gt; podłączony do Jetpacka</string>
     <string name="my_site_bottom_sheet_add_page">Strona witryny</string>
+    <string name="suffix_1_000">%s tys.</string>
     <string name="suffix_1_000_000_000">%s mld</string>
     <string name="suffix_1_000_000">%s mln</string>
     <string name="suffix_1_000_000_000_000_000">%s bld</string>
@@ -536,14 +559,12 @@ Language: pl
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
     <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
-    <string name="gutenberg_native_translate">Przetłumacz</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Stuknij aby ukryć klawiaturę</string>
     <string name="gutenberg_native_tap_here_to_show_help">Stuknij tutaj aby otworzyć pomoc</string>
     <string name="gutenberg_native_take_a_video">Nakręć film</string>
     <string name="gutenberg_native_take_a_photo_or_video">Zrób zdjęcie lub nakręć film</string>
     <string name="gutenberg_native_take_a_photo">Wykonaj zdjęcie</string>
     <string name="gutenberg_native_start_writing">Rozpocznij pisanie…</string>
-    <string name="gutenberg_native_show_section">Wybierz sekcję</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_cut_block">Wytnij blok</string>
@@ -562,6 +583,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
+    <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
@@ -574,6 +596,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Stuknij dwukrotnie aby przesunąć blok w dół</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Stuknij dwukrotnie aby edytować tą wartość</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Stuknij dwukrotnie aby dodać blok</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
@@ -586,6 +609,14 @@ Language: pl
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
+    <string name="main_switch_default_title_on">Włączone</string>
+    <string name="main_switch_default_title_off">Wyłączone</string>
+    <string name="notifications_tab_dialog_main_off_message">Wyłączenie powiadomień dla tej witryny spowoduje zatrzymanie wyświetlania powiadomień w zakładce powiadomienia. Możesz określić jaki typ powiadomień chcesz otrzymywać po włączeniu powiadomień dla tej witryny.</string>
+    <string name="notifications_tab_dialog_main_status_off">Powiadomienia dla tej witryny</string>
+    <string name="notifications_tab_dialog_main_status_on">Powiadomienia dla tej witryny</string>
+    <string name="notifications_tab_dialog_main_off_title">Aby zobaczyć powiadomienia na zakładce powiadomień dla tej witryny, włącz powiadomienia dla tej witryny.</string>
+    <string name="notifications_tab_dialog_main_hint_off">Włącz wyświetlanie powiadomień na zakładce powiadomień dla tej witryny</string>
+    <string name="notifications_tab_dialog_main_hint_on">Wyłącz wyświetlanie powiadomień na zakładce powiadomień dla tej witryny</string>
     <string name="pick_media">Dodaj zdjęcie lub film</string>
     <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
     <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
@@ -857,6 +888,8 @@ Language: pl
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
     <string name="exit">wyjdź</string>
     <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
+    <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
+    <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_sites">Kolejne kroki</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>
@@ -953,7 +986,6 @@ Language: pl
     <string name="stats_insights_share_post">Udostępnij wpis</string>
     <string name="stats_insights_create_post">Stwórz wpis</string>
     <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
-    <string name="gif_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się wczytać z powodu błędu sieci. </string>
     <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
@@ -1059,6 +1091,7 @@ Language: pl
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
     <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które ciebie inspirują i obserwuj je aby otrzymywać aktualizacje kiedy te coś opublikują.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny o podobnych zainteresowaniach</string>
     <string name="quick_start_button_positive">Dalej</string>
     <string name="quick_start_button_negative_short">Anuluj</string>
     <string name="quick_start_button_negative">Nie teraz</string>
@@ -1122,9 +1155,13 @@ Language: pl
     <string name="application_log_button">Log/dziennik aplikacji</string>
     <string name="my_tickets">Moje bilety</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
+    <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Trwa przywracanie</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem przywrócona</string>
     <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
     <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Twoja witryna została z powodzeniem przywrócona.\nOdtworzono stan z %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %1$s %2$s</string>
     <string name="plugin_auto_managed">Zarządzane automatycznie</string>
     <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu - zapisane wpisy nie synchronizują się na innych twoich urządzeniach.</string>
     <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
@@ -1485,6 +1522,7 @@ Language: pl
     <string name="jetpack_disconnect_confirm">Rozłącz</string>
     <string name="jetpack_disconnect_confirmation_message">Czy jesteś pewien że chcesz rozłączyć Jetpack od tej witryny? </string>
     <string name="jetpack_disconnect_pref_title">\"Rozłącz z WordPress.com\"</string>
+    <string name="site_settings_jetpack_allowlist_description">Możesz oznaczyć adres IP (lub serię adresów) jako \"Zawsze dozwolony\" aby zapobiec zablokowaniu przez Jetpacka. Dozwolone są adresy IPv4 i IPv6. Aby określić zakres, wprowadź dolną \n i górną wartość zakresu i odziej je myślnikiem. Przykład 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Wymagaj uwierzytelniania dwuetapowego</string>
     <string name="jetpack_match_wpcom_via_email_title">Połącz konta używając adresu email </string>
     <string name="jetpack_allow_wpcom_sign_in_title">Zezwól na logowanie WordPress.com</string>
@@ -1529,6 +1567,12 @@ Language: pl
     <string name="notification_settings_category_other">Inne</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Wszystkie moje witryny</string>
     <string name="notification_settings_category_your_sites">Twoje witryny</string>
+    <string name="notification_settings_main_off_message">Wyłączenie powiadomień spowoduje że nie będziesz otrzymywać żadnych powiadomień z tej aplikacji, bez względu na ich typ. Możesz dostosować typ otrzymywanych powiadomień po włączeniu powiadomień.</string>
+    <string name="notification_settings_main_off_title">Aby otrzymywać powiadomienia na tym urządzeniu, ustaw powiadomienia na włączone</string>
+    <string name="notification_settings_main_hint_off">Włącz powiadomienia</string>
+    <string name="notification_settings_main_hint_on">Wyłącz powiadomienia</string>
+    <string name="notification_settings_main_status_off">Wyłączone</string>
+    <string name="notification_settings_main_status_on">Włączone</string>
     <string name="max_video_resolution">Maksymalny rozmiar filmu</string>
     <string name="max_thumbnail_px_size">Maksymalny rozmiar obrazka</string>
     <string name="error_upload_post_media_param">Wystąpił błąd podczas przesyłania mediów w tym wpisie: %s.</string>
@@ -1781,6 +1825,7 @@ Language: pl
     <string name="sign_in_wpcom">Zaloguj się do WordPress.com</string>
     <string name="signout">Wyloguj się</string>
     <string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
+    <string name="reader_label_local_related_posts">Więcej od %s</string>
     <string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
     <string name="invite_invalid_email">%s: Nieprawidłowy email</string>
     <string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
@@ -1828,7 +1873,9 @@ Language: pl
     <string name="invite_error_invalid_usernames_multiple">Nie można wysłać: wystąpiły nieprawidłowe nazwy użytkownika lub adresy email</string>
     <string name="invite_error_invalid_usernames_one">Nie można wysłać: nieprawidłowa nazwa użytkownika lub email</string>
     <string name="invite_error_no_usernames">Proszę dodać przynajmniej jednego użytkownika</string>
+    <string name="invite_message_title">Wiadomość spersonalizowana</string>
     <string name="invite">Zaproś</string>
+    <string name="invite_names_title">Nazwy użytkowników lub adresy e-mail</string>
     <string name="invite_people">Zaproś ludzi</string>
     <string name="my_site_header_external">Na zewnątrz</string>
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
@@ -1974,6 +2021,7 @@ Language: pl
     <string name="site_settings_paging_dialog_description">Podziel wątki komentarzy na kilka stron</string>
     <string name="site_settings_paging_dialog_header">Komentarzy na strone</string>
     <string name="site_settings_close_after_dialog_title">Zamknij komentowanie</string>
+    <string name="site_settings_denylist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo \"press\" będzie dopasowane do słowa  \"WordPress\". </string>
     <string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo \"press\" będzie dopasowane do słowa \"WordPress\". </string>
     <string name="site_settings_list_editor_input_hint">Wprowadź słowo lub frazę</string>
     <string name="site_settings_list_editor_no_items_text">Brak elementów</string>
@@ -1988,8 +2036,10 @@ Language: pl
     <string name="site_settings_rp_show_header_title">Pokaż nagłówek</string>
     <string name="site_settings_rp_switch_summary">Wyświetla odpowiednią zawartość z twojej witryny poniżej twoich wpisów.</string>
     <string name="site_settings_rp_switch_title">Pokaż Powiązane Wpisy</string>
+    <string name="site_settings_denylist_hint">Komentarze odpowiadające szablonowi filtra są oznaczane jako spam</string>
     <string name="site_settings_moderation_hold_hint">Komentarze odpowiadające szablonowi filtra są umieszcza w kolejce do moderacji</string>
     <string name="site_settings_multiple_links_hint">Ignoruje limit odnośników od znanych tobie użytkowników</string>
+    <string name="site_settings_allowlist_hint">Autor komentarza musi mieć uprzednio zatwierdzony komentarz</string>
     <string name="site_settings_user_account_required_hint">Użytkownicy muszą być zarejestrowani oraz zalogowani aby móc dodawać komentarze</string>
     <string name="site_settings_identity_required_hint">Autor komentarza musi podać imię oraz e-mail</string>
     <string name="site_settings_paging_hint">Pokaż komentarze w kawałkach o określonym rozmiarze</string>
@@ -2012,6 +2062,8 @@ Language: pl
     <string name="site_settings_address_hint">Zmiana twojego adresu nie jest aktualnie wspierana</string>
     <string name="site_settings_tagline_hint">Krótki opis lub chwytliwe wyrażenie opisujące twojego bloga</string>
     <string name="site_settings_title_hint">W kilku słowach, wyjaśnij o czym jest ta witryna</string>
+    <string name="site_settings_allowlist_known_summary">Komentarze od znanych tobie użytkowników</string>
+    <string name="site_settings_allowlist_all_summary">Komentarze od wszystkich użytkowników</string>
     <string name="site_settings_threading_summary">%d poziomy/ów</string>
     <string name="site_settings_privacy_private_summary">Prywatna</string>
     <string name="site_settings_privacy_hidden_summary">Ukryta</string>
@@ -2019,6 +2071,7 @@ Language: pl
     <string name="site_settings_privacy_public_summary">Publiczna</string>
     <string name="site_settings_moderation_hold_title">Wstrzymaj do moderacji</string>
     <string name="site_settings_multiple_links_title">Odnośniki w komentarzach</string>
+    <string name="site_settings_allowlist_title">Automatyczne zatwierdzaj</string>
     <string name="site_settings_threading_title">Wątki dyskusji</string>
     <string name="site_settings_paging_title">Stronicowanie</string>
     <string name="site_settings_sort_by_title">Sortuj</string>

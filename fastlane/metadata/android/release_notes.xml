@@ -1,134 +1,180 @@
 <ar>
-17.3:
-ما الجديد؟
+17.5:
+ما الجديد في الإصدار 17.5؟
 
-باستخدام مكوِّن البحث الجديد، يمكنك إضافة وظيفة البحث إلى أي مقالة أو صفحة. يمكنك الآن إضافة شعار "مميز" في مكوِّن الصورة. قمنا كذلك بتبسيط السير لإدراج وسائط عند استخدام مكوِّنات الوسائط المتعددة الشائعة لدينا.
+تسمح لك المكوِّنات القابلة لإعادة الاستخدام بإنشاء محتوى المكوِّن مرة واحدة وإعادة استخدامه عدد مرات غير محدود، مباشرةً من أداة إدراج المكوِّن.
 
-تشمل التحسينات الأخرى المزيد من معلومات المستخدم حول إعجاباتك، بالإضافة إلى شاشة تعليقات محدَّثة.
+تجعل الأوامر التي تبدأ بشرطة إضافة المكوِّنات أمرًا سهلاً: ما عليك سوى الضغط على شرطة مائلة إلى الأمام واسم المكوِّن في المحرِّر.
+
+يمكنك الآن الاحتفاظ بالصوت عبر عنوان URL باستخدام مكوِّن الصوت.
+
+وأخيرًا، يمكن لقراء الشاشة الآن تحديد خلية السائر.
 </ar>
 <de-DE>
-17.3:
-Was gibt's Neues?
+17.5:
+Was ist neu in 17.5?
 
-Mit dem neuen Suchblock kannst du jedem Beitrag und beliebigen Seiten eine Suchfunktion hinzufügen. Im Bildblock kannst du ab sofort ein Banner mit Empfehlungen hinzufügen. Außerdem haben wir den Flow zum Einfügen von Medien über unsere beliebten Multimedia-Blöcken erleichtert.
+Mit wiederverwendbaren Blöcken musst du Blockinhalte nur einmal erstellen. Dann kannst du sie direkt über den Block-Inserter beliebig oft wiederverwenden.
 
-Weitere Verbesserungen umfassen unter anderem mehr Benutzerdaten zu deinen Likes sowie einen aktualisierten Look der Kommentare.
+Schrägstrichbefehle erleichtern dir das Hinzufügen von Blöcken: Gib dazu einfach einen Schrägstrich gefolgt vom Blocknamen in den Editor ein.
+
+Mit dem Audioblock kannst du nun Audiodateien per URL einbinden.
+
+Und nicht zuletzt können Screenreader ab sofort die Stepper-Zelle auswählen.
 </de-DE>
 <en-US>
-17.3:
-What’s new?
+17.5:
+What’s new in 17.5?
 
-With the new Search block, you can add a search function to any post or page. In the Image block, you can now add a “featured” banner. We’ve also simplified the flow for inserting media when using our popular multimedia blocks.
+Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
 
-Other improvements include more user information about your Likes, as well as an updated Comments screen.
+Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
+
+You can now pull in audio via URL with the Audio block.
+
+Finally, screen readers can now select the stepper cell.
 </en-US>
-<es-ES>
-17.3:
-Novedades
-
-Con el nuevo bloque de búsqueda, puedes añadir una función de búsqueda en cualquier entrada o página. En el bloque de imagen, ahora puedes añadir un banner destacado. También hemos simplificado los pasos para insertar elementos multimedia con nuestros bloques multimedia populares.
-
-Se han hecho otras mejoras, como incluir más información del usuario sobre tus Me gusta, o una pantalla de comentarios actualizada.
-</es-ES>
-<fr-CA>
-17.3 :
-Nouveautés
-
-Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
-
-Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
-</fr-CA>
-<fr-FR>
-17.3 :
-Nouveautés
-
-Le nouveau bloc Recherche vous permet d’ajouter une fonction de recherche à un article ou une page. Dans le bloc Image, vous pouvez désormais ajouter une bannière « en une ». Nous avons également simplifié le flux d’insertion des médias lors de l’utilisation de nos blocs multimédias populaires.
-
-Les autres améliorations incluent davantage d’informations sur vos mentions J’aime, ainsi qu’un écran de commentaires mis à jour.
-</fr-FR>
 <iw-IL>
-17.3:
-מה חדש?
+17.5:
+מה חדש בגרסת 17.5?
 
-עם בלוק החיפוש החדש, אפשר להוסיף פונקציה של חיפוש בכל פוסט או עמוד. בבלוק התמונה, ניתן להוסיף באנר 'מרכזי'. בנוסף, הגדרנו תהליך פשוט יותר להוספה של מדיה כאשר משתמשים בבלוקים הפופולריים שלנו למולטימדיה.
+בלוקים לשימוש חוזר מאפשרים לך ליצור תוכן של בלוק פעם אחת ולהשתמש בו שוב ושוב, ללא הגבלה, ישירות מתוך מוסיף הבלוקים.
 
-שיפורים נוספים כוללים עוד פרטים למשתמש על הלייקים ומסך 'תגובות' מעודכן.
+פקודות של קו נטוי מאפשרות לך להוסיף בלוקים בקלות: אפשר להקיש על הקו הנטוי לפנים ולהקליד את שם הבלוק בעורך.
+
+אפשר להוסיף אודיו דרך כתובת URL באמצעות בלוק האודיו.
+
+אחרון חביב, קוראי מסכים כעת בוחרים את התא של השלבים.
 </iw-IL>
 <id>
-17.3:
-Apa yang baru?
+17.5:
+Apa yang baru di versi 17.5?
 
-Dengan blok Pencarian yang baru, Anda dapat menambahkan fungsi pencarian ke pos atau halaman mana pun. Di blok Gambar, sekarang Anda dapat menambahkan banner "unggulan". Kami juga telah menyederhanakan alur untuk menyisipkan media saat menggunakan blok multimedia populer.
+Blok pakai ulang memungkinkan Anda membuat konten blok satu kali dan menggunakannya berulang kali, langsung dari penyisip blok.
 
-Peningkatan lainnya mencakup lebih banyak informasi pengguna tentang Sukai, serta pembaruan layar Komentar.
+Perintah garis miring mempermudah penambahan blok: cukup ketik garis miring dan nama blok ke dalam editor.
+
+Sekarang Anda dapat menambahkan audio melalui URL dengan blok Audio.
+
+Terakhir, sekarang pembaca layar dapat memilih sel yang lebih rumit.
 </id>
 <it-IT>
-17.3:
-Cosa c'è di nuovo?
+17.5
+:Novità nella versione 17.5?
 
-Con il nuovo blocco Cerca, puoi aggiungere una funzione di ricerca a qualsiasi articolo o pagina. Nel blocco Immagine, puoi ora aggiungere un banner "in evidenza". Abbiamo anche semplificato il flusso per l'inserimento di elementi multimediali durante l'uso dei blocchi multimediali popolari.
+I blocchi Riutilizzabili ti consentono di creare il contenuto del blocco una volta e riutilizzarlo infinite volte, direttamente dallo strumento per l'inserimento dei blocchi.
 
-Altri miglioramenti includono più informazioni per l'utente come i tuoi Mi piace e una schermata Commenti aggiornata.
+I comandi slash semplificano l'aggiunta di blocchi: basta toccare una barra e il nome del blocco nell'editor.
+
+Ora puoi inserire l'audio tramite URL con il blocco Audio.
+
+Infine, i lettori di schermo possono ora selezionare la casella passo passo.
 </it-IT>
 <ja-JP>
-17.3:
-新着情報
+17.5:
+17.5の新機能
 
-新しいブロック検索で、任意の投稿またはページに検索を追加できます。 画像ブロックで、「おすすめ」のバナーを追加できるようになりました。 また、よく利用されるマルチメディアブロックを使用する場合にメディアを挿入するフローも簡単になりました。
+再利用可能ブロックでブロックコンテンツを一度作成しておくと、「ブロック挿入」から何度でも再使用できるようになりました。
 
-その他の改善内容には、「いいね」のユーザー情報の詳細化、コメント画面の更新などがあります。
+スラッシュコマンドでブロック追加操作が簡単になりました。スラッシュとブロック名をタップしてエディターに入力するだけです。
+
+音声ブロックを使用することで URL を介して音声を取り込めるようになりました。
+
+ついに、スクリーンリーダーではステッパーセルを選択できるようになりました。
 </ja-JP>
 <ko-KR>
-17.3:
-새로운 기능
+17.5:
+17.5의 새로운 기능
 
-새로운 검색 블록으로 글 또는 페이지에 검색 기능을 추가할 수 있습니다. 이미지 블록에서 이제 "추천" 배너를 추가할 수 있습니다. 사용자가 많이 사용하는 멀티미디어 블록을 사용할 때 미디어를 삽입하는 절차도 간소화했습니다.
+재활용 가능한 블록을 통해 블록 콘텐츠를 한 번 생성하면 횟수 제한 없이 블록 편집기에서 바로 재활용할 수 있습니다.
 
-기타 개선 사항에는 좋아요에 대한 추가 사용자 정보는 물론 업데이트된 댓글 화면도 포함됩니다.
+슬래시 명령을 통해 블록을 쉽게 추가할 수 있습니다. 편집기에서 슬래시와 블록 이름을 활용하면 됩니다.
+
+이제 오디오 블록으로 URL을 통해 오디오를 가져올 수 있습니다.
+
+마지막으로, 이제 화면 리더에서 스텝퍼 셀을 선택할 수 있습니다.
 </ko-KR>
 <nl-NL>
-17.3:
-Wat is er nieuw?
+17.5:
+Wat is er nieuw in 17.5?
 
-Met het nieuwe zoek blok, kan je een zoekfunctie toevoegen aan elk bericht of pagina. In het afbeeldingsblok kun je nu een "uitgelichte" banner toevoegen. We hebben ook de flow vereenvoudigd voor het invoegen van media bij het gebruik van onze populaire multimediablokken.
+Met herbruikbare blokken kun je eenmaal blokinhoud maken en deze oneindig vaak hergebruiken, rechtstreeks vanuit de blok inserter.
 
-Andere verbeteringen zijn meer gebruikersinformatie over je likes, evenals een geüpdatet reacties scherm.
+Slash opdrachten maken het toevoegen van blokken eenvoudig: tik gewoon op een voorwaartse schuine streep en bloknaam in de editor.
+
+Je kunt nu audio via URL ophalen met het audioblok.
+
+Ten slotte kunnen schermlezers nu de stepper cel selecteren.
 </nl-NL>
+<pt-BR>
+17.5:
+Quais as novidades da versão 17.5?
+
+Blocos reutilizáveis permitem que você crie o conteúdo de blocos apenas uma vez e reutilize infinitas vezes diretamente no adicionador de blocos.
+
+Comandos com barra facilitam a adição de blocos: digite uma barra e depois o nome de um bloco no editor.
+
+Agora você pode adicionar arquivos de áudio com um URL no bloco de áudio.
+
+Por fim, leitores de tela agora podem selecionar células de passagem no editor.
+</pt-BR>
 <ru-RU>
-17,3:
-Что нового?
+17,5:
+Что нового в версии 17.5?
 
-С новым блоком поиска вы можете добавить функцию поиска к любой записи или странице. В блоке изображений теперь можно добавить «избранный» баннер. Мы также упростили процесс вставки медиафайлов при использовании наших популярных мультимедийных блоков.
+Библиотека "Мои блоки" позволяет создавать содержимое блока один раз и повторно использовать его бесконечное количество раз прямо из панели для вставки блоков.
 
-Другие улучшения включают в себя дополнительную информацию об отметках "понравилось", а также обновленный экран комментариев.
+Команды с косой чертой (слеш) упрощают добавление блоков: просто коснитесь слеша и имени блока в редакторе.
+
+Теперь вы можете вставлять аудио через URL-адрес с помощью блока Audio.
+
+Наконец, программы чтения с экрана теперь могут выбирать шаговую ячейку.
 </ru-RU>
 <sv-SE>
-17.3:
-Vad är nytt?
+17.5:
+Nytt i 17.5.
 
-Med det nya sökblocket kan du lägga till en sökfunktion i ett inlägg eller på en sida. I bildblocket kan du nu lägga till en "utvalt"-banner. Vi har också förenklat flödet för att infoga media vid användning av våra populära multimediablock.
+Återanvändbara block låter dig skapa blockinnehåll en gång och sedan återanvända det gång på gång, direkt från blockinfogaren.
 
-Andra förbättringar inkluderar mer användarinformation om dina gilla-markeringar, samt en uppdaterad skärm för kommentarer.
+Snedstreckskommandon gör enkelt att lägga till block: tryck på snedstreck och skriv in blocknamnet i redigeraren.
+
+Nu kan du lägga in ljudfiler via en URL i ljudblocket.
+
+Slutligen har skärmläsare nu möjlighet att markera stegningscellen.
 </sv-SE>
 <tr-TR>
-17.3:
-Yenilikler
+17.5:
+17.5 sürümündeki yenilikler neler?
 
-Yeni Arama bloku sayesinde, herhangi bir gönderi veya sayfaya arama işlevi ekleyebilirsiniz. Görüntü blokunda artık bir "öne çıkan" başlık ekleyebilirsiniz. Popüler multimedya bloklarımız kullanılırken yapılan medya ekleme işlemleriyle ilgili akışı da basitleştirdik.
+Yeniden kullanılabilir bloklar, doğrudan blok yerleştiriciden blok içeriğini bir kez oluşturup sonsuz kez yeniden kullanmanıza olanak tanır.
 
-Diğer iyileştirmeler arasında, Beğenileriniz hakkında daha fazla kullanıcı bilgisinin yanı sıra güncellenmiş bir Yorumlar ekranı da bulunur.
+Eğik çizgi komutları blok eklemeyi kolaylaştırır: Düzenleyicide bir eğik çizgiye ve blok adına dokunmanız yeterlidir.
+
+Artık Ses bloku ile URL üzerinden ses alabilirsiniz.
+
+Son olarak, ekran okuyucular artık adım hücresini seçebilir.
 </tr-TR>
 <zh-CN>
-17.3：
-通过新的搜索区块，您可以在任何文章或页面中添加搜索功能。在图像区块中，现已可添加 "特色 "横幅。我们还简化了在使用多媒体区块时插入媒体的流程。
+17.5：
+17.5 有什么新特性？
 
-其他改进包括：可以查看更多关于您的 "喜欢"的用户信息，以及一个全新的评论界面。
+可重用区块让您只需创建一次区块内容，就可以在区块插入器中无限次重复使用。
+
+斜线命令使添加区块变得简单：只需在编辑器中点按一下正斜线和区块名称。
+
+您现在可以用音频区块通过URL嵌入音频。
+
+最后，屏幕阅读器现以可选择单元格。
 </zh-CN>
 <zh-TW>
-17.3:
-新功能
+17.5：
+17.5 版有哪些新功能？
 
-現在有了新的搜尋區塊，你可以在任何文章或頁面中加入搜尋功能。 你現在可以在圖片區塊中加入「精選」橫幅。 我們也簡化了使用熱門多媒體區塊時插入媒體的程序。
+可重複使用區塊讓你只要建立一次區塊內容，就能直接從區塊插入工具重複使用，不限次數。
 
-其他改善包括更多「按讚」的使用者資訊，以及煥然一新的「留言」畫面。
+斜線指令可輕鬆新增區塊：只要在編輯器中點選斜線和區塊名稱即可。
+
+你現在可使用音訊區塊透過 URL 嵌入音訊。
+
+最後，螢幕閱讀器現在可以選取步進器欄位。
 </zh-TW>
