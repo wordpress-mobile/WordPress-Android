@@ -1,7 +1,16 @@
 apply plugin: 'com.android.library'
 
+repositories {
+    maven {
+        url 'https://jitpack.io'
+        content {
+            includeGroup "com.github.Automattic"
+        }
+    }
+}
+
 dependencies {
-    implementation 'com.automattic:tracks:1.2.1'
+    implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'org.wordpress:utils:1.19.0'
 
     lintChecks 'org.wordpress:lint:1.0.1'
