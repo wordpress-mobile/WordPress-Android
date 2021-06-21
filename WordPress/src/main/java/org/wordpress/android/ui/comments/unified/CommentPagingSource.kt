@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments.unified
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
@@ -11,12 +10,17 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 import javax.inject.Inject
 
-class CommentPagingSource : PagingSource<Int, CommentModel>() {
+// TODO for testing purposes only. Remove after attaching real data source.
+@Suppress("MagicNumber")
+class CommentPagingSource @Inject constructor(
+    private val networkUtilsWrapper: NetworkUtilsWrapper
+) : PagingSource<Int, CommentModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentModel> {
         val nextPageNumber = params.key ?: 0
-        Log.v("Comments", "UC: Local Data Requested, page $nextPageNumber")
         delay(1500) // synthetic delay
-        Log.v("Comments", "UC: Local Data Loaded")
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return LoadResult.Error(Error("Network Unavailable"))
+        }
         return LoadResult.Page(
                 data = generateComments(params.loadSize, nextPageNumber),
                 prevKey = null, // Only paging forward
@@ -31,14 +35,12 @@ class CommentPagingSource : PagingSource<Int, CommentModel>() {
         }
     }
 
-    // TODO for testing purposes only. Remove after attaching real data source.
-    @Suppress("MagicNumber")
     fun generateComments(loadSize: Int, page: Int): List<CommentModel> {
         val commentListItems = ArrayList<CommentModel>()
         val startIndex = loadSize * page
         var startTimestamp = System.currentTimeMillis() / 1000 - (30000 * startIndex)
 
-        for (i in startIndex..startIndex + loadSize - 1) {
+        for (i in startIndex until startIndex + loadSize) {
             val commentModel = CommentModel()
             commentModel.id = i
             commentModel.remoteCommentId = i.toLong()
