@@ -81,22 +81,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private val siteCreationPreviewWebViewContainerBinding: SiteCreationPreviewWebViewContainerBinding
         get() = binding.siteCreationPreviewScreenDefault.siteCreationPreviewWebViewContainer
 
-    companion object {
-        const val TAG = "site_creation_preview_fragment_tag"
-
-        fun newInstance(
-            screenTitle: String,
-            siteCreationData: SiteCreationState
-        ): SiteCreationPreviewFragment {
-            val fragment = SiteCreationPreviewFragment()
-            val bundle = Bundle()
-            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            bundle.putParcelable(ARG_DATA, siteCreationData)
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -438,6 +422,22 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onStop()
         if (animatorSet?.isRunning == true) {
             animatorSet?.cancel()
+        }
+    }
+
+    companion object {
+        const val TAG = "site_creation_preview_fragment_tag"
+
+        fun newInstance(
+            screenTitle: String,
+            siteCreationData: SiteCreationState
+        ): SiteCreationPreviewFragment {
+            val fragment = SiteCreationPreviewFragment()
+            val bundle = Bundle()
+            bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putParcelable(ARG_DATA, siteCreationData)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }
