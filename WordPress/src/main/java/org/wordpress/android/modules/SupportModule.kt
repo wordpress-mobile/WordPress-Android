@@ -1,6 +1,5 @@
 package org.wordpress.android.modules
 
-import com.automattic.android.tracks.crashlogging.CrashLogging
 import dagger.Module
 import dagger.Provides
 import org.wordpress.android.fluxc.store.AccountStore
