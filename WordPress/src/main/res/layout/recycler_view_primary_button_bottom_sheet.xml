@@ -54,7 +54,7 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
-        android:text="@string/set_your_blogging_goals_button"
+        android:text="@string/set_your_blogging_reminders_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -600,7 +600,7 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
+    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -2332,10 +2332,6 @@
     <string name="invite_links_disable_dialog_title">Disable invite link</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
 
-    <!--Blogging Reminders-->
-    <string name="blogging_reminders_notification_title">%s, it\'s time to blog</string>
-    <string name="blogging_reminders_notification_text">This is your reminder to blog today &#9997;</string>
-
     <!--Plugins-->
     <string name="plugins">Plugins</string>
     <string name="plugin_byline">by %s</string>
@@ -3636,12 +3632,14 @@
     <string name="storage_utils_dialog_ok_button">View Storage</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 
-    <!-- Blogging reminders -->
-    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
-    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
-    <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="blogging_goals_n_a_week">%s a week</string>
-    <string-array name="blogging_goals_count" translatable="false">
+    <!-- Blogging Reminders -->
+    <string name="blogging_reminders_notification_title">%s, it\'s time to blog</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to blog today &#9997;</string>
+    <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="set_your_blogging_reminders_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
+    <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="blogging_reminders_n_a_week">%s a week</string>
+    <string-array name="blogging_reminders_count" translatable="false">
         <item>Once</item>
         <item>Twice</item>
         <item>Three times</item>
@@ -3650,14 +3648,14 @@
         <item>Six times</item>
         <item>Seven times</item>
     </string-array>
-    <string name="blogging_goals_not_set">None set</string>
+    <string name="blogging_reminders_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s on %2$s.</string>
     <string name="blogging_reminders_epilogue_body">You\'ll get reminders to blog everyday.</string>
-    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site > Settings > Blogging goals.</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site > Settings > Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
