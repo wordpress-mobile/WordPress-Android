@@ -29,7 +29,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
 
-    private lateinit var binding: SiteCreationDomainsScreenBinding
+    private var binding: SiteCreationDomainsScreenBinding? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,29 +61,29 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent() {
-        with(binding) {
+        binding?.let {
             searchInputWithHeader = SearchInputWithHeader(
                     uiHelpers = uiHelpers,
-                    rootView = root as ViewGroup,
+                    rootView = it.root as ViewGroup,
                     onClear = { viewModel.onClearTextBtnClicked() }
             )
-            createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
-                initRecyclerView()
-                initViewModel()
+            it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
+            initRecyclerView()
+            initViewModel()
         }
     }
 
-    private fun SiteCreationDomainsScreenBinding.initRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+    private fun initRecyclerView() {
+        binding?.recyclerView?.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
-    private fun SiteCreationDomainsScreenBinding.initAdapter() {
+    private fun initAdapter() {
         val adapter = SiteCreationDomainsAdapter(uiHelpers)
-        recyclerView.adapter = adapter
+        binding?.recyclerView?.adapter = adapter
     }
 
-    private fun SiteCreationDomainsScreenBinding.initViewModel() {
+    private fun initViewModel() {
         viewModel = ViewModelProvider(this@SiteCreationDomainsFragment, viewModelFactory)
                 .get(SiteCreationDomainsViewModel::class.java)
 
@@ -92,8 +92,13 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
-                uiHelpers.updateVisibility(createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
+                binding?.let {
+                    uiHelpers.updateVisibility(
+                            it.createSiteButtonContainer,
+                            uiState.createSiteButtonContainerVisibility
+                    )
+                    uiHelpers.updateVisibility(it.createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
+                }
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })
@@ -110,12 +115,12 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
-        with(binding) {
-            uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
+        binding?.let {
+            uiHelpers.updateVisibility(it.domainListEmptyView, contentState.emptyViewVisibility)
             uiHelpers.updateVisibility(
-                    siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility
+                    it.siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility
             )
-            (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
+            (it.recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
         }
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
@@ -141,6 +146,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         searchInputWithHeader = null
+        binding = null
     }
 
     companion object {
