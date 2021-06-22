@@ -110,9 +110,9 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun SiteCreationDomainsScreenBinding.updateContentUiState(contentState: DomainsUiContentState) {
-            uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
-            uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
-            (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
+        uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
+        uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
+        (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
