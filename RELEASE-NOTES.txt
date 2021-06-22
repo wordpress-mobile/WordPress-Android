@@ -10,6 +10,7 @@
 * [*] Block Editor: "Set as featured" button within image block settings. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3116]
 * [***] Block Editor: Audio block now available on WP.com sites on the free plan. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3523]
 * [*] Block Editor: Improve unsupported block message for reusable block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3621]
+* [**] Fix incorrect block insertion point after blurring the post title field. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3640]
 
 17.5
 -----
