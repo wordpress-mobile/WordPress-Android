@@ -68,22 +68,22 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                     onClear = { viewModel.onClearTextBtnClicked() }
             )
             it.createSiteButton.setOnClickListener { viewModel.createSiteBtnClicked() }
-            initRecyclerView()
-            initViewModel()
+            it.initRecyclerView()
+            it.initViewModel()
         }
     }
 
-    private fun initRecyclerView() {
-        binding?.recyclerView?.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+    private fun SiteCreationDomainsScreenBinding.initRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
-    private fun initAdapter() {
+    private fun SiteCreationDomainsScreenBinding.initAdapter() {
         val adapter = SiteCreationDomainsAdapter(uiHelpers)
-        binding?.recyclerView?.adapter = adapter
+        recyclerView.adapter = adapter
     }
 
-    private fun initViewModel() {
+    private fun SiteCreationDomainsScreenBinding.initViewModel() {
         viewModel = ViewModelProvider(this@SiteCreationDomainsFragment, viewModelFactory)
                 .get(SiteCreationDomainsViewModel::class.java)
 
@@ -92,13 +92,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
                 searchInputWithHeader?.updateSearchInput(requireActivity(), uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                binding?.let {
-                    uiHelpers.updateVisibility(
-                            it.createSiteButtonContainer,
-                            uiState.createSiteButtonContainerVisibility
-                    )
-                    uiHelpers.updateVisibility(it.createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
-                }
+                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(createSiteButtonShaddow, uiState.createSiteButtonContainerVisibility)
                 updateTitleVisibility(uiState.headerUiState == null)
             }
         })
@@ -114,14 +109,11 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         viewModel.start()
     }
 
-    private fun updateContentUiState(contentState: DomainsUiContentState) {
-        binding?.let {
-            uiHelpers.updateVisibility(it.domainListEmptyView, contentState.emptyViewVisibility)
-            uiHelpers.updateVisibility(
-                    it.siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility
-            )
-            (it.recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
-        }
+    private fun SiteCreationDomainsScreenBinding.updateContentUiState(contentState: DomainsUiContentState) {
+            uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
+            uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
+            (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
+
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
         }
