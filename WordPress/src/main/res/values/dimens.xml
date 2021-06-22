@@ -31,6 +31,7 @@
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
     <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_lowest" format="float" type="dimen">0.08</item>
 
     <dimen name="divider_size">1dp</dimen>
     <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
