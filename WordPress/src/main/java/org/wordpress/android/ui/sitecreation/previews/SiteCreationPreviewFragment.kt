@@ -16,7 +16,6 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
@@ -166,7 +165,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             url?.let { urlString ->
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.webViewClient =
                         URLFilteredWebViewClient(urlString, this@SiteCreationPreviewFragment)
-                siteCreationPreviewWebViewContainer.sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
+                siteCreationPreviewWebViewContainer.sitePreviewWebView.settings.userAgentString =
+                        WordPress.getUserAgent()
                 siteCreationPreviewWebViewContainer.sitePreviewWebView.loadUrl(urlString)
             }
         })
@@ -237,7 +237,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun SiteCreationProgressCreatingSiteBinding.updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
+    private fun SiteCreationProgressCreatingSiteBinding.updateLoadingLayout(
+        progressUiState: SitePreviewFullscreenProgressUiState
+    ) {
         progressUiState.apply {
             val newText = uiHelpers.getTextOfUiString(progressText.context, loadingTextResId)
             AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
@@ -281,7 +283,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
+    private fun FullscreenErrorWithRetryBinding.updateErrorLayout(
+        errorUiStateState: SitePreviewFullscreenErrorUiState
+    ) {
         errorUiStateState.apply {
             uiHelpers.setTextOrHide(errorTitle, titleResId)
             uiHelpers.setTextOrHide(errorSubtitle, subtitleResId)
