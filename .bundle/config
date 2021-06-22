@@ -1,5 +1,5 @@
 ---
 BUNDLE_PATH: "vendor/bundle"
 BUNDLE_RETRY: "3"
-BUNDLE_JOBS: "3"
+BUNDLE_JOBS: "16"
 BUNDLE_WITHOUT: "screenshots"
