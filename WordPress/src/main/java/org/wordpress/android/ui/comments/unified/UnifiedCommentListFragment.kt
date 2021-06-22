@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.CommentListFragmentBinding
+import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -22,7 +22,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
-class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
+class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
@@ -31,7 +31,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
     private lateinit var adapter: UnifiedCommentListAdapter
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    private var binding: CommentListFragmentBinding? = null
+    private var binding: UnifiedCommentListFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +41,13 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = CommentListFragmentBinding.bind(view).apply {
+        binding = UnifiedCommentListFragmentBinding.bind(view).apply {
             setupContentViews()
             setupObservers()
         }
     }
 
-    private fun CommentListFragmentBinding.setupContentViews() {
+    private fun UnifiedCommentListFragmentBinding.setupContentViews() {
         val layoutManager = LinearLayoutManager(context)
         commentsRecyclerView.layoutManager = layoutManager
         commentsRecyclerView.addItemDecoration(UnifiedCommentListItemDecoration(commentsRecyclerView.context))
@@ -64,7 +64,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
         adapter.retry()
     }
 
-    private fun CommentListFragmentBinding.setupObservers() {
+    private fun UnifiedCommentListFragmentBinding.setupObservers() {
         lifecycleScope.launchWhenStarted {
             viewModel.commentListData.collect { pagingData ->
                 adapter.submitData(pagingData)
@@ -95,7 +95,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
                                 snackbarMessage.buttonTitle?.let {
                                     Action(
                                             textRes = snackbarMessage.buttonTitle,
-                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
+                                            clickListener = { snackbarMessage.buttonAction() }
                                     )
                                 },
                                 dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
@@ -105,7 +105,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
         }
     }
 
-    private fun CommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
+    private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
         uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
         uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
         uiHelpers.updateVisibility(
