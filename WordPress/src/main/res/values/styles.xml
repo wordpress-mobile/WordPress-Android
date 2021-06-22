@@ -1582,8 +1582,8 @@
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
 
-    <style name="BloggingRemindersTipCaption">
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    <style name="BloggingRemindersTipMessage">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
 </resources>
