@@ -2301,9 +2301,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
         int hashedUserId = convertUserIdToHash(getUserId(), "can_view_editor_onboarding");
-        boolean canViewEditorOnboarding = (
+        boolean canViewEditorOnboarding = !AppPrefs.hasLaunchedGutenbergEditor() && (
                 hashedUserId % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
-                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
+                || BuildConfig.DEBUG
+        );
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
