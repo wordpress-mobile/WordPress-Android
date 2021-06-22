@@ -3268,7 +3268,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onEditorFragmentInitialized() {
-        boolean shouldFinishInit = true;
         // now that we have the Post object initialized,
         // check whether we have media items to insert from the WRITE POST with media functionality
         if (getIntent().hasExtra(EXTRA_INSERT_MEDIA)) {
