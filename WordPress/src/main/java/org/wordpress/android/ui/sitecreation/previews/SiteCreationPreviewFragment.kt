@@ -101,6 +101,14 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
+    }
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
