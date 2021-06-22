@@ -1,13 +1,33 @@
 steps:
-  - label: "🧹 Lint & Checkstyle"
+  - label: "checkstyle"
     commands:
       - cp gradle.properties-example gradle.properties
       - ./gradlew checkstyle
+    plugins:
+      - docker-compose#v3.7.0:
+          run: wpandroid
+          config: .buildkite/docker-compose.yml
+  - label: "ktlint"
+    commands:
+      - cp gradle.properties-example gradle.properties
       - ./gradlew ciktlint
+    plugins:
+      - docker-compose#v3.7.0:
+          run: wpandroid
+          config: .buildkite/docker-compose.yml
+  - label: "detekt"
+    commands:
+      - cp gradle.properties-example gradle.properties
       - ./gradlew WordPress:detekt
+    plugins:
+      - docker-compose#v3.7.0:
+          run: wpandroid
+          config: .buildkite/docker-compose.yml
+  - label: "lint"
+    commands:
+      - cp gradle.properties-example gradle.properties
       - ./gradlew lintWordpressVanillaRelease
     plugins:
-      - docker#v3.8.0:
-          image: "oguzkocer/android-image"
-          environment:
-            - "CI=true"
+      - docker-compose#v3.7.0:
+          run: wpandroid
+          config: .buildkite/docker-compose.yml

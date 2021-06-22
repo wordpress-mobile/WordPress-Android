@@ -1,0 +1,8 @@
+version: "3"
+services:
+  wpandroid:
+    image: oguzkocer/android-image
+    volumes: $PWD:/home/gradle/project
+    working_dir: /home/gradle/project
+    environment:
+      - CI=true
