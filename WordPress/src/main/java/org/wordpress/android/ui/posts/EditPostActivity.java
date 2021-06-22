@@ -306,7 +306,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PUBLISH_SETTINGS = 2;
     private static final int PAGE_HISTORY = 3;
-    private static final int EDITOR_ONBOARDING_PHASE_PERCENTAGE = 0;
+    private static final int EDITOR_ONBOARDING_PHASE_PERCENTAGE = 50;
 
     private AztecImageLoader mAztecImageLoader;
 
