@@ -351,52 +351,52 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun animateContentTransition() {
         siteCreationPreviewScreenDefaultBinding?.let { defaultBinding ->
             defaultBinding.contentLayout.addOnLayoutChangeListener(
-            object : OnLayoutChangeListener {
-                override fun onLayoutChange(
-                    v: View?,
-                    left: Int,
-                    top: Int,
-                    right: Int,
-                    bottom: Int,
-                    oldLeft: Int,
-                    oldTop: Int,
-                    oldRight: Int,
-                    oldBottom: Int
-                ) {
-                    if (meetsHeightWidthForAnimation()) {
-                        defaultBinding.contentLayout.removeOnLayoutChangeListener(this)
-                        val contentHeight = defaultBinding.contentLayout.measuredHeight.toFloat()
-                        val titleAnim = siteCreationPreviewHeaderItemBinding?.sitePreviewTitle?.let { it ->
-                            createFadeInAnimator(it)
-                        }
-                        val webViewAnim = createSlideInFromBottomAnimator(
-                                defaultBinding.siteCreationPreviewWebViewContainer.webViewContainer,
-                                contentHeight
-                        )
+                    object : OnLayoutChangeListener {
+                        override fun onLayoutChange(
+                            v: View?,
+                            left: Int,
+                            top: Int,
+                            right: Int,
+                            bottom: Int,
+                            oldLeft: Int,
+                            oldTop: Int,
+                            oldRight: Int,
+                            oldBottom: Int
+                        ) {
+                            if (meetsHeightWidthForAnimation()) {
+                                defaultBinding.contentLayout.removeOnLayoutChangeListener(this)
+                                val contentHeight = defaultBinding.contentLayout.measuredHeight.toFloat()
+                                val titleAnim = siteCreationPreviewHeaderItemBinding?.sitePreviewTitle?.let { it ->
+                                    createFadeInAnimator(it)
+                                }
+                                val webViewAnim = createSlideInFromBottomAnimator(
+                                        defaultBinding.siteCreationPreviewWebViewContainer.webViewContainer,
+                                        contentHeight
+                                )
 
-                        // OK button should slide in if the container exists and fade in otherwise
-                        // difference between land & portrait
-                        val okAnim = if (isLandscape) {
-                            createFadeInAnimator(defaultBinding.okButton)
-                        } else {
-                            createSlideInFromBottomAnimator(
-                                    defaultBinding.sitePreviewOkButtonContainer as View, contentHeight
-                            )
-                        }
+                                // OK button should slide in if the container exists and fade in otherwise
+                                // difference between land & portrait
+                                val okAnim = if (isLandscape) {
+                                    createFadeInAnimator(defaultBinding.okButton)
+                                } else {
+                                    createSlideInFromBottomAnimator(
+                                            defaultBinding.sitePreviewOkButtonContainer as View, contentHeight
+                                    )
+                                }
 
-                        // There is a chance that either of the following fields can be null,
-                        // so to avoid a NPE, we only execute playTogether if they are both not null
-                        if (titleAnim != null && okAnim != null) {
-                            AnimatorSet().apply {
-                                interpolator = DecelerateInterpolator()
-                                duration = SLIDE_IN_ANIMATION_DURATION
-                                playTogether(titleAnim, webViewAnim, okAnim)
-                                start()
+                                // There is a chance that either of the following fields can be null,
+                                // so to avoid a NPE, we only execute playTogether if they are both not null
+                                if (titleAnim != null && okAnim != null) {
+                                    AnimatorSet().apply {
+                                        interpolator = DecelerateInterpolator()
+                                        duration = SLIDE_IN_ANIMATION_DURATION
+                                        playTogether(titleAnim, webViewAnim, okAnim)
+                                        start()
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-            })
+                    })
         }
     }
 

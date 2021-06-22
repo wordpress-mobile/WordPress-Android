@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import android.content.Context
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -10,7 +11,6 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
-import android.os.Handler
 
 class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, onClear: () -> Unit) {
     private val headerLayout = rootView.findViewById<ViewGroup>(R.id.site_creation_header_item)
