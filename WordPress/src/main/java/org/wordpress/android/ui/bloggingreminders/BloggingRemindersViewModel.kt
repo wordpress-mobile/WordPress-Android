@@ -32,6 +32,9 @@ import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
+import org.wordpress.android.workers.reminder.ReminderScheduler
+import java.time.DayOfWeek
 import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
@@ -45,7 +48,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
     private val dayLabelUtils: DayLabelUtils,
-    private val analyticsTracker: BloggingRemindersAnalyticsTracker
+    private val analyticsTracker: BloggingRemindersAnalyticsTracker,
+    private val reminderScheduler: ReminderScheduler
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
@@ -166,11 +170,12 @@ class BloggingRemindersViewModel @Inject constructor(
         if (bloggingRemindersModel != null) {
             launch {
                 bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
-                // TODO Add logic to save state and schedule notifications here
                 val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
+                    reminderScheduler.schedule(bloggingRemindersModel.siteId, bloggingRemindersModel.toReminderConfig())
                     analyticsTracker.trackRemindersScheduled(daysCount)
                 } else {
+                    reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
                 }
                 _selectedScreen.value = EPILOGUE
@@ -210,6 +215,9 @@ class BloggingRemindersViewModel @Inject constructor(
             EPILOGUE -> analyticsTracker.trackFlowCompleted()
         }
     }
+
+    private fun BloggingRemindersModel.toReminderConfig() =
+            WeeklyReminder(enabledDays.map { DayOfWeek.of(it.ordinal + 1) }.toSet())
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"),

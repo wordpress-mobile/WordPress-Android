@@ -40,6 +40,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.reminder.ReminderScheduler
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -49,6 +50,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
     @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -66,7 +68,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 prologueBuilder,
                 daySelectionBuilder,
                 dayLabelUtils,
-                analyticsTracker
+                analyticsTracker,
+                reminderScheduler
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
