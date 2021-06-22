@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-10 21:01:57+0000
+Translation-Revision-Date: 2021-06-21 10:51:19+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="blogging_reminders_done">Concluído</string>
+    <string name="blogging_reminders_notify_me">Avise-me!</string>
+    <string name="blogging_goals_n_times_a_week">%d vezes por semana</string>
+    <string name="set_your_blogging_goals_button">Definir metas</string>
+    <string name="blogging_goals_not_set">Nenhuma definida</string>
+    <string name="set_your_blogging_goals_message">Publicação em andamento… enquanto isto, defina metas para seu blog para receber lembretes e acompanhar seu progresso.</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>
+    <string name="set_your_blogging_goals_title">Defina metas para seu blog</string>
+    <string name="fab_add_category_desc">Criar categoria</string>
+    <string name="support_ticket_subject">Suporte do WordPress para Android</string>
+    <string name="gutenberg_native_set_as_featured_image">Definir como imagem de destaque</string>
+    <string name="gutenberg_native_remove_as_featured_image">Remover de imagem de destaque</string>
+    <string name="site_settings_categories_hint">Gerenciar as categorias de seu site</string>
+    <string name="site_settings_categories_empty_title">Não existem categorias</string>
+    <string name="site_settings_categories_empty_subtitle">Insira aqui as categorias que mais usa para seleção rápida ao categorizar seus posts</string>
+    <string name="site_settings_categories_title">Categorias</string>
+    <string name="site_settings_blogging_reminders_title">Objetivos do blog</string>
+    <string name="page_is_posts_page_warning">O conteúdo da sua página de posts mais recentes é automaticamente gerado e não pode ser editada.</string>
+    <string name="site_settings_categories_empty_button">Criar uma categoria</string>
     <string name="gutenberg_native_border_settings">Configurações de borda</string>
     <string name="storage_utils_dialog_dont_show_button">Não mostrar novamente</string>
     <string name="storage_utils_dialog_ok_button">Ver armazenamento</string>
@@ -204,6 +223,7 @@ Language: pt_BR
     <string name="scan_provisioning_description">Desejamos boas-vindas ao Jetpack Scan! Estamos analisando seu site. Informaremos se detectarmos algum problema e iniciaremos a primeira varredura completa.</string>
     <string name="scan_scanning_is_initial_description">Desejamos boas-vindas ao Jetpack Scan, estamos realizando uma análise inicial do seu site. Você receberá os resultados em breve.</string>
     <string name="scan_fixing_threats_description_singular">Vamos corrigir essas ameaças enquanto você faz outras coisas. Enquanto isso, sinta-se à vontade para continuar usando o site normalmente. Você pode conferir o progresso a qualquer momento.</string>
+    <string name="scan_scanning_description">Enviaremos uma notificação se uma ameaça for encontrada. Enquanto isso, fique à vontade para continuar utilizando seu site normalmente, você pode verificar o progresso a qualquer momento.</string>
     <string name="scan_fixing_threats_title_plural">Corrigindo ameaças</string>
     <string name="scan_start_request_failed_subtitle">O Jetpack Scan não pôde concluir uma varredura do seu site. Verifique se o seu site está inoperante - se não estiver, tente novamente. Se estiver, ou se o Jetpack Scan ainda estiver com problemas, entre em contato com nossa equipe de suporte.</string>
     <string name="scan_request_failed_title">Ocorreu um erro</string>

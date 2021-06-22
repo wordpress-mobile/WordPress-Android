@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-15 08:44:12+0000
+Translation-Revision-Date: 2021-06-19 15:42:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
@@ -14,10 +14,10 @@ Language: es
     <string name="set_your_blogging_goals_message">Tu entrada se está publicando… Mientras tanto, configura tus objetivos de blogueo para recibir recordatorios y seguir tu progreso.</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
     <string name="set_your_blogging_goals_title">Establece tus objetivos de blogueo</string>
-    <string name="support_ticket_subject">Soporte de WordPress for Android</string>
     <string name="fab_add_category_desc">Crear una categoría</string>
     <string name="gutenberg_native_remove_as_featured_image">Eliminar como imagen destacada</string>
     <string name="gutenberg_native_set_as_featured_image">Establecer como imagen destacada</string>
+    <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_empty_subtitle">Añade aquí las categorías que uses frecuentemente para que puedan ser seleccionadas rápidamente al categorizar tus entradas </string>
     <string name="site_settings_categories_empty_title">Aún no tienes categorías</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
@@ -185,10 +185,10 @@ Language: es
     <string name="restore_status_failure_heading">Vaya, no hemos podido encontrar el estado de tu restauración</string>
     <string name="restore_complete_failed_description">No hemos podido restaura tu sitio</string>
     <string name="restore_warning_action_button">Confirmar</string>
-    <string name="restore_warning_description_with_two_parameters">¡Estás seguro de querer revertir tu sitio al %1$s a las %2$s?\nTodo lo que hayas cambiado desde entonces se perderá.</string>
     <string name="backup_download_complete_failed_description">No hemos podido crear tu copia de seguridad</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(excluye temas, plugins y subidas)</string>
+    <string name="restore_warning_description_with_two_parameters">¿Estás seguro de querer revertir tu sitio al %1$s a las %2$s?\n        Todo lo que hayas cambiado desde entonces se perderá.</string>
     <string name="backup_item_contents">Directorio wp-content</string>
     <string name="backup_item_roots">Raíz de WordPress</string>
     <string name="gutenberg_native_uploading">Subiendo…</string>
@@ -223,7 +223,7 @@ Language: es
     <string name="scan_provisioning_description">¡Bienvenido a la exploración de Jetpack! Le estamos echando un vistazo a tu web para dejarlo todo a punto para el primer análisis completo. Te informaremos si encontramos algún problema que le pueda afectar y después comenzará tu primer análisis.</string>
     <string name="scan_scanning_is_initial_description">Bienvenido a la herramienta de exploración de Jetpack, estamos echándole un primer vistazo a tu web en estos momentos, te mostraremos los resultados enseguida.</string>
     <string name="scan_fixing_threats_description_singular">Trabajamos duro para corregir estas amenazas en segundo plano. Mientras tanto puedes seguir usando tu sitio como siempre, puedes volver a comprobar el progreso en cualquier momento.</string>
-    <string name="scan_scanning_description">Te enviaremos un aviso si se encuentra una amenaza. Mientras tanto, no dudes en seguir usando tu sitio con normalidad, puede comprobar el progreso en cualquier momento.</string>
+    <string name="scan_scanning_description">Te enviaremos un aviso si se encuentra una amenaza. Mientras tanto, no dudes en seguir usando tu sitio con normalidad, puedes comprobar el progreso en cualquier momento.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan no ha podido realizar un análisis de tu sitio. Comprueba si tu sitio está caído. Si no, vuelve a intentarlo. Si tu sitio está caído o si Jetpack Scan sigue teniendo problemas, ponte en contacto con nuestro equipo de soporte.</string>
     <string name="scan_fixing_threats_title_plural">Corrigiendo amenazas</string>
     <string name="scan_request_failed_title">Algo ha salido mal</string>
@@ -288,7 +288,7 @@ Language: es
     <string name="threat_fix_all_warning_title">Corregir todas las amenazas</string>
     <string name="threat_ignore_error_message">No se ha podido ignorar la amenaza. Ponte en contacto con el servicio de soporte.</string>
     <string name="threat_ignore_success_message">Se ha ignorado la amenaza.</string>
-    <string name="threat_ignore_warning">No deberías ignorar un problema de seguridad a menos que estés absolutamente seguro de que no es dañino. Si eliges ignorar esta amenaza seguirá en tu sitio &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="threat_ignore_warning">No deberías ignorar un problema de seguridad a menos que estés absolutamente seguro de que no es dañino. Si eliges ignorar esta amenaza, seguirá en tu sitio &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_fix_error_message">No se ha podido corregir la amenaza. Ponte en contacto con el servicio de soporte.</string>
     <string name="threat_item_sub_header_status_ignored">Amenaza ignorada</string>
     <string name="threat_fixing">Corrigiendo la amenaza</string>
@@ -347,7 +347,7 @@ Language: es
     <string name="suggestion_none">No hay sugerencias %s disponibles.</string>
     <string name="suggestion_selection_needed">Escribe algo para filtrar la lista de sugerencias.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan reemplazará el archivo o el directorio afectados.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan no puede solucionar automáticamente esta amenaza.\n Te sugerimos que soluciones esta amenaza manualmente: asegúrate de que WordPress, tu tema y todos los plugins están actualizados y elimina el código, tema o plugin que esté causando problemas en tu sitio web. \n \n\n Si necesitas más ayuda para resolver esta amenaza, te recomendamos &lt;b&gt;Codeable&lt;/b&gt;, una plataforma de profesionales de confianza, altamente cualificados, expertos en WordPress.\n Han hecho una selección de expertos en seguridad para ayudarnos con estos proyectos. Los precios oscilan entre 70–120 USD/hora y puedes obtener un presupuesto gratuito sin compromiso.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan no puede solucionar automáticamente esta amenaza.\n Te sugerimos que soluciones esta amenaza manualmente: asegúrate de que WordPress, tu tema y todos los plugins están actualizados y elimina el código, tema o plugin que esté causando problemas en tu sitio web. \n \n\n        Si necesitas más ayuda para resolver esta amenaza, te recomendamos &lt;b&gt;Codeable&lt;/b&gt;, una plataforma de profesionales de confianza, altamente cualificados, expertos en WordPress.\n        Han hecho una selección de expertos en seguridad para ayudarnos con estos proyectos. Los precios oscilan entre 70–120 USD/hora y puedes obtener un presupuesto gratuito sin compromiso.</string>
     <string name="threat_fix_current_not_fixable_header">Solucionando la amenaza</string>
     <string name="threat_problem_header">¿Cuál fue el problema?</string>
     <string name="threat_technical_details_header">Información técnica</string>
