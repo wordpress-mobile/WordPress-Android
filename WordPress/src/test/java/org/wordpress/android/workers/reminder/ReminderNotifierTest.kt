@@ -26,7 +26,7 @@ class ReminderNotifierTest {
         on { getString(any(), any()) } doReturn ""
     }
     private val siteStore: SiteStore = mock {
-        on { getSiteBySiteId(SITE_ID) } doReturn TEST_SITE
+        on { getSiteByLocalId(SITE_ID) } doReturn TEST_SITE
     }
     private val accountStore: AccountStore = mock {
         on { account } doReturn TEST_ACCOUNT
@@ -49,21 +49,19 @@ class ReminderNotifierTest {
     @Test
     fun `notify correctly tracks notification received event`() {
         reminderNotifier.notify(SITE_ID)
-        verify(analyticsTracker).setSite(LOCAL_ID)
+        verify(analyticsTracker).setSite(SITE_ID)
         verify(analyticsTracker).trackNotificationReceived()
     }
 
     private companion object {
         private val TEST_SITE = SiteModel().apply {
-            id = LOCAL_ID
-            siteId = SITE_ID
+            id = SITE_ID
         }
 
         private val TEST_ACCOUNT = AccountModel().apply {
             userName = "username"
         }
 
-        private const val LOCAL_ID = 1
-        private const val SITE_ID = 1001L
+        private const val SITE_ID = 1
     }
 }
