@@ -13,7 +13,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -42,26 +41,25 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     private lateinit var viewModel: LayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
-    private var _binding: LayoutPickerPreviewFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var binding: LayoutPickerPreviewFragmentBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = LayoutPickerPreviewFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+        binding = LayoutPickerPreviewFragmentBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.settings.useWideViewPort = true
-        binding.webView.setInitialScale(INITIAL_SCALE)
-        binding.chooseButton.setText(getChooseButtonText())
+        binding?.webView?.settings?.javaScriptEnabled = true
+        binding?.webView?.settings?.useWideViewPort = true
+        binding?.webView?.setInitialScale(INITIAL_SCALE)
+        binding?.chooseButton?.setText(getChooseButtonText())
         initViewModel()
     }
 
@@ -72,54 +70,56 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     private fun initViewModel() {
         this.viewModel = getViewModel()
 
-        viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
+        viewModel.previewState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Loading -> {
-                    binding.desktopPreviewHint.setVisible(false)
-                    binding.progressBar.setVisible(true)
-                    binding.webView.setVisible(false)
-                    binding.errorView.setVisible(false)
-                    binding.webView.loadUrl(state.url)
+                    binding?.desktopPreviewHint?.setVisible(false)
+                    binding?.progressBar?.setVisible(true)
+                    binding?.webView?.setVisible(false)
+                    binding?.errorView?.setVisible(false)
+                    binding?.webView?.loadUrl(state.url)
                 }
                 is Loaded -> {
-                    binding.progressBar.setVisible(false)
-                    binding.webView.setVisible(true)
-                    binding.errorView.setVisible(false)
-                    binding.desktopPreviewHint.setText(
+                    binding?.progressBar?.setVisible(false)
+                    binding?.webView?.setVisible(true)
+                    binding?.errorView?.setVisible(false)
+                    binding?.desktopPreviewHint?.setText(
                             when (viewModel.selectedPreviewMode()) {
                                 MOBILE -> R.string.web_preview_mobile
                                 TABLET -> R.string.web_preview_tablet
                                 DESKTOP -> R.string.web_preview_desktop
                             }
                     )
-                    AniUtils.animateBottomBar(binding.desktopPreviewHint, true)
+                    AniUtils.animateBottomBar(binding?.desktopPreviewHint, true)
                 }
                 is Error -> {
-                    binding.progressBar.setVisible(false)
-                    binding.webView.setVisible(false)
-                    binding.errorView.setVisible(true)
+                    binding?.progressBar?.setVisible(false)
+                    binding?.webView?.setVisible(false)
+                    binding?.errorView?.setVisible(true)
                     state.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
         })
 
         // We're skipping the first emitted value since it derives from the view model initialization (`start` method)
-        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, Observer { load() })
+        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, { load() })
 
-        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), binding.previewTypeSelectorButton)
+        binding?.previewTypeSelectorButton?.let {
+            previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), it)
+        }
 
-        binding.backButton.setOnClickListener { closeModal() }
+        binding?.backButton?.setOnClickListener { closeModal() }
 
-        binding.chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
+        binding?.chooseButton?.setOnClickListener { viewModel.onPreviewChooseTapped() }
 
-        binding.previewTypeSelectorButton.setOnClickListener { viewModel.onPreviewModePressed() }
+        binding?.previewTypeSelectorButton?.setOnClickListener { viewModel.onPreviewModePressed() }
 
-        binding.webView.settings.userAgentString = WordPress.getUserAgent()
-        binding.webView.webViewClient = object : WebViewClient() {
+        binding?.webView?.settings?.userAgentString = WordPress.getUserAgent()
+        binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 if (view == null) return
@@ -139,7 +139,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
             }
         }
 
-        binding.errorView.button.setOnClickListener { load() }
+        binding?.errorView?.button?.setOnClickListener { load() }
         load()
     }
 
@@ -164,6 +164,6 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        binding = null
     }
 }
