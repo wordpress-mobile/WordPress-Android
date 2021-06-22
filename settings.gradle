@@ -80,7 +80,7 @@ if (localBuilds.exists()) {
 }
 
 // Build cache is only enabled for CI, at least for now
-if (System.getenv().containsKey("CI"))
+if (System.getenv().containsKey("CI")) {
     buildCache {
         remote(HttpBuildCache) {
             url = "http://10.0.2.215:5071/cache/"
