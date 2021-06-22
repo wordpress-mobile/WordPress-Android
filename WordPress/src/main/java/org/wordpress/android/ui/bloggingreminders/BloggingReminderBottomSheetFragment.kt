@@ -38,7 +38,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         with(RecyclerViewPrimaryButtonBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             contentRecyclerView.adapter = adapter
-            contentRecyclerView.addOnScrollListener(object: OnScrollListener() {
+            contentRecyclerView.addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (recyclerView.canScrollVertically(1)) {
