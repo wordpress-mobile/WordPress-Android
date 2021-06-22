@@ -1,33 +1,28 @@
+docker-container: &docker-container
+  plugins:
+    - docker#v3.8.0:
+        image: "wordpressmobile/android-build-image"
+        environment:
+          - "CI=true"
+
 steps:
   - label: "checkstyle"
+    <<: *docker-container
     commands:
       - cp gradle.properties-example gradle.properties
       - ./gradlew checkstyle
-    plugins:
-      - docker-compose#v3.7.0:
-          run: wpandroid
-          config: .buildkite/docker-compose.yml
   - label: "ktlint"
+    <<: *docker-container
     commands:
       - cp gradle.properties-example gradle.properties
       - ./gradlew ciktlint
-    plugins:
-      - docker-compose#v3.7.0:
-          run: wpandroid
-          config: .buildkite/docker-compose.yml
   - label: "detekt"
+    <<: *docker-container
     commands:
       - cp gradle.properties-example gradle.properties
       - ./gradlew WordPress:detekt
-    plugins:
-      - docker-compose#v3.7.0:
-          run: wpandroid
-          config: .buildkite/docker-compose.yml
   - label: "lint"
+    <<: *docker-container
     commands:
       - cp gradle.properties-example gradle.properties
       - ./gradlew lintWordpressVanillaRelease
-    plugins:
-      - docker-compose#v3.7.0:
-          run: wpandroid
-          config: .buildkite/docker-compose.yml
