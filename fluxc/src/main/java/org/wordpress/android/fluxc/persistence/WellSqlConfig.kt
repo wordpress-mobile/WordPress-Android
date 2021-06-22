@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 152
+        return 154
     }
 
     override fun getDbName(): String {
@@ -1769,6 +1769,12 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER," +
                             "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,ERROR_SUB_TYPE TEXT," +
                             "FOREIGN KEY(_id) REFERENCES MediaModel(_id) ON DELETE CASCADE)")
+                }
+                152 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCShippingLabelModel ADD COMMERCIAL_INVOICE_URL TEXT")
+                }
+                153 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCOrderModel ADD META_DATA TEXT")
                 }
             }
         }
