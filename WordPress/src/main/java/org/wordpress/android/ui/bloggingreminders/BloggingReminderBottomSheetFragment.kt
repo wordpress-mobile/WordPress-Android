@@ -56,17 +56,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
 
             (dialog as? BottomSheetDialog)?.apply {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.addBottomSheetCallback(object : BottomSheetCallback() {
-                    override fun onStateChanged(view: View, newState: Int) {
-                        if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        }
-                    }
-
-                    override fun onSlide(view: View, v: Float) {
-                        // Not needed
-                    }
-                })
+                behavior.skipCollapsed = true
             }
         }
     }
