@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-<<<<<<< HEAD
-Translation-Revision-Date: 2021-06-18 13:14:45+0000
-=======
 Translation-Revision-Date: 2021-06-21 10:04:37+0000
->>>>>>> e36fcec2dad9335c69f799061c5d26ff820f550d
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
