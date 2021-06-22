@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.R
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import java.lang.ref.WeakReference
@@ -65,18 +66,16 @@ class WPCustomImageGetter(
      * img tag.
      */
     override fun getDrawable(url: String?): Drawable? {
-        if (url.isNullOrEmpty()) {
-            return null
-        }
+        val nonNullUrl = StringUtils.notNullStr(url)
 
-        var source = url!!
+        var source = nonNullUrl
 
         // images in reader comments may skip "http:" (no idea why) so make sure to add protocol here
         if (source.startsWith("//")) {
             source = "http:$source"
         }
 
-        source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(url, maxWidth, 0) else url
+        source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(nonNullUrl, maxWidth, 0) else nonNullUrl
 
         return textView.get()?.let {
             val target = WPRemoteResourceViewTarget(it, maxWidth)
