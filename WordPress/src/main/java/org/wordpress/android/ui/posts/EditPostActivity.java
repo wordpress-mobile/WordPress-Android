@@ -224,6 +224,9 @@ import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsExcep
 import org.wordpress.aztec.util.AztecLog;
 
 import java.io.File;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -2316,6 +2319,34 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 themeBundle,
                 canViewEditorOnboarding
         );
+    }
+
+    /**
+     * Temporary method for the Editor Onboarding project to control the percentage
+     * of users able to use this new editor onboarding tooltip feature. This will eventually
+     * be removed when the functionality is opened to all users.
+     *
+     * Uses cryptography to hash a userId plus a seed containing the feature flag, converts
+     * the result into a BigInteger, then divides that value by 100 and returns the remainder.
+     * The value returned will be used to determine if a user should see the editor onboarding
+     * tooltip.
+     *
+     * @param userId A unique ID for the logged in user.
+     * @param seed The feature string to keep hashed value results between features unique.
+     * @return An int between 1 and 100
+     */
+    private int convertUserIdToHash(String userId, String seed) {
+        String seededUserId = userId + seed;
+        int hashInt = 0;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(seededUserId.getBytes());
+            BigInteger value = new BigInteger(hash);
+            hashInt = value.mod(BigInteger.valueOf(100)).intValue();
+        } catch (NoSuchAlgorithmException e) {
+            AppLog.e(T.EDITOR, e);
+        }
+        return hashInt;
     }
 
     // Moved from EditPostContentFragment
