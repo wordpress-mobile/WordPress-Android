@@ -227,7 +227,7 @@ REPOSITORY_NAME="WordPress-Android"
   desc "Updates a release branch for a new beta release"
   lane :new_beta_release do | options |
     app = options[:app]
-    android_betabuild_prechecks(options)
+    # android_betabuild_prechecks(options)
     send_strings_for_translation()
     download_translations(app: app)
     android_bump_version_beta(app: app)
