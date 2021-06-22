@@ -6,23 +6,13 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
-    <string name="gutenberg_native_size">Μέγεθος</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
-    <string name="gutenberg_native_audio_settings">Ρυθμίσεις ήχου</string>
-    <string name="gutenberg_native_column_settings">Ρυθμίσεις στήλης</string>
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
-    <string name="gutenberg_native_shortcode">Σύντομος κωδικός</string>
     <string name="gutenberg_native_mention">Αναφορά</string>
-    <string name="gutenberg_native_read_more">Διαβάστε περισσότερα</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">εικόνα %1$d από  %2$d στην συλλογή</string>
-    <string name="gutenberg_native_heading_d">Κεφαλίδα %d</string>
-    <string name="gutenberg_native_cover">Κάλυψη</string>
-    <string name="gutenberg_native_auto">Αυτόματο</string>
-    <string name="gutenberg_native_autoplay">Αυτόματη αναπαραγωγή</string>
     <string name="gutenberg_native_cancel_search">Ακύρωση αναζήτησης</string>
     <string name="gutenberg_native_error">Σφάλμα </string>
     <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
@@ -45,7 +35,6 @@ Language: el_GR
     <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
     <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
     <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
-    <string name="gutenberg_native_replace_image">Αντικατάσταση εικόνας</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>

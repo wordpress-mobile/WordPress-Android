@@ -10,12 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -34,8 +34,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -88,7 +87,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 
     private lateinit var site: SiteModel
-    private var binding: PostListActivityBinding? = null
+    private lateinit var binding: PostListActivityBinding
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
@@ -137,42 +136,37 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        val binding = PostListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        this.binding = binding
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+        with(PostListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
+
+            site = if (savedInstanceState == null) {
+                checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
+                    "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+                }
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             }
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
 
-        val initPreviewState = if (savedInstanceState == null) {
-            PostListRemotePreviewState.NONE
-        } else {
-            PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
-        }
+            val initPreviewState = if (savedInstanceState == null) {
+                PostListRemotePreviewState.NONE
+            } else {
+                PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
+            }
 
-        val currentBottomSheetPostId = if (savedInstanceState == null) {
-            LocalId(0)
-        } else {
-            LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
-        }
+            val currentBottomSheetPostId = if (savedInstanceState == null) {
+                LocalId(0)
+            } else {
+                LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
+            }
 
-        with(binding) {
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initCreateMenuViewModel()
             loadIntentData(intent)
         }
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 
     private fun setupActionBar() {
@@ -255,8 +249,11 @@ class PostsListActivity : LocaleAwareActivity(),
 
         postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
             when (createAction) {
-                CREATE_NEW_POST -> viewModel.newPost()
-                CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_POST -> viewModel.newPost()
+                ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_PAGE -> Unit
+                ActionType.NO_ACTION -> Unit
+                null -> Unit
             }
         })
 
@@ -398,7 +395,7 @@ class PostsListActivity : LocaleAwareActivity(),
                             holder.buttonTitle?.let {
                                 SnackbarItem.Action(
                                         textRes = holder.buttonTitle,
-                                        clickListener = OnClickListener { holder.buttonAction() }
+                                        clickListener = { holder.buttonAction() }
                                 )
                             },
                             dismissCallback = { _, _ -> holder.onDismissAction() }
@@ -476,7 +473,7 @@ class PostsListActivity : LocaleAwareActivity(),
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
             initSearchFragment()
-            binding!!.initSearchView()
+            binding.initSearchView()
         }
         return true
     }
@@ -585,7 +582,7 @@ class PostsListActivity : LocaleAwareActivity(),
     // Menu PostListViewLayoutType handling
 
     private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-        getDrawable(iconRes)?.let { drawable ->
+        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
             menuItem.setIcon(drawable)
         }
     }
@@ -599,10 +596,8 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        with(binding!!) {
-            appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-            appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
-        }
+        binding.appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 
     companion object {
