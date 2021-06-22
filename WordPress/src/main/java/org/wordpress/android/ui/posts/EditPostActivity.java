@@ -2300,8 +2300,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
+        int hashedUserId = convertUserIdToHash(getUserId(), "can_view_editor_onboarding");
         boolean canViewEditorOnboarding = (
-                mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
+                hashedUserId % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
                 || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
 
         return new GutenbergPropsBuilder(
