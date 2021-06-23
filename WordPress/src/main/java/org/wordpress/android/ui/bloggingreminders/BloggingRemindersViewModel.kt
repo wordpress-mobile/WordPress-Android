@@ -144,7 +144,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     private fun formattedDay(it: DayOfWeek) =
-            it.name.toLowerCase(Locale.getDefault()).capitalize(Locale.getDefault())
+            it.name.toLowerCase(Locale.getDefault()).capitalize(Locale.ROOT)
 
     private fun buildEpiloguePrimaryButton(): PrimaryButton {
         return PrimaryButton(
