@@ -139,7 +139,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 Illustration(R.drawable.img_illustration_bell_yellow_96dp),
                 Title(UiStringRes(R.string.blogging_reminders_epilogue_title)),
                 HighEmphasisText(body),
-                Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption)),
+                Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption))
         )
     }
 
