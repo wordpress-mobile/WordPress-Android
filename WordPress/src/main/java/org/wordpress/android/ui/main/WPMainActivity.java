@@ -1404,7 +1404,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (BuildConfig.IS_JETPACK_APP) {
                 ActivityLauncher.showSignInForResultJetpackOnly(this);
             } else {
-                ActivityLauncher.showSignInForResult(this);
+                ActivityLauncher.showSignInForResult(this, true);
             }
         } else {
             SiteModel site = getSelectedSite();
