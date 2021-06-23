@@ -1,23 +1,31 @@
 package org.wordpress.android.ui.bloggingreminders
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
-import org.wordpress.android.databinding.BloggingRemindersPrimaryButtonBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
+import org.wordpress.android.databinding.BloggingRemindersTipBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PrimaryButton
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.viewBinding
 
 sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding: T) :
@@ -51,7 +59,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     )
             ) {
         fun onBind(item: HighEmphasisText) = with(binding) {
-            uiHelpers.setTextOrHide(text, item.text)
+            text.drawEmphasizedText(uiHelpers, item.text)
         }
     }
 
@@ -62,22 +70,37 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     )
             ) {
         fun onBind(item: MediumEmphasisText) = with(binding) {
-            uiHelpers.setTextOrHide(text, item.text)
+            if (item.isInvisible) {
+                text.visibility = View.INVISIBLE
+            } else {
+                if (item.text != null) {
+                    text.drawEmphasizedText(uiHelpers, item.text)
+                }
+                text.visibility = View.VISIBLE
+            }
         }
     }
 
-    class PrimaryButtonViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
-            BloggingRemindersViewHolder<BloggingRemindersPrimaryButtonBinding>(
-                    parentView.viewBinding(
-                            BloggingRemindersPrimaryButtonBinding::inflate
-                    )
-            ) {
-        fun onBind(item: PrimaryButton) = with(binding) {
-            uiHelpers.setTextOrHide(primaryButton, item.text)
-            primaryButton.setOnClickListener {
-                item.onClick.click()
+    fun TextView.drawEmphasizedText(uiHelpers: UiHelpers, text: EmphasizedText) {
+        val message = text.text
+        if (text.emphasizeTextParams && message is UiStringResWithParams) {
+            val params = message.params.map { uiHelpers.getTextOfUiString(this.context, it) as String }
+            val textOfUiString = uiHelpers.getTextOfUiString(this.context, message)
+            val spannable = SpannableString(textOfUiString)
+            var index = 0
+            for (param in params) {
+                val indexOfParam = textOfUiString.indexOf(param, index)
+                spannable.setSpan(
+                        StyleSpan(Typeface.BOLD),
+                        indexOfParam,
+                        indexOfParam + param.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                index = textOfUiString.indexOf(param)
             }
-            primaryButton.isEnabled = item.enabled
+            this.text = spannable
+        } else {
+            uiHelpers.setTextOrHide(this, message)
         }
     }
 
@@ -87,7 +110,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                             BloggingRemindersDayButtonsBinding::inflate
                     )
             ) {
-        fun onBind(item: DayButtons) = with(binding) {
+        fun onBind(item: DayButtons, payload: DayButtonsPayload?) = with(binding) {
             listOf(
                     dayOne,
                     dayTwo,
@@ -96,13 +119,31 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
                     dayFive,
                     daySix,
                     daySeven
-            ).forEachIndexed { index, day -> day.initDay(item.dayItems[index]) }
+            ).forEachIndexed { index, day ->
+                if (payload == null) {
+                    day.initDay(item.dayItems[index])
+                } else if (payload.changedDays[index]) {
+                    day.isSelected = item.dayItems[index].isSelected
+                }
+            }
         }
 
         private fun TextView.initDay(dayItem: DayItem) {
             uiHelpers.setTextOrHide(this, dayItem.text)
             setOnClickListener { dayItem.onClick.click() }
             isSelected = dayItem.isSelected
+        }
+    }
+
+    class TipViewHolder(parentView: ViewGroup, private val uiHelpers: UiHelpers) :
+            BloggingRemindersViewHolder<BloggingRemindersTipBinding>(
+                    parentView.viewBinding(
+                            BloggingRemindersTipBinding::inflate
+                    )
+            ) {
+        fun onBind(item: Tip) = with(binding) {
+            uiHelpers.setTextOrHide(title, item.title)
+            uiHelpers.setTextOrHide(message, item.message)
         }
     }
 }
