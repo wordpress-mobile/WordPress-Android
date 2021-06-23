@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.assertEquals
@@ -623,7 +624,8 @@ class ActivityLogRestClientTest {
                 urlCaptor.capture(),
                 eq(null),
                 eq(mapOf()),
-                eq(RewindResponse::class.java)
+                eq(RewindResponse::class.java),
+                isNull()
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -641,7 +643,8 @@ class ActivityLogRestClientTest {
                 urlCaptor.capture(),
                 eq(null),
                 eq(mapOf("types" to requestTypes)),
-                eq(RewindResponse::class.java)
+                eq(RewindResponse::class.java),
+                isNull()
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -661,7 +664,8 @@ class ActivityLogRestClientTest {
                 eq(null),
                 eq(mapOf("rewindId" to rewindId,
                         "types" to requestTypes)),
-                eq(BackupDownloadResponse::class.java)
+                eq(BackupDownloadResponse::class.java),
+                isNull()
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -718,7 +722,8 @@ class ActivityLogRestClientTest {
                 urlCaptor.capture(),
                 anyOrNull(),
                 eq(mapOf("dismissed" to true.toString())),
-                eq(DismissBackupDownloadResponse::class.java)
+                eq(DismissBackupDownloadResponse::class.java),
+                isNull()
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
