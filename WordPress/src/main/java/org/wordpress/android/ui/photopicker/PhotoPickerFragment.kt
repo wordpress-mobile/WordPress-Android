@@ -187,8 +187,8 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun PhotoPickerFragmentBinding.setupSoftAskView(uiModel: SoftAskViewUiModel) {

@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
@@ -37,7 +38,18 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         with(RecyclerViewPrimaryButtonBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             contentRecyclerView.adapter = adapter
-
+            contentRecyclerView.addOnScrollListener(object : OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (recyclerView.canScrollVertically(1)) {
+                        // Show shadow when not at the bottom
+                        bottomShadow.animate().alpha(1.0f).start()
+                    } else {
+                        // Hide shadow at the bottom
+                        bottomShadow.animate().alpha(0.0f).start()
+                    }
+                }
+            })
             viewModel =
                     ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
             viewModel.uiState.observe(this@BloggingReminderBottomSheetFragment) { uiState ->
@@ -56,17 +68,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
 
             (dialog as? BottomSheetDialog)?.apply {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.addBottomSheetCallback(object : BottomSheetCallback() {
-                    override fun onStateChanged(view: View, newState: Int) {
-                        if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                            behavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        }
-                    }
-
-                    override fun onSlide(view: View, v: Float) {
-                        // Not needed
-                    }
-                })
+                behavior.skipCollapsed = true
             }
         }
     }
