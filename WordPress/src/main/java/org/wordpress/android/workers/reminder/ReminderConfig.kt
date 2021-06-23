@@ -20,7 +20,6 @@ sealed class ReminderConfig(val type: ReminderType) {
         DAILY, WEEKLY
     }
 
-    // TODO Use site timezone instead of local time
     fun calculateNext(from: LocalDate = LocalDate.now()): LocalDate = when (this) {
         is DailyReminder -> from.plusDays(1)
         is WeeklyReminder -> from.withNextDayOfWeekFrom(days)!! // We know the set won't be empty

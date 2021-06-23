@@ -20,8 +20,10 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
+import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
+import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
@@ -40,6 +42,9 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
+import org.wordpress.android.workers.reminder.ReminderScheduler
+import java.time.DayOfWeek
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -49,6 +54,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
     @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -66,7 +72,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 prologueBuilder,
                 daySelectionBuilder,
                 dayLabelUtils,
-                analyticsTracker
+                analyticsTracker,
+                reminderScheduler
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -263,6 +270,34 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         viewModel.onBottomSheetDismissed()
 
         verify(analyticsTracker).trackFlowCompleted()
+    }
+
+    @Test
+    fun `clicking primary button on selection screen schedule reminders with correct days`() {
+        val model = BloggingRemindersModel(siteId, setOf(MONDAY, WEDNESDAY, FRIDAY))
+        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(model))
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(reminderScheduler).schedule(
+                siteId,
+                WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
+        )
+    }
+
+    @Test
+    fun `clicking primary button on empty selection screen cancel reminders`() {
+        initEmptyStore()
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(reminderScheduler).cancelBySiteId(siteId)
     }
 
     private fun initEmptyStore(): BloggingRemindersModel {

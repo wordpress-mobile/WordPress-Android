@@ -22,9 +22,9 @@ class ReminderNotifier @Inject constructor(
     val reminderNotificationManager: ReminderNotificationManager,
     val analyticsTracker: BloggingRemindersAnalyticsTracker
 ) {
-    fun notify(siteId: Long) {
+    fun notify(siteId: Int) {
         val context = contextProvider.getContext()
-        val site = siteStore.getSiteBySiteId(siteId)
+        val site = siteStore.getSiteByLocalId(siteId)
         val name = accountStore.account.firstName
 
         val reminderNotification = ReminderNotification(
@@ -49,15 +49,15 @@ class ReminderNotifier @Inject constructor(
 
         reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID, reminderNotification)
 
-        analyticsTracker.setSite(site.id)
+        analyticsTracker.setSite(siteId)
         analyticsTracker.trackNotificationReceived()
     }
 
-    fun shouldNotify(siteId: Long) = siteId != NO_SITE_ID
-            && siteStore.getSiteBySiteId(siteId) != null
+    fun shouldNotify(siteId: Int) = siteId != NO_SITE_ID
+            && siteStore.getSiteByLocalId(siteId) != null
             && accountStore.hasAccessToken()
 
     companion object {
-        const val NO_SITE_ID = -1L
+        const val NO_SITE_ID = -1
     }
 }
