@@ -157,6 +157,12 @@ class BloggingRemindersViewModel @Inject constructor(
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
 
+    fun onPostCreated(siteId: Int, isNewPost: Boolean?) {
+        if (isNewPost == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
+            showBottomSheet(siteId, PROLOGUE)
+        }
+    }
+
     enum class Screen {
         PROLOGUE, SELECTION, EPILOGUE
     }
