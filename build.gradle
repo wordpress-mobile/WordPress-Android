@@ -36,7 +36,6 @@ apply plugin: 'com.automattic.android.fetchstyle'
 
 allprojects {
     apply plugin: 'checkstyle'
-    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
@@ -57,21 +56,6 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
-    }
-
-    detekt {
-        config = files("${project.rootDir}/config/detekt/detekt.yml")
-        autoCorrect = false
-        buildUponDefaultConfig = false
-        disableDefaultRuleSets = false
-        ignoreFailures = false
-        parallel = false
-        debug = false
-        reports {
-            html.enabled = true
-            xml.enabled = true
-            txt.enabled = true
-        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
