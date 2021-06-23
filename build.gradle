@@ -117,6 +117,8 @@ buildScan {
         termsOfServiceAgree = 'yes'
         tag 'CI'
         publishAlways()
+        // Otherwise CI might shut down before it's uploaded
+        uploadInBackground = false
     }
 }
 
