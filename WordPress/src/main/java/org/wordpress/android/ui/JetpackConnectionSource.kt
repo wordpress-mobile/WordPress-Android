@@ -1,30 +1,25 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.ui
 
-import androidx.annotation.Nullable;
+enum class JetpackConnectionSource(private val value: String) {
+    NOTIFICATIONS("notifications"), STATS("stats");
 
-public enum JetpackConnectionSource {
-    NOTIFICATIONS("notifications"),
-    STATS("stats");
-
-    private final String mValue;
-
-    JetpackConnectionSource(String value) {
-        mValue = value;
+    override fun toString(): String {
+        return value
     }
 
-    @Nullable
-    public static JetpackConnectionSource fromString(String value) {
-        if (NOTIFICATIONS.mValue.equals(value)) {
-            return NOTIFICATIONS;
-        } else if (STATS.mValue.equals(value)) {
-            return STATS;
-        } else {
-            return null;
+    companion object {
+        @JvmStatic fun fromString(value: String): JetpackConnectionSource? {
+            return when {
+                NOTIFICATIONS.value == value -> {
+                    NOTIFICATIONS
+                }
+                STATS.value == value -> {
+                    STATS
+                }
+                else -> {
+                    null
+                }
+            }
         }
-    }
-
-    @Override
-    public String toString() {
-        return mValue;
     }
 }
