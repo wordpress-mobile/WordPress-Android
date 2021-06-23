@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.history
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.databinding.HistoryDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 
@@ -15,9 +15,10 @@ class HistoryDetailActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.history_detail_activity)
-
-        setSupportActionBar(toolbar_main)
+        with(HistoryDetailActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = requireNotNull(intent.extras)

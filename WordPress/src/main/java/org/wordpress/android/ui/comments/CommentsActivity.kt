@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -36,8 +37,8 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.APPROVED
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.SPAM
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.TRASH
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNAPPROVED
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.TRASHED
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.PENDING
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNREPLIED
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener
 import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickListener
@@ -50,6 +51,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.util.HashMap
+import java.util.Locale
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -65,7 +67,7 @@ class CommentsActivity : LocaleAwareActivity(),
     private lateinit var appBar: AppBarLayout
     private lateinit var site: SiteModel
 
-    private val commentListFilters = listOf(ALL, UNAPPROVED, UNREPLIED, APPROVED, SPAM, TRASH)
+    private val commentListFilters = listOf(ALL, PENDING, UNREPLIED, APPROVED, SPAM, TRASHED)
 
     private var disabledTabsOpacity: Float = 0F
 
@@ -74,6 +76,8 @@ class CommentsActivity : LocaleAwareActivity(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var commentStore: CommentStore
 
+    // for unknown reason lint complaints about implicit locale, even through we use Locale.US
+    @SuppressLint("DefaultLocale")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -100,7 +104,8 @@ class CommentsActivity : LocaleAwareActivity(),
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 val properties: MutableMap<String, String?> = HashMap()
-                properties["selected_filter"] = commentListFilters[position].label
+                properties["selected_filter"] = commentListFilters[position].name.toLowerCase(Locale.US)
+                        .capitalize(Locale.US)
                 AnalyticsTracker.track(COMMENT_FILTER_CHANGED, properties)
                 super.onPageSelected(position)
             }
@@ -185,7 +190,7 @@ class CommentsActivity : LocaleAwareActivity(),
         if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
             targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
             targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
-            targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
+            targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(PENDING)))
         } else {
             targetFragments.add(
                     pagerAdapter.getItemAtPosition(

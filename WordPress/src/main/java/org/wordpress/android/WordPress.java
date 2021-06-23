@@ -36,6 +36,7 @@ import androidx.multidex.MultiDexApplication;
 import androidx.work.WorkManager;
 
 import com.android.volley.RequestQueue;
+import com.automattic.android.tracks.crashlogging.CrashLogging;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -99,7 +100,6 @@ import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EncryptedLogging;
 import org.wordpress.android.util.FluxCUtils;
@@ -262,8 +262,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mDispatcher.register(this);
         mAppConfig.init();
 
-        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
-        mCrashLogging.start(getContext());
+        // Upload any encrypted logs that were queued but not yet uploaded
         mEncryptedLogging.start();
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
@@ -282,7 +281,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                mCrashLogging.log(sb.toString());
+                mCrashLogging.recordEvent(sb.toString(), null);
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");

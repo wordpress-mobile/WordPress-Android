@@ -39,6 +39,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.automattic.android.tracks.crashlogging.CrashLogging;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -185,7 +186,6 @@ import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -210,6 +210,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
+import org.wordpress.android.util.config.LayoutGridBlockFeatureConfig;
+import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -405,6 +407,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -961,7 +964,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
             if (mPostEditorAnalyticsSession != null) {
-                mPostEditorAnalyticsSession.end();
+                mPostEditorAnalyticsSession.end(canViewEditorOnboarding());
             }
         }
 
@@ -1760,7 +1763,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                             "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
                     );
                 } else {
-                    mCrashLogging.reportException(exception, T.EDITOR.toString());
+                    CrashLoggingExtKt.sendReportWithTag(mCrashLogging, exception, T.EDITOR);
                     AppLog.e(T.EDITOR, exception.getMessage());
                 }
             } else {
@@ -2293,12 +2296,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
-        boolean canViewEditorOnboarding = (
-                mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
-                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
+        boolean enableEditorOnboarding = canViewEditorOnboarding() && !AppPrefs.hasLaunchedGutenbergEditor();
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
+                mLayoutGridBlockFeatureConfig.isEnabled() && SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
@@ -2310,8 +2312,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 postType,
                 featuredImageId,
                 themeBundle,
-                canViewEditorOnboarding
+                enableEditorOnboarding
         );
+    }
+
+    private Boolean canViewEditorOnboarding() {
+        return (mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
+                || BuildConfig.DEBUG);
     }
 
     // Moved from EditPostContentFragment
@@ -3245,7 +3252,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(null);
+            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding());
         }
     }
 
@@ -3258,7 +3265,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        mPostEditorAnalyticsSession.start(unsupportedBlocksList);
+        mPostEditorAnalyticsSession.start(unsupportedBlocksList, canViewEditorOnboarding());
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,

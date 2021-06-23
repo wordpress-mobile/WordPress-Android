@@ -10,8 +10,8 @@ STATISTIEKEN
 - Volg welke berichten en pagina's in de loop van de tijd het meeste verkeer krijgen door dagelijkse, wekelijkse, maandelijkse en jaarlijkse inzichten te analyseren.
 - Gebruik de verkeerskaart om te zien uit welke landen je bezoekers komen.
 
-MELDINGEN
-- Ontvang meldingen over opmerkingen, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je site.
+KENNISGEVINGEN
+- Ontvang kennisgevingen over reacties, vind-ik-leuks en nieuwe volgers, zodat je kunt zien hoe mensen reageren op je site.
 - Reageer op nieuwe commentaren zodra ze verschijnen om het gesprek vlot te laten verlopen en je lezers te erkennen.
 
 PUBLICEREN
@@ -20,7 +20,7 @@ PUBLICEREN
 - Bewaar ideeën als concepten en kom er later op terug als je meer inspiratie hebt of plan nieuwe berichten voor een later moment, zodat je site altijd actueel en aantrekkelijk is.
 - Voeg tags en categorieën toe om nieuwe lezers naar je berichten te leiden en kijk toe hoe je publiek groeit.
 
-LEZER
+READER
 - WordPress is meer dan een blogmaker. Gebruik het om in contact te komen met een community van schrijvers in de WordPress Reader. Verken duizenden onderwerpen per tag, ontdek nieuwe auteurs en organisaties en volg mensen die je interesseren.
 - Bewaar de berichten die je fascineren met de functie Opslaan voor later.
 
