@@ -3636,10 +3636,22 @@
     <string name="set_your_blogging_goals_title">Set your blogging goals</string>
     <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
     <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="blogging_goals_n_times_a_week">%d times a week</string>
+    <string name="blogging_goals_n_a_week">%s a week</string>
+    <string-array name="blogging_goals_count" translatable="false">
+        <item>Once</item>
+        <item>Twice</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
     <string name="blogging_goals_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
+    <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
 </resources>
