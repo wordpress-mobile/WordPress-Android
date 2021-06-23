@@ -5,6 +5,7 @@ import com.android.volley.VolleyError
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -164,7 +165,8 @@ class SiteHomepageRestClientTest {
                         urlCaptor.capture(),
                         eq(null),
                         paramsCaptor.capture(),
-                        eq(kclass)
+                        eq(kclass),
+                        isNull()
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)

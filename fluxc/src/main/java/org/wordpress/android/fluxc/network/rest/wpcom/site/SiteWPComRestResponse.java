@@ -5,11 +5,11 @@ import org.wordpress.android.fluxc.network.Response;
 import java.util.List;
 
 public class SiteWPComRestResponse implements Response {
-    public class SitesResponse {
+    public static class SitesResponse {
         public List<SiteWPComRestResponse> sites;
     }
 
-    public class Options {
+    public static class Options {
         public boolean videopress_enabled;
         public boolean featured_images_enabled;
         public boolean is_automated_transfer;
@@ -32,13 +32,13 @@ public class SiteWPComRestResponse implements Response {
         public long page_for_posts;
     }
 
-    public class Plan {
+    public static class Plan {
         public String product_id;
         public String product_name_short;
         public boolean is_free;
     }
 
-    public class Capabilities {
+    public static class Capabilities {
         public boolean edit_pages;
         public boolean edit_posts;
         public boolean edit_others_posts;
@@ -59,20 +59,20 @@ public class SiteWPComRestResponse implements Response {
         public boolean view_stats;
     }
 
-    public class Quota {
+    public static class Quota {
         public long space_allowed;
         public long space_used;
         public double percent_used;
         public long space_available;
     }
 
-    public class Icon {
+    public static class Icon {
         public String img;
     }
 
 
-    public class Meta {
-        public class Links {
+    public static class Meta {
+        public static class Links {
             public String xmlrpc;
         }
 
