@@ -65,6 +65,9 @@ allOpen {
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
 
+def versionProperties = new Properties()
+file("../version.properties").withInputStream { versionProperties.load(it) }
+
 android {
     useLibrary 'android.test.runner'
 
@@ -82,13 +85,8 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        // Allow versionName to be overridden with property. e.g. -PversionName=1234
-        if (project.hasProperty("versionName")) {
-            versionName project.property("versionName")
-        } else {
-            versionName "alpha-300"
-        }
-        versionCode 1064
+        versionName versionProperties.getProperty("wordpress.alpha.versionName")
+        versionCode versionProperties.getProperty("wordpress.alpha.versionCode").toInteger()
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -129,6 +127,9 @@ android {
         wordpress {
             isDefault true
             dimension "app"
+
+            versionName versionProperties.getProperty("wordpress.versionName")
+            versionCode versionProperties.getProperty("wordpress.versionCode").toInteger()
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -139,6 +140,9 @@ android {
 
         jetpack {
             dimension "app"
+
+            versionName versionProperties.getProperty("jetpack.versionName")
+            versionCode versionProperties.getProperty("jetpack.versionCode").toInteger()
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
@@ -149,11 +153,6 @@ android {
 
         vanilla { // used for release and beta
             dimension "buildType"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName "17.6-rc-3"
-            }
-            versionCode 1063
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
@@ -501,9 +500,23 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     ]
 }
 
-task printVersionName {
+tasks.register("updateVersionProperties") {
     doLast {
-        println android.productFlavors.vanilla.versionName
+        ant.propertyfile(
+                file: "../version.properties") {
+            entry( key: "$key", value: "$value")
+        }
+    }
+}
+
+tasks.register("printVersionName") {
+    doLast {
+        def key = "$productKey" + "."
+        if(project.hasProperty('alpha')) {
+            key += "alpha."
+        }
+        key += "versionName"
+        println versionProperties.getProperty(key)
     }
 }
 
