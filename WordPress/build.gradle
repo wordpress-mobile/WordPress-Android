@@ -51,7 +51,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
@@ -233,11 +233,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-}
-
-// allows us to use cool things like @Parcelize annotations
-androidExtensions {
-    experimental = true
 }
 
 dependencies {
