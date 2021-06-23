@@ -68,23 +68,30 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `sets blogging reminders as shown on PROLOGUE`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, false)
 
         verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
     }
 
     @Test
     fun `shows bottom sheet on showBottomSheet`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, false)
 
         assertThat(events).containsExactly(true)
     }
 
     @Test
     fun `shows prologue ui state on PROLOGUE`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, false)
 
         assertPrologue()
+    }
+
+    @Test
+    fun `shows prologue ui state on PROLOGUE from SiteSettings`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, true)
+
+        assertPrologueWithEmptySubTitle()
     }
 
     @Test
@@ -93,7 +100,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val daySelectionScreen = listOf<BloggingRemindersItem>()
         whenever(daySelectionBuilder.buildSelection(eq(model), any(), any())).thenReturn(daySelectionScreen)
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, false)
 
         assertThat(uiState.last()).isEqualTo(daySelectionScreen)
     }
@@ -123,7 +130,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `switches from prologue do day selection on primary button click`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, false)
 
         assertPrologue()
 
@@ -145,7 +152,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         )
         initDaySelectionBuilder()
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, false)
 
         clickPrimaryButton()
 
@@ -154,7 +161,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `closes bottom sheet from epilogue on primary button click`() {
-        viewModel.showBottomSheet(siteId, EPILOGUE)
+        viewModel.showBottomSheet(siteId, EPILOGUE, false)
 
         assertEpilogue()
 
@@ -179,6 +186,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         assertPrimaryButton(state[3], R.string.set_your_blogging_goals_button, isEnabled = true)
     }
 
+    private fun assertPrologueWithEmptySubTitle() {
+        val state = uiState.last()
+        assertIllustration(state[0], R.drawable.img_illustration_celebration_150dp)
+        assertTitle(state[1], R.string.set_your_blogging_goals_title)
+        assertEmptyHighEmphasisText(state[2], UiStringText(""))
+        assertPrimaryButton(state[3], R.string.set_your_blogging_goals_button, isEnabled = true)
+    }
+
     private fun assertEpilogue() {
         val state = uiState.last()
         // TODO change this method when the list contains the updated UI
@@ -198,6 +213,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun assertHighEmphasisText(item: BloggingRemindersItem, @StringRes textRes: Int) {
         val title = item as HighEmphasisText
         assertThat((title.text as UiStringRes).stringRes).isEqualTo(textRes)
+    }
+
+    private fun assertEmptyHighEmphasisText(item: BloggingRemindersItem, text: UiStringText) {
+        val subTitle = item as HighEmphasisText
+        assertThat((subTitle.text as UiStringText)).isEqualTo(text)
     }
 
     private fun assertPrimaryButton(

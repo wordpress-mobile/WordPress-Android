@@ -23,6 +23,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -63,6 +64,8 @@ class BloggingRemindersViewModel @Inject constructor(
         _isBottomSheetShowing.value = Event(false)
     }
 
+    private var isFromSiteSettings: Boolean = false
+
     fun getSettingsState(siteId: Int): LiveData<String> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
             if (it.enabledDays.isNotEmpty()) {
@@ -76,7 +79,8 @@ class BloggingRemindersViewModel @Inject constructor(
         }.asLiveData(mainDispatcher)
     }
 
-    fun showBottomSheet(siteId: Int, screen: Screen) {
+    fun showBottomSheet(siteId: Int, screen: Screen, fromSiteSettings: Boolean) {
+        isFromSiteSettings = fromSiteSettings
         if (screen == PROLOGUE) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
         }
@@ -92,7 +96,10 @@ class BloggingRemindersViewModel @Inject constructor(
     private fun buildPrologue() = listOf(
             Illustration(R.drawable.img_illustration_celebration_150dp),
             Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-            HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message)),
+            if (!isFromSiteSettings) {
+                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message))
+            } else {
+                HighEmphasisText(UiStringText("")) },
             PrimaryButton(
                     UiStringRes(R.string.set_your_blogging_goals_button),
                     enabled = true,
