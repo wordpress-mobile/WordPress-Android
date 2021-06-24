@@ -75,20 +75,13 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
 
     private fun StatsJetpackConnectionActivityBinding.initViews() {
         jetpackSetup.setOnClickListener {
-            startJetpackConnectionFlow(
-                    this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            )
+            startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
         }
         jetpackFaq.setOnClickListener {
-            WPWebViewActivity.openURL(
-                    this@StatsConnectJetpackActivity,
-                    FAQ_URL
-            )
+            WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
         }
         jetpackTermsAndConditions.text = Html.fromHtml(
-                String.format(
-                        resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
-                )
+                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
         )
         jetpackTermsAndConditions.setOnClickListener {
             WPWebViewActivity.openURL(
