@@ -33,7 +33,7 @@ class ReminderNotifier @Inject constructor(
                     PendingIntent.getActivity(
                             context,
                             0,
-                            PostsListActivity.buildIntent(context, site),
+                            PostsListActivity.buildIntent(context, site, actionsShownByDefault = true),
                             FLAG_CANCEL_CURRENT
                     )
                 },
