@@ -155,7 +155,7 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory:
-          jvmargs: "Xmx1024m"
+          jvmargs: "Xmx1536m"
       - run:
           name: Build
           command: ./gradlew WordPress:assembleWordPressVanillaDebug --stacktrace
