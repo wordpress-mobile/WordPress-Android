@@ -42,14 +42,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(layout.stats_jetpack_connection_activity)
-        val toolbar = findViewById<Toolbar>(id.toolbar_main)
-        setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setTitle(string.stats)
-            actionBar.setDisplayShowTitleEnabled(true)
-            actionBar.setDisplayHomeAsUpEnabled(true)
-        }
+        setActionBar()
         setTitle(string.stats)
 
         // Continue Jetpack connect flow if coming from login/signup magic link.
@@ -85,6 +78,17 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                     this@StatsConnectJetpackActivity,
                     WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
             )
+        }
+    }
+
+    private fun setActionBar() {
+        val toolbar = findViewById<Toolbar>(id.toolbar_main)
+        setSupportActionBar(toolbar)
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setTitle(string.stats)
+            actionBar.setDisplayShowTitleEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
         }
     }
 
