@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-10 20:55:53+0000
+Translation-Revision-Date: 2021-06-23 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="blogging_reminders_done">Terminé</string>
+    <string name="blogging_reminders_notify_me">M’avertir</string>
+    <string name="blogging_goals_not_set">Aucun défini</string>
+    <string name="blogging_goals_n_times_a_week">%d fois par semaine</string>
+    <string name="set_your_blogging_goals_button">Définir des objectifs</string>
+    <string name="set_your_blogging_goals_message">Votre article est en cours de publication… En attendant, définissez vos objectifs de blog pour recevoir des rappels et suivez votre progression.</string>
+    <string name="set_your_blogging_goals_title">Définir vos objectifs de blog</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Saisissez les identifiants de votre serveur&lt;/a&gt; afin d’activer les restaurations de site en un clic à partir des sauvegardes.</string>
+    <string name="gutenberg_native_set_as_featured_image">Définir en tant qu’image mise en avant </string>
+    <string name="gutenberg_native_remove_as_featured_image">Retirer en tant qu’image mise en avant </string>
+    <string name="fab_add_category_desc">Créer une catégorie</string>
+    <string name="support_ticket_subject">Support de WordPress pour Android</string>
+    <string name="site_settings_categories_hint">Gérer les catégories de votre site</string>
+    <string name="site_settings_categories_empty_title">Vous n’avez aucune catégorie</string>
+    <string name="site_settings_categories_empty_subtitle">Ajoutez ici les catégories que vous utilisez le plus souvent afin de pouvoir les sélectionner rapidement lors de la catégorisation de vos articles</string>
+    <string name="site_settings_categories_empty_button">Créer une catégorie</string>
+    <string name="site_settings_categories_title">Catégories</string>
+    <string name="site_settings_blogging_reminders_title">Objectifs de blog</string>
+    <string name="page_is_posts_page_warning">Le contenu de la page de vos derniers articles est automatiquement généré et n’est pas modifiable.</string>
     <string name="gutenberg_native_border_settings">Réglages de bordure</string>
     <string name="storage_utils_dialog_dont_show_button">Ne plus afficher</string>
     <string name="storage_utils_dialog_ok_button">Afficher le stockage</string>
@@ -194,6 +213,7 @@ Language: fr
     <string name="scan_provisioning_description">Bienvenue dans Jetpack Scan ! Nous étudions votre site en vue de préparer une analyse complète. Nous vous ferons savoir si nous rencontrons un problème susceptible de compromettre l’analyse, puis nous démarrerons votre première analyse complète.</string>
     <string name="scan_scanning_is_initial_description">Bienvenue sur Jetpack Scan. Nous réalisons actuellement un état des lieux de votre site et les résultats devraient bientôt vous parvenir.</string>
     <string name="scan_fixing_threats_description_singular">Nous rencontrons des difficultés à résoudre cette menace en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
+    <string name="scan_scanning_description">Nous vous enverrons une notification si une menace est détectée. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
     <string name="scan_fixing_threats_title_plural">Correction des menaces</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan n’a pas pu terminer l’analyse de votre site. Veuillez vérifier si votre site est indisponible. Si ce n’est pas le cas, réessayez. S’il l’est, ou si Jetpack Scan rencontre toujours des problèmes, contactez notre équipe d’assistance.</string>
     <string name="scan_request_failed_title">Un problème est survenu…</string>
