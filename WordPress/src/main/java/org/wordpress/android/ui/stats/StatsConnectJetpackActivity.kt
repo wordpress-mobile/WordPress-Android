@@ -5,15 +5,11 @@ import android.text.Html
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction.FETCH_ACCOUNT
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -41,43 +37,42 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initDagger()
-        setContentView(layout.stats_jetpack_connection_activity)
-        setActionBar()
-        setTitle(string.stats)
+        with(StatsJetpackConnectionActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setActionBar()
+            setTitle(string.stats)
 
-        // Continue Jetpack connect flow if coming from login/signup magic link.
-        if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
-                        .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
-            if (TextUtils.isEmpty(mAccountStore.account.userName)) {
-                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-            } else {
-                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+            // Continue Jetpack connect flow if coming from login/signup magic link.
+            if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
+                            .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+                if (TextUtils.isEmpty(mAccountStore.account.userName)) {
+                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+                } else {
+                    startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+                }
             }
-        }
-        val setupButton = findViewById<Button>(id.jetpack_setup)
-        setupButton.setOnClickListener { v: View? ->
-            startJetpackConnectionFlow(
-                    this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            )
-        }
-        val jetpackFaq = findViewById<Button>(id.jetpack_faq)
-        jetpackFaq.setOnClickListener { v: View? ->
-            WPWebViewActivity.openURL(
-                    this@StatsConnectJetpackActivity,
-                    FAQ_URL
-            )
-        }
-        val jetpackTermsAndConditions = findViewById<TextView>(id.jetpack_terms_and_conditions)
-        jetpackTermsAndConditions.text = Html.fromHtml(
-                String.format(
-                        resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
+            jetpackSetup.setOnClickListener { v: View? ->
+                startJetpackConnectionFlow(
+                        this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
                 )
-        )
-        jetpackTermsAndConditions.setOnClickListener { v: View? ->
-            WPWebViewActivity.openURL(
-                    this@StatsConnectJetpackActivity,
-                    WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
+            }
+            jetpackFaq.setOnClickListener { v: View? ->
+                WPWebViewActivity.openURL(
+                        this@StatsConnectJetpackActivity,
+                        FAQ_URL
+                )
+            }
+            jetpackTermsAndConditions.text = Html.fromHtml(
+                    String.format(
+                            resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
+                    )
             )
+            jetpackTermsAndConditions.setOnClickListener { v: View? ->
+                WPWebViewActivity.openURL(
+                        this@StatsConnectJetpackActivity,
+                        WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
+                )
+            }
         }
     }
 
@@ -85,9 +80,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         (application as WordPress).component().inject(this)
     }
 
-    private fun setActionBar() {
-        val toolbar = findViewById<Toolbar>(id.toolbar_main)
-        setSupportActionBar(toolbar)
+    private fun StatsJetpackConnectionActivityBinding.setActionBar() {
+        setSupportActionBar(toolbarLayout.toolbarMain)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setTitle(string.stats)
