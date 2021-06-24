@@ -74,9 +74,7 @@ class EpilogueBuilder @Inject constructor(
     }
 
     @RequiresApi(VERSION_CODES.O)
-    private fun formattedDay(it: DayOfWeek) =
-        it.getDisplayName(TextStyle.FULL, Locale.getDefault())
-
+    private fun formattedDay(it: DayOfWeek) = it.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
     companion object {
         private const val ZERO = 0
