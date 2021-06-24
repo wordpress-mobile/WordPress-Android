@@ -122,10 +122,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
     fun onAccountChanged(event: OnAccountChanged) {
         if (!isFinishing) {
             if (event.isError) {
-                AppLog.e(
-                        API, "StatsConnectJetpackActivity.onAccountChanged error: "
-                        + event.error.type + " - " + event.error.message
-                )
+                val error = "${event.error.type} - ${event.error.message}"
+                AppLog.e(API, "StatsConnectJetpackActivity.onAccountChanged error: $error")
             } else if (!mIsJetpackConnectStarted && event.causeOfChange == FETCH_ACCOUNT && !TextUtils.isEmpty(
                             mAccountStore.account.userName
                     )) {
