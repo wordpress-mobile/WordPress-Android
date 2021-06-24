@@ -66,16 +66,16 @@ class WPCustomImageGetter(
      * img tag.
      */
     override fun getDrawable(url: String?): Drawable? {
-        val nonNullUrl = StringUtils.notNullStr(url)
-
-        var source = nonNullUrl
+        var source = StringUtils.notNullStr(url)
 
         // images in reader comments may skip "http:" (no idea why) so make sure to add protocol here
         if (source.startsWith("//")) {
             source = "http:$source"
         }
 
-        source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(nonNullUrl, maxWidth, 0) else nonNullUrl
+        if (maxWidth > 0) {
+            source = PhotonUtils.getPhotonImageUrl(source, maxWidth, 0)
+        }
 
         return textView.get()?.let {
             val target = WPRemoteResourceViewTarget(it, maxWidth)
