@@ -15,6 +15,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -154,11 +155,17 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
         clickPrimaryButton()
 
+        initEpilogueBuilder()
+
+        viewModel.showBottomSheet(siteId, EPILOGUE)
+
         assertEpilogue()
     }
 
     @Test
     fun `closes bottom sheet from epilogue on primary button click`() {
+        initEpilogueBuilder()
+
         viewModel.showBottomSheet(siteId, EPILOGUE)
 
         assertEpilogue()
@@ -232,6 +239,18 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                     true,
                     ListItemInteraction.create { onConfirm.invoke() })
         }.whenever(prologueBuilder).buildPrimaryButton(any())
+        return uiItems
+    }
+
+    private fun initEpilogueBuilder(): List<BloggingRemindersItem> {
+        val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Epilogue")))
+        doAnswer {
+            val onConfirm: () -> Unit = it.getArgument(0)
+            PrimaryButton(
+                    UiStringRes(string.blogging_reminders_done),
+                    true,
+                    ListItemInteraction.create { onConfirm.invoke() })
+        }.whenever(epilogueBuilder).buildPrimaryButton(any())
         return uiItems
     }
 }
