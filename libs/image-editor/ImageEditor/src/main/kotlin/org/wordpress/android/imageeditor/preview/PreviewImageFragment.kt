@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.preview
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -24,7 +25,7 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.imageeditor.EditImageViewModel
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
@@ -56,6 +57,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         const val ARG_EDIT_IMAGE_DATA = "arg_edit_image_data"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
 
+        @SuppressLint("ParcelCreator")
         sealed class EditImageData : Parcelable {
             @Parcelize
             data class InputData(
