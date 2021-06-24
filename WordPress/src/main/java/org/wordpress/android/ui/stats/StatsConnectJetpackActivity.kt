@@ -35,10 +35,8 @@ import javax.inject.Inject
  */
 class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private var mIsJetpackConnectStarted = false
-    @JvmField @Inject
-    var mAccountStore: AccountStore? = null
-    @JvmField @Inject
-    var mDispatcher: Dispatcher? = null
+    @Inject lateinit var mAccountStore: AccountStore
+    @Inject lateinit var mDispatcher: Dispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +55,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         // Continue Jetpack connect flow if coming from login/signup magic link.
         if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
                         .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
-            if (TextUtils.isEmpty(mAccountStore!!.account.userName)) {
-                mDispatcher!!.dispatch(AccountActionBuilder.newFetchAccountAction())
+            if (TextUtils.isEmpty(mAccountStore.account.userName)) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             } else {
                 startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
             }
@@ -92,11 +90,11 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
 
     override fun onStart() {
         super.onStart()
-        mDispatcher!!.register(this)
+        mDispatcher.register(this)
     }
 
     override fun onStop() {
-        mDispatcher!!.unregister(this)
+        mDispatcher.unregister(this)
         super.onStop()
     }
 
@@ -113,7 +111,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private fun startJetpackConnectionFlow(siteModel: SiteModel) {
         mIsJetpackConnectStarted = true
         JetpackConnectionWebViewActivity
-                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore!!.hasAccessToken())
+                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken())
         finish()
     }
 
@@ -126,7 +124,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                         + event.error.type + " - " + event.error.message
                 )
             } else if (!mIsJetpackConnectStarted && event.causeOfChange == FETCH_ACCOUNT && !TextUtils.isEmpty(
-                            mAccountStore!!.account.userName
+                            mAccountStore.account.userName
                     )) {
                 startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
             }
