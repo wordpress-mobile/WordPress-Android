@@ -12,15 +12,15 @@ import javax.inject.Inject
 class DayLabelUtils
 @Inject constructor(private val resourceProvider: ResourceProvider) {
     fun buildNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): UiString {
-        val counts = resourceProvider.getStringArray(R.array.blogging_goals_count)
+        val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count)
         val size = bloggingRemindersModel?.enabledDays?.size ?: 0
         return if (size > 0) {
             UiStringResWithParams(
-                    R.string.blogging_goals_n_a_week,
+                    R.string.blogging_reminders_n_a_week,
                     listOf(UiStringText(counts[size - 1]))
             )
         } else {
-            UiStringRes(R.string.blogging_goals_not_set)
+            UiStringRes(R.string.blogging_reminders_not_set)
         }
     }
 }
