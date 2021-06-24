@@ -225,31 +225,35 @@ android {
     applicationVariants.all { variant ->
         def app = variant.productFlavors[0].name
         def buildType = variant.productFlavors[1].name
+        def version = versionForVariant(app, buildType)
         variant.outputs.each { output ->
-            output.versionNameOverride = versionPropertyForVariant(app, buildType, 'versionName')
-            output.versionCodeOverride = versionPropertyForVariant(app, buildType, 'versionCode')?.toInteger()
+            output.versionNameOverride = version['versionName']
+            output.versionCodeOverride = version['versionCode']?.toInteger()
         }
     }
 }
 
-// Search for a variant-specific variation of a property in `version.properties` file based on the
-// variant's app and buildType flavors. The `property` to be searched is typically either 'versionName' or 'versionCode'.
+// Search for a variant-specific variation of the versionName and versionCode in `version.properties` file, based on the
+// variant's app and buildType flavors.
 //
-// This will search the `version.properties` file for "$app.$buildType.$property" first, and fallback on "$app.$property" then just "$property".
+// This will search the `version.properties` file for "$app.$buildType.versionName" first, and fallback to "$app.versionName" then just "versionName" (and same for versionCode)
 // Note: If the property is overridden at project level (e.g. '-PversionName'), it will take priority over any value in `version.properties`.
-def versionPropertyForVariant(app, buildType, property) {
-    // If we provide -P override from command line, use it in priority.
-    // This is especially used by CI for jalapeno builds, used for Installable Builds on PRs
-    def propertyFromProjectOverride = project.findProperty(property)
-    if (propertyFromProjectOverride != null) {
-        return propertyFromProjectOverride
-    }
-
-    // Otherwise (common case), read the value from the version.properties file
+//
+// Returns a Hash with keys 'versionName' and 'versionCode', with the found values for the app and buildType provided.
+def versionForVariant(app, buildType) {
     def versionProperties = new Properties()
     file("../version.properties").withInputStream { versionProperties.load(it) }
 
-    return versionProperties.getProperty("${app}.${buildType}.${property}") ?: versionProperties.getProperty("${app}.${property}") ?: versionProperties.getProperty(property)
+    def propertyForVariant = { property ->
+        return project.findProperty(property)
+                ?: versionProperties.getProperty("${app}.${buildType}.${property}")
+                ?: versionProperties.getProperty("${app}.${property}")
+                ?: versionProperties.getProperty(property)
+    }
+
+    def versionName = propertyForVariant('versionName')
+    def versionCode = propertyForVariant('versionCode')
+    return [versionName: versionName, versionCode: versionCode]
 }
 
 // allows us to use cool things like @Parcelize annotations
@@ -533,7 +537,7 @@ tasks.register("printVersionName") {
     doLast {
         def app = project.findProperty('productKey') ?: 'wordpress'
         def buildType = project.findProperty('buildType') ?: ''
-        println versionPropertyForVariant(app, buildType, 'versionName')
+        println versionForVariant(app, buildType)['versionName']
     }
 }
 
