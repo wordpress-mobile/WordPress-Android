@@ -51,7 +51,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
@@ -233,11 +233,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-}
-
-// allows us to use cool things like @Parcelize annotations
-androidExtensions {
-    experimental = true
 }
 
 dependencies {
@@ -474,7 +469,7 @@ android.buildTypes.all { buildType ->
     }
 }
 
-task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
+tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
     repositoryOwner = "wordpress-mobile"
     repositoryName = "WordPress-Android"
     pullRequestId = System.properties['GITHUB_PULLREQUESTID']
@@ -500,7 +495,7 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     ]
 }
 
-task printVersionName {
+tasks.register("printVersionName") {
     doLast {
         println android.productFlavors.vanilla.versionName
     }

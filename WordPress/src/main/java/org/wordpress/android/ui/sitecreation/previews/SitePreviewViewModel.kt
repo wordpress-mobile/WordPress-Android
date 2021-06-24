@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.sitecreation.previews
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -412,6 +413,7 @@ class SitePreviewViewModel @Inject constructor(
         val previousState: SiteCreationServiceState?
     )
 
+    @SuppressLint("ParcelCreator")
     sealed class CreateSiteState : Parcelable {
         /**
          * CreateSite request haven't finished yet or failed.

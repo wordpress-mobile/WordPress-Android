@@ -176,7 +176,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     private fun assertEpilogue() {
         val state = uiState.last()
-        // TODO change this method when the list contains the updated UI
         assertPrimaryButton(state.primaryButton!!, R.string.blogging_reminders_done, isEnabled = true)
     }
 

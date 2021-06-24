@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
@@ -35,6 +36,7 @@ class BasicDialogViewModel
     }
 
     @Parcelize
+    @SuppressLint("ParcelCreator")
     data class BasicDialogModel(
         val tag: String,
         val title: String? = null,
