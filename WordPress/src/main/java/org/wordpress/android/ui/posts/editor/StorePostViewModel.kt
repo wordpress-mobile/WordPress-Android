@@ -81,7 +81,7 @@ class StorePostViewModel
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
-                    siteStore.getSiteByLocalId(editPostRepository.localSiteId)
+                    requireNotNull(siteStore.getSiteByLocalId(editPostRepository.localSiteId))
             )
             uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
             SAVED_ONLINE

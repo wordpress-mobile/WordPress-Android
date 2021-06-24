@@ -1,12 +1,14 @@
 package org.wordpress.android.editor.gutenberg
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 data class GutenbergPropsBuilder(
     private val enableContactInfoBlock: Boolean,
     private val enableLayoutGridBlock: Boolean,
