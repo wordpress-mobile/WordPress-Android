@@ -41,16 +41,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             setContentView(root)
             setActionBar()
             setTitle(string.stats)
-
-            // Continue Jetpack connect flow if coming from login/signup magic link.
-            if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
-                            .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
-                if (TextUtils.isEmpty(mAccountStore.account.userName)) {
-                    mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-                } else {
-                    startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
-                }
-            }
+            checkAndContinueJetpackConnectionFlow(savedInstanceState)
             jetpackSetup.setOnClickListener { v: View? ->
                 startJetpackConnectionFlow(
                         this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -87,6 +78,20 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             actionBar.setTitle(string.stats)
             actionBar.setDisplayShowTitleEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    /**
+     * Continue Jetpack connect flow if coming from login/signup magic link.
+     */
+    private fun checkAndContinueJetpackConnectionFlow(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
+                        .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+            if (TextUtils.isEmpty(mAccountStore.account.userName)) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
+            } else {
+                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+            }
         }
     }
 
