@@ -70,8 +70,8 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
