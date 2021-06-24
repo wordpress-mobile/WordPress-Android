@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:wordpress-mobile/release-toolkit.git
-  revision: c78ca386d4efbe7b46ba9c09a4e45ba584b21835
+  revision: 262e6800830abc75c7d9b6817537b4c099588634
   branch: jetpack/fix-crashes
   specs:
     fastlane-plugin-wpmreleasetoolkit (1.3.0)
