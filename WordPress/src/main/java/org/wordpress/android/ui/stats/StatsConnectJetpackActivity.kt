@@ -24,7 +24,6 @@ import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
@@ -36,12 +35,11 @@ import javax.inject.Inject
  */
 class StatsConnectJetpackActivity : LocaleAwareActivity() {
     private var mIsJetpackConnectStarted = false
-
     @JvmField @Inject
     var mAccountStore: AccountStore? = null
-
     @JvmField @Inject
     var mDispatcher: Dispatcher? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -119,7 +117,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         finish()
     }
 
-    @Subscribe(threadMode = MAIN) fun onAccountChanged(event: OnAccountChanged) {
+    @Subscribe(threadMode = MAIN)
+    fun onAccountChanged(event: OnAccountChanged) {
         if (!isFinishing) {
             if (event.isError) {
                 AppLog.e(
