@@ -111,6 +111,7 @@ import javax.inject.Singleton
  * SQLite based only. There is no in memory copy of mapped data, everything is queried from the DB.
  *
  * NOTE: This class needs to be open because it's mocked in android tests in the WPAndroid project.
+ *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
  */
 @Singleton
 open class SiteStore
@@ -940,8 +941,11 @@ open class SiteStore
 
     /**
      * Obtains the site with the given (local) id and returns it as a [SiteModel].
+     *
+     * NOTE: This method needs to be open because it's mocked in android tests in the WPAndroid project.
+     *       TODO: consider adding https://kotlinlang.org/docs/all-open-plugin.html
      */
-    fun getSiteByLocalId(id: Int): SiteModel? {
+    open fun getSiteByLocalId(id: Int): SiteModel? {
         val result = siteSqlUtils.getSitesWithLocalId(id)
         return if (result.isNotEmpty()) {
             result[0]
