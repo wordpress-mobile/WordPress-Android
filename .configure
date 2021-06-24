@@ -1,45 +1,35 @@
 {
-  "project_name": "WordPress-Android",
+  "project_name": "wordpress-android",
   "branch": "trunk",
-  "pinned_hash": "92cde8f76c2a77791f8e5164f1e5b287d9cb6f1e",
+  "pinned_hash": "589c18df9a009a0ed20fd845de0bc65069dfb4bf",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
-      "destination": "gradle.properties",
-      "encrypt": true
+      "destination": "gradle.properties"
     },
     {
       "file": "android/WPAndroid/google-services.json",
-      "destination": "WordPress/google-services.json",
-      "encrypt": true
+      "destination": "WordPress/google-services.json"
     },
     {
       "file": "android/WPAndroid/sentry.properties",
-      "destination": "sentry.properties",
-      "encrypt": true
+      "destination": "sentry.properties"
     },
     {
       "file": "android/debug.keystore",
-      "destination": "~/.android/debug_a8c.keystore",
-      "encrypt": true
+      "destination": "~/.android/debug_a8c.keystore"
     },
     {
       "file": "android/automattic.jks",
-      "destination": "WordPress/release.jks",
-      "encrypt": false
+      "destination": "WordPress/release.jks"
     },
     {
       "file": "android/WPAndroid/google-upload-credentials.json",
-      "destination": "google-upload-credentials.json",
-      "encrypt": true
+      "destination": "google-upload-credentials.json"
     },
     {
       "file": "android/automattic_upload.jks",
-      "destination": "WordPress/upload.jks",
-      "encrypt": true
+      "destination": "WordPress/upload.jks"
     }
-  ],
-  "file_dependencies": [
-
   ]
 }
