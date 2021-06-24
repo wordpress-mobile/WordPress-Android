@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
 import android.view.MenuItem
-import android.view.View
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R.string
@@ -75,12 +74,12 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
     }
 
     private fun StatsJetpackConnectionActivityBinding.initViews() {
-        jetpackSetup.setOnClickListener { v: View? ->
+        jetpackSetup.setOnClickListener {
             startJetpackConnectionFlow(
                     this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
             )
         }
-        jetpackFaq.setOnClickListener { v: View? ->
+        jetpackFaq.setOnClickListener {
             WPWebViewActivity.openURL(
                     this@StatsConnectJetpackActivity,
                     FAQ_URL
@@ -91,7 +90,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                         resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
                 )
         )
-        jetpackTermsAndConditions.setOnClickListener { v: View? ->
+        jetpackTermsAndConditions.setOnClickListener {
             WPWebViewActivity.openURL(
                     this@StatsConnectJetpackActivity,
                     WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
