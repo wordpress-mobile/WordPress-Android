@@ -43,6 +43,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var prologueBuilder: PrologueBuilder
+    @Mock lateinit var epilogueBuilder: EpilogueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
     private lateinit var viewModel: BloggingRemindersViewModel
@@ -60,6 +61,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
+                epilogueBuilder,
                 dayLabelUtils
         )
         events = mutableListOf()
