@@ -407,7 +407,6 @@ workflows:
     jobs:
       - submodules-strings-check
       - test
-      - lint
       - Installable Build:
           filters:
             branches:
@@ -451,8 +450,5 @@ workflows:
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
-      - lint
-      - Release Build:
-          requires:
-            - lint
+      - Release Build
 
