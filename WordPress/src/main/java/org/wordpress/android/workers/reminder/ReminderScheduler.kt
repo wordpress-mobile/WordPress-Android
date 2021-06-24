@@ -16,12 +16,12 @@ class ReminderScheduler @Inject constructor(
 ) {
     val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
 
-    fun schedule(siteId: Long, reminderConfig: ReminderConfig) {
+    fun schedule(siteId: Int, reminderConfig: ReminderConfig) {
         val uniqueName = getUniqueName(siteId)
         val next = reminderConfig.calculateNext().atTime(8, 0)
         val delay = Duration.between(LocalDateTime.now(), next)
         val inputData = Data.Builder()
-                .putLong(REMINDER_SITE_ID, siteId)
+                .putInt(REMINDER_SITE_ID, siteId)
                 .putAll(reminderConfig.toMap())
                 .build()
 
@@ -36,17 +36,17 @@ class ReminderScheduler @Inject constructor(
 
     fun cancelById(id: UUID) = workManager.cancelWorkById(id)
 
-    fun cancelBySiteId(siteId: Long) = workManager.cancelUniqueWork(getUniqueName(siteId))
+    fun cancelBySiteId(siteId: Int) = workManager.cancelUniqueWork(getUniqueName(siteId))
 
     fun cancelAll() = workManager.cancelAllWorkByTag(REMINDER_TAG)
 
     fun getById(id: UUID) = workManager.getWorkInfoByIdLiveData(id)
 
-    fun getBySiteId(siteId: Long) = workManager.getWorkInfosForUniqueWorkLiveData(getUniqueName(siteId))
+    fun getBySiteId(siteId: Int) = workManager.getWorkInfosForUniqueWorkLiveData(getUniqueName(siteId))
 
     fun getAll() = workManager.getWorkInfosByTagLiveData(REMINDER_TAG)
 
-    private fun getUniqueName(siteId: Long) = "${REMINDER_TAG}_$siteId"
+    private fun getUniqueName(siteId: Int) = "${REMINDER_TAG}_$siteId"
 
     companion object {
         private const val REMINDER_TAG = "reminder"

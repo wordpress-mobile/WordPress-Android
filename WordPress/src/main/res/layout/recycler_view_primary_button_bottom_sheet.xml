@@ -41,6 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="@dimen/margin_extra_large"
         app:layout_constraintEnd_toEndOf="parent"
+        android:alpha="0"
         android:background="@drawable/login_shadow" />
 
     <com.google.android.material.button.MaterialButton

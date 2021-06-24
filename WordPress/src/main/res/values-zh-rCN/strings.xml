@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-02 17:43:52+0000
+Translation-Revision-Date: 2021-06-14 22:40:30+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="blogging_reminders_done">完成</string>
+    <string name="blogging_reminders_notify_me">通知我</string>
+    <string name="blogging_goals_not_set">未设定</string>
+    <string name="blogging_goals_n_times_a_week">每周%d次</string>
+    <string name="set_your_blogging_goals_button">设定目标</string>
+    <string name="set_your_blogging_goals_message">您的文章正在发布……同时，设置您的博客目标以得到提醒并跟踪境况。</string>
+    <string name="set_your_blogging_goals_title">设定您的博客目标</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
+    <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
+    <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
+    <string name="fab_add_category_desc">创建分类</string>
+    <string name="support_ticket_subject">Android 版 WordPress 支持</string>
+    <string name="site_settings_categories_hint">管理您的站点分类</string>
+    <string name="site_settings_categories_empty_title">您没有任何分类</string>
+    <string name="site_settings_categories_empty_subtitle">在这里添加您经常使用的分类，以便在对您的文章进行分类时可以快速选择。</string>
+    <string name="site_settings_categories_empty_button">创建分类</string>
+    <string name="site_settings_categories_title">分类</string>
+    <string name="site_settings_blogging_reminders_title">博客目标</string>
+    <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
     <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_dont_show_button">不再显示</string>
     <string name="storage_utils_dialog_ok_button">查看存储</string>
@@ -16,32 +35,20 @@ Language: zh_CN
     <string name="gutenberg_native_type_a_url">键入URL</string>
     <string name="gutenberg_native_tap_to_add_content">点击以添加内容</string>
     <string name="gutenberg_native_slash_inserter_results">斜杠插入器结果</string>
-    <string name="gutenberg_native_show_media_on_right">在右边显示媒体</string>
-    <string name="gutenberg_native_show_media_on_left">在左边显示媒体</string>
     <string name="gutenberg_native_s_has_url_set">%s已设置URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s没有URL集</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已转换为常规区块</string>
     <string name="gutenberg_native_s_block">%s区块</string>
-    <string name="gutenberg_native_overlay">覆盖</string>
-    <string name="gutenberg_native_optional_placeholder">可选占位符…</string>
-    <string name="gutenberg_native_opacity">不透明度</string>
     <string name="gutenberg_native_minimum_height">最小高度</string>
-    <string name="gutenberg_native_media_text_settings">媒体和文本设置</string>
     <string name="gutenberg_native_media_options">媒体选项</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">无效的URL。找不到音频文件。</string>
     <string name="gutenberg_native_insert_crosspost">插入交叉发表</string>
-    <string name="gutenberg_native_fixed_background">固定背景</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">拖动以调整焦点</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">双击打开底页以添加图像或视频</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">双击打开操作表以添加图像或视频</string>
-    <string name="gutenberg_native_dimensions">尺寸</string>
     <string name="gutenberg_native_current_unit_is_s">当前单位为%s</string>
     <string name="gutenberg_native_crosspost">交叉发表</string>
-    <string name="gutenberg_native_crop_image_to_fill_entire_column">裁剪图像以填充整个列</string>
-    <string name="gutenberg_native_convert_to_regular_blocks">转换为常规区块</string>
     <string name="gutenberg_native_columns_settings">列设置</string>
-    <string name="gutenberg_native_clear_media">清除媒体</string>
-    <string name="gutenberg_native_button_width">按钮宽度</string>
     <string name="gutenberg_native_add_link_to_s">添加到%s的链接</string>
     <string name="gutenberg_native_add_link_text">添加链接文字</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">添加图像或视频</string>
@@ -59,52 +66,22 @@ Language: zh_CN
     <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
     <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
     <string name="login_not_a_jetpack_site">要将此应用用于 %1$s，您需要安装并启用 Jetpack 插件。</string>
-    <string name="gutenberg_native_size">大小</string>
     <string name="gutenberg_native_move_image_forward">前移图像</string>
     <string name="gutenberg_native_move_image_backward">后移图像</string>
     <string name="gutenberg_native_width_settings">宽度设置</string>
     <string name="gutenberg_native_image_settings">图像设置</string>
-    <string name="gutenberg_native_column_settings">列设置</string>
-    <string name="gutenberg_native_audio_settings">音频设置</string>
     <string name="user_profile_untitled_site">（无标题）</string>
     <string name="user_profile_site_section_header">站点</string>
     <string name="user_profile_bottom_sheet_description">用户个人资料底部信息</string>
     <string name="likes_list_screen_title">作者 %s</string>
-    <string name="gutenberg_native_write_title">编写标题…</string>
-    <string name="gutenberg_native_write_code">编写代码…</string>
     <string name="gutenberg_native_sorting_and_filtering">排序和筛选</string>
     <string name="gutenberg_native_s_social_icon">%s 社交图标</string>
-    <string name="gutenberg_native_show_download_button">显示下载按钮</string>
-    <string name="gutenberg_native_shortcode">简码</string>
     <string name="gutenberg_native_mention">提及</string>
-    <string name="gutenberg_native_add_label">添加标签…</string>
-    <string name="gutenberg_native_read_more">阅读更多</string>
-    <string name="gutenberg_native_preload">预加载</string>
     <string name="gutenberg_native_post_meta_settings">文章元数据设置</string>
     <string name="gutenberg_native_post_content_settings">文章内容设置</string>
-    <string name="gutenberg_native_metadata">元数据</string>
-    <string name="gutenberg_native_media_file">媒体文件</string>
-    <string name="gutenberg_native_media_area">媒体区</string>
-    <string name="gutenberg_native_loop">循环</string>
-    <string name="gutenberg_native_link_to_12d6f96a">链接到</string>
-    <string name="gutenberg_native_link_label">链接标签</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">画廊中第 %1$d/%2$d 张图片</string>
-    <string name="gutenberg_native_heading_d">标题%d</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
-    <string name="gutenberg_native_edit_image">编辑图像</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
-    <string name="gutenberg_native_code">代码</string>
-    <string name="gutenberg_native_change_heading_level">修改标题级别</string>
-    <string name="gutenberg_native_browser_default">浏览器默认</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
-    <string name="gutenberg_native_cover">封面</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">区块已被删除或不可用。</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">区块不能在其内部渲染。</string>
-    <string name="gutenberg_native_autoplay">自动播放</string>
-    <string name="gutenberg_native_auto">自动</string>
-    <string name="gutenberg_native_attachment_page">附件页面</string>
-    <string name="gutenberg_native_add_text">添加文本…</string>
-    <string name="gutenberg_native_add_caption">视频说明文字</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>
@@ -246,7 +223,7 @@ Language: zh_CN
     <string name="scan_provisioning_description">欢迎使用 Jetpack Scan！ 我们正在检查您的站点，准备执行完整扫描。 如果发现任何可能影响扫描的问题，我们将向您发送通知，然后开始您的第一次完整扫描。</string>
     <string name="scan_scanning_is_initial_description">欢迎使用 Jetpack Scan，我们会立即优先浏览您的站点并很快给您结果。</string>
     <string name="scan_fixing_threats_description_singular">我们正在后台努力修复此威胁。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
-    <string name="scan_scanning_description">扫描完成后，我们会向您发送通知。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
+    <string name="scan_scanning_description">如果发现威胁，我们将向您发送通知。在此期间，您可以随时继续正常使用您的站点，并可随时检查进度。</string>
     <string name="scan_fixing_threats_title_plural">修复威胁</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan 无法完成站点扫描。 请检查您的站点是否已经关闭。如果没有，请再试一次。 如果已经关闭，或 Jetpack Scan 仍然有问题，请联系我们的支持团队。</string>
     <string name="scan_request_failed_title">出错了</string>
@@ -554,7 +531,6 @@ Language: zh_CN
     <string name="media_uploading_stock_library_photo">正在上传库存媒体</string>
     <string name="media_uploading_default">正在上传媒体</string>
     <string name="gutenberg_native_search_or_type_url">搜索或键入 URL</string>
-    <string name="gutenberg_native_page_break">分页符</string>
     <string name="gutenberg_native_add_this_telephone_link">添加此电话链接</string>
     <string name="gutenberg_native_add_this_link">添加此链接</string>
     <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
@@ -744,7 +720,6 @@ Language: zh_CN
     <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
-    <string name="gutenberg_native_remove">移除 </string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
     <string name="gutenberg_native_move_to_top">移到顶部</string>
     <string name="gutenberg_native_insert_mention">插入提及</string>
@@ -870,7 +845,6 @@ Language: zh_CN
     <string name="gutenberg_native_edit_cover_media">编辑封面媒体文件</string>
     <string name="gutenberg_native_customize">定制</string>
     <string name="gutenberg_native_button_link_url">按钮链接 URL</string>
-    <string name="gutenberg_native_video_settings">视频设置</string>
     <string name="gutenberg_native_border_radius">边框半径</string>
     <string name="gutenberg_native_add_paragraph_block">添加段落区块</string>
     <string name="create_post_page_fab_tooltip_contributors">撰写文章</string>
@@ -926,7 +900,6 @@ Language: zh_CN
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  以及 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">更换图像</string>
     <string name="gutenberg_native_gallery_caption_s">图库说明。%s</string>
     <string name="create_post_page_fab_tooltip">创建文章或页面</string>
     <string name="content_description_person_building_website">网站构建者</string>

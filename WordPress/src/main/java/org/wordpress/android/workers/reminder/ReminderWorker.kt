@@ -15,7 +15,7 @@ class ReminderWorker(
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = coroutineScope {
-        val siteId = inputData.getLong(REMINDER_SITE_ID, NO_SITE_ID)
+        val siteId = inputData.getInt(REMINDER_SITE_ID, NO_SITE_ID)
         val reminderConfig = ReminderConfig.fromMap(inputData.keyValueMap)
 
         if (notifier.shouldNotify(siteId)) {
