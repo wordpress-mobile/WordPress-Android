@@ -109,9 +109,11 @@ import javax.inject.Singleton
 
 /**
  * SQLite based only. There is no in memory copy of mapped data, everything is queried from the DB.
+ *
+ * NOTE: This class needs to be open because it's mocked in android tests in the WPAndroid project.
  */
 @Singleton
-class SiteStore
+open class SiteStore
 @Inject constructor(
     dispatcher: Dispatcher?,
     private val postSqlUtils: PostSqlUtils,
