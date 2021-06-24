@@ -40,7 +40,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
+        initDagger()
         setContentView(layout.stats_jetpack_connection_activity)
         setActionBar()
         setTitle(string.stats)
@@ -79,6 +79,10 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                     WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
             )
         }
+    }
+
+    private fun initDagger() {
+        (application as WordPress).component().inject(this)
     }
 
     private fun setActionBar() {
