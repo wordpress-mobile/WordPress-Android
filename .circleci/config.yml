@@ -42,28 +42,6 @@ commands:
 
 version: 2.1
 jobs:
-  test:
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory
-      - run:
-          name: Test WordPress
-          command: ./gradlew testWordpressVanillaRelease --stacktrace --no-daemon
-      - run:
-          name: Test WordPressProcessors
-          command: ./gradlew :libs:WordPressProcessors:test --stacktrace
-      - run:
-          name: Test ImageEditor
-          command: ./gradlew :libs:image-editor:ImageEditor:test --stacktrace
-      - android/save-gradle-cache
-      - android/save-test-results
   Installable Build:
     executor:
       name: android/default
@@ -406,7 +384,6 @@ workflows:
         - << pipeline.parameters.release_build >>
     jobs:
       - submodules-strings-check
-      - test
       - Installable Build:
           filters:
             branches:
