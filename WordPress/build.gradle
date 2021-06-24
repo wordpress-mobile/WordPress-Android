@@ -223,39 +223,33 @@ android {
     }
 
     applicationVariants.all { variant ->
+        def app = variant.productFlavors[0].name
+        def buildType = variant.productFlavors[1].name
         variant.outputs.each { output ->
-            output.versionNameOverride = "aa"
-            output.versionCodeOverride = 11231
+            output.versionNameOverride = versionPropertyForVariant(app, buildType, 'versionName')
+            output.versionCodeOverride = versionPropertyForVariant(app, buildType, 'versionCode')?.toInteger()
         }
     }
 }
 
-BuildConfig.VERSION_NAME
+// Search for a variant-specific variation of a property in `version.properties` file based on the
+// variant's app and buildType flavors. The `property` to be searched is typically either 'versionName' or 'versionCode'.
+//
+// This will search the `version.properties` file for "$app.$buildType.$property" first, and fallback on "$app.$property" then just "$property".
+// Note: If the property is overridden at project level (e.g. '-PversionName'), it will take priority over any value in `version.properties`.
+def versionPropertyForVariant(app, buildType, property) {
+    // If we provide -P override from command line, use it in priority.
+    // This is especially used by CI for jalapeno builds, used for Installable Builds on PRs
+    def propertyFromProjectOverride = project.findProperty(property)
+    if (propertyFromProjectOverride != null) {
+        return propertyFromProjectOverride
+    }
 
-def versionNameFromVariantName(variantName) {
+    // Otherwise (common case), read the value from the version.properties file
     def versionProperties = new Properties()
     file("../version.properties").withInputStream { versionProperties.load(it) }
-    def lowerCaseVariantName = variantName.toLowerCase()
-    if (lowerCaseVariantName.contains("wordpress")) {
-        if (lowerCaseVariantName.contains("zalpha")) {
-            return versionProperties.getProperty("wordpress.alpha.versionName")
-        } else if (lowerCaseVariantName.contains("jalapeno")) {
-            return project.findProperty("jalapenoWordPressVersionName") ?: "arst"
-        } else if (lowerCaseVariantName.contains("vanilla")) {
-            return versionProperties.getProperty("wordpress.vanilla.versionName")
-        }
-    } else if (variantName.contains("jetpack")) {
-        if (lowerCaseVariantName.contains("jalapeno")) {
-            return project.findProperty("jalapenoJetpackVersionName") ?: "arst"
-        } else if (lowerCaseVariantName.contains("vanilla")) {
-            return "jetpack-vanilla"
-        }
-    }
-    return "" //maybe set a name here
-}
 
-android.applicationVariants.all { variant ->
-    println "${variant.name}: ${versionNameFromVariantName(variant.name)}"
+    return versionProperties.getProperty("${app}.${buildType}.${property}") ?: versionProperties.getProperty("${app}.${property}") ?: versionProperties.getProperty(property)
 }
 
 // allows us to use cool things like @Parcelize annotations
@@ -537,12 +531,18 @@ tasks.register("updateVersionProperties") {
 
 tasks.register("printVersionName") {
     doLast {
-        def key = "$productKey" + "."
-        if(project.hasProperty('alpha')) {
-            key += "alpha."
+        def app = project.findProperty('productKey') ?: 'wordpress'
+        def buildType = project.findProperty('buildType') ?: ''
+        println versionPropertyForVariant(app, buildType, 'versionName')
+    }
+}
+
+tasks.register("printAllVersions") {
+    doLast {
+        android.applicationVariants.all { variant ->
+            def apkData = variant.outputs[0].apkData
+            println "${variant.name}: ${apkData.versionName} (${apkData.versionCode})"
         }
-        key += "versionName"
-        println versionProperties.getProperty(key)
     }
 }
 
