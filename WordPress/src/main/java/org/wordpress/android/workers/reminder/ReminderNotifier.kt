@@ -24,7 +24,7 @@ class ReminderNotifier @Inject constructor(
 ) {
     fun notify(siteId: Int) {
         val context = contextProvider.getContext()
-        val site = siteStore.getSiteByLocalId(siteId)
+        val site = siteStore.getSiteByLocalId(siteId) ?: return
         val name = accountStore.account.firstName
 
         val reminderNotification = ReminderNotification(
