@@ -63,8 +63,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
      * Continue Jetpack connect flow if coming from login/signup magic link.
      */
     private fun checkAndContinueJetpackConnectionFlow(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null && intent != null && intent.extras != null && intent.extras!!
-                        .getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
+        val continueJetpackConnect = intent.extras?.getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false) ?: false
+        if (savedInstanceState == null && continueJetpackConnect) {
             if (TextUtils.isEmpty(mAccountStore.account.userName)) {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             } else {
