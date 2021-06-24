@@ -42,28 +42,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             setActionBar()
             setTitle(string.stats)
             checkAndContinueJetpackConnectionFlow(savedInstanceState)
-            jetpackSetup.setOnClickListener { v: View? ->
-                startJetpackConnectionFlow(
-                        this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
-                )
-            }
-            jetpackFaq.setOnClickListener { v: View? ->
-                WPWebViewActivity.openURL(
-                        this@StatsConnectJetpackActivity,
-                        FAQ_URL
-                )
-            }
-            jetpackTermsAndConditions.text = Html.fromHtml(
-                    String.format(
-                            resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
-                    )
-            )
-            jetpackTermsAndConditions.setOnClickListener { v: View? ->
-                WPWebViewActivity.openURL(
-                        this@StatsConnectJetpackActivity,
-                        WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
-                )
-            }
+            initViews()
         }
     }
 
@@ -92,6 +71,31 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             } else {
                 startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
             }
+        }
+    }
+
+    private fun StatsJetpackConnectionActivityBinding.initViews() {
+        jetpackSetup.setOnClickListener { v: View? ->
+            startJetpackConnectionFlow(
+                    this@StatsConnectJetpackActivity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            )
+        }
+        jetpackFaq.setOnClickListener { v: View? ->
+            WPWebViewActivity.openURL(
+                    this@StatsConnectJetpackActivity,
+                    FAQ_URL
+            )
+        }
+        jetpackTermsAndConditions.text = Html.fromHtml(
+                String.format(
+                        resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"
+                )
+        )
+        jetpackTermsAndConditions.setOnClickListener { v: View? ->
+            WPWebViewActivity.openURL(
+                    this@StatsConnectJetpackActivity,
+                    WPUrlUtils.buildTermsOfServiceUrl(this@StatsConnectJetpackActivity)
+            )
         }
     }
 
