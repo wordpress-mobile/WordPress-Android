@@ -320,7 +320,8 @@ REPOSITORY_NAME="WordPress-Android"
     android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
-      final: true)
+      final: true,
+      app: options[:app])
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
