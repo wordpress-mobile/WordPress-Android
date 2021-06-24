@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-23 05:35:48+0000
+Translation-Revision-Date: 2021-06-24 12:05:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -1017,9 +1017,9 @@ Language: pl
     <string name="history_preview_html">Podgląd HTML</string>
     <string name="history_preview_visual">Podgląd wizualny</string>
     <string name="support_identity_input_dialog_name_label">Imię</string>
-    <string name="history_detail_title">Wydanie</string>
     <string name="history_detail_button_previous">Poprzednie</string>
     <string name="history_detail_button_next">Następne</string>
+    <string name="history_detail_title">Wersja</string>
     <string name="media_space_used">%1$s wykorzystano</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
