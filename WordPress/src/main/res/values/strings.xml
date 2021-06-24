@@ -3639,7 +3639,7 @@
     <string name="set_your_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
     <string name="set_your_blogging_reminders_button">Set reminders</string>
     <string name="blogging_reminders_n_a_week">%s a week</string>
-    <string-array name="blogging_reminders_count" translatable="false">
+    <string-array name="blogging_reminders_count">
         <item>Once</item>
         <item>Twice</item>
         <item>Three times</item>
