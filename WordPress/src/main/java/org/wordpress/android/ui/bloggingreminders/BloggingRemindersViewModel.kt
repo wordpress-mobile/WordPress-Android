@@ -19,6 +19,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustra
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -59,11 +60,12 @@ class BloggingRemindersViewModel @Inject constructor(
         if (screen != null) {
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
+                PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay)
                 EPILOGUE -> buildEpilogue()
             }
             val primaryButton = when (screen) {
-                PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
+                PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelection)
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
                         bloggingRemindersModel,
                         isFirstTimeFlow == true,
@@ -86,16 +88,13 @@ class BloggingRemindersViewModel @Inject constructor(
         _isBottomSheetShowing.value = Event(false)
     }
 
-    private var isFromSiteSettings: Boolean = false
-
     fun getSettingsState(siteId: Int): LiveData<UiString> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
             dayLabelUtils.buildNTimesLabel(it)
         }.asLiveData(mainDispatcher)
     }
 
-    fun showBottomSheet(siteId: Int, screen: Screen, fromSiteSettings: Boolean) {
-        isFromSiteSettings = fromSiteSettings
+    fun showBottomSheet(siteId: Int, screen: Screen) {
         if (screen == PROLOGUE) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
         } else {
@@ -109,20 +108,6 @@ class BloggingRemindersViewModel @Inject constructor(
             }
         }
     }
-
-    private fun buildPrologue() = listOf(
-            Illustration(R.drawable.img_illustration_celebration_150dp),
-            Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-            if (!isFromSiteSettings) {
-                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message))
-            } else {
-                HighEmphasisText(UiStringText("")) },
-            PrimaryButton(
-                    UiStringRes(R.string.set_your_blogging_goals_button),
-                    enabled = true,
-                    ListItemInteraction.create(startDaySelection)
-            )
-    )
 
     private fun buildEpilogue(): List<BloggingRemindersItem> {
         val numberOfTimes = dayLabelUtils.buildNTimesLabel(_bloggingRemindersModel.value)
@@ -219,12 +204,12 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onPostCreated(siteId: Int, isNewPost: Boolean?) {
         if (isNewPost == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
-            showBottomSheet(siteId, PROLOGUE, false)
+            showBottomSheet(siteId, PROLOGUE)
         }
     }
 
     enum class Screen {
-        PROLOGUE, SELECTION, EPILOGUE
+        PROLOGUE, PROLOGUE_SETTINGS, SELECTION, EPILOGUE
     }
 
     data class UiState(val uiItems: List<BloggingRemindersItem>, val primaryButton: PrimaryButton? = null) {
