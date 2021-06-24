@@ -12,17 +12,16 @@ object BloggingReminderUtils {
         isBottomSheetShowing: LiveData<Event<Boolean>>,
         lifecycleOwner: LifecycleOwner,
         tag: String,
-        getSupportFragmentManager: () -> FragmentManager
+        getSupportFragmentManager: () -> FragmentManager?
     ) {
         isBottomSheetShowing.observeEvent(lifecycleOwner,
             { isShowing: Boolean ->
-                val fm: FragmentManager = getSupportFragmentManager()
-                var bottomSheet = fm
-                    .findFragmentByTag(tag) as BloggingReminderBottomSheetFragment?
+                val fm: FragmentManager = getSupportFragmentManager() ?: return@observeEvent
+                var bottomSheet = fm.findFragmentByTag(tag) as BloggingReminderBottomSheetFragment?
                 if (isShowing && bottomSheet == null) {
                     bottomSheet = BloggingReminderBottomSheetFragment()
                     bottomSheet.show(
-                        getSupportFragmentManager(),
+                        fm,
                         tag
                     )
                 } else if (!isShowing && bottomSheet != null) {

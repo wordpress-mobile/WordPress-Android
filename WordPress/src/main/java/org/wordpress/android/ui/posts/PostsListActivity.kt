@@ -34,6 +34,8 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -85,6 +87,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+    @Inject internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
 
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
@@ -164,6 +167,7 @@ class PostsListActivity : LocaleAwareActivity(),
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
+            initBloggingReminders()
             initCreateMenuViewModel()
             loadIntentData(intent)
         }
@@ -324,6 +328,26 @@ class PostsListActivity : LocaleAwareActivity(),
         setupFabEvents()
     }
 
+    private fun initBloggingReminders() {
+        bloggingRemindersViewModel = ViewModelProvider(
+                this,
+                viewModelFactory
+        ).get(BloggingRemindersViewModel::class.java)
+
+        observeBottomSheet(
+                bloggingRemindersViewModel.isBottomSheetShowing,
+                this,
+                BLOGGING_REMINDERS_FRAGMENT_TAG,
+                {
+                    if (!this.isFinishing) {
+                        this.supportFragmentManager
+                    } else {
+                        null
+                    }
+                }
+        )
+    }
+
     private fun setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity, {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
@@ -438,6 +462,10 @@ class PostsListActivity : LocaleAwareActivity(),
             }
 
             viewModel.handleEditPostResult(data)
+            bloggingRemindersViewModel.onPostCreated(
+                    site.id,
+                    data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
+            )
         } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
             viewModel.handleRemotePreviewClosing()
         } else if (requestCode == RequestCodes.PHOTO_PICKER &&
@@ -601,6 +629,8 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     companion object {
+        private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
+
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
