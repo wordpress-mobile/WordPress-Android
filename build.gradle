@@ -103,7 +103,7 @@ subprojects {
         args "-F", "src/**/*.kt"
     }
 
-    task.register("ciktlint", JavaExec) {
+    tasks.register("ciktlint", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
