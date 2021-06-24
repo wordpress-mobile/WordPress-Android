@@ -30,7 +30,8 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
-    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_low" format="float" type="dimen">0.08</item>
 
     <dimen name="divider_size">1dp</dimen>
     <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
@@ -167,7 +168,7 @@
     <dimen name="scrim_visible_height_trigger">150dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
-        @dimen/emphasis_extra_low
+        @dimen/emphasis_extra_extra_low
     </item>
 
     <dimen name="text_sz_extra_extra_small">7sp</dimen>
@@ -667,4 +668,7 @@
     <dimen name="login_empty_view_avatar_height">72dp</dimen>
     <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
     <dimen name="login_empty_view_line_spacing">2sp</dimen>
+
+    <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
+    <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
 </resources>

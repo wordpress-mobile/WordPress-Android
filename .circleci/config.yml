@@ -50,63 +50,6 @@ commands:
 
 version: 2.1
 jobs:
-  test:
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory
-      - run:
-          name: Test WordPress
-          command: ./gradlew testWordpressVanillaRelease --stacktrace --no-daemon
-      - run:
-          name: Test WordPressProcessors
-          command: ./gradlew :libs:WordPressProcessors:test --stacktrace
-      - run:
-          name: Test ImageEditor
-          command: ./gradlew :libs:image-editor:ImageEditor:test --stacktrace
-      - android/save-gradle-cache
-      - android/save-test-results
-  lint:
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory
-      - run:
-          name: Checkstyle
-          command: ./gradlew --stacktrace checkstyle
-      - run:
-          name: ktlint
-          command: ./gradlew --stacktrace ciktlint
-      - run:
-          name: Detekt
-          command: ./gradlew --stacktrace WordPress:detekt
-      - run:
-          name: Lint
-          command: ./gradlew --stacktrace lintWordpressVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-          no_output_timeout: 40m
-      - run:
-          name: Violations
-          when: on_fail
-          command: |
-            if [ -n "$GITHUB_API_TOKEN" ]; then
-              ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GHHELPER_ACCESS
-            else
-              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
-            fi
-      - android/save-gradle-cache
-      - android/save-lint-results
   Installable Build:
     executor:
       name: android/default
@@ -454,8 +397,6 @@ workflows:
         - << pipeline.parameters.release_build >>
     jobs:
       - submodules-strings-check
-      - test
-      - lint
       - Installable Build:
           filters:
             branches:
@@ -499,8 +440,5 @@ workflows:
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
-      - lint
-      - Release Build:
-          requires:
-            - lint
+      - Release Build
 

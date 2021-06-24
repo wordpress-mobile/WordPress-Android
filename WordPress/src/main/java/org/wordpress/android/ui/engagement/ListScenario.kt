@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.engagement
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 data class ListScenario(
     val type: ListScenarioType,
     val source: EngagementNavigationSource,
@@ -26,6 +28,7 @@ enum class ListScenarioType(val typeDescription: String) {
 }
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 data class HeaderData constructor(
     val authorName: AuthorName,
     val snippetText: String,
@@ -36,6 +39,7 @@ data class HeaderData constructor(
     val numLikes: Int = 0
 ) : Parcelable
 
+@SuppressLint("ParcelCreator")
 sealed class AuthorName : Parcelable {
     @Parcelize
     data class AuthorNameString(val nameString: String?) : AuthorName()
