@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -78,28 +76,15 @@ public class StatsConnectJetpackActivity extends LocaleAwareActivity {
         }
 
         Button setupButton = findViewById(R.id.jetpack_setup);
-        setupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startJetpackConnectionFlow(
-                        (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
-            }
-        });
+        setupButton.setOnClickListener(v -> startJetpackConnectionFlow(
+                (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE)));
         Button jetpackFaq = findViewById(R.id.jetpack_faq);
-        jetpackFaq.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, FAQ_URL);
-            }
-        });
+        jetpackFaq.setOnClickListener(v -> WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, FAQ_URL));
         TextView jetpackTermsAndConditions = findViewById(R.id.jetpack_terms_and_conditions);
         jetpackTermsAndConditions.setText(Html.fromHtml(String.format(
                 getResources().getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")));
-        jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this,
-                        WPUrlUtils.buildTermsOfServiceUrl(StatsConnectJetpackActivity.this));
-            }
-        });
+        jetpackTermsAndConditions.setOnClickListener(v -> WPWebViewActivity.openURL(StatsConnectJetpackActivity.this,
+                WPUrlUtils.buildTermsOfServiceUrl(StatsConnectJetpackActivity.this)));
     }
 
     @Override
