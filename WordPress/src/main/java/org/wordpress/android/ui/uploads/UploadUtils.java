@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
@@ -171,10 +172,13 @@ public class UploadUtils {
     String getErrorMessageFromMedia(Context context, @NonNull MediaModel media) {
         MediaUploadModel uploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(media.getId());
 
-        MediaError error = new MediaError(null, null, null);
+        MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR, null, null);
 
         if (uploadModel != null) {
-            error = uploadModel.getMediaError();
+            MediaError errorFromUploadModel = uploadModel.getMediaError();
+            if (errorFromUploadModel != null) {
+                error = errorFromUploadModel;
+            }
         }
 
         return getErrorMessageFromMediaError(context, media, error);

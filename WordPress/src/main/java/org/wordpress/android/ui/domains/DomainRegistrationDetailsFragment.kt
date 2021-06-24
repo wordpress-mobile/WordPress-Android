@@ -132,8 +132,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun DomainRegistrationDetailsFragmentBinding.setupInputFieldTextWatchers() {

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-05 20:10:02+0000
+Translation-Revision-Date: 2021-06-14 19:44:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="set_your_blogging_goals_button">Stel doelen in</string>
+    <string name="blogging_goals_n_times_a_week">%d keer per week</string>
+    <string name="blogging_goals_not_set">Geen ingesteld</string>
+    <string name="blogging_reminders_notify_me">Breng me op de hoogte</string>
+    <string name="blogging_reminders_done">Klaar</string>
+    <string name="set_your_blogging_goals_message">Je bericht wordt gepubliceerd… intussen, stel je blogdoelen in om herinneringen te krijgen, en je voortgang te volgen.</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Voer je inloggegevens voor je server in&lt;/a&gt; om terugzetten in één klik van back-ups in te schakelen.</string>
+    <string name="set_your_blogging_goals_title">Stel je blogdoelen in</string>
+    <string name="support_ticket_subject">WordPress voor Android ondersteuning</string>
+    <string name="fab_add_category_desc">Maak categorie</string>
+    <string name="gutenberg_native_remove_as_featured_image">Verwijder als uitgelichte afbeelding</string>
+    <string name="gutenberg_native_set_as_featured_image">Instellen als uitgelichte afbeelding</string>
+    <string name="site_settings_categories_hint">Beheer je site categorieën</string>
+    <string name="site_settings_categories_empty_title">Je hebt geen categorieën</string>
+    <string name="site_settings_categories_empty_subtitle">Voeg je veelgebruikte categorieën hier toe, zodat ze snel geselecteerd kunnen worden, als je je berichten categoriseert</string>
+    <string name="site_settings_blogging_reminders_title">Blogging doelen</string>
+    <string name="site_settings_categories_title">Categorieën</string>
+    <string name="site_settings_categories_empty_button">Maak een categorie</string>
+    <string name="page_is_posts_page_warning">De inhoud van je laatste berichten pagina is automatisch gegenereerd en kan niet bewerkt worden.</string>
     <string name="gutenberg_native_border_settings">Randinstellingen</string>
     <string name="storage_utils_dialog_message">We moeten je inhoud op het apparaat opslaan voordat deze kan worden gepubliceerd. Bekijk je opslaginstellingen en verwijder bestanden om ruimte vrij te maken.</string>
     <string name="storage_utils_dialog_ok_button">Bekijk de opslag</string>
@@ -15,35 +34,23 @@ Language: nl
     <string name="gutenberg_native_x_axis_position">X-as positie</string>
     <string name="gutenberg_native_s_has_no_url_set">%s heeft geen URL ingesteld</string>
     <string name="gutenberg_native_s_has_url_set">%s heeft URL ingesteld</string>
-    <string name="gutenberg_native_show_media_on_left">Media aan de linkerkant weergeven</string>
-    <string name="gutenberg_native_show_media_on_right">Media rechts weergeven</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter resultaten</string>
     <string name="gutenberg_native_tap_to_add_content">Tik om inhoud toe te voegen</string>
     <string name="gutenberg_native_type_a_url">Typ een URL</string>
-    <string name="gutenberg_native_optional_placeholder">Optionele plaatshouder…</string>
-    <string name="gutenberg_native_overlay">Bedekking</string>
     <string name="gutenberg_native_s_block">%s blok</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s geconverteerd naar gewone blokken</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Ongeldige URL. Audiobestand niet gevonden.</string>
     <string name="gutenberg_native_media_options">Media opties</string>
-    <string name="gutenberg_native_media_text_settings">Media &amp; tekstinstellingen</string>
     <string name="gutenberg_native_minimum_height">Minimale hoogte</string>
-    <string name="gutenberg_native_opacity">Doorzichtigheid</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Dubbeltik om actieblad te openen om afbeelding of video toe te voegen</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Dubbeltik om onderste blad te openen om afbeelding of video toe te voegen</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Slepen om het brandpunt aan te passen</string>
-    <string name="gutenberg_native_fixed_background">Vaste achtergrond</string>
     <string name="gutenberg_native_insert_crosspost">Kruisbericht invoegen</string>
     <string name="gutenberg_native_columns_settings">Kolommen instellingen</string>
-    <string name="gutenberg_native_convert_to_regular_blocks">Converteren naar normale blokken</string>
-    <string name="gutenberg_native_crop_image_to_fill_entire_column">Afbeelding bijsnijden om de hele kolom te vullen</string>
     <string name="gutenberg_native_crosspost">Kruisbericht</string>
     <string name="gutenberg_native_current_unit_is_s">Huidige eenheid is %s</string>
-    <string name="gutenberg_native_dimensions">Dimensies</string>
     <string name="gutenberg_native_add_link_text">Linktekst toevoegen</string>
     <string name="gutenberg_native_add_link_to_s">Link toevoegen aan %s</string>
-    <string name="gutenberg_native_button_width">Knop breedte</string>
-    <string name="gutenberg_native_clear_media">Media wissen</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Afbeelding of video toevoegen</string>
     <string name="error_media_could_not_find_media_in_path">Kan mediabestand niet vinden in pad</string>
     <string name="error_media_path_is_directory">Het opgegeven pad is een folder in plaats van een mediabestand</string>
@@ -59,52 +66,22 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltik om een link toe te voegen.</string>
     <string name="login_empty_view_avatar_content_description">Je profielfoto</string>
     <string name="login_not_a_jetpack_site">Om deze app voor %1$s te gebruiken, moet de Jetpack plugin zijn geïnstalleerd en verbonden met je WordPress.com account.</string>
-    <string name="gutenberg_native_size">Grootte</string>
     <string name="gutenberg_native_image_settings">Afbeeldingsinstellingen</string>
-    <string name="gutenberg_native_audio_settings">Audio-instellingen</string>
     <string name="gutenberg_native_move_image_forward">Verplaats afbeelding naar voren</string>
     <string name="gutenberg_native_move_image_backward">Verplaats afbeelding naar achteren</string>
     <string name="gutenberg_native_width_settings">Breedte instellingen</string>
-    <string name="gutenberg_native_column_settings">Kolom instellingen</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_untitled_site">(Zonder titel)</string>
     <string name="user_profile_bottom_sheet_description">Gebruikersprofiel onderste blad informatie</string>
     <string name="likes_list_screen_title">Likes lijst %s</string>
-    <string name="gutenberg_native_write_title">Schrijf titel…</string>
-    <string name="gutenberg_native_write_code">Schrijf code…</string>
     <string name="gutenberg_native_sorting_and_filtering">Sortering en filtering</string>
-    <string name="gutenberg_native_show_download_button">Toon downloadknop</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
-    <string name="gutenberg_native_shortcode">Shortcode</string>
     <string name="gutenberg_native_mention">Vermelding</string>
-    <string name="gutenberg_native_add_label">Label toevoegen…</string>
-    <string name="gutenberg_native_read_more">Lees meer</string>
-    <string name="gutenberg_native_preload">Vooraf laden</string>
     <string name="gutenberg_native_post_content_settings">Berichtinhoud instellingen</string>
     <string name="gutenberg_native_post_meta_settings">Bericht meta-instellingen</string>
-    <string name="gutenberg_native_metadata">Metagegevens</string>
-    <string name="gutenberg_native_media_file">Mediabestand</string>
-    <string name="gutenberg_native_media_area">Mediagebied</string>
-    <string name="gutenberg_native_loop">Loop</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Link naar</string>
-    <string name="gutenberg_native_link_label">Link label</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">afbeelding %1$d van %2$d in galerij</string>
-    <string name="gutenberg_native_heading_d">Heading %d</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
-    <string name="gutenberg_native_edit_image">Bewerk afbeelding</string>
     <string name="gutenberg_native_display_post_date">Toon bericht datum</string>
-    <string name="gutenberg_native_change_heading_level">Wijzig heading niveau</string>
-    <string name="gutenberg_native_code">Code</string>
-    <string name="gutenberg_native_browser_default">Browser standaard</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
-    <string name="gutenberg_native_attachment_page">Bijlagepagina</string>
-    <string name="gutenberg_native_auto">Auto</string>
-    <string name="gutenberg_native_autoplay">Automatisch afspelen</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Het blok kan niet binnen zichzelf weergegeven worden.</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blok is verwijderd of is niet beschikbaar.</string>
-    <string name="gutenberg_native_cover">Bedekken</string>
-    <string name="gutenberg_native_add_text">Tekst toevoegen…</string>
-    <string name="gutenberg_native_add_caption">Bijschrift toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_transform_block">Transformeer blok…</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
@@ -244,9 +221,9 @@ Language: nl
     <string name="scan_idle_threats_description_singular">De scan vond één potentiële bedreiging met %1$s. Bekijk de bedreiging hieronder en onderneem actie of tik op de knop Alles herstellen. We zijn %2$s als je ons nodig hebt.</string>
     <string name="scan_provisioning_description">Welkom bij Jetpack Scan! We verkennen je site en maken een volledige scan. We laten het je weten als we problemen ontdekken die van invloed kunnen zijn op een scan, waarna je eerste volledige scan start.</string>
     <string name="scan_idle_manual_scan_description">Om je site opnieuw te bekijken, voer je een handmatige scan uit, of wacht tot Jetpack je site later vandaag scant.</string>
-    <string name="scan_scanning_description">We sturen je een bericht zodra de scan is afgerond. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
     <string name="scan_scanning_is_initial_description">Welkom bij Jetpack Scan, we nemen nu een voor het eerst een kijkje op je site, de resultaten zijn er zo.</string>
     <string name="scan_fixing_threats_description_singular">We zijn hard aan het werk om deze bedreiging op de achtergrond te verhelpen. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
+    <string name="scan_scanning_description">We sturen je een kennisgeving als er een bedreiging is gevonden. In de tussentijd kan je je site gewoon blijven gebruiken, je kan op elk moment de voortgang bekijken.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan kon geen scan van je site afronden. Controleer of je site bereikbaar is - probeer het opnieuw als dat niet het geval is. Als dit het geval is, of als Jetpack Scan nog steeds problemen heeft, neem dan contact op met ons ondersteuningsteam.</string>
     <string name="scan_fixing_threats_title_plural">Bezig met bedreigingen oplossen</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Er is met succes een back-up van je site gemaakt</string>
@@ -554,7 +531,6 @@ Language: nl
     <string name="stats_referrer_popup_unmark_as_spam">Markering als spam ongedaan maken</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Deze verwijzer kan niet gemarkeerd worden als spam</string>
     <string name="gutenberg_native_search_or_type_url">Zoek of typ URL</string>
-    <string name="gutenberg_native_page_break">Pagina-einde</string>
     <string name="gutenberg_native_add_this_telephone_link">Voeg deze telefoon link toe</string>
     <string name="gutenberg_native_add_this_email_link">Voeg deze e-mail link toe</string>
     <string name="gutenberg_native_add_this_link">Voeg deze link toe</string>
@@ -746,7 +722,6 @@ Language: nl
     <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
     <string name="gutenberg_native_move_to_top">Verplaats naar boven</string>
-    <string name="gutenberg_native_remove">Verwijder</string>
     <string name="gutenberg_native_insert_mention">Voeg vermelding in</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltik om actieblad te openen met beschikbare opties</string>
@@ -871,7 +846,6 @@ Language: nl
     <string name="gutenberg_native_customize">AANPASSEN</string>
     <string name="gutenberg_native_button_link_url">Knop URL-link</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraafblok toevoegen</string>
-    <string name="gutenberg_native_video_settings">Video-instellingen</string>
     <string name="gutenberg_native_border_radius">Rand radius</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
@@ -928,7 +902,6 @@ Language: nl
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">Bijschrift galerij. %s</string>
     <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
-    <string name="gutenberg_native_replace_image">Afbeelding vervangen</string>
     <string name="post_signup_interstitial_not_right_now">Niet nu</string>
     <string name="post_signup_interstitial_subtitle">Wat je ook wilt creëren of delen, wij helpen je erbij.</string>
     <string name="content_description_person_building_website">Persoon die de site gebouwd heeft</string>
@@ -2701,7 +2674,6 @@ Language: nl
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
     <string name="adding_cat_failed">Toevoegen van categorie mislukt</string>
     <string name="adding_cat_success">Categorie toegevoegd</string>
-    <string name="cat_name_required">Het veld Categorienaam is verplicht</string>
     <string name="sdcard_message">Er moet een SD-kaart zijn gekoppeld om media te uploaden</string>
     <string name="error_load_comment">Kan de reactie niet laden</string>
     <string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
@@ -2720,6 +2692,7 @@ Language: nl
     <string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
     <string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
     <string name="notifications_empty_list">Geen kennisgevingen</string>
+    <string name="cat_name_required">Het veld categorienaam is verplicht</string>
     <string name="select_categories">Categorieën selecteren</string>
     <string name="connection_error">Verbindingsfout</string>
     <string name="cancel_edit">Bewerken annuleren</string>
