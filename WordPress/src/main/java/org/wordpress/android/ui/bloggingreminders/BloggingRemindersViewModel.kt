@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
@@ -222,6 +223,12 @@ class BloggingRemindersViewModel @Inject constructor(
             _bloggingRemindersModel.value = BloggingRemindersModel(siteId, enabledDays)
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
+    }
+
+    fun onPostCreated(siteId: Int, isNewPost: Boolean?) {
+        if (isNewPost == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
+            showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+        }
     }
 
     fun onBottomSheetDismissed() {
