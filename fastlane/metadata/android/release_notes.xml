@@ -1,180 +1,136 @@
 <ar>
-17.5:
-ما الجديد في الإصدار 17.5؟
+17.6:
+يسمح لك مكوِّن الصوت بإضافة ملفات البث الصوتي والموسيقى والصوت إلى مقالاتك وصفحاتك. إنه متاح الآن لمستخدمي الخطة المجانية كذلك!
 
-تسمح لك المكوِّنات القابلة لإعادة الاستخدام بإنشاء محتوى المكوِّن مرة واحدة وإعادة استخدامه عدد مرات غير محدود، مباشرةً من أداة إدراج المكوِّن.
+حوّل أي صورة إلى صورة *بارزة* باستخدام زر "تعيين كصورة بارزة" الجديد الموجود في مكوِّن الصورة.
 
-تجعل الأوامر التي تبدأ بشرطة إضافة المكوِّنات أمرًا سهلاً: ما عليك سوى الضغط على شرطة مائلة إلى الأمام واسم المكوِّن في المحرِّر.
-
-يمكنك الآن الاحتفاظ بالصوت عبر عنوان URL باستخدام مكوِّن الصوت.
-
-وأخيرًا، يمكن لقراء الشاشة الآن تحديد خلية السائر.
+وأخيرًا، لقد جعلناه أكثر وضوحًا لدرجة أنه لا يمكنك تحرير صفحة أرشيفات المقالة التي تم إنشاؤها تلقائيًا.
 </ar>
 <de-DE>
-17.5:
-Was ist neu in 17.5?
+17.6:
+Mit dem Audioblock kannst du deinen Beiträgen und Seiten Podcasts, Musik und Audiodateien hinzufügen. Er ist jetzt auch für Benutzer mit dem Kostenlos-Tarif verfügbar!
 
-Mit wiederverwendbaren Blöcken musst du Blockinhalte nur einmal erstellen. Dann kannst du sie direkt über den Block-Inserter beliebig oft wiederverwenden.
+Mache mit dem neuen Button „Als Beitragsbild festlegen“ Im Bildblock jedes beliebige Bild zu einem Beitragsbild.
 
-Schrägstrichbefehle erleichtern dir das Hinzufügen von Blöcken: Gib dazu einfach einen Schrägstrich gefolgt vom Blocknamen in den Editor ein.
-
-Mit dem Audioblock kannst du nun Audiodateien per URL einbinden.
-
-Und nicht zuletzt können Screenreader ab sofort die Stepper-Zelle auswählen.
+Außerdem haben wir noch verdeutlicht, dass du die automatisch generierte Beitragsarchivseite nicht bearbeiten kannst.
 </de-DE>
 <en-US>
-17.5:
-What’s new in 17.5?
+17.6:
+The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
 
-Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
+Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
 
-Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
-
-You can now pull in audio via URL with the Audio block.
-
-Finally, screen readers can now select the stepper cell.
+Finally, we made it clearer that you can’t edit the automatically generated post archives page.
 </en-US>
+<es-ES>
+17.6:
+El bloque de audio te permite añadir podcasts, música y archivos de sonido a tus entradas y páginas. ¡Ahora también está disponible para los usuarios del plan gratuito!
+
+Convierte cualquier imagen en una imagen *destacada* con el nuevo botón «Establecer como destacada» en el bloque de imagen.
+
+Por último, hemos aclarado que no puedes editar la página de archivo de entradas generada automáticamente.
+</es-ES>
+<fr-CA>
+17.6 :
+Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
+
+Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
+
+Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
+</fr-CA>
+<fr-FR>
+17.6 :
+Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
+
+Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
+
+Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
+</fr-FR>
 <iw-IL>
-17.5:
-מה חדש בגרסת 17.5?
+17.6:
+בלוק האודיו מאפשר לך להוסיף פודקאסטים, מוזיקה וקובצי ;קול לפוסטים ולעמודים. הבלוק זמין עכשיו גם למנויים לתוכנית החינמית!
 
-בלוקים לשימוש חוזר מאפשרים לך ליצור תוכן של בלוק פעם אחת ולהשתמש בו שוב ושוב, ללא הגבלה, ישירות מתוך מוסיף הבלוקים.
+אפשר להפוך כל תמונה לתמונה *מרכזית* באמצעות הכפתור 'להגדיר כמרכזית' בבלוק התמונה.
 
-פקודות של קו נטוי מאפשרות לך להוסיף בלוקים בקלות: אפשר להקיש על הקו הנטוי לפנים ולהקליד את שם הבלוק בעורך.
-
-אפשר להוסיף אודיו דרך כתובת URL באמצעות בלוק האודיו.
-
-אחרון חביב, קוראי מסכים כעת בוחרים את התא של השלבים.
+אחרון חביב, שיפרנו את ההודעה אשר מסבירה שאין אפשרות לערוך את עמוד הארכיון של הפוסטים שנוצר באופן אוטומטי.
 </iw-IL>
 <id>
-17.5:
-Apa yang baru di versi 17.5?
+17.6:
+Blok Audio memungkinkan Anda menambahkan podcast, musik, dan file suara ke pos dan halaman Anda. Sekarang juga tersedia untuk pengguna dengan Paket Gratis!
 
-Blok pakai ulang memungkinkan Anda membuat konten blok satu kali dan menggunakannya berulang kali, langsung dari penyisip blok.
+Ubah semua gambar menjadi gambar *andalan*, dengan tombol ‘Tetapkan sebagai Andalan’ yang baru pada blok Gambar.
 
-Perintah garis miring mempermudah penambahan blok: cukup ketik garis miring dan nama blok ke dalam editor.
-
-Sekarang Anda dapat menambahkan audio melalui URL dengan blok Audio.
-
-Terakhir, sekarang pembaca layar dapat memilih sel yang lebih rumit.
+Terakhir, kami memperjelas bahwa Anda tidak dapat menyunting halaman arsip pos yang dibuat secara otomatis.
 </id>
 <it-IT>
-17.5
-:Novità nella versione 17.5?
+17.6:
+Il blocco Audio ti permette di aggiungere podcast, musica e file audio ad articoli e pagine. Ora è anche disponibile per gli utenti del piano gratuito.
 
-I blocchi Riutilizzabili ti consentono di creare il contenuto del blocco una volta e riutilizzarlo infinite volte, direttamente dallo strumento per l'inserimento dei blocchi.
+Trasforma qualsiasi immagine in un'immagine *in evidenza*, con il nuovo pulsante "Imposta come in evidenza" nel blocco Immagine.
 
-I comandi slash semplificano l'aggiunta di blocchi: basta toccare una barra e il nome del blocco nell'editor.
-
-Ora puoi inserire l'audio tramite URL con il blocco Audio.
-
-Infine, i lettori di schermo possono ora selezionare la casella passo passo.
+Infine, abbiamo chiarito che non è possibile modificare la pagina degli archivi degli articoli generata automaticamente.
 </it-IT>
 <ja-JP>
-17.5:
-17.5の新機能
+17.6:
+音声ブロックを使って、ポッドキャスト、音楽、音声ファイルを投稿や固定ページに追加できます。 無料プランのユーザーも利用できるようになりました。
 
-再利用可能ブロックでブロックコンテンツを一度作成しておくと、「ブロック挿入」から何度でも再使用できるようになりました。
+画像ブロックの新しい「アイキャッチ画像として設定」ボタンを使って、任意の画像を*アイキャッチ*画像に変換できるようになりました。
 
-スラッシュコマンドでブロック追加操作が簡単になりました。スラッシュとブロック名をタップしてエディターに入力するだけです。
-
-音声ブロックを使用することで URL を介して音声を取り込めるようになりました。
-
-ついに、スクリーンリーダーではステッパーセルを選択できるようになりました。
+最後に、自動生成された投稿アーカイブページは編集できないことがはっきりと分かるように変更を加えました。
 </ja-JP>
 <ko-KR>
-17.5:
-17.5의 새로운 기능
+17.6:
+오디오 블록이 있으면 팟캐스트, 음악 및 사운드 파일을 글과 페이지에 추가할 수 있습니다. 지금 무료 요금제 사용자도 이용할 수 있습니다!
 
-재활용 가능한 블록을 통해 블록 콘텐츠를 한 번 생성하면 횟수 제한 없이 블록 편집기에서 바로 재활용할 수 있습니다.
+어떤 이미지든 이미지 블록의 새로운 '특성으로 설정' 버튼을 통해 *특성* 이미지로 전환하세요.
 
-슬래시 명령을 통해 블록을 쉽게 추가할 수 있습니다. 편집기에서 슬래시와 블록 이름을 활용하면 됩니다.
-
-이제 오디오 블록으로 URL을 통해 오디오를 가져올 수 있습니다.
-
-마지막으로, 이제 화면 리더에서 스텝퍼 셀을 선택할 수 있습니다.
+마지막으로, 자동으로 생성된 글 목록 페이지를 편집할 수 없다는 것을 더 명확하게 밝혔습니다.
 </ko-KR>
 <nl-NL>
-17.5:
-Wat is er nieuw in 17.5?
+17.6:
+Met het audioblok kun je podcasts, muziek en geluidsbestanden toevoegen aan je berichten en pagina's. Het is nu ook beschikbaar voor gebruikers van het gratis abonnement!
 
-Met herbruikbare blokken kun je eenmaal blokinhoud maken en deze oneindig vaak hergebruiken, rechtstreeks vanuit de blok inserter.
+Verander elke afbeelding in een *uitgelichte* afbeelding, met de nieuwe knop 'Instellen als aanbevolen' in het afbeeldingsblok.
 
-Slash opdrachten maken het toevoegen van blokken eenvoudig: tik gewoon op een voorwaartse schuine streep en bloknaam in de editor.
-
-Je kunt nu audio via URL ophalen met het audioblok.
-
-Ten slotte kunnen schermlezers nu de stepper cel selecteren.
+Ten slotte hebben we duidelijker gemaakt dat je de automatisch gegenereerde pagina met berichtarchieven niet kunt bewerken.
 </nl-NL>
-<pt-BR>
-17.5:
-Quais as novidades da versão 17.5?
-
-Blocos reutilizáveis permitem que você crie o conteúdo de blocos apenas uma vez e reutilize infinitas vezes diretamente no adicionador de blocos.
-
-Comandos com barra facilitam a adição de blocos: digite uma barra e depois o nome de um bloco no editor.
-
-Agora você pode adicionar arquivos de áudio com um URL no bloco de áudio.
-
-Por fim, leitores de tela agora podem selecionar células de passagem no editor.
-</pt-BR>
 <ru-RU>
-17,5:
-Что нового в версии 17.5?
+17.6:
+Блок аудио позволяет вам добавлять подкасты, музыку и звуковые файлы к вашим записям и страницам. Теперь он доступен и пользователям бесплатного тарифа!
 
-Библиотека "Мои блоки" позволяет создавать содержимое блока один раз и повторно использовать его бесконечное количество раз прямо из панели для вставки блоков.
+Превратите любое изображение в *избранное* изображение с помощью новой кнопки «Установить как избранное» в блоке изображения.
 
-Команды с косой чертой (слеш) упрощают добавление блоков: просто коснитесь слеша и имени блока в редакторе.
-
-Теперь вы можете вставлять аудио через URL-адрес с помощью блока Audio.
-
-Наконец, программы чтения с экрана теперь могут выбирать шаговую ячейку.
+Наконец, мы уточнили, что вы не можете редактировать автоматически созданную страницу архивов записей.
 </ru-RU>
 <sv-SE>
-17.5:
-Nytt i 17.5.
+17.6:
+Med ljudblocket kan du lägga in en podcast, musik och andra ljudfiler i dina inlägg och sidor. Nu tillgängligt även för dem som använder gratispaketet!
 
-Återanvändbara block låter dig skapa blockinnehåll en gång och sedan återanvända det gång på gång, direkt från blockinfogaren.
+Ändra valfri bild till en *utvald* bild med den nya knappen ”Ange som utvald” i bildblocket.
 
-Snedstreckskommandon gör enkelt att lägga till block: tryck på snedstreck och skriv in blocknamnet i redigeraren.
-
-Nu kan du lägga in ljudfiler via en URL i ljudblocket.
-
-Slutligen har skärmläsare nu möjlighet att markera stegningscellen.
+Slutligen har vi gjort det tydligare att man inte kan redigera den automatiskt genererade sidan med inläggsarkivet.
 </sv-SE>
 <tr-TR>
-17.5:
-17.5 sürümündeki yenilikler neler?
+17.6:
+Ses Bloku, gönderilerinize ve sayfalarınıza podcast'ler, müzik ve ses dosyaları eklemenize olanak tanır. Artık Ücretsiz Paket kullanıcıları tarafından da kullanılabilir.
 
-Yeniden kullanılabilir bloklar, doğrudan blok yerleştiriciden blok içeriğini bir kez oluşturup sonsuz kez yeniden kullanmanıza olanak tanır.
+Görsel blokundaki yeni 'Öne Çıkan Olarak Ayarla' düğmesiyle herhangi bir görseli *öne çıkan* bir görsele dönüştürün.
 
-Eğik çizgi komutları blok eklemeyi kolaylaştırır: Düzenleyicide bir eğik çizgiye ve blok adına dokunmanız yeterlidir.
-
-Artık Ses bloku ile URL üzerinden ses alabilirsiniz.
-
-Son olarak, ekran okuyucular artık adım hücresini seçebilir.
+Son olarak, otomatik olarak oluşturulan gönderi arşivleri sayfasını düzenleyemeyeceğinizi daha net olarak belirttik.
 </tr-TR>
 <zh-CN>
-17.5：
-17.5 有什么新特性？
+17.6：
+通过音频区块可让您将播客、音乐和声音文件添加到您的文章和页面中。该功能现也可供免费套餐用户使用！
 
-可重用区块让您只需创建一次区块内容，就可以在区块插入器中无限次重复使用。
+使用图片区块中的新“设置为特色”按钮可将任何图片设为*特色*图片。
 
-斜线命令使添加区块变得简单：只需在编辑器中点按一下正斜线和区块名称。
-
-您现在可以用音频区块通过URL嵌入音频。
-
-最后，屏幕阅读器现以可选择单元格。
+最后，我们明确表明，您无法编辑自动生成的文章归档页面。
 </zh-CN>
 <zh-TW>
-17.5：
-17.5 版有哪些新功能？
+17.6：
+音訊區塊讓你將 Podcast、音樂和音效檔加入文章和頁面。 這項功能現在也開放免費方案使用者使用！
 
-可重複使用區塊讓你只要建立一次區塊內容，就能直接從區塊插入工具重複使用，不限次數。
+圖片區塊推出「設為特色圖片」新按鈕，按一下即可將任何圖片變成 *特色* 圖片。
 
-斜線指令可輕鬆新增區塊：只要在編輯器中點選斜線和區塊名稱即可。
-
-你現在可使用音訊區塊透過 URL 嵌入音訊。
-
-最後，螢幕閱讀器現在可以選取步進器欄位。
+最後我們清楚強調，自動產生的文章彙整頁面無法編輯。
 </zh-TW>
