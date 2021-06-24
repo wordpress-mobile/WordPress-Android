@@ -6,10 +6,11 @@ enum class JetpackConnectionSource(private val value: String) {
     override fun toString() = value
 
     companion object {
-        @JvmStatic fun fromString(value: String) = when {
-            NOTIFICATIONS.value == value -> { NOTIFICATIONS }
-            STATS.value == value -> { STATS }
-            else -> { null }
+        @JvmStatic
+        fun fromString(value: String) = when {
+            NOTIFICATIONS.value == value -> NOTIFICATIONS
+            STATS.value == value -> STATS
+            else -> null
         }
     }
 }
