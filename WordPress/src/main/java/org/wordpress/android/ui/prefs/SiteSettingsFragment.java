@@ -1228,7 +1228,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-
         mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.PROLOGUE_SETTINGS, Source.BLOG_SETTINGS);
     }
 
