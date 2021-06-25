@@ -222,6 +222,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 
+    public void updateEditorSettings(String rawEditorSettings) {
+        mWPAndroidGlueCode.updateEditorSettings(rawEditorSettings);
+    }
+
     public void showNotice(String message) {
         mWPAndroidGlueCode.showNotice(message);
     }

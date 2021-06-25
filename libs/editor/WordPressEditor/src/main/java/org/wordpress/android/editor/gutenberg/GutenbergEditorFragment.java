@@ -41,6 +41,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.EditorSettingsUpdateListener;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
@@ -87,6 +88,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
         EditorThemeUpdateListener,
+        EditorSettingsUpdateListener,
         StorySaveMediaListener,
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface {
@@ -1344,6 +1346,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
+    }
+
+    @Override public void onRawEditorSettingsUpdated(String rawEditorSettings) {
+        getGutenbergContainerFragment().updateEditorSettings(rawEditorSettings);
     }
 
     @Override public void onMediaSaveReattached(String localId, float currentProgress) {
