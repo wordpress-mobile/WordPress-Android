@@ -68,7 +68,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 bloggingRemindersManager,
                 bloggingRemindersStore,
-                resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
                 dayLabelUtils,
@@ -365,12 +364,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
         whenever(prologueBuilder.buildUiItems()).thenReturn(uiItems)
         doAnswer {
-            val onConfirm: () -> Unit = it.getArgument(0)
+            val isFirstTimeFlow = it.getArgument<Boolean>(0)
+            val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
                     UiStringText("Confirm"),
                     true,
-                    ListItemInteraction.create { onConfirm.invoke() })
-        }.whenever(prologueBuilder).buildPrimaryButton(any())
+                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+        }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
         return uiItems
     }
 
@@ -378,12 +378,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
         whenever(prologueBuilder.buildUiItemsForSettings()).thenReturn(uiItems)
         doAnswer {
-            val onConfirm: () -> Unit = it.getArgument(0)
+            val isFirstTimeFlow = it.getArgument<Boolean>(0)
+            val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
                     UiStringText("Confirm"),
                     true,
-                    ListItemInteraction.create { onConfirm.invoke() })
-        }.whenever(prologueBuilder).buildPrimaryButton(any())
+                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+        }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
         return uiItems
     }
 }
