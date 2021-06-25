@@ -77,6 +77,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -1227,8 +1228,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-
-        mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.PROLOGUE_SETTINGS);
+        mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.PROLOGUE_SETTINGS, Source.BLOG_SETTINGS);
     }
 
     private void showHomepageSettings() {

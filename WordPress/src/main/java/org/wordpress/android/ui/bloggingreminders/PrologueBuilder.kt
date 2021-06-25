@@ -13,8 +13,8 @@ class PrologueBuilder
 @Inject constructor() {
     fun buildUiItems(): List<BloggingRemindersItem> {
         return listOf(Illustration(R.drawable.img_illustration_celebration_150dp),
-                Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message))
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.set_your_blogging_reminders_message))
         )
     }
 
@@ -29,7 +29,7 @@ class PrologueBuilder
         onContinue: () -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(R.string.set_your_blogging_goals_button),
+                UiStringRes(R.string.set_your_blogging_reminders_button),
                 enabled = true,
                 ListItemInteraction.create(onContinue)
         )

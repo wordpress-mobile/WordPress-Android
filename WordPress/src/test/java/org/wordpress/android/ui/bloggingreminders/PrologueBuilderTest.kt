@@ -41,7 +41,7 @@ class PrologueBuilderTest {
 
         assertThat(primaryButton).isEqualTo(
                 PrimaryButton(
-                        UiStringRes(R.string.set_your_blogging_goals_button),
+                        UiStringRes(R.string.set_your_blogging_reminders_button),
                         true,
                         Companion.create(onConfirm)
                 )
@@ -61,7 +61,7 @@ class PrologueBuilderTest {
         uiModel: List<BloggingRemindersItem>
     ) {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
-        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_goals_title)))
-        assertThat(uiModel[2]).isEqualTo(HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message)))
+        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_reminders_title)))
+        assertThat(uiModel[2]).isEqualTo(HighEmphasisText(UiStringRes(R.string.set_your_blogging_reminders_message)))
     }
 }
