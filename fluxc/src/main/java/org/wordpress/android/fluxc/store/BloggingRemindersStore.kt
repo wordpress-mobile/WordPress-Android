@@ -23,9 +23,10 @@ class BloggingRemindersStore
         }
     }
 
-    fun hasModifiedBloggingReminders(siteId: Int): Boolean {
-        return bloggingRemindersDao.getBySiteId(siteId).isNotEmpty()
-    }
+    suspend fun hasModifiedBloggingReminders(siteId: Int) =
+            coroutineEngine.withDefaultContext(T.SETTINGS, this, "Has blogging reminders") {
+                bloggingRemindersDao.getBySiteId(siteId).isNotEmpty()
+            }
 
     suspend fun updateBloggingReminders(model: BloggingRemindersModel) =
             coroutineEngine.withDefaultContext(T.SETTINGS, this, "Updating blogging reminders") {

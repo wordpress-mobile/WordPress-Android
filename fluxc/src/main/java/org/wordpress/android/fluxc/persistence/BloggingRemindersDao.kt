@@ -17,10 +17,10 @@ abstract class BloggingRemindersDao {
     abstract fun liveGetBySiteId(siteId: Int): Flow<BloggingReminders?>
 
     @Query("SELECT * FROM BloggingReminders WHERE localSiteId = :siteId")
-    abstract fun getBySiteId(siteId: Int): List<BloggingReminders>
+    abstract suspend fun getBySiteId(siteId: Int): List<BloggingReminders>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(type: BloggingReminders): Long
+    abstract suspend fun insert(type: BloggingReminders): Long
 
     @Entity(tableName = "BloggingReminders")
     data class BloggingReminders(
