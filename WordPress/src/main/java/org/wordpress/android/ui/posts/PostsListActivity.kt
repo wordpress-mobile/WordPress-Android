@@ -165,11 +165,13 @@ class PostsListActivity : LocaleAwareActivity(),
                 LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
             }
 
+            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
+
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel()
+            initCreateMenuViewModel(actionsShownByDefault)
             loadIntentData(intent)
         }
     }
@@ -220,7 +222,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel() {
+    private fun PostListActivityBinding.initCreateMenuViewModel(actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
@@ -262,7 +264,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start(site)
+        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
@@ -647,11 +649,20 @@ class PostsListActivity : LocaleAwareActivity(),
 
     companion object {
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
+        private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
+            return buildIntent(context, site, false)
+        }
+
+        @JvmStatic
+        fun buildIntent(context: Context, site: SiteModel, actionsShownByDefault: Boolean): Intent {
+            val intent = Intent(context, PostsListActivity::class.java)
+            intent.putExtra(WordPress.SITE, site)
+            intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
             return intent
         }
     }

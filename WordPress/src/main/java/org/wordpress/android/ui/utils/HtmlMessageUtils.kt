@@ -13,4 +13,10 @@ class HtmlMessageUtils
                 HtmlCompat.FROM_HTML_MODE_LEGACY
         )
     }
+    fun getHtmlMessageFromStringFormat(text: String, vararg args: Any?): CharSequence {
+        return HtmlCompat.fromHtml(
+                String.format(text, *args),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+    }
 }

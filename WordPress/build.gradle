@@ -113,6 +113,8 @@ android {
     // Gutenberg's dependency - react-native-video is using
     // Java API 1.8
     compileOptions {
+        // Enables Java 8+ API desugaring support
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -452,6 +454,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+
+    // Enables Java 8+ API desugaring support
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 }
 
 configurations.all {
