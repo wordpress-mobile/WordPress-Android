@@ -18,6 +18,13 @@ class PrologueBuilder
         )
     }
 
+    fun buildUiItemsForSettings(): List<BloggingRemindersItem> {
+        return listOf(
+                Illustration(R.drawable.img_illustration_celebration_150dp),
+                Title(UiStringRes(R.string.set_your_blogging_goals_title))
+        )
+    }
+
     fun buildPrimaryButton(
         onContinue: () -> Unit
     ): PrimaryButton {
