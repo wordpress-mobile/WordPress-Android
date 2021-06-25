@@ -108,7 +108,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `shows prologue ui state on PROLOGUE from SiteSettings`() {
         val uiItems = initPrologueBuilderForSiteSettings()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
