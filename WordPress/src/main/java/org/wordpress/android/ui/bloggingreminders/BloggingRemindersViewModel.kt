@@ -32,7 +32,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
@@ -47,7 +46,6 @@ class BloggingRemindersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    private val resourceProvider: ResourceProvider,
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
     private val dayLabelUtils: DayLabelUtils,
@@ -73,8 +71,10 @@ class BloggingRemindersViewModel @Inject constructor(
                 EPILOGUE -> buildEpilogue()
             }
             val primaryButton = when (screen) {
-                PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
-                PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelectionFromSettings)
+                PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(
+                        isFirstTimeFlow ?: false,
+                        startDaySelection
+                )
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
                         bloggingRemindersModel,
                         isFirstTimeFlow == true,
@@ -88,14 +88,9 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }.distinctUntilChanged()
 
-    private val startDaySelection: () -> Unit = {
+    private val startDaySelection: (isFirstTimeFlow: Boolean) -> Unit = { isFirstTimeFlow ->
         analyticsTracker.trackPrimaryButtonPressed(PROLOGUE)
-        _isFirstTimeFlow.value = true
-        _selectedScreen.value = SELECTION
-    }
-
-    private val startDaySelectionFromSettings: () -> Unit = {
-        _isFirstTimeFlow.value = false
+        _isFirstTimeFlow.value = isFirstTimeFlow
         _selectedScreen.value = SELECTION
     }
 

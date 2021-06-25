@@ -26,12 +26,13 @@ class PrologueBuilder
     }
 
     fun buildPrimaryButton(
-        onContinue: () -> Unit
+        isFirstTimeFlow: Boolean,
+        onContinue: (Boolean) -> Unit
     ): PrimaryButton {
         return PrimaryButton(
                 UiStringRes(R.string.set_your_blogging_reminders_button),
                 enabled = true,
-                ListItemInteraction.create(onContinue)
+                ListItemInteraction.create(isFirstTimeFlow, onContinue)
         )
     }
 }
