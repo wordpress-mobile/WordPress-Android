@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.test
 import org.wordpress.android.toList
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
@@ -84,6 +85,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Test
     fun `sets blogging reminders as shown on PROLOGUE`() {
         viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
+    }
+
+    @Test
+    fun `sets blogging reminders as shown on PROLOGUE from SiteSettings`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS, BLOG_SETTINGS)
 
         verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
     }
@@ -317,10 +325,77 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         verify(reminderScheduler).cancelBySiteId(siteId)
     }
 
+    @Test
+    fun `onPostCreated shows prologue when post is new and prompt was not shown before`() {
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
+
+        initPrologueBuilder()
+
+        viewModel.onPostCreated(siteId, true)
+
+        assertPrologue()
+    }
+
+    @Test
+    fun `onPostCreated does not show prologue when post is old and prompt was not shown before`() {
+        initPrologueBuilder()
+
+        viewModel.onPostCreated(siteId, false)
+
+        assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
+    }
+
+    @Test
+    fun `onPostCreated does not show prologue when post is new and prompt was shown before`() {
+        whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(false)
+
+        initPrologueBuilder()
+
+        viewModel.onPostCreated(siteId, true)
+
+        assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
+    }
+
+    @Test
+    fun `onSettingsItemClicked shows prologue when no reminders are set`() = test {
+        whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(false)
+
+        initPrologueBuilderForSiteSettings()
+
+        viewModel.onSettingsItemClicked(siteId)
+
+        assertPrologue()
+    }
+
+    @Test
+    fun `onSettingsItemClicked shows day selection when reminders are set`() = test {
+        whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
+
+        initEmptyStore()
+        initDaySelectionBuilder()
+
+        viewModel.onSettingsItemClicked(siteId)
+
+        assertDaySelection()
+    }
+
     private fun initEmptyStore(): BloggingRemindersModel {
         val emptyModel = BloggingRemindersModel(siteId)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
         return emptyModel
+    }
+
+    private fun assertPrologue() {
+        val state = uiState.last()
+        assertPrimaryButton(state.primaryButton!!, R.string.set_your_blogging_reminders_button)
+    }
+
+    private fun assertDaySelection(isFirstTime: Boolean = false) {
+        val state = uiState.last()
+        assertPrimaryButton(
+                state.primaryButton!!,
+                if (isFirstTime) R.string.blogging_reminders_notify_me else R.string.blogging_reminders_update
+        )
     }
 
     private fun assertEpilogue() {
@@ -362,8 +437,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val model = it.getArgument<BloggingRemindersModel>(0)
             val isFirstTimeFlow = it.getArgument<Boolean>(1)
             val onConfirm: (BloggingRemindersModel?) -> Unit = it.getArgument(2)
-            PrimaryButton(
-                    UiStringText("Confirm"),
+            val buttonLabel = if (isFirstTimeFlow) {
+                R.string.blogging_reminders_notify_me
+            } else {
+                R.string.blogging_reminders_update
+            }
+            return@doAnswer PrimaryButton(
+                    UiStringRes(buttonLabel),
                     !isFirstTimeFlow || model.enabledDays.isNotEmpty(),
                     ListItemInteraction.create { onConfirm.invoke(model) })
         }.whenever(daySelectionBuilder).buildPrimaryButton(any(), any(), any())
@@ -376,7 +456,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val isFirstTimeFlow = it.getArgument<Boolean>(0)
             val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
-                    UiStringText("Confirm"),
+                    UiStringRes(R.string.set_your_blogging_reminders_button),
                     true,
                     ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
         }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
@@ -402,7 +482,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
             val isFirstTimeFlow = it.getArgument<Boolean>(0)
             val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
-                    UiStringText("Confirm"),
+                    UiStringRes(R.string.set_your_blogging_reminders_button),
                     true,
                     ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
         }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
