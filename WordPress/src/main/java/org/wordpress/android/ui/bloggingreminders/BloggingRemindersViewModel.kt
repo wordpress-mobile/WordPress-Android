@@ -65,7 +65,8 @@ class BloggingRemindersViewModel @Inject constructor(
                 EPILOGUE -> buildEpilogue()
             }
             val primaryButton = when (screen) {
-                PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelection)
+                PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
+                PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelectionFromSettings)
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
                         bloggingRemindersModel,
                         isFirstTimeFlow == true,
@@ -81,6 +82,11 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private val startDaySelection: () -> Unit = {
         _isFirstTimeFlow.value = true
+        _selectedScreen.value = SELECTION
+    }
+
+    private val startDaySelectionFromSettings: () -> Unit = {
+        _isFirstTimeFlow.value = false
         _selectedScreen.value = SELECTION
     }
 
