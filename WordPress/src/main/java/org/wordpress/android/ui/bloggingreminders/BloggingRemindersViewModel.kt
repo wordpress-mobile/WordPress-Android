@@ -104,7 +104,8 @@ class BloggingRemindersViewModel @Inject constructor(
     fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackFlowStart(source)
-        if (screen == PROLOGUE) {
+        val isPrologueScreen = screen == PROLOGUE || screen == PROLOGUE_SETTINGS
+        if (isPrologueScreen) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
         } else {
             _isFirstTimeFlow.value = false
