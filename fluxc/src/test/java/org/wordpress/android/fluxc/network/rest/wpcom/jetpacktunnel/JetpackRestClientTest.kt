@@ -4,6 +4,7 @@ import com.android.volley.RequestQueue
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -92,7 +93,8 @@ class JetpackRestClientTest {
                 urlCaptor.capture(),
                 eq(null),
                 paramsCaptor.capture(),
-                eq(JetpackInstallResponse::class.java)
+                eq(JetpackInstallResponse::class.java),
+                isNull()
         )).thenReturn(response)
     }
 }
