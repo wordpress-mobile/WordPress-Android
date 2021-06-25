@@ -14,14 +14,15 @@ class PrologueBuilder
     fun buildUiItems(): List<BloggingRemindersItem> {
         return listOf(Illustration(R.drawable.img_illustration_celebration_150dp),
                 Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
-                HighEmphasisText(UiStringRes(R.string.set_your_blogging_reminders_message))
+                HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message))
         )
     }
 
     fun buildUiItemsForSettings(): List<BloggingRemindersItem> {
         return listOf(
                 Illustration(R.drawable.img_illustration_celebration_150dp),
-                Title(UiStringRes(R.string.set_your_blogging_reminders_title))
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.set_up_blogging_reminders_message))
         )
     }
 

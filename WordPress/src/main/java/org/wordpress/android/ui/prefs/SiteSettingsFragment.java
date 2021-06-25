@@ -1229,7 +1229,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.PROLOGUE_SETTINGS, Source.BLOG_SETTINGS);
+        mBloggingRemindersViewModel.onSettingsItemClicked(mSite.getId());
     }
 
     private void showHomepageSettings() {

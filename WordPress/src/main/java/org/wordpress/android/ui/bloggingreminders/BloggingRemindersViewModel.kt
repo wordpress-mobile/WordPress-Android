@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -32,7 +33,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
@@ -47,7 +47,6 @@ class BloggingRemindersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    private val resourceProvider: ResourceProvider,
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
     private val dayLabelUtils: DayLabelUtils,
@@ -230,6 +229,17 @@ class BloggingRemindersViewModel @Inject constructor(
     fun onPostCreated(siteId: Int, isNewPost: Boolean?) {
         if (isNewPost == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
             showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+        }
+    }
+
+    fun onSettingsItemClicked(siteId: Int) {
+        launch {
+                val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
+                    SELECTION
+                } else {
+                    PROLOGUE_SETTINGS
+                }
+            showBottomSheet(siteId, screen, BLOG_SETTINGS)
         }
     }
 

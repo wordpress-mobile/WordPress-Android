@@ -50,7 +50,6 @@ import java.time.DayOfWeek
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
-    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var prologueBuilder: PrologueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
@@ -68,7 +67,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 bloggingRemindersManager,
                 bloggingRemindersStore,
-                resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
                 dayLabelUtils,
