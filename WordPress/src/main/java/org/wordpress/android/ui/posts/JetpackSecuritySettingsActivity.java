@@ -32,8 +32,6 @@ public class JetpackSecuritySettingsActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24px);
-                actionBar.setSubtitle("");
             }
         }
     }
