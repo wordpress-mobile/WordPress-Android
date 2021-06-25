@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.posts.PostsListActivity
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -25,7 +26,7 @@ class ReminderNotifier @Inject constructor(
     fun notify(siteId: Int) {
         val context = contextProvider.getContext()
         val site = siteStore.getSiteByLocalId(siteId) ?: return
-        val name = accountStore.account.firstName
+        val siteName = SiteUtils.getSiteNameOrHomeURL(site)
 
         val reminderNotification = ReminderNotification(
                 channel = resourceProvider.getString(R.string.notification_channel_reminder_id),
@@ -37,7 +38,7 @@ class ReminderNotifier @Inject constructor(
                             FLAG_CANCEL_CURRENT
                     )
                 },
-                contentTitle = resourceProvider.getString(R.string.blogging_reminders_notification_title, name),
+                contentTitle = resourceProvider.getString(R.string.blogging_reminders_notification_title, siteName),
                 contentText = resourceProvider.getString(R.string.blogging_reminders_notification_text),
                 priority = PRIORITY_DEFAULT,
                 category = CATEGORY_REMINDER,
