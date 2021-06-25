@@ -3633,8 +3633,8 @@
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 
     <!-- Blogging Reminders -->
-    <string name="blogging_reminders_notification_title">%s, it\'s time to blog</string>
-    <string name="blogging_reminders_notification_text">This is your reminder to blog today &#9997;</string>
+    <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
     <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
     <string name="set_your_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
     <string name="set_your_blogging_reminders_button">Set reminders</string>

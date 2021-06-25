@@ -8,7 +8,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -28,9 +27,7 @@ class ReminderNotifierTest {
     private val siteStore: SiteStore = mock {
         on { getSiteByLocalId(SITE_ID) } doReturn TEST_SITE
     }
-    private val accountStore: AccountStore = mock {
-        on { account } doReturn TEST_ACCOUNT
-    }
+    private val accountStore: AccountStore = mock()
     private val notificationManager: ReminderNotificationManager = mock()
     private val analyticsTracker: BloggingRemindersAnalyticsTracker = mock()
 
@@ -56,10 +53,6 @@ class ReminderNotifierTest {
     private companion object {
         private val TEST_SITE = SiteModel().apply {
             id = SITE_ID
-        }
-
-        private val TEST_ACCOUNT = AccountModel().apply {
-            userName = "username"
         }
 
         private const val SITE_ID = 1
