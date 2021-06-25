@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -450,28 +451,44 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK) {
-            if (data != null && EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(
-                        data, this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        when {
+            requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
+                if (data != null && EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(
+                            data, this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                    )
+
+                    // a restart will happen so, no need to continue here
+                    return
+                }
+
+                viewModel.handleEditPostResult(data)
+                bloggingRemindersViewModel.onPostCreated(
+                        site.id,
+                        data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
                 )
-
-                // a restart will happen so, no need to continue here
-                return
             }
-
-            viewModel.handleEditPostResult(data)
-            bloggingRemindersViewModel.onPostCreated(
-                    site.id,
-                    data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
-            )
-        } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
-            viewModel.handleRemotePreviewClosing()
-        } else if (requestCode == RequestCodes.PHOTO_PICKER &&
-                resultCode == Activity.RESULT_OK &&
-                data != null) {
-            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site, STORY_FROM_POSTS_LIST)
+            requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
+                viewModel.handleRemotePreviewClosing()
+            }
+            requestCode == RequestCodes.PHOTO_PICKER &&
+                    resultCode == Activity.RESULT_OK &&
+                    data != null -> {
+                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                        data,
+                        this,
+                        site,
+                        STORY_FROM_POSTS_LIST
+                )
+            }
+            requestCode == RequestCodes.CREATE_STORY -> {
+                val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
+                bloggingRemindersViewModel.onPostCreated(
+                        site.id,
+                        isNewStory
+                )
+            }
         }
     }
 
