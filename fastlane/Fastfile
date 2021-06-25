@@ -290,7 +290,7 @@ REPOSITORY_NAME="WordPress-Android"
     download_translations(app: app) unless hotfix
     android_bump_version_final_release(app: app) unless hotfix
     version = android_get_release_version(app: app)
-    download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
+    download_metadata_strings(app: app, version: version["name"], build_number: version["code"]) unless hotfix
 
     # Wrap up
     removebranchprotection(repository:GHHELPER_REPO, branch: "release/#{version["name"]}")
@@ -554,19 +554,24 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
-  # download_metadata_string
+  # download_metadata_strings
   # -----------------------------------------------------------------------------------
-  # This lane downloads the translated metadata (release notes,
-  # app store strings, title, etc.) from GlotPress and updates the local files
+  # This lane downloads the translated metadata (release notes, app store strings, title, etc.)
+  # from GlotPress and updates the local files
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane download_metadata_string build_number:<build_number> version:<version>
+  # fastlane download_metadata_strings app:<wordpress|jetpack> build_number:<build_number> version:<version>
   #
   # Example:
-  # fastlane download_metadata_string build_number:573 version:10.3
+  # fastlane download_metadata_strings app:jetpack build_number:573 version:10.3
   #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options|
+    app = options[:app] || 'wordpress'
+    paths = {
+      wordpress: { metadata_dir: 'metadata', gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/' },
+      jetpack:   { metadata_dir: 'jetpack_metadata', gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/' }
+    }[app.to_sym]
     values = options[:version].split('.')
     files = {
       "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key:"release_note_short_#{values[0]}#{values[1]}"},
@@ -576,15 +581,15 @@ REPOSITORY_NAME="WordPress-Android"
     }
 
     delete_old_changelogs(build: options[:build_number])
-    download_path=Dir.pwd + "/metadata/android"
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+    download_path = File.join(Dir.pwd, paths[:metadata_dir], 'android')
+    gp_downloadmetadata(project_url: paths[:gp_url],
       target_files: files,
-      locales: RELEASE_NOTES_LOCALES,
+      locales: RELEASE_NOTES_LOCALES, # Currently the same for WP and JP
       source_locale: "en-US",
       download_path: download_path)
 
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
-    sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
+    sh("git add #{download_path} && git commit -m \"Update #{app} metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
 
 ########################################################################
