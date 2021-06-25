@@ -16,6 +16,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -50,6 +51,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
     @Mock lateinit var prologueBuilder: PrologueBuilder
+    @Mock lateinit var epilogueBuilder: EpilogueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
     @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
@@ -68,6 +70,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 bloggingRemindersStore,
                 prologueBuilder,
                 daySelectionBuilder,
+                epilogueBuilder,
                 dayLabelUtils,
                 analyticsTracker,
                 reminderScheduler
@@ -165,17 +168,24 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                         model
                 )
         )
+
         initDaySelectionBuilder()
 
         viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
 
         clickPrimaryButton()
 
+        initEpilogueBuilder()
+
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
+
         assertEpilogue()
     }
 
     @Test
     fun `closes bottom sheet from epilogue on primary button click`() {
+        initEpilogueBuilder()
+
         viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
 
         assertEpilogue()
@@ -247,6 +257,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `clicking primary button on epilogue screen tracks correct events`() {
+        initEpilogueBuilder()
         viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
 
         clickPrimaryButton()
@@ -362,12 +373,25 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
         whenever(prologueBuilder.buildUiItems()).thenReturn(uiItems)
         doAnswer {
-            val onConfirm: () -> Unit = it.getArgument(0)
+            val isFirstTimeFlow = it.getArgument<Boolean>(0)
+            val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
                     UiStringText("Confirm"),
                     true,
+                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+        }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
+        return uiItems
+    }
+
+    private fun initEpilogueBuilder(): List<BloggingRemindersItem> {
+        val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Epilogue")))
+        doAnswer {
+            val onConfirm: () -> Unit = it.getArgument(0)
+            PrimaryButton(
+                    UiStringRes(string.blogging_reminders_done),
+                    true,
                     ListItemInteraction.create { onConfirm.invoke() })
-        }.whenever(prologueBuilder).buildPrimaryButton(any())
+        }.whenever(epilogueBuilder).buildPrimaryButton(any())
         return uiItems
     }
 
@@ -375,12 +399,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
         whenever(prologueBuilder.buildUiItemsForSettings()).thenReturn(uiItems)
         doAnswer {
-            val onConfirm: () -> Unit = it.getArgument(0)
+            val isFirstTimeFlow = it.getArgument<Boolean>(0)
+            val onConfirm: (Boolean) -> Unit = it.getArgument(1)
             PrimaryButton(
                     UiStringText("Confirm"),
                     true,
-                    ListItemInteraction.create { onConfirm.invoke() })
-        }.whenever(prologueBuilder).buildPrimaryButton(any())
+                    ListItemInteraction.create { onConfirm.invoke(isFirstTimeFlow) })
+        }.whenever(prologueBuilder).buildPrimaryButton(any(), any())
         return uiItems
     }
 }

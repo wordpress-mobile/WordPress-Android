@@ -7,6 +7,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Locale
 import javax.inject.Inject
 
 class DayLabelUtils
@@ -22,5 +23,13 @@ class DayLabelUtils
         } else {
             UiStringRes(R.string.blogging_reminders_not_set)
         }
+    }
+
+    fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): String? {
+        val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count).map {
+            it.toLowerCase(Locale.getDefault())
+        }
+        val size = bloggingRemindersModel?.enabledDays?.size ?: 0
+        return counts.getOrNull(size - 1)
     }
 }
