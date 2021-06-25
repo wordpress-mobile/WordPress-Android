@@ -989,6 +989,11 @@ class SiteRestClient @Inject constructor(
                 site.xmlRpcUrl = from.meta.links.xmlrpc
             }
         }
+        if (from.zendesk_site_meta != null) {
+            site.zendeskPlan = from.zendesk_site_meta.plan
+            site.zendeskAddOns = from.zendesk_site_meta.addon
+                    ?.let { TextUtils.join(",", from.zendesk_site_meta.addon) } ?: ""
+        }
         // Only set the isWPCom flag for "pure" WPCom sites
         if (!from.jetpack) {
             site.setIsWPCom(true)
@@ -1054,7 +1059,7 @@ class SiteRestClient @Inject constructor(
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = ("ID,URL,name,description,jetpack,visible,is_private,options,plan," +
-                "capabilities,quota,icon,meta")
+                "capabilities,quota,icon,meta,zendesk_site_meta")
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
