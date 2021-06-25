@@ -57,10 +57,11 @@ class JetpackStore
         val installedPayload = jetpackRestClient.installJetpack(site)
         reloadSite(site)
         val reloadedSite = siteStore.getSiteByLocalId(site.id)
-        return@withDefaultContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
+        val isJetpackInstalled = reloadedSite?.isJetpackInstalled == true
+        return@withDefaultContext if (!installedPayload.isError || isJetpackInstalled) {
             val onJetpackInstall = OnJetpackInstalled(
                     installedPayload.success ||
-                            reloadedSite.isJetpackInstalled, action
+                            isJetpackInstalled, action
             )
             emitChange(onJetpackInstall)
             onJetpackInstall
