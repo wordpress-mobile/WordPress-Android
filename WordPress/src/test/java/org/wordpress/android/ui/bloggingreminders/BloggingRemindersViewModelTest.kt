@@ -33,6 +33,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
@@ -99,6 +100,15 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val uiItems = initPrologueBuilder()
 
         viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        assertThat(uiState.last().uiItems).isEqualTo(uiItems)
+    }
+
+    @Test
+    fun `shows prologue ui state on PROLOGUE from SiteSettings`() {
+        val uiItems = initPrologueBuilderForSiteSettings()
+
+        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -354,6 +364,19 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun initPrologueBuilder(): List<BloggingRemindersItem> {
         val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
         whenever(prologueBuilder.buildUiItems()).thenReturn(uiItems)
+        doAnswer {
+            val onConfirm: () -> Unit = it.getArgument(0)
+            PrimaryButton(
+                    UiStringText("Confirm"),
+                    true,
+                    ListItemInteraction.create { onConfirm.invoke() })
+        }.whenever(prologueBuilder).buildPrimaryButton(any())
+        return uiItems
+    }
+
+    private fun initPrologueBuilderForSiteSettings(): List<BloggingRemindersItem> {
+        val uiItems = listOf<BloggingRemindersItem>(Title(UiStringText("Prologue")))
+        whenever(prologueBuilder.buildUiItemsForSettings()).thenReturn(uiItems)
         doAnswer {
             val onConfirm: () -> Unit = it.getArgument(0)
             PrimaryButton(
