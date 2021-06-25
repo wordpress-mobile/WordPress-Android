@@ -3636,7 +3636,8 @@
     <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
     <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
     <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
-    <string name="set_your_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
     <string name="set_your_blogging_reminders_button">Set reminders</string>
     <string name="blogging_reminders_n_a_week">%s a week</string>
     <string-array name="blogging_reminders_count">

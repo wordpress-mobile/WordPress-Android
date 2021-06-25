@@ -43,7 +43,6 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
@@ -51,7 +50,6 @@ import java.time.DayOfWeek
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
     @Mock lateinit var bloggingRemindersStore: BloggingRemindersStore
-    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var prologueBuilder: PrologueBuilder
     @Mock lateinit var epilogueBuilder: EpilogueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder

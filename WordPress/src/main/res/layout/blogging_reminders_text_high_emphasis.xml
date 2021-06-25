@@ -8,4 +8,4 @@
     android:paddingBottom="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
-    tools:text="@string/set_your_blogging_reminders_message" />
+    tools:text="@string/post_publishing_set_up_blogging_reminders_message" />

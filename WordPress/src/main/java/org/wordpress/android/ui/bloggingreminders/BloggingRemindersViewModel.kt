@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
@@ -174,6 +175,17 @@ class BloggingRemindersViewModel @Inject constructor(
     fun onPostCreated(siteId: Int, isNewPost: Boolean?) {
         if (isNewPost == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
             showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+        }
+    }
+
+    fun onSettingsItemClicked(siteId: Int) {
+        launch {
+                val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
+                    SELECTION
+                } else {
+                    PROLOGUE_SETTINGS
+                }
+            showBottomSheet(siteId, screen, BLOG_SETTINGS)
         }
     }
 
