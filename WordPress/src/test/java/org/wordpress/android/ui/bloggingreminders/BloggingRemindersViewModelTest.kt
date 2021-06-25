@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -19,10 +20,14 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
+import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
+import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.toList
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -38,6 +43,9 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
+import org.wordpress.android.workers.reminder.ReminderScheduler
+import java.time.DayOfWeek
 
 class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingRemindersManager: BloggingRemindersManager
@@ -46,6 +54,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     @Mock lateinit var prologueBuilder: PrologueBuilder
     @Mock lateinit var daySelectionBuilder: DaySelectionBuilder
     @Mock lateinit var dayLabelUtils: DayLabelUtils
+    @Mock lateinit var analyticsTracker: BloggingRemindersAnalyticsTracker
+    @Mock lateinit var reminderScheduler: ReminderScheduler
     private lateinit var viewModel: BloggingRemindersViewModel
     private val siteId = 123
     private lateinit var events: MutableList<Boolean>
@@ -61,7 +71,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
-                dayLabelUtils
+                dayLabelUtils,
+                analyticsTracker,
+                reminderScheduler
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -71,14 +83,14 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `sets blogging reminders as shown on PROLOGUE`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         verify(bloggingRemindersManager).bloggingRemindersShown(siteId)
     }
 
     @Test
     fun `shows bottom sheet on showBottomSheet`() {
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         assertThat(events).containsExactly(true)
     }
@@ -87,7 +99,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `shows prologue ui state on PROLOGUE`() {
         val uiItems = initPrologueBuilder()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -96,7 +108,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `shows prologue ui state on PROLOGUE from SiteSettings`() {
         val uiItems = initPrologueBuilderForSiteSettings()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE_SETTINGS, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(uiItems)
     }
@@ -107,7 +119,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         val daySelectionScreen = listOf<BloggingRemindersItem>()
         whenever(daySelectionBuilder.buildSelection(eq(model), any())).thenReturn(daySelectionScreen)
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
 
         assertThat(uiState.last().uiItems).isEqualTo(daySelectionScreen)
     }
@@ -138,7 +150,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `switches from prologue do day selection on primary button click`() {
         initPrologueBuilder()
 
-        viewModel.showBottomSheet(siteId, PROLOGUE)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
 
         clickPrimaryButton()
 
@@ -158,7 +170,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         )
         initDaySelectionBuilder()
 
-        viewModel.showBottomSheet(siteId, SELECTION)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
 
         clickPrimaryButton()
 
@@ -167,7 +179,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `closes bottom sheet from epilogue on primary button click`() {
-        viewModel.showBottomSheet(siteId, EPILOGUE)
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
 
         assertEpilogue()
 
@@ -176,6 +188,125 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         clickPrimaryButton()
 
         assertThat(events.last()).isFalse()
+    }
+
+    @Test
+    fun `showBottomSheet sets tracker site id`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        verify(analyticsTracker).setSite(siteId)
+    }
+
+    @Test
+    fun `showBottomSheet tracks flow start with correct source`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+
+        verify(analyticsTracker).trackFlowStart(BLOG_SETTINGS)
+        verify(analyticsTracker).trackFlowStart(PUBLISH_FLOW)
+    }
+
+    @Test
+    fun `showBottomSheet tracks screen shown with correct screen`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        verify(analyticsTracker).trackScreenShown(PROLOGUE)
+        verify(analyticsTracker).trackScreenShown(SELECTION)
+    }
+
+    @Test
+    fun `showBottomSheet tracks screen shown more than once`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        verify(analyticsTracker, times(2)).trackScreenShown(PROLOGUE)
+    }
+
+    @Test
+    fun `clicking primary button on prologue screen tracks correct events`() {
+        initPrologueBuilder()
+
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(PROLOGUE)
+        verify(analyticsTracker).trackScreenShown(SELECTION)
+    }
+
+    @Test
+    fun `clicking primary button on selection screen tracks correct events`() {
+        initEmptyStore()
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(SELECTION)
+        verify(analyticsTracker).trackScreenShown(EPILOGUE)
+    }
+
+    @Test
+    fun `clicking primary button on epilogue screen tracks correct events`() {
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(analyticsTracker).trackPrimaryButtonPressed(EPILOGUE)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on prologue screen tracks dismiss event`() {
+        viewModel.showBottomSheet(siteId, PROLOGUE, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowDismissed(PROLOGUE)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on selection screen tracks dismiss event`() {
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowDismissed(SELECTION)
+    }
+
+    @Test
+    fun `dismissing bottom sheet on epilogue screen tracks completed event`() {
+        viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
+        viewModel.onBottomSheetDismissed()
+
+        verify(analyticsTracker).trackFlowCompleted()
+    }
+
+    @Test
+    fun `clicking primary button on selection screen schedule reminders with correct days`() {
+        val model = BloggingRemindersModel(siteId, setOf(MONDAY, WEDNESDAY, FRIDAY))
+        whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(model))
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(reminderScheduler).schedule(
+                siteId,
+                WeeklyReminder(setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY))
+        )
+    }
+
+    @Test
+    fun `clicking primary button on empty selection screen cancel reminders`() {
+        initEmptyStore()
+        initDaySelectionBuilder()
+
+        viewModel.showBottomSheet(siteId, SELECTION, BLOG_SETTINGS)
+
+        clickPrimaryButton()
+
+        verify(reminderScheduler).cancelBySiteId(siteId)
     }
 
     private fun initEmptyStore(): BloggingRemindersModel {
