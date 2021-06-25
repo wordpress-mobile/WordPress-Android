@@ -19,6 +19,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustra
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -59,11 +60,12 @@ class BloggingRemindersViewModel @Inject constructor(
         if (screen != null) {
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
+                PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay)
                 EPILOGUE -> buildEpilogue()
             }
             val primaryButton = when (screen) {
-                PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
+                PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelection)
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
                         bloggingRemindersModel,
                         isFirstTimeFlow == true,
@@ -207,7 +209,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     enum class Screen {
-        PROLOGUE, SELECTION, EPILOGUE
+        PROLOGUE, PROLOGUE_SETTINGS, SELECTION, EPILOGUE
     }
 
     data class UiState(val uiItems: List<BloggingRemindersItem>, val primaryButton: PrimaryButton? = null) {

@@ -1087,7 +1087,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
                             });
-
                     mBloggingRemindersViewModel.onPostCreated(
                             site.getId(),
                             data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
