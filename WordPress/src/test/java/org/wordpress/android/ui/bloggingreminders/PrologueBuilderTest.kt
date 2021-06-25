@@ -62,6 +62,10 @@ class PrologueBuilderTest {
     ) {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_reminders_title)))
-        assertThat(uiModel[2]).isEqualTo(HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message)))
+        assertThat(uiModel[2]).isEqualTo(
+                HighEmphasisText(
+                        UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message)
+                )
+        )
     }
 }

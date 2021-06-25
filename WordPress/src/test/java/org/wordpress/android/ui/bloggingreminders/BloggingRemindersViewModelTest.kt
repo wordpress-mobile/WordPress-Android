@@ -42,7 +42,6 @@ import org.wordpress.android.ui.utils.ListItemInteraction.Companion
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
