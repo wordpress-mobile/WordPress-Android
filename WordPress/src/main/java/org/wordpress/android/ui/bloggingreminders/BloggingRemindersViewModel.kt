@@ -247,7 +247,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"),
-        PROLOGUE_SETTINGS ("main"),
+        PROLOGUE_SETTINGS("main"),
         SELECTION("day_picker"),
         EPILOGUE("all_set")
     }
