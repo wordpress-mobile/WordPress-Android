@@ -26,7 +26,8 @@ class EpilogueBuilder @Inject constructor(
         val selectedDays = when (enabledDays?.size) {
             ONE_DAY -> enabledDays.joinToString { it.toString() }
             TWO_DAYS -> enabledDays.joinToString(separator = " and ") {
-                it.toString()}
+                it.toString()
+            }
             in THREE_DAYS..SIX_DAYS -> {
                 val firstDays = enabledDays?.dropLast(1)
                 val lastDay = enabledDays?.drop(enabledDays.count() - 1)
