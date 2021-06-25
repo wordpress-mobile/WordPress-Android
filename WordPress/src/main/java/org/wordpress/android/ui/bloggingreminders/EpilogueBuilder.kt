@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.bloggingreminders
 
+import android.icu.text.ListFormatter
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -13,6 +16,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.time.DayOfWeek
+import java.time.format.TextStyle
+import java.util.Locale
 import javax.inject.Inject
 
 class EpilogueBuilder @Inject constructor(
@@ -21,21 +26,8 @@ class EpilogueBuilder @Inject constructor(
     fun buildUiItems(
         bloggingRemindersModel: BloggingRemindersModel?
     ): List<BloggingRemindersItem> {
-        val enabledDays = bloggingRemindersModel?.enabledDays?.sorted()?.map { DayOfWeek.valueOf(it.name) }
-
-        val selectedDays = when (enabledDays?.size) {
-            ONE_DAY -> enabledDays.joinToString { it.toString() }
-            TWO_DAYS -> enabledDays.joinToString(separator = " and ") {
-                it.toString()
-            }
-            in THREE_DAYS..SIX_DAYS -> {
-                val firstDays = enabledDays?.dropLast(1)
-                val lastDay = enabledDays?.drop(enabledDays.count() - 1)
-                firstDays?.joinToString(postfix = " and ") {
-                    it.toString()
-                } + lastDay?.joinToString { it.toString() }
-            }
-            else -> UiStringRes(string.blogging_reminders_epilogue_body_everyday).toString()
+        val enabledDays = bloggingRemindersModel?.enabledDays?.sorted()?.map {
+            DayOfWeek.valueOf(it.name).getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
 
         val title = when (enabledDays?.size) {
@@ -47,9 +39,13 @@ class EpilogueBuilder @Inject constructor(
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
             SEVEN_DAYS -> UiStringRes(string.blogging_reminders_epilogue_body_everyday)
             else -> {
-                val numberOfTimes = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
-                // TODO: Undo this when desugaring is merged and remove selectedDay above
-                // val selectedDays = ListFormatter.getInstance().format(enabledDays)
+                val numberOfTimes = dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel)
+
+                val selectedDays = if (VERSION.SDK_INT >= VERSION_CODES.O) {
+                    ListFormatter.getInstance().format(enabledDays)
+                } else {
+                    getFormattedDays(enabledDays)
+                }
 
                 UiStringResWithParams(
                         string.blogging_reminders_epilogue_body_days,
@@ -63,6 +59,15 @@ class EpilogueBuilder @Inject constructor(
                 HighEmphasisText(body),
                 Caption(UiStringRes(string.blogging_reminders_epilogue_caption))
         )
+    }
+
+    // for android sdk below Oreo(26), it will show only comma separated list e.g. Monday, Tuesday
+    private fun getFormattedDays(enabledDays: List<String>?): String {
+        return when (enabledDays?.size) {
+            ONE_DAY -> enabledDays.joinToString { it }
+            in TWO_DAYS..SIX_DAYS -> enabledDays?.joinToString { it }.toString()
+            else -> UiStringRes(string.blogging_reminders_epilogue_body_everyday).toString()
+        }
     }
 
     fun buildPrimaryButton(

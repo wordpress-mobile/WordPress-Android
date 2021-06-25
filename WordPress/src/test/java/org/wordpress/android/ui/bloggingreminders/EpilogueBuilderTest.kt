@@ -54,10 +54,10 @@ class EpilogueBuilderTest {
     @Test
     fun `builds UI model with selected days`() {
         val bloggingRemindersModel = BloggingRemindersModel(1, setOf(WEDNESDAY, SUNDAY))
-        val dayLabel = UiStringText("Twice a week")
-        whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
+        val dayLabel = UiStringText("twice")
+        whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
-        val selectedDays = "Wednesday and Sunday"
+        val selectedDays = "Wednesday, Sunday"
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithSelection(uiModel, dayLabel, selectedDays)
