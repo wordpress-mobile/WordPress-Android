@@ -26,10 +26,15 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.ListFormatterUtils
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class EpilogueBuilderTest {
     @Mock lateinit var dayLabelUtils: DayLabelUtils
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var listFormatterUtils: ListFormatterUtils
     private lateinit var epilogueBuilder: EpilogueBuilder
     private var done = false
 
@@ -39,8 +44,9 @@ class EpilogueBuilderTest {
 
     @Before
     fun setUp() {
-        epilogueBuilder = EpilogueBuilder(dayLabelUtils)
+        epilogueBuilder = EpilogueBuilder(dayLabelUtils, localeManagerWrapper, listFormatterUtils)
         done = false
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
@@ -58,6 +64,8 @@ class EpilogueBuilderTest {
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
         val selectedDays = "Wednesday, Sunday"
+        whenever(listFormatterUtils.formatList(listOf("Wednesday", "Sunday"))).thenReturn(selectedDays)
+
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithSelection(uiModel, dayLabel, selectedDays)
@@ -67,7 +75,8 @@ class EpilogueBuilderTest {
     fun `builds UI model with all days selected`() {
         val bloggingRemindersModel = BloggingRemindersModel(
                 1,
-                setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY))
+                setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+        )
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithAllDaysSelection(uiModel)
@@ -112,11 +121,14 @@ class EpilogueBuilderTest {
         assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(string.blogging_reminders_epilogue_title)))
         assertThat(uiModel[2])
-                .isEqualTo(HighEmphasisText(
-                        UiStringResWithParams(
-                        string.blogging_reminders_epilogue_body_days,
-                        listOf(numberOfTimes, UiStringText(selectedDays)))
-                ))
+                .isEqualTo(
+                        HighEmphasisText(
+                                UiStringResWithParams(
+                                        string.blogging_reminders_epilogue_body_days,
+                                        listOf(numberOfTimes, UiStringText(selectedDays))
+                                )
+                        )
+                )
     }
 
     private fun assertModelWithAllDaysSelection(
@@ -124,7 +136,10 @@ class EpilogueBuilderTest {
     ) {
         assertThat(uiModel[0]).isEqualTo(Illustration(drawable.img_illustration_bell_yellow_96dp))
         assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(string.blogging_reminders_epilogue_title)))
-        assertThat(uiModel[2]).isEqualTo(HighEmphasisText(
-                        UiStringRes(string.blogging_reminders_epilogue_body_everyday)))
+        assertThat(uiModel[2]).isEqualTo(
+                HighEmphasisText(
+                        UiStringRes(string.blogging_reminders_epilogue_body_everyday)
+                )
+        )
     }
 }
