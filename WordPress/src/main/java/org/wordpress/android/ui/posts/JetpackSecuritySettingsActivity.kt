@@ -1,57 +1,49 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts
 
-import android.os.Bundle;
-import android.view.MenuItem;
+import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import org.wordpress.android.R.id
+import org.wordpress.android.R.layout
+import org.wordpress.android.R.string
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import org.wordpress.android.R;
-
-public class JetpackSecuritySettingsActivity extends AppCompatActivity {
-    public static final int JETPACK_SECURITY_SETTINGS_REQUEST_CODE = 101;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_jetpack_security_settings);
-
-        setupToolbar();
+class JetpackSecuritySettingsActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(layout.fragment_jetpack_security_settings)
+        setupToolbar()
     }
 
-    private void setupToolbar() {
-        setTitle(getResources().getText(R.string.jetpack_security_setting_title));
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+    private fun setupToolbar() {
+        title = resources.getText(string.jetpack_security_setting_title)
+        val toolbar = findViewById<Toolbar>(id.toolbar)
         if (toolbar != null) {
-            setSupportActionBar(toolbar);
-
-            ActionBar actionBar = getSupportActionBar();
+            setSupportActionBar(toolbar)
+            val actionBar = supportActionBar
             if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(true)
+                actionBar.setDisplayHomeAsUpEnabled(true)
             }
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemID = item.getItemId();
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemID = item.itemId
         if (itemID == android.R.id.home) {
-            setResult(RESULT_OK, null);
-            finish();
-            return true;
+            setResult(RESULT_OK, null)
+            finish()
+            return true
         }
-
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_OK, null);
-        finish();
+    override fun onBackPressed() {
+        setResult(RESULT_OK, null)
+        finish()
+    }
+
+    companion object {
+        const val JETPACK_SECURITY_SETTINGS_REQUEST_CODE = 101
     }
 }
