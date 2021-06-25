@@ -260,6 +260,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     @Test
     fun `clicking primary button on epilogue screen tracks correct events`() {
+        initEpilogueBuilder()
         viewModel.showBottomSheet(siteId, EPILOGUE, BLOG_SETTINGS)
 
         clickPrimaryButton()
