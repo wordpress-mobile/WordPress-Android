@@ -25,18 +25,11 @@ class DayLabelUtils
         }
     }
 
-    fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): UiString {
+    fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): String? {
         val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count).map {
             it.toLowerCase(Locale.getDefault())
         }
         val size = bloggingRemindersModel?.enabledDays?.size ?: 0
-        return if (size > 0) {
-            UiStringResWithParams(
-                    R.string.blogging_reminders_n_times,
-                    listOf(UiStringText(counts[size - 1]))
-            )
-        } else {
-            UiStringRes(R.string.blogging_reminders_not_set)
-        }
+        return counts.getOrNull(size - 1)
     }
 }

@@ -70,7 +70,6 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 bloggingRemindersManager,
                 bloggingRemindersStore,
-                resourceProvider,
                 prologueBuilder,
                 daySelectionBuilder,
                 epilogueBuilder,

@@ -5,13 +5,14 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.ListFormatterUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class EpilogueBuilder @Inject constructor(
     private val dayLabelUtils: DayLabelUtils,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val listFormatterUtils: ListFormatterUtils
+    private val listFormatterUtils: ListFormatterUtils,
+    private val htmlMessageUtils: HtmlMessageUtils
 ) {
     fun buildUiItems(
         bloggingRemindersModel: BloggingRemindersModel?
@@ -36,19 +38,18 @@ class EpilogueBuilder @Inject constructor(
 
         val body = when (enabledDays.size) {
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
-            SEVEN_DAYS -> UiStringRes(string.blogging_reminders_epilogue_body_everyday)
+            SEVEN_DAYS -> UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(string.blogging_reminders_epilogue_body_everyday))
             else -> {
-                val numberOfTimes = dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel)
+                val numberOfTimes = (dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel) ?: "").toBold()
 
-                val selectedDays = if (enabledDays.size == SEVEN_DAYS) {
-                    UiStringRes(string.blogging_reminders_epilogue_body_everyday).toString()
-                } else {
-                    listFormatterUtils.formatList(enabledDays.print())
-                }
+                val selectedDays = listFormatterUtils.formatList(enabledDays.print().map { it.toBold() })
 
-                UiStringResWithParams(
-                        string.blogging_reminders_epilogue_body_days,
-                        listOf(numberOfTimes, UiStringText(selectedDays))
+                UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                                string.blogging_reminders_epilogue_body_days,
+                                numberOfTimes,
+                                selectedDays
+                        )
                 )
             }
         }
@@ -56,7 +57,7 @@ class EpilogueBuilder @Inject constructor(
         return listOf(
                 Illustration(drawable.img_illustration_bell_yellow_96dp),
                 Title(title),
-                HighEmphasisText(body),
+                HighEmphasisText(EmphasizedText(body, false)),
                 Caption(UiStringRes(string.blogging_reminders_epilogue_caption))
         )
     }
@@ -75,6 +76,10 @@ class EpilogueBuilder @Inject constructor(
         return this.sorted().map {
             DayOfWeek.valueOf(it.name).getDisplayName(TextStyle.FULL, localeManagerWrapper.getLocale())
         }
+    }
+
+    private fun String.toBold(): String {
+        return this.let { "<b>$it</b>" }
     }
 
     companion object {

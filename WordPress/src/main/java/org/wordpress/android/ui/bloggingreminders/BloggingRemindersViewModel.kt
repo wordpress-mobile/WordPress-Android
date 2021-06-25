@@ -37,7 +37,6 @@ class BloggingRemindersViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val bloggingRemindersManager: BloggingRemindersManager,
     private val bloggingRemindersStore: BloggingRemindersStore,
-    private val resourceProvider: ResourceProvider,
     private val prologueBuilder: PrologueBuilder,
     private val daySelectionBuilder: DaySelectionBuilder,
     private val epilogueBuilder: EpilogueBuilder,

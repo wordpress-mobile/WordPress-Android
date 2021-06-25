@@ -3656,7 +3656,7 @@
     <string name="blogging_reminders_epilogue_title">All set!</string>
     <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog everyday.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
     <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site > Settings > Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
