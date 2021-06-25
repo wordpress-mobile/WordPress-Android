@@ -107,9 +107,8 @@ class BloggingRemindersViewModel @Inject constructor(
         val isPrologueScreen = screen == PROLOGUE || screen == PROLOGUE_SETTINGS
         if (isPrologueScreen) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
-        } else {
-            _isFirstTimeFlow.value = false
         }
+        _isFirstTimeFlow.value = isPrologueScreen
         _isBottomSheetShowing.value = Event(true)
         _selectedScreen.value = screen
         launch {
