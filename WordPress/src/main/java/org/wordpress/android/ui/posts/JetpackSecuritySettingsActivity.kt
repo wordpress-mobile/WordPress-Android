@@ -3,28 +3,25 @@ package org.wordpress.android.ui.posts
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
+import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
 
 class JetpackSecuritySettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout.fragment_jetpack_security_settings)
-        setupToolbar()
+        with(FragmentJetpackSecuritySettingsBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setupToolbar()
+        }
     }
 
-    private fun setupToolbar() {
+    private fun FragmentJetpackSecuritySettingsBinding.setupToolbar() {
         title = resources.getText(string.jetpack_security_setting_title)
-        val toolbar = findViewById<Toolbar>(id.toolbar)
-        if (toolbar != null) {
-            setSupportActionBar(toolbar)
-            val actionBar = supportActionBar
-            if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true)
-                actionBar.setDisplayHomeAsUpEnabled(true)
-            }
+        setSupportActionBar(toolbar)
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
         }
     }
 
