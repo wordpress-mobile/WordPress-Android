@@ -64,7 +64,7 @@ class BloggingRemindersViewModel @Inject constructor(
             }
             val primaryButton = when (screen) {
                 PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(
-                        isFirstTimeFlow ?: false,
+                        isFirstTimeFlow == true,
                         startDaySelection
                 )
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
@@ -104,11 +104,11 @@ class BloggingRemindersViewModel @Inject constructor(
     fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackFlowStart(source)
-        if (screen == PROLOGUE) {
+        val isPrologueScreen = screen == PROLOGUE || screen == PROLOGUE_SETTINGS
+        if (isPrologueScreen) {
             bloggingRemindersManager.bloggingRemindersShown(siteId)
-        } else {
-            _isFirstTimeFlow.value = false
         }
+        _isFirstTimeFlow.value = isPrologueScreen
         _isBottomSheetShowing.value = Event(true)
         _selectedScreen.value = screen
         launch {
