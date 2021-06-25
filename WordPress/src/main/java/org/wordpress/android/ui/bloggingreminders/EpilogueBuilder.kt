@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import android.os.Build.VERSION_CODES
-import androidx.annotation.RequiresApi
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
@@ -15,44 +13,47 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.time.DayOfWeek
-import java.time.format.TextStyle
-import java.util.Locale
 import javax.inject.Inject
 
 class EpilogueBuilder @Inject constructor(
     private val dayLabelUtils: DayLabelUtils
 ) {
-    @RequiresApi(VERSION_CODES.O) // TODO: Remove this annotation once de-sugaring PR is merged
     fun buildUiItems(
         bloggingRemindersModel: BloggingRemindersModel?
     ): List<BloggingRemindersItem> {
-        val numberOfTimes = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
-        val enabledDays = bloggingRemindersModel?.enabledDays?.map { DayOfWeek.valueOf(it.name) }
+        val enabledDays = bloggingRemindersModel?.enabledDays?.sorted()?.map { DayOfWeek.valueOf(it.name) }
 
-        val selectedDays = when (enabledDays?.count()) {
-            ONE_DAY -> enabledDays.joinToString { formattedDay(it) }
-            TWO_DAYS -> enabledDays.joinToString(separator = " and ") { formattedDay(it) }
+        val selectedDays = when (enabledDays?.size) {
+            ONE_DAY -> enabledDays.joinToString { it.toString() }
+            TWO_DAYS -> enabledDays.joinToString(separator = " and ") {
+                it.toString()}
             in THREE_DAYS..SIX_DAYS -> {
                 val firstDays = enabledDays?.dropLast(1)
                 val lastDay = enabledDays?.drop(enabledDays.count() - 1)
                 firstDays?.joinToString(postfix = " and ") {
-                    formattedDay(it)
-                } + lastDay?.joinToString { formattedDay(it) }
+                    it.toString()
+                } + lastDay?.joinToString { it.toString() }
             }
             else -> UiStringRes(string.blogging_reminders_epilogue_body_everyday).toString()
         }
 
-        val title = when (enabledDays?.count()) {
+        val title = when (enabledDays?.size) {
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_not_set_title)
             else -> UiStringRes(string.blogging_reminders_epilogue_title)
         }
 
-        val body = when (enabledDays?.count()) {
+        val body = when (enabledDays?.size) {
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
             SEVEN_DAYS -> UiStringRes(string.blogging_reminders_epilogue_body_everyday)
-            else -> UiStringResWithParams(
-                    string.blogging_reminders_epilogue_body_days,
-                    listOf(numberOfTimes, UiStringText(selectedDays)))
+            else -> {
+                val numberOfTimes = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
+                // TODO: Undo this when desugaring is merged and remove selectedDay above
+                // val selectedDays = ListFormatter.getInstance().format(enabledDays)
+
+                UiStringResWithParams(
+                        string.blogging_reminders_epilogue_body_days,
+                        listOf(numberOfTimes, UiStringText(selectedDays)))
+            }
         }
 
         return listOf(
@@ -72,9 +73,6 @@ class EpilogueBuilder @Inject constructor(
                 ListItemInteraction.create(onDone)
         )
     }
-
-    @RequiresApi(VERSION_CODES.O)
-    private fun formattedDay(it: DayOfWeek) = it.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
     companion object {
         private const val ZERO = 0

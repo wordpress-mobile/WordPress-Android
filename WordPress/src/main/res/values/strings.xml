@@ -3651,7 +3651,7 @@
     <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
-    <string name="blogging_reminders_epilogue_not_set_title">Blogging reminders</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
     <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s on %2$s.</string>
     <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog everyday.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
