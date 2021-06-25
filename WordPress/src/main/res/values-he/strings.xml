@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-11 14:16:38+0000
+Translation-Revision-Date: 2021-06-23 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="blogging_reminders_done">סיימתי</string>
+    <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
+    <string name="blogging_goals_not_set">לא הוגדרו אפשרויות</string>
+    <string name="blogging_goals_n_times_a_week">%d פעמים בשבוע</string>
+    <string name="set_your_blogging_goals_button">לקבוע מטרות</string>
+    <string name="set_your_blogging_goals_message">הפוסט שלך מתפרסם… בינתיים, אפשר להגדיר את המטרות שלך לבלוג כדי לקבל תזכורות ולעקוב אחר ההתקדמות שלך.</string>
+    <string name="set_your_blogging_goals_title">להגדיר את המטרות שלך לבלוג</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
+    <string name="gutenberg_native_set_as_featured_image">להגדיר כתמונה מרכזית </string>
+    <string name="gutenberg_native_remove_as_featured_image">להסיר מהתמונה המרכזית </string>
+    <string name="fab_add_category_desc">ליצור קטגוריה</string>
+    <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
+    <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
+    <string name="site_settings_categories_empty_title">אין לך קטגוריות</string>
+    <string name="site_settings_categories_empty_subtitle">אפשר להוסיף את הקטגוריות שנפוצות אצלך כאן כדי לבחור בהן במהירות בעת הקצאת קטגוריות לפוסטים שלך</string>
+    <string name="site_settings_categories_empty_button">ליצור קטגוריה</string>
+    <string name="site_settings_categories_title">קטגוריות</string>
+    <string name="site_settings_blogging_reminders_title">מטרות לכתיבה בבלוג</string>
+    <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>
     <string name="storage_utils_dialog_ok_button">להציג את שטח האחסון</string>
@@ -201,6 +220,7 @@ Language: he_IL
     <string name="scan_provisioning_description">ברוך בואך ל-Jetpack Scan! אנחנו מכינים את האתר לסריקה מלאה. אנחנו נודיע לך אם נמצא בעיות כלשהן שעלולות להפריע לסריקה ולאחר מכן, הסריקה הראשונה שלך תתחיל.</string>
     <string name="scan_scanning_is_initial_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.</string>
     <string name="scan_fixing_threats_description_singular">אנחנו משקיעים המון מאמצים ברקע כדי לתקן את האיום הזה. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="scan_scanning_description">אנחנו נשלח אליך הודעה אם נאתר איום. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
     <string name="scan_start_request_failed_subtitle">ל-Jetpack Scan לא הייתה אפשרות להשלים את הסריקה של האתר שלך. יש לבדוק אם האתר מושבת – אם לא, יש לנסות שוב. אם האתר מושבת או אם עדיין יש בעיות בהפעלה של Jetpack Scan, עליך ליצור קשר עם צוות התמיכה.</string>
     <string name="scan_fixing_threats_title_plural">מתקן את האיומים</string>
     <string name="scan_request_failed_title">משהו השתבש</string>

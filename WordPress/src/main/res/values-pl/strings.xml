@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-21 10:04:37+0000
+Translation-Revision-Date: 2021-06-23 05:35:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -1048,12 +1048,12 @@ Language: pl
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
     <string name="pages_delete_permanently">Usuń na zawsze</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
-    <string name="pages_view">Podgląd</string>
     <string name="pages_trashed">Przesunięto do kosza</string>
     <string name="pages_scheduled">Zaplanowano</string>
     <string name="pages_drafts">Szkice</string>
     <string name="pages_published">Opublikowano</string>
     <string name="login_error_sms_throttled">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS - zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
+    <string name="pages_view">Zobacz</string>
     <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
     <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
     <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria twojego wyszukiwania</string>
@@ -2106,12 +2106,12 @@ Language: pl
     <string name="theme_activation_error">Coś poszło nie tak. Nie można było włączyć motywu</string>
     <string name="theme_by_author_prompt_append">o %1$s</string>
     <string name="theme_prompt">Dziękujemy za wybranie %1$s</string>
-    <string name="theme_view">Podgląd</string>
     <string name="theme_try_and_customize">Wypróbuj i dostosuj</string>
     <string name="theme_details">Szczegóły</string>
     <string name="theme_support">Wsparcie</string>
     <string name="theme_done">Wykonano</string>
     <string name="theme_manage_site">ZARZĄDZAJ WITRYNĄ</string>
+    <string name="theme_view">Zobacz</string>
     <string name="theme_activate">Aktywuj</string>
     <string name="current_theme">Aktualny motyw</string>
     <string name="support">Wsparcie</string>
@@ -2165,7 +2165,7 @@ Language: pl
     <string name="post_trashed">Wpis został przeniesiony do kosza</string>
     <string name="button_stats">Statystyki</string>
     <string name="button_trash">Kosz</string>
-    <string name="button_view">Podgląd</string>
+    <string name="button_view">Zobacz</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień dostępu do tej witryny</string>
     <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>

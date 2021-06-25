@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -49,11 +50,12 @@ class BloggingRemindersViewModel @Inject constructor(
         if (screen != null) {
             val uiItems = when (screen) {
                 PROLOGUE -> prologueBuilder.buildUiItems()
+                PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(bloggingRemindersModel, this::selectDay)
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
             val primaryButton = when (screen) {
-                PROLOGUE -> prologueBuilder.buildPrimaryButton(startDaySelection)
+                PROLOGUE, PROLOGUE_SETTINGS -> prologueBuilder.buildPrimaryButton(startDaySelection)
                 SELECTION -> daySelectionBuilder.buildPrimaryButton(
                         bloggingRemindersModel,
                         isFirstTimeFlow == true,
@@ -150,7 +152,7 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     enum class Screen {
-        PROLOGUE, SELECTION, EPILOGUE
+        PROLOGUE, PROLOGUE_SETTINGS, SELECTION, EPILOGUE
     }
 
     data class UiState(val uiItems: List<BloggingRemindersItem>, val primaryButton: PrimaryButton? = null) {
