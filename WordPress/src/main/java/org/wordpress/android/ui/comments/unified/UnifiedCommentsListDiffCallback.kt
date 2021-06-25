@@ -16,4 +16,14 @@ class UnifiedCommentsListDiffCallback : DiffUtil.ItemCallback<UnifiedCommentList
     override fun areContentsTheSame(oldItem: UnifiedCommentListItem, newItem: UnifiedCommentListItem): Boolean {
         return oldItem == newItem
     }
+
+    /**
+     * Since we don't currently have a logic for updating only a part of the view, this method sends empty Payload
+     * to avoid view blinking in RecyclerView.
+     */
+    override fun getChangePayload(oldItem: UnifiedCommentListItem, newItem: UnifiedCommentListItem): Any {
+        return Payload
+    }
+
+    object Payload
 }
