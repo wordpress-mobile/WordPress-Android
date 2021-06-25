@@ -235,7 +235,8 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onBottomSheetDismissed() {
         when (val screen = selectedScreen.value) {
-            PROLOGUE -> analyticsTracker.trackFlowDismissed(screen)
+            PROLOGUE,
+            PROLOGUE_SETTINGS,
             SELECTION -> analyticsTracker.trackFlowDismissed(screen)
             EPILOGUE -> analyticsTracker.trackFlowCompleted()
         }
