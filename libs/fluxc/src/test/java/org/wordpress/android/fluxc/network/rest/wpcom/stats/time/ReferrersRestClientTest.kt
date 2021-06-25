@@ -330,7 +330,8 @@ class ReferrersRestClientTest {
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
                         eq(null),
-                        eq(kclass)
+                        eq(kclass),
+                        isNull()
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)

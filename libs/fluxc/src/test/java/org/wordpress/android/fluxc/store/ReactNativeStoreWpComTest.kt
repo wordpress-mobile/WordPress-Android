@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.wordpress.android.fluxc.TestSiteSqlUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
@@ -29,7 +30,13 @@ class ReactNativeStoreWpComTest {
 
     @Before
     fun setup() {
-        store = ReactNativeStore(wpComRestClient, mock(), discoveryWPAPIRestClient, initCoroutineEngine())
+        store = ReactNativeStore(
+                wpComRestClient,
+                mock(),
+                discoveryWPAPIRestClient,
+                TestSiteSqlUtils.siteSqlUtils,
+                initCoroutineEngine()
+        )
     }
 
     @Test
@@ -58,6 +65,7 @@ class ReactNativeStoreWpComTest {
                 wpComRestClient,
                 mock(),
                 discoveryWPAPIRestClient,
+                TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
                 mutableMapOf(),
                 uriParser = uriParser)
