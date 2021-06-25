@@ -283,12 +283,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
+    app = options[:app]
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    hotfix = android_current_branch_is_hotfix
-    download_translations(options) unless hotfix
-    android_bump_version_final_release(app: options[:app]) unless hotfix
-    version = android_get_release_version(app: options[:app])
+    hotfix = android_current_branch_is_hotfix(app: app)
+    download_translations(app: app) unless hotfix
+    android_bump_version_final_release(app: app) unless hotfix
+    version = android_get_release_version(app: app)
     download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
 
     # Wrap up
@@ -317,11 +318,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm],
+    android_build_prechecks(
+      skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
       final: true,
-      app: options[:app])
+      app: options[:app]
+    )
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
@@ -351,11 +354,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm],
+    android_build_prechecks(
+      skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
       final: false,
-      app: options[:app])
+      app: options[:app]
+    )
     android_build_preflight() unless (options[:skip_prechecks])
     build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
     build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
