@@ -53,9 +53,8 @@ class ReminderNotifier @Inject constructor(
         analyticsTracker.trackNotificationReceived()
     }
 
-    fun shouldNotify(siteId: Int) = siteId != NO_SITE_ID
-            && siteStore.getSiteByLocalId(siteId) != null
-            && accountStore.hasAccessToken()
+    fun shouldNotify(siteId: Int) =
+            siteId != NO_SITE_ID && siteStore.getSiteByLocalId(siteId) != null && accountStore.hasAccessToken()
 
     companion object {
         const val NO_SITE_ID = -1

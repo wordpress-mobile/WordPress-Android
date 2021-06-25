@@ -7,6 +7,7 @@ import androidx.work.WorkManager
 import org.wordpress.android.viewmodel.ContextProvider
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.UUID
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class ReminderScheduler @Inject constructor(
 
     fun schedule(siteId: Int, reminderConfig: ReminderConfig) {
         val uniqueName = getUniqueName(siteId)
-        val next = reminderConfig.calculateNext().atTime(8, 0)
+        val next = reminderConfig.calculateNext().atTime(DEFAULT_START_TIME)
         val delay = Duration.between(LocalDateTime.now(), next)
         val inputData = Data.Builder()
                 .putInt(REMINDER_SITE_ID, siteId)
@@ -51,5 +52,6 @@ class ReminderScheduler @Inject constructor(
     companion object {
         private const val REMINDER_TAG = "reminder"
         const val REMINDER_SITE_ID = "reminder_site_id"
+        private val DEFAULT_START_TIME = LocalTime.of(8, 0)
     }
 }
