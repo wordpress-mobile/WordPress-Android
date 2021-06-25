@@ -178,7 +178,8 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onBottomSheetDismissed() {
         when (val screen = selectedScreen.value) {
-            PROLOGUE -> analyticsTracker.trackFlowDismissed(screen)
+            PROLOGUE,
+            PROLOGUE_SETTINGS,
             SELECTION -> analyticsTracker.trackFlowDismissed(screen)
             EPILOGUE -> analyticsTracker.trackFlowCompleted()
         }
@@ -189,7 +190,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"),
-        PROLOGUE_SETTINGS("main_from_settings"),
+        PROLOGUE_SETTINGS("main"),
         SELECTION("day_picker"),
         EPILOGUE("all_set")
     }
