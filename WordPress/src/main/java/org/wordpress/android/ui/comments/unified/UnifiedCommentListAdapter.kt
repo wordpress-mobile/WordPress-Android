@@ -6,7 +6,7 @@ import android.content.Context
  * Temporarily commented out untill migration between Paging 2 and 3 is sorted out.
  */
 class UnifiedCommentListAdapter(context: Context) {
-//: PagingDataAdapter<UnifiedCommentListItem,
+// : PagingDataAdapter<UnifiedCommentListItem,
 // UnifiedCommentListViewHolder<*>>(
 //                diffCallback
 //        ) {
