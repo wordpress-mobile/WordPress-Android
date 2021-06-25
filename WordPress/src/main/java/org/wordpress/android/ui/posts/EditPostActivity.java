@@ -3243,8 +3243,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         refreshEditorContent();
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
-            refreshEditorTheme();
-            /* parallel for now.. TODO: update theme downstream */
+            /* This is now refreshed along with editor settings fetch callback TODO: remove dead code */
+            // refreshEditorTheme();
+            /* TODO: add flag similar to gssEnabled */
             refreshEditorSettings();
             List<MediaModel> failedMedia =
                     mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
