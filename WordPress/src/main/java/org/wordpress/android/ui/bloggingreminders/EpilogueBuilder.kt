@@ -38,7 +38,11 @@ class EpilogueBuilder @Inject constructor(
 
         val body = when (enabledDays.size) {
             ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
-            SEVEN_DAYS -> UiStringText(htmlMessageUtils.getHtmlMessageFromStringFormatResId(string.blogging_reminders_epilogue_body_everyday))
+            SEVEN_DAYS -> UiStringText(
+                    htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            string.blogging_reminders_epilogue_body_everyday
+                    )
+            )
             else -> {
                 val numberOfTimes = (dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel) ?: "").toBold()
 

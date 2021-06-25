@@ -67,9 +67,13 @@ class EpilogueBuilderTest {
         val selectedDays = "<b>Wednesday</b>, <b>Sunday</b>"
         whenever(listFormatterUtils.formatList(listOf("<b>Wednesday</b>", "<b>Sunday</b>"))).thenReturn(selectedDays)
         val message = "You'll get reminders to blog <b>$dayLabel</b> a week on $selectedDays."
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(string.blogging_reminders_epilogue_body_days,
-                "<b>$dayLabel</b>",
-                selectedDays)).thenReturn(message)
+        whenever(
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                        string.blogging_reminders_epilogue_body_days,
+                        "<b>$dayLabel</b>",
+                        selectedDays
+                )
+        ).thenReturn(message)
 
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
@@ -83,7 +87,11 @@ class EpilogueBuilderTest {
                 setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
         )
         val message = "You'll get reminders to blog <b>everyday</b>."
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(string.blogging_reminders_epilogue_body_everyday)).thenReturn(
+        whenever(
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                        string.blogging_reminders_epilogue_body_everyday
+                )
+        ).thenReturn(
                 message
         )
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
