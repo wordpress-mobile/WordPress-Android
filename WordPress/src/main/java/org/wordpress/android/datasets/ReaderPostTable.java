@@ -1249,9 +1249,39 @@ public class ReaderPostTable {
         ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
         for (ReaderPost post : posts) {
             for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
-                if (post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId()) {
-                    post.isBookmarked = true;
-                }
+                if (isBookmarkedPost(post, bookmarkedPostId)) post.isBookmarked = true;
+            }
+        }
+    }
+
+    private static boolean isBookmarkedPost(ReaderPost post, ReaderBlogIdPostId bookmarkedPostId) {
+        return post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId();
+    }
+
+    public static void updateBookmarkedPostsPseudoId(final ReaderPostList posts) {
+        ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
+        for (ReaderPost post : posts) {
+            for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
+                if (isBookmarkedPost(post, bookmarkedPostId)) updateBookmarkedPostsPseudoId(post, bookmarkedPostId);
+            }
+        }
+    }
+
+    public static void updateBookmarkedPostsPseudoId(ReaderPost post, ReaderBlogIdPostId bookmarkedPostIds) {
+        ReaderPost bookmarkedPost = getBlogPost(bookmarkedPostIds.getBlogId(), bookmarkedPostIds.getPostId(), true);
+        if (bookmarkedPost != null && !bookmarkedPost.getPseudoId().equals(post.getPseudoId())) {
+            SQLiteDatabase db = ReaderDatabase.getWritableDb();
+            db.beginTransaction();
+            try {
+                String sql = "UPDATE tbl_posts SET pseudo_id=? WHERE blog_id=? AND post_id=? AND tag_type=?";
+                db.execSQL(sql, new String[]{
+                        post.getPseudoId(),
+                        Long.toString(post.blogId),
+                        Long.toString(post.postId),
+                        Integer.toString(ReaderTagType.BOOKMARKED.toInt())});
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
             }
         }
     }
