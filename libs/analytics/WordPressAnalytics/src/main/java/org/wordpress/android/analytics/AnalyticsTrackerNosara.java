@@ -2083,6 +2083,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "storage_warning_canceled";
             case STORAGE_WARNING_DONT_SHOW_AGAIN:
                 return "storage_warning_dont_show_again";
+            case BLOGGING_REMINDERS_SCREEN_SHOWN:
+                return "blogging_reminders_screen_shown";
+            case BLOGGING_REMINDERS_BUTTON_PRESSED:
+                return "blogging_reminders_button_pressed";
+            case BLOGGING_REMINDERS_FLOW_START:
+                return "blogging_reminders_flow_start";
+            case BLOGGING_REMINDERS_FLOW_DISMISSED:
+                return "blogging_reminders_flow_dismissed";
+            case BLOGGING_REMINDERS_FLOW_COMPLETED:
+                return "blogging_reminders_flow_completed";
+            case BLOGGING_REMINDERS_SCHEDULED:
+                return "blogging_reminders_scheduled";
+            case BLOGGING_REMINDERS_CANCELLED:
+                return "blogging_reminders_cancelled";
+            case BLOGGING_REMINDERS_NOTIFICATION_RECEIVED:
+                return "blogging_reminders_notification_received";
         }
         return null;
     }
