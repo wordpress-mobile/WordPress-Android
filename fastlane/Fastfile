@@ -149,7 +149,7 @@ REPOSITORY_NAME="WordPress-Android"
       release_notes_file_path: "#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path: release_notes_path('wordpress')
     )
-    File.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
+    FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
     cleanup_release_files(files: release_notes_short_paths)
 
     android_update_release_notes(new_version: new_version) # Adds empty section for next version
