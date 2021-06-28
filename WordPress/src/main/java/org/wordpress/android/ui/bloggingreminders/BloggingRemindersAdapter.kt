@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
@@ -29,30 +28,14 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewHolder.Ti
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-class BloggingRemindersAdapter
-@Inject constructor(private val uiHelpers: UiHelpers) :
-    Adapter<BloggingRemindersViewHolder<*>>() {
-    private var items: List<BloggingRemindersItem> = listOf()
-
-    fun update(newItems: List<BloggingRemindersItem>) {
-        val diffResult = DiffUtil.calculateDiff(
-            BloggingRemindersDiffCallback(
-                items,
-                newItems
-            )
-        )
-        items = newItems
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    override fun getItemCount(): Int = items.size
-
+class BloggingRemindersAdapter @Inject constructor(private val uiHelpers: UiHelpers) :
+    ListAdapter<BloggingRemindersItem, BloggingRemindersViewHolder<*>>(BloggingRemindersDiffCallback) {
     override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int) {
         onBindViewHolder(holder, position, listOf())
     }
 
     override fun onBindViewHolder(holder: BloggingRemindersViewHolder<*>, position: Int, payloads: List<Any>) {
-        val item = items[position]
+        val item = getItem(position)
         when (holder) {
             is IllustrationViewHolder -> holder.onBind(item as Illustration)
             is TitleViewHolder -> holder.onBind(item as Title)
@@ -77,6 +60,6 @@ class BloggingRemindersAdapter
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].type.ordinal
+        return getItem(position).type.ordinal
     }
 }
