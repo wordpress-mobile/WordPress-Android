@@ -4,6 +4,9 @@ docker-container: &docker-container
         image: "public.ecr.aws/m4u4m2y0/android-build-image:latest"
         environment:
           - "CI=true"
+    - automattic/git-s3-cache#v1.0.0:
+        bucket: "a8c-repo-mirrors"
+        repo: "wordpress-mobile/wordpress-android/"
 
 steps:
   - label: "checkstyle"
