@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -28,7 +27,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
-    private var binding: DomainSuggestionsActivityBinding? = null
+    private lateinit var binding: DomainSuggestionsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,17 +48,12 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
     }
 
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
-    }
-
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel.start()
 
-        viewModel.domainSuggestionsVisible.observe(this, Observer { isVisible ->
+        viewModel.domainSuggestionsVisible.observe(this, { isVisible ->
             if (isVisible == true) {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
                 if (fragment == null) {
@@ -74,7 +68,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.selectedDomain.observe(this, Observer { selectedDomain ->
+        viewModel.selectedDomain.observe(this, { selectedDomain ->
             selectedDomain?.let {
                 var fragment = supportFragmentManager.findFragmentByTag(
                         DomainRegistrationDetailsFragment.TAG
@@ -87,7 +81,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             }
         })
 
-        viewModel.domainRegistrationCompleted.observe(this, Observer { event ->
+        viewModel.domainRegistrationCompleted.observe(this, { event ->
             event?.let {
                 if (shouldShowCongratsScreen()) {
                     var fragment = supportFragmentManager.findFragmentByTag(
@@ -148,19 +142,19 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        binding?.apply {
+        binding.appbarMain.apply {
             if (containerId == R.id.domain_suggestions_list) {
-                appbarMain.post {
-                    appbarMain.isLiftOnScroll = false
-                    appbarMain.setLifted(false)
-                    appbarMain.elevation = 0F
-                    appbarMain.requestLayout()
+                post {
+                    isLiftOnScroll = false
+                    setLifted(false)
+                    elevation = 0F
+                    requestLayout()
                 }
             } else {
-                appbarMain.post {
-                    appbarMain.isLiftOnScroll = true
-                    appbarMain.liftOnScrollTargetViewId = containerId
-                    appbarMain.requestLayout()
+                post {
+                    isLiftOnScroll = true
+                    liftOnScrollTargetViewId = containerId
+                    requestLayout()
                 }
             }
         }
