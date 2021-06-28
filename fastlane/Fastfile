@@ -133,11 +133,12 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    old_version = android_codefreeze_prechecks(options)
+    # old_version = android_codefreeze_prechecks(options)
+    old_version = '17.6'
 
-    app = options[:app]
-    android_bump_version_release(app: 'wordpress')
-    android_bump_version_release(app: 'jetpack')
+    # app = options[:app]
+    # android_bump_version_release(app: 'wordpress')
+    # android_bump_version_release(app: 'jetpack')
     new_version = android_get_app_version(app: 'wordpress')
 
     # need to get prs list before version update to frozen tag
