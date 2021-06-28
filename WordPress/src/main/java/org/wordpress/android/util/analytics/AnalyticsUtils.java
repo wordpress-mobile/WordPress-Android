@@ -748,6 +748,14 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.LIKE_LIST_OPENED, properties);
     }
 
+    public static void trackLikeListFetchedMore(String source, String listType) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+        properties.put(LIST_TYPE_KEY, listType);
+
+        AnalyticsTracker.track(Stat.LIKE_LIST_FETCHED_MORE, properties);
+    }
+
     public static void trackStorageWarningDialogEvent(Stat stat, String source, Boolean isStorageSettingsResolved) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(SOURCE_KEY, source);
