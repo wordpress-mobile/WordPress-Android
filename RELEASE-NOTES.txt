@@ -7,6 +7,7 @@
 * [*] Block editor: Tweaks to the badge component's styling, including change of background color and reduced padding. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3642]
 * [***] Block editor: New block Layout grid. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3513]
 * [***] Added blogging reminders to site settings and after a new post has been created
+* [*] Fixed Reader duplicate post issue [https://github.com/wordpress-mobile/WordPress-Android/issues/12938]
 
 17.6
 -----
