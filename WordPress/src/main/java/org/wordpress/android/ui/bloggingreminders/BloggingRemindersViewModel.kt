@@ -101,7 +101,7 @@ class BloggingRemindersViewModel @Inject constructor(
         }.asLiveData(mainDispatcher)
     }
 
-    fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
+    private fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackFlowStart(source)
         val isPrologueScreen = screen == PROLOGUE || screen == PROLOGUE_SETTINGS
