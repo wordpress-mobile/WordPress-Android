@@ -210,6 +210,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
+import org.wordpress.android.util.config.LayoutGridBlockFeatureConfig;
 import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -408,6 +409,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
+    @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -964,7 +966,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     protected void onDestroy() {
         if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
             if (mPostEditorAnalyticsSession != null) {
-                mPostEditorAnalyticsSession.end();
+                mPostEditorAnalyticsSession.end(canViewEditorOnboarding());
             }
         }
 
@@ -2296,12 +2298,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
 
-        boolean canViewEditorOnboarding = (
-                mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
-                || BuildConfig.DEBUG) && !AppPrefs.hasLaunchedGutenbergEditor();
+        boolean enableEditorOnboarding = canViewEditorOnboarding() && !AppPrefs.hasLaunchedGutenbergEditor();
 
         return new GutenbergPropsBuilder(
                 mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
+                mLayoutGridBlockFeatureConfig.isEnabled() && SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
@@ -2313,8 +2314,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 postType,
                 featuredImageId,
                 themeBundle,
-                canViewEditorOnboarding
+                enableEditorOnboarding
         );
+    }
+
+    private Boolean canViewEditorOnboarding() {
+        return (mAccountStore.getAccount().getUserId() % 100 >= (100 - EDITOR_ONBOARDING_PHASE_PERCENTAGE)
+                || BuildConfig.DEBUG);
     }
 
     // Moved from EditPostContentFragment
@@ -3248,7 +3254,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(null);
+            mPostEditorAnalyticsSession.start(null, canViewEditorOnboarding());
         }
     }
 
@@ -3261,7 +3267,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        mPostEditorAnalyticsSession.start(unsupportedBlocksList);
+        mPostEditorAnalyticsSession.start(unsupportedBlocksList, canViewEditorOnboarding());
         presentNewPageNoticeIfNeeded();
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
