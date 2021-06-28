@@ -3,7 +3,7 @@ package org.wordpress.android.ui.bloggingreminders
 import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 
-object BloggingRemindersDiffCallback : DiffUtil.ItemCallback<BloggingRemindersItem>(){
+object BloggingRemindersDiffCallback : DiffUtil.ItemCallback<BloggingRemindersItem>() {
     override fun areItemsTheSame(oldItem: BloggingRemindersItem, newItem: BloggingRemindersItem): Boolean {
         return oldItem.type == newItem.type
     }
