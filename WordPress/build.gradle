@@ -151,7 +151,7 @@ android {
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
             buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "false"
+            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         }
 
         zalpha { // alpha version - enable experimental features
