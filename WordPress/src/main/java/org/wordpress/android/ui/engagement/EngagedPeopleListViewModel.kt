@@ -30,6 +30,7 @@ import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -234,6 +235,10 @@ class EngagedPeopleListViewModel @Inject constructor(
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
+                analyticsUtilsWrapper.trackListListFetchedMore(
+                        EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                        ListScenarioType.getSourceDescription(listScenario?.type)
+                )
             })
         } else {
             listOf()
