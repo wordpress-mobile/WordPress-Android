@@ -1258,16 +1258,16 @@ public class ReaderPostTable {
         return post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId();
     }
 
-    public static void updateBookmarkedPostsPseudoId(final ReaderPostList posts) {
+    public static void updateBookmarkedPostPseudoId(final ReaderPostList posts) {
         ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
         for (ReaderPost post : posts) {
             for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
-                if (isBookmarkedPost(post, bookmarkedPostId)) updateBookmarkedPostsPseudoId(post, bookmarkedPostId);
+                if (isBookmarkedPost(post, bookmarkedPostId)) updateBookmarkedPostPseudoId(post, bookmarkedPostId);
             }
         }
     }
 
-    public static void updateBookmarkedPostsPseudoId(ReaderPost post, ReaderBlogIdPostId bookmarkedPostIds) {
+    public static void updateBookmarkedPostPseudoId(ReaderPost post, ReaderBlogIdPostId bookmarkedPostIds) {
         ReaderPost bookmarkedPost = getBlogPost(bookmarkedPostIds.getBlogId(), bookmarkedPostIds.getPostId(), true);
         if (bookmarkedPost != null && !bookmarkedPost.getPseudoId().equals(post.getPseudoId())) {
             SQLiteDatabase db = ReaderDatabase.getWritableDb();

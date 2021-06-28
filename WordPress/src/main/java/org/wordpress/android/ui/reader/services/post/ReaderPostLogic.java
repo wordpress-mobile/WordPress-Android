@@ -264,7 +264,7 @@ public class ReaderPostLogic {
                     }
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
                     if (AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)) {
-                        ReaderPostTable.updateBookmarkedPostsPseudoId(serverPosts);
+                        ReaderPostTable.updateBookmarkedPostPseudoId(serverPosts);
                         AppPrefs.setBookmarkPostsPseudoIdsUpdated();
                     }
 
