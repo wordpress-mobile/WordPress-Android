@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class DayLabelUtils
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun buildNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): UiString {
+    fun buildNTimesLabel(bloggingRemindersModel: BloggingRemindersUiModel?): UiString {
         val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count)
         val size = bloggingRemindersModel?.enabledDays?.size ?: 0
         return if (size > 0) {
@@ -25,7 +25,7 @@ class DayLabelUtils
         }
     }
 
-    fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersModel?): String? {
+    fun buildLowercaseNTimesLabel(bloggingRemindersModel: BloggingRemindersUiModel?): String? {
         val counts = resourceProvider.getStringArray(R.array.blogging_reminders_count).map {
             it.toLowerCase(Locale.getDefault())
         }

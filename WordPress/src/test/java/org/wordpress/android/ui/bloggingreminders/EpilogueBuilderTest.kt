@@ -9,14 +9,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SATURDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.THURSDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.TUESDAY
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.WEDNESDAY
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
@@ -28,6 +20,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.ListFormatterUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import java.time.DayOfWeek
 import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
@@ -52,7 +45,7 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with no selected days`() {
-        val bloggingRemindersModel = BloggingRemindersModel(1, setOf())
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf())
         val uiModel = epilogueBuilder.buildUiItems(bloggingRemindersModel)
 
         assertModelWithNoSelection(uiModel)
@@ -60,7 +53,7 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with selected days`() {
-        val bloggingRemindersModel = BloggingRemindersModel(1, setOf(WEDNESDAY, SUNDAY))
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY))
         val dayLabel = "twice"
         whenever(dayLabelUtils.buildLowercaseNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -82,9 +75,9 @@ class EpilogueBuilderTest {
 
     @Test
     fun `builds UI model with all days selected`() {
-        val bloggingRemindersModel = BloggingRemindersModel(
+        val bloggingRemindersModel = BloggingRemindersUiModel(
                 1,
-                setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+                DayOfWeek.values().toSet()
         )
         val message = "You'll get reminders to blog <b>everyday</b>."
         whenever(

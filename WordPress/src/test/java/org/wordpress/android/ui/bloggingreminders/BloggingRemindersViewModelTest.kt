@@ -20,7 +20,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.eventToList
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.FRIDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.SUNDAY
@@ -35,7 +34,6 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiState.PrimaryButton
@@ -74,7 +72,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                 epilogueBuilder,
                 dayLabelUtils,
                 analyticsTracker,
-                reminderScheduler
+                reminderScheduler,
+                BloggingRemindersModelMapper()
         )
         events = mutableListOf()
         events = viewModel.isBottomSheetShowing.eventToList()
@@ -153,7 +152,12 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         )
         val dayLabel = UiStringText("Blogging reminders 2 times a week")
         whenever(
-                dayLabelUtils.buildNTimesLabel(model)
+                dayLabelUtils.buildNTimesLabel(
+                        BloggingRemindersUiModel(
+                                siteId,
+                                setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY)
+                        )
+                )
         ).thenReturn(dayLabel)
         var uiState: UiString? = null
 
@@ -398,10 +402,10 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         assertDaySelection()
     }
 
-    private fun initEmptyStore(): BloggingRemindersModel {
+    private fun initEmptyStore(): BloggingRemindersUiModel {
         val emptyModel = BloggingRemindersModel(siteId)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
-        return emptyModel
+        return BloggingRemindersUiModel(siteId)
     }
 
     private fun assertPrologue() {
@@ -437,11 +441,11 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
 
     private fun initDaySelectionBuilder() {
         doAnswer {
-            val model = it.getArgument<BloggingRemindersModel>(0)
-            val onDaySelected: (Day) -> Unit = it.getArgument(1)
+            val model = it.getArgument<BloggingRemindersUiModel>(0)
+            val onDaySelected: (DayOfWeek) -> Unit = it.getArgument(1)
             listOf(
                     DayButtons(
-                            Day.values()
+                            DayOfWeek.values()
                                     .map { day ->
                                         DayItem(
                                                 UiStringText(day.name),
@@ -453,9 +457,9 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
         }.whenever(daySelectionBuilder).buildSelection(any(), any())
 
         doAnswer {
-            val model = it.getArgument<BloggingRemindersModel>(0)
+            val model = it.getArgument<BloggingRemindersUiModel>(0)
             val isFirstTimeFlow = it.getArgument<Boolean>(1)
-            val onConfirm: (BloggingRemindersModel?) -> Unit = it.getArgument(2)
+            val onConfirm: (BloggingRemindersUiModel?) -> Unit = it.getArgument(2)
             val buttonLabel = if (isFirstTimeFlow) {
                 R.string.blogging_reminders_notify_me
             } else {
