@@ -102,7 +102,7 @@ class PluginCoroutineStore
     ): OnSitePluginConfigured {
         val plugin = PluginSqlUtils.getSitePluginBySlug(site, slug)
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
-            pluginWPAPIRestClient.updatePlugin(siteModel, nonce, plugin.plugin, isActive)
+            pluginWPAPIRestClient.updatePlugin(siteModel, nonce, plugin.name, isActive)
         }
         val event = OnSitePluginConfigured(payload.site, pluginName, slug)
         if (payload.isError()) {

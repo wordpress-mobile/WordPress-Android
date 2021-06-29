@@ -125,7 +125,7 @@ class PluginWPAPIRestClient @Inject constructor(
         plugin.authorName = this.author
         plugin.description = this.description?.raw
         plugin.displayName = this.name
-        plugin.name = this.name
+        plugin.name = this.plugin
         plugin.setIsActive(this.status == "active")
         plugin.localSiteId = siteId
         plugin.pluginUrl = this.pluginUri
