@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-23 09:54:08+0000
+Translation-Revision-Date: 2021-06-24 19:42:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
@@ -121,6 +121,7 @@ Language: it
     <string name="get_likes_no_network_error">Nessuna rete disponibile.</string>
     <string name="comments_empty_list_filtered_unreplied">Nessun commento senza risposta</string>
     <string name="comment_status_unreplied">Senza risposta</string>
+    <string name="gutenberg_native_search_settings">Impostazioni di ricerca</string>
     <string name="jetpack_brute_force_allowlist_title">Indirizzi IP sempre consentiti</string>
     <string name="site_settings_denylist_title">Commenti respinti</string>
     <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>
@@ -203,6 +204,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Tocca due volte per ascoltare il file audio</string>
     <string name="gutenberg_native_choose_audio">Scegli audio</string>
     <string name="gutenberg_native_audio_player">Audio Player</string>
+    <string name="gutenberg_native_audio_file">file audio</string>
     <string name="gutenberg_native_audio_caption_s">Didascalia audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Didascalia audio. Vuota</string>
     <string name="gutenberg_native_add_audio">AGGIUNGI AUDIO</string>

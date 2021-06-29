@@ -8,4 +8,4 @@
     android:paddingBottom="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_extra_medium_large"
     android:paddingStart="@dimen/margin_extra_extra_medium_large"
-    tools:text="@string/set_your_blogging_goals_title" />
+    tools:text="@string/set_your_blogging_reminders_title" />

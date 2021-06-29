@@ -8,7 +8,7 @@ buildscript {
     ext.wordPressUtilsVersion = 'develop-bb54ee34c5fec5fa7375ce90a356adb5adbdcae0'
     ext.wordPressLoginVersion = '0.0.2'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = '3573-8833a621c9558abccba05cbde8ddca4fad160499'
+    ext.gutenbergMobileVersion = '3573-b93b1f615d6626810486bd650a9883ba1a8a0b85'
 
     repositories {
         maven {
@@ -133,12 +133,11 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.19.2-beta-2'
+    fluxCVersion = '1.20.1-beta-1'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
     lifecycleVersion = '2.2.0'
-    pagingVersion = '3.0.0'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
     preferenceVersion = '1.1.0'
@@ -146,6 +145,8 @@ ext {
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
     tracksVersion = '2.1.0'
+
+    coreLibraryDesugaringVersion = '1.1.5'
 
     // testing
     jUnitVersion = '4.13'
