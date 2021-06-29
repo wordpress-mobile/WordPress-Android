@@ -2295,7 +2295,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || mIsJetpackSsoEnabled;
 
-        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled;
+        boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
