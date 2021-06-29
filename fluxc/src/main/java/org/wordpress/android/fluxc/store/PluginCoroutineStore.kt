@@ -71,7 +71,7 @@ class PluginCoroutineStore
     ): OnSitePluginDeleted {
         val plugin = PluginSqlUtils.getSitePluginBySlug(site, slug)
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
-            pluginWPAPIRestClient.deletePlugin(siteModel, nonce, plugin.plugin)
+            pluginWPAPIRestClient.deletePlugin(siteModel, nonce, plugin.name)
         }
         val event = OnSitePluginDeleted(payload.site, pluginName, slug)
         val error = payload.error?.let {
@@ -120,10 +120,10 @@ class PluginCoroutineStore
 
     suspend fun syncInstallSitePlugin(
         site: SiteModel,
-        textDomain: String
+        slug: String
     ): OnSitePluginInstalled {
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
-            pluginWPAPIRestClient.installPlugin(siteModel, nonce, textDomain)
+            pluginWPAPIRestClient.installPlugin(siteModel, nonce, slug)
         }
         val slug = payload.data?.slug
         val event = OnSitePluginInstalled(payload.site, payload.data?.slug ?: slug)
