@@ -137,8 +137,13 @@ REPOSITORY_NAME="WordPress-Android"
 
     app = options[:app]
     android_bump_version_release(app: 'wordpress')
-    android_bump_version_release(app: 'jetpack')
     new_version = android_get_app_version(app: 'wordpress')
+
+    # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
+    #   which won't work since we already ran this action for wordpress and are already in release branch. Patch it manually for now, by applying the same versionName and versionCOde as the ones from WordPress
+    new_version_code = android_get_release_version(app: 'wordpress')['code']
+    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version}")
+    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_code}")
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -148,7 +153,7 @@ REPOSITORY_NAME="WordPress-Android"
       release_notes_file_path: "#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path: release_notes_path('wordpress')
     )
-    File.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
+    FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
     cleanup_release_files(files: release_notes_short_paths)
 
     android_update_release_notes(new_version: new_version) # Adds empty section for next version
