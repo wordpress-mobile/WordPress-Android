@@ -24,6 +24,7 @@ public class SitePluginModel implements Identifiable, Serializable {
     @Column private String mAuthorName;
     @Column private String mAuthorUrl;
     @Column private String mSettingsUrl;
+    @Column private String mPlugin;
     @Column private boolean mIsActive;
     @Column private boolean mIsAutoUpdateEnabled;
 
@@ -115,6 +116,14 @@ public class SitePluginModel implements Identifiable, Serializable {
 
     public void setSettingsUrl(String settingsUrl) {
         mSettingsUrl = settingsUrl;
+    }
+
+    public String getPlugin() {
+        return mPlugin;
+    }
+
+    public void setPlugin(String plugin) {
+        mPlugin = plugin;
     }
 
     public boolean isActive() {

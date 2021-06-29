@@ -24,12 +24,15 @@ class NonceRestClient
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
+    private val nonceMap: MutableMap<SiteModel, Nonce> = mutableMapOf()
+    fun getNonce(site: SiteModel): Nonce? = nonceMap[site]
+
     /**
      *  Requests a nonce using the
      *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
      *  that became available in WordPress 5.3.
      */
-    suspend fun requestNonce(site: SiteModel): Nonce {
+    suspend fun requestNonce(site: SiteModel) {
         val wpLoginUrl = slashJoin(site.url, "wp-login.php")
         val redirectUrl = slashJoin(site.url, "wp-admin/admin-ajax.php?action=rest-nonce")
         val body = mapOf(
@@ -39,7 +42,7 @@ class NonceRestClient
         )
         val response =
                 wpApiEncodedBodyRequestBuilder.syncPostRequest(this, wpLoginUrl, body = body)
-        return when (response) {
+        nonceMap[site] = when (response) {
             is Success -> if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
                 Available(response.data)
             } else {

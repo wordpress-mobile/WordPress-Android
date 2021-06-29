@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
@@ -37,7 +36,6 @@ class ReactNativeStore
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine,
-    private val nonceMap: MutableMap<SiteModel, Nonce>,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
     private val sitePersistanceFunction: (site: SiteModel) -> Int = siteSqlUtils::insertOrUpdateSite,
     private val uriParser: (string: String) -> Uri = Uri::parse
@@ -56,7 +54,9 @@ class ReactNativeStore
             discoveryWPAPIRestClient,
             siteSqlUtils,
             coroutineEngine,
-            mutableMapOf()
+            System::currentTimeMillis,
+            siteSqlUtils::insertOrUpdateSite,
+            Uri::parse
     )
 
     private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
@@ -121,15 +121,15 @@ class ReactNativeStore
         }
         val fullRestUrl = slashJoin(site.wpApiRestUrl, path)
 
-        val usingSavedNonce = nonceMap[site] is Available
-        val failedRecently = true == (nonceMap[site] as? FailedRequest)?.timeOfResponse?.let {
+        val usingSavedNonce = getNonce(site) is Available
+        val failedRecently = true == (getNonce(site) as? FailedRequest)?.timeOfResponse?.let {
             it + FIVE_MIN_MILLIS > currentTimeMillis()
         }
-        if (nonceMap[site] is Unknown || !(usingSavedNonce || failedRecently)) {
-            nonceMap[site] = nonceRestClient.requestNonce(site)
+        if (getNonce(site) is Unknown || !(usingSavedNonce || failedRecently)) {
+            nonceRestClient.requestNonce(site)
         }
 
-        val response = executeFetch(fullRestUrl, params, nonceMap[site]?.value, enableCaching)
+        val response = executeFetch(fullRestUrl, params, getNonce(site)?.value, enableCaching)
         return when (response) {
             is Success -> response
 
@@ -137,14 +137,14 @@ class ReactNativeStore
                 401 -> {
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
-                        val previousNonce = nonceMap[site]?.value
-                        nonceMap[site] = nonceRestClient.requestNonce(site)
-                        val newNonce = nonceMap[site]?.value
+                        val previousNonce = getNonce(site)?.value
+                        nonceRestClient.requestNonce(site)
+                        val newNonce = getNonce(site)?.value
 
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return executeFetch(fullRestUrl, params, nonceMap[site]?.value, enableCaching)
+                            return executeFetch(fullRestUrl, params, getNonce(site)?.value, enableCaching)
                         }
                     }
                     response
@@ -214,6 +214,8 @@ class ReactNativeStore
             AppLog.d(AppLog.T.DB, "Error when persisting site: $e")
         }
     }
+
+    private fun getNonce(site: SiteModel) = nonceRestClient.getNonce(site)
 
     companion object {
         private const val FIVE_MIN_MILLIS: Long = 5 * 60 * 1000
