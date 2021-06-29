@@ -125,7 +125,6 @@ class PluginCoroutineStore
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
             pluginWPAPIRestClient.installPlugin(siteModel, nonce, slug)
         }
-        val slug = payload.data?.slug
         val event = OnSitePluginInstalled(payload.site, payload.data?.slug ?: slug)
         if (payload.isError) {
             event.error = InstallSitePluginError(payload.error?.volleyError?.message, payload.error?.message)
