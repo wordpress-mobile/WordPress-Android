@@ -2,7 +2,7 @@
 
 17.8
 -----
-
+* [*] App Settings: updated look and functionality of Locale Picker [#14836]
 
 17.7
 -----

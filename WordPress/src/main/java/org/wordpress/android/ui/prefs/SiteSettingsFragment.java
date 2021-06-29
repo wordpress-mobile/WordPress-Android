@@ -16,7 +16,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.HapticFeedbackConstants;
@@ -112,6 +111,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSiteAcceleratorSettings;
+
+import kotlin.Triple;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
@@ -1645,15 +1646,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = LocaleManager
+        Triple<String[], String[], String[]> supportedLocales = LocaleManager
                 .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
-        if (pair != null) {
-            String[] sortedEntries = pair.first;
-            String[] sortedValues = pair.second;
+        if (supportedLocales != null) {
+            String[] sortedEntries = supportedLocales.component1();
+            String[] sortedValues = supportedLocales.component2();
+            String[] localizedEntries = supportedLocales.component3();
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(localizedEntries);
         }
     }
 
