@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 154
+        return 155
     }
 
     override fun getDbName(): String {
@@ -1775,6 +1775,19 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 153 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCOrderModel ADD META_DATA TEXT")
+                }
+                154 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS EditorTheme")
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT," +
+                                    "RAW_STYLES TEXT," +
+                                    "RAW_FEATURES TEXT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
                 }
             }
         }
