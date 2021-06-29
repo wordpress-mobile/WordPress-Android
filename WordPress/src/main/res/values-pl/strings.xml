@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-25 10:52:41+0000
+Translation-Revision-Date: 2021-06-24 12:05:47+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -9,7 +9,6 @@ Language: pl
     <string name="login_empty_view_try_another_account">Spróbuj z innym kontem</string>
     <string name="login_empty_view_see_instructions">Sprawdź instrukcje</string>
     <string name="gutenberg_native_image_settings">Ustawienia obrazka</string>
-    <string name="gutenberg_native_audio_settings">Ustawienia pliku dźwiękowego</string>
     <string name="user_profile_site_section_header">Witryna</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
@@ -138,15 +137,14 @@ Language: pl
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
     <string name="reader_discover_empty_subtitle">Obserwuj tematy aby odkryć nowe blogi</string>
-    <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako Spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Oznacz jako Nie Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Otwórz witrynę</string>
     <string name="media_uploading_gif_library_photo">Przesyłanie plików gif</string>
     <string name="media_uploading_default">Przesyłanie plików mediów</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ten polecający nie może być oznaczony jako Spam</string>
     <string name="media_uploading_stock_library_photo">Przesyłanie stockowych mediów</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako spam</string>
     <string name="gutenberg_native_search_or_type_url">Przeszukaj lub wpisz adres URL</string>
-    <string name="gutenberg_native_page_break">Podział strony</string>
     <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
@@ -461,7 +459,6 @@ Language: pl
     <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
-    <string name="gutenberg_native_video_settings">Ustawienia wideo</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_trashed_posts">Usunięto do kosza</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
@@ -517,7 +514,6 @@ Language: pl
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
     <string name="gutenberg_native_gallery_caption_s">Podpis galerii. %s</string>
-    <string name="gutenberg_native_replace_image">Zastąp obrazek</string>
     <string name="post_signup_interstitial_not_right_now">Nie teraz</string>
     <string name="content_description_person_building_website">Osoba budująca witrynę</string>
     <string name="post_signup_interstitial_subtitle">Cokolwiek chcesz stworzyć lub udostępnić, pomożemy tobie do zrobić właśnie tu.</string>
@@ -750,7 +746,6 @@ Language: pl
     <string name="stats_widget_site_caption">Wybierz swoją witrynę</string>
     <string name="stats_widget_all_time_title">Od początku</string>
     <string name="stats_widget_views_title">Wyświetlenia w tym tygodniu</string>
-    <string name="stats_widget_add">Dodaj widget</string>
     <string name="stats_widget_select_your_site">Wybierz swoją witrynę</string>
     <string name="stats_widget_select_color">Kolor</string>
     <string name="stats_widget_select_type">Typ</string>
@@ -758,6 +753,7 @@ Language: pl
     <string name="stats_widget_log_in_message">Proszę zalogować się do aplikacji WordPress aby dodać widget.</string>
     <string name="stats_widget_weekly_views_name">Wyświetleń w tym tygodniu</string>
     <string name="stats_widget_error_no_network">Brak dostępu do sieci</string>
+    <string name="stats_widget_add">Dodaj widżet</string>
     <string name="plugin_fetching_error_after_at">Odświeżenie szczegółów wtyczki trwa dłużej niż zwykle. Proszę spróbować później.</string>
     <string name="plugin_install_site_ineligible_default_error">Jeśli właśnie zarejestrowałe(a)ś nazwę domeny, poczekaj aż ukończymy konfigurację i wówczas spróbuj ponownie.\n\nJeśli nie zarejestrowałe(a)ś domeny, wygląda na to że coś poszło nie tak i funkcjonalność wtyczki może być w tym momencie niedostępna dla tej witryny.</string>
     <string name="domain_contact_information_state_not_available_hint">Stan (niedostępne)</string>
@@ -840,10 +836,10 @@ Language: pl
     <string name="stats_insights_total_likes">Suma polubień</string>
     <string name="stats_insights_average_comments">Średnio koment./wpis</string>
     <string name="stats_insights_total_comments">Suma komentarzy</string>
-    <string name="stats_insights_posts">Wpisów</string>
     <string name="stats_insights_year">Rok</string>
     <string name="stats_insights_this_year_site_stats">Ten rok</string>
     <string name="no_site_error">Adres witryny nie jest nie adresem witryny WordPressa. Aby ją połączyć, witryna musi wykorzystywać WordPressa.</string>
+    <string name="stats_insights_posts">Wpisy</string>
     <string name="plugin_check_domain_credits_progress_dialog_message">Sprawdzanie środków domeny</string>
     <string name="plugin_check_domain_credit_error">Nie udało się sprawdzić dostępnych środków w ramach domeny</string>
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Zarejestruj domenę</string>
@@ -890,12 +886,12 @@ Language: pl
     <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
     <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
-    <string name="quick_start_sites">Kolejne kroki</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>
     <string name="quick_start_dialog_upload_icon_title">Wczytaj ikonę witryny</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
+    <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
     <string name="quick_start_dialog_need_help_message">Przeprowadzimy cię przez podstawy budowy i rozwijania swojej witryny.</string>
     <string name="quick_start_dialog_migration_title">Dokonaliśmy kilku zmian na twojej liście</string>
@@ -929,19 +925,19 @@ Language: pl
     <string name="cancel_new_site_wizard_content_description">Anuluj kreatora tworzenia nowej witryny</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Tworzymy nową witrynę</string>
     <string name="notification_new_site_creation_failed">Wystąpił problem</string>
-    <string name="notification_new_site_creation_title">Tworzenie nowej witryny</string>
-    <string name="new_site_creation_create_site_button">Tworzenie nowej witryny</string>
     <string name="new_site_creation_domain_header_subtitle">To tu ludzie odnajdą ciebie w internecie.</string>
+    <string name="notification_new_site_creation_title">Utwórz witrynę</string>
+    <string name="new_site_creation_create_site_button">Utwórz witrynę</string>
     <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
     <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>
     <string name="site_creation_error_generic_title">Wystąpił problem</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Wystąpił problem</string>
     <string name="new_site_creation_preview_title">Twoja witryna został utworzona!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
-    <string name="new_site_creation_screen_title_general">Tworzenie witryny</string>
     <string name="suggestions_updated_content_description">Sugestie zaktualizowano</string>
     <string name="site_picker_failed_selecting_added_site">Nie można było wybrać nowo dodanej witryny z własnym hostingiem.</string>
     <string name="local_post_is_conflicted">Konflikt wersji</string>
+    <string name="new_site_creation_screen_title_general">Utwórz witrynę</string>
     <string name="preference_crash_reports_summary">Zezwól na automatyczne raportowanie błędów aby pomóc nam w poprawie wydajności aplikacji.</string>
     <string name="preference_crash_reports">Raporty błędów</string>
     <string name="snackbar_conflict_undo">Cofnij</string>
@@ -1021,9 +1017,9 @@ Language: pl
     <string name="history_preview_html">Podgląd HTML</string>
     <string name="history_preview_visual">Podgląd wizualny</string>
     <string name="support_identity_input_dialog_name_label">Imię</string>
-    <string name="history_detail_title">Wydanie</string>
     <string name="history_detail_button_previous">Poprzednie</string>
     <string name="history_detail_button_next">Następne</string>
+    <string name="history_detail_title">Wersja</string>
     <string name="media_space_used">%1$s wykorzystano</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
@@ -1048,16 +1044,16 @@ Language: pl
     <string name="pages_empty_published">Nie opublikowałeś jeszcze żadnych stron</string>
     <string name="pages_search_suggestion">Przeszukaj strony</string>
     <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
-    <string name="pages_delete_permanently">Usuń permanentnie</string>
     <string name="pages_move_to_trash">Przesuń do kosza</string>
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
+    <string name="pages_delete_permanently">Usuń na zawsze</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
-    <string name="pages_view">Podgląd</string>
     <string name="pages_trashed">Przesunięto do kosza</string>
     <string name="pages_scheduled">Zaplanowano</string>
     <string name="pages_drafts">Szkice</string>
     <string name="pages_published">Opublikowano</string>
     <string name="login_error_sms_throttled">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS - zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
+    <string name="pages_view">Zobacz</string>
     <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
     <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
     <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria twojego wyszukiwania</string>
@@ -1324,12 +1320,12 @@ Language: pl
     <string name="release_notes_screen_title">Informacje o wydaniu</string>
     <string name="signup_epilogue_error_avatar_view">Twój obrazek profilowy został przesłany i będzie wkrótce dostępny.</string>
     <string name="permissions_denied_title">Uprawnienia</string>
-    <string name="plugin_caption_featured">Wyróżniający</string>
     <string name="version_with_name_param">Wersja %s</string>
     <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/&gt;&lt;br/&gt;Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong&gt;%s&lt;/strong&gt; jest uaktywnione.</string>
     <string name="sharing_disabled_description">Nie możesz uzyskać dostępu do ustawień udostępniania ponieważ twój moduł udostępniania Jetpack jest wyłączony.</string>
     <string name="sharing_disabled">Moduł udostępniania wyłączony</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
+    <string name="plugin_caption_featured">Wyróżnione</string>
     <string name="publisher_with_company_param">Opublikował:  %s</string>
     <string name="notification_sound_has_invalid_path">Nieprawidłowa ścieżka do wybranego dźwięku. Proszę wybierz inny.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -1411,7 +1407,7 @@ Language: pl
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>
     <string name="plugin_info_requires_version">Wymagana wersja WordPressa</string>
-    <string name="plugin_info_lastupdated">Ostatnio zaktualizowano</string>
+    <string name="plugin_info_lastupdated">Ostatnia aktualizacja</string>
     <string name="plugin_info_version">Wersja </string>
     <string name="plugin_five_stars">5 gwiazdek</string>
     <string name="plugin_four_stars">4 gwiazdki</string>
@@ -1932,7 +1928,7 @@ Language: pl
     <string name="editor_remove_failed_uploads">Usuń nieudane próby przesyłania</string>
     <string name="site_settings_advanced_header">Zaawansowane</string>
     <string name="comments_empty_list_filtered_trashed">Brak komentarzy w koszu</string>
-    <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących</string>
+    <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących na moderację</string>
     <string name="comments_empty_list_filtered_approved">Brak zatwierdzonych komentarzy</string>
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
@@ -2001,7 +1997,7 @@ Language: pl
     <string name="site_settings_threading_dialog_header">Wątek do</string>
     <string name="remove">Usuń</string>
     <string name="search">Szukaj</string>
-    <string name="disabled">Wyłączone</string>
+    <string name="disabled">Wyłączono</string>
     <string name="site_settings_image_original_size">Oryginalny rozmiar</string>
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
     <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nieindeksowanie jej</string>
@@ -2110,12 +2106,12 @@ Language: pl
     <string name="theme_activation_error">Coś poszło nie tak. Nie można było włączyć motywu</string>
     <string name="theme_by_author_prompt_append">o %1$s</string>
     <string name="theme_prompt">Dziękujemy za wybranie %1$s</string>
-    <string name="theme_view">Podgląd</string>
     <string name="theme_try_and_customize">Wypróbuj i dostosuj</string>
     <string name="theme_details">Szczegóły</string>
     <string name="theme_support">Wsparcie</string>
     <string name="theme_done">Wykonano</string>
     <string name="theme_manage_site">ZARZĄDZAJ WITRYNĄ</string>
+    <string name="theme_view">Zobacz</string>
     <string name="theme_activate">Aktywuj</string>
     <string name="current_theme">Aktualny motyw</string>
     <string name="support">Wsparcie</string>
@@ -2169,7 +2165,7 @@ Language: pl
     <string name="post_trashed">Wpis został przeniesiony do kosza</string>
     <string name="button_stats">Statystyki</string>
     <string name="button_trash">Kosz</string>
-    <string name="button_view">Podgląd</string>
+    <string name="button_view">Zobacz</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień dostępu do tej witryny</string>
     <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>

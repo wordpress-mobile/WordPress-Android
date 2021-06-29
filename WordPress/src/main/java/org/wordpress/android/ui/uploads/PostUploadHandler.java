@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -196,6 +197,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD, AUTO_SAVE_OR_UPDATE_DRAFT
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;
 
