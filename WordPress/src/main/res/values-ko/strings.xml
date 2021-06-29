@@ -1,56 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-28 09:54:08+0000
+Translation-Revision-Date: 2021-06-11 14:13:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_border_settings">경계선 설정</string>
+    <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
+    <string name="storage_utils_dialog_ok_button">저장 공간 보기</string>
+    <string name="storage_utils_dialog_message">콘텐츠를 기기에 저장해야 발행할 수 있습니다. 저장 공간 설정을 검토하고 파일을 제거하여 공간을 확보하세요.</string>
+    <string name="storage_utils_dialog_title">부족한 기기 저장 공간</string>
+    <string name="gutenberg_native_y_axis_position">Y–축 위치</string>
+    <string name="gutenberg_native_x_axis_position">X–축 위치</string>
+    <string name="gutenberg_native_type_a_url">URL 입력</string>
+    <string name="gutenberg_native_tap_to_add_content">콘텐츠를 눌러서 추가</string>
+    <string name="gutenberg_native_slash_inserter_results">슬래시 삽입기 결과</string>
+    <string name="gutenberg_native_s_has_url_set">%s에 설정된 URL 있음</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s에 설정된 URL 없음</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">일반 블록으로 %s 변환됨</string>
+    <string name="gutenberg_native_s_block">%s 블록</string>
+    <string name="gutenberg_native_minimum_height">최소 높이</string>
+    <string name="gutenberg_native_media_options">미디어 옵션</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">유효하지 않은 URL입니다. 오디오 파일을 찾을 수 없습니다.</string>
+    <string name="gutenberg_native_insert_crosspost">교차 글 삽입</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">끌어서 초점 조정</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">두 번 눌러 이미지 또는 비디오를 추가할 하단 시트 열기</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">두 번 눌러 이미지 또는 비디오를 추가할 작업 시트 열기</string>
+    <string name="gutenberg_native_current_unit_is_s">현재 단위는 %s입니다.</string>
+    <string name="gutenberg_native_crosspost">교차 글</string>
+    <string name="gutenberg_native_columns_settings">열 설정</string>
+    <string name="gutenberg_native_add_link_to_s">%s에 링크 추가</string>
+    <string name="gutenberg_native_add_link_text">링크 텍스트 추가</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">이미지 또는 비디오 추가</string>
+    <string name="error_media_path_is_directory">지정한 경로가 미디어 파일이 아니라 디렉터리입니다.</string>
+    <string name="error_media_could_not_find_media_in_path">경로에서 미디어 파일을 찾을 수 없음</string>
+    <string name="error_media_unexpected_empty_media_file_path">예기치 않은 미디어의 빈 파일 경로</string>
+    <string name="error_media_file_type_not_allowed">이 파일 형식은 허용하지 않습니다.</string>
+    <string name="error_media_unexpected_null_value">미디어가 비었습니다.</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">링크를 두 번 눌러 추가하세요.</string>
     <string name="gutenberg_native_add_link">링크 추가</string>
     <string name="login_empty_view_try_another_account">다른 계정으로 시도</string>
     <string name="login_empty_view_see_instructions">지침 참조</string>
-    <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 WordPress 계정에 연결해야 합니다.</string>
+    <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 워드프레스닷컴 계정에 연결해야 합니다.</string>
     <string name="login_empty_view_avatar_content_description">프로필 사진</string>
     <string name="login_not_a_jetpack_site">%1$s에 이 앱을 사용하려면 설치되고 워드프레스닷컴 계정에 연결된 젯팩 플러그인이 있어야 합니다.</string>
-    <string name="gutenberg_native_audio_settings">오디오 설정</string>
     <string name="gutenberg_native_image_settings">이미지 설정</string>
-    <string name="gutenberg_native_size">크기</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
+    <string name="gutenberg_native_width_settings">폭 설정</string>
     <string name="user_profile_site_section_header">사이트</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
     <string name="likes_list_screen_title">좋아요 목록 %s</string>
-    <string name="gutenberg_native_write_code">코드 쓰기…</string>
     <string name="gutenberg_native_sorting_and_filtering">정렬과 필터</string>
-    <string name="gutenberg_native_show_download_button">다운로드 버튼 보이기</string>
-    <string name="gutenberg_native_shortcode">쇼트코드</string>
-    <string name="gutenberg_native_read_more">더 보기</string>
+    <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
+    <string name="gutenberg_native_mention">멘션</string>
     <string name="gutenberg_native_post_content_settings">글 콘텐츠 설정</string>
     <string name="gutenberg_native_post_meta_settings">글 메타 설정</string>
-    <string name="gutenberg_native_preload">미리 올림</string>
-    <string name="gutenberg_native_media_area">미디어 영역</string>
-    <string name="gutenberg_native_media_file">미디어 파일</string>
-    <string name="gutenberg_native_metadata">메타자료</string>
-    <string name="gutenberg_native_loop">연속재생</string>
-    <string name="gutenberg_native_link_to_12d6f96a">링크하기</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">갤러리의 이미지 %2$d개 중 %1$d개</string>
-    <string name="gutenberg_native_heading_d">헤딩 %d</string>
     <string name="gutenberg_native_featured">추천</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">여기에 임베드 하려면 URL을 입력하세요…</string>
-    <string name="gutenberg_native_edit_image">이미지 편집하기</string>
     <string name="gutenberg_native_display_post_date">발행일 보이기</string>
-    <string name="gutenberg_native_code">코드</string>
-    <string name="gutenberg_native_change_heading_level">헤딩 수준 바꾸기</string>
-    <string name="gutenberg_native_browser_default">브라우저 기본 설정</string>
-    <string name="gutenberg_native_auto">자동</string>
-    <string name="gutenberg_native_autoplay">자동 실행</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">블록을 삭제했거나 가능하지 않습니다.</string>
-    <string name="gutenberg_native_attachment_page">첨부 패이지</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">블록은 자체적으로 렌더링할 수 없습니다.</string>
-    <string name="gutenberg_native_add_text">문자 추가하기…</string>
-    <string name="gutenberg_native_add_caption">캡션 추가</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
     <string name="gutenberg_native_what_is_alt_text">대체 텍스트란 무엇인가요?</string>
     <string name="gutenberg_native_transform_s_to">다음으로 %s 변형</string>
@@ -64,26 +76,38 @@ Language: ko_KR
     <string name="like_faces_singular_text">1명의 블로거가 좋아합니다.</string>
     <string name="like_title_plural">%d 좋아요</string>
     <string name="like_title_singular">좋아요 1개</string>
-    <string name="threat_fix_enter_server_creds_message_plural">위협을 해결하려면 서버 자격 증명을 입력하세요.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">위협을 해결하려면 서버 자격 증명을 입력하세요.</string>
     <string name="suggestion">제안:</string>
+    <string name="gutenberg_native_use_icon_button">아이콘 버튼 사용</string>
+    <string name="gutenberg_native_search_input_field">입력 필드를 검색합니다.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">검색 버튼입니다. 현재 버튼 텍스트는</string>
     <string name="gutenberg_native_search_blocks">블록 검색</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">블록 레이블을 검색합니다. 현재 텍스트는</string>
     <string name="gutenberg_native_search_block">블록 검색</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">설정된 사용자 정의 플레이스홀더 없음</string>
+    <string name="gutenberg_native_no_button">버튼 없음</string>
+    <string name="gutenberg_native_inside">내부</string>
+    <string name="gutenberg_native_hide_search_heading">검색 헤딩요소 숨기기</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">두 번 눌러 레이블 텍스트 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">두 번 눌러 버튼 텍스트 편집하기</string>
     <string name="gutenberg_native_double_tap_to_change_unit">두 번 눌러 단위 변경하기</string>
+    <string name="gutenberg_native_outside">외부</string>
+    <string name="gutenberg_native_current_placeholder_text_is">현재 플레이스홀더 텍스트는</string>
     <string name="gutenberg_native_clear_search">검색 지우기</string>
     <string name="gutenberg_native_cancel_search">검색 취소</string>
+    <string name="gutenberg_native_button_position">버튼 위치</string>
+    <string name="gutenberg_native_button_outside">버튼 외부</string>
+    <string name="gutenberg_native_button_inside">버튼 내부</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s은(는) %3$s %4$s입니다.</string>
     <string name="get_likes_empty_state_title">좋아요 데이터를 가져오는 중 오류가 발생함</string>
     <string name="get_likes_unknown_error">좋아요를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
     <string name="get_likes_no_network_error">사용 가능한 네트워크가 없습니다.</string>
     <string name="comments_empty_list_filtered_unreplied">응답 없는 댓글 없음</string>
     <string name="comment_status_unreplied">응답 없음</string>
-    <string name="gutenberg_native_table_of_contents">목차</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">헤딩요소 목록으로 글을 요약하세요. 여기에서 HTML 앵커를 헤딩요소 블록에 추가하여 링크를 설정하세요.</string>
-    <string name="gutenberg_native_document_outline">문서 개요</string>
-    <string name="gutenberg_native_buttongroup">ButtonGroup</string>
+    <string name="gutenberg_native_search_settings">설정 검색</string>
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
+    <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
     <string name="reader_title_interests">토픽 따르기</string>
     <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
@@ -163,7 +187,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">오디오 파일을 두 번 눌러 듣기</string>
     <string name="gutenberg_native_choose_audio">오디오 선택</string>
     <string name="gutenberg_native_audio_player">오디오 플레이어</string>
-    <string name="gutenberg_native_audio_file">오디오 파일</string>
     <string name="gutenberg_native_audio_caption_s">오디오 캡션. %s</string>
     <string name="gutenberg_native_audio_caption_empty">오디오 캡션. 비었음</string>
     <string name="gutenberg_native_add_audio">오디오 추가</string>
@@ -179,7 +202,6 @@ Language: ko_KR
     <string name="scan_idle_manual_scan_description">사이트를 다시 검토하려면 수동 스캔을 실행하거나 젯팩의 오늘 중 사이트 스캔을 기다리세요.</string>
     <string name="scan_provisioning_description">Jetpack Scan에 오신 것을 환영합니다. 전체 스캔이 수행되도록 설정하여 사이트를 자세히 살펴보는 중입니다. 스캔에 영향을 미칠 만한 문제를 발견하면 먼저 알려드리고 전체 스캔을 시작합니다.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan에 오신 것을 환영합니다. 지금 회원님 사이트를 살펴보고 있으며 결과를 곧 알려드리겠습니다.</string>
-    <string name="scan_scanning_description">스캔이 완료되면 알림을 보내드립니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행 상황을 확인하실 수 있습니다.</string>
     <string name="scan_fixing_threats_description_singular">이 위협을 해결하기 위해 백그라운드에서 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행률을 확인하실 수 있습니다.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan에서 사이트 스캔을 완료할 수 없습니다. 사이트가 다운되었는지 확인해 주세요. 다운되지 않았으면 다시 시도해 주세요. 다운되었거나 Jetpack Scan에서 계속 문제가 발생하는 경우 지원팀에 문의하세요.</string>
     <string name="scan_fixing_threats_title_plural">위협 해결 중</string>
@@ -479,8 +501,6 @@ Language: ko_KR
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="gutenberg_native_search_or_type_url">검색하거나 URL 입력하기</string>
-    <string name="gutenberg_native_select_item">항목 선택하기</string>
-    <string name="gutenberg_native_page_break">페이지 자르기</string>
     <string name="gutenberg_native_add_this_telephone_link">이 전화 링크 추가하기</string>
     <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
     <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
@@ -639,7 +659,6 @@ Language: ko_KR
     <string name="me">나</string>
     <string name="everyone">모두</string>
     <string name="menu_content_info">콘텐츠 구조</string>
-    <string name="photo_picker_use_gif">이 GIF 사용하기</string>
     <string name="pages_list_author">페이지 작성자</string>
     <string name="error_media_thumbnail_not_loaded">미디어 썸네일을 불러 올 수 없습니다</string>
     <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
@@ -675,6 +694,7 @@ Language: ko_KR
     <string name="gutenberg_native_move_to_top">위로 이동하기</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 동작 시트를 열기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
+    <string name="gutenberg_native_insert_mention">언급 넣기</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">선택된 홈페이지와 글에 대한 페이지는 같을 수 없습니다.</string>
     <string name="site_settings_classic_blog">고전 블로그</string>
     <string name="site_settings_posts_page">글 페이지</string>
@@ -725,6 +745,7 @@ Language: ko_KR
     <string name="sitepicker_continue_flow">계속</string>
     <string name="comment_share_link_via">공유 경로</string>
     <string name="comment_toast_err_share_intent">공유 실패</string>
+    <string name="gutenberg_native_number_of_columns">열 수</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">블록을 왼쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">블록을 오른쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_move_block_left">블록 왼쪽으로 움직이기</string>
@@ -748,7 +769,6 @@ Language: ko_KR
     <string name="weekday_friday">금요일</string>
     <string name="weekday_saturday">토요일</string>
     <string name="photo_picker_gif">테너에서 선택</string>
-    <string name="gif_picker_search_hint">테너 검색</string>
     <string name="gif_powered_by_tenor">테너 제공</string>
     <string name="media_accessing_progress">비공개 사이트의 내용에 접근 중</string>
     <string name="media_accessing_failed">비공개 사이트의 내용에 접근이 실패하였습니다. 일부 미디어가 이용 가능하지 않을 수 있습니다.</string>
@@ -792,9 +812,11 @@ Language: ko_KR
     <string name="gutenberg_native_link_to">링크</string>
     <string name="gutenberg_native_link_settings">링크 설정</string>
     <string name="gutenberg_native_excerpt_length_words">요약문 길이(단어)</string>
+    <string name="gutenberg_native_edit_cover_media">커버 미디어 편집</string>
     <string name="gutenberg_native_customize">사용자 정의</string>
+    <string name="gutenberg_native_button_link_url">버튼 링크 URL</string>
+    <string name="gutenberg_native_border_radius">경계선 반경</string>
     <string name="gutenberg_native_add_paragraph_block">단락 블록 추가</string>
-    <string name="gutenberg_native_video_settings">비디오 설정</string>
     <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
@@ -833,6 +855,7 @@ Language: ko_KR
     <string name="reader_filter_cta">필터</string>
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
+    <string name="gutenberg_native_edit_media">미디어 편집</string>
     <string name="gutenberg_native_add_a_shortcode">쇼트코드 추가…</string>
     <string name="post_list_author">작성자</string>
     <string name="fab_create_desc">게시물 작성</string>
@@ -849,7 +872,6 @@ Language: ko_KR
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">갤러리 캡션. %s</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
-    <string name="gutenberg_native_replace_image">이미지 삭제</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>
     <string name="post_signup_interstitial_not_right_now">나중에</string>
     <string name="post_signup_interstitial_subtitle">무엇을 만들거나 공유하려는 경우 지금 바로 도와드리겠습니다.</string>
@@ -890,7 +912,6 @@ Language: ko_KR
     <string name="reader_filter_tags_title">토픽</string>
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
-    <string name="gutenberg_native_translate">번역</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">키보드를 숨기려면 탭</string>
     <string name="gutenberg_native_tap_here_to_show_help">도움말을 보려면 여기를 탭</string>
     <string name="gutenberg_native_take_a_video">비디오 촬영</string>
@@ -898,7 +919,6 @@ Language: ko_KR
     <string name="gutenberg_native_take_a_photo">사진 촬영</string>
     <string name="gutenberg_native_start_writing">글쓰기 시작…</string>
     <string name="gutenberg_native_unsupported">지원되지 않음</string>
-    <string name="gutenberg_native_show_section">섹션 표시</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
     <string name="gutenberg_native_s_block_empty">%s 블록. 비어 있음</string>
     <string name="gutenberg_native_cut_block">블록 잘라내기</string>
@@ -915,11 +935,13 @@ Language: ko_KR
     <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
     <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
+    <string name="gutenberg_native_link_inserted">링크 삽입됨</string>
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
     <string name="gutenberg_native_hide_keyboard">키보드 숨기기</string>
     <string name="gutenberg_native_help_icon">도움말 아이콘</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">마지막 변경을 취소하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_link_text">링크 텍스트</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">설정을 전환하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">이미지를 선택하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">비디오를 선택하려면 두 번 탭하세요.</string>
@@ -929,6 +951,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_move_the_block_down">블록을 아래로 이동하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">이 값을 편집하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">블록을 추가하려면 두 번 탭하세요.</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">편집하려면 두 번 탭하고 길게 누르세요.</string>
     <string name="gutenberg_native_current_value_is_s">현재 값은 %s입니다.</string>
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
@@ -1310,7 +1333,6 @@ Language: ko_KR
     <string name="stats_insights_share_post">게시글 공유</string>
     <string name="stats_insights_create_post">게시글 작성</string>
     <string name="stats_insights_latest_post_message">%2$s 발행 후 %1$s이(가) 지났습니다. 지금까지 게시글의 성과입니다</string>
-    <string name="gif_picker_endless_scroll_network_error">네트워크 오류로 인해 일부 미디어를 로드하지 못했습니다.</string>
     <string name="gif_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
     <string name="gif_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 발행한 후에는 글을 공유하여 조회수를 높이세요</string>
