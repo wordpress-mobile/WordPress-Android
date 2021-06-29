@@ -1,7 +1,7 @@
 docker-container: &docker-container
   plugins:
     - docker#v3.8.0:
-        image: "wordpressmobile/android-build-image"
+        image: "public.ecr.aws/m4u4m2y0/android-build-image:latest"
         environment:
           - "CI=true"
 
@@ -26,3 +26,18 @@ steps:
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew lintWordpressVanillaRelease
+  - label: "Test WordPress"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew testWordpressVanillaRelease
+  - label: "Test WordPressProcessors"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew :libs:WordPressProcessors:test
+  - label: "Test ImageEditor"
+    <<: *docker-container
+    command: |
+      cp gradle.properties-example gradle.properties
+      ./gradlew :libs:image-editor:ImageEditor:test

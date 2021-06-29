@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.RecyclerViewPrimaryButtonBottomSheetBinding
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.disableAnimation
 import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
@@ -38,6 +40,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
         with(RecyclerViewPrimaryButtonBottomSheetBinding.bind(view)) {
             contentRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             contentRecyclerView.adapter = adapter
+            contentRecyclerView.disableAnimation()
             contentRecyclerView.addOnScrollListener(object : OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -53,7 +56,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
             viewModel =
                     ViewModelProvider(requireActivity(), viewModelFactory).get(BloggingRemindersViewModel::class.java)
             viewModel.uiState.observe(this@BloggingReminderBottomSheetFragment) { uiState ->
-                (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.update(uiState?.uiItems ?: listOf())
+                (contentRecyclerView.adapter as? BloggingRemindersAdapter)?.submitList(uiState?.uiItems ?: listOf())
                 if (uiState?.primaryButton != null) {
                     primaryButton.visibility = View.VISIBLE
                     uiHelpers.setTextOrHide(primaryButton, uiState.primaryButton.text)
@@ -81,6 +84,11 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onBottomSheetDismissed()
     }
 
     companion object {
