@@ -7,10 +7,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Available
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.FailedRequest
-import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce.Unknown
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Available
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
+import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
@@ -32,6 +33,7 @@ class ReactNativeStore
 @VisibleForTesting constructor(
     private val wpComRestClient: ReactNativeWPComRestClient,
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
+    private val nonceRestClient: NonceRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine,
@@ -43,12 +45,14 @@ class ReactNativeStore
     @Inject constructor(
         wpComRestClient: ReactNativeWPComRestClient,
         wpAPIRestClient: ReactNativeWPAPIRestClient,
+        nonceRestClient: NonceRestClient,
         discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
         siteSqlUtils: SiteSqlUtils,
         coroutineEngine: CoroutineEngine
     ) : this(
             wpComRestClient,
             wpAPIRestClient,
+            nonceRestClient,
             discoveryWPAPIRestClient,
             siteSqlUtils,
             coroutineEngine,
@@ -122,7 +126,7 @@ class ReactNativeStore
             it + FIVE_MIN_MILLIS > currentTimeMillis()
         }
         if (nonceMap[site] is Unknown || !(usingSavedNonce || failedRecently)) {
-            nonceMap[site] = wpAPIRestClient.requestNonce(site)
+            nonceMap[site] = nonceRestClient.requestNonce(site)
         }
 
         val response = executeFetch(fullRestUrl, params, nonceMap[site]?.value, enableCaching)
@@ -134,7 +138,7 @@ class ReactNativeStore
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
                         val previousNonce = nonceMap[site]?.value
-                        nonceMap[site] = wpAPIRestClient.requestNonce(site)
+                        nonceMap[site] = nonceRestClient.requestNonce(site)
                         val newNonce = nonceMap[site]?.value
 
                         // Try original call again if we have a new nonce
