@@ -131,7 +131,6 @@ class PluginWPAPIRestClient @Inject constructor(
         plugin.pluginUrl = this.pluginUri
         plugin.version = this.version
         plugin.slug = this.textDomain
-        plugin.plugin = this.plugin
         return plugin
     }
 
