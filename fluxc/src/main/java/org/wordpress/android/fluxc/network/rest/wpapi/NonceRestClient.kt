@@ -65,4 +65,3 @@ class NonceRestClient
         return "$noSlashBegin/$noSlashEnd"
     }
 }
-
