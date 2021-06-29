@@ -22,7 +22,7 @@ class PluginWPAPIRestClient @Inject constructor(
     private val wpApiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     dispatcher: Dispatcher,
     @Named("custom-ssl") requestQueue: RequestQueue,
-    userAgent: UserAgent,
+    userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     suspend fun fetchPlugins(
         site: SiteModel,
