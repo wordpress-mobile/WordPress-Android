@@ -340,7 +340,8 @@ public class PluginStore extends Store {
         }
     }
 
-    static class RemoveSitePluginsError implements OnChangedError {}
+    static class RemoveSitePluginsError implements OnChangedError {
+    }
 
     // Error types
 
@@ -483,6 +484,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginConfigured(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -495,6 +497,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginDeleted(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -506,6 +509,7 @@ public class PluginStore extends Store {
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
         public String slug;
+
         public OnSitePluginInstalled(SiteModel site, String slug) {
             this.site = site;
             this.slug = slug;
@@ -517,6 +521,7 @@ public class PluginStore extends Store {
         public SiteModel site;
         public String pluginName;
         public String slug;
+
         public OnSitePluginUpdated(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
@@ -537,6 +542,7 @@ public class PluginStore extends Store {
     public static class OnSitePluginsRemoved extends OnChanged<RemoveSitePluginsError> {
         public SiteModel site;
         public int rowsAffected;
+
         public OnSitePluginsRemoved(SiteModel site, int rowsAffected) {
             this.site = site;
             this.rowsAffected = rowsAffected;
@@ -545,13 +551,16 @@ public class PluginStore extends Store {
 
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
+    private final PluginCoroutineStore mPluginCoroutineStore;
 
     @Inject public PluginStore(Dispatcher dispatcher,
                                PluginRestClient pluginRestClient,
-                               PluginWPOrgClient pluginWPOrgClient) {
+                               PluginWPOrgClient pluginWPOrgClient,
+                               PluginCoroutineStore pluginCoroutineStore) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
         mPluginWPOrgClient = pluginWPOrgClient;
+        mPluginCoroutineStore = pluginCoroutineStore;
     }
 
     @Override
@@ -659,6 +668,9 @@ public class PluginStore extends Store {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive,
                     payload.isAutoUpdateEnabled);
+        }
+        if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, payload.slug,
@@ -670,6 +682,8 @@ public class PluginStore extends Store {
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.pluginName, payload.slug);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.deleteSitePlugin(payload.site, payload.pluginName, payload.slug);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.slug,
@@ -696,6 +710,8 @@ public class PluginStore extends Store {
     private void fetchSitePlugins(@Nullable SiteModel site) {
         if (site != null && site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchSitePlugins(site);
+        } else if (site != null && !site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.fetchWPApiPlugins(site);
         } else {
             PluginDirectoryError error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
             FetchedPluginDirectoryPayload errorPayload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE,
@@ -711,6 +727,8 @@ public class PluginStore extends Store {
     private void installSitePlugin(InstallSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
             mPluginRestClient.installSitePlugin(payload.site, payload.slug);
+        } else if (!payload.site.isUsingWpComRestApi()) {
+            mPluginCoroutineStore.installSitePlugin(payload.site, payload.slug);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
