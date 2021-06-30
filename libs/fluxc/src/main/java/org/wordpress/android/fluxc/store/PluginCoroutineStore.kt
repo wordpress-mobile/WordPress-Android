@@ -49,8 +49,9 @@ class PluginCoroutineStore
     ): OnPluginDirectoryFetched {
         val payload = executeWPAPIRequest(siteModel, true, pluginWPAPIRestClient::fetchPlugins)
         val event = OnPluginDirectoryFetched(SITE, false)
-        if (payload.isError) {
-            event.error = PluginDirectoryError(payload.error?.volleyError?.message, payload.error?.message)
+        val error = payload.error
+        if (error != null) {
+            event.error = PluginDirectoryError(error.type, error.message)
         } else if (!payload.data.isNullOrEmpty()) {
             event.canLoadMore = false
             PluginSqlUtils.insertOrReplaceSitePlugins(siteModel, payload.data)
@@ -75,10 +76,7 @@ class PluginCoroutineStore
         }
         val event = OnSitePluginDeleted(payload.site, pluginName, slug)
         val error = payload.error?.let {
-            DeleteSitePluginError(
-                    payload.error?.volleyError?.message,
-                    payload.error?.message
-            )
+            DeleteSitePluginError(it.type, it.message)
         }
         if (error != null && error.type != UNKNOWN_PLUGIN) {
             event.error = error
@@ -105,8 +103,9 @@ class PluginCoroutineStore
             pluginWPAPIRestClient.updatePlugin(siteModel, nonce, plugin.name, isActive)
         }
         val event = OnSitePluginConfigured(payload.site, pluginName, slug)
-        if (payload.isError()) {
-            event.error = ConfigureSitePluginError(payload.error?.volleyError?.message, payload.error?.message)
+        val error = payload.error
+        if (error != null) {
+            event.error = ConfigureSitePluginError(error.type, error.message, isActive)
         } else {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.data)
         }
@@ -126,8 +125,9 @@ class PluginCoroutineStore
             pluginWPAPIRestClient.installPlugin(siteModel, nonce, slug)
         }
         val event = OnSitePluginInstalled(payload.site, payload.data?.slug ?: slug)
-        if (payload.isError) {
-            event.error = InstallSitePluginError(payload.error?.volleyError?.message, payload.error?.message)
+        val error = payload.error
+        if (error != null) {
+            event.error = InstallSitePluginError(error.type, error.message)
         } else {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.data)
         }
