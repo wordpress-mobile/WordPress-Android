@@ -213,6 +213,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSou
 import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
 import org.wordpress.android.util.config.LayoutGridBlockFeatureConfig;
 import org.wordpress.android.util.crashlogging.CrashLoggingExtKt;
+import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -411,6 +412,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
+    @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
     @Inject LayoutGridBlockFeatureConfig mLayoutGridBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
@@ -2293,9 +2295,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
         boolean isUnsupportedBlockEditorEnabled =
-                mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
+                mSite.isWPCom() || mIsJetpackSsoEnabled;
 
-        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
+        boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
@@ -3589,7 +3591,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void refreshEditorTheme() {
-        FetchEditorThemePayload payload = new FetchEditorThemePayload(mSite);
+        FetchEditorThemePayload payload =
+                new FetchEditorThemePayload(mSite, mGlobalStyleSupportFeatureConfig.isEnabled());
         mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
     }
 

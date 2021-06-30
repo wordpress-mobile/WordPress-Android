@@ -106,6 +106,7 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -541,8 +542,8 @@ tasks.register("printVersionName") {
 tasks.register("printAllVersions") {
     doLast {
         android.applicationVariants.all { variant ->
-            def apkData = variant.outputs[0].apkData
-            println "${variant.name}: ${apkData.versionName} (${apkData.versionCode})"
+            def apkData = variant.outputs*.apkData
+            println "${variant.name}: ${apkData*.versionName} (${apkData*.versionCode})"
         }
     }
 }

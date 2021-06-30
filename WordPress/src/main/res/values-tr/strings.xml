@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-08 09:54:08+0000
+Translation-Revision-Date: 2021-06-24 15:57:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="blogging_reminders_done">Tamamlandı</string>
+    <string name="blogging_reminders_notify_me">Bana bildir</string>
+    <string name="blogging_goals_not_set">Hiçbir şey ayarlanmadı</string>
+    <string name="blogging_goals_n_times_a_week">Haftada %d kez</string>
+    <string name="set_your_blogging_goals_button">Hedefler belirle</string>
+    <string name="set_your_blogging_goals_message">Gönderiniz yayınlanıyor… bu arada, hatırlatıcılar almak ve ilerleme durumunuzu takip etmek için blog hedeflerinizi ayarlayın.</string>
+    <string name="set_your_blogging_goals_title">Blog hedeflerinizi belirleyin</string>
+    <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
+    <string name="gutenberg_native_set_as_featured_image">Öne Çıkarılan Görsel olarak ayarla </string>
+    <string name="gutenberg_native_remove_as_featured_image">Öne Çıkan Görsel kategorisinden kaldır </string>
+    <string name="fab_add_category_desc">Kategori oluştur</string>
+    <string name="support_ticket_subject">Android için WordPress Desteği</string>
+    <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
+    <string name="site_settings_categories_empty_title">Hiç kategoriniz yok</string>
+    <string name="site_settings_categories_empty_subtitle">Gönderilerinizi kategorilere ayırırken hızlı bir şekilde seçilebilmesi için sık kullandığınız kategorilerinizi buraya ekleyin</string>
+    <string name="site_settings_categories_empty_button">Bir kategori oluştur</string>
+    <string name="site_settings_categories_title">Kategoriler</string>
+    <string name="site_settings_blogging_reminders_title">Blog hedefleri</string>
+    <string name="page_is_posts_page_warning">Güncel paylaşımlar sayfanızın içeriği, otomatik olarak oluşturulur ve düzenlenemez.</string>
     <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
     <string name="storage_utils_dialog_dont_show_button">Tekrar Gösterme</string>
     <string name="storage_utils_dialog_ok_button">Depolamayı Görüntüle</string>
@@ -200,6 +219,7 @@ Language: tr
     <string name="scan_provisioning_description">Jetpack Scan\'e hoş geldiniz! Sitenize göz atıyor ve tam bir tarama yapacak şekilde ayarlıyoruz. Taramayı etkileyebilecek herhangi bir sorun tespit edersek size haber vereceğiz, ardından ilk tam taramanız başlayacaktır.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.</string>
     <string name="scan_fixing_threats_description_singular">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
+    <string name="scan_scanning_description">Bir tehdit bulunursa size bir bildirim göndeririz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
     <string name="scan_fixing_threats_title_plural">Tehditler düzeltiliyor</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan sitenizin taramasını tamamlayamadı. Lütfen sitenizin devre dışı olup olmadığını kontrol edin, değilse tekrar deneyin. Devre dışıysa veya Jetpack Scan\'de hâlâ sorun varsa destek ekibimizle iletişime geçin.</string>
     <string name="scan_request_failed_title">Bir şeyler yanlış gitti</string>
