@@ -333,4 +333,3 @@ class PluginCoroutineStoreTest {
         verify(dispatcher, times(1)).emitChange(any())
     }
 }
-
