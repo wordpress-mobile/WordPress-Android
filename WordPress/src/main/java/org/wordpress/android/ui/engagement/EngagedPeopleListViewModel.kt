@@ -40,6 +40,8 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class EngagedPeopleListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -234,10 +236,18 @@ class EngagedPeopleListViewModel @Inject constructor(
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
-                analyticsUtilsWrapper.trackLikeListFetchedMore(
-                        EngagementNavigationSource.getSourceDescription(listScenario?.source),
-                        ListScenarioType.getSourceDescription(listScenario?.type)
-                )
+                val perPage = GetLikesHandler.LIKES_PER_PAGE_DEFAULT.toDouble()
+                val currentCount = uiState.value?.engageItemsList?.size ?: 0
+                if (listScenario != null) {
+                    val totalPages = ceil(listScenario!!.headerData.numLikes / perPage).toInt()
+                    val nextPage = 1 + floor(currentCount / perPage).toInt()
+                    analyticsUtilsWrapper.trackLikeListFetchedMore(
+                            EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                            ListScenarioType.getSourceDescription(listScenario?.type),
+                            nextPage,
+                            totalPages
+                    )
+                }
             })
         } else {
             listOf()
