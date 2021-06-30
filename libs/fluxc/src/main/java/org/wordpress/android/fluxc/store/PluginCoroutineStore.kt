@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginWPAPIRestClient
-import org.wordpress.android.fluxc.persistence.PluginSqlUtils
+import org.wordpress.android.fluxc.persistence.PluginSqlUtilsWrapper
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError
@@ -37,7 +37,8 @@ class PluginCoroutineStore
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val siteSqlUtils: SiteSqlUtils,
     private val nonceRestClient: NonceRestClient,
-    private val currentTimeProvider: CurrentTimeProvider
+    private val currentTimeProvider: CurrentTimeProvider,
+    private val pluginSqlUtils: PluginSqlUtilsWrapper
 ) {
     fun fetchWPApiPlugins(siteModel: SiteModel) = coroutineEngine.launch(T.PLUGINS, this, "Fetching WPAPI plugins") {
         val event = syncFetchWPApiPlugins(siteModel)
@@ -54,14 +55,14 @@ class PluginCoroutineStore
             event.error = PluginDirectoryError(error.type, error.message)
         } else if (!payload.data.isNullOrEmpty()) {
             event.canLoadMore = false
-            PluginSqlUtils.insertOrReplaceSitePlugins(siteModel, payload.data)
+            pluginSqlUtils.insertOrReplaceSitePlugins(siteModel, payload.data)
         }
         return event
     }
 
     fun deleteSitePlugin(site: SiteModel, pluginName: String, slug: String) =
             coroutineEngine.launch(T.PLUGINS, this, "Deleting WPAPI plugin") {
-                val event = syncDeleteSitePlugin(site, slug, pluginName)
+                val event = syncDeleteSitePlugin(site, pluginName, slug)
                 dispatcher.emitChange(event)
             }
 
@@ -70,9 +71,9 @@ class PluginCoroutineStore
         pluginName: String,
         slug: String
     ): OnSitePluginDeleted {
-        val plugin = PluginSqlUtils.getSitePluginBySlug(site, slug)
+        val plugin = pluginSqlUtils.getSitePluginBySlug(site, slug)
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
-            pluginWPAPIRestClient.deletePlugin(siteModel, nonce, plugin.name)
+            pluginWPAPIRestClient.deletePlugin(siteModel, nonce, plugin?.name ?: pluginName)
         }
         val event = OnSitePluginDeleted(payload.site, pluginName, slug)
         val error = payload.error?.let {
@@ -81,7 +82,7 @@ class PluginCoroutineStore
         if (error != null && error.type != UNKNOWN_PLUGIN) {
             event.error = error
         } else {
-            PluginSqlUtils.deleteSitePlugin(payload.site, slug)
+            pluginSqlUtils.deleteSitePlugin(site, slug)
         }
         return event
     }
@@ -98,16 +99,16 @@ class PluginCoroutineStore
         slug: String,
         isActive: Boolean
     ): OnSitePluginConfigured {
-        val plugin = PluginSqlUtils.getSitePluginBySlug(site, slug)
+        val plugin = pluginSqlUtils.getSitePluginBySlug(site, slug)
         val payload = executeWPAPIRequest(site, false) { siteModel, nonce, _ ->
-            pluginWPAPIRestClient.updatePlugin(siteModel, nonce, plugin.name, isActive)
+            pluginWPAPIRestClient.updatePlugin(siteModel, nonce, plugin?.name ?: pluginName, isActive)
         }
         val event = OnSitePluginConfigured(payload.site, pluginName, slug)
         val error = payload.error
         if (error != null) {
             event.error = ConfigureSitePluginError(error.type, error.message, isActive)
         } else {
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.data)
+            pluginSqlUtils.insertOrUpdateSitePlugin(site, payload.data)
         }
         return event
     }
@@ -129,7 +130,7 @@ class PluginCoroutineStore
         if (error != null) {
             event.error = InstallSitePluginError(error.type, error.message)
         } else {
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.data)
+            pluginSqlUtils.insertOrUpdateSitePlugin(site, payload.data)
         }
         dispatcher.emitChange(event)
 
@@ -137,7 +138,8 @@ class PluginCoroutineStore
         if (!payload.isError && payload.data != null) {
             // Give a second to the server as otherwise the following configure call may fail
             delay(1000)
-            syncConfigureSitePlugin(site, payload.data.name, payload.data.slug, true)
+            val configureEvent = syncConfigureSitePlugin(site, payload.data.name, payload.data.slug, true)
+            dispatcher.emitChange(configureEvent)
         }
         return event
     }
@@ -156,29 +158,29 @@ class PluginCoroutineStore
                     ) // fallback to ".../wp-json/" default if discovery fails
             (siteSqlUtils::insertOrUpdateSite)(site)
         }
-        val usingSavedNonce = getNonce(site) is Available
-        val failedRecently = true == (getNonce(site) as? FailedRequest)?.timeOfResponse?.let {
+        var nonce = nonceRestClient.getNonce(site)
+        val usingSavedNonce = nonce is Available
+        val failedRecently = true == (nonce as? FailedRequest)?.timeOfResponse?.let {
             it + FIVE_MIN_MILLIS > currentTimeProvider.currentDate().time
         }
-        if (getNonce(site) is Unknown || !(usingSavedNonce || failedRecently)) {
-            nonceRestClient.requestNonce(site)
+        if (nonce is Unknown || !(usingSavedNonce || failedRecently)) {
+            nonce = nonceRestClient.requestNonce(site)
         }
 
-        val response = fetchMethod(site, getNonce(site), enableCaching)
+        val response = fetchMethod(site, nonce, enableCaching)
         return when (response.isError) {
             false -> response
             else -> when (response.error?.volleyError?.networkResponse?.statusCode) {
                 401 -> {
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
-                        val previousNonce = getNonce(site)?.value
-                        nonceRestClient.requestNonce(site)
-                        val newNonce = getNonce(site)?.value
+                        val previousNonce = nonce
+                        val newNonce = nonceRestClient.requestNonce(site)
 
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return fetchMethod(site, getNonce(site), enableCaching)
+                            return fetchMethod(site, newNonce, enableCaching)
                         }
                     }
                     response
