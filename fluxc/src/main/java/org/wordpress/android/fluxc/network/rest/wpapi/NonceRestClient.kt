@@ -32,7 +32,7 @@ class NonceRestClient
      *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
      *  that became available in WordPress 5.3.
      */
-    suspend fun requestNonce(site: SiteModel) {
+    suspend fun requestNonce(site: SiteModel): Nonce? {
         val wpLoginUrl = slashJoin(site.url, "wp-login.php")
         val redirectUrl = slashJoin(site.url, "wp-admin/admin-ajax.php?action=rest-nonce")
         val body = mapOf(
@@ -57,6 +57,7 @@ class NonceRestClient
                 }
             }
         }
+        return nonceMap[site]
     }
 
     private fun slashJoin(begin: String, end: String): String {

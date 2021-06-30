@@ -71,7 +71,6 @@ class ReactNativeStoreWpComTest {
                 discoveryWPAPIRestClient,
                 TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
-                mutableMapOf(),
                 uriParser = uriParser)
 
         val response = store.executeRequest(mock(), "")

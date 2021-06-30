@@ -33,12 +33,10 @@ class PluginWPAPIRestClient @Inject constructor(
         val type = object : TypeToken<List<PluginResponseModel>>() {}.type
         val response =
                 wpApiGsonRequestBuilder.syncGetRequest<List<PluginResponseModel>>(
-                        this,
-                        url,
-                        emptyMap(),
-                        emptyMap(),
-                        type,
-                        enableCaching,
+                        restClient = this,
+                        url = url,
+                        type = type,
+                        enableCaching = enableCaching,
                         nonce = nonce?.value
                 )
         return when (response) {
@@ -62,10 +60,10 @@ class PluginWPAPIRestClient @Inject constructor(
         val url = buildUrl(site)
         val response =
                 wpApiGsonRequestBuilder.syncPostRequest(
-                        this,
-                        url,
-                        mapOf("slug" to installedPluginSlug),
-                        PluginResponseModel::class.java,
+                        restClient = this,
+                        url = url,
+                        body = mapOf("slug" to installedPluginSlug),
+                        clazz = PluginResponseModel::class.java,
                         nonce = nonce?.value
                 )
         return handleResponse(response, site)
@@ -80,10 +78,10 @@ class PluginWPAPIRestClient @Inject constructor(
         val url = buildUrl(site, updatedPlugin)
         val response =
                 wpApiGsonRequestBuilder.syncPutRequest(
-                        this,
-                        url,
-                        mapOf("status" to if (active) "active" else "inactive"),
-                        PluginResponseModel::class.java,
+                        restClient = this,
+                        url = url,
+                        body = mapOf("status" to if (active) "active" else "inactive"),
+                        clazz = PluginResponseModel::class.java,
                         nonce = nonce?.value
                 )
         return handleResponse(response, site)
@@ -97,10 +95,9 @@ class PluginWPAPIRestClient @Inject constructor(
         val url = buildUrl(site, deletedPlugin)
         val response =
                 wpApiGsonRequestBuilder.syncDeleteRequest(
-                        this,
-                        url,
-                        mapOf(),
-                        PluginResponseModel::class.java,
+                        restClient = this,
+                        url = url,
+                        clazz = PluginResponseModel::class.java,
                         nonce = nonce?.value
                 )
         return handleResponse(response, site)

@@ -62,10 +62,7 @@ class ReactNativeStoreWPAPITest {
     }
 
     private fun initStore(nonce: Nonce?) {
-        val nonceMap = mutableMapOf<SiteModel, Nonce>()
-        if (nonce != null) {
-            nonceMap[site] = nonce
-        }
+        whenever(nonceRestClient.getNonce(any())).thenReturn(nonce)
         sitePersistenceMock = mock()
         store = ReactNativeStore(
                 mock(),
@@ -74,7 +71,6 @@ class ReactNativeStoreWPAPITest {
                 discoveryWPAPIRestClient,
                 TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
-                nonceMap,
                 { currentTime },
                 sitePersistenceMock
         )
@@ -267,7 +263,7 @@ class ReactNativeStoreWPAPITest {
         // nonce never requested, so retrieves nonce
         initStore(null)
         val nonce = Available("a_nonce")
-        whenever(nonceRestClient.requestNonce(site))
+        whenever(nonceRestClient.getNonce(site))
                 .thenReturn(nonce)
 
         // initial fetch uses saved nonce and fails with unauthorized
@@ -296,7 +292,7 @@ class ReactNativeStoreWPAPITest {
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // fetching nonce returns already used nonce
-        whenever(nonceRestClient.requestNonce(site))
+        whenever(nonceRestClient.getNonce(site))
                 .thenReturn(savedNonce)
 
         val actualResponse = store.executeRequest(site, restPathWithParams)
@@ -331,6 +327,7 @@ class ReactNativeStoreWPAPITest {
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(secondResponseWithSuccess, actualResponse)
         inOrder(wpApiRestClient, nonceRestClient) {
+            verify(nonceRestClient).getNonce(site)
             verify(wpApiRestClient).fetch(fetchUrl, savedNonce.value)
             verify(nonceRestClient).requestNonce(site)
             verify(wpApiRestClient).fetch(fetchUrl, updatedNonce.value)
@@ -349,8 +346,8 @@ class ReactNativeStoreWPAPITest {
                 .thenReturn(initialResponseWithUnauthorizedError)
 
         // fails to fetch new nonce
-        whenever(nonceRestClient.requestNonce(site))
-                .thenReturn(null)
+        whenever(nonceRestClient.getNonce(site))
+                .thenReturn(savedNonce, null)
 
         val actualResponse = store.executeRequest(site, restPathWithParams)
         assertEquals(initialResponseWithUnauthorizedError, actualResponse)
@@ -446,7 +443,6 @@ class ReactNativeStoreWPAPITest {
                 discoveryWPAPIRestClient,
                 TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
-                mutableMapOf(),
                 { currentTime },
                 sitePersistenceMock,
                 uriParser

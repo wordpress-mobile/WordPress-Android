@@ -121,15 +121,16 @@ class ReactNativeStore
         }
         val fullRestUrl = slashJoin(site.wpApiRestUrl, path)
 
-        val usingSavedNonce = getNonce(site) is Available
-        val failedRecently = true == (getNonce(site) as? FailedRequest)?.timeOfResponse?.let {
+        var nonce = nonceRestClient.getNonce(site)
+        val usingSavedNonce = nonce is Available
+        val failedRecently = true == (nonce as? FailedRequest)?.timeOfResponse?.let {
             it + FIVE_MIN_MILLIS > currentTimeMillis()
         }
-        if (getNonce(site) is Unknown || !(usingSavedNonce || failedRecently)) {
-            nonceRestClient.requestNonce(site)
+        if (nonce is Unknown || !(usingSavedNonce || failedRecently)) {
+            nonce = nonceRestClient.requestNonce(site)
         }
 
-        val response = executeFetch(fullRestUrl, params, getNonce(site)?.value, enableCaching)
+        val response = executeFetch(fullRestUrl, params, nonce?.value, enableCaching)
         return when (response) {
             is Success -> response
 
@@ -137,14 +138,13 @@ class ReactNativeStore
                 401 -> {
                     if (usingSavedNonce) {
                         // Call with saved nonce failed, so try getting a new one
-                        val previousNonce = getNonce(site)?.value
-                        nonceRestClient.requestNonce(site)
-                        val newNonce = getNonce(site)?.value
+                        val previousNonce = nonce?.value
+                        val newNonce = nonceRestClient.requestNonce(site)?.value
 
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return executeFetch(fullRestUrl, params, getNonce(site)?.value, enableCaching)
+                            return executeFetch(fullRestUrl, params, newNonce, enableCaching)
                         }
                     }
                     response
