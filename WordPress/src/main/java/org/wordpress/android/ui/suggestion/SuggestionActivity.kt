@@ -130,7 +130,8 @@ class SuggestionActivity : LocaleAwareActivity() {
                             viewModel.trackExit(false)
                             finish()
                         } else if (s.startsWith("$prefix ")) {
-                            finishWithValue("")
+                            // Tapping the space key directly after the prefix exits the suggestions UI
+                            finishWithValue("", false)
                         } else if (!s.startsWith(prefix)) {
                             // Re-insert prefix if it was deleted
                             val string = "$prefix$s"
@@ -202,13 +203,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)
     }
 
-    private fun finishWithValue(value: String?) {
-        if (value == "") {
-            // Tapping the space key directly after the prefix exits the suggestions UI
-            viewModel.trackExit(false)
-        } else {
-            viewModel.trackExit(true)
-        }
+    private fun finishWithValue(value: String?, withSuggestion: Boolean = true) {
+        viewModel.trackExit(withSuggestion)
+
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(SELECTED_VALUE, value)
         })
