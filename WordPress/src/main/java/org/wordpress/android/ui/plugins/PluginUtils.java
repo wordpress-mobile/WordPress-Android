@@ -23,6 +23,8 @@ public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
+        } else if (!site.isUsingWpComRestApi() && supportsPlugins(site.getSoftwareVersion())) {
+            return true;
         }
 
         // If the site has business plan we can do an Automated Transfer
@@ -30,6 +32,27 @@ public class PluginUtils {
                && SiteUtils.hasNonJetpackBusinessPlan(site)
                && site.getHasCapabilityManageOptions() // Automated Transfer require admin capabilities
                && !site.isPrivate(); // Private sites are not eligible for Automated Transfer
+    }
+
+    /**
+     * Plugins are supported from version 5.5
+     * @param softwareVersion WordPress version
+     * @return
+     */
+    private static boolean supportsPlugins(String softwareVersion) {
+        String[] version = softwareVersion.split("\\.");
+        try {
+            Integer versionNum1 = Integer.valueOf(version[0]);
+            if (versionNum1 > 5) {
+                return true;
+            } else if (versionNum1 == 5 && version.length >= 2) {
+                return Integer.valueOf(version[0]) >= 5;
+            } else {
+                return false;
+            }
+        } catch (NumberFormatException nme) {
+            return false;
+        }
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {
