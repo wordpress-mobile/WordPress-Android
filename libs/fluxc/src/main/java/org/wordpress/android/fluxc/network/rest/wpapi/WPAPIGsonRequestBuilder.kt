@@ -14,8 +14,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncGetRequest(
         restClient: BaseWPAPIRestClient,
         url: String,
-        params: Map<String, String>,
-        body: Map<String, String>,
+        params: Map<String, String> = emptyMap(),
+        body: Map<String, String> = emptyMap(),
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
@@ -26,8 +26,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncGetRequest(
         restClient: BaseWPAPIRestClient,
         url: String,
-        params: Map<String, String>,
-        body: Map<String, String>,
+        params: Map<String, String> = emptyMap(),
+        body: Map<String, String> = emptyMap(),
         type: Type,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
@@ -39,7 +39,7 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncPostRequest(
         restClient: BaseWPAPIRestClient,
         url: String,
-        body: Map<String, String>,
+        body: Map<String, String> = emptyMap(),
         clazz: Class<T>,
         nonce: String? = null
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
@@ -49,7 +49,7 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncPutRequest(
         restClient: BaseWPAPIRestClient,
         url: String,
-        body: Map<String, String>,
+        body: Map<String, String> = emptyMap(),
         clazz: Class<T>,
         nonce: String? = null
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
@@ -59,7 +59,7 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     suspend fun <T> syncDeleteRequest(
         restClient: BaseWPAPIRestClient,
         url: String,
-        body: Map<String, String>,
+        body: Map<String, String> = emptyMap(),
         clazz: Class<T>,
         nonce: String? = null
     ) = suspendCancellableCoroutine<WPAPIResponse<T>> { cont ->
@@ -69,8 +69,8 @@ class WPAPIGsonRequestBuilder @Inject constructor() {
     private fun <T> callMethod(
         method: Int,
         url: String,
-        params: Map<String, String>?,
-        body: Map<String, String>,
+        params: Map<String, String>? = null,
+        body: Map<String, String> = emptyMap(),
         clazz: Class<T>,
         cont: CancellableContinuation<WPAPIResponse<T>>,
         enableCaching: Boolean,
