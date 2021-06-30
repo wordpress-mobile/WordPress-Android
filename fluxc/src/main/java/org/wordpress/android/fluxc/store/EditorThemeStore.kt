@@ -144,5 +144,24 @@ class EditorThemeStore
     }
 
     private fun globalStyleSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && Version(site.softwareVersion) >= Version(GSS_LIMIT_VERSION)
+            gssEnabled && hasRequiredWordPressVersion(site.softwareVersion)
+
+    /**
+     * Checks if the [wordPressSoftwareVersion] is higher or equal to [GSS_LIMIT_VERSION]
+     *
+     * Note: At this point semantic version information (alpha, beta etc) is stripped since it
+     * is not supported by our [Version] utility
+     *
+     * @param wordPressSoftwareVersion the WordPress version
+     * @return true if the check is met
+     */
+    private fun hasRequiredWordPressVersion(wordPressSoftwareVersion: String) = try {
+        val version = if (wordPressSoftwareVersion.contains("-")) {
+            // strip semantic versioning information (alpha, beta etc)
+            wordPressSoftwareVersion.substringBefore("-")
+        } else wordPressSoftwareVersion
+        Version(version) >= Version(GSS_LIMIT_VERSION)
+    } catch (e: IllegalArgumentException) {
+        false // if version parsing fails return false
+    }
 }
