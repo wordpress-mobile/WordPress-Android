@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.EditorThemeAction
 import org.wordpress.android.fluxc.action.EditorThemeAction.FETCH_EDITOR_THEME
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.BlockEditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -16,8 +17,13 @@ import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.helpers.Version
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
+private const val GSS_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
+private const val GSS_LIMIT_VERSION = "5.8"
 
 @Singleton
 class EditorThemeStore
@@ -26,17 +32,10 @@ class EditorThemeStore
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    private val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
     private val editorThemeSqlUtils = EditorThemeSqlUtils()
 
-    class FetchEditorThemePayload(val site: SiteModel) : Payload<BaseNetworkError>() {
-        constructor(
-            error: BaseNetworkError,
-            site: SiteModel
-        ) : this(site = site) {
-            this.error = error
-        }
-    }
+    class FetchEditorThemePayload @JvmOverloads constructor(val site: SiteModel, val gssEnabled: Boolean = false) :
+            Payload<BaseNetworkError>()
 
     data class OnEditorThemeChanged(
         val editorTheme: EditorTheme?,
@@ -59,19 +58,24 @@ class EditorThemeStore
         val actionType = action.type as? EditorThemeAction ?: return
         when (actionType) {
             FETCH_EDITOR_THEME -> {
-            coroutineEngine.launch(
-                    AppLog.T.API,
-                    this,
-                    TransactionsStore::class.java.simpleName + ": On FETCH_EDITOR_THEME"
-            ) {
-                handleFetchEditorTheme((action.payload as FetchEditorThemePayload).site, actionType)
+                coroutineEngine.launch(
+                        AppLog.T.API,
+                        this,
+                        EditorThemeStore::class.java.simpleName + ": On FETCH_EDITOR_THEME"
+                ) {
+                    val payload = action.payload as FetchEditorThemePayload
+                    if (globalStyleSettingsAvailable(payload.site, payload.gssEnabled)) {
+                        handleFetchGlobalStylesSettings(payload.site, actionType)
+                    } else {
+                        handleFetchEditorTheme(payload.site, actionType)
+                    }
+                }
             }
-        }
         }
     }
 
     override fun onRegister() {
-        AppLog.d(AppLog.T.API, TransactionsStore::class.java.simpleName + " onRegister")
+        AppLog.d(AppLog.T.API, EditorThemeStore::class.java.simpleName + " onRegister")
     }
 
     private suspend fun handleFetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
@@ -104,5 +108,60 @@ class EditorThemeStore
                 emitChange(onChanged)
             }
         }
+    }
+
+    private suspend fun handleFetchGlobalStylesSettings(site: SiteModel, action: EditorThemeAction) {
+        val response = reactNativeStore.executeRequest(site, GSS_REQUEST_PATH, false)
+
+        when (response) {
+            is Success -> {
+                val noGssError = OnEditorThemeChanged(EditorThemeError("Response does not contain GSS"), action)
+                if (response.result == null || !response.result.isJsonObject) {
+                    emitChange(noGssError)
+                    return
+                }
+
+                val responseTheme = response.result.asJsonObject
+                if (responseTheme == null) {
+                    emitChange(noGssError)
+                    return
+                }
+
+                val blockEditorSettings = Gson().fromJson(responseTheme, BlockEditorSettings::class.java)
+                val newTheme = EditorTheme(blockEditorSettings)
+                val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
+                if (newTheme != existingTheme) {
+                    editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
+                    val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
+                    emitChange(onChanged)
+                }
+            }
+            is Error -> {
+                val onChanged = OnEditorThemeChanged(EditorThemeError(response.error.message), action)
+                emitChange(onChanged)
+            }
+        }
+    }
+
+    private fun globalStyleSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
+            gssEnabled && hasRequiredWordPressVersion(site.softwareVersion)
+
+    /**
+     * Checks if the [wordPressSoftwareVersion] is higher or equal to [GSS_LIMIT_VERSION]
+     *
+     * Note: At this point semantic version information (alpha, beta etc) is stripped since it
+     * is not supported by our [Version] utility
+     *
+     * @param wordPressSoftwareVersion the WordPress version
+     * @return true if the check is met
+     */
+    private fun hasRequiredWordPressVersion(wordPressSoftwareVersion: String) = try {
+        val version = if (wordPressSoftwareVersion.contains("-")) {
+            // strip semantic versioning information (alpha, beta etc)
+            wordPressSoftwareVersion.substringBefore("-")
+        } else wordPressSoftwareVersion
+        Version(version) >= Version(GSS_LIMIT_VERSION)
+    } catch (e: IllegalArgumentException) {
+        false // if version parsing fails return false
     }
 }

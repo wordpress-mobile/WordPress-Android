@@ -34,7 +34,7 @@ class BloggingRemindersStoreTest {
     fun `maps items emitted from dao`() = test {
         val dbEntity = BloggingReminders(siteId, monday = true)
         val domainModel = BloggingRemindersModel(siteId, setOf(MONDAY))
-        whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(flowOf(dbEntity))
+        whenever(bloggingRemindersDao.liveGetBySiteId(siteId)).thenReturn(flowOf(dbEntity))
         whenever(mapper.toDomainModel(dbEntity)).thenReturn(domainModel)
 
         assertThat(store.bloggingRemindersModel(siteId).single()).isEqualTo(domainModel)
@@ -42,7 +42,7 @@ class BloggingRemindersStoreTest {
 
     @Test
     fun `maps null value to empty model emitted from dao`() = test {
-        whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(flowOf(null))
+        whenever(bloggingRemindersDao.liveGetBySiteId(siteId)).thenReturn(flowOf(null))
 
         assertThat(store.bloggingRemindersModel(siteId).single()).isEqualTo(BloggingRemindersModel(siteId))
     }
@@ -56,5 +56,20 @@ class BloggingRemindersStoreTest {
         store.updateBloggingReminders(domainModel)
 
         verify(bloggingRemindersDao).insert(dbEntity)
+    }
+
+    @Test
+    fun `has modified blogging reminders when DAO returns data`() = test {
+        val dbEntity = BloggingReminders(siteId, monday = true)
+        whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(listOf(dbEntity))
+
+        assertThat(store.hasModifiedBloggingReminders(siteId)).isTrue()
+    }
+
+    @Test
+    fun `does not have modified blogging reminders when DAO returns no data`() = test {
+        whenever(bloggingRemindersDao.getBySiteId(siteId)).thenReturn(listOf())
+
+        assertThat(store.hasModifiedBloggingReminders(siteId)).isFalse()
     }
 }
