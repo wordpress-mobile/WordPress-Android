@@ -10,8 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import org.wordpress.android.R
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
 import org.wordpress.android.util.getColorResIdFromAttribute
 
@@ -48,11 +46,11 @@ class ActivityLogListItemMenuAdapter(
         val iconRes: Int
         val colorRes = view.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         when (items[position]) {
-            RESTORE -> {
+            SecondaryAction.RESTORE -> {
                 textRes = R.string.activity_log_item_menu_restore_label
                 iconRes = R.drawable.ic_history_white_24dp
             }
-            DOWNLOAD_BACKUP -> {
+            SecondaryAction.DOWNLOAD_BACKUP -> {
                 textRes = R.string.activity_log_item_menu_download_backup_label
                 iconRes = R.drawable.ic_get_app_white_24dp
             }
