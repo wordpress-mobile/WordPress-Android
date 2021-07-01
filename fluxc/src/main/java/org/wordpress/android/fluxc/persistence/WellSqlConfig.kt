@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 156
+        return 157
     }
 
     override fun getDbName(): String {
@@ -1790,6 +1790,11 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 155 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffers")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersFeature")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersId")
+                }
+                156 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_MODULES TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_PUBLICIZE_PERMANENTLY_DISABLED BOOLEAN")
                 }
