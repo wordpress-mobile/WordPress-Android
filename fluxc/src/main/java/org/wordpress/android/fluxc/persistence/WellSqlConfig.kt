@@ -1792,7 +1792,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 155 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS PlanOffers")
                     db.execSQL("DROP TABLE IF EXISTS PlanOffersFeature")
-                    db.execSQL("DROP TABLE IF EXISTS PlanOffersId")  
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersId")
                 }
             }
         }
