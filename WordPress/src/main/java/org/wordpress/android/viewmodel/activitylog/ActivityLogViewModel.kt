@@ -201,8 +201,9 @@ class ActivityLogViewModel @Inject constructor(
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
-                    model,
-                    withRestoreProgressItem || withBackupDownloadProgressItem
+                    model = model,
+                    rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
+                    isRestoreHidden = false
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
