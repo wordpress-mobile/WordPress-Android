@@ -14,10 +14,14 @@ import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
 import org.wordpress.android.util.getColorResIdFromAttribute
 
 class ActivityLogListItemMenuAdapter(
-    context: Context
+    context: Context,
+    isRestoreHidden: Boolean,
 ) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val items: List<SecondaryAction> = SecondaryAction.values().toList()
+    private val items: List<SecondaryAction> = SecondaryAction.values()
+            .toList()
+            .filter { !(it == SecondaryAction.RESTORE && isRestoreHidden) }
+
     override fun getCount(): Int {
         return items.size
     }
