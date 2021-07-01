@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-14 21:17:48+0000
+Translation-Revision-Date: 2021-06-29 05:02:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_select_days_message">You can update this anytime</string>
+    <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
+    <string name="blogging_reminders_epilogue_title">All set!</string>
+    <string name="blogging_reminders_update">Update</string>
+    <string name="blogging_reminders_not_set">None set</string>
+    <string name="blogging_reminders_n_a_week">%s a week</string>
+    <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
+    <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
-    <string name="blogging_goals_not_set">None set</string>
-    <string name="blogging_goals_n_times_a_week">%d times a week</string>
-    <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
-    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one click site restores from backups.</string>
     <string name="gutenberg_native_set_as_featured_image">Set as featured image</string>
     <string name="gutenberg_native_remove_as_featured_image">Remove as featured image </string>
@@ -23,7 +40,7 @@ Language: en_CA
     <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
     <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_title">Categories</string>
-    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
+    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
     <string name="gutenberg_native_border_settings">Border Settings</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
@@ -193,8 +210,6 @@ Language: en_CA
     <string name="backup_item_roots">WordPress root</string>
     <string name="backup_download_details_choose_items_header">Items included in this download</string>
     <string name="gutenberg_native_uploading">Uploading…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Reusable blocks aren\'t editable on WordPress for iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Reusable blocks aren\'t editable on WordPress for Android</string>
     <string name="gutenberg_native_replace_file">Replace file</string>
     <string name="gutenberg_native_replace_audio">Replace audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem opening the audio</string>
@@ -2855,4 +2870,13 @@ Language: en_CA
     <string name="add">Add</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string-array name="blogging_reminders_count">
+        <item>Once</item>
+        <item>Twice</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
 </resources>
