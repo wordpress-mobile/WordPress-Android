@@ -3,17 +3,11 @@ buildscript {
         jcenter()
         google()
     }
-
-    dependencies {
-        classpath 'com.automattic.android:fetchstyle:1.1'
-    }
 }
-
-apply plugin: 'com.automattic.android.fetchstyle'
 
 allprojects {
     apply plugin: 'checkstyle'
-    
+
     if (tasks.findByPath('checkstyle') == null) {
         tasks.create(name: 'checkstyle', type: Checkstyle) {
             source 'src'

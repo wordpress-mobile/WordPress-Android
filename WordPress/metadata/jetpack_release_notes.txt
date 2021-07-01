@@ -1,5 +1,7 @@
-The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
+* [*] Block editor: Tablet view fixes for inserter button. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3602]
+* [**] Block editor: Fixed an issue where pressing enter inside a text-based block was not creating a new block when using Gboard [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3590]
+* [*] Block editor: Tweaks to the badge component's styling, including change of background color and reduced padding. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3642]
+* [***] Block editor: New block Layout grid. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3513]
+* [***] Added blogging reminders to site settings and after a new post has been created
+* [*] Fixed Reader duplicate post issue [https://github.com/wordpress-mobile/WordPress-Android/issues/12938]
 
-Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
-
-Finally, we made it clearer that you can’t edit the automatically generated post archives page.

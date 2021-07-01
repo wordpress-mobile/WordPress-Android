@@ -1,24 +1,25 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import androidx.recyclerview.widget.DiffUtil.Callback
+import androidx.recyclerview.widget.DiffUtil
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 
-class BloggingRemindersDiffCallback(
-    private val oldList: List<BloggingRemindersItem>,
-    private val newList: List<BloggingRemindersItem>
-) : Callback() {
-    override fun getOldListSize() = oldList.size
-
-    override fun getNewListSize() = newList.size
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
+object BloggingRemindersDiffCallback : DiffUtil.ItemCallback<BloggingRemindersItem>() {
+    override fun areItemsTheSame(oldItem: BloggingRemindersItem, newItem: BloggingRemindersItem): Boolean {
         return oldItem.type == newItem.type
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
+    override fun areContentsTheSame(oldItem: BloggingRemindersItem, newItem: BloggingRemindersItem): Boolean {
         return oldItem == newItem
     }
+
+    override fun getChangePayload(oldItem: BloggingRemindersItem, newItem: BloggingRemindersItem): Any? {
+        if (oldItem is DayButtons && newItem is DayButtons) {
+            return DayButtonsPayload(oldItem.dayItems.mapIndexed { index, dayItem ->
+                dayItem != newItem.dayItems[index]
+            }.toList())
+        }
+        return super.getChangePayload(oldItem, newItem)
+    }
+
+    data class DayButtonsPayload(val changedDays: List<Boolean>)
 }

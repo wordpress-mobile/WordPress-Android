@@ -78,12 +78,12 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
@@ -184,6 +184,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
+    @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1214,7 +1215,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             );
             mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
                 if (mBloggingRemindersPref != null) {
-                    mBloggingRemindersPref.setSummary(s);
+                    CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
+                    mBloggingRemindersPref.setSummary(summary);
                 }
             });
         }
@@ -1224,8 +1226,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-
-        mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.SELECTION);
+        mBloggingRemindersViewModel.onSettingsItemClicked(mSite.getId());
     }
 
     private void showHomepageSettings() {

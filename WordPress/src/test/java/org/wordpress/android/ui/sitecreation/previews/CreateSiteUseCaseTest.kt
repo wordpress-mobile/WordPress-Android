@@ -45,8 +45,7 @@ class CreateSiteUseCaseTest {
     @Before
     fun setUp() {
         useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper)
-        event = OnNewSiteCreated()
-        event.newSiteRemoteId = 123
+        event = OnNewSiteCreated(newSiteRemoteId = 123)
     }
 
     @Test
