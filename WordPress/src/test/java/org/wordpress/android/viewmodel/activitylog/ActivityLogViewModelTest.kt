@@ -1224,6 +1224,29 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun `given status is multisite, when query restore status, then reload events for multisite`() = test {
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
+                .thenReturn(flow { emit(RestoreRequestState.Multisite) })
+        initRestoreProgressMocks()
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isRestoreHidden = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
     fun `given status is a progress, when query restore status, then reload events for progress`() = test {
         val progress = RestoreRequestState.Progress(REWIND_ID, 50)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
