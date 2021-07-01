@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -343,7 +344,7 @@ class GetRestoreStatusUseCaseTest {
         state: State = State.ACTIVE
     ) = RewindStatusModel(
             state = state,
-            reason = null,
+            reason = Reason.NO_REASON,
             lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
