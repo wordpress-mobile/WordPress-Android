@@ -43,7 +43,7 @@ msgstr ""
 #. App store app name
 msgctxt "app-store-name"
 msgid "Jetpack: WP Security & Speed"
-msgstr "Jetpack : WP Security & Speed"
+msgstr ""
 
 #. Description for the first app store image
 msgctxt "screenshot-text-1"
