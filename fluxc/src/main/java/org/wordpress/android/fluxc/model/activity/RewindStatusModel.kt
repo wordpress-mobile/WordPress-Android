@@ -10,6 +10,7 @@ data class RewindStatusModel(
     val credentials: List<Credentials>?,
     val rewind: Rewind?
 ) {
+    @Suppress("unused")
     enum class State(val value: String) {
         ACTIVE("active"),
         INACTIVE("inactive"),
