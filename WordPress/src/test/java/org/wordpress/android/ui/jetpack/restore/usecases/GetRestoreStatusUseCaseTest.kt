@@ -225,6 +225,26 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
+    fun `given unavailable multisite without restoreId, when restore status triggers, then return multisite`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE, Reason.MULTISITE_NOT_SUPPORTED))
+
+        val result = useCase.getRestoreStatus(site, null).toList()
+
+        assertThat(result).contains(RestoreRequestState.Multisite)
+    }
+
+    @Test
+    fun `given unavailable multisite with restoreId, when restore status triggers, then return multisite`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE, Reason.MULTISITE_NOT_SUPPORTED))
+
+        val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+        assertThat(result).contains(RestoreRequestState.Multisite)
+    }
+
+    @Test
     fun `given unavailable without restoreId, when restore status triggers, then return empty`() = test {
         whenever(activityLogStore.getRewindStatusForSite(site))
                 .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE))
@@ -342,10 +362,11 @@ class GetRestoreStatusUseCaseTest {
     private fun rewindStatusModel(
         rewindId: String?,
         status: Rewind.Status? = null,
-        state: State = State.ACTIVE
+        state: State = State.ACTIVE,
+        reason: Reason = Reason.NO_REASON
     ) = RewindStatusModel(
             state = state,
-            reason = Reason.NO_REASON,
+            reason = reason,
             lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
