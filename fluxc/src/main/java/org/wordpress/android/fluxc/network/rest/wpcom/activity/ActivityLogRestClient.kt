@@ -359,6 +359,7 @@ class ActivityLogRestClient @Inject constructor(
         val stateValue = response.state
         val state = RewindStatusModel.State.fromValue(stateValue)
                 ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESPONSE)
+        val reason = RewindStatusModel.Reason.fromValue(response.reason)
         val rewindModel = response.rewind?.let {
             val rewindId = it.rewind_id
                     ?: return buildErrorPayload(site, RewindStatusErrorType.MISSING_REWIND_ID)
@@ -380,7 +381,7 @@ class ActivityLogRestClient @Inject constructor(
 
         val rewindStatusModel = RewindStatusModel(
                 state = state,
-                reason = response.reason,
+                reason = reason,
                 lastUpdated = response.last_updated,
                 canAutoconfigure = response.can_autoconfigure,
                 credentials = response.credentials?.map {
