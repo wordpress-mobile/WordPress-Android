@@ -20,7 +20,7 @@ data class RewindStatusModel(
 
         companion object {
             fun fromValue(value: String): State? {
-                return State.values().firstOrNull { it.value == value }
+                return values().firstOrNull { it.value == value }
             }
         }
     }
@@ -47,7 +47,7 @@ data class RewindStatusModel(
 
             companion object {
                 fun fromValue(value: String?): Status? {
-                    return value?.let { Status.values().firstOrNull { it.value == value } }
+                    return value?.let { values().firstOrNull { it.value == value } }
                 }
             }
         }
