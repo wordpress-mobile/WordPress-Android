@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 155
+        return 156
     }
 
     override fun getDbName(): String {
@@ -1788,6 +1788,11 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "RAW_FEATURES TEXT," +
                                     "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
                     )
+                }
+                155 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffers")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersFeature")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersId")
                 }
             }
         }
