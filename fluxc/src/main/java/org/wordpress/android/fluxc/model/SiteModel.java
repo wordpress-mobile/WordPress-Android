@@ -123,6 +123,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mSpaceUsed;
     @Column private double mSpacePercentUsed;
 
+    @Column private String mActiveModules;
+    @Column private boolean mIsPublicizePermanentlyDisabled;
+
     @Override
     public int getId() {
         return mId;
@@ -705,5 +708,21 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPageForPosts(long pageForPosts) {
         mPageForPosts = pageForPosts;
+    }
+
+    public boolean isPublicizePermanentlyDisabled() {
+        return mIsPublicizePermanentlyDisabled;
+    }
+
+    public void setIsPublicizePermanentlyDisabled(boolean publicizePermanentlyDisabled) {
+        mIsPublicizePermanentlyDisabled = publicizePermanentlyDisabled;
+    }
+
+    public String getActiveModules() {
+        return mActiveModules;
+    }
+
+    public void setActiveModules(String activeModules) {
+        mActiveModules = activeModules;
     }
 }
