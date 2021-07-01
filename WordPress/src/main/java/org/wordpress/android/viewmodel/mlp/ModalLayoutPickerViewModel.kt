@@ -61,7 +61,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
-    private val site: SiteModel by lazy { siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()) }
+    private val site: SiteModel by lazy {
+        requireNotNull(siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()))
+    }
 
     override val useCachedData: Boolean = true
 
@@ -115,7 +117,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (event.isError) {
             setErrorState()
         } else {
-            handleResponse(event.layouts.toLayoutModels(), event.categories.toLayoutCategories())
+            handleResponse(
+                    (event.layouts ?: listOf()).toLayoutModels(),
+                    (event.categories ?: listOf()).toLayoutCategories()
+            )
         }
     }
 

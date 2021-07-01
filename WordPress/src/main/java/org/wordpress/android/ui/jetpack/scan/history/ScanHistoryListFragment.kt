@@ -40,8 +40,8 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun initDagger() {

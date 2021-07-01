@@ -1,5 +1,6 @@
 package org.wordpress.android.support
 
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
@@ -8,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.wordpress.android.util.CrashLogging
 
 class ZendeskPlanFieldHelperTest {
     private lateinit var zendeskPlanFieldHelper: ZendeskPlanFieldHelper
@@ -143,6 +143,6 @@ class ZendeskPlanFieldHelperTest {
         zendeskPlanFieldHelper.getHighestPlan(planIds)
 
         // Then
-        verify(crashLogging, times(1)).reportException(any(), anyOrNull(), anyOrNull())
+        verify(crashLogging, times(1)).sendReport(any(), anyOrNull(), anyOrNull())
     }
 }
