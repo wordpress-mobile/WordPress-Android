@@ -149,8 +149,7 @@ class SiteModelTest {
     }
 
     @Test
-    fun `given publicize + share buttons unsupported jetpack site, when site generated over rest, sharing is disabled`()
-    {
+    fun `given publicize + share btns unsupported jetpack site, when site generated over rest, sharing is disabled`() {
         val site = SiteUtils.generateJetpackSiteOverRestOnly()
         site.setPublicizeSupport(false)
         site.setShareButtonsSupport(false)
