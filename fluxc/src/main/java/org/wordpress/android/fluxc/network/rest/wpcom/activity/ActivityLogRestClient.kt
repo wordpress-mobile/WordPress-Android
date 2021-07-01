@@ -356,8 +356,7 @@ class ActivityLogRestClient @Inject constructor(
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
-        val stateValue = response.state
-        val state = RewindStatusModel.State.fromValue(stateValue)
+        val state = RewindStatusModel.State.fromValue(response.state)
                 ?: return buildErrorPayload(site, RewindStatusErrorType.INVALID_RESPONSE)
         val reason = RewindStatusModel.Reason.fromValue(response.reason)
         val rewindModel = response.rewind?.let {
