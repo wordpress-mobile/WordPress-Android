@@ -815,7 +815,6 @@ REPOSITORY_NAME="WordPress-Android"
 
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     name="#{prefix}-#{version["name"]}.aab"
-    apk_name=universal_apk_name(version)
 
     aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
@@ -967,7 +966,7 @@ REPOSITORY_NAME="WordPress-Android"
       next
     end
 
-    apk_file_path = universal_apk_file_path(version)
+    apk_file_path = universal_apk_file_path(options[:app], version)
     aab_file_path = bundle_file_path(options[:app], version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
     release_assets = [aab_file_path]
@@ -997,19 +996,23 @@ REPOSITORY_NAME="WordPress-Android"
   def release_notes_path(app)
     paths = {
       wordpress: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt",
-      jetpack: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/jetpack_release_notes.txt"
+      jetpack: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/jetpack_metadata/release_notes.txt"
     }
     paths[app.to_sym] || paths[:wordpress]
   end
 
   def release_notes_short_paths
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    metadata_dir = File.join(project_root, "WordPress", "metadata")
-    [File.join(metadata_dir, 'release_notes_short.txt'), File.join(metadata_dir, 'jetpack_release_notes_short.txt')]
+    [
+      File.join(project_root, "WordPress", "metadata", 'release_notes_short.txt'),
+      File.join(project_root, "WordPress", "jetpack_metadata", 'release_notes_short.txt')
+    ]
   end
 
-  def universal_apk_name(version)
-    "wpandroid-#{version["name"]}-universal.apk"
+  def universal_apk_name(app, version)
+    basenames = { wordpress: 'wpandroid', jetpack: 'jpandroid' }
+    basename = basenames[app.to_sym] || basenames[:wordpress]
+    "#{basename}-#{version["name"]}-universal.apk"
   end
 
   def bundle_file_path(app, version)
@@ -1018,8 +1021,8 @@ REPOSITORY_NAME="WordPress-Android"
     File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
   end
 
-  def universal_apk_file_path(version)
+  def universal_apk_file_path(app, version)
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", universal_apk_name(version))
+    File.join(project_root, "build", universal_apk_name(app, version))
   end
 end
