@@ -449,6 +449,11 @@ dependencies {
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
 
+    // Necessary because of the failing android tests
+    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
+
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
