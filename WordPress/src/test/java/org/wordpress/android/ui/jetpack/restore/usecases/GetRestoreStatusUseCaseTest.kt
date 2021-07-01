@@ -225,8 +225,9 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given get status model is null without restoreId, when restore status triggers, then return empty`() = test {
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+    fun `given unavailable without restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE))
 
         val result = useCase.getRestoreStatus(site, null).toList()
 
@@ -234,8 +235,9 @@ class GetRestoreStatusUseCaseTest {
     }
 
     @Test
-    fun `given get status model is null with restoreId, when restore status triggers, then return empty`() = test {
-        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+    fun `given unavailable with restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site))
+                .thenReturn(rewindStatusModel(null, null, State.UNAVAILABLE))
 
         val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
@@ -347,7 +349,11 @@ class GetRestoreStatusUseCaseTest {
             lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
-            rewind = if (state != State.AWAITING_CREDENTIALS) rewind(rewindId, status as Rewind.Status) else null
+            rewind = if (state == State.AWAITING_CREDENTIALS || state == State.UNAVAILABLE) {
+                null
+            } else {
+                rewind(rewindId, status as Rewind.Status)
+            }
     )
 
     private fun rewind(
