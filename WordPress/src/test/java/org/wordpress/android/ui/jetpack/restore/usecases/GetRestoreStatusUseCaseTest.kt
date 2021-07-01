@@ -28,7 +28,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
-import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
@@ -254,7 +253,7 @@ class GetRestoreStatusUseCaseTest {
                 val result = useCase.getRestoreStatus(site, null).toList()
 
                 assertThat(result).size().isEqualTo(1)
-                assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+                assertThat(result).isEqualTo(listOf(Failure.RemoteRequestFailure))
             }
 
     @Test
