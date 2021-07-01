@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
@@ -275,7 +276,7 @@ class ActivityLogRestClientTest {
             assertNull(error)
             assertNotNull(rewindStatusModelResponse)
             rewindStatusModelResponse?.apply {
-                assertEquals(reason, REWIND_STATUS_RESPONSE.reason)
+                assertEquals(reason, Reason.UNKNOWN)
                 assertEquals(state, state)
                 assertNotNull(rewind)
                 rewind?.apply {
