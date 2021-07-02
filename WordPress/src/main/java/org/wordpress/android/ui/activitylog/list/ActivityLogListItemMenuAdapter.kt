@@ -15,7 +15,7 @@ import org.wordpress.android.util.getColorResIdFromAttribute
 
 class ActivityLogListItemMenuAdapter(
     context: Context,
-    isRestoreHidden: Boolean,
+    isRestoreHidden: Boolean
 ) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val items: List<SecondaryAction> = SecondaryAction.values()

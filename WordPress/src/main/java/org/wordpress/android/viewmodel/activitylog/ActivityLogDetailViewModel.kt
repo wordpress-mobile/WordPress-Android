@@ -19,8 +19,6 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEv
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
-import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -69,7 +67,7 @@ class ActivityLogDetailViewModel @Inject constructor(
         site: SiteModel,
         activityLogId: String,
         areButtonsVisible: Boolean,
-        isRestoreHidden: Boolean,
+        isRestoreHidden: Boolean
     ) {
         this.site = site
         this.activityLogId = activityLogId
