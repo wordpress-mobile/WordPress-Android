@@ -8,11 +8,6 @@ Language: id
 <resources>
     <string name="blogging_reminders_done">Selesai</string>
     <string name="blogging_reminders_notify_me">Beri tahu saya</string>
-    <string name="blogging_goals_not_set">Tidak diatur</string>
-    <string name="blogging_goals_n_times_a_week">%d kali seminggu</string>
-    <string name="set_your_blogging_goals_button">Tetapkan tujuan</string>
-    <string name="set_your_blogging_goals_message">Pos Anda sedang diposkan… sementara itu, tetapkan tujuan pembuatan blog untuk mendapatkan pengingat, dan lacak progres Anda.</string>
-    <string name="set_your_blogging_goals_title">Tetapkan tujuan blog Anda</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
     <string name="gutenberg_native_set_as_featured_image">Atur sebagai Gambar Andalan </string>
     <string name="gutenberg_native_remove_as_featured_image">Hapus dari Gambar Andalan </string>
@@ -23,7 +18,6 @@ Language: id
     <string name="site_settings_categories_empty_subtitle">Tambahkan kategori yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat mengategorikan pos</string>
     <string name="site_settings_categories_empty_button">Buat kategori</string>
     <string name="site_settings_categories_title">Kategori</string>
-    <string name="site_settings_blogging_reminders_title">Tujuan pembuatan blog</string>
     <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
     <string name="gutenberg_native_border_settings">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>
@@ -190,8 +184,6 @@ Language: id
     <string name="backup_item_roots">Root WordPress</string>
     <string name="backup_download_details_choose_items_header">Item yang disertakan di unduhan ini</string>
     <string name="gutenberg_native_uploading">Mengunggah…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blok pakai ulang tidak dapat disunting di WordPress untuk iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blok pakai ulang tidak dapat disunting di WordPress untuk Android</string>
     <string name="gutenberg_native_replace_file">Ganti file</string>
     <string name="gutenberg_native_replace_audio">Ganti audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Terjadi masalah saat membuka audio</string>

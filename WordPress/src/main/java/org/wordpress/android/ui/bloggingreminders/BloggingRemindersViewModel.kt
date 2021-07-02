@@ -8,8 +8,6 @@ import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
@@ -42,13 +40,14 @@ class BloggingRemindersViewModel @Inject constructor(
     private val epilogueBuilder: EpilogueBuilder,
     private val dayLabelUtils: DayLabelUtils,
     private val analyticsTracker: BloggingRemindersAnalyticsTracker,
-    private val reminderScheduler: ReminderScheduler
+    private val reminderScheduler: ReminderScheduler,
+    private val mapper: BloggingRemindersModelMapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing = _isBottomSheetShowing as LiveData<Event<Boolean>>
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
-    private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersModel>()
+    private val _bloggingRemindersModel = MutableLiveData<BloggingRemindersUiModel>()
     private val _isFirstTimeFlow = MutableLiveData<Boolean>()
     val uiState: LiveData<UiState> = merge(
             selectedScreen,
@@ -97,11 +96,11 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun getSettingsState(siteId: Int): LiveData<UiString> {
         return bloggingRemindersStore.bloggingRemindersModel(siteId).map {
-            dayLabelUtils.buildNTimesLabel(it)
+            mapper.toUiModel(it).let { uiModel -> dayLabelUtils.buildNTimesLabel(uiModel) }
         }.asLiveData(mainDispatcher)
     }
 
-    fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
+    private fun showBottomSheet(siteId: Int, screen: Screen, source: Source) {
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackFlowStart(source)
         val isPrologueScreen = screen == PROLOGUE || screen == PROLOGUE_SETTINGS
@@ -113,12 +112,12 @@ class BloggingRemindersViewModel @Inject constructor(
         _selectedScreen.value = screen
         launch {
             bloggingRemindersStore.bloggingRemindersModel(siteId).collect {
-                _bloggingRemindersModel.value = it
+                _bloggingRemindersModel.value = mapper.toUiModel(it)
             }
         }
     }
 
-    fun selectDay(day: Day) {
+    fun selectDay(day: DayOfWeek) {
         val currentState = _bloggingRemindersModel.value!!
         val enabledDays = currentState.enabledDays.toMutableSet()
         if (enabledDays.contains(day)) {
@@ -129,11 +128,15 @@ class BloggingRemindersViewModel @Inject constructor(
         _bloggingRemindersModel.value = currentState.copy(enabledDays = enabledDays)
     }
 
-    private fun showEpilogue(bloggingRemindersModel: BloggingRemindersModel?) {
+    private fun showEpilogue(bloggingRemindersModel: BloggingRemindersUiModel?) {
         analyticsTracker.trackPrimaryButtonPressed(SELECTION)
         if (bloggingRemindersModel != null) {
             launch {
-                bloggingRemindersStore.updateBloggingReminders(bloggingRemindersModel)
+                bloggingRemindersStore.updateBloggingReminders(
+                        mapper.toDomainModel(
+                                bloggingRemindersModel
+                        )
+                )
                 val daysCount = bloggingRemindersModel.enabledDays.size
                 if (daysCount > 0) {
                     reminderScheduler.schedule(bloggingRemindersModel.siteId, bloggingRemindersModel.toReminderConfig())
@@ -166,8 +169,8 @@ class BloggingRemindersViewModel @Inject constructor(
         }
         val siteId = state.getInt(SITE_ID)
         if (siteId != 0) {
-            val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { Day.valueOf(it) }?.toSet() ?: setOf()
-            _bloggingRemindersModel.value = BloggingRemindersModel(siteId, enabledDays)
+            val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { DayOfWeek.valueOf(it) }?.toSet() ?: setOf()
+            _bloggingRemindersModel.value = BloggingRemindersUiModel(siteId, enabledDays)
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
@@ -180,11 +183,11 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onSettingsItemClicked(siteId: Int) {
         launch {
-                val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
-                    SELECTION
-                } else {
-                    PROLOGUE_SETTINGS
-                }
+            val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
+                SELECTION
+            } else {
+                PROLOGUE_SETTINGS
+            }
             showBottomSheet(siteId, screen, BLOG_SETTINGS)
         }
     }
@@ -198,8 +201,8 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    private fun BloggingRemindersModel.toReminderConfig() =
-            WeeklyReminder(enabledDays.map { DayOfWeek.of(it.ordinal + 1) }.toSet())
+    private fun BloggingRemindersUiModel.toReminderConfig() =
+            WeeklyReminder(this.enabledDays)
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"),

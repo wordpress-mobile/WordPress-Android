@@ -8,11 +8,6 @@ Language: ko_KR
 <resources>
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
-    <string name="blogging_goals_not_set">설정 없음</string>
-    <string name="blogging_goals_n_times_a_week">일주일에 %d번</string>
-    <string name="set_your_blogging_goals_button">목표 설정</string>
-    <string name="set_your_blogging_goals_message">글을 발행하는 중입니다. 그동안 알림을 받을 블로깅 목표를 설정하고 진행률을 추적하세요.</string>
-    <string name="set_your_blogging_goals_title">블로깅 목표 설정</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="gutenberg_native_set_as_featured_image">특성 이미지로 설정 </string>
     <string name="gutenberg_native_remove_as_featured_image">특성 이미지 제거 </string>
@@ -23,7 +18,6 @@ Language: ko_KR
     <string name="site_settings_categories_empty_subtitle">글을 분류할 때 빠르게 선택할 수 있도록 자주 사용하는 카테고리 추가</string>
     <string name="site_settings_categories_empty_button">카테고리 생성</string>
     <string name="site_settings_categories_title">카테고리</string>
-    <string name="site_settings_blogging_reminders_title">블로깅 목표</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
     <string name="gutenberg_native_border_settings">경계선 설정</string>
     <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
@@ -193,8 +187,6 @@ Language: ko_KR
     <string name="backup_item_roots">워드프레스 루터</string>
     <string name="backup_download_details_choose_items_header">이 다운로드에 포함된 항목</string>
     <string name="gutenberg_native_uploading">업로드 중…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">재활용 가능한 블록은 iOS용 WordPress에서 편집할 수 없습니다.</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">재활용 가능한 블록은 Android용 WordPress에서 편집할 수 없습니다.</string>
     <string name="gutenberg_native_replace_file">파일 바꾸기</string>
     <string name="gutenberg_native_replace_audio">오디오 교체</string>
     <string name="gutenberg_native_problem_opening_the_audio">오디오 열기 문제</string>
