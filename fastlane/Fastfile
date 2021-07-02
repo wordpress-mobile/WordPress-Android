@@ -190,8 +190,9 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # update_appstore_strings
   # -----------------------------------------------------------------------------------
-  # This lane gets the data from the txt files in the WordPress/metadata/ folder
-  # and updates the .po file that is then picked by GlotPress for translations.
+  # This lane gets the data from the txt files in the WordPress/metadata/ and
+  # WordPress/jetpack_metadata folders and updates the .po files that is then
+  # picked by GlotPress for translations.
   # -----------------------------------------------------------------------------------
   # Usage:
   # fastlane update_appstore_strings version:<version>
@@ -199,9 +200,26 @@ REPOSITORY_NAME="WordPress-Android"
   # Example:
   # fastlane update_appstore_strings version:10.3
   #####################################################################################
-  desc "Updates the PlayStoreStrings.po file"
+  desc "Updates the PlayStoreStrings.po & JetpackPlayStoreStrings.po files"
   lane :update_appstore_strings do |options|
-    # TODO: Adapt the list of files for Jetpack and JetpackPlayStoreStrings.po
+    update_wordpress_appstore_strings(options)
+    update_jetpack_appstore_strings(options)
+  end
+
+  #####################################################################################
+  # update_wordpress_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the WordPress/metadata/ folder
+  # and updates the .po file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_wordpress_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_wordpress_appstore_strings version:10.3
+  #####################################################################################
+  desc "Updates the PlayStoreStrings.po file for WordPress"
+  lane :update_wordpress_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
 
     files = {
@@ -229,6 +247,40 @@ REPOSITORY_NAME="WordPress-Android"
 
     android_update_metadata_source(
       po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      source_files: files,
+      release_version: options[:version]
+    )
+  end
+
+  #####################################################################################
+  # update_jetpack_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the WordPress/jetpack_metadata/ folder
+  # and updates the .po file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_jetpack_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_jetpack_appstore_strings version:10.3
+  #####################################################################################
+  desc "Updates the JetpackPlayStoreStrings.po file for Jetpack"
+  lane :update_jetpack_appstore_strings do |options|
+    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+
+    files = {
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      'short-description': File.join(metadata_folder, 'short_description.txt'),
+      'app-store-description': File.join(metadata_folder, 'full_description.txt'),
+      'app-store-name': File.join(metadata_folder, 'title.txt'),
+    }
+
+    # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.
+    #   This will require a change in the sandbox to update the path that the cron job uses to import this file into GlotPress.
+    #   In the meantime, `jetpack_metadata/PlayStoreStrings.po` is a symlink to the real `../metadata/JetpackPlayStoreStrings.po`
+    android_update_metadata_source(
+      po_file_path: metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'JetpackPlayStoreStrings.po'),
       source_files: files,
       release_version: options[:version]
     )
@@ -763,7 +815,6 @@ REPOSITORY_NAME="WordPress-Android"
 
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     name="#{prefix}-#{version["name"]}.aab"
-    apk_name=universal_apk_name(version)
 
     aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
@@ -915,7 +966,7 @@ REPOSITORY_NAME="WordPress-Android"
       next
     end
 
-    apk_file_path = universal_apk_file_path(version)
+    apk_file_path = universal_apk_file_path(options[:app], version)
     aab_file_path = bundle_file_path(options[:app], version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
     release_assets = [aab_file_path]
@@ -945,19 +996,23 @@ REPOSITORY_NAME="WordPress-Android"
   def release_notes_path(app)
     paths = {
       wordpress: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt",
-      jetpack: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/jetpack_release_notes.txt"
+      jetpack: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/jetpack_metadata/release_notes.txt"
     }
     paths[app.to_sym] || paths[:wordpress]
   end
 
   def release_notes_short_paths
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    metadata_dir = File.join(project_root, "WordPress", "metadata")
-    [File.join(metadata_dir, 'release_notes_short.txt'), File.join(metadata_dir, 'jetpack_release_notes_short.txt')]
+    [
+      File.join(project_root, "WordPress", "metadata", 'release_notes_short.txt'),
+      File.join(project_root, "WordPress", "jetpack_metadata", 'release_notes_short.txt')
+    ]
   end
 
-  def universal_apk_name(version)
-    "wpandroid-#{version["name"]}-universal.apk"
+  def universal_apk_name(app, version)
+    basenames = { wordpress: 'wpandroid', jetpack: 'jpandroid' }
+    basename = basenames[app.to_sym] || basenames[:wordpress]
+    "#{basename}-#{version["name"]}-universal.apk"
   end
 
   def bundle_file_path(app, version)
@@ -966,8 +1021,8 @@ REPOSITORY_NAME="WordPress-Android"
     File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
   end
 
-  def universal_apk_file_path(version)
+  def universal_apk_file_path(app, version)
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", universal_apk_name(version))
+    File.join(project_root, "build", universal_apk_name(app, version))
   end
 end
