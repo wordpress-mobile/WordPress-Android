@@ -29,6 +29,7 @@ class ActivityLogDetailViewModel
     lateinit var site: SiteModel
     lateinit var activityLogId: String
     var areButtonsVisible = false
+    var isRestoreHidden = false
 
     private val _navigationEvents = MutableLiveData<Event<ActivityLogDetailNavigationEvents>>()
     val navigationEvents: LiveData<Event<ActivityLogDetailNavigationEvents>>
@@ -50,10 +51,16 @@ class ActivityLogDetailViewModel
     val downloadBackupVisible: LiveData<Boolean>
         get() = _downloadBackupVisible
 
-    fun start(site: SiteModel, activityLogId: String, areButtonsVisible: Boolean) {
+    fun start(
+        site: SiteModel,
+        activityLogId: String,
+        areButtonsVisible: Boolean,
+        isRestoreHidden: Boolean,
+    ) {
         this.site = site
         this.activityLogId = activityLogId
         this.areButtonsVisible = areButtonsVisible
+        this.isRestoreHidden = isRestoreHidden
 
         _restoreVisible.value = areButtonsVisible
         _downloadBackupVisible.value = areButtonsVisible

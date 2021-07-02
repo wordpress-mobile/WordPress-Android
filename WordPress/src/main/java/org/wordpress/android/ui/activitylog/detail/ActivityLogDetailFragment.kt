@@ -100,7 +100,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                     }
                 })
 
-                viewModel.start(site, activityLogId, areButtonsVisible)
+                viewModel.start(site, activityLogId, areButtonsVisible, false)
             }
         }
     }
