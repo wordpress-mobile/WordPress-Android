@@ -62,7 +62,7 @@ class ActivityLogDetailViewModel
         this.areButtonsVisible = areButtonsVisible
         this.isRestoreHidden = isRestoreHidden
 
-        _restoreVisible.value = areButtonsVisible
+        _restoreVisible.value = areButtonsVisible && !isRestoreHidden
         _downloadBackupVisible.value = areButtonsVisible
 
         if (activityLogId != _item.value?.activityID) {
