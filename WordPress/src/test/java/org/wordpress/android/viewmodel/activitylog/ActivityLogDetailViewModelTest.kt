@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.activitylog
 
 import android.text.SpannableString
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
@@ -14,6 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
@@ -24,7 +26,9 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -33,6 +37,8 @@ class ActivityLogDetailViewModelTest {
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var activityLogStore: ActivityLogStore
+    @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: ActivityLogDetailViewModel
 
@@ -76,13 +82,21 @@ class ActivityLogDetailViewModelTest {
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
-                activityLogStore
+                activityLogStore,
+                resourceProvider,
+                htmlMessageUtils
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
         viewModel.downloadBackupVisible.observeForever { downloadBackupVisible = it }
         viewModel.multisiteVisible.observeForever { multisiteVisible = it }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
+        setUpMocks()
+    }
+
+    private fun setUpMocks() {
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
+        whenever(resourceProvider.getString(anyInt())).thenReturn("")
     }
 
     @After

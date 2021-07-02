@@ -2,6 +2,8 @@ package org.wordpress.android.ui.activitylog.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -72,16 +74,19 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                 viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
                     activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
                 })
+                viewModel.multisiteVisible.observe(viewLifecycleOwner, { available ->
+                    checkAndShowMultisiteMessage(available)
+                })
 
-            viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
-                            requireActivity(),
-                            viewModel.site,
-                            it.model.activityID,
-                            RequestCodes.BACKUP_DOWNLOAD,
-                            buildTrackingSource()
-                    )
+                viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+                    when (it) {
+                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                                requireActivity(),
+                                viewModel.site,
+                                it.model.activityID,
+                                RequestCodes.BACKUP_DOWNLOAD,
+                                buildTrackingSource()
+                        )
                     is ShowRestore -> ActivityLauncher.showRestoreForResult(
                             requireActivity(),
                             viewModel.site,
@@ -104,6 +109,20 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
 
                 viewModel.start(site, activityLogId, areButtonsVisible, isRestoreHidden)
             }
+        }
+    }
+
+    private fun ActivityLogItemDetailBinding.checkAndShowMultisiteMessage(available: Pair<Boolean, SpannableString?>) {
+        if (available.first) {
+            with(multisiteMessage) {
+                linksClickable = true
+                isClickable = true
+                movementMethod = LinkMovementMethod.getInstance()
+                text = available.second
+                visibility = View.VISIBLE
+            }
+        } else {
+            multisiteMessage.visibility = View.GONE
         }
     }
 

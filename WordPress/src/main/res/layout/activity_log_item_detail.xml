@@ -178,6 +178,16 @@
 
         </LinearLayout>
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/multisiteMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:visibility="gone"
+            tools:text="Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information visit our documentation page."
+            tools:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
