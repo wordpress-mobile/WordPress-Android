@@ -24,7 +24,7 @@ SCREENSHOTS_CONFIG_FILE = File.join(Dir.pwd, "screenshots.json")
 JETPACK_RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw_jetpack")
 JETPACK_RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp_jetpack")
 JETPACK_PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp_jetpack")
-JETPACK_FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
+JETPACK_FINAL_METADATA_DIR = File.join(Dir.pwd, "jetpack_metadata/android")
 JETPACK_SCREENSHOTS_CONFIG_FILE = File.join(Dir.pwd, "jetpack-screenshots.json")
 
 default_platform(:android)
