@@ -31,7 +31,7 @@ class SiteModelTest {
     }
 
     @Test
-    fun `given wpcom site with publish posts capability enabled, when site is generated, publicize is disabled`() {
+    fun `given wpcom site with publish posts capability enabled, when site is generated, publicize is enabled`() {
         val site = SiteUtils.generateWPComSite()
         site.hasCapabilityPublishPosts = true
 
