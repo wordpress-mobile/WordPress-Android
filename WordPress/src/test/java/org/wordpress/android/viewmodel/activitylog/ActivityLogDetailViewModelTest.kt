@@ -117,6 +117,16 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
+    fun `given buttons are visible, when view model starts, then download backup button is shown`() {
+        val areButtonsVisible = true
+        val isRestoreHidden = false
+
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+
+        assertEquals(true, downloadBackupVisible)
+    }
+
+    @Test
     fun emitsUIModelOnStart() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
