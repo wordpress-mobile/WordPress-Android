@@ -87,7 +87,7 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given buttons are not visible, when view model starts, then restore button is not shown`() {
+    fun `given buttons not visible and restore not hidden, when view model starts, then restore button is not shown`() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
@@ -97,7 +97,17 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given buttons are visible, when view model starts, then restore button is shown`() {
+    fun `given button not visible and restore hidden, when view model starts, then restore button is not shown`() {
+        val areButtonsVisible = false
+        val isRestoreHidden = true
+
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+
+        assertEquals(false, restoreVisible)
+    }
+
+    @Test
+    fun `given buttons visible and restore not hidden, when view model starts, then restore button is shown`() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
@@ -107,7 +117,17 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given buttons are not visible, when view model starts, then download backup button is not shown`() {
+    fun `given button visible and restore hidden, when view model starts, then restore button is not shown`() {
+        val areButtonsVisible = true
+        val isRestoreHidden = true
+
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+
+        assertEquals(false, restoreVisible)
+    }
+
+    @Test
+    fun `given buttons not visible, when view model starts, then download backup button is not shown`() {
         val areButtonsVisible = false
         val isRestoreHidden = false
 
@@ -117,7 +137,7 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given buttons are visible, when view model starts, then download backup button is shown`() {
+    fun `given buttons visible, when view model starts, then download backup button is shown`() {
         val areButtonsVisible = true
         val isRestoreHidden = false
 
