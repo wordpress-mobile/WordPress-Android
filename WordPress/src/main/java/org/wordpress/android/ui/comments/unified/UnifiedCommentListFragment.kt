@@ -6,17 +6,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.flow.collectLatest
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CommentListFragmentBinding
-import org.wordpress.android.ui.comments.CommentListItemDecoration
 import javax.inject.Inject
 
+/**
+ * Temporarily commented out until migration between Paging 2 and 3 is sorted out.
+ */
 class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: UnifiedCommentListViewModel
+//    private lateinit var adapter: UnifiedCommentListAdapter
 
     private var binding: CommentListFragmentBinding? = null
 
@@ -37,16 +39,33 @@ class UnifiedCommentListFragment : Fragment(R.layout.comment_list_fragment) {
     private fun CommentListFragmentBinding.setupContentViews() {
         val layoutManager = LinearLayoutManager(context)
         commentsRecyclerView.layoutManager = layoutManager
-        commentsRecyclerView.addItemDecoration(CommentListItemDecoration(commentsRecyclerView.context))
-        commentsRecyclerView.adapter = UnifiedCommentListAdapter(requireContext())
+        commentsRecyclerView.addItemDecoration(UnifiedCommentListItemDecoration(commentsRecyclerView.context))
+
+//        adapter = UnifiedCommentListAdapter(requireContext())
+//        commentsRecyclerView.adapter = adapter
     }
 
     private fun CommentListFragmentBinding.setupObservers() {
         lifecycleScope.launchWhenStarted {
-            viewModel.commentListItems.collectLatest { pagingData ->
-                commentsRecyclerView.adapter?.let { it -> (it as UnifiedCommentListAdapter).submitData(pagingData) }
-            }
+//            viewModel.uiState.collect { uiState ->
+//                setupCommentsList(uiState.commentsListUiModel)
+//            }
         }
+    }
+
+//    private fun CommentListFragmentBinding.setupCommentsList(commentsListUiModel: CommentsListUiModel) {
+//        when (commentsListUiModel) {
+//            is CommentsListUiModel.Data -> {
+//                adapter.submitData(lifecycle, commentsListUiModel.pagingData)
+//            }
+//            else -> {
+//            }
+//        }
+//    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     companion object {
