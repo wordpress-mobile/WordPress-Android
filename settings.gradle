@@ -14,7 +14,6 @@ include ':libs:image-editor:ImageEditor'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
-include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
 
@@ -24,6 +23,7 @@ project(':WordPressMocks').projectDir = new File(rootProject.projectDir, propert
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.includedBuildGutenbergMobilePath = null
 
 def localBuilds = new File('local-builds.gradle')
@@ -68,5 +68,25 @@ if (localBuilds.exists()) {
             }
         }
     }
+
+    if (ext.has("localLoginFlowPath")) {
+        includeBuild(ext.localLoginFlowPath) {
+            dependencySubstitution {
+                println "Substituting login-flow with the local build"
+                substitute module("$gradle.ext.loginFlowBinaryPath") with project(':WordPressLoginFlow')
+            }
+        }
+    }
 }
 
+// Build cache is only enabled for CI, at least for now
+if (System.getenv().containsKey("CI")) {
+    buildCache {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.215:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+        }
+    }
+}

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.history
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.RevisionModel

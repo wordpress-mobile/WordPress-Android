@@ -156,7 +156,8 @@ public class AppPrefs {
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
-        PINNED_DYNAMIC_CARD
+        PINNED_DYNAMIC_CARD,
+        BLOGGING_REMINDERS_SHOWN
     }
 
     /**
@@ -253,6 +254,10 @@ public class AppPrefs {
 
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
     }
 
     private static SharedPreferences prefs() {
@@ -1208,6 +1213,16 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
     }
 
+    public static void setBookmarkPostsPseudoIdsUpdated() {
+        setBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, false);
+    }
+
+    public static boolean shouldUpdateBookmarkPostsPseudoIds(ReaderTag tag) {
+        return tag != null
+               && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
+               && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
+    }
+
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
@@ -1238,6 +1253,18 @@ public class AppPrefs {
 
     @NonNull private static String getManualFeatureConfigKey(String featureKey) {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
+    }
+
+    public static void setBloggingRemindersShown(int siteId) {
+        prefs().edit().putBoolean(getBloggingRemindersConfigKey(siteId), true).apply();
+    }
+
+    public static boolean isBloggingRemindersShown(int siteId) {
+        return prefs().getBoolean(getBloggingRemindersConfigKey(siteId), false);
+    }
+
+    @NonNull private static String getBloggingRemindersConfigKey(int siteId) {
+        return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
     }
 
     /*

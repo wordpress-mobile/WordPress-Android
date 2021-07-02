@@ -1,170 +1,136 @@
 <ar>
-17.4:
-لقد أضفنا 3 تحديثات جديدة في هذا التحديث:
+17.6:
+يسمح لك مكوِّن الصوت بإضافة ملفات البث الصوتي والموسيقى والصوت إلى مقالاتك وصفحاتك. إنه متاح الآن لمستخدمي الخطة المجانية كذلك!
 
-سترى الآن أداة انتقاء الوسائط عند إضافة مكوِّن القصة من محرِّر المكوِّن، ما يسهِّل البدء.
+حوّل أي صورة إلى صورة *بارزة* باستخدام زر "تعيين كصورة بارزة" الجديد الموجود في مكوِّن الصورة.
 
-تعرض معاينات القصة الآن كما هو متوقع في القارئ.
-
-وأخيرًا، عند فشل رفع الشرائح، سيقوم التطبيق بإعادة المحاولة تلقائيًا، ما يوفِّر عليك نقرة إضافية!
+وأخيرًا، لقد جعلناه أكثر وضوحًا لدرجة أنه لا يمكنك تحرير صفحة أرشيفات المقالة التي تم إنشاؤها تلقائيًا.
 </ar>
 <de-DE>
-17.4:
-Wir haben bei diesem Update 3 neue Updates für Geschichten hinzugefügt:
+17.6:
+Mit dem Audioblock kannst du deinen Beiträgen und Seiten Podcasts, Musik und Audiodateien hinzufügen. Er ist jetzt auch für Benutzer mit dem Kostenlos-Tarif verfügbar!
 
-Dir wird nun eine Medienauswahl angezeigt, wenn du einen Geschichtenblock vom Block-Editor hinzufügst, um dir den Start zu erleichtern.
+Mache mit dem neuen Button „Als Beitragsbild festlegen“ Im Bildblock jedes beliebige Bild zu einem Beitragsbild.
 
-Die Geschichtenvorschau wird im Reader nun wie erwartet wiedergegeben.
-
-Und zuletzt versucht die App nun automatisch erneut, Slides hochzuladen, wenn dies fehlgeschlagen ist.
+Außerdem haben wir noch verdeutlicht, dass du die automatisch generierte Beitragsarchivseite nicht bearbeiten kannst.
 </de-DE>
 <en-US>
-17.4:
-We’ve added 3 new updates to Stories in this update:
+17.6:
+The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
 
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
+Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
 
-Story previews now render as expected in the Reader.
-
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
+Finally, we made it clearer that you can’t edit the automatically generated post archives page.
 </en-US>
 <es-ES>
-17.4:
-Hemos añadido 3 nuevas actualizaciones a las historias en esta actualización:
+17.6:
+El bloque de audio te permite añadir podcasts, música y archivos de sonido a tus entradas y páginas. ¡Ahora también está disponible para los usuarios del plan gratuito!
 
-Ahora verás un selector de medios cuando añadas un bloque de historias desde el editor de bloques, haciendo más fácil empezar.
+Convierte cualquier imagen en una imagen *destacada* con el nuevo botón «Establecer como destacada» en el bloque de imagen.
 
-Las vistas previas de las historias ahora se muestran en el lector como se espera.
-
-Y, por último, cuando las diapositivas fallan al subir, la aplicación volverá a intentarlo automáticamente, ¡ahorrándote un toque adicional!
+Por último, hemos aclarado que no puedes editar la página de archivo de entradas generada automáticamente.
 </es-ES>
 <fr-CA>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
+17.6 :
+Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
 
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
+Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
 
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
+Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
 </fr-CA>
 <fr-FR>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
+17.6 :
+Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
 
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
+Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
 
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
+Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
 </fr-FR>
 <iw-IL>
-17.4:
-בעדכון הזה הוספנו שלושה עדכונים חדשים לסטוריז:
+17.6:
+בלוק האודיו מאפשר לך להוסיף פודקאסטים, מוזיקה וקובצי ;קול לפוסטים ולעמודים. הבלוק זמין עכשיו גם למנויים לתוכנית החינמית!
 
-בורר המדיה מוצג כעת כאשר מוסיפים בלוק של סטורי מעורך הבלוקים, כך שאפשר להתחיל לפרסם בקלות רבה יותר.
+אפשר להפוך כל תמונה לתמונה *מרכזית* באמצעות הכפתור 'להגדיר כמרכזית' בבלוק התמונה.
 
-התצוגות המקדימות של הסטורי כעת מעובדות באופן תקין ב-Reader.
-
-ואחרון חביב, אם טעינת השקופיות נכשלת, האפליקציה תמשיך לנסות שוב באופן אוטומטי כדי לחסוך לך את ההקשה הנוספת!
+אחרון חביב, שיפרנו את ההודעה אשר מסבירה שאין אפשרות לערוך את עמוד הארכיון של הפוסטים שנוצר באופן אוטומטי.
 </iw-IL>
 <id>
-17.4:
-Kami menambahkan 3 pembaruan untuk Cerita pada pembaruan ini:
+17.6:
+Blok Audio memungkinkan Anda menambahkan podcast, musik, dan file suara ke pos dan halaman Anda. Sekarang juga tersedia untuk pengguna dengan Paket Gratis!
 
-Pemilih media akan ditampilkan saat menambahkan blok Cerita dari editor blok, sehingga proses memulai menjadi lebih mudah.
+Ubah semua gambar menjadi gambar *andalan*, dengan tombol ‘Tetapkan sebagai Andalan’ yang baru pada blok Gambar.
 
-Pratinjau Cerita kini ditampilkan dengan pas di Pembaca.
-
-Akhirnya, jika slide gagal diunggah, aplikasi akan otomatis mencoba ulang, sehingga tidak perlu mengetuk layar lagi.
+Terakhir, kami memperjelas bahwa Anda tidak dapat menyunting halaman arsip pos yang dibuat secara otomatis.
 </id>
+<it-IT>
+17.6:
+Il blocco Audio ti permette di aggiungere podcast, musica e file audio ad articoli e pagine. Ora è anche disponibile per gli utenti del piano gratuito.
+
+Trasforma qualsiasi immagine in un'immagine *in evidenza*, con il nuovo pulsante "Imposta come in evidenza" nel blocco Immagine.
+
+Infine, abbiamo chiarito che non è possibile modificare la pagina degli archivi degli articoli generata automaticamente.
+</it-IT>
 <ja-JP>
-17.4:
-今回のアップデートでは、ストーリーに3件の新しいアップデートを追加しました。
+17.6:
+音声ブロックを使って、ポッドキャスト、音楽、音声ファイルを投稿や固定ページに追加できます。 無料プランのユーザーも利用できるようになりました。
 
-ブロックエディターからストーリーブロックを追加する際に、メディアピッカーが表示されるようになり、開始が簡単になりました。
+画像ブロックの新しい「アイキャッチ画像として設定」ボタンを使って、任意の画像を*アイキャッチ*画像に変換できるようになりました。
 
-Reader でストーリーのプレビューが期待どおりに表示されるようになりました。
-
-さらに、スライドのアップロードに失敗するとアプリが自動的に再試行するため、再びタップする必要がなくなりました。
+最後に、自動生成された投稿アーカイブページは編集できないことがはっきりと分かるように変更を加えました。
 </ja-JP>
 <ko-KR>
-17.4:
-이 업데이트에서 새 업데이트 3가지를 스토리에 추가했습니다.
+17.6:
+오디오 블록이 있으면 팟캐스트, 음악 및 사운드 파일을 글과 페이지에 추가할 수 있습니다. 지금 무료 요금제 사용자도 이용할 수 있습니다!
 
-이제는 더 쉽게 시작할 수 있도록 블록 편집기의 스토리 블록을 추가할 때 미디어 선택기가 표시됩니다.
+어떤 이미지든 이미지 블록의 새로운 '특성으로 설정' 버튼을 통해 *특성* 이미지로 전환하세요.
 
-이제는 스토리 미리보기가 뉴스피드에서 예상대로 렌더링됩니다.
-
-그리고 마지막으로, 슬라이드가 업로드되지 않으면 앱에서 자동으로 다시 시도되므로 다시 누르지 않아도 됩니다.
+마지막으로, 자동으로 생성된 글 목록 페이지를 편집할 수 없다는 것을 더 명확하게 밝혔습니다.
 </ko-KR>
 <nl-NL>
-17.4:
-We hebben in deze update drie nieuwe updates aan Verhalen toegevoegd:
+17.6:
+Met het audioblok kun je podcasts, muziek en geluidsbestanden toevoegen aan je berichten en pagina's. Het is nu ook beschikbaar voor gebruikers van het gratis abonnement!
 
-Je ziet nu een mediakiezer wanneer je een verhaalblok toevoegt vanuit de blok-editor, waardoor het gemakkelijker wordt om aan de slag te gaan.
+Verander elke afbeelding in een *uitgelichte* afbeelding, met de nieuwe knop 'Instellen als aanbevolen' in het afbeeldingsblok.
 
-Verhaal voorbeelden worden nu weergegeven zoals verwacht in de Reader.
-
-En tot slot, wanneer slides niet kunnen worden geüpload, zal de app het automatisch opnieuw proberen, waardoor je een extra tik bespaart!
+Ten slotte hebben we duidelijker gemaakt dat je de automatisch gegenereerde pagina met berichtarchieven niet kunt bewerken.
 </nl-NL>
-<pt-BR>
-17.4:
-Adicionamos 3 novas atualizações às Stories:
-
-Um seletor de mídia agora é exibido ao adicionar o bloco Story no editor de blocos, facilitando a criação.
-
-A visualização de Story agora é exibida como esperado no leitor.
-
-Por fim, quando slides não são enviados corretamente, o aplicativo tentará novamente economizando um toque adicional.
-</pt-BR>
 <ru-RU>
-17,4:
-В этой версии мы добавили 3 новых обновления для историй:
+17.6:
+Блок аудио позволяет вам добавлять подкасты, музыку и звуковые файлы к вашим записям и страницам. Теперь он доступен и пользователям бесплатного тарифа!
 
-Теперь при добавлении блока истории из редактора блоков вы увидите средство выбора мультимедиа, что позволит начать гораздо проще.
+Превратите любое изображение в *избранное* изображение с помощью новой кнопки «Установить как избранное» в блоке изображения.
 
-Предварительный просмотр истории теперь отображается в Чтиве должным образом.
-
-И, наконец, когда слайды не загружаются, приложение автоматически повторит попытку, экономя вам дополнительное нажатие!
+Наконец, мы уточнили, что вы не можете редактировать автоматически созданную страницу архивов записей.
 </ru-RU>
 <sv-SE>
-17.4:
-Vi har lagt till 3 nya uppdateringar för berättelser i denna uppdatering:
+17.6:
+Med ljudblocket kan du lägga in en podcast, musik och andra ljudfiler i dina inlägg och sidor. Nu tillgängligt även för dem som använder gratispaketet!
 
-Nu visas en mediaväljare när du lägger till ett berättelseblock i blockredigeraren, så att du enklare kommer igång.
+Ändra valfri bild till en *utvald* bild med den nya knappen ”Ange som utvald” i bildblocket.
 
-Nu visas förhandsvisningar av berättelser på förväntat sätt i läsaren.
-
-Slutligen: Om en bildspelsbild inte laddas upp korrekt kommer appen automatiskt att göra ett nytt försök, så att du inte behöver trycka en extra gång!
+Slutligen har vi gjort det tydligare att man inte kan redigera den automatiskt genererade sidan med inläggsarkivet.
 </sv-SE>
 <tr-TR>
-17.4:
-Bu güncellemede Hikayeler'e 3 yeni güncelleme ekledik:
+17.6:
+Ses Bloku, gönderilerinize ve sayfalarınıza podcast'ler, müzik ve ses dosyaları eklemenize olanak tanır. Artık Ücretsiz Paket kullanıcıları tarafından da kullanılabilir.
 
-Artık blok düzenleyiciden bir Hikaye bloku eklerken, başlamayı kolaylaştıran bir medya seçici göreceksiniz.
+Görsel blokundaki yeni 'Öne Çıkan Olarak Ayarla' düğmesiyle herhangi bir görseli *öne çıkan* bir görsele dönüştürün.
 
-Hikaye önizlemeleri artık Okuyucu'da beklendiği gibi çalışıyor.
-
-Son olarak, slaytlar yüklenemediğinde, uygulama otomatik olarak yeniden dener ve size fazladan bir dokunuş kazandırır.
+Son olarak, otomatik olarak oluşturulan gönderi arşivleri sayfasını düzenleyemeyeceğinizi daha net olarak belirttik.
 </tr-TR>
 <zh-CN>
-17.4
-在本次更新中，我们向故事功能新增了3项更新。
+17.6：
+通过音频区块可让您将播客、音乐和声音文件添加到您的文章和页面中。该功能现也可供免费套餐用户使用！
 
-现在，您使用区块编辑器添加故事区块时会看到一个媒体选择器，让您更容易上手。
+使用图片区块中的新“设置为特色”按钮可将任何图片设为*特色*图片。
 
-在阅读器中，故事的预览渲染已经达到预期。
-
-当幻灯片上传失败，应用程序将自动重试，减少您的操作负担。
+最后，我们明确表明，您无法编辑自动生成的文章归档页面。
 </zh-CN>
 <zh-TW>
-17.4:
-我們在此次更新中為「故事」新增了 3 個更新：
+17.6：
+音訊區塊讓你將 Podcast、音樂和音效檔加入文章和頁面。 這項功能現在也開放免費方案使用者使用！
 
-現在從區塊編輯器新增故事區塊會看到媒體選擇器，讓你更容易上手。
+圖片區塊推出「設為特色圖片」新按鈕，按一下即可將任何圖片變成 *特色* 圖片。
 
-故事預覽現在可在閱讀器中正常顯示。
-
-若投影片無法上傳，該應用程式將自動重試，為你省去按按鍵的麻煩！
+最後我們清楚強調，自動產生的文章彙整頁面無法編輯。
 </zh-TW>

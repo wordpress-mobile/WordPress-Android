@@ -4,6 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.comments.CommentListItem.Comment
 import org.wordpress.android.ui.comments.CommentListItem.SubHeader
 
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
 class CommentListItemDiffCallback(
     private val oldList: List<CommentListItem>,
     private val newList: List<CommentListItem>

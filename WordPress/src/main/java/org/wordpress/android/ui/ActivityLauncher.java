@@ -82,6 +82,7 @@ import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.categories.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -1279,7 +1280,15 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
+        showSignInForResult(activity, false);
+    }
+
+    public static void showSignInForResult(Activity activity, boolean clearTop) {
         Intent intent = new Intent(activity, LoginActivity.class);
+        if (clearTop) {
+            intent.setFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1524,5 +1533,11 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_RESTORE_ACTIVITY_ID_KEY, activityId);
         activity.startActivityForResult(intent, resultCode);
+    }
+
+    public static void showCategoriesList(@NonNull Context context, @NonNull SiteModel site) {
+        Intent intent = new Intent(context, CategoriesListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 }
