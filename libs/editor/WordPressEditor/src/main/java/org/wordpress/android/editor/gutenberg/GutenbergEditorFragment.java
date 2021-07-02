@@ -116,6 +116,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
     private static final String TAG_REPLACE_FEATURED_DIALOG = "REPLACE_FEATURED_DIALOG";
+    private static final String TAG_CANCEL_MEDIA_UPLOAD_DIALOG = "CANCEL_MEDIA_UPLOAD_DIALOG";
 
     public static final int MEDIA_ID_NO_FEATURED_IMAGE_SET = 0;
 
@@ -751,34 +752,29 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showCancelMediaUploadDialog(final int localMediaId) {
-        // Display 'cancel upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(getString(R.string.stop_upload_dialog_title));
-        builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
-                            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
-                            // remove from editor
-                            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
-                            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
-                            mCancelledMediaIds.put(String.valueOf(localMediaId), new Date());
-                            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
-                        }
-                        dialog.dismiss();
-                    }
-                });
+        GutenbergDialogFragment dialog = new GutenbergDialogFragment();
+        dialog.initialize(
+                TAG_CANCEL_MEDIA_UPLOAD_DIALOG,
+                getString(R.string.stop_upload_dialog_title),
+                null,
+                getString(R.string.stop_upload_dialog_button_yes),
+                getString(R.string.stop_upload_dialog_button_no),
+                localMediaId
+        );
+        dialog.show(getChildFragmentManager(), TAG_CANCEL_MEDIA_UPLOAD_DIALOG);
+    }
 
-        builder.setNegativeButton(R.string.stop_upload_dialog_button_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    private void cancelMediaUpload(final int localMediaId) {
+        if (mUploadingMediaProgressMax.containsKey(String.valueOf(localMediaId))) {
+            mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
+            // remove from editor
+            mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
+            getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
+            mCancelledMediaIds.put(String.valueOf(localMediaId), new Date());
+            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
+        }
     }
 
     private void showRetryMediaUploadDialog(final int mediaId) {
@@ -1398,10 +1394,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
+    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag,
+                                                 @org.jetbrains.annotations.Nullable Object dataFromGutenberg) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
-                setFeaturedImage(mediaId);
+                setFeaturedImage((int) dataFromGutenberg);
+                break;
+            case TAG_CANCEL_MEDIA_UPLOAD_DIALOG:
+                cancelMediaUpload((int) dataFromGutenberg);
                 break;
         }
     }
@@ -1410,6 +1410,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onGutenbergDialogNegativeClicked(@NotNull String instanceTag) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
+            case TAG_CANCEL_MEDIA_UPLOAD_DIALOG:
                 // Dismiss dialog with no action.
                 break;
         }
