@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowDocumentationPage
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
@@ -116,7 +117,7 @@ class ActivityLogDetailViewModel @Inject constructor(
     ): SpannableString {
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                TODO()
+                _navigationEvents.postValue(Event(ShowDocumentationPage()))
             }
         }
         val clickableStartIndex = multisiteMessage.indexOf(clickableText)

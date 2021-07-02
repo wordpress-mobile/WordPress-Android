@@ -16,6 +16,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowDocumentationPage
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRestore
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
@@ -87,13 +88,14 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
                                 RequestCodes.BACKUP_DOWNLOAD,
                                 buildTrackingSource()
                         )
-                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
-                            requireActivity(),
-                            viewModel.site,
-                            it.model.activityID,
-                            RequestCodes.RESTORE,
-                            buildTrackingSource()
-                    )
+                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                                requireActivity(),
+                                viewModel.site,
+                                it.model.activityID,
+                                RequestCodes.RESTORE,
+                                buildTrackingSource()
+                        )
+                        is ShowDocumentationPage -> ActivityLauncher.openUrlExternal(requireContext(), it.url)
                 }
             })
 
