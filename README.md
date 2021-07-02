@@ -1,5 +1,6 @@
 # WordPress for Android #
 
+
 [![CircleCI](https://circleci.com/gh/wordpress-mobile/WordPress-Android.svg?style=svg)](https://circleci.com/gh/wordpress-mobile/WordPress-Android)
 
 If you're just looking to install WordPress for Android, you can find
