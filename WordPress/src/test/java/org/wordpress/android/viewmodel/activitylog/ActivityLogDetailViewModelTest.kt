@@ -1,10 +1,12 @@
 package org.wordpress.android.viewmodel.activitylog
 
+import android.text.SpannableString
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -67,6 +69,7 @@ class ActivityLogDetailViewModelTest {
     private var lastEmittedItem: ActivityLogDetailModel? = null
     private var restoreVisible: Boolean = false
     private var downloadBackupVisible: Boolean = false
+    private var multisiteVisible: Pair<Boolean, SpannableString?> = Pair(false, null)
     private var navigationEvents: MutableList<Event<ActivityLogDetailNavigationEvents?>> = mutableListOf()
 
     @Before
@@ -78,6 +81,7 @@ class ActivityLogDetailViewModelTest {
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
         viewModel.downloadBackupVisible.observeForever { downloadBackupVisible = it }
+        viewModel.multisiteVisible.observeForever { multisiteVisible = it }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
     }
 
@@ -144,6 +148,28 @@ class ActivityLogDetailViewModelTest {
         viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
 
         assertEquals(true, downloadBackupVisible)
+    }
+
+    @Test
+    fun `given restore not hidden, when view model starts, then multisite message is not shown`() {
+        val areButtonsVisible = true
+        val isRestoreHidden = false
+
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+
+        assertFalse(multisiteVisible.first)
+        assertNull(multisiteVisible.second)
+    }
+
+    @Test
+    fun `given restore hidden, when view model starts, then multisite message is shown`() {
+        val areButtonsVisible = true
+        val isRestoreHidden = true
+
+        viewModel.start(site, activityID, areButtonsVisible, isRestoreHidden)
+
+        assertTrue(multisiteVisible.first)
+        assertNotNull(multisiteVisible.second)
     }
 
     @Test

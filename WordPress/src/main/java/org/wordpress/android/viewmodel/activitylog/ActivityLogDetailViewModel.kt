@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.activitylog
 
+import android.text.SpannableString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,10 @@ class ActivityLogDetailViewModel
     private val _downloadBackupVisible = MutableLiveData<Boolean>()
     val downloadBackupVisible: LiveData<Boolean>
         get() = _downloadBackupVisible
+
+    private val _multisiteVisible = MutableLiveData<Pair<Boolean, SpannableString?>>()
+    val multisiteVisible: LiveData<Pair<Boolean, SpannableString?>>
+        get() = _multisiteVisible
 
     fun start(
         site: SiteModel,
