@@ -1398,6 +1398,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void showEditorHelp() {
+        getGutenbergContainerFragment().showEditorHelp();
+    }
+
+    @Override
     public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
