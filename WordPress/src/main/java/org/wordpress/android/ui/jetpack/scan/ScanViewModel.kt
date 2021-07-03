@@ -90,10 +90,10 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun init() {
+        updateUiState(FullScreenLoadingUiState)
         launch {
             scanStateModel = scanStore.getScanStateForSite(this@ScanViewModel.site)
             scanStateModel?.let {
-                updateUiState(buildContentUiState(it))
                 if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = false)
             }
             fetchScanState()
@@ -102,7 +102,6 @@ class ScanViewModel @Inject constructor(
 
     private fun fetchScanState(invokedByUser: Boolean = false, isRetry: Boolean = false) {
         launch {
-            if (scanStateModel == null) updateUiState(FullScreenLoadingUiState)
             if (isRetry) delay(RETRY_DELAY)
 
             fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
