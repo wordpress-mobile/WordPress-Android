@@ -96,11 +96,15 @@ class ScanViewModel @Inject constructor(
             scanStateModel?.let {
                 if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = false)
             }
-            fetchScanState()
+            fetchScanState(isInvokedFromInit = true)
         }
     }
 
-    private fun fetchScanState(invokedByUser: Boolean = false, isRetry: Boolean = false) {
+    private fun fetchScanState(
+        invokedByUser: Boolean = false,
+        isRetry: Boolean = false,
+        isInvokedFromInit: Boolean = false
+    ) {
         launch {
             if (isRetry) delay(RETRY_DELAY)
 
@@ -120,7 +124,7 @@ class ScanViewModel @Inject constructor(
 
                             is FetchScanState.Failure.NetworkUnavailable -> {
                                 scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
-                                scanStateModel
+                                scanStateModel?.takeIf { !isInvokedFromInit }
                                         ?.let {
                                             updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                                         }
@@ -129,7 +133,7 @@ class ScanViewModel @Inject constructor(
 
                             is FetchScanState.Failure.RemoteRequestFailure -> {
                                 scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
-                                scanStateModel
+                                scanStateModel?.takeIf { !isInvokedFromInit }
                                         ?.let {
                                             updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
                                         }
