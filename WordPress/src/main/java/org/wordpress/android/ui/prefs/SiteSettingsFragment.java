@@ -1929,10 +1929,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_jetpack_performance_settings);
     }
 
-    // This removes all preferences from the General preference group, except for Blogging Reminders – in practice it is
-    // removed as well, but then added back.
-    // In the future, we should consider either moving the Blogging Reminders preference to its own group or replace
-    // this approach with something more scalable and efficient.
+    /**
+     * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
+     * is removed as well, but then added back.
+     *
+     * In the future, we should consider either moving the Blogging Reminders preference to its own group or
+     * replace this approach with something more scalable and efficient.
+     */
     private void removeGeneralSettingsExceptBloggingReminders() {
         PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
         if (group != null && mBloggingRemindersPref != null) {
