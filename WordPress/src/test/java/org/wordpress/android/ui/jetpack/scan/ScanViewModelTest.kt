@@ -127,6 +127,14 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
+    fun `given last scan state present in db, when vm starts, then app displays full screen loading scan state`() =
+            test {
+                val uiStates = init().uiStates
+
+                assertThat(uiStates.first()).isInstanceOf(FullScreenLoadingUiState::class.java)
+            }
+
+    @Test
     fun `when vm starts, fetch scan state is triggered`() = test {
         viewModel.start(site)
 
