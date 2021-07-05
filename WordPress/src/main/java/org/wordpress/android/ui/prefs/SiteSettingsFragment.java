@@ -13,6 +13,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -1918,7 +1919,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonSelfHostedPreferences() {
         mUsernamePref.setEnabled(true);
         mPasswordPref.setEnabled(true);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        removeGeneralSettingsExceptBloggingReminders();
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
@@ -1926,6 +1927,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
+    }
+
+    // This removes all preferences from the General preference group, except for Blogging Reminders – in practice it is
+    // removed as well, but then added back.
+    // In the future, we should consider either moving the Blogging Reminders preference to its own group or replace
+    // this approach with something more scalable and efficient.
+    private void removeGeneralSettingsExceptBloggingReminders() {
+        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
+        if (group != null && mBloggingRemindersPref != null) {
+            group.removeAll();
+            group.addPreference(mBloggingRemindersPref);
+        }
     }
 
     private void removeNonJetpackPreferences() {
