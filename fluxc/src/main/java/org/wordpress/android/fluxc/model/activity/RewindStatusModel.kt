@@ -4,12 +4,13 @@ import java.util.Date
 
 data class RewindStatusModel(
     val state: State,
-    val reason: String?,
+    val reason: Reason,
     val lastUpdated: Date,
     val canAutoconfigure: Boolean?,
     val credentials: List<Credentials>?,
     val rewind: Rewind?
 ) {
+    @Suppress("unused")
     enum class State(val value: String) {
         ACTIVE("active"),
         INACTIVE("inactive"),
@@ -20,7 +21,19 @@ data class RewindStatusModel(
 
         companion object {
             fun fromValue(value: String): State? {
-                return State.values().firstOrNull { it.value == value }
+                return values().firstOrNull { it.value == value }
+            }
+        }
+    }
+
+    enum class Reason(val value: String?) {
+        MULTISITE_NOT_SUPPORTED("multisite_not_supported"),
+        NO_REASON(null),
+        UNKNOWN("unknown");
+
+        companion object {
+            fun fromValue(value: String?): Reason {
+                return values().firstOrNull { it.value == value } ?: UNKNOWN
             }
         }
     }
@@ -47,7 +60,7 @@ data class RewindStatusModel(
 
             companion object {
                 fun fromValue(value: String?): Status? {
-                    return value?.let { Status.values().firstOrNull { it.value == value } }
+                    return value?.let { values().firstOrNull { it.value == value } }
                 }
             }
         }
