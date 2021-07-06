@@ -692,6 +692,63 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(observers.snackBarMsgs.isEmpty()).isTrue
             }
 
+    @Test
+    fun `given no network, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.NetworkUnavailable, invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+    }
+
+    @Test
+    fun `given no network, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.NetworkUnavailable, invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
+    @Test
+    fun `given request failed, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.RemoteRequestFailure, invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_error_message)))
+    }
+
+    @Test
+    fun `given request failed, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.RemoteRequestFailure, invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
+    @Test
+    fun `given request succeeds, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1), invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_singular)))
+    }
+
+    @Test
+    fun `given request succeeds, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1), invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as ContentUiState)
                 .items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
