@@ -120,8 +120,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    def properties = loadPropertiesFromFile(checkGradlePropertiesFile())
-
     flavorDimensions "app", "buildType"
 
     productFlavors {
@@ -137,7 +135,6 @@ android {
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
 
         }
-        addBuildConfigFieldsFromPrefixedProperties(wordpress, properties, 'wp')
 
         jetpack {
             dimension "app"
@@ -150,9 +147,7 @@ android {
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
 
         }
-        addBuildConfigFieldsFromPrefixedProperties(jetpack, properties, 'wp') // Inherit same properties used from WP
-        addBuildConfigFieldsFromPrefixedProperties(jetpack, properties, 'jp') // Add or overwrite with Jetpack-specific properties
-
+        
         vanilla { // used for release and beta
             dimension "buildType"
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
@@ -179,6 +174,11 @@ android {
             applicationIdSuffix ".prealpha"
             dimension "buildType"
         }
+
+        // Also dynamically add additional `buildConfigFields` to our app flavors from any `wp.`/`jp.`-prefixed property in `gradle.properties`
+        def properties = loadPropertiesFromFile(checkGradlePropertiesFile())
+        addBuildConfigFieldsFromPrefixedProperties(wordpress, properties, ['wp'])
+        addBuildConfigFieldsFromPrefixedProperties(jetpack, properties, ['wp', 'jp']) // Inherit same properties used from WP first then overwrite with JP-specific ones
     }
 
     buildTypes {
@@ -245,20 +245,29 @@ android {
     }
 }
 
-def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefix) {
-    println("Adding properties prefixed with '${prefix}.' to ${variant.name} product flavor...")
-    // e.g. for prefix='wp', add properties named "wp.xxx" to our BuildConfig
-    properties.any { property ->
-        if (property.key.toLowerCase().startsWith("${prefix}.")) {
-            variant.buildConfigField "String", property.key.replace("${prefix}.", "").replace(".", "_").toUpperCase(),
-                    "\"${property.value}\""
-            if (property.key.replace(prefix, "") == ".sentry.dsn") {
-                println("    buildConfigField ${property.key.replace("${prefix}.", "").replace(".", "_").toUpperCase()}, \"${property.value}\"")
+/// Dynamically add `buildConfigFields` on a given variant/flavor from prefixed properties
+/// (This is used to e.g. add every property prefixed `wp.` in `gradle.properties` as a BuildConfigField in the `wordpress` flavor)
+///
+/// `prefixes` is an array of prefixes to search for, without their `.` dot (e.g. `["wp", "jp"]`).
+/// Properties found with prefixes first in that array will be overriden by the ones found with prefixes later in the array.
+def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefixes) {
+    // Build a Map of prefixed properties found. Keys in this Map will be lowercased and `.` replaced by `_`
+    def fields_map = [:]
+    prefixes.each { prefix ->
+        properties.each { property ->
+            if (property.key.toLowerCase().startsWith("${prefix.toLowerCase()}.")) {
+                def key = property.key.toLowerCase().replace("${prefix.toLowerCase()}.", "").replace(".", "_")
+                fields_map[key] = property.value
             }
         }
-        if (property.key.toLowerCase().startsWith("${prefix}.res.")) {
-            variant.resValue "String", property.key.replace("${prefix}.res.", "").replace(".", "_").toLowerCase(),
-                    "${property.value}"
+    }
+
+    // Then define the found properties as buildConfigFields
+    // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
+    fields_map.each {
+        variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
+        if (it.key.startsWith("res_")) {
+            variant.resValue "String", it.key.replace("res_", ""), "${it.value}"
         }
     }
 }
