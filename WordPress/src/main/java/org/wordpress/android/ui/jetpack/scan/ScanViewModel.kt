@@ -251,9 +251,12 @@ class ScanViewModel @Inject constructor(
                     }
                 }
             }
-            updateUiState(
-                    buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
-            )
+
+            if (status is FetchFixThreatsState.InProgress || status is FetchFixThreatsState.Complete) {
+                updateUiState(
+                        buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
+                )
+            }
 
             if (isInvokedByUser) messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
