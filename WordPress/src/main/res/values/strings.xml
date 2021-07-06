@@ -430,6 +430,12 @@
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
+    <string name="comment_tracker_label_all">All</string>
+    <string name="comment_tracker_label_pending" translatable="false">Pending</string>
+    <string name="comment_tracker_label_unreplied" translatable="false">Unreplied</string>
+    <string name="comment_tracker_label_approved" translatable="false">Approved</string>
+    <string name="comment_tracker_label_spam" translatable="false">Spam</string>
+    <string name="comment_tracker_label_trashed" translatable="false">Trashed</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
