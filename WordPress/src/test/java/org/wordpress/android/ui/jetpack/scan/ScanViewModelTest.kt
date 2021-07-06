@@ -749,6 +749,34 @@ class ScanViewModelTest : BaseUnitTest() {
         assertThat(observers.snackBarMsgs.isEmpty()).isTrue
     }
 
+    @Test
+    fun `given complete state, when fix status is fetched, then ui is updated`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1))
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `given progress state, when fix status is fetched, then ui is updated`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.InProgress(listOf(1L)))
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `given non progress or complete state, when fix status is fetched, then ui is not updated`() = test {
+        whenever(fetchScanStateUseCase.fetchScanState(site = site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.NotStarted)
+
+        assertThat(observers.uiStates.filterIsInstance(ContentUiState::class.java)).isEmpty()
+    }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as ContentUiState)
                 .items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
@@ -780,7 +808,7 @@ class ScanViewModelTest : BaseUnitTest() {
         }
     }
 
-    private suspend fun fetchFixThreatsStatusForState(state: FetchFixThreatsState, invokedByUser: Boolean) {
+    private suspend fun fetchFixThreatsStatusForState(state: FetchFixThreatsState, invokedByUser: Boolean = false) {
         val scanStateModelWithFixableThreats = fakeScanStateModel
                 .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
