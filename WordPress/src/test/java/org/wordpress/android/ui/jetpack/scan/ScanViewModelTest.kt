@@ -663,39 +663,33 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
             test {
-                val messages = init().snackBarMsgs
-                whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                        flowOf(
-                                FetchFixThreatsState.Failure.FixFailure(
-                                        containsOnlyErrors = true,
-                                        mightBeMissingCredentials = false
-                                )
-                        )
+                val observers = initObservers()
+
+                fetchFixThreatsStatusForState(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        ),
+                        invokedByUser = true
                 )
 
-                viewModel.onFixStateRequested(threatId = 11L)
-
-                assertThat(messages.isNotEmpty()).isTrue
+                assertThat(observers.snackBarMsgs.isNotEmpty()).isTrue
             }
 
     @Test
     fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
             test {
-                whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                        flowOf(
-                                FetchFixThreatsState.Failure.FixFailure(
-                                        containsOnlyErrors = true,
-                                        mightBeMissingCredentials = false
-                                )
-                        )
+                val observers = initObservers()
+
+                fetchFixThreatsStatusForState(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        ),
+                        invokedByUser = false
                 )
-                val scanStateModelWithFixableThreats = fakeScanStateModel
-                        .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
 
-                val messages = init().snackBarMsgs
-
-                assertThat(messages.isEmpty()).isTrue
+                assertThat(observers.snackBarMsgs.isEmpty()).isTrue
             }
 
     private fun triggerFixThreatsAction(observers: Observers) {
@@ -726,6 +720,20 @@ class ScanViewModelTest : BaseUnitTest() {
             // Fetch scan state on scan start (invoked by user)
             (observers?.uiStates?.last() as? ContentUiState)?.items
                     ?.filterIsInstance<ActionButtonState>()?.first()?.onClick?.invoke()
+        }
+    }
+
+    private suspend fun fetchFixThreatsStatusForState(state: FetchFixThreatsState, invokedByUser: Boolean) {
+        val scanStateModelWithFixableThreats = fakeScanStateModel
+                .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(flowOf(state))
+
+        // Fetch fix threats status on init
+        viewModel.start(site)
+        if (invokedByUser) {
+            // Fetch fix threats status invoked by user
+            viewModel.onFixStateRequested(threatId = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.id)
         }
     }
 
