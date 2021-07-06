@@ -133,7 +133,6 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
 
             manifestPlaceholders = [magicLinkScheme:"wordpress"]
-
         }
 
         jetpack {
@@ -145,9 +144,8 @@ android {
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
-
         }
-        
+
         vanilla { // used for release and beta
             dimension "buildType"
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
