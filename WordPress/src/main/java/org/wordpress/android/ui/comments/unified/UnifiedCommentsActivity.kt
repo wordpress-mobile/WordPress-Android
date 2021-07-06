@@ -1,22 +1,85 @@
 package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.collect
+import org.wordpress.android.R.dimen
+import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
+import org.wordpress.android.ui.comments.unified.CommentFilter.APPROVED
+import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
+import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
+import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
+import org.wordpress.android.ui.comments.unified.CommentFilter.UNREPLIED
+import javax.inject.Inject
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: UnifiedCommentActivityViewModel
+
+    private val commentListFilters = listOf(ALL, PENDING, UNREPLIED, APPROVED, SPAM, TRASHED)
+
+    private var disabledTabsOpacity: Float = 0F
+
+    private lateinit var pagerAdapter: UnifiedCommentListPagerAdapter
+
+    private var binding: UnifiedCommentActivityBinding? = null
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as WordPress).component().inject(this)
 
-        with(UnifiedCommentActivityBinding.inflate(layoutInflater)) {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
+        val disabledAlpha = TypedValue()
+        resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
+        disabledTabsOpacity = disabledAlpha.float
+
+        binding = UnifiedCommentActivityBinding.inflate(layoutInflater).apply {
             setContentView(root)
-            setSupportActionBar(toolbarMain)
+            setupActionBar()
+            setupContent()
+            setupObservers()
         }
+    }
 
+    private fun UnifiedCommentActivityBinding.setupContent() {
+        pagerAdapter = UnifiedCommentListPagerAdapter(commentListFilters, this@UnifiedCommentsActivity)
+        viewPager.adapter = pagerAdapter
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.setText(commentListFilters[position].labelResId)
+        }.attach()
+    }
+
+    private fun UnifiedCommentActivityBinding.setupActionBar() {
+        setSupportActionBar(toolbarMain)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    private fun UnifiedCommentActivityBinding.setupObservers() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiState.collect { uiState ->
+                viewPager.isUserInputEnabled = uiState.isTabBarEnabled
+                for (i in 0 until tabLayout.tabCount) {
+                    tabLayout.getTabAt(i)?.view?.isEnabled = uiState.isTabBarEnabled
+                    tabLayout.getTabAt(i)?.view?.isClickable = uiState.isTabBarEnabled
+                    if (uiState.isTabBarEnabled) {
+                        tabLayout.getTabAt(i)?.view?.alpha = 1F
+                    } else {
+                        tabLayout.getTabAt(i)?.view?.alpha = disabledTabsOpacity
+
+                    }
+                }
+            }
         }
     }
 
