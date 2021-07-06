@@ -246,13 +246,14 @@ class ScanViewModel @Inject constructor(
                     }
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
-                    } else if (isInvokedByUser) {
+                    } else {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                 }
             }
 
-            if (status is FetchFixThreatsState.InProgress || status is FetchFixThreatsState.Complete) {
+            val shouldUpdateUi = status is FetchFixThreatsState.InProgress || status is FetchFixThreatsState.Complete
+            if (shouldUpdateUi) {
                 updateUiState(
                         buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
                 )
