@@ -146,7 +146,7 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `given no network, when scan state fetched on init, then app reaches no connection state`() = test {
+    fun `given no network, when scan state fetch not invoked by user, then app reaches no connection state`() = test {
         val observers = initObservers()
 
         fetchScanStateStatusForState(state = Failure.NetworkUnavailable, observers = observers, invokedByUser = false)
@@ -155,7 +155,7 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no connection state, when scan state fetched on init, then no network ui is shown`() = test {
+    fun `given no connection state, when scan state fetch not invoked by user, then no network ui is shown`() = test {
         val observers = initObservers()
 
         fetchScanStateStatusForState(state = Failure.NetworkUnavailable, observers = observers, invokedByUser = false)
@@ -180,7 +180,7 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fetch scan fails, when scan state fetched on init, then app reaches failed ui state`() = test {
+    fun `given fetch scan fails, when scan state fetch not invoked by user, then app reaches failed ui state`() = test {
         val observers = initObservers()
 
         fetchScanStateStatusForState(state = Failure.RemoteRequestFailure, observers = observers, invokedByUser = false)
@@ -189,19 +189,24 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given request failed ui state, when scan state fetched on init, then request failed ui shown`() = test {
-        val observers = initObservers()
+    fun `given request failed ui state, when scan state fetch not invoked by user, then request failed ui shown`() =
+            test {
+                val observers = initObservers()
 
-        fetchScanStateStatusForState(state = Failure.RemoteRequestFailure, observers = observers, invokedByUser = false)
+                fetchScanStateStatusForState(
+                        state = Failure.RemoteRequestFailure,
+                        observers = observers,
+                        invokedByUser = false
+                )
 
-        val state = observers.uiStates.last() as ErrorUiState
-        with(state) {
-            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
-            assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
-            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
-            assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))
-        }
-    }
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
+                    assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))
+                }
+            }
 
     @Test
     fun `given fetch scan state fails, when scan state fetch invoked by user, then request failed msg shown`() = test {
