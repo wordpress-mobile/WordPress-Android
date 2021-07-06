@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 // TODO for testing purposes only. Remove after attaching real data source.
 @Suppress("MagicNumber")
-class CommentPagingSource @Inject constructor(
+class CommentPagingSource @Inject constructor(private val commentFilter: CommentFilter,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : PagingSource<Int, CommentModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentModel> {
@@ -47,7 +47,7 @@ class CommentPagingSource @Inject constructor(
             commentModel.postTitle = "Post $i"
             commentModel.authorName = "Author $i"
             commentModel.authorEmail = "authors_email$i@wordpress.org"
-            commentModel.content = "Generated <b>Comment</b> <i>Content</i> for Comment with remote ID $i"
+            commentModel.content = "Generated ${commentFilter.name} <b>Comment</b> <i>Content</i> for Comment with remote ID $i"
             startTimestamp -= 30000
             commentModel.publishedTimestamp = startTimestamp
             commentModel.datePublished = DateTimeUtils.iso8601FromDate(Date(startTimestamp * 1000))

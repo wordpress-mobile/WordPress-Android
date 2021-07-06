@@ -20,6 +20,7 @@ import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.ui.comments.unified.CommentFilter.ALL
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsUiModel
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UnifiedCommentListViewModelTest : BaseUnitTest() {
@@ -39,6 +41,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
 
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: UnifiedCommentListViewModel
 
@@ -48,9 +51,11 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         viewModel = UnifiedCommentListViewModel(
                 dateTimeUtilsWrapper,
                 networkUtilsWrapper,
+                resourceProvider,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
+        viewModel.setup(ALL)
     }
 
     @Test

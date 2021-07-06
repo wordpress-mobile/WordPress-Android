@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -28,8 +30,11 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
 
     private lateinit var viewModel: UnifiedCommentListViewModel
+    private lateinit var activityViewModel: UnifiedCommentActivityViewModel
     private lateinit var adapter: UnifiedCommentListAdapter
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+
+    private lateinit var commentListFilter: CommentFilter
 
     private var binding: UnifiedCommentListFragmentBinding? = null
 
@@ -37,6 +42,10 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentListViewModel::class.java)
+        activityViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
+        arguments?.let {
+            commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,15 +74,29 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
+        viewModel.setup(commentListFilter)
+
         lifecycleScope.launchWhenStarted {
             viewModel.commentListData.collect { pagingData ->
                 adapter.submitData(pagingData)
             }
         }
 
+        var isShowingActionMode = false
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                    isShowingActionMode = true
+                    (activity as AppCompatActivity).startSupportActionMode(
+                            CommentListActionModeCallback(
+                                    viewModel,
+                                    activityViewModel
+                            )
+                    )
+                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                    isShowingActionMode = false
+                }
             }
         }
 
@@ -95,7 +118,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                                 snackbarMessage.buttonTitle?.let {
                                     Action(
                                             textRes = snackbarMessage.buttonTitle,
-                                            clickListener = { snackbarMessage.buttonAction() }
+                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
                                     )
                                 },
                                 dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
@@ -140,11 +163,12 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     companion object {
-        fun newInstance(): UnifiedCommentListFragment {
-            val args = Bundle()
-            val fragment = UnifiedCommentListFragment()
-            fragment.arguments = args
-            return fragment
+        private const val KEY_COMMENT_LIST_FILTER = "KEY_COMMENT_LIST_FILTER"
+
+        fun newInstance(filter: CommentFilter) = UnifiedCommentListFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(KEY_COMMENT_LIST_FILTER, filter)
+            }
         }
     }
 }
