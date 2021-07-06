@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
 
@@ -32,15 +33,17 @@ sealed class UnifiedCommentListItem(val type: CommentListItemType) {
 
     data class ToggleAction(
         val remoteCommentId: Long,
-        private val toggleSelected: (remoteCommentId: Long) -> Unit
+        val commentStatus: CommentStatus,
+        private val toggleSelected: (remoteCommentId: Long, commentStatus: CommentStatus) -> Unit
     ) {
-        fun onToggle() = toggleSelected(remoteCommentId)
+        fun onToggle() = toggleSelected(remoteCommentId, commentStatus)
     }
 
     data class ClickAction(
         val remoteCommentId: Long,
-        private val clickItem: (remoteCommentId: Long) -> Unit
+        val commentStatus: CommentStatus,
+        private val clickItem: (remoteCommentId: Long, commentStatus: CommentStatus) -> Unit
     ) {
-        fun onClick() = clickItem(remoteCommentId)
+        fun onClick() = clickItem(remoteCommentId, commentStatus)
     }
 }

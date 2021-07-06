@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.databinding.CommentListItemBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
+import org.wordpress.android.ui.utils.AnimationUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -19,7 +20,8 @@ class UnifiedCommentViewHolder(
     private val uiHelpers: UiHelpers,
     private val commentListUiUtils: CommentListUiUtils,
     private val resourceProvider: ResourceProvider,
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper
+    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val animationUtilsWrapper: AnimationUtilsWrapper
 ) : UnifiedCommentListViewHolder<CommentListItemBinding>(parent.viewBinding(CommentListItemBinding::inflate)) {
     fun bind(item: Comment) = with(binding) {
         title.text = commentListUiUtils.formatCommentTitle(item.authorName, item.postTitle, title.context)
@@ -49,7 +51,16 @@ class UnifiedCommentViewHolder(
         }
     }
 
-    fun getGravatarUrl(comment: Comment): String {
+    fun toggleSelected(isSelected: Boolean) = with(binding) {
+        animationUtilsWrapper.startAnimation(
+                imageCheckmark,
+                if (isSelected) R.anim.comment_multiselect_checkbox_in else R.anim.comment_multiselect_checkbox_out
+        )
+        uiHelpers.updateVisibility(imageCheckmark, isSelected)
+        commentListUiUtils.toggleSelectedStateOfCommentListItem(layoutContainer, isSelected)
+    }
+
+    private fun getGravatarUrl(comment: Comment): String {
         return if (!TextUtils.isEmpty(comment.authorAvatarUrl)) {
             gravatarUtilsWrapper.fixGravatarUrl(
                     comment.authorAvatarUrl,

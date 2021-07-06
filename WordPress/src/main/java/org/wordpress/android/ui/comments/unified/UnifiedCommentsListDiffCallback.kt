@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
+import org.wordpress.android.ui.activitylog.list.ActivityLogDiffCallback
+import org.wordpress.android.ui.activitylog.list.ActivityLogDiffCallback.Companion
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 
@@ -22,8 +26,16 @@ class UnifiedCommentsListDiffCallback : DiffUtil.ItemCallback<UnifiedCommentList
      * to avoid view blinking in RecyclerView.
      */
     override fun getChangePayload(oldItem: UnifiedCommentListItem, newItem: UnifiedCommentListItem): Any {
-        return Payload
+        val bundle = Bundle()
+        if (oldItem is Comment && newItem is Comment &&
+                oldItem.isSelected != newItem.isSelected) {
+            bundle.putBoolean(COMMENT_SELECTION_TOGGLED, newItem.isSelected)
+        }
+
+        return bundle
     }
 
-    object Payload
+    companion object {
+        const val COMMENT_SELECTION_TOGGLED = "COMMENT_SELECTION_TOGGLED"
+    }
 }

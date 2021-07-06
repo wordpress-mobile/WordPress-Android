@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments.unified
 
 import android.content.Context
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import org.wordpress.android.WordPress
@@ -8,6 +9,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
+import org.wordpress.android.ui.utils.AnimationUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
@@ -23,6 +25,7 @@ class UnifiedCommentListAdapter(context: Context) :
     @Inject lateinit var commentListUiUtils: CommentListUiUtils
     @Inject lateinit var resourceProvider: ResourceProvider
     @Inject lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    @Inject lateinit var animationUtilsWrapper: AnimationUtilsWrapper
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -37,9 +40,20 @@ class UnifiedCommentListAdapter(context: Context) :
                     uiHelpers,
                     commentListUiUtils,
                     resourceProvider,
-                    gravatarUtilsWrapper
+                    gravatarUtilsWrapper,
+                    animationUtilsWrapper
             )
             else -> throw IllegalArgumentException("Unexpected view holder in UnifiedCommentListAdapter")
+        }
+    }
+
+    override fun onBindViewHolder(holder: UnifiedCommentListViewHolder<*>, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty() && (payloads.first() as? Bundle)?.size() ?: 0 > 0) {
+            val bundle = payloads.first() as Bundle
+            val isSelected = bundle.getBoolean(UnifiedCommentsListDiffCallback.COMMENT_SELECTION_TOGGLED)
+            (holder as UnifiedCommentViewHolder).toggleSelected(isSelected)
+        } else {
+            onBindViewHolder(holder, position)
         }
     }
 
