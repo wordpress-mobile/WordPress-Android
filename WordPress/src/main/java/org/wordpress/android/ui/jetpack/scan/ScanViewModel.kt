@@ -255,7 +255,7 @@ class ScanViewModel @Inject constructor(
                     buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
             )
 
-            messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
+            if (isInvokedByUser) messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
 
         return someOrAllThreatFixed
