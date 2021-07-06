@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
+import org.wordpress.android.fluxc.store.UnifiedCommentStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Loading
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Refreshing
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Hidden
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Visible
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -57,18 +59,25 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
+    private val commentStore: UnifiedCommentStore,
+    private val selectedSiteRepository: SelectedSiteRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
 
+    var pagingSource: CommentPagingSource? = null
+
     // TODO we would like to explore moving PagingSource into the repository
     val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) {
-        CommentPagingSource(
+        pagingSource = CommentPagingSource(
                 commentFilter,
-                networkUtilsWrapper
+                networkUtilsWrapper,
+                commentStore,
+                selectedSiteRepository.getSelectedSite()
         )
+        pagingSource!!
     }
 
     private val _commentListLoadingState: MutableStateFlow<PagedListLoadingState> = MutableStateFlow(Loading)
@@ -164,6 +173,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private fun clickItem(remoteCommentId: Long, commentStatus: CommentStatus) {
         if (_selectedComments.value.isNotEmpty()) {
             toggleItem(remoteCommentId, commentStatus)
+        } else {
+            launch(bgDispatcher) {
+                commentStore.moderateComment(selectedSiteRepository.getSelectedSite()!!, remoteCommentId, UNAPPROVED)
+                pagingSource?.invalidate()
+                commentStore.pushComment(selectedSiteRepository.getSelectedSite()!!, remoteCommentId)
+                pagingSource?.invalidate()
+            }
         }
     }
 

@@ -2,9 +2,13 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import kotlinx.coroutines.delay
+import com.yarolegovich.wellsql.SelectQuery
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.persistence.CommentSqlUtils
+import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload
+import org.wordpress.android.fluxc.store.UnifiedCommentStore
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
@@ -12,19 +16,39 @@ import javax.inject.Inject
 
 // TODO for testing purposes only. Remove after attaching real data source.
 @Suppress("MagicNumber")
-class CommentPagingSource @Inject constructor(private val commentFilter: CommentFilter,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+class CommentPagingSource @Inject constructor(
+    private val commentFilter: CommentFilter,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val commentStore: UnifiedCommentStore,
+    private val site: SiteModel?
 ) : PagingSource<Int, CommentModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CommentModel> {
-        val nextPageNumber = params.key ?: 0
-        delay(1500) // synthetic delay
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return LoadResult.Error(Error("Network Unavailable"))
         }
+        if (site == null) {
+            return LoadResult.Error(Error("No Site Selected"))
+        }
+        val nextPageNumber = params.key ?: 0
+        val startIndex = params.loadSize * nextPageNumber
+
+        val payload = FetchCommentsPayload(site, commentFilter.toCommentStatus(), params.loadSize, startIndex)
+        val response = commentStore.fetchComments(payload)
+        if (response.isError) {
+            return LoadResult.Error(Error(response.error.message))
+        }
+
+        val allComments = CommentSqlUtils.getCommentsForSite(
+                site,
+                SelectQuery.ORDER_DESCENDING,
+                startIndex + params.loadSize, commentFilter.toCommentStatus()
+        )
+
+        val commentsToDeliver = allComments.takeLast(params.loadSize)
         return LoadResult.Page(
-                data = generateComments(params.loadSize, nextPageNumber),
+                data = commentsToDeliver,
                 prevKey = null, // Only paging forward
-                nextKey = if (nextPageNumber == 4) null else nextPageNumber + 1 // limit to 5 pages for now
+                nextKey = if (allComments.size < startIndex + params.loadSize) null else nextPageNumber + 1 // limit to 5 pages for now
         )
     }
 
