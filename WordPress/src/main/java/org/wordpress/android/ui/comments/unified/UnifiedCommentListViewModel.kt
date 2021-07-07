@@ -19,29 +19,29 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
-import org.wordpress.android.fluxc.store.UnifiedCommentStore
+import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
+import org.wordpress.android.fluxc.store.comments.CommentsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
 import org.wordpress.android.ui.comments.unified.CommentFilter.SPAM
 import org.wordpress.android.ui.comments.unified.CommentFilter.TRASHED
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ClickAction
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ToggleAction
-import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Empty
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.EmptyError
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Error
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Idle
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Loading
 import org.wordpress.android.ui.comments.unified.PagedListLoadingState.Refreshing
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ClickAction
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.ToggleAction
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Hidden
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel.Visible
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
@@ -59,23 +59,26 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val commentStore: UnifiedCommentStore,
+    private val commentsStore: CommentsStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
+    private lateinit var cacheStatuses: List<CommentStatus>
+
 
     var pagingSource: CommentPagingSource? = null
 
     // TODO we would like to explore moving PagingSource into the repository
     val commentListItemPager = Pager(PagingConfig(pageSize = 30, initialLoadSize = 30)) {
         pagingSource = CommentPagingSource(
-                commentFilter,
-                networkUtilsWrapper,
-                commentStore,
-                selectedSiteRepository.getSelectedSite()
+                commentFilter = commentFilter,
+                cacheStatuses = cacheStatuses,
+                networkUtilsWrapper = networkUtilsWrapper,
+                commentsStore = commentsStore,
+                site = selectedSiteRepository.getSelectedSite()
         )
         pagingSource!!
     }
@@ -83,7 +86,7 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val _commentListLoadingState: MutableStateFlow<PagedListLoadingState> = MutableStateFlow(Loading)
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
-    private val _rawComments: Flow<PagingData<CommentModel>> = commentListItemPager.flow.cachedIn(viewModelScope)
+    private val _rawComments: Flow<PagingData<CommentEntity>> = commentListItemPager.flow.cachedIn(viewModelScope)
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
 
@@ -150,11 +153,12 @@ class UnifiedCommentListViewModel @Inject constructor(
             initialValue = CommentsUiModel.buildInitialState()
     )
 
-    fun setup(commentListFilter: CommentFilter) {
+    fun setup(commentListFilter: CommentFilter, cacheStatusList: List<CommentStatus>) {
         if (isStarted) return
         isStarted = true
 
         commentFilter = commentListFilter
+        cacheStatuses = cacheStatusList
     }
 
     private fun toggleItem(remoteCommentId: Long, commentStatus: CommentStatus) {
@@ -175,9 +179,9 @@ class UnifiedCommentListViewModel @Inject constructor(
             toggleItem(remoteCommentId, commentStatus)
         } else {
             launch(bgDispatcher) {
-                commentStore.moderateComment(selectedSiteRepository.getSelectedSite()!!, remoteCommentId, UNAPPROVED)
-                pagingSource?.invalidate()
-                commentStore.pushComment(selectedSiteRepository.getSelectedSite()!!, remoteCommentId)
+                commentsStore.moderateCommentLocally(selectedSiteRepository.getSelectedSite()!!, remoteCommentId, UNAPPROVED)
+                //pagingSource?.invalidate() // TODO: do we need this?
+                commentsStore.pushComment(selectedSiteRepository.getSelectedSite()!!, remoteCommentId)
                 pagingSource?.invalidate()
             }
         }
