@@ -18,7 +18,7 @@ class PrologueBuilderTest {
     private lateinit var prologueBuilder: PrologueBuilder
     private var confirmed = false
 
-    private val onConfirm: () -> Unit = {
+    private val onConfirm: (Boolean) -> Unit = {
         confirmed = true
     }
 
@@ -37,20 +37,21 @@ class PrologueBuilderTest {
 
     @Test
     fun `builds primary button`() {
-        val primaryButton = prologueBuilder.buildPrimaryButton(onConfirm)
+        val isFirstTimeFlow = true
+        val primaryButton = prologueBuilder.buildPrimaryButton(isFirstTimeFlow, onConfirm)
 
         assertThat(primaryButton).isEqualTo(
                 PrimaryButton(
-                        UiStringRes(R.string.set_your_blogging_goals_button),
+                        UiStringRes(R.string.set_your_blogging_reminders_button),
                         true,
-                        Companion.create(onConfirm)
+                        Companion.create(isFirstTimeFlow, onConfirm)
                 )
         )
     }
 
     @Test
-    fun `click on primary button confims selection`() {
-        val primaryButton = prologueBuilder.buildPrimaryButton(onConfirm)
+    fun `click on primary button confirms selection`() {
+        val primaryButton = prologueBuilder.buildPrimaryButton(true, onConfirm)
 
         primaryButton.onClick.click()
 
@@ -61,7 +62,11 @@ class PrologueBuilderTest {
         uiModel: List<BloggingRemindersItem>
     ) {
         assertThat(uiModel[0]).isEqualTo(Illustration(R.drawable.img_illustration_celebration_150dp))
-        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_goals_title)))
-        assertThat(uiModel[2]).isEqualTo(HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message)))
+        assertThat(uiModel[1]).isEqualTo(Title(UiStringRes(R.string.set_your_blogging_reminders_title)))
+        assertThat(uiModel[2]).isEqualTo(
+                HighEmphasisText(
+                        UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message)
+                )
+        )
     }
 }

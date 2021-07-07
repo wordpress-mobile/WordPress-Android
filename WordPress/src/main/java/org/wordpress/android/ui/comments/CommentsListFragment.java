@@ -77,23 +77,30 @@ public class CommentsListFragment extends ViewPagerFragment {
     }
 
     public enum CommentStatusCriteria implements FilterCriteria {
-        ALL(R.string.comment_status_all),
-        PENDING(R.string.comment_status_unapproved),
-        APPROVED(R.string.comment_status_approved),
-        UNREPLIED(R.string.comment_status_unreplied),
-        TRASHED(R.string.comment_status_trash),
-        SPAM(R.string.comment_status_spam),
-        DELETE(R.string.comment_status_trash);
+        ALL(R.string.comment_status_all, R.string.comment_tracker_label_all),
+        UNAPPROVED(R.string.comment_status_unapproved, R.string.comment_tracker_label_pending),
+        APPROVED(R.string.comment_status_approved, R.string.comment_tracker_label_approved),
+        UNREPLIED(R.string.comment_status_unreplied, R.string.comment_tracker_label_unreplied),
+        TRASH(R.string.comment_status_trash, R.string.comment_tracker_label_trashed),
+        SPAM(R.string.comment_status_spam, R.string.comment_tracker_label_spam),
+        DELETE(R.string.comment_status_trash, R.string.comment_tracker_label_trashed);
 
         private final int mLabelResId;
+        private final int mTrackerLabelResId;
 
-        CommentStatusCriteria(@StringRes int labelResId) {
+        CommentStatusCriteria(@StringRes int labelResId, @StringRes int trackerLabelResId) {
             mLabelResId = labelResId;
+            mTrackerLabelResId = trackerLabelResId;
         }
 
         @StringRes
         public int getLabelResId() {
             return mLabelResId;
+        }
+
+        @StringRes
+        public int getTrackerLabelResId() {
+            return mTrackerLabelResId;
         }
 
         @Override
@@ -220,7 +227,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case APPROVED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_approved;
                     break;
-                case PENDING:
+                case UNAPPROVED:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_pending;
                     break;
                 case UNREPLIED:
@@ -229,7 +236,7 @@ public class CommentsListFragment extends ViewPagerFragment {
                 case SPAM:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_spam;
                     break;
-                case TRASHED:
+                case TRASH:
                     emptyViewMessageStringId = R.string.comments_empty_list_filtered_trashed;
                     break;
                 case DELETE:
@@ -410,7 +417,7 @@ public class CommentsListFragment extends ViewPagerFragment {
     }
 
     private void confirmDeleteComments() {
-        if (mCommentStatusFilter == CommentStatusCriteria.TRASHED) {
+        if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
             AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
             int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments
@@ -606,7 +613,7 @@ public class CommentsListFragment extends ViewPagerFragment {
             setItemEnabled(menu, R.id.menu_trash, hasSelection, true);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASHED) {
+            if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASH) {
                 trashItem.setTitle(R.string.mnu_comment_delete_permanently);
             }
             return true;

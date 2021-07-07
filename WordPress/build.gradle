@@ -82,13 +82,6 @@ android {
         applicationId "org.wordpress.android"
         archivesBaseName = "$applicationId"
 
-        // Allow versionName to be overridden with property. e.g. -PversionName=1234
-        if (project.hasProperty("versionName")) {
-            versionName project.property("versionName")
-        } else {
-            versionName "alpha-300"
-        }
-        versionCode 1064
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -113,6 +106,7 @@ android {
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
+        buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -120,6 +114,8 @@ android {
     // Gutenberg's dependency - react-native-video is using
     // Java API 1.8
     compileOptions {
+        // Enables Java 8+ API desugaring support
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -130,6 +126,7 @@ android {
         wordpress {
             isDefault true
             dimension "app"
+
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "false"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
@@ -140,6 +137,7 @@ android {
 
         jetpack {
             dimension "app"
+
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
@@ -150,16 +148,11 @@ android {
 
         vanilla { // used for release and beta
             dimension "buildType"
-            // Only set the release version if one isn't provided
-            if (!project.hasProperty("versionName")) {
-                versionName "17.6-rc-3"
-            }
-            versionCode 1063
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
             buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
-            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "false"
+            buildConfigField "boolean", "LAYOUT_GRID_BLOCK_AVAILABLE", "true"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -233,6 +226,39 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    applicationVariants.all { variant ->
+        def app = variant.productFlavors[0].name
+        def buildType = variant.productFlavors[1].name
+        def version = versionForVariant(app, buildType)
+        variant.outputs.each { output ->
+            output.versionNameOverride = version['versionName']
+            output.versionCodeOverride = version['versionCode']?.toInteger()
+        }
+    }
+}
+
+// Search for a variant-specific variation of the versionName and versionCode in `version.properties` file, based on the
+// variant's app and buildType flavors.
+//
+// This will search the `version.properties` file for "$app.$buildType.versionName" first, and fallback to "$app.versionName" then just "versionName" (and same for versionCode)
+// Note: If the property is overridden at project level (e.g. '-PversionName'), it will take priority over any value in `version.properties`.
+//
+// Returns a Hash with keys 'versionName' and 'versionCode', with the found values for the app and buildType provided.
+def versionForVariant(app, buildType) {
+    def versionProperties = new Properties()
+    file("../version.properties").withInputStream { versionProperties.load(it) }
+
+    def propertyForVariant = { property ->
+        return project.findProperty(property)
+                ?: versionProperties.getProperty("${app}.${buildType}.${property}")
+                ?: versionProperties.getProperty("${app}.${property}")
+                ?: versionProperties.getProperty(property)
+    }
+
+    def versionName = propertyForVariant('versionName')
+    def versionCode = propertyForVariant('versionCode')
+    return [versionName: versionName, versionCode: versionCode]
 }
 
 dependencies {
@@ -277,8 +303,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     // ProcessLifecycleOwner
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
-    // Paging Library
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -425,10 +449,18 @@ dependencies {
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
 
+    // Necessary because of the failing android tests
+    androidTestImplementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-ktx:$roomVersion"
+
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+
+    // Enables Java 8+ API desugaring support
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 }
 
 configurations.all {
@@ -495,9 +527,29 @@ tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.
     ]
 }
 
+tasks.register("updateVersionProperties") {
+    doLast {
+        ant.propertyfile(
+                file: "../version.properties") {
+            entry( key: "$key", value: "$value")
+        }
+    }
+}
+
 tasks.register("printVersionName") {
     doLast {
-        println android.productFlavors.vanilla.versionName
+        def app = project.findProperty('productKey') ?: 'wordpress'
+        def buildType = project.findProperty('buildType') ?: ''
+        println versionForVariant(app, buildType)['versionName']
+    }
+}
+
+tasks.register("printAllVersions") {
+    doLast {
+        android.applicationVariants.all { variant ->
+            def apkData = variant.outputs*.apkData
+            println "${variant.name}: ${apkData*.versionName} (${apkData*.versionCode})"
+        }
     }
 }
 

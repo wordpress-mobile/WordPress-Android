@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -164,11 +165,13 @@ class PostsListActivity : LocaleAwareActivity(),
                 LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
             }
 
+            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
+
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel()
+            initCreateMenuViewModel(actionsShownByDefault)
             loadIntentData(intent)
         }
     }
@@ -219,7 +222,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel() {
+    private fun PostListActivityBinding.initCreateMenuViewModel(actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
@@ -261,7 +264,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start(site)
+        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
@@ -450,28 +453,44 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK) {
-            if (data != null && EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(
-                        data, this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        when {
+            requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
+                if (data != null && EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(
+                            data, this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                    )
+
+                    // a restart will happen so, no need to continue here
+                    return
+                }
+
+                viewModel.handleEditPostResult(data)
+                bloggingRemindersViewModel.onPostCreated(
+                        site.id,
+                        data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
                 )
-
-                // a restart will happen so, no need to continue here
-                return
             }
-
-            viewModel.handleEditPostResult(data)
-            bloggingRemindersViewModel.onPostCreated(
-                    site.id,
-                    data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
-            )
-        } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
-            viewModel.handleRemotePreviewClosing()
-        } else if (requestCode == RequestCodes.PHOTO_PICKER &&
-                resultCode == Activity.RESULT_OK &&
-                data != null) {
-            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site, STORY_FROM_POSTS_LIST)
+            requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
+                viewModel.handleRemotePreviewClosing()
+            }
+            requestCode == RequestCodes.PHOTO_PICKER &&
+                    resultCode == Activity.RESULT_OK &&
+                    data != null -> {
+                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                        data,
+                        this,
+                        site,
+                        STORY_FROM_POSTS_LIST
+                )
+            }
+            requestCode == RequestCodes.CREATE_STORY -> {
+                val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
+                bloggingRemindersViewModel.onPostCreated(
+                        site.id,
+                        isNewStory
+                )
+            }
         }
     }
 
@@ -630,11 +649,20 @@ class PostsListActivity : LocaleAwareActivity(),
 
     companion object {
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
+        private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
+            return buildIntent(context, site, false)
+        }
+
+        @JvmStatic
+        fun buildIntent(context: Context, site: SiteModel, actionsShownByDefault: Boolean): Intent {
+            val intent = Intent(context, PostsListActivity::class.java)
+            intent.putExtra(WordPress.SITE, site)
+            intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
             return intent
         }
     }

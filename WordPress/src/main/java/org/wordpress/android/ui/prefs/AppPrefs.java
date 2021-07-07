@@ -254,6 +254,10 @@ public class AppPrefs {
 
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
     }
 
     private static SharedPreferences prefs() {
@@ -1207,6 +1211,16 @@ public class AppPrefs {
 
     public static boolean shouldShowStorageWarning() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
+    }
+
+    public static void setBookmarkPostsPseudoIdsUpdated() {
+        setBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, false);
+    }
+
+    public static boolean shouldUpdateBookmarkPostsPseudoIds(ReaderTag tag) {
+        return tag != null
+               && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
+               && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {

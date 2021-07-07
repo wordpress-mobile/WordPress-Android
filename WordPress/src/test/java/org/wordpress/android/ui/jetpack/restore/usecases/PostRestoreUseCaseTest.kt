@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.QUEUED
@@ -144,7 +145,7 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
 
     private fun buildStatusModel(status: Status) = RewindStatusModel(
             state = ACTIVE,
-            reason = null,
+            reason = Reason.NO_REASON,
             lastUpdated = Date(1609690147756),
             canAutoconfigure = null,
             credentials = null,

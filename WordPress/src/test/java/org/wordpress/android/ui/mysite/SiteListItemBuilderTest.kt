@@ -386,8 +386,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `share item built if is accessed through WPCom REST`() {
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
+    fun `share item built if site supports sharing`() {
+        whenever(siteModel.supportsSharing()).thenReturn(true)
 
         val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
@@ -395,8 +395,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `share item not built if is not accessed through WPCom REST`() {
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(false)
+    fun `share item not built if site does not supports sharing`() {
+        whenever(siteModel.supportsSharing()).thenReturn(false)
 
         val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
