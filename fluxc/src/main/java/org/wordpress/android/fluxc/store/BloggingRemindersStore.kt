@@ -18,10 +18,15 @@ class BloggingRemindersStore
     private val coroutineEngine: CoroutineEngine
 ) {
     fun bloggingRemindersModel(siteId: Int): Flow<BloggingRemindersModel> {
-        return bloggingRemindersDao.getBySiteId(siteId).map {
+        return bloggingRemindersDao.liveGetBySiteId(siteId).map {
             it?.let { dbModel -> mapper.toDomainModel(dbModel) } ?: BloggingRemindersModel(siteId)
         }
     }
+
+    suspend fun hasModifiedBloggingReminders(siteId: Int) =
+            coroutineEngine.withDefaultContext(T.SETTINGS, this, "Has blogging reminders") {
+                bloggingRemindersDao.getBySiteId(siteId).isNotEmpty()
+            }
 
     suspend fun updateBloggingReminders(model: BloggingRemindersModel) =
             coroutineEngine.withDefaultContext(T.SETTINGS, this, "Updating blogging reminders") {
