@@ -3438,6 +3438,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
+    @Override public void showPreview() {
+        PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
+                this,
+                mSite,
+                Objects.requireNonNull(mEditPostRepository.getPost()),
+                getEditPostActivityStrategyFunctions());
+        if (opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
+            || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
+            || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+        ) {
+            return;
+        } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
+        }
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
