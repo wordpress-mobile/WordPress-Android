@@ -47,6 +47,7 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOver
 import static org.wordpress.android.fluxc.site.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedSiteFutureJetpack;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateSiteWithZendeskMetaData;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateTestSite;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
@@ -892,5 +893,15 @@ public class SiteStoreUnitTest {
 
         SiteModel siteFromDb = mSiteSqlUtils.getSites().get(0);
         assertTrue(siteFromDb.isPublicizePermanentlyDisabled());
+    }
+
+    @Test
+    public void testZendeskPlanAndAddonsInsertionAndRetrieval() {
+        SiteModel siteModel = generateSiteWithZendeskMetaData();
+        WellSql.insert(siteModel).execute();
+
+        SiteModel siteFromDb = mSiteStore.getSites().get(0);
+        assertEquals(siteModel.getZendeskPlan(), siteFromDb.getZendeskPlan());
+        assertEquals(siteModel.getZendeskAddOns(), siteFromDb.getZendeskAddOns());
     }
 }
