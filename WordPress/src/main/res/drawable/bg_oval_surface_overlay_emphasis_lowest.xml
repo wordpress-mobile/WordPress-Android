@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="oval">
-    <solid android:color="@color/on_surface_emphasis_lowest_green_20_selector"/>
-
-    <size
-        android:width="55dp"
-        android:height="55dp"/>
-</shape>

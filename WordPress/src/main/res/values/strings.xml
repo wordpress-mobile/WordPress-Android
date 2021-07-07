@@ -430,6 +430,12 @@
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
+    <string name="comment_tracker_label_all" translatable="false">All</string>
+    <string name="comment_tracker_label_pending" translatable="false">Pending</string>
+    <string name="comment_tracker_label_unreplied" translatable="false">Unreplied</string>
+    <string name="comment_tracker_label_approved" translatable="false">Approved</string>
+    <string name="comment_tracker_label_spam" translatable="false">Spam</string>
+    <string name="comment_tracker_label_trashed" translatable="false">Trashed</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -600,7 +606,7 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
+    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -1061,6 +1067,8 @@
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
     <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
 
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
@@ -3253,6 +3261,7 @@
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <!-- translators: accessibility text. Empty Audio caption. -->
     <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Audio caption. Empty</string>
@@ -3346,6 +3355,8 @@
     <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3435,8 +3446,6 @@
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for Android</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>
     <!-- translators: %s: Block name e.g. "Image block" -->
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
@@ -3632,14 +3641,35 @@
     <string name="storage_utils_dialog_ok_button">View Storage</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 
-    <!-- Blogging reminders -->
-    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
-    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
-    <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="blogging_goals_n_times_a_week">%d times a week</string>
-    <string name="blogging_goals_not_set">None set</string>
+    <!-- Blogging Reminders -->
+    <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
+    <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
+    <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="blogging_reminders_n_a_week">%s a week</string>
+    <string-array name="blogging_reminders_count">
+        <item>Once</item>
+        <item>Twice</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
+    <string name="blogging_reminders_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
+    <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
+    <string name="blogging_reminders_epilogue_title">All set!</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
+    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
 </resources>
