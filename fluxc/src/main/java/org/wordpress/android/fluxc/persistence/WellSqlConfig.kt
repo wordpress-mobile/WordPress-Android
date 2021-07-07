@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 157
+        return 158
     }
 
     override fun getDbName(): String {
@@ -1797,6 +1797,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 156 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_MODULES TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_PUBLICIZE_PERMANENTLY_DISABLED BOOLEAN")
+                }
+                157 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD ZENDESK_PLAN TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD ZENDESK_ADD_ONS TEXT")
                 }
             }
         }
