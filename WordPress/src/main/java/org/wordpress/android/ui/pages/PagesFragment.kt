@@ -128,8 +128,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

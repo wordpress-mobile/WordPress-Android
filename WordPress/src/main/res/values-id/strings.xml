@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-10 20:34:06+0000
+Translation-Revision-Date: 2021-06-23 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="blogging_reminders_done">Selesai</string>
+    <string name="blogging_reminders_notify_me">Beri tahu saya</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
+    <string name="gutenberg_native_set_as_featured_image">Atur sebagai Gambar Andalan </string>
+    <string name="gutenberg_native_remove_as_featured_image">Hapus dari Gambar Andalan </string>
+    <string name="fab_add_category_desc">Buat Kategori</string>
+    <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
+    <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
+    <string name="site_settings_categories_empty_title">Anda tidak memiliki kategori</string>
+    <string name="site_settings_categories_empty_subtitle">Tambahkan kategori yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat mengategorikan pos</string>
+    <string name="site_settings_categories_empty_button">Buat kategori</string>
+    <string name="site_settings_categories_title">Kategori</string>
+    <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
     <string name="gutenberg_native_border_settings">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>
     <string name="storage_utils_dialog_ok_button">Lihat Penyimpanan</string>
@@ -16,32 +29,20 @@ Language: id
     <string name="gutenberg_native_type_a_url">Ketik URL</string>
     <string name="gutenberg_native_tap_to_add_content">Ketuk untuk menambahkan konten</string>
     <string name="gutenberg_native_slash_inserter_results">Hasil penyisip garis miring</string>
-    <string name="gutenberg_native_show_media_on_right">Tampilkan media di sisi kanan</string>
-    <string name="gutenberg_native_show_media_on_left">Tampilkan media di sisi kiri</string>
     <string name="gutenberg_native_s_has_url_set">URL %s telah ditetapkan</string>
     <string name="gutenberg_native_s_has_no_url_set">URL %s belum ditetapkan</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s diubah ke blok reguler</string>
     <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_overlay">Overlay</string>
-    <string name="gutenberg_native_optional_placeholder">Placeholder opsional…</string>
-    <string name="gutenberg_native_opacity">Keburaman</string>
     <string name="gutenberg_native_minimum_height">Tinggi minimum</string>
-    <string name="gutenberg_native_media_text_settings">Pengaturan Media &amp; Teks</string>
     <string name="gutenberg_native_media_options">Opsi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL tidak valid. File audio tidak ditemukan.</string>
     <string name="gutenberg_native_insert_crosspost">Sisipkan lintas pos</string>
-    <string name="gutenberg_native_fixed_background">Latar belakang tetap</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Seret untuk menyetel titik fokus</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Ketuk dua kali guna membuka Lembar Bawah untuk menambahkan gambar atau video</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Ketuk dua kali guna membuka Lembar Tindakan untuk menambahkan gambar atau video</string>
-    <string name="gutenberg_native_dimensions">Dimensi</string>
     <string name="gutenberg_native_current_unit_is_s">Unit saat ini adalah %s</string>
     <string name="gutenberg_native_crosspost">Lintas pos</string>
-    <string name="gutenberg_native_crop_image_to_fill_entire_column">Potong gambar untuk mengisi kolom secara penuh</string>
-    <string name="gutenberg_native_convert_to_regular_blocks">Ubah ke blok reguler</string>
     <string name="gutenberg_native_columns_settings">Pengaturan Kolom</string>
-    <string name="gutenberg_native_clear_media">Kosongkan Media</string>
-    <string name="gutenberg_native_button_width">Lebar tombol</string>
     <string name="gutenberg_native_add_link_to_s">Tambahkan tautan ke %s</string>
     <string name="gutenberg_native_add_link_text">Tambahkan teks tautan</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b">Tambahkan gambar atau video</string>
@@ -59,52 +60,22 @@ Language: id
     <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
     <string name="login_empty_view_avatar_content_description">Foto profil Anda</string>
     <string name="login_not_a_jetpack_site">Untuk menggunakan aplikasi ini untuk %1$s, Anda perlu memasang plugin Jeptpack dan menghubungkannya ke akun WordPress.com Anda.</string>
-    <string name="gutenberg_native_size">Ukuran</string>
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
     <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_width_settings">Pengaturan Lebar</string>
     <string name="gutenberg_native_image_settings">Pengaturan gambar</string>
-    <string name="gutenberg_native_column_settings">Pengaturan kolom</string>
-    <string name="gutenberg_native_audio_settings">Pengaturan audio</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
     <string name="likes_list_screen_title">Daftar Suka %s</string>
-    <string name="gutenberg_native_write_title">Tulis judul…</string>
-    <string name="gutenberg_native_write_code">Tulis kode…</string>
     <string name="gutenberg_native_sorting_and_filtering">Pengurutan dan penyaringan</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
-    <string name="gutenberg_native_show_download_button">Tampilkan tombol unduh</string>
-    <string name="gutenberg_native_shortcode">Shortcode</string>
     <string name="gutenberg_native_mention">Sebutan</string>
-    <string name="gutenberg_native_add_label">Tambahkan label…</string>
-    <string name="gutenberg_native_read_more">Selanjutnya</string>
-    <string name="gutenberg_native_preload">Pramuat</string>
     <string name="gutenberg_native_post_meta_settings">Pengaturan meta artikel</string>
     <string name="gutenberg_native_post_content_settings">Pengaturan konten artikel</string>
-    <string name="gutenberg_native_metadata">Metadata</string>
-    <string name="gutenberg_native_media_file">Berkas media</string>
-    <string name="gutenberg_native_media_area">Area Media</string>
-    <string name="gutenberg_native_loop">Pengulangan</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Tautan ke</string>
-    <string name="gutenberg_native_link_label">Label tautan</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">gambar %1$d dari %2$d di galeri</string>
-    <string name="gutenberg_native_heading_d">Tajuk %d</string>
     <string name="gutenberg_native_featured">Andalan</string>
-    <string name="gutenberg_native_edit_image">Sunting gambar</string>
     <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
-    <string name="gutenberg_native_code">Kode</string>
-    <string name="gutenberg_native_change_heading_level">Ubah level judul</string>
-    <string name="gutenberg_native_browser_default">Peramban standar</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
-    <string name="gutenberg_native_cover">Sampul</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blok telah dihapus atau tidak tersedia.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Blok tidak dapat dirender di dalam dirinya sendiri.</string>
-    <string name="gutenberg_native_autoplay">Putar otomatis</string>
-    <string name="gutenberg_native_auto">Otomatis</string>
-    <string name="gutenberg_native_attachment_page">Laman lampiran</string>
-    <string name="gutenberg_native_add_text">Tambahkan teks…</string>
-    <string name="gutenberg_native_add_caption">Tambahkan keterangan</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
     <string name="gutenberg_native_what_is_alt_text">Apa itu teks alt?</string>
     <string name="gutenberg_native_transform_s_to">Ubah %s menjadi</string>
@@ -213,8 +184,6 @@ Language: id
     <string name="backup_item_roots">Root WordPress</string>
     <string name="backup_download_details_choose_items_header">Item yang disertakan di unduhan ini</string>
     <string name="gutenberg_native_uploading">Mengunggah…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blok pakai ulang tidak dapat disunting di WordPress untuk iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blok pakai ulang tidak dapat disunting di WordPress untuk Android</string>
     <string name="gutenberg_native_replace_file">Ganti file</string>
     <string name="gutenberg_native_replace_audio">Ganti audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Terjadi masalah saat membuka audio</string>
@@ -243,7 +212,7 @@ Language: id
     <string name="scan_provisioning_description">Selamat datang di Jetpack Scan! Kami mengamati situs Anda untuk mempersiapkan pemindaian menyeluruh. Kami akan memberi tahu Anda jika kami menemukan kendala yang mungkin memengaruhi proses pemindaian, kemudian pemindaian menyeluruh yang pertama akan dimulai.</string>
     <string name="scan_scanning_is_initial_description">Selamat datang di Jetpack Scan, kami sedang melakukan pemeriksaan perdana untuk situs Anda dan hasilnya akan segera ditampilkan.</string>
     <string name="scan_fixing_threats_description_singular">Kami berupaya keras di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
-    <string name="scan_scanning_description">Kami akan mengirimkan pemberitahuan setelah pemindaian selesai dilakukan. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
+    <string name="scan_scanning_description">Kami akan mengirimkan pemberitahuan jika menemukan ancaman. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_fixing_threats_title_plural">Memperbaiki Ancaman</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan tidak dapat menyelesaikan pemindaian situs Anda. Harap periksa apakah situs Anda tidak aktif – jika tidak, coba lagi. Jika tidak aktif, atau jika Jetpack Scan masih mengalami masalah, hubungi tim dukungan kami.</string>
     <string name="scan_request_failed_title">Terjadi kesalahan</string>
@@ -549,7 +518,6 @@ Language: id
     <string name="media_uploading_stock_library_photo">Mengunggah media stok</string>
     <string name="media_uploading_default">Mengunggah media</string>
     <string name="gutenberg_native_search_or_type_url">Cari atau ketik URL</string>
-    <string name="gutenberg_native_page_break">Pemisah laman</string>
     <string name="gutenberg_native_add_this_telephone_link">Tambahkan link telepon ini</string>
     <string name="gutenberg_native_add_this_link">Tambahkan link ini</string>
     <string name="gutenberg_native_add_this_email_link">Tambahkan link email ini</string>
@@ -739,7 +707,6 @@ Language: id
     <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
-    <string name="gutenberg_native_remove">Buang</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
     <string name="gutenberg_native_move_to_top">Pindah ke atas</string>
     <string name="gutenberg_native_insert_mention">Sertakan penyebutan</string>
@@ -865,7 +832,6 @@ Language: id
     <string name="gutenberg_native_edit_cover_media">Edit media sampul</string>
     <string name="gutenberg_native_customize">SESUAIKAN</string>
     <string name="gutenberg_native_button_link_url">URL Tautan Tombol</string>
-    <string name="gutenberg_native_video_settings">Pengaturan video</string>
     <string name="gutenberg_native_border_radius">Radius Batas</string>
     <string name="gutenberg_native_add_paragraph_block">Tambahkan blok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Buat pos</string>
@@ -921,7 +887,6 @@ Language: id
     <string name="stats_box_type_low">rendah</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Ganti gambar</string>
     <string name="gutenberg_native_gallery_caption_s">Keterangan galeri. %s</string>
     <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
     <string name="content_description_person_building_website">Orang membangun situs web</string>

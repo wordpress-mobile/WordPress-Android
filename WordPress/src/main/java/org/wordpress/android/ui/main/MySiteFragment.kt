@@ -1004,7 +1004,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowThemes.visibility = themesVisibility
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
-        val sharingVisibility = if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
+        val sharingVisibility = if (site.supportsSharing()) View.VISIBLE else View.GONE
         rowSharing.visibility = sharingVisibility
 
         // show settings for all self-hosted to expose Delete Site
