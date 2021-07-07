@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.BlockEditorSettings
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_FOUND
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
@@ -22,7 +23,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-private const val GSS_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
+private const val GSS_REQUEST_PATH = "wp-block-editor/v1/settings?context=mobile"
+private const val GSS_EXPERIMENTAL_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
 private const val GSS_LIMIT_VERSION = "5.8"
 
 @Singleton
@@ -115,32 +117,61 @@ class EditorThemeStore
 
         when (response) {
             is Success -> {
-                val noGssError = OnEditorThemeChanged(EditorThemeError("Response does not contain GSS"), action)
-                if (response.result == null || !response.result.isJsonObject) {
-                    emitChange(noGssError)
-                    return
-                }
-
-                val responseTheme = response.result.asJsonObject
-                if (responseTheme == null) {
-                    emitChange(noGssError)
-                    return
-                }
-
-                val blockEditorSettings = Gson().fromJson(responseTheme, BlockEditorSettings::class.java)
-                val newTheme = EditorTheme(blockEditorSettings)
-                val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
-                if (newTheme != existingTheme) {
-                    editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
-                    val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
-                    emitChange(onChanged)
-                }
+                response.handleFetchEditorThemeResponse(site, action)
             }
             is Error -> {
-                val onChanged = OnEditorThemeChanged(EditorThemeError(response.error.message), action)
-                emitChange(onChanged)
+                if (response.error.type == NOT_FOUND) {
+                    // When the endpoint is not found we retry with the `__experimental` path
+                    handleFetchExperimentalEditorTheme(site, action)
+                } else {
+                    response.handleFetchEditorThemeResponse(action)
+                }
             }
         }
+    }
+
+    private suspend fun handleFetchExperimentalEditorTheme(site: SiteModel, action: EditorThemeAction) {
+        val response = reactNativeStore.executeRequest(site, GSS_EXPERIMENTAL_REQUEST_PATH, false)
+
+        when (response) {
+            is Success -> {
+                response.handleFetchEditorThemeResponse(site, action)
+            }
+            is Error -> {
+                response.handleFetchEditorThemeResponse(action)
+            }
+        }
+    }
+
+    private fun ReactNativeFetchResponse.Success.handleFetchEditorThemeResponse(
+        site: SiteModel,
+        action: EditorThemeAction
+    ) {
+        val noGssError = OnEditorThemeChanged(EditorThemeError("Response does not contain GSS"), action)
+        if (result == null || !result.isJsonObject) {
+            emitChange(noGssError)
+            return
+        }
+
+        val responseTheme = result.asJsonObject
+        if (responseTheme == null) {
+            emitChange(noGssError)
+            return
+        }
+
+        val blockEditorSettings = Gson().fromJson(responseTheme, BlockEditorSettings::class.java)
+        val newTheme = EditorTheme(blockEditorSettings)
+        val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
+        if (newTheme != existingTheme) {
+            editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
+            val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
+            emitChange(onChanged)
+        }
+    }
+
+    private fun ReactNativeFetchResponse.Error.handleFetchEditorThemeResponse(action: EditorThemeAction) {
+        val onChanged = OnEditorThemeChanged(EditorThemeError(error.message), action)
+        emitChange(onChanged)
     }
 
     private fun globalStyleSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
