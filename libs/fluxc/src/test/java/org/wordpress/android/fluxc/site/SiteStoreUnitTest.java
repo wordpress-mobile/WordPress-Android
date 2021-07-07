@@ -868,6 +868,34 @@ public class SiteStoreUnitTest {
     }
 
     @Test
+    public void testInsertAndRetrieveForActiveModules() throws DuplicateSiteException {
+        WellSqlTestUtils.setupWordPressComAccount();
+        SiteModel site = generateWPComSite();
+        String activeModules = SiteModel.ACTIVE_MODULES_KEY_PUBLICIZE
+                               + ","
+                               + SiteModel.ACTIVE_MODULES_KEY_SHARING_BUTTONS;
+        site.setActiveModules(activeModules);
+
+        mSiteSqlUtils.insertOrUpdateSite(site);
+
+        SiteModel siteFromDb = mSiteSqlUtils.getSites().get(0);
+        assertTrue(siteFromDb.isActiveModuleEnabled(SiteModel.ACTIVE_MODULES_KEY_PUBLICIZE));
+        assertTrue(siteFromDb.isActiveModuleEnabled(SiteModel.ACTIVE_MODULES_KEY_SHARING_BUTTONS));
+    }
+
+    @Test
+    public void testInsertAndRetrieveForPublicizePermanentlyDisabled() throws DuplicateSiteException {
+        WellSqlTestUtils.setupWordPressComAccount();
+        SiteModel site = generateWPComSite();
+        site.setIsPublicizePermanentlyDisabled(true);
+
+        mSiteSqlUtils.insertOrUpdateSite(site);
+
+        SiteModel siteFromDb = mSiteSqlUtils.getSites().get(0);
+        assertTrue(siteFromDb.isPublicizePermanentlyDisabled());
+    }
+
+    @Test
     public void testZendeskPlanAndAddonsInsertionAndRetrieval() {
         SiteModel siteModel = generateSiteWithZendeskMetaData();
         WellSql.insert(siteModel).execute();

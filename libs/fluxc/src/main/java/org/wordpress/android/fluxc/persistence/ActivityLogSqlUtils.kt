@@ -207,7 +207,7 @@ class ActivityLogSqlUtils
                 remoteSiteId = site.siteId,
                 state = this.state.value,
                 lastUpdated = this.lastUpdated.time,
-                reason = this.reason,
+                reason = this.reason.value,
                 canAutoconfigure = this.canAutoconfigure,
                 rewindId = this.rewind?.rewindId,
                 restoreId = this.rewind?.restoreId,
@@ -338,11 +338,12 @@ class ActivityLogSqlUtils
             )
             return RewindStatusModel(
                     RewindStatusModel.State.fromValue(state) ?: RewindStatusModel.State.UNKNOWN,
-                    reason,
+                    RewindStatusModel.Reason.fromValue(reason),
                     Date(lastUpdated),
                     canAutoconfigure,
                     credentials,
-                    restoreStatus)
+                    restoreStatus
+            )
         }
     }
 
