@@ -130,6 +130,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mActiveModules;
     @Column private boolean mIsPublicizePermanentlyDisabled;
 
+    // Zendesk meta
+    @Column private String mZendeskPlan;
+    @Column private String mZendeskAddOns;
+
     @Override
     public int getId() {
         return mId;
@@ -773,5 +777,21 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         } else {
             return true;
         }
+    }
+
+    public String getZendeskPlan() {
+        return mZendeskPlan;
+    }
+
+    public void setZendeskPlan(String zendeskPlan) {
+        mZendeskPlan = zendeskPlan;
+    }
+
+    public String getZendeskAddOns() {
+        return mZendeskAddOns;
+    }
+
+    public void setZendeskAddOns(String zendeskAddOns) {
+        mZendeskAddOns = zendeskAddOns;
     }
 }
