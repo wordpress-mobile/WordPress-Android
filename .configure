@@ -35,7 +35,7 @@
     },
     {
       "file": "android/WPAndroid/google-upload-credentials.json",
-      "destination": "google-upload-credentials.json",
+      "destination": "~/.configure/wordpress-android/secrets/google-upload-credentials.json",
       "encrypt": true
     },
     {
