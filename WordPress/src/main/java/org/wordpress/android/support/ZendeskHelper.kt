@@ -461,6 +461,8 @@ private fun buildZendeskTags(
 
     selectedSite?.zendeskAddOns?.takeIf { it.isNotEmpty() }?.let { tags.addAll(it.split(",")) }
 
+    if (selectedSite?.isUsingWpComRestApi == false) { tags.add(ZendeskConstants.mobileSelfHostedTag) }
+
     return tags
 }
 
@@ -493,6 +495,7 @@ private val wpcomPushNotificationDeviceToken: String?
 private object ZendeskConstants {
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
+    const val mobileSelfHostedTag = "mobile_self_hosted"
     const val networkWifi = "WiFi"
     const val networkWWAN = "Mobile"
     const val networkTypeLabel = "Network Type:"
