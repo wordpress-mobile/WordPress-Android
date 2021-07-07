@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 155
+        return 158
     }
 
     override fun getDbName(): String {
@@ -1777,6 +1777,28 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCOrderModel ADD META_DATA TEXT")
                 }
                 154 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS EditorTheme")
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT," +
+                                    "RAW_STYLES TEXT," +
+                                    "RAW_FEATURES TEXT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
+                }
+                155 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffers")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersFeature")
+                    db.execSQL("DROP TABLE IF EXISTS PlanOffersId")
+                }
+                156 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD ACTIVE_MODULES TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_PUBLICIZE_PERMANENTLY_DISABLED BOOLEAN")
+                }
+                157 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD ZENDESK_PLAN TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD ZENDESK_ADD_ONS TEXT")
                 }

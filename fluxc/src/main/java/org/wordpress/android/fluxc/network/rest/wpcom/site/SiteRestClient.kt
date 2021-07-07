@@ -924,6 +924,10 @@ class SiteRestClient @Inject constructor(
             site.showOnFront = from.options.show_on_front
             site.pageOnFront = from.options.page_on_front
             site.pageForPosts = from.options.page_for_posts
+            site.setIsPublicizePermanentlyDisabled(from.options.publicize_permanently_disabled)
+            if (from.options.active_modules != null) {
+                site.activeModules = from.options.active_modules.joinToString(",")
+            }
             try {
                 site.maxUploadSize = java.lang.Long.valueOf(from.options.max_upload_size)
             } catch (e: NumberFormatException) {

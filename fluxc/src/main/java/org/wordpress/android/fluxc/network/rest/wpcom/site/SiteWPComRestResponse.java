@@ -30,6 +30,8 @@ public class SiteWPComRestResponse implements Response {
         public String show_on_front;
         public long page_on_front;
         public long page_for_posts;
+        public boolean publicize_permanently_disabled;
+        public List<String> active_modules;
     }
 
     public static class Plan {

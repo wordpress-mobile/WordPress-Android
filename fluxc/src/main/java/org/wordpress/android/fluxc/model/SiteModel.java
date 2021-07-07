@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -34,6 +35,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     public static final int ORIGIN_XMLRPC = 2;
 
     public static final long VIP_PLAN_ID = 31337;
+
+    public static final String ACTIVE_MODULES_KEY_PUBLICIZE = "publicize";
+    public static final String ACTIVE_MODULES_KEY_SHARING_BUTTONS = "sharedaddy";
 
     @PrimaryKey
     @Column private int mId;
@@ -122,6 +126,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mSpaceAllowed;
     @Column private long mSpaceUsed;
     @Column private double mSpacePercentUsed;
+
+    @Column private String mActiveModules;
+    @Column private boolean mIsPublicizePermanentlyDisabled;
 
     // Zendesk meta
     @Column private String mZendeskPlan;
@@ -709,6 +716,67 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setPageForPosts(long pageForPosts) {
         mPageForPosts = pageForPosts;
+    }
+
+    public boolean isPublicizePermanentlyDisabled() {
+        return mIsPublicizePermanentlyDisabled;
+    }
+
+    public void setIsPublicizePermanentlyDisabled(boolean publicizePermanentlyDisabled) {
+        mIsPublicizePermanentlyDisabled = publicizePermanentlyDisabled;
+    }
+
+    public String getActiveModules() {
+        return mActiveModules;
+    }
+
+    public void setActiveModules(String activeModules) {
+        mActiveModules = activeModules;
+    }
+
+    public boolean isActiveModuleEnabled(String moduleName) {
+        if (mActiveModules != null) {
+            String[] activeModules = mActiveModules.split(",");
+            return Arrays.asList(activeModules).contains(moduleName);
+        }
+        return false;
+    }
+
+    public boolean isAdmin() {
+        return mHasCapabilityManageOptions;
+    }
+
+    public boolean supportsSharing() {
+        return supportsPublicize() || supportsShareButtons();
+    }
+
+    public boolean supportsPublicize() {
+        // Publicize is only supported via REST
+        if (getOrigin() != ORIGIN_WPCOM_REST) return false;
+
+        if (!getHasCapabilityPublishPosts()) return false;
+
+        if (isJetpackConnected()) {
+            // For Jetpack, check if the module is enabled
+            return isActiveModuleEnabled(ACTIVE_MODULES_KEY_PUBLICIZE);
+        } else {
+            // For WordPress.com, check if it is not disabled
+            return !isPublicizePermanentlyDisabled();
+        }
+    }
+
+    public boolean supportsShareButtons() {
+        // Share Button settings are only supported via REST, and for admins
+        if (!isAdmin() || getOrigin() != ORIGIN_WPCOM_REST) {
+            return false;
+        }
+
+        if (isJetpackConnected()) {
+            // For Jetpack, check if the module is enabled
+            return isActiveModuleEnabled(ACTIVE_MODULES_KEY_SHARING_BUTTONS);
+        } else {
+            return true;
+        }
     }
 
     public String getZendeskPlan() {
