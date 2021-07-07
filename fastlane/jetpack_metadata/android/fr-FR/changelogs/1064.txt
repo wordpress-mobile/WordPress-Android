@@ -1,0 +1,6 @@
+17.6 :
+Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
+
+Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
+
+Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-04 11:03:59+0000
+Translation-Revision-Date: 2021-06-29 12:03:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="blogging_reminders_tip">Ndihmëz</string>
+    <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe.</string>
+    <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
+    <string name="blogging_reminders_epilogue_title">Gjithçka e rregulluar!</string>
+    <string name="blogging_reminders_update">Përditëso</string>
+    <string name="blogging_reminders_done">U bë</string>
+    <string name="fab_add_category_desc">Krijoni Kategori</string>
+    <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
+    <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
+    <string name="site_settings_categories_empty_title">S’keni ndonjë kategori</string>
+    <string name="site_settings_categories_empty_subtitle">Shtoni këtu kategoritë që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur caktoni kategori për postimet tuaja</string>
+    <string name="site_settings_categories_empty_button">Krijoni një kategori</string>
+    <string name="site_settings_categories_title">Kategori</string>
     <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
     <string name="storage_utils_dialog_dont_show_button">Mos e Shfaq Sërish</string>
     <string name="storage_utils_dialog_ok_button">Shihni Depozitim</string>
@@ -170,8 +183,6 @@ Language: sq_AL
     <string name="backup_item_roots">Rrënjë WordPress-i</string>
     <string name="backup_download_details_choose_items_header">Elementë të përfshirë në këtë shkarkim</string>
     <string name="gutenberg_native_uploading">Po ngarkohet…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për Android</string>
     <string name="gutenberg_native_replace_file">Zëvendësoni kartelë</string>
     <string name="gutenberg_native_replace_audio">Zëvendësoni audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem me hapjen e audios</string>
@@ -200,6 +211,7 @@ Language: sq_AL
     <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
     <string name="scan_fixing_threats_description_singular">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këtë kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
+    <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, nëse gjendet një kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>
     <string name="scan_fixing_threats_title_plural">Zgjidhje Kërcënimesh</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan s’plotësoi dot një kontroll të sajtit tuaj. Ju lutemi, kontrolloni se mos sajti juaj s’është në funksionim – nëse s’është, riprovoni. Nëse është jashtë funksionimi, ose në Jetpack Scan prapë ka probleme, lidhuni me ekipin tonë të asistencës.</string>
     <string name="scan_request_failed_title">Diçka shkoi ters</string>
@@ -2830,4 +2842,13 @@ Language: sq_AL
     <string name="add">Shtoni</string>
     <string name="save">Ruaje</string>
     <string name="cancel">Anuloje</string>
+    <string-array name="blogging_reminders_count">
+        <item>Një herë</item>
+        <item>Dy herë</item>
+        <item>Tre herë</item>
+        <item>Katër herë</item>
+        <item>Pesë herë</item>
+        <item>Gjashtë herë</item>
+        <item>Shtatë herë</item>
+    </string-array>
 </resources>

@@ -1,0 +1,6 @@
+17.6:
+El bloque de audio te permite añadir podcasts, música y archivos de sonido a tus entradas y páginas. ¡Ahora también está disponible para los usuarios del plan gratuito!
+
+Convierte cualquier imagen en una imagen *destacada* con el nuevo botón «Establecer como destacada» en el bloque de imagen.
+
+Por último, hemos aclarado que no puedes editar la página de archivo de entradas generada automáticamente.

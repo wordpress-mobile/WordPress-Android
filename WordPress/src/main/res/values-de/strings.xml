@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-11 14:23:20+0000
+Translation-Revision-Date: 2021-06-24 19:38:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="blogging_reminders_done">Fertig</string>
+    <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>
+    <string name="gutenberg_native_set_as_featured_image">Als Beitragsbild festlegen </string>
+    <string name="gutenberg_native_remove_as_featured_image">Als Beitragsbild entfernen </string>
+    <string name="fab_add_category_desc">Kategorie erstellen</string>
+    <string name="support_ticket_subject">WordPress für Android-Support</string>
+    <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
+    <string name="site_settings_categories_empty_title">Es sind keine Kategorien vorhanden</string>
+    <string name="site_settings_categories_empty_subtitle">Füge deine häufig verwendeten Kategorien hier hinzu, sodass du sie beim Kategorisieren deiner Beiträge schnell auswählen kannst</string>
+    <string name="site_settings_categories_empty_button">Eine Kategorie erstellen</string>
+    <string name="site_settings_categories_title">Kategorien</string>
+    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
@@ -103,6 +116,7 @@ Language: de
     <string name="get_likes_no_network_error">Kein Netzwerk verfügbar</string>
     <string name="comments_empty_list_filtered_unreplied">Keine unbeantworteten Kommentare</string>
     <string name="comment_status_unreplied">Unbeantwortet</string>
+    <string name="gutenberg_native_search_settings">Sucheinstellungen</string>
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
@@ -172,8 +186,6 @@ Language: de
     <string name="backup_item_roots">WordPress-Root</string>
     <string name="backup_download_details_choose_items_header">In diesem Download enthaltene Elemente</string>
     <string name="gutenberg_native_uploading">Wird hochgeladen …</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Wiederverwendbare Blöcke können auf WordPress für iOS nicht bearbeitet werden</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Wiederverwendbare Blöcke können auf WordPress für Android nicht bearbeitet werden</string>
     <string name="gutenberg_native_replace_file">Datei ersetzen</string>
     <string name="gutenberg_native_replace_audio">Audio ersetzen</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem beim Öffnen der Audiodatei</string>
@@ -185,6 +197,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Doppeltippen, um die Audiodatei anzuhören</string>
     <string name="gutenberg_native_choose_audio">Audio-Datei wählen</string>
     <string name="gutenberg_native_audio_player">Audio-Player</string>
+    <string name="gutenberg_native_audio_file">Audiodatei</string>
     <string name="gutenberg_native_audio_caption_s">Audiountertitel. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audiountertitel. Leer</string>
     <string name="gutenberg_native_add_audio">AUDIO HINZUFÜGEN</string>
@@ -201,6 +214,7 @@ Language: de
     <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
     <string name="scan_fixing_threats_description_singular">Wir arbeiten im Hintergrund daran, die Bedrohung zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
+    <string name="scan_scanning_description">Du erhältst eine Benachrichtigung, wenn eine Bedrohung gefunden wird. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_fixing_threats_title_plural">Bedrohungen werden behoben</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan konnte einen Scan deiner Website ausführen. Schau bitte nach, ob deine Website erreichbar ist. Wenn ja, versuche es erneut. Wenn sie nicht erreichbar ist oder wenn mit Jetpack Scan weiterhin Probleme auftreten, wende dich bitte an unser Support-Team.</string>
     <string name="scan_request_failed_title">Etwas ist schiefgelaufen</string>

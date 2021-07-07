@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-14 22:40:30+0000
+Translation-Revision-Date: 2021-06-29 05:00:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="set_your_blogging_reminders_button">设置提醒</string>
+    <string name="set_up_blogging_reminders_message">在您想发文的日期设置博客提醒。</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">您的文章正在发布……同时您可以在您想发表文章的日期设置博客提醒。</string>
+    <string name="set_your_blogging_reminders_title">设置您的博客提醒</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚未支持编辑可重用区块</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚未支持编辑可重用区块</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">另外，您也可以通过点击“转换为常规区块”将这些区块分离出来并单独编辑。</string>
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
-    <string name="blogging_goals_not_set">未设定</string>
-    <string name="blogging_goals_n_times_a_week">每周%d次</string>
-    <string name="set_your_blogging_goals_button">设定目标</string>
-    <string name="set_your_blogging_goals_message">您的文章正在发布……同时，设置您的博客目标以得到提醒并跟踪境况。</string>
-    <string name="set_your_blogging_goals_title">设定您的博客目标</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
     <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
     <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
@@ -23,7 +25,7 @@ Language: zh_CN
     <string name="site_settings_categories_empty_subtitle">在这里添加您经常使用的分类，以便在对您的文章进行分类时可以快速选择。</string>
     <string name="site_settings_categories_empty_button">创建分类</string>
     <string name="site_settings_categories_title">分类</string>
-    <string name="site_settings_blogging_reminders_title">博客目标</string>
+    <string name="site_settings_blogging_reminders_title">博客提醒</string>
     <string name="page_is_posts_page_warning">最新文章页面的内容是自动生成的，无法编辑。</string>
     <string name="gutenberg_native_border_settings">边框设置</string>
     <string name="storage_utils_dialog_dont_show_button">不再显示</string>
@@ -193,8 +195,6 @@ Language: zh_CN
     <string name="backup_item_roots">WordPress 根</string>
     <string name="backup_download_details_choose_items_header">此下载包含的项目</string>
     <string name="gutenberg_native_uploading">正在上传…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重用区块在 iOS 版 WordPress 上不可编辑</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">可重用区块在 Android 版 WordPress 上不可编辑</string>
     <string name="gutenberg_native_replace_file">替换文件</string>
     <string name="gutenberg_native_replace_audio">替换音频</string>
     <string name="gutenberg_native_problem_opening_the_audio">打开音频时出现问题</string>

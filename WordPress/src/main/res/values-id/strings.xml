@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-10 20:34:06+0000
+Translation-Revision-Date: 2021-06-23 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="blogging_reminders_done">Selesai</string>
+    <string name="blogging_reminders_notify_me">Beri tahu saya</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
+    <string name="gutenberg_native_set_as_featured_image">Atur sebagai Gambar Andalan </string>
+    <string name="gutenberg_native_remove_as_featured_image">Hapus dari Gambar Andalan </string>
+    <string name="fab_add_category_desc">Buat Kategori</string>
+    <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
+    <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
+    <string name="site_settings_categories_empty_title">Anda tidak memiliki kategori</string>
+    <string name="site_settings_categories_empty_subtitle">Tambahkan kategori yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat mengategorikan pos</string>
+    <string name="site_settings_categories_empty_button">Buat kategori</string>
+    <string name="site_settings_categories_title">Kategori</string>
+    <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
     <string name="gutenberg_native_border_settings">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>
     <string name="storage_utils_dialog_ok_button">Lihat Penyimpanan</string>
@@ -171,8 +184,6 @@ Language: id
     <string name="backup_item_roots">Root WordPress</string>
     <string name="backup_download_details_choose_items_header">Item yang disertakan di unduhan ini</string>
     <string name="gutenberg_native_uploading">Mengunggah…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blok pakai ulang tidak dapat disunting di WordPress untuk iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blok pakai ulang tidak dapat disunting di WordPress untuk Android</string>
     <string name="gutenberg_native_replace_file">Ganti file</string>
     <string name="gutenberg_native_replace_audio">Ganti audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Terjadi masalah saat membuka audio</string>
@@ -201,6 +212,7 @@ Language: id
     <string name="scan_provisioning_description">Selamat datang di Jetpack Scan! Kami mengamati situs Anda untuk mempersiapkan pemindaian menyeluruh. Kami akan memberi tahu Anda jika kami menemukan kendala yang mungkin memengaruhi proses pemindaian, kemudian pemindaian menyeluruh yang pertama akan dimulai.</string>
     <string name="scan_scanning_is_initial_description">Selamat datang di Jetpack Scan, kami sedang melakukan pemeriksaan perdana untuk situs Anda dan hasilnya akan segera ditampilkan.</string>
     <string name="scan_fixing_threats_description_singular">Kami berupaya keras di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
+    <string name="scan_scanning_description">Kami akan mengirimkan pemberitahuan jika menemukan ancaman. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_fixing_threats_title_plural">Memperbaiki Ancaman</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan tidak dapat menyelesaikan pemindaian situs Anda. Harap periksa apakah situs Anda tidak aktif – jika tidak, coba lagi. Jika tidak aktif, atau jika Jetpack Scan masih mengalami masalah, hubungi tim dukungan kami.</string>
     <string name="scan_request_failed_title">Terjadi kesalahan</string>

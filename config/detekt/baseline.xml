@@ -485,10 +485,8 @@
     <ID>TooManyFunctions:ScanViewModel.kt$ScanViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:SelectedDateProvider.kt$SelectedDateProvider</ID>
     <ID>TooManyFunctions:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment</ID>
-    <ID>TooManyFunctions:SiteCreationDomainsFragment.kt$SiteCreationDomainsFragment : SiteCreationBaseFormFragment</ID>
     <ID>TooManyFunctions:SiteCreationDomainsViewModel.kt$SiteCreationDomainsViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:SiteCreationMainVM.kt$SiteCreationMainVM : ViewModel</ID>
-    <ID>TooManyFunctions:SiteCreationPreviewFragment.kt$SiteCreationPreviewFragment : SiteCreationBaseFormFragmentErrorManagedWebViewClientListener</ID>
     <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker : LayoutPickerTracker</ID>
     <ID>TooManyFunctions:SiteListItemBuilder.kt$SiteListItemBuilder</ID>
     <ID>TooManyFunctions:SitePreviewViewModel.kt$SitePreviewViewModel : ViewModelCoroutineScope</ID>

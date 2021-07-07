@@ -6,13 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="blogging_goals_n_times_a_week">週%d回</string>
     <string name="blogging_reminders_notify_me">通知する</string>
-    <string name="blogging_goals_not_set">設定なし</string>
-    <string name="set_your_blogging_goals_message">投稿を公開中です。ブログの目標を設定してリマインダー通知を受け取り、進捗状況を追跡しましょう。</string>
-    <string name="set_your_blogging_goals_button">目標を設定</string>
     <string name="blogging_reminders_done">完了</string>
-    <string name="set_your_blogging_goals_title">ブログの目標を設定</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
     <string name="gutenberg_native_set_as_featured_image">アイキャッチ画像として設定 </string>
     <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除 </string>
@@ -21,7 +16,6 @@ Language: ja_JP
     <string name="site_settings_categories_empty_subtitle">頻繁に使用するカテゴリーをここに追加しておけば、投稿にカテゴリーを設定するときにすばやく選択できます</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
     <string name="site_settings_categories_empty_title">カテゴリーがありません</string>
-    <string name="site_settings_blogging_reminders_title">ブログの目標</string>
     <string name="site_settings_categories_empty_button">カテゴリーを作成</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
@@ -193,8 +187,6 @@ Language: ja_JP
     <string name="backup_item_roots">WordPress ルート</string>
     <string name="backup_download_details_choose_items_header">このダウンロードに含まれるアイテム</string>
     <string name="gutenberg_native_uploading">アップロード中…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">WordPress for iOS では再利用可能ブロックを編集できません</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">WordPress for Android では再利用可能ブロックを編集できません</string>
     <string name="gutenberg_native_replace_file">ファイルを置換</string>
     <string name="gutenberg_native_replace_audio">音声ファイルを置換</string>
     <string name="gutenberg_native_problem_opening_the_audio">音声を開く際にエラーが発生しました</string>

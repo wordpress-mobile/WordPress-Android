@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-14 16:14:27+0000
+Translation-Revision-Date: 2021-06-29 04:11:19+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Регулярное пополнение блога займёт ваших подписчиков и привлечет новых посетителей на сайт.</string>
+    <string name="blogging_reminders_tip">Совет</string>
+    <string name="blogging_reminders_select_days_message">Вы можете обновить это в любое время</string>
+    <string name="blogging_reminders_select_days">Выберите дни, в которые вы хотите писать в блог</string>
+    <string name="blogging_reminders_epilogue_caption">Вы можете изменить это в любое время в Мой сайт &gt; Настройки &gt; Напоминания блоггинга.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Напоминания не установлены.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Вы получите напоминания о необходимости писать в блог &lt;b&gt;ежедневно&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Вы получите напоминания о необходимости написать в блог %1$s в неделю, по  %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Напоминания удалены!</string>
+    <string name="blogging_reminders_epilogue_title">Всё готово!</string>
+    <string name="blogging_reminders_update">Обновить</string>
+    <string name="blogging_reminders_not_set">Не установлены</string>
+    <string name="blogging_reminders_n_a_week">%s в неделю</string>
+    <string name="set_your_blogging_reminders_button">Установить напоминания</string>
+    <string name="set_up_blogging_reminders_message">Установить напоминания о необходимости написать в блог в те дни, в которые вы хотите это делать.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Идет публикация записи…. А пока вы можете установить напоминания о необходимости написать в блог в те дни, в которые вы хотите это делать.</string>
+    <string name="set_your_blogging_reminders_title">Установите напоминания о блоггинге</string>
+    <string name="blogging_reminders_notification_text">Это ваше напоминание о том, что нужно что-то сделать сегодня</string>
+    <string name="blogging_reminders_notification_title">Самое время написать в блог на %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Редактирование \"моих блоков\" пока не доступно в WordPress для iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Редактирование \"моих блоков\" пока не доступно в WordPress для Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Альтернативным вариантом вы можете рассоединить и отредактировать эти блоки по отдельности, нажав на \"преобразовать в обычные блоки\".</string>
     <string name="blogging_reminders_done">Готово</string>
     <string name="blogging_reminders_notify_me">Уведомить меня</string>
-    <string name="blogging_goals_not_set">Не установлены</string>
-    <string name="blogging_goals_n_times_a_week">%d раз в неделю</string>
-    <string name="set_your_blogging_goals_button">Установите цели</string>
-    <string name="set_your_blogging_goals_message">Ваша запись в процессе публикации, а пока вы можете установить цели блога для получения напоминаний и отслеживания прогресса.</string>
-    <string name="set_your_blogging_goals_title">Установите цели вашего блога</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Введите учетные данные сервера&lt;/a&gt;, чтобы включить восстановление из резервных копий в одно нажатие.</string>
     <string name="gutenberg_native_set_as_featured_image">Установить как избранное изображение</string>
     <string name="gutenberg_native_remove_as_featured_image">Удалить как избранное изображение</string>
@@ -23,7 +40,7 @@ Language: ru
     <string name="site_settings_categories_empty_subtitle">Добавьте сюда часто используемые рубрики, чтобы быстро выбирать их для записей</string>
     <string name="site_settings_categories_empty_button">Создать рубрику</string>
     <string name="site_settings_categories_title">Рубрики</string>
-    <string name="site_settings_blogging_reminders_title">Цели блога</string>
+    <string name="site_settings_blogging_reminders_title">Напоминания блоггинга</string>
     <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
     <string name="gutenberg_native_border_settings">Настройки границы</string>
     <string name="storage_utils_dialog_dont_show_button">Не показывать снова</string>
@@ -193,8 +210,6 @@ Language: ru
     <string name="backup_item_roots">Корневая папка WordPress</string>
     <string name="backup_download_details_choose_items_header">Элементы включенные для скачивания</string>
     <string name="gutenberg_native_uploading">Загрузка…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">\"Мои блоки\" нельзя редактировать в приложении WordPress для iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">\"Мои блоки\" нельзя редактировать в приложении WordPress для Android</string>
     <string name="gutenberg_native_replace_file">Заменить файл</string>
     <string name="gutenberg_native_replace_audio">Заменить аудиофайл</string>
     <string name="gutenberg_native_problem_opening_the_audio">Проблема с открытием аудио</string>
@@ -2855,4 +2870,13 @@ Language: ru
     <string name="add">Добавить</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>
+    <string-array name="blogging_reminders_count">
+        <item>Однократно</item>
+        <item>Дважды</item>
+        <item>Трижды</item>
+        <item>Четыре раза</item>
+        <item>Пять раз</item>
+        <item>Шесть раз</item>
+        <item>Семь раз</item>
+    </string-array>
 </resources>
