@@ -23,9 +23,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-private const val GSS_REQUEST_PATH = "wp-block-editor/v1/settings?context=mobile"
-private const val GSS_EXPERIMENTAL_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
-private const val GSS_LIMIT_VERSION = "5.8"
+private const val EDITOR_SETTINGS_REQUEST_PATH = "wp-block-editor/v1/settings?context=mobile"
+private const val EDITOR_SETTINGS_EXPERIMENTAL_REQUEST_PATH = "__experimental/wp-block-editor/v1/settings?context=mobile"
+private const val EDITOR_SETTINGS_LIMIT_VERSION = "5.8"
 
 @Singleton
 class EditorThemeStore
@@ -66,10 +66,10 @@ class EditorThemeStore
                         EditorThemeStore::class.java.simpleName + ": On FETCH_EDITOR_THEME"
                 ) {
                     val payload = action.payload as FetchEditorThemePayload
-                    if (globalStyleSettingsAvailable(payload.site, payload.gssEnabled)) {
-                        handleFetchGlobalStylesSettings(payload.site, actionType)
+                    if (editorSettingsAvailable(payload.site, payload.gssEnabled)) {
+                        fetchEditorSettings(payload.site, actionType)
                     } else {
-                        handleFetchEditorTheme(payload.site, actionType)
+                        fetchEditorTheme(payload.site, actionType)
                     }
                 }
             }
@@ -80,7 +80,7 @@ class EditorThemeStore
         AppLog.d(AppLog.T.API, EditorThemeStore::class.java.simpleName + " onRegister")
     }
 
-    private suspend fun handleFetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
+    private suspend fun fetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
         val response = reactNativeStore.executeRequest(site, THEME_REQUEST_PATH, false)
 
         when (response) {
@@ -112,38 +112,38 @@ class EditorThemeStore
         }
     }
 
-    private suspend fun handleFetchGlobalStylesSettings(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, GSS_REQUEST_PATH, false)
+    private suspend fun fetchEditorSettings(site: SiteModel, action: EditorThemeAction) {
+        val response = reactNativeStore.executeRequest(site, EDITOR_SETTINGS_REQUEST_PATH, false)
 
         when (response) {
             is Success -> {
-                response.handleFetchEditorThemeResponse(site, action)
+                response.handleFetchEditorSettingsResponse(site, action)
             }
             is Error -> {
                 if (response.error.type == NOT_FOUND) {
                     // When the endpoint is not found we retry with the `__experimental` path
-                    handleFetchExperimentalEditorTheme(site, action)
+                    fetchExperimentalEditorSettings(site, action)
                 } else {
-                    response.handleFetchEditorThemeResponse(action)
+                    response.handleFetchEditorSettingsResponse(action)
                 }
             }
         }
     }
 
-    private suspend fun handleFetchExperimentalEditorTheme(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, GSS_EXPERIMENTAL_REQUEST_PATH, false)
+    private suspend fun fetchExperimentalEditorSettings(site: SiteModel, action: EditorThemeAction) {
+        val response = reactNativeStore.executeRequest(site, EDITOR_SETTINGS_EXPERIMENTAL_REQUEST_PATH, false)
 
         when (response) {
             is Success -> {
-                response.handleFetchEditorThemeResponse(site, action)
+                response.handleFetchEditorSettingsResponse(site, action)
             }
             is Error -> {
-                response.handleFetchEditorThemeResponse(action)
+                response.handleFetchEditorSettingsResponse(action)
             }
         }
     }
 
-    private fun ReactNativeFetchResponse.Success.handleFetchEditorThemeResponse(
+    private fun ReactNativeFetchResponse.Success.handleFetchEditorSettingsResponse(
         site: SiteModel,
         action: EditorThemeAction
     ) {
@@ -169,16 +169,16 @@ class EditorThemeStore
         }
     }
 
-    private fun ReactNativeFetchResponse.Error.handleFetchEditorThemeResponse(action: EditorThemeAction) {
+    private fun ReactNativeFetchResponse.Error.handleFetchEditorSettingsResponse(action: EditorThemeAction) {
         val onChanged = OnEditorThemeChanged(EditorThemeError(error.message), action)
         emitChange(onChanged)
     }
 
-    private fun globalStyleSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
+    private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
             gssEnabled && hasRequiredWordPressVersion(site.softwareVersion)
 
     /**
-     * Checks if the [wordPressSoftwareVersion] is higher or equal to [GSS_LIMIT_VERSION]
+     * Checks if the [wordPressSoftwareVersion] is higher or equal to [EDITOR_SETTINGS_LIMIT_VERSION]
      *
      * Note: At this point semantic version information (alpha, beta etc) is stripped since it
      * is not supported by our [Version] utility
@@ -191,7 +191,7 @@ class EditorThemeStore
             // strip semantic versioning information (alpha, beta etc)
             wordPressSoftwareVersion.substringBefore("-")
         } else wordPressSoftwareVersion
-        Version(version) >= Version(GSS_LIMIT_VERSION)
+        Version(version) >= Version(EDITOR_SETTINGS_LIMIT_VERSION)
     } catch (e: IllegalArgumentException) {
         false // if version parsing fails return false
     }
