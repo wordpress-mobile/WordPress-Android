@@ -76,7 +76,8 @@ fun handleUploadAction(
                     activity,
                     action.post,
                     action.site,
-                    action.dispatcher
+                    action.dispatcher,
+                    onPublishingCallback
             )
         }
         is PostUploadAction.PostUploadedSnackbar -> {
