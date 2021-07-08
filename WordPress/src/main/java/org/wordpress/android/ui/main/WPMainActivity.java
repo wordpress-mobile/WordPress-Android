@@ -1097,7 +1097,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
                 if (selectedSite != null) {
                     boolean isNewStory = data == null || data.getStringExtra(ARG_STORY_BLOCK_ID) == null;
-                    mBloggingRemindersViewModel.onPostCreated(
+                    mBloggingRemindersViewModel.onPublishingPost(
                             selectedSite.getId(),
                             isNewStory
                     );
