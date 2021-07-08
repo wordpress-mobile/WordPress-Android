@@ -264,9 +264,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
     // Also define found properties that started with `res.` (`res_*` keys once in the `fields_map`) as resValues
     fields_map.each {
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
-        if (it.key.startsWith("res_")) {
-            variant.resValue "String", it.key.replace("res_", ""), "${it.value}"
-        }
     }
 }
 
@@ -516,8 +513,6 @@ if (!file("google-services.json").exists()) {
 if ((file('google-services.json').text) == (file('google-services.json-example').text)) {
     println("WARNING: You're using the example google-services.json file. Google login will fail.")
 }
-
-
 
 tasks.register("violationCommentsToGitHub", se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
     repositoryOwner = "wordpress-mobile"
