@@ -186,6 +186,7 @@ class ReactNativeStore
                 val url = path?.let {
                     val newPath = it
                             .replace("wp/v2".toRegex(), "wp/v2/sites/$wpComSiteId")
+                            .replace("wp-block-editor/v1".toRegex(), "wp-block-editor/v1/sites/$wpComSiteId")
                     slashJoin(WPCOM_ENDPOINT, newPath)
                 }
                 Pair(url, params)
