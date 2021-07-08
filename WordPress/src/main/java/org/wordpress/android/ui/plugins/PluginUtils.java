@@ -23,8 +23,8 @@ public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
-        } else if (site.isSelfHostedAdmin() && supportsPlugins(site.getSoftwareVersion())) {
-            return true;
+        } else if (site.isSelfHostedAdmin()) {
+            return supportsPlugins(site.getSoftwareVersion());
         }
 
         // If the site has business plan we can do an Automated Transfer
