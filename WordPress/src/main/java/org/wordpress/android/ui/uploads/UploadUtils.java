@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -196,7 +197,8 @@ public class UploadUtils {
                                                           @NonNull final SiteModel site,
                                                           @NonNull final UploadAction uploadAction,
                                                           SnackbarSequencer sequencer,
-                                                          View.OnClickListener publishPostListener) {
+                                                          View.OnClickListener publishPostListener,
+                                                          @Nullable OnPublishingCallback onPublishingCallback) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
@@ -255,6 +257,9 @@ public class UploadUtils {
             } else {
                 showSnackbar(snackbarAttachView,
                         post.isPage() ? R.string.editor_uploading_page : R.string.editor_uploading_post, sequencer);
+                if (onPublishingCallback != null) {
+                    onPublishingCallback.onPublishing(PostUtils.isFirstTimePublish(post));
+                }
             }
             return;
         }

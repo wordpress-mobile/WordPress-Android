@@ -451,14 +451,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                         data,
                         post,
                         site,
-                        uploadActionUseCase.getUploadAction(post)
-                ) {
-                    uploadUtilsWrapper.publishPost(
-                            activity,
-                            post,
-                            site
-                    )
-                }
+                        uploadActionUseCase.getUploadAction(post),
+                        {
+                            uploadUtilsWrapper.publishPost(
+                                    activity,
+                                    post,
+                                    site
+                            )
+                        }
+                )
             }
         })
 
