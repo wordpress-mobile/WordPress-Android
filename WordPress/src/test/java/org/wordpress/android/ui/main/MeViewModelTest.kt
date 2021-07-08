@@ -9,16 +9,18 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
 class MeViewModelTest : BaseUnitTest() {
     @Mock lateinit var wordPress: WordPress
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var viewModel: MeViewModel
 
     @Before
     fun setUp() {
-        viewModel = MeViewModel(TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = MeViewModel(TEST_DISPATCHER, TEST_DISPATCHER, selectedSiteRepository)
     }
 
     @Test

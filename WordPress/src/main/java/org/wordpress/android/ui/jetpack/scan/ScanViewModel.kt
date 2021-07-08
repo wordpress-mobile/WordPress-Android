@@ -90,55 +90,56 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun init() {
+        updateUiState(FullScreenLoadingUiState)
         launch {
             scanStateModel = scanStore.getScanStateForSite(this@ScanViewModel.site)
             scanStateModel?.let {
-                updateUiState(buildContentUiState(it))
                 if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = false)
             }
-            fetchScanState()
+            fetchScanState(isInvokedFromInit = true)
         }
     }
 
-    private fun fetchScanState(invokedByUser: Boolean = false, isRetry: Boolean = false) {
-        launch {
-            if (scanStateModel == null) updateUiState(FullScreenLoadingUiState)
-            if (isRetry) delay(RETRY_DELAY)
+    private suspend fun fetchScanState(
+        invokedByUser: Boolean = false,
+        isRetry: Boolean = false,
+        isInvokedFromInit: Boolean = false
+    ) {
+        if (isRetry) delay(RETRY_DELAY)
 
-            fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
-                    .collect { state ->
-                        when (state) {
-                            is FetchScanState.Success -> {
-                                scanStateModel = state.scanStateModel
-                                updateUiState(buildContentUiState(state.scanStateModel))
-                                if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
-                                    scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
-                                    updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
-                                } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
-                                    showScanFinishedMessage(state.scanStateModel)
-                                }
-                            }
-
-                            is FetchScanState.Failure.NetworkUnavailable -> {
-                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
-                                scanStateModel
-                                        ?.let {
-                                            updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
-                                        }
-                                        ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
-                            }
-
-                            is FetchScanState.Failure.RemoteRequestFailure -> {
-                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
-                                scanStateModel
-                                        ?.let {
-                                            updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
-                                        }
-                                        ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+        fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
+                .collect { state ->
+                    when (state) {
+                        is FetchScanState.Success -> {
+                            scanStateModel = state.scanStateModel
+                            updateUiState(buildContentUiState(state.scanStateModel))
+                            if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
+                                scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
+                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                            } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
+                                showScanFinishedMessage(state.scanStateModel)
                             }
                         }
+
+                        is FetchScanState.Failure.NetworkUnavailable -> {
+                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
+                            scanStateModel?.takeIf { !isInvokedFromInit }
+                                    ?.let {
+                                        updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                                    }
+                                    ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+                        }
+
+                        is FetchScanState.Failure.RemoteRequestFailure -> {
+                            scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
+                            scanStateModel?.takeIf { !isInvokedFromInit }
+                                    ?.let {
+                                        updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message))
+                                    }
+                                    ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+                        }
                     }
-        }
+                }
     }
 
     private fun showScanFinishedMessage(scanStateModel: ScanStateModel) {
@@ -243,23 +244,27 @@ class ScanViewModel @Inject constructor(
                     }
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
-                    } else if (isInvokedByUser) {
+                    } else {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                 }
             }
-            updateUiState(
-                    buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
-            )
 
-            messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
+            val shouldUpdateUi = status is FetchFixThreatsState.InProgress || status is FetchFixThreatsState.Complete
+            if (shouldUpdateUi) {
+                updateUiState(
+                        buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
+                )
+            }
+
+            if (isInvokedByUser) messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
 
         return someOrAllThreatFixed
     }
 
     private fun onRetryClicked() {
-        fetchScanState(isRetry = true)
+        launch { fetchScanState(isRetry = true) }
     }
 
     private fun onContactSupportClicked() {
@@ -300,7 +305,7 @@ class ScanViewModel @Inject constructor(
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
         updateSnackbarMessageEvent(UiStringRes(messageRes))
-        fetchScanState()
+        launch { fetchScanState() }
     }
 
     fun onFixStateRequested(threatId: Long) {

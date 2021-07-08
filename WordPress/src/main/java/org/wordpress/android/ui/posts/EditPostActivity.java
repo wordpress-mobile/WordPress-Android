@@ -67,6 +67,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.EditorSettingsUpdateListener;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
@@ -78,6 +79,7 @@ import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.EditorSettingsActionBuilder;
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -112,6 +114,9 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.RawEditorSettingsStore;
+import org.wordpress.android.fluxc.store.RawEditorSettingsStore.FetchEditorSettingsPayload;
+import org.wordpress.android.fluxc.store.RawEditorSettingsStore.OnEditorSettingsChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
@@ -379,6 +384,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject MediaStore mMediaStore;
     @Inject UploadStore mUploadStore;
     @Inject EditorThemeStore mEditorThemeStore;
+    @Inject RawEditorSettingsStore mRawEditorSettingsStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
     @Inject QuickStartStore mQuickStartStore;
@@ -2311,6 +2317,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
+        String rawEditorSettings = mRawEditorSettingsStore.getRawEditorSettingsForSite(mSite);
+
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || mIsJetpackSsoEnabled;
 
@@ -2335,7 +2343,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 postType,
                 featuredImageId,
                 themeBundle,
-                enableEditorOnboarding
+                enableEditorOnboarding,
+                rawEditorSettings
         );
     }
 
@@ -3302,7 +3311,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         refreshEditorContent();
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
-            refreshEditorTheme();
+            /* This is now refreshed along with editor settings fetch callback TODO: remove dead code */
+            // refreshEditorTheme();
+            /* TODO: add flag similar to gssEnabled */
+            refreshEditorSettings();
             List<MediaModel> failedMedia =
                     mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
             if (failedMedia != null && !failedMedia.isEmpty()) {
@@ -3613,6 +3625,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
     }
 
+    private void refreshEditorSettings() {
+        FetchEditorSettingsPayload payload = new FetchEditorSettingsPayload(mSite);
+        mDispatcher.dispatch(EditorSettingsActionBuilder.newFetchEditorSettingsAction(payload));
+    }
+
     private void fetchMediaList() {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(this)) {
@@ -3624,6 +3641,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
     }
 
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onEditorSettingsChanged(OnEditorSettingsChanged event) {
+        if (!(mEditorFragment instanceof EditorSettingsUpdateListener)) return;
+
+        if (mSite.getId() != event.getSiteId()) return;
+        String rawEditorSettings = event.getRawEditorSettings();
+
+        if (rawEditorSettings == null) return;
+        ((EditorSettingsUpdateListener) mEditorFragment).onRawEditorSettingsUpdated(rawEditorSettings);
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
