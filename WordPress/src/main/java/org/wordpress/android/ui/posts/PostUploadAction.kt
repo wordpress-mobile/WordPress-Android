@@ -88,7 +88,8 @@ fun handleUploadAction(
                     action.isFirstTimePublish,
                     action.post,
                     action.errorMessage,
-                    action.site
+                    action.site,
+                    onPublishingCallback
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {
