@@ -1527,7 +1527,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         event.isFirstTimePublish,
                         event.post,
                         null,
-                        targetSite);
+                        targetSite,
+                        isFirstTimePublishing -> mBloggingRemindersViewModel
+                                .onPublishingPost(targetSite.getId(), isFirstTimePublishing)
+                );
             }
         }
     }
