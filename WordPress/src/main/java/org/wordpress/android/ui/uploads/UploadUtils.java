@@ -679,4 +679,8 @@ public class UploadUtils {
         }
         return messageRes;
     }
+
+    public interface OnPublishingCallback {
+        void onPublishing(boolean isFirstTimePublish);
+    }
 }
