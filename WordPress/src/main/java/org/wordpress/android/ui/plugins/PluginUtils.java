@@ -23,7 +23,7 @@ public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
-        } else if (!site.isUsingWpComRestApi() && supportsPlugins(site.getSoftwareVersion())) {
+        } else if (site.isSelfHostedAdmin() && supportsPlugins(site.getSoftwareVersion())) {
             return true;
         }
 
