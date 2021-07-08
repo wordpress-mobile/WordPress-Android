@@ -9,7 +9,7 @@ buildscript {
     ext.wordPressLoginVersion = '0.0.2'
     ext.detektVersion = '1.15.0'
     // gallery editor settings
-    ext.gutenbergMobileVersion = '3678-9aa2416ce0d6da2e56eea1715bb0ca3b17b858fc'
+    ext.gutenbergMobileVersion = '3678-27569b2c5c3220cee239d4b5e2384083054b6a6e'
 
     repositories {
         maven {
@@ -135,7 +135,7 @@ ext {
 
     daggerVersion = '2.29.1'
     // gallery editor settings
-    fluxCVersion = 'cf42e715e2a70e10857c2e165f641103d62d050b'
+    fluxCVersion = 'bba4d1613123fa3b0c492ac419be96488ced00bc'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'

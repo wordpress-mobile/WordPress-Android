@@ -33,7 +33,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
 import org.wordpress.android.databinding.MeFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
@@ -118,7 +117,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewAppSettingsForResult(activity)
         }
         rowSupport.setOnClickListener {
-            ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, selectedSite, null)
+            ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
@@ -445,11 +444,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     fun onAccountChanged(event: OnAccountChanged?) {
         binding?.refreshAccountDetails()
     }
-
-    private val selectedSite: SiteModel?
-        get() {
-            return (activity as? WPMainActivity)?.selectedSite
-        }
 
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
