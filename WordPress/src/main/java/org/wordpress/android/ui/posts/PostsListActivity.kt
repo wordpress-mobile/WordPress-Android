@@ -363,7 +363,9 @@ class PostsListActivity : LocaleAwareActivity(),
                         findViewById(R.id.coordinator),
                         uploadActionUseCase,
                         uploadUtilsWrapper
-                )
+                ) { isFirstTimePublishing ->
+                    bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
+                }
             }
         })
     }
@@ -466,10 +468,6 @@ class PostsListActivity : LocaleAwareActivity(),
                 }
 
                 viewModel.handleEditPostResult(data)
-                bloggingRemindersViewModel.onPostCreated(
-                        site.id,
-                        data?.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
-                )
             }
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()

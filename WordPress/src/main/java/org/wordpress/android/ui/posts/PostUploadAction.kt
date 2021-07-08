@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtils.OnPublishingCallback
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 
 sealed class PostUploadAction {
@@ -48,12 +49,14 @@ sealed class PostUploadAction {
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
 
+@Suppress("LongParameterList")
 fun handleUploadAction(
     action: PostUploadAction,
     activity: Activity,
     snackbarAttachView: View,
     uploadActionUseCase: UploadActionUseCase,
-    uploadUtilsWrapper: UploadUtilsWrapper
+    uploadUtilsWrapper: UploadUtilsWrapper,
+    onPublishingCallback: OnPublishingCallback
 ) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
@@ -64,7 +67,8 @@ fun handleUploadAction(
                     action.post,
                     action.site,
                     uploadActionUseCase.getUploadAction(action.post),
-                    View.OnClickListener { action.publishAction() }
+                    { action.publishAction() },
+                    onPublishingCallback
             )
         }
         is PostUploadAction.PublishPost -> {
