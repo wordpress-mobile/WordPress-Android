@@ -1,54 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-27 09:54:08+0000
+Translation-Revision-Date: 2021-06-23 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="blogging_reminders_done">完成</string>
+    <string name="blogging_reminders_notify_me">通知我</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
+    <string name="gutenberg_native_set_as_featured_image">設為特色圖片 </string>
+    <string name="gutenberg_native_remove_as_featured_image">移除特色圖片 </string>
+    <string name="fab_add_category_desc">建立分類</string>
+    <string name="support_ticket_subject">Android 版 WordPress 支援</string>
+    <string name="site_settings_categories_hint">管理你的網站分類</string>
+    <string name="site_settings_categories_empty_title">你沒有任何分類</string>
+    <string name="site_settings_categories_empty_subtitle">請在此處新增你常用的標籤，為文章分類時就能快速選取</string>
+    <string name="site_settings_categories_empty_button">建立分類</string>
+    <string name="site_settings_categories_title">分類</string>
+    <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
+    <string name="gutenberg_native_border_settings">框線設定</string>
+    <string name="storage_utils_dialog_dont_show_button">不要再顯示</string>
+    <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>
+    <string name="storage_utils_dialog_message">我們需先將內容儲存在你的裝置上，然後才能發表。  請檢視你的儲存空間設定，並移除一些檔案以釋放空間。</string>
+    <string name="storage_utils_dialog_title">裝置儲存空間不足</string>
+    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
+    <string name="gutenberg_native_type_a_url">輸入 URL</string>
+    <string name="gutenberg_native_tap_to_add_content">點選以新增內容</string>
+    <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
+    <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s 沒有 URL 集</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s 已轉換為一般區塊</string>
+    <string name="gutenberg_native_s_block">%s 區塊</string>
+    <string name="gutenberg_native_minimum_height">最小高度</string>
+    <string name="gutenberg_native_media_options">媒體選項</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">無效網址。 找不到音訊檔案。</string>
+    <string name="gutenberg_native_insert_crosspost">插入多重發佈</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">拖曳以調整焦點</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">按兩下開啟底部工作表以新增圖片或視訊</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">按兩下開啟操作工作表以新增圖片或視訊</string>
+    <string name="gutenberg_native_current_unit_is_s">目前的單位為 %s</string>
+    <string name="gutenberg_native_crosspost">多重發佈</string>
+    <string name="gutenberg_native_columns_settings">欄位設定</string>
+    <string name="gutenberg_native_add_link_to_s">新增連結至 %s</string>
+    <string name="gutenberg_native_add_link_text">新增連結文字</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">新增圖片或視訊</string>
+    <string name="error_media_path_is_directory">指定的路徑是目錄而不是媒體檔案</string>
+    <string name="error_media_could_not_find_media_in_path">無法在路徑中找到媒體檔案</string>
+    <string name="error_media_unexpected_empty_media_file_path">未預期的空白媒體檔案路徑</string>
+    <string name="error_media_file_type_not_allowed">此檔案並非允許的格式</string>
+    <string name="error_media_unexpected_null_value">媒體為空白</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;以修正威脅。</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">按兩下以新增連結。</string>
     <string name="gutenberg_native_add_link">新增連結</string>
     <string name="login_empty_view_try_another_account">嘗試其他帳號</string>
     <string name="login_empty_view_see_instructions">查看說明</string>
+    <string name="login_no_jetpack_sites_error_message">若你已擁有網站，則需要安裝免費 Jetpack 外掛程式，並連結你的 WordPress.com 帳號。</string>
     <string name="login_empty_view_avatar_content_description">你的個人檔案照片</string>
     <string name="login_not_a_jetpack_site">若要將此應用程式用於 %1$s，你需要安裝 Jetpack 外掛程式並連結 WordPress.com 帳號。</string>
-    <string name="gutenberg_native_size">尺寸</string>
+    <string name="gutenberg_native_width_settings">寬度設定</string>
     <string name="gutenberg_native_image_settings">圖片設定</string>
-    <string name="gutenberg_native_audio_settings">音訊設定</string>
     <string name="user_profile_untitled_site">(未命名)</string>
     <string name="user_profile_site_section_header">網站</string>
     <string name="user_profile_bottom_sheet_description">使用者個人資料底頁資訊</string>
     <string name="likes_list_screen_title">按讚清單%s</string>
-    <string name="gutenberg_native_write_title">撰寫標題…</string>
-    <string name="gutenberg_native_write_code">撰寫程式碼…</string>
     <string name="gutenberg_native_sorting_and_filtering">排序及篩選方式</string>
-    <string name="gutenberg_native_show_download_button">顯示下載按鈕</string>
-    <string name="gutenberg_native_shortcode">短代碼</string>
-    <string name="gutenberg_native_read_more">閱讀全文</string>
-    <string name="gutenberg_native_preload">預先載入</string>
+    <string name="gutenberg_native_s_social_icon">%s 社交圖示</string>
+    <string name="gutenberg_native_mention">標記</string>
     <string name="gutenberg_native_post_meta_settings">文章中繼資料設定</string>
     <string name="gutenberg_native_post_content_settings">文章內容設定</string>
-    <string name="gutenberg_native_metadata">中繼資料</string>
-    <string name="gutenberg_native_media_file">媒體檔案</string>
-    <string name="gutenberg_native_media_area">媒體區域</string>
-    <string name="gutenberg_native_loop">循環播放</string>
-    <string name="gutenberg_native_link_to_12d6f96a">連結到</string>
-    <string name="gutenberg_native_link_label">連結標籤</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">第 %1$d 張圖片，圖庫中總計 %2$d 張圖片</string>
-    <string name="gutenberg_native_heading_d">標題 %d</string>
     <string name="gutenberg_native_featured">精選內容</string>
-    <string name="gutenberg_native_edit_image">編輯圖片</string>
     <string name="gutenberg_native_display_post_date">顯示內容發佈日期</string>
-    <string name="gutenberg_native_code">標示為程式碼</string>
-    <string name="gutenberg_native_change_heading_level">變更標題階層</string>
-    <string name="gutenberg_native_browser_default">瀏覽器預設值</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">區塊已刪除或無法使用。</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">區塊無法在內部含有相同區塊時進行轉譯。</string>
-    <string name="gutenberg_native_autoplay">自動播放</string>
-    <string name="gutenberg_native_auto">自動載入</string>
-    <string name="gutenberg_native_attachment_page">附件頁面</string>
-    <string name="gutenberg_native_add_text">加入文字…</string>
-    <string name="gutenberg_native_add_caption">新增說明文字</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
     <string name="gutenberg_native_what_is_alt_text">替代文字是什麼？</string>
     <string name="gutenberg_native_transform_s_to">將 %s 轉換為</string>
@@ -98,7 +123,7 @@ Language: zh_TW
     <string name="activity_log_backup_download_notice_download_action">下載</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
     <string name="threat_fix_all_confirmation_message_plural">請確認你要修正所有 %s 個作用中威脅。</string>
-    <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
+    <string name="scan_idle_threats_description_plural">掃描作業發現 %2$s 有 %1$s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「修復所有威脅」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
@@ -106,18 +131,18 @@ Language: zh_TW
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">輸入網站的名稱</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你將觸及更多使用者。 做得好！</string>
-    <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你已自訂你的網站。 做得好！</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b&gt;已完成所有任務&lt;/b&gt;&lt;br/&gt;你已自訂網站。 做得好！</string>
     <string name="quick_start_card_menu_hide">暫時隱藏</string>
     <string name="magic_link_not_meaning_to_create_account">不是要建立一個新帳號嗎？ 返回並重新輸入你的電子郵件地址。</string>
-    <string name="invite_links_disable_dialog_message">一旦你停用此邀請連結，就沒有人可以再用此連結加入你的團隊。 你確定嗎？</string>
+    <string name="invite_links_disable_dialog_message">停用此邀請連結後，就沒有人能再用此連結加入你的團隊。 你確定嗎？</string>
     <string name="invite_links_disable_dialog_title">停用邀請連結</string>
     <string name="invite_links_bad_format_response">收到無效回應</string>
     <string name="invite_links_null_response">未收到回應</string>
     <string name="invite_links_cannot_get_role_data_error">取得角色的資料時發生錯誤%1$s</string>
-    <string name="invite_links_cannot_get_roles_error">取得角色發生錯誤</string>
-    <string name="invite_links_generic_get_data_error">擷取邀請連結資料時發生未知錯誤</string>
-    <string name="invite_links_helper_text">用這個連結直接加入成員，就不需要一個一個邀請。 造訪此 URL 的人都可以註冊你的組織，即使他們是從其他人那裡收到連結，因此請務必與值得信任的人分享。</string>
-    <string name="invite_links_expire_date">過期 %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">取得角色時發生錯誤</string>
+    <string name="invite_links_generic_get_data_error">擷取邀請連結資料時發生不明錯誤</string>
+    <string name="invite_links_helper_text">用這個連結讓成員直接加入，不需要一一邀請。 即使是從其他人那裡收到連結，只要造訪此 URL 的人都可以註冊你的組織，因此請確保僅與值得信任的人分享。</string>
+    <string name="invite_links_expire_date">有效期限 %1$s</string>
     <string name="invite_links_disable_invite_link">停用邀請連結</string>
     <string name="invite_links_share_invite_link">分享邀請連結</string>
     <string name="invite_links_generate">產生新連結</string>
@@ -125,7 +150,7 @@ Language: zh_TW
     <string name="invite_links_section_title">邀請連結</string>
     <string name="threats_found_singular">發現威脅</string>
     <string name="threats_found_plural">發現數個威脅</string>
-    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; %s 發現潛在威脅</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; %s 個潛在威脅已發現</string>
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; 發現一個潛在威脅</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;掃描完成&lt;/b&gt; &lt;br&gt; 未發現威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
@@ -158,8 +183,6 @@ Language: zh_TW
     <string name="backup_item_roots">WordPress 根目錄</string>
     <string name="backup_download_details_choose_items_header">包含在這次下載中的項目</string>
     <string name="gutenberg_native_uploading">上傳中…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重複使用區塊無法在 iOS 版 WordPress 中編輯</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">可重複使用區塊無法在 Android 版 WordPress 中編輯</string>
     <string name="gutenberg_native_replace_file">取代檔案</string>
     <string name="gutenberg_native_replace_audio">替換音訊</string>
     <string name="gutenberg_native_problem_opening_the_audio">開啟音訊時發生問題</string>
@@ -182,12 +205,12 @@ Language: zh_TW
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">隨時為你提供協助</string>
-    <string name="scan_idle_threats_description_singular">掃描作業發現 %1$s 有一個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %2$s。</string>
+    <string name="scan_idle_threats_description_singular">掃描作業發現 %1$s 有一個潛在威脅。 請檢閱以下威脅並採取行動，或點選「修復所有威脅」按鈕。 如果你有需要，我們 %2$s。</string>
     <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
-    <string name="scan_fixing_threats_description_singular">我們正致力在背景解決此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
-    <string name="scan_scanning_description">掃瞄作業完成後，我們會傳送通知給你。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_fixing_threats_description_singular">我們正努力在背景解決此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_scanning_description">如果發現威脅，你會收到通知。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="scan_fixing_threats_title_plural">正在修正威脅</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan 無法完成網站掃瞄作業。 請檢查你的網站是否已經關閉。若否，請再試一次。 如果網站已關閉，或 Jetpack Scan 仍無法順利掃瞄，請與我們的支援團隊聯絡。</string>
     <string name="scan_request_failed_title">發生錯誤</string>
@@ -284,7 +307,7 @@ Language: zh_TW
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_footnote">無須等待。 我們會在備份準備就緒時通知你。</string>
+    <string name="backup_download_progress_footnote">無需在附近等待。 我們會在備份準備就緒時通知你。</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
     <string name="backup_download_progress_header">目前正在為你的網站建立可下載的備份</string>
@@ -457,7 +480,7 @@ Language: zh_TW
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_two">攝影師 Cameron Karsten 的作品讓我深受啟發。 我下次會嘗試這些技巧</string>
     <string name="login_prologue_second_subtitle_one">激發靈感</string>
-    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新網誌。</string>
+    <string name="login_prologue_title_fifth">追蹤你喜歡的網站並發掘新網誌。</string>
     <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
     <string name="login_prologue_title_third">即時查看留言和通知。</string>
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
@@ -495,7 +518,6 @@ Language: zh_TW
     <string name="media_uploading_stock_library_photo">正在上傳庫存媒體</string>
     <string name="media_uploading_default">正在上傳媒體</string>
     <string name="gutenberg_native_search_or_type_url">搜尋或輸入 URL</string>
-    <string name="gutenberg_native_page_break">分頁符號</string>
     <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
     <string name="gutenberg_native_add_this_link">新增此連結</string>
     <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
@@ -740,6 +762,7 @@ Language: zh_TW
     <string name="button_insert">插入</string>
     <string name="continue_label">繼續</string>
     <string name="copy_text">複製</string>
+    <string name="gutenberg_native_number_of_columns">欄位數</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
     <string name="gutenberg_native_move_block_right">向右移動區塊</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
@@ -809,8 +832,7 @@ Language: zh_TW
     <string name="gutenberg_native_edit_cover_media">編輯封面媒體</string>
     <string name="gutenberg_native_customize">自訂</string>
     <string name="gutenberg_native_button_link_url">按鈕連結網址</string>
-    <string name="gutenberg_native_video_settings">視訊設定</string>
-    <string name="gutenberg_native_border_radius">框線半徑</string>
+    <string name="gutenberg_native_border_radius">框線圓角半徑</string>
     <string name="gutenberg_native_add_paragraph_block">新增段落區塊</string>
     <string name="create_post_page_fab_tooltip_contributors">建立文章</string>
     <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
@@ -865,7 +887,6 @@ Language: zh_TW
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">更換圖片</string>
     <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
@@ -931,6 +952,7 @@ Language: zh_TW
     <string name="gutenberg_native_move_block_up">向上移動區塊</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
     <string name="gutenberg_native_move_block_down">向下移動區塊</string>
+    <string name="gutenberg_native_link_text">連結文字</string>
     <string name="gutenberg_native_link_inserted">連結已插入</string>
     <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隱藏鍵盤</string>
@@ -1438,7 +1460,7 @@ Language: zh_TW
     <string name="quick_start_dialog_need_help_button_neutral">從未</string>
     <string name="quick_start_dialog_need_help_button_negative">不用了，謝謝</string>
     <string name="quick_start_dialog_follow_sites_title">關注其他網站</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s搜尋%2$s以尋找具有相似主題的網站</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">點選%1$s「搜尋」%2$s以尋找具有相似主題的網站</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">點選%1$s讀取器%2$s以繼續</string>
     <string name="quick_start_dialog_follow_sites_message">尋找並關注讓你獲得啟發的網站，在這些網站發表文章時獲得最新資訊。</string>
     <string name="quick_start_button_positive">執行</string>

@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-01 12:40:34+0000
+Translation-Revision-Date: 2021-06-05 20:46:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
-    <string name="gutenberg_native_audio_settings">Ajustes de audio</string>
-    <string name="gutenberg_native_column_settings">Ajustes del formato</string>
+    <string name="storage_utils_dialog_dont_show_button">No mostrar de nuevo</string>
+    <string name="storage_utils_dialog_title">Insuficiente almacenamiento en el dispositivo</string>
+    <string name="gutenberg_native_type_a_url">Escribe una URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Toca para añadir contenido</string>
+    <string name="gutenberg_native_s_has_url_set">%s tiene una URL ya establecida</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL establecida</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
     <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
     <string name="gutenberg_native_width_settings">Ajustes de medios</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
-    <string name="gutenberg_native_size">Tamaño</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
-    <string name="gutenberg_native_write_title">Escribe el título…</string>
-    <string name="gutenberg_native_write_code">Escribe código…</string>
     <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
     <string name="reader_title_interests">Seguir temáticas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>

@@ -7,3 +7,4 @@ group :screenshots, optional: true do
 end
 
 gem 'fastlane-plugin-wpmreleasetoolkit', '~> 1.3.1'
+

@@ -1,9 +1,4 @@
-What’s new in 17.5?
-
-Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.
-
-Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.
-
-You can now pull in audio via URL with the Audio block.
-
-Finally, screen readers can now select the stepper cell.
+- New! Get blogging reminder prompts on days of your choice
+- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
+- Fixed Reader duplicate post issue
+- Added ability to subscribe to conversations by email from Reader

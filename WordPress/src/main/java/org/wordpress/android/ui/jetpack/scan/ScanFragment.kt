@@ -55,8 +55,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         recyclerView.addItemDecoration(
                 HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
-        recyclerView.setEmptyView(actionableEmptyView)
         initAdapter()
+        initActionableEmptyView()
+    }
+
+    private fun ScanFragmentBinding.initActionableEmptyView() {
+        recyclerView.setEmptyView(actionableEmptyView)
+        uiHelpers.updateVisibility(actionableEmptyView, false)
     }
 
     private fun ScanFragmentBinding.initAdapter() {
