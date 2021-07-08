@@ -178,6 +178,12 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
+    fun onPublishingPost(siteId: Int, isFirstTimePublishing: Boolean?) {
+        if (isFirstTimePublishing == true && bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)) {
+            showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+        }
+    }
+
     fun onSettingsItemClicked(siteId: Int) {
         launch {
                 val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
