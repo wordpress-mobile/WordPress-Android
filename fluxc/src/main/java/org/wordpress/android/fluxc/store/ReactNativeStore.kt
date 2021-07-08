@@ -187,6 +187,7 @@ class ReactNativeStore
                     val newPath = it
                             .replace("wp/v2".toRegex(), "wp/v2/sites/$wpComSiteId")
                             .replace("wp-block-editor/v1".toRegex(), "wp-block-editor/v1/sites/$wpComSiteId")
+                            .replace("oembed/1.0".toRegex(), "oembed/1.0/sites/$wpComSiteId")
                     slashJoin(WPCOM_ENDPOINT, newPath)
                 }
                 Pair(url, params)
