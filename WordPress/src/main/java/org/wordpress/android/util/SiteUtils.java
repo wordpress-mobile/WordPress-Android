@@ -345,6 +345,35 @@ public class SiteUtils {
         return false;
     }
 
+    /**
+     * Checks if the site's WordPress version is equal to or higher than the provided minimal version.
+     *
+     * Note: This method disregards "-beta", "-alpha" or "-RC" versions, meaning that this will return {@code true} for
+     * a site with version "5.5-beta1" and {@code minVersion} "5.5", for example.
+     *
+     * @param site The site to check.
+     * @param minVersion Minimal acceptable WordPress version.
+     * @return {@code true} if the version is equal to or higher than the {@code minVersion}; {@code false} otherwise.
+     */
+    public static boolean checkMinimalWordPressVersion(SiteModel site, String minVersion) {
+        String version = site.getSoftwareVersion();
+        if (!TextUtils.isEmpty(version)) {
+            try {
+                // Strip any trailing "-beta", "-alpha" or "-RC" suffixes from the version
+                int index = version.lastIndexOf("-");
+                if (index > 0) {
+                    version = version.substring(0, index);
+                }
+                return new Version(version).compareTo(new Version(minVersion)) >= 0;
+            } catch (IllegalArgumentException e) {
+                String errorStr = "Invalid site WordPress version " + version + ", expected " + minVersion;
+                AppLog.e(AppLog.T.UTILS, errorStr, e);
+                return false;
+            }
+        }
+        return false;
+    }
+
     public static boolean supportsStoriesFeature(SiteModel site) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION));
     }
