@@ -1423,18 +1423,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
-                PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
-                        this,
-                        mSite,
-                        Objects.requireNonNull(mEditPostRepository.getPost()),
-                        getEditPostActivityStrategyFunctions());
-                if (opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
-                    || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
-                    || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
-                ) {
+                if (!showPreview()) {
                     return false;
-                } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
-                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
                 }
             } else if (itemId == R.id.menu_post_settings) {
                 if (mEditPostSettingsFragment != null) {
@@ -3438,7 +3428,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
-    @Override public void showPreview() {
+    @Override public boolean showPreview() {
         PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
                 this,
                 mSite,
@@ -3448,10 +3438,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
             || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
         ) {
-            return;
+            return false;
         } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
             updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
         }
+        return true;
     }
 
     // FluxC events

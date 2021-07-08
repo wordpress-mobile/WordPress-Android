@@ -218,7 +218,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
-        void showPreview();
+        boolean showPreview();
     }
 
     /**
