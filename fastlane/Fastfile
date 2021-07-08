@@ -366,16 +366,14 @@ REPOSITORY_NAME="WordPress-Android"
     app = options[:app]
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    hotfix = android_current_branch_is_hotfix
-    unless hotfix
-      check_translation_progress(
-        glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-        abort_on_violations: false
-      )
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false
+    )
 
-      download_translations(app: app)
-      android_bump_version_final_release(app: app)
-    end
+    download_translations(app: app)
+
+    android_bump_version_final_release(app: app)
     version = android_get_release_version(app: app)
     download_metadata_strings(app: app, version: version["name"], build_number: version["code"])
 
