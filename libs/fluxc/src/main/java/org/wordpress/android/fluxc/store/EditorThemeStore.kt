@@ -23,9 +23,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
+
+/**
+ * This endpoint was released as part of WP 5.8 with the __experimental flag.
+ * Starting with Gutenberg 11.1 the endpoint will be available without the __experimental flag.
+ * Gutenberg 11.1 will be included in WP 5.9.
+ */
 private const val EDITOR_SETTINGS_REQUEST_PATH = "wp-block-editor/v1/settings?context=mobile"
 private const val EDITOR_SETTINGS_EXPERIMENTAL_REQUEST_PATH = "__experimental/$EDITOR_SETTINGS_REQUEST_PATH"
-private const val EDITOR_SETTINGS_LIMIT_VERSION = "5.8"
+private const val EDITOR_SETTINGS_EXPERIMENTAL_VERSION = "5.8"
+private const val EDITOR_SETTINGS_STABLE_VERSION = "5.9"
 
 @Singleton
 class EditorThemeStore
@@ -49,6 +56,7 @@ class EditorThemeStore
             this.error = error
         }
     }
+
     class EditorThemeError(var message: String? = null) : OnChangedError
 
     fun getEditorThemeForSite(site: SiteModel): EditorTheme? {
@@ -120,8 +128,11 @@ class EditorThemeStore
                 response.handleFetchEditorSettingsResponse(site, action)
             }
             is Error -> {
-                if (response.error.type == NOT_FOUND) {
-                    // When the endpoint is not found we retry with the `__experimental` path
+                if (response.error.type == NOT_FOUND && site.mayHaveExperimentalEndpoint) {
+                    /**
+                     * We tried the non-experimental path first but since that failed (which should only be for
+                     * base WordPress 5.8 installs) we'll fall back and try the experimental endpoint.
+                     */
                     fetchExperimentalEditorSettings(site, action)
                 } else {
                     response.handleFetchEditorSettingsResponse(action)
@@ -175,24 +186,29 @@ class EditorThemeStore
     }
 
     private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && hasRequiredWordPressVersion(site.softwareVersion)
+            gssEnabled && site.hasRequiredWordPressVersion(EDITOR_SETTINGS_EXPERIMENTAL_VERSION)
 
     /**
-     * Checks if the [wordPressSoftwareVersion] is higher or equal to [EDITOR_SETTINGS_LIMIT_VERSION]
+     * Checks if the [SiteModel.getSoftwareVersion] is higher or equal to the [requiredVersion]
      *
      * Note: At this point semantic version information (alpha, beta etc) is stripped since it
      * is not supported by our [Version] utility
      *
-     * @param wordPressSoftwareVersion the WordPress version
+     * @param requiredVersion the required WordPress version
      * @return true if the check is met
      */
-    private fun hasRequiredWordPressVersion(wordPressSoftwareVersion: String) = try {
-        val version = if (wordPressSoftwareVersion.contains("-")) {
+    private fun SiteModel.hasRequiredWordPressVersion(requiredVersion: String) = try {
+        val version = if (softwareVersion.contains("-")) {
             // strip semantic versioning information (alpha, beta etc)
-            wordPressSoftwareVersion.substringBefore("-")
-        } else wordPressSoftwareVersion
-        Version(version) >= Version(EDITOR_SETTINGS_LIMIT_VERSION)
+            softwareVersion.substringBefore("-")
+        } else softwareVersion
+        Version(version) >= Version(requiredVersion)
     } catch (e: IllegalArgumentException) {
         false // if version parsing fails return false
     }
+
+    val SiteModel.mayHaveExperimentalEndpoint: Boolean
+        get() = hasRequiredWordPressVersion(EDITOR_SETTINGS_EXPERIMENTAL_VERSION) && !hasRequiredWordPressVersion(
+                EDITOR_SETTINGS_STABLE_VERSION
+        )
 }
