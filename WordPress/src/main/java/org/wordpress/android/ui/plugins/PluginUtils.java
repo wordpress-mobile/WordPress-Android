@@ -24,7 +24,7 @@ public class PluginUtils {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
         } else if (site.isSelfHostedAdmin()) {
-            return supportsPlugins(site.getSoftwareVersion());
+            return SiteUtils.checkMinimalWordPressVersion(site, "5.5");
         }
 
         // If the site has business plan we can do an Automated Transfer
