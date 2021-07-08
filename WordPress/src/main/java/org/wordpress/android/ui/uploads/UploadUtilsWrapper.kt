@@ -133,6 +133,10 @@ class UploadUtilsWrapper @Inject constructor(
             isEligibleForAutoUpload
     )
 
-    fun publishPost(activity: Activity, post: PostModel, site: SiteModel) =
-            UploadUtils.publishPost(activity, post, site, dispatcher)
+    fun publishPost(
+        activity: Activity,
+        post: PostModel,
+        site: SiteModel,
+        onPublishingCallback: OnPublishingCallback? = null
+    ) = UploadUtils.publishPost(activity, post, site, dispatcher, onPublishingCallback)
 }

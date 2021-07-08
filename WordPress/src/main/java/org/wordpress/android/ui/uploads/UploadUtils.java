@@ -435,6 +435,11 @@ public class UploadUtils {
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
+        publishPost(activity, post, site, dispatcher, null);
+    }
+
+    public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher,
+                                   @Nullable OnPublishingCallback onPublishingCallback) {
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
             String message = activity.getString(
@@ -452,6 +457,9 @@ public class UploadUtils {
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
             UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
+            if (onPublishingCallback != null) {
+                onPublishingCallback.onPublishing(isFirstTimePublish);
+            }
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
