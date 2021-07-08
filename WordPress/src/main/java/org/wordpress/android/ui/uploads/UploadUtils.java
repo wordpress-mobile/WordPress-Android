@@ -478,7 +478,8 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
-                                                     SnackbarSequencer sequencer) {
+                                                     SnackbarSequencer sequencer,
+                                                     @Nullable OnPublishingCallback onPublishingCallback) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
@@ -519,7 +520,7 @@ public class UploadUtils {
                             publishPostListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    UploadUtils.publishPost(activity, post, site, dispatcher);
+                                    UploadUtils.publishPost(activity, post, site, dispatcher, onPublishingCallback);
                                 }
                             };
                             snackbarButtonRes = R.string.button_publish;
