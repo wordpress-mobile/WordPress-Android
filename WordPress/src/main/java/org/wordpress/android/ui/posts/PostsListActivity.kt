@@ -486,7 +486,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
-                bloggingRemindersViewModel.onPostCreated(
+                bloggingRemindersViewModel.onPublishingPost(
                         site.id,
                         isNewStory
                 )
