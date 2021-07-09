@@ -77,6 +77,7 @@ public class AnalyticsUtils {
     private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
     private static final String PAGE_KEY = "page";
     private static final String TOTAL_PAGES_KEY = "total_pages";
+    private static final String PAGE_LENGTH_KEY = "page_length";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -750,12 +751,17 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.LIKE_LIST_OPENED, properties);
     }
 
-    public static void trackLikeListFetchedMore(String source, String listType, Integer nextPage, Integer totalPages) {
+    public static void trackLikeListFetchedMore(String source,
+                                                String listType,
+                                                int nextPage,
+                                                int totalPages,
+                                                int pageLength) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(SOURCE_KEY, source);
         properties.put(LIST_TYPE_KEY, listType);
         properties.put(PAGE_KEY, nextPage);
         properties.put(TOTAL_PAGES_KEY, totalPages);
+        properties.put(PAGE_LENGTH_KEY, pageLength);
 
         AnalyticsTracker.track(Stat.LIKE_LIST_FETCHED_MORE, properties);
     }

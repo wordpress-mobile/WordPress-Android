@@ -26,6 +26,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
@@ -40,8 +41,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.ceil
-import kotlin.math.floor
 
 class EngagedPeopleListViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -197,14 +196,14 @@ class EngagedPeopleListViewModel @Inject constructor(
                         updateLikesState.likes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true, updateLikesState.pageInfo)
             }
             is Failure -> {
                 engagementUtils.likesToEngagedPeople(
                         updateLikesState.cachedLikes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false, updateLikesState.pageInfo)
             }
             Loading, null -> listOf()
         }
@@ -232,22 +231,21 @@ class EngagedPeopleListViewModel @Inject constructor(
         )
     }
 
-    private fun appendNextPageLoaderIfNeeded(hasMore: Boolean, isLoading: Boolean): List<EngageItem> {
+    private fun appendNextPageLoaderIfNeeded(
+        hasMore: Boolean,
+        isLoading: Boolean,
+        pageInfo: PagingInfo
+    ): List<EngageItem> {
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
-                val perPage = GetLikesHandler.LIKES_PER_PAGE_DEFAULT.toDouble()
-                val currentCount = uiState.value?.engageItemsList?.size ?: 0
-                if (listScenario != null) {
-                    val totalPages = ceil(listScenario!!.headerData.numLikes / perPage).toInt()
-                    val nextPage = 1 + floor(currentCount / perPage).toInt()
                     analyticsUtilsWrapper.trackLikeListFetchedMore(
                             EngagementNavigationSource.getSourceDescription(listScenario?.source),
                             ListScenarioType.getSourceDescription(listScenario?.type),
-                            nextPage,
-                            totalPages
+                            pageInfo.page + 1,
+                            pageInfo.totalPages,
+                            pageInfo.pageLength
                     )
-                }
             })
         } else {
             listOf()
