@@ -322,56 +322,51 @@ public class SiteUtils {
     public static boolean checkMinimalJetpackVersion(SiteModel site, String limitVersion) {
         String jetpackVersion = site.getJetpackVersion();
         if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
+            // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+            // longer active.
+            if (jetpackVersion.equals("false")) {
+                return false;
+            }
+            return checkMinimalVersion(jetpackVersion, limitVersion);
+        }
+        return false;
+    }
+
+    public static boolean checkMinimalWordPressVersion(SiteModel site, String minVersion) {
+        return checkMinimalVersion(site.getSoftwareVersion(), minVersion);
+    }
+
+    /**
+     * Checks if a version is equal to or higher than a provided minimal version.
+     *
+     * Note: This method disregards "-beta", "-alpha" or "-RC" versions, meaning that this will return {@code true} for
+     * a site with version "5.5-beta1" and {@code minVersion} "5.5", for example.
+     *
+     * @param version The version to check.
+     * @param minVersion Minimal acceptable version.
+     * @return {@code true} if the version is equal to or higher than the {@code minVersion}; {@code false} otherwise.
+     */
+    public static boolean checkMinimalVersion(String version, String minVersion) {
+        if (!TextUtils.isEmpty(version)) {
             try {
-                // strip any trailing "-beta" or "-alpha" from the version
-                int index = jetpackVersion.lastIndexOf("-");
-                if (index > 0) {
-                    jetpackVersion = jetpackVersion.substring(0, index);
-                }
-                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
-                // longer active.
-                if (jetpackVersion.equals("false")) {
-                    return false;
-                }
-                Version siteJetpackVersion = new Version(jetpackVersion);
-                Version minVersion = new Version(limitVersion);
-                return siteJetpackVersion.compareTo(minVersion) >= 0;
+                version = stripVersionSuffixes(version);
+                minVersion = stripVersionSuffixes(minVersion);
+                return new Version(version).compareTo(new Version(minVersion)) >= 0;
             } catch (IllegalArgumentException e) {
-                String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
-                AppLog.e(AppLog.T.UTILS, errorStr, e);
+                AppLog.e(AppLog.T.UTILS, "Invalid version " + version + ", expected " + minVersion, e);
                 return false;
             }
         }
         return false;
     }
 
-    /**
-     * Checks if the site's WordPress version is equal to or higher than the provided minimal version.
-     *
-     * Note: This method disregards "-beta", "-alpha" or "-RC" versions, meaning that this will return {@code true} for
-     * a site with version "5.5-beta1" and {@code minVersion} "5.5", for example.
-     *
-     * @param site The site to check.
-     * @param minVersion Minimal acceptable WordPress version.
-     * @return {@code true} if the version is equal to or higher than the {@code minVersion}; {@code false} otherwise.
-     */
-    public static boolean checkMinimalWordPressVersion(SiteModel site, String minVersion) {
-        String version = site.getSoftwareVersion();
-        if (!TextUtils.isEmpty(version)) {
-            try {
-                // Strip any trailing "-beta", "-alpha" or "-RC" suffixes from the version
-                int index = version.lastIndexOf("-");
-                if (index > 0) {
-                    version = version.substring(0, index);
-                }
-                return new Version(version).compareTo(new Version(minVersion)) >= 0;
-            } catch (IllegalArgumentException e) {
-                String errorStr = "Invalid site WordPress version " + version + ", expected " + minVersion;
-                AppLog.e(AppLog.T.UTILS, errorStr, e);
-                return false;
-            }
+    // Strip any trailing "-beta", "-alpha" or "-RC" suffixes from the version
+    private static String stripVersionSuffixes(final String version) {
+        int index = version.indexOf("-");
+        if (index > 0) {
+            return version.substring(0, index);
         }
-        return false;
+        return version;
     }
 
     public static boolean supportsStoriesFeature(SiteModel site) {
