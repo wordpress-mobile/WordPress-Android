@@ -8,11 +8,6 @@ Language: de
 <resources>
     <string name="blogging_reminders_done">Fertig</string>
     <string name="blogging_reminders_notify_me">Benachrichtige mich</string>
-    <string name="blogging_goals_not_set">Nicht festgelegt</string>
-    <string name="blogging_goals_n_times_a_week">%d-mal pro Woche</string>
-    <string name="set_your_blogging_goals_button">Ziele festlegen</string>
-    <string name="set_your_blogging_goals_message">Dein Beitrag wird veröffentlicht. In der Zwischenzeit kannst du deine Blogziele einrichten, um Erinnerungen zu erhalten und deinen Fortschritt zu verfolgen.</string>
-    <string name="set_your_blogging_goals_title">Lege deine Blog-Ziele fest</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Gib deine Serveranmeldedaten ein&lt;/a&gt;, um Ein-Klick-Website-Wiederherstellungen von Backups zu aktivieren.</string>
     <string name="gutenberg_native_set_as_featured_image">Als Beitragsbild festlegen </string>
     <string name="gutenberg_native_remove_as_featured_image">Als Beitragsbild entfernen </string>
@@ -23,7 +18,6 @@ Language: de
     <string name="site_settings_categories_empty_subtitle">Füge deine häufig verwendeten Kategorien hier hinzu, sodass du sie beim Kategorisieren deiner Beiträge schnell auswählen kannst</string>
     <string name="site_settings_categories_empty_button">Eine Kategorie erstellen</string>
     <string name="site_settings_categories_title">Kategorien</string>
-    <string name="site_settings_blogging_reminders_title">Blogziele</string>
     <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
@@ -192,8 +186,6 @@ Language: de
     <string name="backup_item_roots">WordPress-Root</string>
     <string name="backup_download_details_choose_items_header">In diesem Download enthaltene Elemente</string>
     <string name="gutenberg_native_uploading">Wird hochgeladen …</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Wiederverwendbare Blöcke können auf WordPress für iOS nicht bearbeitet werden</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Wiederverwendbare Blöcke können auf WordPress für Android nicht bearbeitet werden</string>
     <string name="gutenberg_native_replace_file">Datei ersetzen</string>
     <string name="gutenberg_native_replace_audio">Audio ersetzen</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem beim Öffnen der Audiodatei</string>

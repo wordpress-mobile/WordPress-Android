@@ -8,11 +8,6 @@ Language: gl_ES
 <resources>
     <string name="blogging_reminders_done">Feito</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
-    <string name="blogging_goals_not_set">Ningún establecido</string>
-    <string name="blogging_goals_n_times_a_week">%d veces á semana</string>
-    <string name="set_your_blogging_goals_button">Establecer os obxectivos</string>
-    <string name="set_your_blogging_goals_message">A túa entrada estase publicando… Mentres tanto, configura os teus obxectivos de blogueo para recibir recordatorios e seguir o teu progreso.</string>
-    <string name="set_your_blogging_goals_title">Establece os teus obxectivos de blogueo</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para activar as restauracións do sitio cun clic das copias de seguridade.</string>
     <string name="gutenberg_native_set_as_featured_image">Establecer como imaxe destacada</string>
     <string name="gutenberg_native_remove_as_featured_image">Eliminar como imaxe destacada</string>
@@ -23,7 +18,6 @@ Language: gl_ES
     <string name="site_settings_categories_empty_subtitle">Engade aquí as categorías que uses frecuentemente para que poidan ser seleccionadas rapidamente ao categorizar as túas entradas</string>
     <string name="site_settings_categories_empty_button">Crear unha categoría</string>
     <string name="site_settings_categories_title">Categorías</string>
-    <string name="site_settings_blogging_reminders_title">Obxectivos de blogueo</string>
     <string name="page_is_posts_page_warning">O contido da páxina das túas últimas entradas xérase automaticamente e non se pode editar.</string>
     <string name="gutenberg_native_border_settings">Axustes do borde</string>
     <string name="storage_utils_dialog_dont_show_button">Non amosar de novo</string>
@@ -193,8 +187,6 @@ Language: gl_ES
     <string name="backup_item_roots">Raíz de WordPress</string>
     <string name="backup_download_details_choose_items_header">Elementos incluídos nesta descarga</string>
     <string name="gutenberg_native_uploading">Subindo…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Os bloques reutilizables non se poden editar en WordPress para iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Os bloques reutilizables non se poden editar en WordPress para Android</string>
     <string name="gutenberg_native_replace_file">Substituír arquivo</string>
     <string name="gutenberg_native_replace_audio">Substituír audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema ao abrir o audio</string>

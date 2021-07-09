@@ -2,8 +2,6 @@ package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -27,7 +25,7 @@ class EpilogueBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils
 ) {
     fun buildUiItems(
-        bloggingRemindersModel: BloggingRemindersModel?
+        bloggingRemindersModel: BloggingRemindersUiModel?
     ): List<BloggingRemindersItem> {
         val enabledDays = bloggingRemindersModel?.enabledDays ?: setOf()
 
@@ -76,9 +74,9 @@ class EpilogueBuilder @Inject constructor(
         )
     }
 
-    private fun Set<Day>.print(): List<String> {
+    private fun Set<DayOfWeek>.print(): List<String> {
         return this.sorted().map {
-            DayOfWeek.valueOf(it.name).getDisplayName(TextStyle.FULL, localeManagerWrapper.getLocale())
+            it.getDisplayName(TextStyle.FULL, localeManagerWrapper.getLocale())
         }
     }
 

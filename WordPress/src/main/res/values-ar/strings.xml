@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-17 23:17:29+0000
+Translation-Revision-Date: 2021-06-30 21:21:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
     <string name="blogging_reminders_done">تمّ</string>
-    <string name="set_your_blogging_goals_button">تحديد الأهداف</string>
-    <string name="blogging_goals_n_times_a_week">%d مرة في الأسبوع</string>
-    <string name="blogging_goals_not_set">لا شيء محدد</string>
-    <string name="set_your_blogging_goals_message">جاري نشر مقالتك… في غضون ذلك، قم بإعداد أهداف التدوين الخاصة بك للحصول على تذكيرات، وتتبّع تقدمك.</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>
-    <string name="set_your_blogging_goals_title">تحديد أهداف التدوين الخاصة بك</string>
     <string name="gutenberg_native_remove_as_featured_image">إزالة الصورة البارزة </string>
     <string name="fab_add_category_desc">إنشاء تصنيف</string>
     <string name="gutenberg_native_set_as_featured_image">تعيين كصورة بارزة </string>
@@ -22,9 +17,9 @@ Language: ar
     <string name="site_settings_categories_empty_title">ليس لديك أي تصنيفات</string>
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
-    <string name="site_settings_blogging_reminders_title">أهداف التدوين</string>
     <string name="site_settings_categories_empty_button">إنشاء تصنيف</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
+    <string name="site_settings_blogging_reminders_title">تذكيرات التدوين</string>
     <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
     <string name="storage_utils_dialog_dont_show_button">عدم العرض مرة أخرى</string>
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>
@@ -193,8 +188,6 @@ Language: ar
     <string name="backup_item_roots">جذر ووردبريس</string>
     <string name="backup_item_contents">دليل WP-content</string>
     <string name="backup_download_details_choose_items_header">العناصر المضمنة في هذا التنزيل</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">تُعد المكوِّنات القابلة لإعادة الاستخدام غير قابلة للتحرير على ووردبريس بالنسبة إلى نظام تشغيل iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">تُعد المكوِّنات القابلة لإعادة الاستخدام غير قابلة للتحرير على ووردبريس بالنسبة إلى نظام تشغيل Android</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">فشل إدراج الملف الصوتي. يرجى النقر على الخيارات.</string>
     <string name="gutenberg_native_lock_icon">أيقونة القفل</string>
     <string name="gutenberg_native_open">فتح</string>
@@ -2725,7 +2718,6 @@ Language: ar
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
-    <string name="comment_status_approved">تمت الموافقة</string>
     <string name="error_blog_hidden">هذه المدونة مخفية و لايمكن تحميلها . قم بتفعيلها مرة اخرى من الإعدادات وأعد المحاولة.</string>
     <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="trash">سلة المهملات</string>
@@ -2749,6 +2741,7 @@ Language: ar
     <string name="reader_toast_err_remove_tag">غير قادر على إزالة هذا الموضوع</string>
     <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الموضوع</string>
     <string name="http_authorization_required">التخويل مطلوب</string>
+    <string name="comment_status_approved">تمّت الموافقة</string>
     <string name="share_link">رابط المشاركة</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_label_reply">رد</string>

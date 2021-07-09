@@ -1067,6 +1067,8 @@
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
     <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
 
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>

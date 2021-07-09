@@ -1662,6 +1662,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         ToastUtils.showToast(getActivity(), message).show();
     }
 
+    @Override public void showEditorHelp() {
+    }
+
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
                                final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
