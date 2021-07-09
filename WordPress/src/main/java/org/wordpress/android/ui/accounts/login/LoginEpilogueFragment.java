@@ -120,9 +120,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
 
-        mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
-        mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
-        mOldSitesIds = getArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+        mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
+        mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
+        mOldSitesIds = requireArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
     }
 
     @Override
