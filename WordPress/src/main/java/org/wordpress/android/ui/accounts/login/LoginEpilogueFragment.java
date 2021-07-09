@@ -144,7 +144,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private void setNewAdapter() {
         mAdapter = new SitePickerAdapter(
-                requireActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
+                requireActivity(),
+                R.layout.login_epilogue_sites_listitem,
+                0,
+                "",
+                false,
                 new SitePickerAdapter.OnDataLoadedListener() {
                     @Override
                     public void onBeforeLoad(boolean isEmpty) {
@@ -190,7 +194,10 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                     public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
                         bindFooterViewHolder(holder, sites);
                     }
-                }, mOldSitesIds, SitePickerMode.DEFAULT_MODE);
+                },
+                mOldSitesIds,
+                SitePickerMode.DEFAULT_MODE
+        );
     }
 
     @Override
