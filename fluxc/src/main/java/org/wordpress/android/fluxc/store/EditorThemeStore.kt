@@ -14,6 +14,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_FOUND
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils
+import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.BLOCK_EDITOR
+import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.EXPERIMENTAL_BLOCK_EDITOR
+import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.THEME_SUPPORTS
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -49,12 +52,19 @@ class EditorThemeStore
     data class OnEditorThemeChanged(
         val editorTheme: EditorTheme?,
         val siteId: Int,
-        val causeOfChange: EditorThemeAction
+        val causeOfChange: EditorThemeAction,
+        val endpoint: ThemeChangedEndpoint
     ) : Store.OnChanged<EditorThemeError>() {
-        constructor(error: EditorThemeError, causeOfChange: EditorThemeAction) :
-                this(editorTheme = null, siteId = -1, causeOfChange = causeOfChange) {
+        constructor(error: EditorThemeError, causeOfChange: EditorThemeAction, endpoint: ThemeChangedEndpoint) :
+                this(editorTheme = null, siteId = -1, causeOfChange = causeOfChange, endpoint = endpoint) {
             this.error = error
         }
+    }
+
+    enum class ThemeChangedEndpoint(val value: String) {
+        THEME_SUPPORTS("theme_supports"),
+        BLOCK_EDITOR("wp-block-editor"),
+        EXPERIMENTAL_BLOCK_EDITOR("experimental_wp-block-editor")
     }
 
     class EditorThemeError(var message: String? = null) : OnChangedError
@@ -93,7 +103,11 @@ class EditorThemeStore
 
         when (response) {
             is Success -> {
-                val noThemeError = OnEditorThemeChanged(EditorThemeError("Response does not contain a theme"), action)
+                val noThemeError = OnEditorThemeChanged(
+                        EditorThemeError("Response does not contain a theme"),
+                        action,
+                        THEME_SUPPORTS
+                )
                 if (response.result == null || !response.result.isJsonArray) {
                     emitChange(noThemeError)
                     return
@@ -109,12 +123,12 @@ class EditorThemeStore
                 val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
                 if (newTheme != existingTheme) {
                     editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
-                    val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
+                    val onChanged = OnEditorThemeChanged(newTheme, site.id, action, THEME_SUPPORTS)
                     emitChange(onChanged)
                 }
             }
             is Error -> {
-                val onChanged = OnEditorThemeChanged(EditorThemeError(response.error.message), action)
+                val onChanged = OnEditorThemeChanged(EditorThemeError(response.error.message), action, THEME_SUPPORTS)
                 emitChange(onChanged)
             }
         }
@@ -125,7 +139,7 @@ class EditorThemeStore
 
         when (response) {
             is Success -> {
-                response.handleFetchEditorSettingsResponse(site, action)
+                response.handleFetchEditorSettingsResponse(site, action, BLOCK_EDITOR)
             }
             is Error -> {
                 if (response.error.type == NOT_FOUND && site.mayHaveExperimentalEndpoint) {
@@ -135,7 +149,7 @@ class EditorThemeStore
                      */
                     fetchExperimentalEditorSettings(site, action)
                 } else {
-                    response.handleFetchEditorSettingsResponse(action)
+                    response.handleFetchEditorSettingsResponse(action, BLOCK_EDITOR)
                 }
             }
         }
@@ -146,19 +160,20 @@ class EditorThemeStore
 
         when (response) {
             is Success -> {
-                response.handleFetchEditorSettingsResponse(site, action)
+                response.handleFetchEditorSettingsResponse(site, action, EXPERIMENTAL_BLOCK_EDITOR)
             }
             is Error -> {
-                response.handleFetchEditorSettingsResponse(action)
+                response.handleFetchEditorSettingsResponse(action, EXPERIMENTAL_BLOCK_EDITOR)
             }
         }
     }
 
     private fun ReactNativeFetchResponse.Success.handleFetchEditorSettingsResponse(
         site: SiteModel,
-        action: EditorThemeAction
+        action: EditorThemeAction,
+        endpoint: ThemeChangedEndpoint
     ) {
-        val noGssError = OnEditorThemeChanged(EditorThemeError("Response does not contain GSS"), action)
+        val noGssError = OnEditorThemeChanged(EditorThemeError("Response does not contain GSS"), action, endpoint)
         if (result == null || !result.isJsonObject) {
             emitChange(noGssError)
             return
@@ -175,13 +190,16 @@ class EditorThemeStore
         val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
         if (newTheme != existingTheme) {
             editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
-            val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
+            val onChanged = OnEditorThemeChanged(newTheme, site.id, action, endpoint)
             emitChange(onChanged)
         }
     }
 
-    private fun ReactNativeFetchResponse.Error.handleFetchEditorSettingsResponse(action: EditorThemeAction) {
-        val onChanged = OnEditorThemeChanged(EditorThemeError(error.message), action)
+    private fun ReactNativeFetchResponse.Error.handleFetchEditorSettingsResponse(
+        action: EditorThemeAction,
+        endpoint: ThemeChangedEndpoint
+    ) {
+        val onChanged = OnEditorThemeChanged(EditorThemeError(error.message), action, endpoint)
         emitChange(onChanged)
     }
 
