@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-15 02:40:05+0000
+Translation-Revision-Date: 2021-07-08 09:55:01+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">定期的に投稿することで、読者の興味を引きつけ、新たなサイト訪問者を獲得できます。</string>
+    <string name="blogging_reminders_tip">ヒント</string>
+    <string name="blogging_reminders_select_days_message">こちらはいつでも更新できます</string>
+    <string name="blogging_reminders_select_days">ブログを投稿する日を選択します</string>
+    <string name="blogging_reminders_epilogue_caption">「自分のサイト」 &gt; 「設定」 &gt; 「ブログのリマインダー」からいつでも更新できます。</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">リマインダーが設定されていません。</string>
+    <string name="blogging_reminders_epilogue_body_everyday">&lt;b&gt;毎日&lt;/b&gt;ブログ投稿のリマインダーを受け取ります。</string>
+    <string name="blogging_reminders_epilogue_body_days">週に%1$s、%2$sにブログ投稿のリマインダーを受け取ります。</string>
+    <string name="blogging_reminders_epilogue_not_set_title">リマインダーを削除しました。</string>
+    <string name="blogging_reminders_epilogue_title">設定を完了しました。</string>
+    <string name="blogging_reminders_update">更新</string>
+    <string name="blogging_reminders_not_set">設定なし</string>
+    <string name="blogging_reminders_n_a_week">週に%s</string>
+    <string name="set_your_blogging_reminders_button">リマインダーを設定</string>
+    <string name="set_up_blogging_reminders_message">投稿する予定の日にブログ投稿のリマインダーを設定します。</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">投稿を掲載しています…その間に、投稿する予定の日にブログ投稿のリマインダーを設定できます。</string>
+    <string name="set_your_blogging_reminders_title">ブログ投稿のリマインダーを設定</string>
+    <string name="blogging_reminders_notification_text">本日はブログに投稿する日です</string>
+    <string name="blogging_reminders_notification_title">%sのブログに投稿する日です</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">再利用ブロックの編集は WordPress for iOS ではまだサポートされていません</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">再利用ブロックの編集は WordPress for Android ではまだサポートされていません</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">「通常のブロックへ変換」をタップして、これらのブロックを個別に切り離して編集できます。</string>
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
@@ -19,6 +41,7 @@ Language: ja_JP
     <string name="site_settings_categories_empty_button">カテゴリーを作成</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
+    <string name="site_settings_blogging_reminders_title">ブログ投稿のリマインダー</string>
     <string name="gutenberg_native_border_settings">枠線設定</string>
     <string name="storage_utils_dialog_dont_show_button">今後表示しない</string>
     <string name="storage_utils_dialog_ok_button">ストレージを表示</string>
@@ -2847,4 +2870,13 @@ Language: ja_JP
     <string name="category_refresh_error">カテゴリーの再読み込みエラー</string>
     <string name="notification_settings">通知設定</string>
     <string name="publish_now">今すぐ公開</string>
+    <string-array name="blogging_reminders_count">
+        <item>1回</item>
+        <item>2回</item>
+        <item>3回</item>
+        <item>4回</item>
+        <item>5回</item>
+        <item>6回</item>
+        <item>7回</item>
+    </string-array>
 </resources>

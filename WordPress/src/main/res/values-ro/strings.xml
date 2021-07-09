@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-01 12:30:58+0000
+Translation-Revision-Date: 2021-07-08 13:14:23+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -2661,12 +2661,12 @@ Language: ro
     <string name="comment">Comentariu</string>
     <string name="comment_trashed">Comentariu aruncat la gunoi</string>
     <string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
-    <string name="comment_reply_to_user">Răspunde la %s</string>
     <string name="signing_out">Deautentificare….</string>
     <string name="mnu_comment_liked">Apreciat</string>
     <string name="reader_label_like">Apreciere</string>
     <string name="reader_empty_posts_in_tag">Niciun articol cu acest subiect</string>
     <string name="browse_our_faq_button">Răsfoiește întrebările noastre frecvente</string>
+    <string name="comment_reply_to_user">Răspunde-i lui %s</string>
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
     <string name="reader_menu_block_blog">Blochează acest site</string>
     <string name="reader_toast_err_block_blog">Nu pot bloca acest site</string>

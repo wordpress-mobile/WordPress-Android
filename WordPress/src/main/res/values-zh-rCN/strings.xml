@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 05:00:08+0000
+Translation-Revision-Date: 2021-07-07 14:18:37+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">定期发布文章有助于留住读者以及吸引新访客访问您的站点。</string>
+    <string name="blogging_reminders_tip">提示</string>
+    <string name="blogging_reminders_select_days_message">您可以随时更新</string>
+    <string name="blogging_reminders_select_days">选择您希望发布博客的日期</string>
+    <string name="blogging_reminders_epilogue_caption">您可以通过“我的站点 &gt; 设置 &gt; 博客发布提醒”来随时更新。</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">您没有设置提醒。</string>
+    <string name="blogging_reminders_epilogue_body_everyday">您&lt;b&gt;每天&lt;/b&gt;都会收到发布博客的提醒。</string>
+    <string name="blogging_reminders_epilogue_body_days">您会收到每周在 %2$s 上发布 %1$s 次博客的提醒。</string>
+    <string name="blogging_reminders_epilogue_not_set_title">删除提醒！</string>
+    <string name="blogging_reminders_epilogue_title">搞定！</string>
+    <string name="blogging_reminders_update">更新</string>
+    <string name="blogging_reminders_not_set">无设置</string>
+    <string name="blogging_reminders_n_a_week">每周 %s 次</string>
     <string name="set_your_blogging_reminders_button">设置提醒</string>
     <string name="set_up_blogging_reminders_message">在您想发文的日期设置博客提醒。</string>
     <string name="post_publishing_set_up_blogging_reminders_message">您的文章正在发布……同时您可以在您想发表文章的日期设置博客提醒。</string>
     <string name="set_your_blogging_reminders_title">设置您的博客提醒</string>
+    <string name="blogging_reminders_notification_text">此为今日提醒，提醒您发布一些内容</string>
+    <string name="blogging_reminders_notification_title">在 %s 上发布博客的时间到了！</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚未支持编辑可重用区块</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚未支持编辑可重用区块</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">另外，您也可以通过点击“转换为常规区块”将这些区块分离出来并单独编辑。</string>
@@ -2855,4 +2870,13 @@ Language: zh_CN
     <string name="add">添加</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
+    <string-array name="blogging_reminders_count">
+        <item>一次</item>
+        <item>两次</item>
+        <item>三次</item>
+        <item>四次</item>
+        <item>五次</item>
+        <item>六次</item>
+        <item>七次</item>
+    </string-array>
 </resources>

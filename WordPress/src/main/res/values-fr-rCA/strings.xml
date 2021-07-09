@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-30 22:54:08+0000
+Translation-Revision-Date: 2021-07-07 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Publier régulièrement peut aider à fidéliser vos lecteurs et attirer de nouveaux visiteurs sur votre site.</string>
+    <string name="blogging_reminders_tip">Conseil</string>
+    <string name="blogging_reminders_select_days_message">Vous pouvez le mettre à jour à tout moment</string>
+    <string name="blogging_reminders_select_days">Sélectionner les jours où vous voulez bloguer</string>
+    <string name="blogging_reminders_epilogue_caption">Vous pouvez le mettre à jour à tout moment via Mon site &gt; Réglages &gt; Rappels de blog.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Vous n’avez aucun rappel défini.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Vous recevrez des rappels pour bloguer &lt;b&gt;tous les jours&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Vous recevrez des rappels pour bloguer %1$s par semaine le %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Rappels supprimés !</string>
+    <string name="blogging_reminders_epilogue_title">Tout est bon !</string>
+    <string name="blogging_reminders_update">Mettre à jour</string>
+    <string name="blogging_reminders_not_set">Aucun défini</string>
+    <string name="blogging_reminders_n_a_week">%s par semaine</string>
+    <string name="set_your_blogging_reminders_button">Définir des rappels</string>
+    <string name="set_up_blogging_reminders_message">Définissez des rappels de blog les jours où vous souhaitez publier.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Votre article est en cours de publication… En attendant, vous pouvez définir des rappels de blog les jours où vous souhaitez publier.</string>
+    <string name="set_your_blogging_reminders_title">Définir vos rappels de blog</string>
+    <string name="blogging_reminders_notification_text">Ceci est votre rappel pour créer quelque chose aujourd’hui</string>
+    <string name="blogging_reminders_notification_title">C’est l’heure de bloguer sur %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modification des blocs réutilisables n’est pas encore prise en charge sur WordPress pour Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Vous pouvez également détacher et modifier ces blocs séparément en appuyant sur « Convertir en blocs normaux ».</string>
     <string name="blogging_reminders_done">Terminé</string>
     <string name="blogging_reminders_notify_me">M’avertir</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Saisissez les identifiants de votre serveur&lt;/a&gt; afin d’activer les restaurations de site en un clic à partir des sauvegardes.</string>
@@ -18,6 +40,7 @@ Language: fr
     <string name="site_settings_categories_empty_subtitle">Ajoutez ici les catégories que vous utilisez le plus souvent afin de pouvoir les sélectionner rapidement lors de la catégorisation de vos articles</string>
     <string name="site_settings_categories_empty_button">Créer une catégorie</string>
     <string name="site_settings_categories_title">Catégories</string>
+    <string name="site_settings_blogging_reminders_title">Rappels de blog</string>
     <string name="page_is_posts_page_warning">Le contenu de la page de vos derniers articles est automatiquement généré et n’est pas modifiable.</string>
     <string name="gutenberg_native_border_settings">Réglages de bordure</string>
     <string name="storage_utils_dialog_dont_show_button">Ne plus afficher</string>
@@ -2823,4 +2846,13 @@ Language: fr
     <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
+    <string-array name="blogging_reminders_count">
+        <item>Une fois</item>
+        <item>Deux fois</item>
+        <item>Trois fois</item>
+        <item>Quatre fois</item>
+        <item>Cinq fois</item>
+        <item>Six fois</item>
+        <item>Sept fois</item>
+    </string-array>
 </resources>

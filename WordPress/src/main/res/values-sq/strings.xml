@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 12:03:26+0000
+Translation-Revision-Date: 2021-07-05 12:21:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Postimi rregullisht mund të ndihmojë t’i mbani lexuesit tuaj të angazhuar, dhe të tërhiqni vizitorë të rinj te sajti juaj.</string>
     <string name="blogging_reminders_tip">Ndihmëz</string>
     <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe.</string>
     <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
+    <string name="blogging_reminders_epilogue_caption">Këtë mund ta përditësoni në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues blogimi.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">S’keni të ujdisur kujtues.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Do të merrni kujtues për të bloguar &lt;b&gt;përditë&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Do të merrni kujtues për të bloguar %1$s në javë te %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Kujtuesit u hoqën!</string>
     <string name="blogging_reminders_epilogue_title">Gjithçka e rregulluar!</string>
     <string name="blogging_reminders_update">Përditëso</string>
+    <string name="blogging_reminders_not_set">S’ka të caktuar</string>
+    <string name="blogging_reminders_n_a_week">%s në javë</string>
+    <string name="set_your_blogging_reminders_button">Ujdisni kujtues</string>
+    <string name="set_up_blogging_reminders_message">Ujdisni kujtues blogimi për ditë kur doni të postoni.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Postimi juaj po botohet… ndërkohë, mund të ujdisni kujtues blogimi për ditë kur doni të postoni.</string>
+    <string name="set_your_blogging_reminders_title">Caktoni kujtuesit tuaj për blogimin</string>
+    <string name="blogging_reminders_notification_text">Ky kujtuesi juaj për të krijuar diçka sot</string>
+    <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shndërroji në blloqe të rregullt”.</string>
     <string name="blogging_reminders_done">U bë</string>
+    <string name="blogging_reminders_notify_me">Njoftomë</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>
+    <string name="gutenberg_native_set_as_featured_image">Vëre Si Figurë të Zgjedhur </string>
+    <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur </string>
     <string name="fab_add_category_desc">Krijoni Kategori</string>
     <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
     <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
@@ -19,6 +40,8 @@ Language: sq_AL
     <string name="site_settings_categories_empty_subtitle">Shtoni këtu kategoritë që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur caktoni kategori për postimet tuaja</string>
     <string name="site_settings_categories_empty_button">Krijoni një kategori</string>
     <string name="site_settings_categories_title">Kategori</string>
+    <string name="site_settings_blogging_reminders_title">Kujtues blogimi</string>
+    <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
     <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
     <string name="storage_utils_dialog_dont_show_button">Mos e Shfaq Sërish</string>
     <string name="storage_utils_dialog_ok_button">Shihni Depozitim</string>
@@ -63,6 +86,7 @@ Language: sq_AL
     <string name="gutenberg_native_image_settings">Rregullime figurash</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
+    <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
     <string name="gutenberg_native_sorting_and_filtering">Renditje dhe filtrim</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
