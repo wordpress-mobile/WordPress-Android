@@ -243,8 +243,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         if (hasSites) {
             holder.showSitesHeading(StringUtils.getQuantityString(
-                    requireActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
-                    R.string.login_epilogue_mysites_other, sites.size()));
+                    requireActivity(),
+                    R.string.login_epilogue_mysites_one,
+                    R.string.login_epilogue_mysites_one,
+                    R.string.login_epilogue_mysites_other,
+                    sites.size())
+            );
         } else {
             holder.hideSitesHeading();
         }
