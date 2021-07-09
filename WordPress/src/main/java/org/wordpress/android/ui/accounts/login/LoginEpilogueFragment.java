@@ -99,7 +99,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
         mSitesList = rootView.findViewById(R.id.recycler_view);
-        mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSitesList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mSitesList.setItemAnimator(null);
         mSitesList.setAdapter(getAdapter());
@@ -118,7 +118,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         mDoLoginUpdate = getArguments().getBoolean(ARG_DO_LOGIN_UPDATE);
         mShowAndReturn = getArguments().getBoolean(ARG_SHOW_AND_RETURN);
@@ -144,7 +144,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private void setNewAdapter() {
         mAdapter = new SitePickerAdapter(
-                getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
+                requireActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
                 new SitePickerAdapter.OnDataLoadedListener() {
                     @Override
                     public void onBeforeLoad(boolean isEmpty) {
@@ -236,7 +236,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         if (hasSites) {
             holder.showSitesHeading(StringUtils.getQuantityString(
-                    getActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
+                    requireActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
                     R.string.login_epilogue_mysites_other, sites.size()));
         } else {
             holder.hideSitesHeading();
