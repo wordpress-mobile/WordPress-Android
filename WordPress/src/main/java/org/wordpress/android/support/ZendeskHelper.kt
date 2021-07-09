@@ -463,8 +463,8 @@ private fun buildZendeskTags(
 
     // Add selectedSiteSelfHostedTag if selected site is self-hosted irrespective of the connection type
     selectedSite?.let {
-        val isSelectedSiteSelfHosted = !SiteUtils.isAccessedViaWPComRest(it)
-                || (it.isJetpackConnected && !it.isWPComAtomic)
+        val isSelectedSiteSelfHosted = !SiteUtils.isAccessedViaWPComRest(it) ||
+                (it.isJetpackConnected && !it.isWPComAtomic)
         if (isSelectedSiteSelfHosted) tags.add(ZendeskConstants.selectedSiteSelfHostedTag)
     }
 
