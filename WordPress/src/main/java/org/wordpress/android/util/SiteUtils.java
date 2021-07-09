@@ -24,7 +24,6 @@ import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
 import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
 
@@ -327,46 +326,13 @@ public class SiteUtils {
             if (jetpackVersion.equals("false")) {
                 return false;
             }
-            return checkMinimalVersion(jetpackVersion, limitVersion);
+            return VersionUtils.checkMinimalVersion(jetpackVersion, limitVersion);
         }
         return false;
     }
 
     public static boolean checkMinimalWordPressVersion(SiteModel site, String minVersion) {
-        return checkMinimalVersion(site.getSoftwareVersion(), minVersion);
-    }
-
-    /**
-     * Checks if a version is equal to or higher than a provided minimal version.
-     *
-     * Note: This method disregards "-beta", "-alpha" or "-RC" versions, meaning that this will return {@code true} for
-     * a site with version "5.5-beta1" and {@code minVersion} "5.5", for example.
-     *
-     * @param version The version to check.
-     * @param minVersion Minimal acceptable version.
-     * @return {@code true} if the version is equal to or higher than the {@code minVersion}; {@code false} otherwise.
-     */
-    public static boolean checkMinimalVersion(String version, String minVersion) {
-        if (!TextUtils.isEmpty(version)) {
-            try {
-                version = stripVersionSuffixes(version);
-                minVersion = stripVersionSuffixes(minVersion);
-                return new Version(version).compareTo(new Version(minVersion)) >= 0;
-            } catch (IllegalArgumentException e) {
-                AppLog.e(AppLog.T.UTILS, "Invalid version " + version + ", expected " + minVersion, e);
-                return false;
-            }
-        }
-        return false;
-    }
-
-    // Strip any trailing "-beta", "-alpha" or "-RC" suffixes from the version
-    private static String stripVersionSuffixes(final String version) {
-        int index = version.indexOf("-");
-        if (index > 0) {
-            return version.substring(0, index);
-        }
-        return version;
+        return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
     public static boolean supportsStoriesFeature(SiteModel site) {
