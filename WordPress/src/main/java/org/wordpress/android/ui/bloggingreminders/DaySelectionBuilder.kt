@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.BloggingRemindersModel
-import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
@@ -14,15 +12,22 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.UiS
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.time.DayOfWeek
+import java.time.format.TextStyle.SHORT_STANDALONE
 import javax.inject.Inject
 
 class DaySelectionBuilder
-@Inject constructor(private val daysProvider: DaysProvider, private val dayLabelUtils: DayLabelUtils) {
+@Inject constructor(
+    private val daysProvider: DaysProvider,
+    private val dayLabelUtils: DayLabelUtils,
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
     fun buildSelection(
-        bloggingRemindersModel: BloggingRemindersModel?,
-        onSelectDay: (Day) -> Unit
+        bloggingRemindersModel: BloggingRemindersUiModel?,
+        onSelectDay: (DayOfWeek) -> Unit
     ): List<BloggingRemindersItem> {
-        val daysOfWeek = daysProvider.getDays()
+        val daysOfWeek = daysProvider.getDaysOfWeekByLocale()
         val text = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
         val nTimesLabel = MediumEmphasisText(
                 EmphasizedText(text),
@@ -34,9 +39,9 @@ class DaySelectionBuilder
                 MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
                 DayButtons(daysOfWeek.map {
                     DayItem(
-                            UiStringText(it.first),
-                            bloggingRemindersModel?.enabledDays?.contains(it.second) == true,
-                            ListItemInteraction.create(it.second, onSelectDay)
+                            UiStringText(it.getDisplayName(SHORT_STANDALONE, localeManagerWrapper.getLocale())),
+                            bloggingRemindersModel?.enabledDays?.contains(it) == true,
+                            ListItemInteraction.create(it, onSelectDay)
                     )
                 }),
                 nTimesLabel,
@@ -45,9 +50,9 @@ class DaySelectionBuilder
     }
 
     fun buildPrimaryButton(
-        bloggingRemindersModel: BloggingRemindersModel?,
+        bloggingRemindersModel: BloggingRemindersUiModel?,
         isFirstTimeFlow: Boolean,
-        onConfirm: (BloggingRemindersModel?) -> Unit
+        onConfirm: (BloggingRemindersUiModel?) -> Unit
     ): PrimaryButton {
         val buttonEnabled = if (isFirstTimeFlow) {
             bloggingRemindersModel?.enabledDays?.isNotEmpty() == true

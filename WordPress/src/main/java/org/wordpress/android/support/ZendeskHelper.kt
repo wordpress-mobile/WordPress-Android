@@ -49,7 +49,6 @@ class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val supportHelper: SupportHelper,
-    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private val zendeskInstance: Zendesk
@@ -136,7 +135,6 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper,
                         buildConfigWrapper
                     )
                 )
@@ -168,7 +166,6 @@ class ZendeskHelper(
                         origin,
                         selectedSite,
                         extraTags,
-                        zendeskPlanFieldHelper,
                         buildConfigWrapper
                     )
                 )
@@ -346,17 +343,16 @@ private fun buildZendeskConfig(
     origin: Origin?,
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     buildConfigWrapper: BuildConfigWrapper
 ): Configuration {
     val ticketSubject = context.getString(R.string.support_ticket_subject)
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,
-            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper, buildConfigWrapper)
+            buildZendeskCustomFields(context, allSites, selectedSite, buildConfigWrapper)
         )
         .withRequestSubject(ticketSubject)
-        .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
+        .withTags(buildZendeskTags(allSites, selectedSite, origin ?: Origin.UNKNOWN, extraTags))
         .config()
 }
 
@@ -368,7 +364,6 @@ private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
     selectedSite: SiteModel?,
-    zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
     buildConfigWrapper: BuildConfigWrapper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
@@ -393,16 +388,8 @@ private fun buildZendeskCustomFields(
         CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
         CustomField(TicketFieldIds.sourcePlatform, sourcePlatform)
     )
-    allSites?.let {
-        val planIds = it.map { site -> site.planId }.distinct()
-            .filter { planId -> planId != 0L }
-        if (planIds.isNotEmpty()) {
-            val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
-            if (highestPlan != UNKNOWN_PLAN) {
-                customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
-            }
-        }
-    }
+
+    selectedSite?.zendeskPlan?.let { customFields.add(CustomField(TicketFieldIds.highestPlan, it)) }
 
     return customFields
 }
@@ -445,7 +432,12 @@ private fun getCombinedLogInformationOfSites(allSites: List<SiteModel>?): String
  * This is a helper function which returns a set of pre-defined tags depending on some conditions. It accepts a list of
  * custom tags to be added for special cases.
  */
-private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTags: List<String>?): List<String> {
+private fun buildZendeskTags(
+    allSites: List<SiteModel>?,
+    selectedSite: SiteModel? = null,
+    origin: Origin,
+    extraTags: List<String>?
+): List<String> {
     val tags = ArrayList<String>()
     allSites?.let {
         // Add wpcom tag if at least one site is WordPress.com site
@@ -466,6 +458,9 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
     extraTags?.let {
         tags.addAll(it)
     }
+
+    selectedSite?.zendeskAddOns?.takeIf { it.isNotEmpty() }?.let { tags.addAll(it.split(",")) }
+
     return tags
 }
 

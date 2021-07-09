@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.8
+-----
+* [*] Fixed a bug where the web version of the editor did not load when using an account created before December 2018. [#14762]
+
 17.7
 -----
 * [*] Block editor: Tablet view fixes for inserter button. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3602]
