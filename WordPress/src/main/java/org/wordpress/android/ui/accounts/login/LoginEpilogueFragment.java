@@ -32,6 +32,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
@@ -58,6 +59,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -173,8 +176,17 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                     @Override
                     public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                                                                     boolean attachToRoot) {
-                        return new LoginHeaderViewHolder(
-                                layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
+                        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                            return new LoginHeaderViewHolder(
+                                    layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
+                                    true
+                            );
+                        } else {
+                            return new LoginHeaderViewHolder(
+                                    layoutInflater.inflate(R.layout.login_epilogue_header, parent, false),
+                                    false
+                            );
+                        }
                     }
 
                     @Override
@@ -242,13 +254,17 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
 
         if (hasSites) {
-            holder.showSitesHeading(StringUtils.getQuantityString(
-                    requireActivity(),
-                    R.string.login_epilogue_mysites_one,
-                    R.string.login_epilogue_mysites_one,
-                    R.string.login_epilogue_mysites_other,
-                    sites.size())
-            );
+            if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                holder.showSitesHeading();
+            } else {
+                holder.showSitesHeading(StringUtils.getQuantityString(
+                        requireActivity(),
+                        R.string.login_epilogue_mysites_one,
+                        R.string.login_epilogue_mysites_one,
+                        R.string.login_epilogue_mysites_other,
+                        sites.size())
+                );
+            }
         } else {
             holder.hideSitesHeading();
         }
