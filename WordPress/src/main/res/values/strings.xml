@@ -2701,6 +2701,8 @@
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+    <string name="login_epilogue_mysites_heading">Choose a site to open</string>
+    <string name="login_epilogue_mysites_subheading">You can switch sites any time.</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>

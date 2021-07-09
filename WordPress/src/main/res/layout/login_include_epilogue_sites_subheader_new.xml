@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_epilogue_header_sites_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_medium_large">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_epilogue_mysites_heading"
+        android:textColor="@color/login_on_surface_high_selector"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_medium"
+        android:text="@string/login_epilogue_mysites_subheading"
+        android:textColor="@color/login_on_surface_medium_selector"
+        android:textSize="@dimen/text_sz_large" />
+
+</LinearLayout>
