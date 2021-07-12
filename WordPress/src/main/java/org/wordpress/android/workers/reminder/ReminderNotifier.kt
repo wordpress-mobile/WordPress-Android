@@ -7,13 +7,13 @@ import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.posts.PostsListActivity
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import kotlin.random.Random
 
 class ReminderNotifier @Inject constructor(
     val contextProvider: ContextProvider,
@@ -48,7 +48,7 @@ class ReminderNotifier @Inject constructor(
                 smallIcon = R.drawable.ic_app_white_24dp
         )
 
-        reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID, reminderNotification)
+        reminderNotificationManager.notify(Random.nextInt(), reminderNotification)
 
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackNotificationReceived()
