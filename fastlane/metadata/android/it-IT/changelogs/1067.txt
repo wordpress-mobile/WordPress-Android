@@ -1,6 +1,0 @@
-17.6:
-Il blocco Audio ti permette di aggiungere podcast, musica e file audio ad articoli e pagine. Ora è anche disponibile per gli utenti del piano gratuito.
-
-Trasforma qualsiasi immagine in un'immagine *in evidenza*, con il nuovo pulsante "Imposta come in evidenza" nel blocco Immagine.
-
-Infine, abbiamo chiarito che non è possibile modificare la pagina degli archivi degli articoli generata automaticamente.

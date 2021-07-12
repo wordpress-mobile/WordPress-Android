@@ -1,6 +1,0 @@
-17.6:
-Ses Bloku, gönderilerinize ve sayfalarınıza podcast'ler, müzik ve ses dosyaları eklemenize olanak tanır. Artık Ücretsiz Paket kullanıcıları tarafından da kullanılabilir.
-
-Görsel blokundaki yeni 'Öne Çıkan Olarak Ayarla' düğmesiyle herhangi bir görseli *öne çıkan* bir görsele dönüştürün.
-
-Son olarak, otomatik olarak oluşturulan gönderi arşivleri sayfasını düzenleyemeyeceğinizi daha net olarak belirttik.
