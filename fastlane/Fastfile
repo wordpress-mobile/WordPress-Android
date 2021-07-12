@@ -133,9 +133,9 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    old_version = android_codefreeze_prechecks(options)
+    old_version = '17.7' # android_codefreeze_prechecks(options)
 
-    android_bump_version_release(app: 'wordpress')
+    # android_bump_version_release(app: 'wordpress')
     new_version = android_get_app_version(app: 'wordpress')
 
     # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
