@@ -16,7 +16,9 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.widgets.WPTextView
+import javax.inject.Inject
 
 class PromoDialog : AppCompatDialogFragment() {
     companion object {
@@ -40,6 +42,14 @@ class PromoDialog : AppCompatDialogFragment() {
     private lateinit var neutralButtonLabel: String
     private lateinit var positiveButtonLabel: String
     private lateinit var title: String
+
+    @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
+
+    override fun getTheme() = if (onboardingImprovementsFeatureConfig.isEnabled()) {
+        R.style.WordPress_FullscreenDialog
+    } else {
+        0
+    }
 
     interface PromoDialogClickInterface {
         fun onLinkClicked(instanceTag: String)
