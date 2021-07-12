@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-24 12:05:47+0000
+Translation-Revision-Date: 2021-07-09 11:59:37+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -30,7 +30,7 @@ Language: pl
     <string name="dialog_confirm_copy_local_copy_button">Skopiuj wersję z tej aplikacji</string>
     <string name="dialog_confirm_copy_local_edit_button">Najpierw edytuj wpis</string>
     <string name="dialog_confirm_copy_local_title">Konflikt synchronizacji wpisu</string>
-    <string name="button_copy">Zduplikuj</string>
+    <string name="button_copy">Powiel</string>
     <string name="toast_edit_story_update_in_progress_title">Relacja jest zapisywana, proszę czekać…</string>
     <string name="gutenberg_native_file_name">Nazwa pliku:</string>
     <string name="gutenberg_native_file_block_settings">Ustawienia bloku pliku</string>
@@ -224,7 +224,6 @@ Language: pl
     <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
     <string name="label_control_retry">Ponów</string>
     <string name="label_control_saved">Zapisano</string>
-    <string name="label_control_saving">Trwa zapisywanie</string>
     <string name="label_control_flash">Flash</string>
     <string name="label_control_flip_camera">Odwróć</string>
     <string name="sound_button_alt">Dźwięk</string>
@@ -243,6 +242,7 @@ Language: pl
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
+    <string name="label_control_saving">Zapisywanie</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -326,11 +326,11 @@ Language: pl
     <string name="reader_btn_done">Gotowe</string>
     <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>
     <string name="post_status_post_published">Opublikowano</string>
-    <string name="post_status_post_trashed">Usunięto</string>
     <string name="post_status_post_scheduled">Zaplanowano</string>
     <string name="publish_date">Data publikacji</string>
     <string name="ccpa_privacy_notice_read">Przeczytaj notkę o prywatności CCPA</string>
     <string name="ccpa_privacy_notice_caption">Akt CPA wymaga aby dostarczyć rezydentom Kaliforni dodakowej informacji o danych które pozyskujemy.</string>
+    <string name="post_status_post_trashed">W koszu</string>
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
@@ -460,11 +460,11 @@ Language: pl
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
-    <string name="post_list_tab_trashed_posts">Usunięto do kosza</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
     <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
+    <string name="post_list_tab_trashed_posts">W koszu</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
     <string name="notifications_tab_title_follows">Obserwuje</string>
     <string name="notifications_tab_title_comments">Komentarze</string>
@@ -635,8 +635,8 @@ Language: pl
     <string name="preview_unavailable_self_hosted_sites">Podgląd niedostępny</string>
     <string name="remote_preview_operation_error">Błąd podczas próby zapisania wpisu przed uruchomieniem podglądu</string>
     <string name="post_preview_remote_auto_saving_post">Generowanie podglądu…</string>
-    <string name="post_preview_saving_draft">Zapisywanie…</string>
     <string name="local_post_autosave_revision_available">Dokonałeś niezapisanych zmian do tego wpisu</string>
+    <string name="post_preview_saving_draft">Zapisywanie…</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Wersja z tej aplikacji</string>
     <string name="dialog_confirm_autosave_restore_button">Wersja z innego urządzenia</string>
     <string name="dialog_confirm_autosave_body_first_part">Dokonałeś ostatnio zmian w tym wpisie, ale nie zostały zapisane. Wybierz wersję, którą chcesz wczytać:\n\n</string>
@@ -854,8 +854,8 @@ Language: pl
     <string name="stats_detail_months_and_years">Miesiące i lata</string>
     <string name="stats_insights_load_more">Wczytaj więcej</string>
     <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
-    <string name="publish_on">Publikuj w dniu: %s</string>
     <string name="published_on">Opublikowano w dniu: %s</string>
+    <string name="publish_on">Zostanie opublikowany w dniu: %s</string>
     <string name="stats_insights_today_stats">Dziś</string>
     <string name="stats_insights_best_hour">Najlepsza godzina</string>
     <string name="stats_insights_best_day">Najlepszy Dzień</string>
@@ -964,7 +964,6 @@ Language: pl
     <string name="stats_videos">Filmy</string>
     <string name="stats_country_views_label">Wyświetleń</string>
     <string name="stats_country_label">Państwo</string>
-    <string name="stats_countries">Państwa</string>
     <string name="stats_clicks_label">Kliknięcia</string>
     <string name="stats_clicks_link_label">Odnośnik</string>
     <string name="stats_clicks">Kliknięcia</string>
@@ -983,6 +982,7 @@ Language: pl
     <string name="stats_insights_create_post">Stwórz wpis</string>
     <string name="stats_insights_latest_post_message">Minęło %1$s od kiedy wpis %2$s został opublikowany. Oto jak wpis radził sobie jak dotychczas:</string>
     <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
+    <string name="stats_countries">Kraje</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
@@ -1044,16 +1044,16 @@ Language: pl
     <string name="pages_empty_published">Nie opublikowałeś jeszcze żadnych stron</string>
     <string name="pages_search_suggestion">Przeszukaj strony</string>
     <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
-    <string name="pages_move_to_trash">Przesuń do kosza</string>
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
     <string name="pages_delete_permanently">Usuń na zawsze</string>
+    <string name="pages_move_to_trash">Przenieś do kosza</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
-    <string name="pages_trashed">Przesunięto do kosza</string>
     <string name="pages_scheduled">Zaplanowano</string>
     <string name="pages_drafts">Szkice</string>
     <string name="pages_published">Opublikowano</string>
     <string name="login_error_sms_throttled">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS - zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
     <string name="pages_view">Zobacz</string>
+    <string name="pages_trashed">W koszu</string>
     <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
     <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
     <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria twojego wyszukiwania</string>
@@ -1202,11 +1202,11 @@ Language: pl
     <string name="third_party_policy_learn_more_caption">Korzystamy z narzędzi do śledzenia, w tym z narzędzi od podmiotów trzecich. Przeczytaj więcej i dowiedz się jak je kontrolować.</string>
     <string name="third_party_policy_learn_more_header">Polityka prywatności podmiotów trzecich</string>
     <string name="privacy_policy_learn_more_header">Polityka prywatności</string>
-    <string name="cookie_policy_learn_more_header">Polityka \"ciasteczek\"</string>
     <string name="preference_privacy_settings">Ustawienia prywatności</string>
     <string name="preference_collect_information">Zbieranie informacji</string>
     <string name="privacy_policy_learn_more_caption">Ta informacja pomaga nam ulepszyć nasze produkty, oferować bardziej spersonalizowany marketing, dostosować działanie WordPressa oraz uszczegółowić politykę prywatności.</string>
     <string name="cookie_policy_learn_more_caption">Udostępnij informacje przy pomocy naszego narzędzia analitycznego dotyczące wykorzystania usług podczas zalogowania to konta WordPressowego.</string>
+    <string name="cookie_policy_learn_more_header">Polityka ciasteczek</string>
     <string name="post_submitted">Zamieszczono wpis</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcjonalność wtyczek wymaga aby subskrypcja domeny głównej była przypisana do tego użytkownika.</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funkcja wtyczki wymaga, aby witryna była w dobrej kondycji.</string>
@@ -1358,8 +1358,8 @@ Language: pl
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">Nie przesłano 1 strony z 1 plikiem</string>
     <string name="media_file_posts_plural_mixed_not_uploaded_one_file">Nie przesłano %1$d wpisów z 1 plikiem</string>
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Nie przesłano 1 wpisu z 1 plikiem</string>
-    <string name="untitled_in_parentheses">(bez tytułu)</string>
     <string name="at_username">\@%s</string>
+    <string name="untitled_in_parentheses">(Bez nazwy)</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
@@ -1435,10 +1435,10 @@ Language: pl
     <string name="dlg_deleting_tag">Usuwanie</string>
     <string name="dlg_confirm_delete_tag">Trwale usunąć tag \'%s\'? </string>
     <string name="error_tag_exists">Tag o tej nazwie już istnieje</string>
-    <string name="add_new_tag">Dodaj nowy tag</string>
     <string name="tag_description_hint">Opis </string>
     <string name="tag_name_hint">Tag</string>
     <string name="site_settings_amp_summary">Twoja WordPressowa witryna wspiera Przyspieszone Strony Mobile (AMP),  inicjatywę Google,  która znacznie przyspiesza ładowanie stron na urządzeniach mobilnych</string>
+    <string name="add_new_tag">Dodaj tag</string>
     <string name="site_settings_amp_title">Przyspieszone Strony Mobilne (AMP)</string>
     <string name="site_settings_timezones_error">Nie można było wczytać stref czasowych</string>
     <string name="site_settings_format_help">Dowiedz się więcej o formatowaniu daty i czasu</string>
@@ -1550,7 +1550,7 @@ Language: pl
     <string name="media_edit_image_dimensions_caption">Wymiary obrazka</string>
     <string name="media_edit_filetype_caption">Typ pliku</string>
     <string name="media_edit_filename_caption">Nazwa pliku</string>
-    <string name="media_edit_url_caption">Adres URL </string>
+    <string name="media_edit_url_caption">Adres URL</string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="connect_site">Połącz witrynę</string>
@@ -1598,7 +1598,7 @@ Language: pl
     <string name="login_epilogue_mysites_one">Moja witryna</string>
     <string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
     <string name="login_empty_2fa">Wprowadź kod weryfkacyjny</string>
-    <string name="login_empty_username">Proszę wprowadzić nazwę użytkownika</string>
+    <string name="login_empty_username">Proszę podać nazwę użytkownika</string>
     <string name="login_log_in_for_deeplink">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
     <string name="login_error_while_adding_site">Błąd podczas dodawania witryny. Kod błędu: %s</string>
     <string name="login_checking_site_address">Sprawdzanie adresu witryny</string>
@@ -1644,8 +1644,8 @@ Language: pl
     <string name="post_settings_slug_dialog_hint">Nazwa uproszczona to tytuł wpisu w postaci przyjaznego adresu URL</string>
     <string name="post_settings_slug">Uproszczona nazwa</string>
     <string name="post_settings_excerpt">Zajawka</string>
-    <string name="post_settings_post_format">Format wpisu</string>
     <string name="post_settings_tags">Tagi</string>
+    <string name="post_settings_post_format">Format treści</string>
     <string name="post_settings_more_options">Więcej opcji</string>
     <string name="post_settings_not_set">Nie ustawiono</string>
     <string name="post_settings_categories_and_tags">Kategorie i tagi</string>
@@ -1834,9 +1834,9 @@ Language: pl
     <string name="role_follower">Subskrybent</string>
     <string name="role_viewer">Oglądający</string>
     <string name="error_post_my_profile_no_connection">Brak połączenia, nie można zapisać twojego profilu</string>
-    <string name="alignment_right">Wyrównaj do prawej</string>
-    <string name="alignment_left">Wyrównaj do lewej</string>
     <string name="alignment_none">Brak wyrównania</string>
+    <string name="alignment_left">Do lewej</string>
+    <string name="alignment_right">Do prawej</string>
     <string name="site_settings_list_editor_action_mode_title">Wybrano %1$d</string>
     <string name="error_fetch_users_list">Nie można pobrać użytkowników witryny</string>
     <string name="title_follower">Obserwujący</string>
@@ -1858,7 +1858,7 @@ Language: pl
     <string name="image_width">Szerokość</string>
     <string name="image_link_to">Odnośnik do</string>
     <string name="image_settings_save_toast">Zmiany zostały zapisane</string>
-    <string name="image_caption">Podpis pod obrazkiem</string>
+    <string name="image_caption">Podpis</string>
     <string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
     <string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
     <string name="invite_error_some_failed">Zaproszenie wysłano, ale wystąpiły błędy!</string>
@@ -1929,7 +1929,7 @@ Language: pl
     <string name="site_settings_advanced_header">Zaawansowane</string>
     <string name="comments_empty_list_filtered_trashed">Brak komentarzy w koszu</string>
     <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących na moderację</string>
-    <string name="comments_empty_list_filtered_approved">Brak zatwierdzonych komentarzy</string>
+    <string name="comments_empty_list_filtered_approved">Brak zaakceptowanych komentarzy</string>
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Film</string>
@@ -2031,12 +2031,12 @@ Language: pl
     <string name="site_settings_rp_show_images_title">Pokaż obrazki</string>
     <string name="site_settings_rp_show_header_title">Pokaż nagłówek</string>
     <string name="site_settings_rp_switch_summary">Wyświetla odpowiednią zawartość z twojej witryny poniżej twoich wpisów.</string>
-    <string name="site_settings_rp_switch_title">Pokaż Powiązane Wpisy</string>
+    <string name="site_settings_rp_switch_title">Pokaż podobne wpisy</string>
     <string name="site_settings_denylist_hint">Komentarze odpowiadające szablonowi filtra są oznaczane jako spam</string>
     <string name="site_settings_moderation_hold_hint">Komentarze odpowiadające szablonowi filtra są umieszcza w kolejce do moderacji</string>
     <string name="site_settings_multiple_links_hint">Ignoruje limit odnośników od znanych tobie użytkowników</string>
     <string name="site_settings_allowlist_hint">Autor komentarza musi mieć uprzednio zatwierdzony komentarz</string>
-    <string name="site_settings_user_account_required_hint">Użytkownicy muszą być zarejestrowani oraz zalogowani aby móc dodawać komentarze</string>
+    <string name="site_settings_user_account_required_hint">Użytkownicy muszą być zarejestrowani i zalogowani, aby móc komentować</string>
     <string name="site_settings_identity_required_hint">Autor komentarza musi podać imię oraz e-mail</string>
     <string name="site_settings_paging_hint">Pokaż komentarze w kawałkach o określonym rozmiarze</string>
     <string name="site_settings_threading_hint">Zezwalaj na zagnieżdżanie do określonej głębokości</string>
@@ -2070,17 +2070,17 @@ Language: pl
     <string name="site_settings_allowlist_title">Automatyczne zatwierdzaj</string>
     <string name="site_settings_threading_title">Wątki dyskusji</string>
     <string name="site_settings_paging_title">Stronicowanie</string>
-    <string name="site_settings_sort_by_title">Sortuj</string>
+    <string name="site_settings_sort_by_title">Sortuj według</string>
     <string name="site_settings_account_required_title">Użytkow. muszą być zalog.</string>
     <string name="site_settings_identity_required_title">Muszą zawierać imię i email</string>
     <string name="site_settings_receive_pingbacks_title">Odbieraj pingbacki</string>
     <string name="site_settings_send_pingbacks_title">Wysyłaj pingbacki</string>
-    <string name="site_settings_allow_comments_title">Włącz komentowanie</string>
+    <string name="site_settings_allow_comments_title">Zezwól na komentarze</string>
     <string name="site_settings_default_format_title">Domyślny format wpisów</string>
     <string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
     <string name="site_settings_address_title">Adres</string>
     <string name="site_settings_title_title">Tytuł witryny</string>
-    <string name="site_settings_tagline_title">Opis</string>
+    <string name="site_settings_tagline_title">Slogan</string>
     <string name="site_settings_discussion_new_posts_header">Ustawienia domyślne dla nowych wpisów</string>
     <string name="site_settings_account_header">Konto</string>
     <string name="site_settings_writing_header">Redagowanie wpisów</string>
@@ -2091,7 +2091,7 @@ Language: pl
     <string name="oldest_first">Od najstarszych</string>
     <string name="privacy">Prywatność witryny</string>
     <string name="close_after">Zamknij komentowanie po</string>
-    <string name="related_posts">Powiązane Wpisy</string>
+    <string name="related_posts">Podobne wpisy</string>
     <string name="media_error_no_permission_upload">Nie masz uprawnień do przesyłania mediów na tą witrynę</string>
     <string name="never">Nigdy</string>
     <string name="unknown">Nieznane</string>
@@ -2303,7 +2303,6 @@ Language: pl
     <string name="username_or_password_incorrect">Niepoprawna nazwa użytkownika lub hasło</string>
     <string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
     <string name="error_deleting_post">Wystąpił błąd podczas usuwania wpisu</string>
-    <string name="trash">Usuń</string>
     <string name="mnu_comment_unapprove">Odrzuć</string>
     <string name="new_post">Nowy wpis</string>
     <string name="new_media">Nowe media</string>
@@ -2338,7 +2337,6 @@ Language: pl
     <string name="reader_title_applog">Dziennik aplikacji</string>
     <string name="dlg_spamming_comments">Uznane za spam</string>
     <string name="dlg_approving_comments">Zatwierdzanie</string>
-    <string name="comment_status_unapproved">Oczekujące</string>
     <string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
     <string name="dlg_trashing_comments">Wysyłanie do kosza</string>
     <string name="mnu_comment_trash">Kosz</string>
@@ -2359,6 +2357,8 @@ Language: pl
     <string name="delete_page">Usunąć stronę?</string>
     <string name="reader_toast_err_add_tag">Nie udało się dodać tematu</string>
     <string name="reader_toast_err_remove_tag">Nie udało się usunąć tematu</string>
+    <string name="comment_status_unapproved">Oczekujący</string>
+    <string name="trash">Kosz</string>
     <string name="share_link">Udostępnij odnośnik</string>
     <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów…</string>
     <string name="reader_label_reply">Odpowiedz</string>
@@ -2372,7 +2372,6 @@ Language: pl
     <string name="pick_video">Wybierz film</string>
     <string name="comments_empty_list">Brak komentarzy </string>
     <string name="empty_list_default">Lista jest pusta</string>
-    <string name="reader_untitled_post">(Brak tytułu)</string>
     <string name="reader_btn_share">Udostępnij</string>
     <string name="reader_label_removed_tag">Usunięto %s</string>
     <string name="reader_label_added_tag">Dodano %s</string>
@@ -2389,6 +2388,7 @@ Language: pl
     <string name="sign_up_label">Zarejestruj się</string>
     <string name="reader_toast_err_tag_invalid">To nie jest poprawny temat</string>
     <string name="reader_toast_err_tag_exists">Obserwujesz już ten temat</string>
+    <string name="reader_untitled_post">(Bez nazwy)</string>
     <string name="themes">Motywy</string>
     <string name="media_gallery_type_tiled">Kafelki</string>
     <string name="media_gallery_type_squares">Kwadraty</string>
@@ -2407,8 +2407,8 @@ Language: pl
     <string name="stats_timeframe_months">Miesiące</string>
     <string name="media_gallery_type_circles">Kręgi</string>
     <string name="stats_view_referrers">Polecający</string>
-    <string name="media_edit_caption_text">Podpis pod obrazkiem</string>
     <string name="theme_activate_button">Włącz</string>
+    <string name="media_edit_caption_text">Podpis</string>
     <string name="discard">Odrzuć</string>
     <string name="manage">Zarządzaj</string>
     <string name="note_reply_successful">Odpowiedź opublikowana</string>
@@ -2428,7 +2428,7 @@ Language: pl
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="pages">Strony</string>
     <string name="posts">Wpisy</string>
-    <string name="anonymous">Anonimowy</string>
+    <string name="anonymous">Anonim</string>
     <string name="ok">OK</string>
     <string name="done">gotowe</string>
     <string name="link_enter_url">Adres URL</string>
@@ -2451,7 +2451,7 @@ Language: pl
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
     <string name="media">Multimedia</string>
     <string name="delete">Usuń</string>
-    <string name="approve">Zaakceptuj</string>
+    <string name="approve">Zatwierdź</string>
     <string name="none">Brak</string>
     <string name="add">Dodaj</string>
     <string name="error">Błąd</string>

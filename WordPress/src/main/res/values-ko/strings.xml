@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-24 15:58:49+0000
+Translation-Revision-Date: 2021-07-07 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">정기적으로 게시하면 독자의 참여도를 높이고 새 방문자를 사이트로 유도하는 데 도움이 됩니다.</string>
+    <string name="blogging_reminders_tip">팁</string>
+    <string name="blogging_reminders_select_days_message">언제든지 업데이트할 수 있습니다.</string>
+    <string name="blogging_reminders_select_days">블로깅할 일자 선택</string>
+    <string name="blogging_reminders_epilogue_caption">내 사이트 &gt; 설정에 &gt; 블로깅 알림에서 언제든지 업데이트할 수 있습니다.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">설정된 알림이 없습니다.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">블로깅에 대한 알림을 &lt;b&gt;매일&lt;/b&gt; 받게 됩니다.</string>
+    <string name="blogging_reminders_epilogue_body_days">블로깅에 대한 알림을 일주일에 %1$s번 %2$s에 받게 됩니다.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">알림이 제거되었습니다!</string>
+    <string name="blogging_reminders_epilogue_title">모두 설정되었습니다!</string>
+    <string name="blogging_reminders_update">업데이트</string>
+    <string name="blogging_reminders_not_set">설정 없음</string>
+    <string name="blogging_reminders_n_a_week">일주일에 %s번</string>
+    <string name="set_your_blogging_reminders_button">알림 설정</string>
+    <string name="set_up_blogging_reminders_message">게시하려는 일자의 블로깅 알림 설정</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">글을 발행하는 중입니다… 그동안에 게시하려는 일자의 블로깅 알림을 설정하실 수 있습니다.</string>
+    <string name="set_your_blogging_reminders_title">블로깅 알림 설정</string>
+    <string name="blogging_reminders_notification_text">오늘의 내용을 생성하라는 알림입니다.</string>
+    <string name="blogging_reminders_notification_title">%s의 블로깅 시간입니다.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">재활용 가능한 블록 편집은 아직 iOS용 WordPress에서 지원되지 않습니다.</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">재활용 가능한 블록 편집은 아직 Android용 WordPress에서 지원되지 않습니다.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">대신에 \"일반 블록으로 변환\"을 눌러 이러한 블록을 분리하고 따로 편집할 수 있습니다.</string>
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
-    <string name="blogging_goals_not_set">설정 없음</string>
-    <string name="blogging_goals_n_times_a_week">일주일에 %d번</string>
-    <string name="set_your_blogging_goals_button">목표 설정</string>
-    <string name="set_your_blogging_goals_message">글을 발행하는 중입니다. 그동안 알림을 받을 블로깅 목표를 설정하고 진행률을 추적하세요.</string>
-    <string name="set_your_blogging_goals_title">블로깅 목표 설정</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="gutenberg_native_set_as_featured_image">특성 이미지로 설정 </string>
     <string name="gutenberg_native_remove_as_featured_image">특성 이미지 제거 </string>
@@ -23,7 +40,7 @@ Language: ko_KR
     <string name="site_settings_categories_empty_subtitle">글을 분류할 때 빠르게 선택할 수 있도록 자주 사용하는 카테고리 추가</string>
     <string name="site_settings_categories_empty_button">카테고리 생성</string>
     <string name="site_settings_categories_title">카테고리</string>
-    <string name="site_settings_blogging_reminders_title">블로깅 목표</string>
+    <string name="site_settings_blogging_reminders_title">블로깅 알림</string>
     <string name="page_is_posts_page_warning">최신 글 페이지의 콘텐츠는 자동으로 생성되며 편집할 수 없습니다.</string>
     <string name="gutenberg_native_border_settings">경계선 설정</string>
     <string name="storage_utils_dialog_dont_show_button">다시 보지 않음</string>
@@ -193,8 +210,6 @@ Language: ko_KR
     <string name="backup_item_roots">워드프레스 루터</string>
     <string name="backup_download_details_choose_items_header">이 다운로드에 포함된 항목</string>
     <string name="gutenberg_native_uploading">업로드 중…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">재활용 가능한 블록은 iOS용 WordPress에서 편집할 수 없습니다.</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">재활용 가능한 블록은 Android용 WordPress에서 편집할 수 없습니다.</string>
     <string name="gutenberg_native_replace_file">파일 바꾸기</string>
     <string name="gutenberg_native_replace_audio">오디오 교체</string>
     <string name="gutenberg_native_problem_opening_the_audio">오디오 열기 문제</string>
@@ -2825,4 +2840,13 @@ Language: ko_KR
     <string name="add">추가</string>
     <string name="save">저장</string>
     <string name="cancel">취소</string>
+    <string-array name="blogging_reminders_count">
+        <item>한 번</item>
+        <item>두 번</item>
+        <item>세 번</item>
+        <item>네 번</item>
+        <item>다섯 번</item>
+        <item>여섯 번</item>
+        <item>일곱 번</item>
+    </string-array>
 </resources>

@@ -79,9 +79,7 @@ import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersManager;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
@@ -149,6 +147,7 @@ import javax.inject.Inject;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
@@ -228,7 +227,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
-    @Inject BloggingRemindersManager mBloggingRemindersManager;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -1088,11 +1086,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 public void onClick(View v) {
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
-                            });
-                    boolean isNewPost = data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false);
-                    if (isNewPost && mBloggingRemindersManager.shouldShowBloggingRemindersPrompt(site.getId())) {
-                        mBloggingRemindersViewModel.showBottomSheet(site.getId(), Screen.PROLOGUE);
-                    }
+                            },
+                            isFirstTimePublishing -> mBloggingRemindersViewModel
+                                    .onPublishingPost(site.getId(), isFirstTimePublishing)
+                    );
+                }
+                break;
+            case RequestCodes.CREATE_STORY:
+                SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
+                if (selectedSite != null) {
+                    boolean isNewStory = data == null || data.getStringExtra(ARG_STORY_BLOCK_ID) == null;
+                    mBloggingRemindersViewModel.onPublishingPost(
+                            selectedSite.getId(),
+                            isNewStory
+                    );
                 }
                 break;
             case RequestCodes.CREATE_SITE:
@@ -1403,7 +1410,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (BuildConfig.IS_JETPACK_APP) {
                 ActivityLauncher.showSignInForResultJetpackOnly(this);
             } else {
-                ActivityLauncher.showSignInForResult(this);
+                ActivityLauncher.showSignInForResult(this, true);
             }
         } else {
             SiteModel site = getSelectedSite();
@@ -1520,7 +1527,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         event.isFirstTimePublish,
                         event.post,
                         null,
-                        targetSite);
+                        targetSite,
+                        isFirstTimePublishing -> mBloggingRemindersViewModel
+                                .onPublishingPost(targetSite.getId(), isFirstTimePublishing)
+                );
             }
         }
     }

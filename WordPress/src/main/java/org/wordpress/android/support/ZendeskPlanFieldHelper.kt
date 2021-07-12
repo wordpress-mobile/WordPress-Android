@@ -1,8 +1,8 @@
 package org.wordpress.android.support
 
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SUPPORT
-import org.wordpress.android.util.CrashLogging
 
 const val ZENDESK_UNKNOWN_PLAN_IDS_ERROR = "See issue #12064; zendesk-unknown-plan-ids"
 const val UNKNOWN_PLAN = "unknown-plan"
@@ -89,7 +89,7 @@ class ZendeskPlanFieldHelper(private val remoteLoggingUtils: CrashLogging) {
             val logMessage = "$ZENDESK_UNKNOWN_PLAN_IDS_ERROR ${getUnknownPlanIds(planIds)}"
 
             AppLog.e(SUPPORT, ZendeskPlanFieldHelper::class.java.simpleName + logMessage)
-            remoteLoggingUtils.reportException(NoSuchElementException(logMessage))
+            remoteLoggingUtils.sendReport(NoSuchElementException(logMessage))
         }
 
         return when {

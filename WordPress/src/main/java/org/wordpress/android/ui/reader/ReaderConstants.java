@@ -73,7 +73,7 @@ public class ReaderConstants {
     // JSON key names
     public static final String JSON_TAG_TAGS_ARRAY = "tags";
     public static final String JSON_TAG_TITLE = "title";
-    public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
+    public static final String JSON_TAG_DISPLAY_NAME = "display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
     public static final String JSON_CARDS = "cards";
