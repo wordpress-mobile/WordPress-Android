@@ -349,32 +349,32 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onPostCreated shows prologue when post is new and prompt was not shown before`() {
+    fun `onPublishingPost shows prologue when publishing for the first time and prompt was not shown before`() {
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
 
         initPrologueBuilder()
 
-        viewModel.onPostCreated(siteId, true)
+        viewModel.onPublishingPost(siteId, true)
 
         assertPrologue()
     }
 
     @Test
-    fun `onPostCreated does not show prologue when post is old and prompt was not shown before`() {
+    fun `onPublishingPost does not show prologue when post was already published and prompt was not shown before`() {
         initPrologueBuilder()
 
-        viewModel.onPostCreated(siteId, false)
+        viewModel.onPublishingPost(siteId, false)
 
         assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
     }
 
     @Test
-    fun `onPostCreated does not show prologue when post is new and prompt was shown before`() {
+    fun `onPublishingPost does not show prologue when publishing for the first time and prompt was shown before`() {
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(false)
 
         initPrologueBuilder()
 
-        viewModel.onPostCreated(siteId, true)
+        viewModel.onPublishingPost(siteId, true)
 
         assertThat(uiState.last().uiItems).isEqualTo(emptyList<BloggingRemindersItem>())
     }

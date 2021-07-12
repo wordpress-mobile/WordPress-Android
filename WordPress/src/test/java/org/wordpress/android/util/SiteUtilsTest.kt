@@ -125,6 +125,42 @@ class SiteUtilsTest {
     }
 
     @Test
+    fun `checkMinimalWordPressVersion returns true when software version is higher than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.6"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns true when software version is equal to the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.5"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns false when software version is lower than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.4"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isFalse
+    }
+
+    @Test
     fun `isAccessedViaWPComRest return false when origin is not wpcom rest`() {
         val site = SiteModel()
         site.origin = SiteModel.ORIGIN_XMLRPC

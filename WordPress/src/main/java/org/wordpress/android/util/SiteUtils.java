@@ -24,7 +24,6 @@ import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
 import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
 
@@ -322,27 +321,18 @@ public class SiteUtils {
     public static boolean checkMinimalJetpackVersion(SiteModel site, String limitVersion) {
         String jetpackVersion = site.getJetpackVersion();
         if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
-            try {
-                // strip any trailing "-beta" or "-alpha" from the version
-                int index = jetpackVersion.lastIndexOf("-");
-                if (index > 0) {
-                    jetpackVersion = jetpackVersion.substring(0, index);
-                }
-                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
-                // longer active.
-                if (jetpackVersion.equals("false")) {
-                    return false;
-                }
-                Version siteJetpackVersion = new Version(jetpackVersion);
-                Version minVersion = new Version(limitVersion);
-                return siteJetpackVersion.compareTo(minVersion) >= 0;
-            } catch (IllegalArgumentException e) {
-                String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
-                AppLog.e(AppLog.T.UTILS, errorStr, e);
+            // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+            // longer active.
+            if (jetpackVersion.equals("false")) {
                 return false;
             }
+            return VersionUtils.checkMinimalVersion(jetpackVersion, limitVersion);
         }
         return false;
+    }
+
+    public static boolean checkMinimalWordPressVersion(SiteModel site, String minVersion) {
+        return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
     public static boolean supportsStoriesFeature(SiteModel site) {
