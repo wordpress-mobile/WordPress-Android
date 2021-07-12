@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-01 12:30:58+0000
+Translation-Revision-Date: 2021-07-09 12:28:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -1479,10 +1479,10 @@ Language: ro
     <string name="quick_start_list_create_site_subtitle">Obții un site care funcționează și rulează.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Atinge %1$s Partajare %2$s pentru a continua</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Atinge %1$s Conexiuni %2$s pentru a-ți adăuga conturile din media socială</string>
-    <string name="quick_start_dialog_view_site_title">Vizualizează-ți site-ul</string>
     <string name="quick_start_dialog_share_site_title">Partajează-ți site-ul</string>
     <string name="quick_start_dialog_share_site_message">Conectează-ți conturile din media socială - site-ul tău va partaja automat articolele noi.</string>
     <string name="quick_start_dialog_view_site_message_short">Atinge %1$s Vizualizează site-ul %2$s pentru a-l previzualiza</string>
+    <string name="quick_start_dialog_view_site_title">Vezi site-ul</string>
     <string name="quick_start_dialog_publish_post_title">Publică un articol</string>
     <string name="quick_start_dialog_publish_post_message_short">Atinge %1$s Creează articol %2$s pentru a crea un articol nou</string>
     <string name="quick_start_dialog_need_help_title">Vrei un pic de ajutor pentru a începe?</string>
@@ -2377,7 +2377,7 @@ Language: ro
     <string name="days_quantity_one">O zi</string>
     <string name="pending_email_change_snackbar">Dă clic pe legătura de verificare din emailul trimis la %1$s pentru a confirma noua ta adresă</string>
     <string name="web_address">Adresă web</string>
-    <string name="primary_site">Site primar</string>
+    <string name="primary_site">Site principal</string>
     <string name="editor_toast_uploading_please_wait">Acum încarci media. Te rog așteaptă până ce asta se termină.</string>
     <string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
     <string name="post_settings_set_featured_image">Setează imaginea reprezentativă</string>
@@ -2593,7 +2593,7 @@ Language: ro
     <string name="my_site_btn_view_admin">Vezi administrator</string>
     <string name="site_picker_title">Alege site</string>
     <string name="my_site_btn_switch_site">Comută site</string>
-    <string name="my_site_btn_view_site">Vezi site</string>
+    <string name="my_site_btn_view_site">Vezi site-ul</string>
     <string name="my_site_btn_blog_posts">Articole blog</string>
     <string name="my_site_btn_site_settings">Setări</string>
     <string name="my_site_header_look_and_feel">Aspect și afect</string>
@@ -2661,12 +2661,12 @@ Language: ro
     <string name="comment">Comentariu</string>
     <string name="comment_trashed">Comentariu aruncat la gunoi</string>
     <string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
-    <string name="comment_reply_to_user">Răspunde la %s</string>
     <string name="signing_out">Deautentificare….</string>
     <string name="mnu_comment_liked">Apreciat</string>
     <string name="reader_label_like">Apreciere</string>
     <string name="reader_empty_posts_in_tag">Niciun articol cu acest subiect</string>
     <string name="browse_our_faq_button">Răsfoiește întrebările noastre frecvente</string>
+    <string name="comment_reply_to_user">Răspunde-i lui %s</string>
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
     <string name="reader_menu_block_blog">Blochează acest site</string>
     <string name="reader_toast_err_block_blog">Nu pot bloca acest site</string>

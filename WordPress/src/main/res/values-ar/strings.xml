@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-30 21:21:09+0000
+Translation-Revision-Date: 2021-07-07 16:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">يمكن أن يساعد النشر بشكل منتظم على الحفاظ على انشغال القراء وجذب زائرين جدد إلى موقعك.</string>
+    <string name="blogging_reminders_tip">نصيحة</string>
+    <string name="blogging_reminders_select_days_message">يمكنك تحديث هذا في أي وقت</string>
+    <string name="blogging_reminders_select_days">تحديد الأيام التي ترغب في التدوين بها</string>
+    <string name="blogging_reminders_epilogue_caption">يمكن تحديث هذا في أي وقت من خلال موقعي &gt; الإعدادات &gt; تذكيرات التدوين.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">ليست لديك أي تذكيرات معينة.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">ستحصل على تذكيرات للتدوين ⁦%1$s⁩ في الأسبوع يوم ⁦%2$s⁩.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">تمت إزالة التذكيرات!</string>
+    <string name="blogging_reminders_epilogue_title">كل شيء جاهز!</string>
+    <string name="blogging_reminders_update">تحديث</string>
+    <string name="blogging_reminders_not_set">لم يتم تعيين أي شيء</string>
+    <string name="blogging_reminders_n_a_week">%s في الأسبوع</string>
+    <string name="set_your_blogging_reminders_button">تعيين التذكيرات</string>
+    <string name="set_up_blogging_reminders_message">قم بإعداد تذكيرات التدوين في الأيام التي ترغب في النشر فيها.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">جارٍ نشر مقالتك… ويمكنك في هذه الأثناء إعداد تذكيرات التدوين في الأيام التي ترغب في النشر فيها.</string>
+    <string name="set_your_blogging_reminders_title">تعيين تذكيرات التدوين الخاصة بك</string>
+    <string name="blogging_reminders_notification_text">هذا تذكير لك لإنشاء شيء ما اليوم</string>
+    <string name="blogging_reminders_notification_title">حان الوقت للتدوين في %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">تحرير المكوِّنات القابلة لإعادة الاستخدام غير مدعوم بعد على ووردبريس لنظام تشغيل Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">وبدلاً من ذلك، يمكنك فصل هذه المكوِّنات وتحريرها بشكل منفصل عن طريق الضغط على \"التحويل إلى مكوِّنات عادية\".</string>
     <string name="blogging_reminders_done">تمّ</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>
@@ -2848,4 +2870,13 @@ Language: ar
     <string name="on">تشغيل</string>
     <string name="notification_settings">إعدادات التنبيهات</string>
     <string name="publish_now">النشر الآن</string>
+    <string-array name="blogging_reminders_count">
+        <item>مرة واحدة</item>
+        <item>مرتان</item>
+        <item>ثلاث مرات</item>
+        <item>أربع مرات</item>
+        <item>خمس مرات</item>
+        <item>ست مرات</item>
+        <item>سبع مرات</item>
+    </string-array>
 </resources>

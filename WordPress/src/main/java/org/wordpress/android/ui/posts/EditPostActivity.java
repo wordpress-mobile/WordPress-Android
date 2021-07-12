@@ -1208,6 +1208,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
+        MenuItem helpMenuItem = menu.findItem(R.id.menu_editor_help);
 
         if (secondaryAction != null && mEditPostRepository.hasPost()) {
             secondaryAction.setVisible(showMenuItems && getSecondaryAction().isVisible());
@@ -1267,6 +1268,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
             });
         } else {
             contentInfo.setVisible(false); // only show the menu item when for Gutenberg
+        }
+
+        if (helpMenuItem != null) {
+            if (mEditorFragment instanceof GutenbergEditorFragment
+                && BuildConfig.DEBUG
+                && showMenuItems
+            ) {
+                helpMenuItem.setVisible(true);
+            } else {
+                helpMenuItem.setVisible(false);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1451,6 +1463,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mViewModel.finish(ActivityFinishState.SAVED_LOCALLY);
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
+                }
+            } else if (itemId == R.id.menu_editor_help) {
+                // Display the editor help page -- option should only be available in the GutenbergEditor
+                if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).showEditorHelp();
                 }
             }
         }

@@ -1,143 +1,71 @@
 <ar>
-17.6:
-يسمح لك مكوِّن الصوت بإضافة ملفات البث الصوتي والموسيقى والصوت إلى مقالاتك وصفحاتك. إنه متاح الآن لمستخدمي الخطة المجانية كذلك!
-
-حوّل أي صورة إلى صورة *بارزة* باستخدام زر "تعيين كصورة بارزة" الجديد الموجود في مكوِّن الصورة.
-
-وأخيرًا، لقد جعلناه أكثر وضوحًا لدرجة أنه لا يمكنك تحرير صفحة أرشيفات المقالة التي تم إنشاؤها تلقائيًا.
+17.7:
+محرِّر المكوِّن: شبكة تخطيط المكوِّن الجديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
 </ar>
 <de-DE>
-17.6:
-Mit dem Audioblock kannst du deinen Beiträgen und Seiten Podcasts, Musik und Audiodateien hinzufügen. Er ist jetzt auch für Benutzer mit dem Kostenlos-Tarif verfügbar!
-
-Mache mit dem neuen Button „Als Beitragsbild festlegen“ Im Bildblock jedes beliebige Bild zu einem Beitragsbild.
-
-Außerdem haben wir noch verdeutlicht, dass du die automatisch generierte Beitragsarchivseite nicht bearbeiten kannst.
+17.7:
+- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
 </de-DE>
 <en-US>
-The Audio Block lets you add podcasts, music, and sound files to your posts and pages. It’s now available for Free Plan users, too!
-
-Turn any image into a *featured* image, with the new ‘Set as Featured’ button in the Image block.
-
-Finally, we made it clearer that you can’t edit the automatically generated post archives page.
+Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
 </en-US>
 <es-ES>
-17.6:
-Con el bloque Audio, puedes añadir podcasts, música y archivos de audio a tus entradas y páginas. También está disponible para usuarios del plan gratuito.
-
-Utiliza el nuevo botón "Establecer como destacado" del bloque Imagen para convertir cualquier imagen en una imagen *destacada*.
-
-Por último, dejamos claro que no es posible editar la página Archivos de entradas, que se genera automáticamente.
+17.7:
+Editor de bloques: se ha incorporado una nueva cuadrícula de diseño de bloques, se han introducido cambios en el estilo de las insignias, se ha corregido el hecho de que no se cree un nuevo bloque al pulsar Intro dentro de un bloque de texto y también se ha corregido la vista de tableta para el botón de inserción
 </es-ES>
 <fr-CA>
-17.6 :
-Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
-
-Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
-
-Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
+17.7 :
+Éditeur de blocs : Nouvelle grille de mise en page de bloc, Modifications du style de badge, Correction d’un nouveau bloc non créé lorsque vous appuyez sur Entrée à l’intérieur d’un bloc textuel, Corrections de la vue tablette pour le bouton de l’outil d’insertion
 </fr-CA>
 <fr-FR>
-17.6 :
-Le bloc son vous permet d’ajouter des podcasts, de la musique et des fichiers audio à vos articles et pages. Il est désormais également disponible pour les utilisateurs du plan gratuit !
-
-Transformez n’importe quelle image en image *mise en avant*, grâce au nouveau bouton « Définir en tant qu’image mise en avant » dans le bloc d’image.
-
-Enfin, nous avons explicité le fait qu’il n’est pas possible de modifier la page d’archives des articles générée automatiquement.
+17.7 :
+Éditeur de blocs : Nouvelle grille de mise en page de bloc, Modifications du style de badge, Correction d’un nouveau bloc non créé lorsque vous appuyez sur Entrée à l’intérieur d’un bloc textuel, Corrections de la vue tablette pour le bouton de l’outil d’insertion
 </fr-FR>
 <iw-IL>
-17.6:
-בלוק האודיו מאפשר לך להוסיף פודקאסטים, מוזיקה וקובצי ;קול לפוסטים ולעמודים. הבלוק זמין עכשיו גם למנויים לתוכנית החינמית!
-
-אפשר להפוך כל תמונה לתמונה *מרכזית* באמצעות הכפתור 'להגדיר כמרכזית' בבלוק התמונה.
-
-אחרון חביב, שיפרנו את ההודעה אשר מסבירה שאין אפשרות לערוך את עמוד הארכיון של הפוסטים שנוצר באופן אוטומטי.
+17.7:
+עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
 </iw-IL>
 <id>
-17.6:
-Blok Audio memungkinkan Anda menambahkan podcast, musik, dan file suara ke pos dan halaman Anda. Sekarang juga tersedia untuk pengguna dengan Paket Gratis!
-
-Ubah semua gambar menjadi gambar *andalan*, dengan tombol ‘Tetapkan sebagai Andalan’ yang baru pada blok Gambar.
-
-Terakhir, kami memperjelas bahwa Anda tidak dapat menyunting halaman arsip pos yang dibuat secara otomatis.
+17.7:
+Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
 </id>
 <it-IT>
-17.6:
-Il blocco Audio ti permette di aggiungere podcast, musica e file audio ad articoli e pagine. Ora è anche disponibile per gli utenti del piano gratuito.
-
-Trasforma qualsiasi immagine in un'immagine *in evidenza*, con il nuovo pulsante "Imposta come in evidenza" nel blocco Immagine.
-
-Infine, abbiamo chiarito che non è possibile modificare la pagina degli archivi degli articoli generata automaticamente.
+17.7:
+Editor dei blocchi: nuovo blocco Griglia di layout, modifiche allo stile dei Badge, correzione del problema relativo alla mancata creazione di un nuovo blocco quando viene premuto Invio all'interno del blocco basato su testo, correzioni relative alla visualizzazione su tablet per il pulsante di inserimento
 </it-IT>
 <ja-JP>
-17.6:
-音声ブロックを使用すると、投稿とページにポッドキャスト、音楽、音声ファイルを追加できます。 無料プランのお客様にもご利用いただけるようになりました。
-
-画像ブロックで新しい「アイキャッチ画像を設定」を使用して、画像を *アイキャッチ* 画像にできます。
-
-最後に、自動的に生成された投稿アーカイブページは編集不可であることをわかりやすくしました。
+17.7:
+ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
 </ja-JP>
 <ko-KR>
-17.6:
-오디오 블록이 있으면 팟캐스트, 음악 및 사운드 파일을 글과 페이지에 추가할 수 있습니다. 지금 무료 요금제 사용자도 이용할 수 있습니다!
-
-어떤 이미지든 이미지 블록의 새로운 '특성으로 설정' 버튼을 통해 *특성* 이미지로 전환하세요.
-
-마지막으로, 자동으로 생성된 글 목록 페이지를 편집할 수 없다는 것을 더 명확하게 밝혔습니다.
+17.7:
+블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
 </ko-KR>
 <nl-NL>
-17.6:
-Met het Audioblok kan je podcasts, muziek en geluidsbestanden toevoegen aan je berichten en pagina’s. Hij is nu ook beschikbaar voor gebruikers met een gratis abonnement!
-
-Maak van iedere afbeelding een *uitgelichte* afbeelding met de nieuwe knop ‘Instellen als uitgelicht’ in het Afbeeldingblok.
-
-Tenslotte hebben we het duidelijker gemaakt dat je de automatisch gegenereerde berichtarchiefpagina’s niet kunt bewerken.
+17.7:
+Blokeditor: Nieuw indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
 </nl-NL>
 <pt-BR>
-17.6:
-O bloco de áudio permite incluir podcasts, músicas e outros arquivos de som em seus posts e páginas. Agora, ele está disponível também para usuários do plano gratuito!
-
-Transforme qualquer foto em uma imagem *destacada* com o novo botão "Definir como destacada" no bloco de imagem.
-
-Por fim, deixamos mais explícito que não é possível editar a página de arquivos de post, que é criada automaticamente.
+17.7:
+Editor de blocos: nova grade de layout de blocos, ajustes no estilo de selo, correção do bug que obstruía a criação de bloco ao pressionar Enter em um bloco baseado em texto e correções na visualização do botão de inserção em tablets
 </pt-BR>
 <ru-RU>
-17.6:
-Блок «Аудио» позволяет легко добавлять подкасты, музыку и звуковые файлы в ваши записи и на страницы. Он также теперь доступен и пользователям бесплатного тарифного плана!
-
-Сделайте любое изображение *избранным* с помощью новой кнопки «Сделать избранным» в блоке «Изображение».
-
-Наконец, было чётко разъяснено, что редактирование автоматически генерируемых страниц архивов записей невозможно.
+17.7:
+Редактор блоков: новая разметка блоков в виде сетки, слегка измененный стиль эмблем, исправлена ошибка, из-за которой новый блок не создавался при нажатии клавиши ВВОД внутри текстового блока, а также исправлена кнопка вставки в режиме разметки для планшетов
 </ru-RU>
 <sv-SE>
-17.6:
-Ljudblocket gör det möjligt att lägga till podcasts, musik och ljudfiler i dina inlägg och på dina sidor. Det är nu även tillgängligt för användare med gratispaket!
-
-Gör valfri bild till en *utvald* bild med den nya knappen "Ange som utvald" i bildblocket.
-
-Vi har även gjort det tydligare att du inte kan redigera den automatiskt genererade inläggsarkivsidan.
+17.7:
+Blockredigerare: nytt Layoutrutnät-block, justeringar av märkesstilar, korrigering av att det inte skapades något nytt block när man tryckte på Enter i ett textbaserat block och av infogarknappen i surfplattevy
 </sv-SE>
 <tr-TR>
-17.6:
-Ses Bloku, gönderilerinize ve sayfalarınıza podcast'ler, müzik ve ses dosyaları eklemenize olanak tanır. Artık Ücretsiz Paket kullanıcıları tarafından da kullanılabilir.
-
-Görsel blokundaki yeni 'Öne Çıkan Olarak Ayarla' düğmesiyle herhangi bir görseli *öne çıkan* bir görsele dönüştürün.
-
-Son olarak, otomatik olarak oluşturulan gönderi arşivleri sayfasını düzenleyemeyeceğinizi daha net olarak belirttik.
+17.7:
+Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
 </tr-TR>
 <zh-CN>
-17.6：
-音频区块可以将播客、音乐和声音文件添加到文章和页面中。 现在，免费套餐用户也可使用。
-
-使用图像区块中新的“设置为特色图片”按钮，可将任意图片转换为*特色*图片。
-
-最后，我们进一步明确您无法编辑自动生成的文章存档页面。
+17.7：
+区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
 </zh-CN>
 <zh-TW>
-17.6：
-音訊區塊讓你將 Podcast、音樂和音效檔加入文章和頁面。 這項功能現在也開放免費方案使用者使用！
-
-圖片區塊推出「設為特色圖片」新按鈕，按一下即可將任何圖片變成 *特色* 圖片。
-
-最後我們清楚強調，自動產生的文章彙整頁面無法編輯。
+17.7：
+區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
 </zh-TW>

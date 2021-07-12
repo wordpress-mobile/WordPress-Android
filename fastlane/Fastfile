@@ -135,15 +135,18 @@ REPOSITORY_NAME="WordPress-Android"
   lane :code_freeze do | options |
     old_version = android_codefreeze_prechecks(options)
 
-    app = options[:app]
     android_bump_version_release(app: 'wordpress')
     new_version = android_get_app_version(app: 'wordpress')
 
     # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
     #   which won't work since we already ran this action for wordpress and are already in release branch. Patch it manually for now, by applying the same versionName and versionCOde as the ones from WordPress
-    new_version_code = android_get_release_version(app: 'wordpress')['code']
-    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version}")
-    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_code}")
+    new_version_tuple = android_get_release_version(app: 'wordpress')
+    Dir.chdir('..') do
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version_tuple['name']}")
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_tuple['code']}")
+      sh('git', 'add', 'version.properties')
+      sh('git', 'commit', '-m', 'Bump Jetpack version number')
+    end
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -153,7 +156,13 @@ REPOSITORY_NAME="WordPress-Android"
       release_notes_file_path: "#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path: release_notes_path('wordpress')
     )
-    FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
+    # Jetpack Release notes are based on WP Release notes
+    begin
+      # FIXME: Move this logic to release-toolkit?
+      FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack'))
+      sh('git', 'add', release_notes_path('jetpack'))
+      sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
+    end
     cleanup_release_files(files: release_notes_short_paths)
 
     android_update_release_notes(new_version: new_version) # Adds empty section for next version
@@ -361,9 +370,9 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
+    app = options[:app]
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: app)
 
-    app = options[:app]
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
     
