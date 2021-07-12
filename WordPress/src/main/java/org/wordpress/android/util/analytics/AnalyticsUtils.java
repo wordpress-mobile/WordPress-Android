@@ -77,7 +77,7 @@ public class AnalyticsUtils {
     private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
     private static final String PAGE_KEY = "page";
     private static final String TOTAL_PAGES_KEY = "total_pages";
-    private static final String PAGE_LENGTH_KEY = "page_length";
+    private static final String PAGE_LENGTH_KEY = "per_page";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
