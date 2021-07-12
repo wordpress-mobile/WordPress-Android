@@ -775,7 +775,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private boolean mIsHidden;
         private boolean mIsRecentPick;
 
-        SiteRecord(SiteModel siteModel) {
+        public SiteRecord(SiteModel siteModel) {
             mLocalId = siteModel.getId();
             mSiteId = siteModel.getSiteId();
             mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);

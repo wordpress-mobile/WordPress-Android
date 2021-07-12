@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.widgets.WPTextView
@@ -42,8 +44,10 @@ class PromoDialog : AppCompatDialogFragment() {
     private lateinit var neutralButtonLabel: String
     private lateinit var positiveButtonLabel: String
     private lateinit var title: String
+    private lateinit var siteRecord: SiteRecord
 
     @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
 
     override fun getTheme() = if (onboardingImprovementsFeatureConfig.isEnabled()) {
         R.style.WordPress_FullscreenDialog
@@ -94,7 +98,7 @@ class PromoDialog : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        this.siteRecord = SiteRecord(selectedSiteRepository.getSelectedSite())
         if (savedInstanceState != null) {
             fragmentTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
             title = requireNotNull(savedInstanceState.getString(STATE_KEY_TITLE))
