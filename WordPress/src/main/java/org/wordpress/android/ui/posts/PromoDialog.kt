@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
 
@@ -69,6 +71,15 @@ class PromoDialog : AppCompatDialogFragment() {
         this.neutralButtonLabel = neutralButtonLabel
         this.linkLabel = linkLabel
         this.drawableResId = drawableResId
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        initDagger()
+    }
+
+    private fun initDagger() {
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
