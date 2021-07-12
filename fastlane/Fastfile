@@ -361,13 +361,21 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
-    app = options[:app]
+    app = options[:app] || 'wordpress'
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: app)
 
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
+    UI.message('Checking app strings translation status...')
     check_translation_progress(
       glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false
+    )
+
+    UI.message("Checking #{app} release notes strings translation status...")
+    paths = APP_SPECIFIC_VALUES[app.to_sym]
+    check_translation_progress(
+      glotpress_url: paths[:gp_url],
       abort_on_violations: false
     )
 
