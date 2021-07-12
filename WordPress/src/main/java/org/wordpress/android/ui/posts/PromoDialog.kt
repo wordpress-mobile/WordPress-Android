@@ -133,6 +133,22 @@ class PromoDialog : AppCompatDialogFragment() {
     }
 
     private fun initializeView(view: View) {
+        updateDialogImage(view)
+
+        updateDialogTitle(view)
+
+        updateDialogDescription(view)
+
+        updateLink(view)
+
+        updatePositiveButton(view)
+
+        updateNegativeButton(view)
+
+        updateNeutralButton(view)
+    }
+
+    private fun updateDialogImage(view: View) {
         val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
         if (drawableResId == UNDEFINED_RES_ID) {
             imageContainer.visibility = View.GONE
@@ -141,13 +157,19 @@ class PromoDialog : AppCompatDialogFragment() {
             image.setImageResource(drawableResId)
             imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
         }
+    }
 
+    private fun updateDialogTitle(view: View) {
         val dialogTitle = view.findViewById<WPTextView>(R.id.promo_dialog_title)
         dialogTitle.text = title
+    }
 
+    private fun updateDialogDescription(view: View) {
         val description = view.findViewById<WPTextView>(R.id.promo_dialog_description)
         description.text = message
+    }
 
+    private fun updateLink(view: View) {
         val link = view.findViewById<WPTextView>(R.id.promo_dialog_link)
         if (linkLabel.isNotEmpty() && activity is PromoDialogClickInterface) {
             link.text = linkLabel
@@ -155,7 +177,9 @@ class PromoDialog : AppCompatDialogFragment() {
         } else {
             link.visibility = View.GONE
         }
+    }
 
+    private fun updatePositiveButton(view: View) {
         val buttonPositive = view.findViewById<Button>(R.id.promo_dialog_button_positive)
         buttonPositive.text = positiveButtonLabel
         buttonPositive.setOnClickListener {
@@ -164,7 +188,9 @@ class PromoDialog : AppCompatDialogFragment() {
             }
             this.dismiss()
         }
+    }
 
+    private fun updateNegativeButton(view: View) {
         val buttonNegative = view.findViewById<Button>(R.id.promo_dialog_button_negative)
         if (negativeButtonLabel.isNotEmpty()) {
             buttonNegative.visibility = View.VISIBLE
@@ -176,7 +202,9 @@ class PromoDialog : AppCompatDialogFragment() {
                 this.dismiss()
             }
         }
+    }
 
+    private fun updateNeutralButton(view: View) {
         val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
         if (neutralButtonLabel.isNotEmpty()) {
             buttonNeutral.visibility = View.VISIBLE
