@@ -180,6 +180,7 @@ import javax.inject.Named
         "This class is being refactored, if you implement any change, please also update " +
                 "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}"
 )
+@Suppress("LargeClass", "TooManyFunctions")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
