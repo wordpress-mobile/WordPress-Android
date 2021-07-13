@@ -3248,7 +3248,8 @@
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Add image or video</string>
-    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">ADD LINK</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">Add link</string>
+    <string name="gutenberg_native_add_link_0fcaed3b" tools:ignore="UnusedResources">ADD LINK</string>
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Add link to %s</string>
@@ -3352,11 +3353,19 @@
     <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Edit cover media</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
     <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edit focal point</string>
+    <string name="gutenberg_native_edit_link" tools:ignore="UnusedResources">EDIT LINK</string>
     <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <!-- translators: accessibility text. Empty Embed caption. -->
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Embed caption. Empty</string>
+    <!-- translators: accessibility text. %s: Embed caption. -->
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Embed caption. %s</string>
+    <string name="gutenberg_native_embed_link" tools:ignore="UnusedResources">Embed link</string>
+    <!-- translators: %s: host providing embed content e.g: www.youtube.com -->
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t" tools:ignore="UnusedResources">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3383,6 +3392,7 @@
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
     <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Inside</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Invalid URL. Audio file not found.</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">Invalid URL. Please enter a valid URL.</string>
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
@@ -3466,9 +3476,7 @@
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
-    <string name="gutenberg_native_search_block" tools:ignore="UnusedResources">Search block</string>
     <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Search block label. Current text is</string>
-    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Search blocks</string>
     <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Search button. Current button text is</string>
     <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Search input field.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
