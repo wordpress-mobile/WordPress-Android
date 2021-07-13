@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.TestSiteSqlUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
@@ -25,6 +26,7 @@ import kotlin.test.assertNull
 class ReactNativeStoreWpComTest {
     private val wpComRestClient = mock<ReactNativeWPComRestClient>()
     private val discoveryWPAPIRestClient = mock<DiscoveryWPAPIRestClient>()
+    private val nonceRestClient = mock<NonceRestClient>()
 
     private lateinit var store: ReactNativeStore
 
@@ -33,6 +35,7 @@ class ReactNativeStoreWpComTest {
         store = ReactNativeStore(
                 wpComRestClient,
                 mock(),
+                nonceRestClient,
                 discoveryWPAPIRestClient,
                 TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine()
@@ -64,10 +67,10 @@ class ReactNativeStoreWpComTest {
         store = ReactNativeStore(
                 wpComRestClient,
                 mock(),
+                nonceRestClient,
                 discoveryWPAPIRestClient,
                 TestSiteSqlUtils.siteSqlUtils,
                 initCoroutineEngine(),
-                mutableMapOf(),
                 uriParser = uriParser)
 
         val response = store.executeRequest(mock(), "")
