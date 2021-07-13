@@ -26,7 +26,7 @@ import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class PromoDialog : AppCompatDialogFragment() {
+class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     companion object {
         private const val STATE_KEY_LINK_LABEL = "state_key_link_label"
         private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
@@ -59,7 +59,7 @@ class PromoDialog : AppCompatDialogFragment() {
         0
     }
 
-    interface PromoDialogClickInterface {
+    interface QuickStartPromptClickInterface {
         fun onLinkClicked(instanceTag: String)
         fun onNegativeClicked(instanceTag: String)
         fun onNeutralClicked(instanceTag: String)
@@ -130,9 +130,9 @@ class PromoDialog : AppCompatDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         @LayoutRes val layoutRes = if (onboardingImprovementsFeatureConfig.isEnabled()) {
-            R.layout.promo_dialog_new
+            R.layout.quick_start_prompt_dialog_fragment_new
         } else {
-            R.layout.promo_dialog
+            R.layout.quick_start_prompt_dialog_fragment
         }
         val view = inflater.inflate(layoutRes, container, false)
         initializeView(view)
@@ -203,9 +203,9 @@ class PromoDialog : AppCompatDialogFragment() {
     private fun updateLink(view: View) {
         val link = view.findViewById<WPTextView>(R.id.promo_dialog_link)
         link?.let {
-            if (linkLabel.isNotEmpty() && activity is PromoDialogClickInterface) {
+            if (linkLabel.isNotEmpty() && activity is QuickStartPromptClickInterface) {
                 link.text = linkLabel
-                link.setOnClickListener { (activity as PromoDialogClickInterface).onLinkClicked(fragmentTag) }
+                link.setOnClickListener { (activity as QuickStartPromptClickInterface).onLinkClicked(fragmentTag) }
             } else {
                 link.visibility = View.GONE
             }
@@ -216,8 +216,8 @@ class PromoDialog : AppCompatDialogFragment() {
         val buttonPositive = view.findViewById<Button>(R.id.promo_dialog_button_positive)
         buttonPositive.text = positiveButtonLabel
         buttonPositive.setOnClickListener {
-            if (activity is PromoDialogClickInterface) {
-                (activity as PromoDialogClickInterface).onPositiveClicked(fragmentTag)
+            if (activity is QuickStartPromptClickInterface) {
+                (activity as QuickStartPromptClickInterface).onPositiveClicked(fragmentTag)
             }
             this.dismiss()
         }
@@ -229,8 +229,8 @@ class PromoDialog : AppCompatDialogFragment() {
             buttonNegative.visibility = View.VISIBLE
             buttonNegative.text = negativeButtonLabel
             buttonNegative.setOnClickListener {
-                if (activity is PromoDialogClickInterface) {
-                    (activity as PromoDialogClickInterface).onNegativeClicked(fragmentTag)
+                if (activity is QuickStartPromptClickInterface) {
+                    (activity as QuickStartPromptClickInterface).onNegativeClicked(fragmentTag)
                 }
                 this.dismiss()
             }
@@ -244,8 +244,8 @@ class PromoDialog : AppCompatDialogFragment() {
                 buttonNeutral.visibility = View.VISIBLE
                 buttonNeutral.text = neutralButtonLabel
                 buttonNeutral.setOnClickListener {
-                    if (activity is PromoDialogClickInterface) {
-                        (activity as PromoDialogClickInterface).onNeutralClicked(fragmentTag)
+                    if (activity is QuickStartPromptClickInterface) {
+                        (activity as QuickStartPromptClickInterface).onNeutralClicked(fragmentTag)
                     }
                     this.dismiss()
                 }

@@ -99,8 +99,8 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeCli
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PromoDialog;
-import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -164,7 +164,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface,
-        PromoDialogClickInterface {
+        QuickStartPromptClickInterface {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -1214,8 +1214,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
-        PromoDialog promoDialog = new PromoDialog();
-        promoDialog.initialize(
+        QuickStartPromptDialogFragment quickStartPromptDialogFragment = new QuickStartPromptDialogFragment();
+        quickStartPromptDialogFragment.initialize(
                 tag,
                 getString(titleRes),
                 getString(messageRes),
@@ -1226,7 +1226,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 neutralButtonTitleRes != -1 ? getString(neutralButtonTitleRes) : ""
         );
 
-        promoDialog.show(getSupportFragmentManager(), tag);
+        quickStartPromptDialogFragment.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
 
         // Set migration dialog flag so it is not shown for new sites.

@@ -117,8 +117,8 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PromoDialog
-import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -185,7 +185,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface,
-        PromoDialogClickInterface,
+        QuickStartPromptClickInterface,
         OnConfirmListener,
         OnDismissListener,
         TextInputDialogFragment.Callback {
@@ -1534,7 +1534,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartDialogMigration() {
-        val promoDialog = PromoDialog()
+        val promoDialog = QuickStartPromptDialogFragment()
         promoDialog.initialize(
                 TAG_QUICK_START_MIGRATION_DIALOG,
                 getString(R.string.quick_start_dialog_migration_title),
