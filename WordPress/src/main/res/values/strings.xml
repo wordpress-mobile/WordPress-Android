@@ -2878,7 +2878,7 @@
     <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
     <string name="quick_start_dialog_need_help_manage_site_message">We\'ll walk you through the basics of managing your site with the app.</string>
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
-    <string name="quick_start_dialog_need_help_manage_site_button_negative">@string/quick_start_dialog_need_help_button_negative</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
 
     <!-- Quick Start Promo Dialog (Migration) -->
     <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
