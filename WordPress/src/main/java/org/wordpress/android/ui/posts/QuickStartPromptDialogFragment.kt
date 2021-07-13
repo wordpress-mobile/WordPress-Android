@@ -28,7 +28,6 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     companion object {
-        private const val STATE_KEY_LINK_LABEL = "state_key_link_label"
         private const val STATE_KEY_DRAWABLE_RES_ID = "state_key_drawable"
         private const val STATE_KEY_TAG = "state_key_tag"
         private const val STATE_KEY_TITLE = "state_key_title"
@@ -41,7 +40,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     @DrawableRes private var drawableResId: Int = UNDEFINED_RES_ID
     private lateinit var fragmentTag: String
-    private lateinit var linkLabel: String
     private lateinit var message: String
     private lateinit var negativeButtonLabel: String
     private lateinit var neutralButtonLabel: String
@@ -60,7 +58,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     interface QuickStartPromptClickInterface {
-        fun onLinkClicked(instanceTag: String)
         fun onNegativeClicked(instanceTag: String)
         fun onNeutralClicked(instanceTag: String)
         fun onPositiveClicked(instanceTag: String)
@@ -78,7 +75,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         positiveButtonLabel: String,
         @DrawableRes drawableResId: Int = UNDEFINED_RES_ID,
         negativeButtonLabel: String = "",
-        linkLabel: String = "",
         neutralButtonLabel: String = ""
     ) {
         this.fragmentTag = tag
@@ -87,7 +83,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         this.positiveButtonLabel = positiveButtonLabel
         this.negativeButtonLabel = negativeButtonLabel
         this.neutralButtonLabel = neutralButtonLabel
-        this.linkLabel = linkLabel
         this.drawableResId = drawableResId
     }
 
@@ -110,7 +105,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
             positiveButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL))
             negativeButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL))
             neutralButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_NEUTRAL_BUTTON_LABEL))
-            linkLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_LINK_LABEL))
             drawableResId = savedInstanceState.getInt(STATE_KEY_DRAWABLE_RES_ID)
         }
     }
@@ -122,7 +116,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         outState.putString(STATE_KEY_POSITIVE_BUTTON_LABEL, positiveButtonLabel)
         outState.putString(STATE_KEY_NEGATIVE_BUTTON_LABEL, negativeButtonLabel)
         outState.putString(STATE_KEY_NEUTRAL_BUTTON_LABEL, neutralButtonLabel)
-        outState.putString(STATE_KEY_LINK_LABEL, linkLabel)
         outState.putInt(STATE_KEY_DRAWABLE_RES_ID, drawableResId)
 
         super.onSaveInstanceState(outState)
@@ -154,8 +147,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         updateDialogTitle(view)
 
         updateDialogDescription(view)
-
-        updateLink(view)
 
         updatePositiveButton(view)
 
@@ -198,18 +189,6 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     private fun updateDialogDescription(view: View) {
         val description = view.findViewById<WPTextView>(R.id.promo_dialog_description)
         description.text = message
-    }
-
-    private fun updateLink(view: View) {
-        val link = view.findViewById<WPTextView>(R.id.promo_dialog_link)
-        link?.let {
-            if (linkLabel.isNotEmpty() && activity is QuickStartPromptClickInterface) {
-                link.text = linkLabel
-                link.setOnClickListener { (activity as QuickStartPromptClickInterface).onLinkClicked(fragmentTag) }
-            } else {
-                link.visibility = View.GONE
-            }
-        }
     }
 
     private fun updatePositiveButton(view: View) {

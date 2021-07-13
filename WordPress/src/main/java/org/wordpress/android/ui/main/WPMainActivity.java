@@ -1222,7 +1222,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 getString(positiveButtonTitleRes),
                 R.drawable.img_illustration_site_about_280dp,
                 getString(negativeButtonTitleRes),
-                "",
                 neutralButtonTitleRes != -1 ? getString(neutralButtonTitleRes) : ""
         );
 
@@ -1663,14 +1662,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
             fragment.onDismissByOutsideTouch(instanceTag);
-        }
-    }
-
-    @Override
-    public void onLinkClicked(@NonNull String instanceTag) {
-        MySiteFragment fragment = getMySiteFragment();
-        if (fragment != null) {
-            fragment.onLinkClicked(instanceTag);
         }
     }
 

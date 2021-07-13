@@ -1353,8 +1353,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    override fun onLinkClicked(instanceTag: String) {}
-
     private fun fetchSitePlans(site: SiteModel?) {
         dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
     }
@@ -1541,7 +1539,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 getString(R.string.quick_start_dialog_migration_message),
                 getString(android.R.string.ok),
                 R.drawable.img_illustration_checkmark_280dp,
-                "",
                 "",
                 ""
         )
