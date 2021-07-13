@@ -12,13 +12,13 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 
 @Database(
+        version = 2,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
             PlanOfferId::class,
             PlanOfferFeature::class
-        ],
-        version = 2
+        ]
 )
 abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun bloggingRemindersDao(): BloggingRemindersDao
