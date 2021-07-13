@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-16 00:39:30+0000
+Translation-Revision-Date: 2021-07-08 09:55:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">定期發表文章有助於持續與讀者互動，並吸引更多訪客造訪網站。</string>
+    <string name="blogging_reminders_tip">秘訣</string>
+    <string name="blogging_reminders_select_days_message">你可以隨時更新</string>
+    <string name="blogging_reminders_select_days">選取你希望發表網誌的日期</string>
+    <string name="blogging_reminders_epilogue_caption">你可以隨時前往「我的網站」&gt;「設定」&gt;「網誌提醒」更新此設定。</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">你目前並未設定任何提醒。</string>
+    <string name="blogging_reminders_epilogue_body_everyday">你會&lt;b&gt;每天&lt;/b&gt;收到網誌提醒。</string>
+    <string name="blogging_reminders_epilogue_body_days">你每週會收到%1$s網誌提醒，分別在%2$s。</string>
+    <string name="blogging_reminders_epilogue_not_set_title">提醒已移除！</string>
+    <string name="blogging_reminders_epilogue_title">一切就緒！</string>
+    <string name="blogging_reminders_update">更新</string>
+    <string name="blogging_reminders_not_set">未設定任何目標</string>
+    <string name="blogging_reminders_n_a_week">一週%s</string>
+    <string name="set_your_blogging_reminders_button">設定提醒</string>
+    <string name="set_up_blogging_reminders_message">在你想發表文章的日期設定網誌提醒。</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">正在發表你的文章…在此同時，你可以在想張貼文章的日期設定網誌提醒。</string>
+    <string name="set_your_blogging_reminders_title">設定你的網誌提醒</string>
+    <string name="blogging_reminders_notification_text">在此提醒你於今天創作一些內容</string>
+    <string name="blogging_reminders_notification_title">該在 %s 新增網誌內容了</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">iOS 版 WordPress 尚不支援編輯可重複使用區塊</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Android 版 WordPress 尚不支援編輯可重複使用區塊</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">你可以改為點選「轉換為一般區塊」，然後分別移除並編輯這些區塊。</string>
+    <string name="blogging_reminders_done">完成</string>
+    <string name="blogging_reminders_notify_me">通知我</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
+    <string name="gutenberg_native_set_as_featured_image">設為特色圖片 </string>
+    <string name="gutenberg_native_remove_as_featured_image">移除特色圖片 </string>
+    <string name="fab_add_category_desc">建立分類</string>
+    <string name="support_ticket_subject">Android 版 WordPress 支援</string>
+    <string name="site_settings_categories_hint">管理你的網站分類</string>
+    <string name="site_settings_categories_empty_title">你沒有任何分類</string>
+    <string name="site_settings_categories_empty_subtitle">請在此處新增你常用的標籤，為文章分類時就能快速選取</string>
+    <string name="site_settings_categories_empty_button">建立分類</string>
+    <string name="site_settings_categories_title">分類</string>
+    <string name="site_settings_blogging_reminders_title">網誌提醒</string>
+    <string name="page_is_posts_page_warning">最新文章頁面的內容由系統自動產生，無法編輯。</string>
     <string name="gutenberg_native_border_settings">框線設定</string>
     <string name="storage_utils_dialog_dont_show_button">不要再顯示</string>
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>
@@ -170,8 +206,6 @@ Language: zh_TW
     <string name="backup_item_roots">WordPress 根目錄</string>
     <string name="backup_download_details_choose_items_header">包含在這次下載中的項目</string>
     <string name="gutenberg_native_uploading">上傳中…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重複使用區塊無法在 iOS 版 WordPress 中編輯</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">可重複使用區塊無法在 Android 版 WordPress 中編輯</string>
     <string name="gutenberg_native_replace_file">取代檔案</string>
     <string name="gutenberg_native_replace_audio">替換音訊</string>
     <string name="gutenberg_native_problem_opening_the_audio">開啟音訊時發生問題</string>
@@ -199,6 +233,7 @@ Language: zh_TW
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
     <string name="scan_fixing_threats_description_singular">我們正努力在背景解決此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_scanning_description">如果發現威脅，你會收到通知。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="scan_fixing_threats_title_plural">正在修正威脅</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan 無法完成網站掃瞄作業。 請檢查你的網站是否已經關閉。若否，請再試一次。 如果網站已關閉，或 Jetpack Scan 仍無法順利掃瞄，請與我們的支援團隊聯絡。</string>
     <string name="scan_request_failed_title">發生錯誤</string>
@@ -2824,4 +2859,13 @@ Language: zh_TW
     <string name="add">新增</string>
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
+    <string-array name="blogging_reminders_count">
+        <item>一次</item>
+        <item>兩次</item>
+        <item>三次</item>
+        <item>四次</item>
+        <item>五次</item>
+        <item>六次</item>
+        <item>七次</item>
+    </string-array>
 </resources>

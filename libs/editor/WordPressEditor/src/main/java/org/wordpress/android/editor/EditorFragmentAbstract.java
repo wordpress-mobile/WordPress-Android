@@ -47,6 +47,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void removeMedia(String mediaId);
     // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
+    public abstract void showEditorHelp();
 
 
     public enum MediaType {
@@ -217,6 +218,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
+        boolean showPreview();
     }
 
     /**
