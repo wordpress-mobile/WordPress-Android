@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_FOUND
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils
 import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.BLOCK_EDITOR
-import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.EXPERIMENTAL_BLOCK_EDITOR
 import org.wordpress.android.fluxc.store.EditorThemeStore.ThemeChangedEndpoint.THEME_SUPPORTS
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
@@ -26,16 +25,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-
-/**
- * This endpoint was released as part of WP 5.8 with the __experimental flag.
- * Starting with Gutenberg 11.1 the endpoint will be available without the __experimental flag.
- * Gutenberg 11.1 will be included in WP 5.9.
- */
 private const val EDITOR_SETTINGS_REQUEST_PATH = "wp-block-editor/v1/settings?context=mobile"
-private const val EDITOR_SETTINGS_EXPERIMENTAL_REQUEST_PATH = "__experimental/$EDITOR_SETTINGS_REQUEST_PATH"
-private const val EDITOR_SETTINGS_EXPERIMENTAL_VERSION = "5.8"
-private const val EDITOR_SETTINGS_STABLE_VERSION = "5.9"
+private const val EDITOR_SETTINGS_WP_VERSION = "5.8"
 
 @Singleton
 class EditorThemeStore
@@ -64,7 +55,6 @@ class EditorThemeStore
     enum class ThemeChangedEndpoint(val value: String) {
         THEME_SUPPORTS("theme_supports"),
         BLOCK_EDITOR("wp-block-editor"),
-        EXPERIMENTAL_BLOCK_EDITOR("experimental_wp-block-editor")
     }
 
     class EditorThemeError(var message: String? = null) : OnChangedError
@@ -142,28 +132,15 @@ class EditorThemeStore
                 response.handleFetchEditorSettingsResponse(site, action, BLOCK_EDITOR)
             }
             is Error -> {
-                if (response.error.type == NOT_FOUND && site.mayHaveExperimentalEndpoint) {
+                if (response.error.type == NOT_FOUND) {
                     /**
-                     * We tried the non-experimental path first but since that failed (which should only be for
-                     * base WordPress 5.8 installs) we'll fall back and try the experimental endpoint.
+                     * We tried the editor settings call first but since that failed we fall back to the themes endpoint
+                     * since the user may not have the gutenberg plugin installed.
                      */
-                    fetchExperimentalEditorSettings(site, action)
+                    fetchEditorTheme(site, action)
                 } else {
                     response.handleFetchEditorSettingsResponse(action, BLOCK_EDITOR)
                 }
-            }
-        }
-    }
-
-    private suspend fun fetchExperimentalEditorSettings(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, EDITOR_SETTINGS_EXPERIMENTAL_REQUEST_PATH, false)
-
-        when (response) {
-            is Success -> {
-                response.handleFetchEditorSettingsResponse(site, action, EXPERIMENTAL_BLOCK_EDITOR)
-            }
-            is Error -> {
-                response.handleFetchEditorSettingsResponse(action, EXPERIMENTAL_BLOCK_EDITOR)
             }
         }
     }
@@ -204,7 +181,7 @@ class EditorThemeStore
     }
 
     private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && site.hasRequiredWordPressVersion(EDITOR_SETTINGS_EXPERIMENTAL_VERSION)
+            gssEnabled && site.hasRequiredWordPressVersion(EDITOR_SETTINGS_WP_VERSION)
 
     /**
      * Checks if the [SiteModel.getSoftwareVersion] is higher or equal to the [requiredVersion]
@@ -224,9 +201,4 @@ class EditorThemeStore
     } catch (e: IllegalArgumentException) {
         false // if version parsing fails return false
     }
-
-    val SiteModel.mayHaveExperimentalEndpoint: Boolean
-        get() = hasRequiredWordPressVersion(EDITOR_SETTINGS_EXPERIMENTAL_VERSION) && !hasRequiredWordPressVersion(
-                EDITOR_SETTINGS_STABLE_VERSION
-        )
 }
