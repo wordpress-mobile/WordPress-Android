@@ -33,8 +33,7 @@ class PromoDialog : AppCompatDialogFragment() {
         private const val UNDEFINED_RES_ID = -1
     }
 
-    @DrawableRes
-    private var drawableResId: Int = UNDEFINED_RES_ID
+    @DrawableRes private var drawableResId: Int = UNDEFINED_RES_ID
     private lateinit var fragmentTag: String
     private lateinit var linkLabel: String
     private lateinit var message: String
