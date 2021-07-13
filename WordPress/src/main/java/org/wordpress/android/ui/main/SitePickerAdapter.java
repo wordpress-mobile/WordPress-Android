@@ -786,7 +786,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mIsHidden = !siteModel.isVisible();
         }
 
-        String getBlogNameOrHomeURL() {
+        public String getBlogNameOrHomeURL() {
             if (TextUtils.isEmpty(mBlogName)) {
                 return mHomeURL;
             }

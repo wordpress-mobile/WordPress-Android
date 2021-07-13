@@ -10,6 +10,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDialog
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
@@ -46,6 +48,7 @@ class PromoDialog : AppCompatDialogFragment() {
     private lateinit var title: String
     private lateinit var siteRecord: SiteRecord
 
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
 
@@ -145,6 +148,8 @@ class PromoDialog : AppCompatDialogFragment() {
     private fun initializeView(view: View) {
         updateDialogImage(view)
 
+        updateSiteLayout(view)
+
         updateDialogTitle(view)
 
         updateDialogDescription(view)
@@ -168,6 +173,19 @@ class PromoDialog : AppCompatDialogFragment() {
                 image.setImageResource(drawableResId)
                 imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
             }
+        }
+    }
+
+    private fun updateSiteLayout(view: View) {
+        val siteLayout = view.findViewById<LinearLayout>(R.id.site_layout)
+        siteLayout?.let {
+            val txtTitle = siteLayout.findViewById<TextView>(R.id.text_title)
+            val txtDomain = view.findViewById<TextView>(R.id.text_domain)
+            val imgBlavatar = view.findViewById<ImageView>(R.id.image_blavatar)
+
+            txtTitle.text = siteRecord.blogNameOrHomeURL
+            txtDomain.text = siteRecord.homeURL
+            imageManager.load(imgBlavatar, siteRecord.blavatarType, siteRecord.blavatarUrl)
         }
     }
 
