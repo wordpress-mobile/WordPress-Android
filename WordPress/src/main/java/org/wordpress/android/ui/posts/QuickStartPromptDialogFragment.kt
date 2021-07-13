@@ -67,6 +67,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         (dialog as AppCompatDialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
+    @Suppress("LongParameterList")
     @JvmOverloads
     fun initialize(
         tag: String,
