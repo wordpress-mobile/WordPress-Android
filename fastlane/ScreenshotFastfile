@@ -19,6 +19,7 @@ RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
 FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
 SCREENSHOTS_CONFIG_FILE = File.join(Dir.pwd, "screenshots.json")
+DOWNLOAD_PATH = File.join(Dir.pwd, "/playstoreres/metadata")
 
 # Jetpack: Append _jetpack to existing directories
 JETPACK_RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw_jetpack")
@@ -26,6 +27,7 @@ JETPACK_RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_
 JETPACK_PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp_jetpack")
 JETPACK_FINAL_METADATA_DIR = File.join(Dir.pwd, "jetpack_metadata/android")
 JETPACK_SCREENSHOTS_CONFIG_FILE = File.join(Dir.pwd, "jetpack-screenshots.json")
+JETPACK_DOWNLOAD_PATH = File.join(Dir.pwd, "/playstoreres/jetpack_metadata")
 
 default_platform(:android)
 app_name = "wordpress"
@@ -159,12 +161,12 @@ end
 
     if app_name.casecmp('jetpack') == 0
             files = {
-              "play_store_screenshot_1" => {desc: "jetpack_play_store_screenshot_1.txt"},
-              "play_store_screenshot_2" => {desc: "jetpack_play_store_screenshot_2.txt"},
-              "play_store_screenshot_3" => {desc: "jetpack_play_store_screenshot_3.txt"},
-              "play_store_screenshot_4" => {desc: "jetpack_play_store_screenshot_4.txt"},
-              "play_store_screenshot_5" => {desc: "jetpack_play_store_screenshot_5.txt"},
-              "play_store_screenshot_6" => {desc: "jetpack_play_store_splash_1.txt"},
+              "screenshot-text-1" => {desc: "screenshot-text-1.txt"},
+              "screenshot-text-2" => {desc: "screenshot-text-2.txt"},
+              "screenshot-text-3" => {desc: "screenshot-text-3.txt"},
+              "screenshot-text-4" => {desc: "screenshot-text-4.txt"},
+              "screenshot-text-5" => {desc: "screenshot-text-5.txt"},
+              "screenshot-text-6" => {desc: "screenshot-text-6.txt"},
             }
       else
         files = {
@@ -192,15 +194,17 @@ end
 
     if app_name.casecmp('jetpack') == 0
         project_url = "https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/"
+        download_path = JETPACK_DOWNLOAD_PATH
     else
         project_url = "https://translate.wordpress.org/projects/apps/android/release-notes/"
+        download_path = DOWNLOAD_PATH
     end
 
     gp_downloadmetadata(project_url: project_url,
       target_files: files,
       locales: locales,
       source_locale: "en-US",
-      download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
+      download_path: download_path)
   end
 
 

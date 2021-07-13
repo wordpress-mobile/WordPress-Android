@@ -93,6 +93,7 @@ JP_APP_NAME = "Jetpack"
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
 
 before_all do |lane|
+  puts "Main before all :#{lane}"
   # Check that the env file exists
   unless is_ci || File.file?(USER_ENV_FILE_PATH)
     UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")
@@ -283,6 +284,12 @@ REPOSITORY_NAME="WordPress-Android"
       'short-description': File.join(metadata_folder, 'short_description.txt'),
       'app-store-description': File.join(metadata_folder, 'full_description.txt'),
       'app-store-name': File.join(metadata_folder, 'title.txt'),
+      play_store_screenshot_1: File.join(metadata_folder, 'screenshot_1.txt'),
+      play_store_screenshot_2: File.join(metadata_folder, 'screenshot_2.txt'),
+      play_store_screenshot_3: File.join(metadata_folder, 'screenshot_3.txt'),
+      play_store_screenshot_4: File.join(metadata_folder, 'screenshot_4.txt'),
+      play_store_screenshot_5: File.join(metadata_folder, 'screenshot_5.txt'),
+      play_store_screenshot_6: File.join(metadata_folder, 'screenshot_6.txt'),
     }
 
     # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.
@@ -375,7 +382,7 @@ REPOSITORY_NAME="WordPress-Android"
 
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    
+
     download_translations(app: app)
     android_bump_version_final_release(app: app)
     version = android_get_release_version(app: app)
@@ -683,7 +690,7 @@ REPOSITORY_NAME="WordPress-Android"
       # But for Jetpack, we don't have en-gb in its GP release note project, so copy from source instead as a fallback
       FileUtils.cp(File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'jetpack_release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{options[:build_number]}.txt"))
     end
-    
+
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update #{app} metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
