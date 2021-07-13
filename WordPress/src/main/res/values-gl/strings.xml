@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-19 10:30:31+0000
+Translation-Revision-Date: 2021-07-04 15:17:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Publicar regularmente pode axudar a que os teus lectores permanezan implicados, e a atraer novos visitantes ao teu sitio.</string>
+    <string name="blogging_reminders_tip">Consello</string>
+    <string name="blogging_reminders_select_days_message">Podes actualizar isto en calquera momento</string>
+    <string name="blogging_reminders_select_days">Selecciona os días nos que queres bloguear</string>
+    <string name="blogging_reminders_epilogue_caption">Podes actualizar isto en calquera momento desde O meu sitio &gt; Axustes &gt; Recordatorios de blogueo.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Non tes configurado ningún recordatorio.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Tes recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Tes recordatorios para bloguear %1$s á semana en %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Recordatorios eliminados!</string>
+    <string name="blogging_reminders_epilogue_title">Todo configurado!</string>
+    <string name="blogging_reminders_update">Actualizar</string>
+    <string name="blogging_reminders_not_set">Nada configurado</string>
+    <string name="blogging_reminders_n_a_week">%s á semana</string>
+    <string name="set_your_blogging_reminders_button">Configurar recordatorios</string>
+    <string name="set_up_blogging_reminders_message">Configura recordatorios de blogueo os días que queiras publicar.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">A túa entrada estase publicando… mentres tanto podes configurar recordatorios de blogueo os días que quieras publicar.</string>
+    <string name="set_your_blogging_reminders_title">Configura os teus recordatorios de blogueo</string>
+    <string name="blogging_reminders_notification_text">Este é o teu recordatorio para crear algo hoxe</string>
+    <string name="blogging_reminders_notification_title">É hora de bloguear en %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aínda non é compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aínda non é compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Converter en bloques normais».</string>
     <string name="blogging_reminders_done">Feito</string>
     <string name="blogging_reminders_notify_me">Avísame</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para activar as restauracións do sitio cun clic das copias de seguridade.</string>
@@ -18,6 +40,7 @@ Language: gl_ES
     <string name="site_settings_categories_empty_subtitle">Engade aquí as categorías que uses frecuentemente para que poidan ser seleccionadas rapidamente ao categorizar as túas entradas</string>
     <string name="site_settings_categories_empty_button">Crear unha categoría</string>
     <string name="site_settings_categories_title">Categorías</string>
+    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
     <string name="page_is_posts_page_warning">O contido da páxina das túas últimas entradas xérase automaticamente e non se pode editar.</string>
     <string name="gutenberg_native_border_settings">Axustes do borde</string>
     <string name="storage_utils_dialog_dont_show_button">Non amosar de novo</string>
@@ -2847,4 +2870,13 @@ Language: gl_ES
     <string name="add">Engadir</string>
     <string name="save">Gardar</string>
     <string name="cancel">Cancelar</string>
+    <string-array name="blogging_reminders_count">
+        <item>Unha vez</item>
+        <item>Dúas veces</item>
+        <item>Tres veces</item>
+        <item>Catro veces</item>
+        <item>Cinco veces</item>
+        <item>Seis veces</item>
+        <item>Sete veces</item>
+    </string-array>
 </resources>

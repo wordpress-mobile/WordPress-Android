@@ -1086,10 +1086,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 public void onClick(View v) {
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
-                            });
-                    mBloggingRemindersViewModel.onPostCreated(
-                            site.getId(),
-                            data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false)
+                            },
+                            isFirstTimePublishing -> mBloggingRemindersViewModel
+                                    .onPublishingPost(site.getId(), isFirstTimePublishing)
                     );
                 }
                 break;
@@ -1097,7 +1096,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 SiteModel selectedSite = mSelectedSiteRepository.getSelectedSite();
                 if (selectedSite != null) {
                     boolean isNewStory = data == null || data.getStringExtra(ARG_STORY_BLOCK_ID) == null;
-                    mBloggingRemindersViewModel.onPostCreated(
+                    mBloggingRemindersViewModel.onPublishingPost(
                             selectedSite.getId(),
                             isNewStory
                     );
@@ -1528,7 +1527,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         event.isFirstTimePublish,
                         event.post,
                         null,
-                        targetSite);
+                        targetSite,
+                        isFirstTimePublishing -> mBloggingRemindersViewModel
+                                .onPublishingPost(targetSite.getId(), isFirstTimePublishing)
+                );
             }
         }
     }

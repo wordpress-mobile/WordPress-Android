@@ -135,15 +135,18 @@ REPOSITORY_NAME="WordPress-Android"
   lane :code_freeze do | options |
     old_version = android_codefreeze_prechecks(options)
 
-    app = options[:app]
     android_bump_version_release(app: 'wordpress')
     new_version = android_get_app_version(app: 'wordpress')
 
     # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
     #   which won't work since we already ran this action for wordpress and are already in release branch. Patch it manually for now, by applying the same versionName and versionCOde as the ones from WordPress
-    new_version_code = android_get_release_version(app: 'wordpress')['code']
-    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version}")
-    sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_code}")
+    new_version_tuple = android_get_release_version(app: 'wordpress')
+    Dir.chdir('..') do
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version_tuple['name']}")
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_tuple['code']}")
+      sh('git', 'add', 'version.properties')
+      sh('git', 'commit', '-m', 'Bump Jetpack version number')
+    end
 
     # need to get prs list before version update to frozen tag
     get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
@@ -153,7 +156,13 @@ REPOSITORY_NAME="WordPress-Android"
       release_notes_file_path: "#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
       extracted_notes_file_path: release_notes_path('wordpress')
     )
-    FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack')) # Jetpack Release notes are based on WP Release notes
+    # Jetpack Release notes are based on WP Release notes
+    begin
+      # FIXME: Move this logic to release-toolkit?
+      FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack'))
+      sh('git', 'add', release_notes_path('jetpack'))
+      sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
+    end
     cleanup_release_files(files: release_notes_short_paths)
 
     android_update_release_notes(new_version: new_version) # Adds empty section for next version
@@ -361,13 +370,26 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
+    app = options[:app] || 'wordpress'
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: app)
 
-    app = options[:app]
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    
+    UI.message('Checking app strings translation status...')
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false
+    )
+
+    UI.message("Checking #{app} release notes strings translation status...")
+    paths = APP_SPECIFIC_VALUES[app.to_sym]
+    check_translation_progress(
+      glotpress_url: paths[:gp_url],
+      abort_on_violations: false
+    )
+
     download_translations(app: app)
+
     android_bump_version_final_release(app: app)
     version = android_get_release_version(app: app)
     download_metadata_strings(app: app, version: version["name"], build_number: version["code"])
@@ -674,7 +696,7 @@ REPOSITORY_NAME="WordPress-Android"
       # But for Jetpack, we don't have en-gb in its GP release note project, so copy from source instead as a fallback
       FileUtils.cp(File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'jetpack_release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{options[:build_number]}.txt"))
     end
-    
+
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update #{app} metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
