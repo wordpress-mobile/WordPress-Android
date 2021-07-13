@@ -40,7 +40,7 @@
 					"position": [0, 0]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_splash_0.txt",
+					"text": "playstoreres/jetpack_metadata/%s/play_store_splash_0.txt",
 					"size": [810,480],
 					"position": [100,160],
 					"font-size": 120,
@@ -54,35 +54,35 @@
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/1-bring-your-jetpack-with-you.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_1.txt"
 		},
 		// Keep tabs on your site activity
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/2-keep-tabs-on-your-site-activity.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_2.txt"
 		},
 		// Scan for issues on the go
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/3-scan-for-issues-on-the-go.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_3.txt"
 		},
 		// Back up your site at any moment
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/4-back-up-your-site-at-any-moment.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_4.txt"
 		},
 		// Site stats in your pocket
 		{
 			"device": "Pixel 3",
 			"screenshot": "images/phoneScreenshots/5-site-stats-in-your-pocket.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_5.txt"
 		},
 		// Safer. Faster. More traffic.
 		// Safer. Faster. More traffic.
@@ -96,7 +96,7 @@
 					"position": [0, 0]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_splash_0.txt",
+					"text": "playstoreres/jetpack_metadata/%s/play_store_splash_0.txt",
 					"size": [1200,1000],
 					"position": [200,220],
 					"font-size": 140,
@@ -110,35 +110,35 @@
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/1-bring-your-jetpack-with-you.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_1.txt"
 		},
 		// Keep tabs on your site activity
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/2-keep-tabs-on-your-site-activity.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_2.txt"
 		},
 		// Scan for issues on the go
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/3-scan-for-issues-on-the-go.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_3.txt"
 		},
 		// Back up your site at any moment
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/4-back-up-your-site-at-any-moment.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_4.txt"
 		},
 		// Site stats in your pocket
 		{
 			"device": "Nexus 9",
 			"screenshot": "images/tenInchScreenshots/5-site-stats-in-your-pocket.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/jetpack-stars.png",
-			"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt"
+			"text": "playstoreres/jetpack_metadata/%s/play_store_screenshot_5.txt"
 		}
 	]
 }
