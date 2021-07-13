@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/promo_dialog_title"
+        style="@style/PromoDialogTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_title" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/promo_dialog_description"
+        style="@style/PromoDialogDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promo_dialog_title"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_message" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/promo_dialog_button_positive"
+        style="@style/PromoDialogButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promo_dialog_description"
+        tools:text="@string/quick_start_dialog_need_help_manage_site_button_positive" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/promo_dialog_button_negative"
+        style="@style/PromoDialogButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promo_dialog_button_positive"
+        tools:text="@string/quick_start_dialog_need_help_button_negative"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

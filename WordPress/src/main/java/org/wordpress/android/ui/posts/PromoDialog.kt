@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
@@ -120,7 +121,12 @@ class PromoDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.promo_dialog, container, false)
+        @LayoutRes val layoutRes = if (onboardingImprovementsFeatureConfig.isEnabled()) {
+            R.layout.promo_dialog_new
+        } else {
+            R.layout.promo_dialog
+        }
+        val view = inflater.inflate(layoutRes, container, false)
         initializeView(view)
         return view
     }
@@ -150,12 +156,14 @@ class PromoDialog : AppCompatDialogFragment() {
 
     private fun updateDialogImage(view: View) {
         val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
-        if (drawableResId == UNDEFINED_RES_ID) {
-            imageContainer.visibility = View.GONE
-        } else {
-            val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
-            image.setImageResource(drawableResId)
-            imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+        imageContainer?.let {
+            if (drawableResId == UNDEFINED_RES_ID) {
+                imageContainer.visibility = View.GONE
+            } else {
+                val image = view.findViewById<ImageView>(R.id.promo_dialog_image)
+                image.setImageResource(drawableResId)
+                imageContainer.visibility = if (DisplayUtils.isLandscape(activity)) View.GONE else View.VISIBLE
+            }
         }
     }
 
@@ -171,11 +179,13 @@ class PromoDialog : AppCompatDialogFragment() {
 
     private fun updateLink(view: View) {
         val link = view.findViewById<WPTextView>(R.id.promo_dialog_link)
-        if (linkLabel.isNotEmpty() && activity is PromoDialogClickInterface) {
-            link.text = linkLabel
-            link.setOnClickListener { (activity as PromoDialogClickInterface).onLinkClicked(fragmentTag) }
-        } else {
-            link.visibility = View.GONE
+        link?.let {
+            if (linkLabel.isNotEmpty() && activity is PromoDialogClickInterface) {
+                link.text = linkLabel
+                link.setOnClickListener { (activity as PromoDialogClickInterface).onLinkClicked(fragmentTag) }
+            } else {
+                link.visibility = View.GONE
+            }
         }
     }
 
@@ -206,14 +216,16 @@ class PromoDialog : AppCompatDialogFragment() {
 
     private fun updateNeutralButton(view: View) {
         val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
-        if (neutralButtonLabel.isNotEmpty()) {
-            buttonNeutral.visibility = View.VISIBLE
-            buttonNeutral.text = neutralButtonLabel
-            buttonNeutral.setOnClickListener {
-                if (activity is PromoDialogClickInterface) {
-                    (activity as PromoDialogClickInterface).onNeutralClicked(fragmentTag)
+        buttonNeutral?.let {
+            if (neutralButtonLabel.isNotEmpty()) {
+                buttonNeutral.visibility = View.VISIBLE
+                buttonNeutral.text = neutralButtonLabel
+                buttonNeutral.setOnClickListener {
+                    if (activity is PromoDialogClickInterface) {
+                        (activity as PromoDialogClickInterface).onNeutralClicked(fragmentTag)
+                    }
+                    this.dismiss()
                 }
-                this.dismiss()
             }
         }
     }
