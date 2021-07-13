@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -134,6 +135,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -223,6 +225,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
+    @Inject OnboardingImprovementsFeatureConfig mOnboardingImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
@@ -1191,17 +1194,37 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
+        @StringRes int titleRes;
+        @StringRes int messageRes;
+        @StringRes int positiveButtonTitleRes;
+        @StringRes int negativeButtonTitleRes;
+        @StringRes int neutralButtonTitleRes = -1;
+
+        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            titleRes = R.string.quick_start_dialog_need_help_manage_site_title;
+            messageRes = R.string.quick_start_dialog_need_help_manage_site_message;
+            positiveButtonTitleRes = R.string.quick_start_dialog_need_help_manage_site_button_positive;
+            negativeButtonTitleRes = R.string.quick_start_dialog_need_help_button_negative;
+        } else {
+            titleRes = R.string.quick_start_dialog_need_help_title;
+            messageRes = R.string.quick_start_dialog_need_help_message;
+            positiveButtonTitleRes = R.string.quick_start_dialog_need_help_button_positive;
+            negativeButtonTitleRes = R.string.quick_start_dialog_need_help_manage_site_button_negative;
+            neutralButtonTitleRes = R.string.quick_start_dialog_need_help_button_neutral;
+        }
+
         String tag = MySiteFragment.TAG_QUICK_START_DIALOG;
         PromoDialog promoDialog = new PromoDialog();
         promoDialog.initialize(
                 tag,
-                getString(R.string.quick_start_dialog_need_help_title),
-                getString(R.string.quick_start_dialog_need_help_message),
-                getString(R.string.quick_start_dialog_need_help_button_positive),
+                getString(titleRes),
+                getString(messageRes),
+                getString(positiveButtonTitleRes),
                 R.drawable.img_illustration_site_about_280dp,
-                getString(R.string.quick_start_dialog_need_help_button_negative),
+                getString(negativeButtonTitleRes),
                 "",
-                getString(R.string.quick_start_dialog_need_help_button_neutral));
+                neutralButtonTitleRes != -1 ? getString(neutralButtonTitleRes) : ""
+        );
 
         promoDialog.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
