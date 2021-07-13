@@ -25,6 +25,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class PromoDialog : AppCompatDialogFragment() {
     companion object {
         private const val STATE_KEY_LINK_LABEL = "state_key_link_label"
