@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -196,7 +197,8 @@ public class UploadUtils {
                                                           @NonNull final SiteModel site,
                                                           @NonNull final UploadAction uploadAction,
                                                           SnackbarSequencer sequencer,
-                                                          View.OnClickListener publishPostListener) {
+                                                          View.OnClickListener publishPostListener,
+                                                          @Nullable OnPublishingCallback onPublishingCallback) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
@@ -255,6 +257,9 @@ public class UploadUtils {
             } else {
                 showSnackbar(snackbarAttachView,
                         post.isPage() ? R.string.editor_uploading_page : R.string.editor_uploading_post, sequencer);
+                if (onPublishingCallback != null) {
+                    onPublishingCallback.onPublishing(PostUtils.isFirstTimePublish(post));
+                }
             }
             return;
         }
@@ -430,6 +435,11 @@ public class UploadUtils {
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
+        publishPost(activity, post, site, dispatcher, null);
+    }
+
+    public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher,
+                                   @Nullable OnPublishingCallback onPublishingCallback) {
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
             String message = activity.getString(
@@ -447,6 +457,9 @@ public class UploadUtils {
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
             UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
+            if (onPublishingCallback != null) {
+                onPublishingCallback.onPublishing(isFirstTimePublish);
+            }
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }
@@ -465,7 +478,8 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
-                                                     SnackbarSequencer sequencer) {
+                                                     SnackbarSequencer sequencer,
+                                                     @Nullable OnPublishingCallback onPublishingCallback) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
@@ -506,7 +520,7 @@ public class UploadUtils {
                             publishPostListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    UploadUtils.publishPost(activity, post, site, dispatcher);
+                                    UploadUtils.publishPost(activity, post, site, dispatcher, onPublishingCallback);
                                 }
                             };
                             snackbarButtonRes = R.string.button_publish;
@@ -678,5 +692,9 @@ public class UploadUtils {
                 break;
         }
         return messageRes;
+    }
+
+    public interface OnPublishingCallback {
+        void onPublishing(boolean isFirstTimePublish);
     }
 }

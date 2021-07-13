@@ -10,4 +10,4 @@ import javax.inject.Inject
 @FeatureInDevelopment
 class OnboardingImprovementsFeatureConfig @Inject constructor(
     appConfig: AppConfig
-) : FeatureConfig(appConfig, BuildConfig.GLOBAL_STYLE_SUPPORT)
+) : FeatureConfig(appConfig, BuildConfig.ONBOARDING_IMPROVEMENTS)
