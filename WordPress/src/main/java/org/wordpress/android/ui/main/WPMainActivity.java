@@ -188,6 +188,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
 
+    private static final int NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES = -1;
+
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
 
@@ -1194,17 +1196,18 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-        @StringRes int titleRes;
-        @StringRes int messageRes;
-        @StringRes int positiveButtonTitleRes;
-        @StringRes int negativeButtonTitleRes;
-        @StringRes int neutralButtonTitleRes = -1;
+        final @StringRes int titleRes;
+        final @StringRes int messageRes;
+        final @StringRes int positiveButtonTitleRes;
+        final @StringRes int negativeButtonTitleRes;
+        final @StringRes int neutralButtonTitleRes;
 
         if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
             titleRes = R.string.quick_start_dialog_need_help_manage_site_title;
             messageRes = R.string.quick_start_dialog_need_help_manage_site_message;
             positiveButtonTitleRes = R.string.quick_start_dialog_need_help_manage_site_button_positive;
             negativeButtonTitleRes = R.string.quick_start_dialog_need_help_button_negative;
+            neutralButtonTitleRes = NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES;
         } else {
             titleRes = R.string.quick_start_dialog_need_help_title;
             messageRes = R.string.quick_start_dialog_need_help_message;
@@ -1222,7 +1225,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 getString(positiveButtonTitleRes),
                 R.drawable.img_illustration_site_about_280dp,
                 getString(negativeButtonTitleRes),
-                neutralButtonTitleRes != -1 ? getString(neutralButtonTitleRes) : ""
+                neutralButtonTitleRes != NOT_AVAILABLE_NEUTRAL_BUTTON_TITLE_RES ? getString(neutralButtonTitleRes) : ""
         );
 
         quickStartPromptDialogFragment.show(getSupportFragmentManager(), tag);
