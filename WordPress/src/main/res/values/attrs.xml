@@ -265,4 +265,20 @@
             <enum name="normal" value="1" />
         </attr>
     </declare-styleable>
+
+    <!--
+        Stats Module Actionable View attributes
+    -->
+    <declare-styleable name="StatsModuleActionableView">
+        <!-- Optional: string text of button -->
+        <attr name="smavButton" format="string"/>
+        <!-- Optional: resource id of image -->
+        <attr name="smavImage" format="reference"/>
+        <!-- Optional: defines if image should be hidden in landscape mode -->
+        <attr name="smavImageHiddenInLandscape" format="boolean" />
+        <!-- Optional: string text of subtitle -->
+        <attr name="smavSubtitle" format="string"/>
+        <!-- Required: string text of title -->
+        <attr name="smavTitle" format="string"/>
+    </declare-styleable>
 </resources>
