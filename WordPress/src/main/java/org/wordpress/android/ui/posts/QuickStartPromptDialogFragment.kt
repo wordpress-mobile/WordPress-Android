@@ -142,17 +142,11 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     private fun initializeView(view: View) {
         updateDialogImage(view)
-
         updateSiteLayout(view)
-
         updateDialogTitle(view)
-
         updateDialogDescription(view)
-
         updatePositiveButton(view)
-
         updateNegativeButton(view)
-
         updateNeutralButton(view)
     }
 
