@@ -3445,6 +3445,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
+    // TODO(David): What are the appropriate types for this function?
+    //  How might we merge `newBlockTypes` with the stored Map<String, Intger>?
+    @Override public Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<String> newBlockTypes) {
+        Map<String, Integer> impressions = new HashMap<>();
+        for (int i = 0; i < newBlockTypes.size(); i++) {
+            impressions.put(newBlockTypes.get(i), 3);
+        }
+        return impressions;
+    }
+
+    @Override public void onSetBlockTypeImpressionCount(String name, Integer count) {
+        // TODO(David): Need to update stored Map<String, Integer> based on `count` argument.
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")

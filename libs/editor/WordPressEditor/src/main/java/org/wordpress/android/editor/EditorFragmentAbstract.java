@@ -12,11 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -219,6 +222,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
         boolean showPreview();
+        // TODO(David): Is this correctly typed? Should it use React Native types instead (e.g. ReadableMap,
+        //  ReadableArray)?
+        Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<String> newBlockTypes);
+        void onSetBlockTypeImpressionCount(String name, Integer count);
     }
 
     /**

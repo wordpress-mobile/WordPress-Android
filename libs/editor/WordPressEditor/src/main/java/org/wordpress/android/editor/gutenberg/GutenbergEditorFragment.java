@@ -31,6 +31,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
@@ -61,6 +65,7 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
@@ -492,6 +497,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void gutenbergDidRequestPreview() {
                         mEditorFragmentListener.showPreview();
+                    }
+                },
+                new OnBlockTypeImpressionsEventListener() {
+                    @Override
+                    public ReadableMap onRequestBlockTypeImpressions(ReadableArray newBlockTypes) {
+                        // TODO(David): What are the appropriate types for this function?
+                        //  How might/where should we cast from React Native types (e.g. Readablemap)
+                        //  to Java types (e.g. ArrayList)?
+                        Map<String, Integer> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes.toArrayList());
+                        return combinedNewBlockTypesAndStoreImpressionCounts;
+                    }
+
+                    @Override
+                    public void onSetBlockTypeImpressionCount(String name, Integer count) {
+                        mEditorFragmentListener.onSetBlockTypeImpressionCount(name, count);
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));

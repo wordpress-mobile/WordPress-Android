@@ -125,6 +125,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -881,6 +882,17 @@ public class AppPrefs {
     public static boolean getGutenbergFocalPointPickerTooltipShown() {
         return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
     }
+
+      // TODO(David): How might we store a Map<String, Integer> in AppPrefs below?
+      //  All existing examples are String, int, or boolean. Stringify Map?
+
+//    public static void setGutenbergBlockTypeImpressions(String name, Integer count) {
+//        setString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, name);
+//    }
+//
+//    public static String getGutenbergBlockTypeImpressions() {
+//        return getString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "");
+//    }
 
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
