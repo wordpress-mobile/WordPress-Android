@@ -64,11 +64,11 @@ class JetpackRestClientTest {
         val jetpackInstalledPayload = jetpackRestClient.installJetpack(site)
 
         checkUrlAndLogin()
-        assertThat(jetpackInstalledPayload).isNotNull()
+        assertThat(jetpackInstalledPayload).isNotNull
         assertThat(jetpackInstalledPayload.success).isEqualTo(success)
     }
 
-    fun checkUrlAndLogin() {
+    private fun checkUrlAndLogin() {
         val url = "https://public-api.wordpress.com/rest/v1/jetpack-install/http%3A%2F%2Fwordpress.org/"
         assertThat(urlCaptor.lastValue).isEqualTo(url)
         assertThat(paramsCaptor.lastValue).containsEntry("user", username).containsEntry("password", password)
@@ -81,7 +81,7 @@ class JetpackRestClientTest {
         val jetpackErrorPayload = jetpackRestClient.installJetpack(site)
 
         checkUrlAndLogin()
-        assertThat(jetpackErrorPayload).isNotNull()
+        assertThat(jetpackErrorPayload).isNotNull
         assertThat(jetpackErrorPayload.success).isEqualTo(false)
         assertThat(jetpackErrorPayload.error?.type).isEqualTo(JetpackInstallErrorType.GENERIC_ERROR)
     }
