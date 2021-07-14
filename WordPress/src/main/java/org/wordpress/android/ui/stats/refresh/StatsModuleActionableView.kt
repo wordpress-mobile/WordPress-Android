@@ -41,6 +41,7 @@ class StatsModuleActionableView : LinearLayout {
         initView(context, attrs)
     }
 
+    @Suppress("TooGenericExceptionThrown")
     private fun initView(context: Context, attrs: AttributeSet) {
         clipChildren = false
         clipToPadding = false
