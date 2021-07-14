@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -131,4 +132,7 @@ class JetpackStore
             siteContinuation = null
         }
     }
+
+    // Activate Jetpack Stats Module
+    class ActivateStatsModulePayload(val site: SiteModel) : Payload<BaseNetworkError>()
 }
