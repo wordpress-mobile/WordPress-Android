@@ -53,9 +53,8 @@ class AnalyticsUtilsWrapper @Inject constructor(
         source: String,
         listType: String,
         nextPage: Int,
-        totalPages: Int,
-        pageLength: Int
-    ) = AnalyticsUtils.trackLikeListFetchedMore(source, listType, nextPage, totalPages, pageLength)
+        perPage: Int
+    ) = AnalyticsUtils.trackLikeListFetchedMore(source, listType, nextPage, perPage)
 
     /* READER */
 

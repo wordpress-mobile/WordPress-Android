@@ -243,7 +243,6 @@ class EngagedPeopleListViewModel @Inject constructor(
                             EngagementNavigationSource.getSourceDescription(listScenario?.source),
                             ListScenarioType.getSourceDescription(listScenario?.type),
                             pageInfo.page + 1,
-                            pageInfo.totalPages,
                             pageInfo.pageLength
                     )
             })

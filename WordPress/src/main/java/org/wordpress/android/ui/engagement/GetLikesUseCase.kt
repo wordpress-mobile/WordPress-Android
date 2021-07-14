@@ -42,7 +42,6 @@ import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.math.ceil
 
 // NOTE: Do not remove the commentStore and postStore fields; commentStore seems needed so that the store is registered
 // when we dispatch events; postStore added to keep the rational even if not strictly needed as of today.
@@ -131,9 +130,7 @@ class GetLikesUseCase @Inject constructor(
 
                 val pageInfo = PagingInfo(
                         pageLength = paginationParams.pageLength,
-                        page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1,
-                        totalPages = ceil(fingerPrint.expectedNumLikes.toDouble() / paginationParams.pageLength).toInt()
-
+                        page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1
                 )
                 flow.emit(
                     if (result.isError) {
@@ -302,7 +299,7 @@ class GetLikesUseCase @Inject constructor(
         }
     }
 
-    data class PagingInfo(val pageLength: Int, val page: Int, val totalPages: Int)
+    data class PagingInfo(val pageLength: Int, val page: Int)
 
     // Extend error categories if appropriate
     enum class FailureType {
