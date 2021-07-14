@@ -26,6 +26,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
@@ -152,64 +153,79 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 0,
                 "",
                 false,
-                new SitePickerAdapter.OnDataLoadedListener() {
-                    @Override
-                    public void onBeforeLoad(boolean isEmpty) {
-                    }
-
-                    @Override
-                    public void onAfterLoad() {
-                        mSitesList.post(() -> {
-                            if (!isAdded()) {
-                                return;
-                            }
-
-                            if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                                mBottomShadow.setVisibility(View.VISIBLE);
-                            } else {
-                                mBottomShadow.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-                },
-                new SitePickerAdapter.ViewHolderHandler<LoginHeaderViewHolder>() {
-                    @Override
-                    public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                                    boolean attachToRoot) {
-                        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
-                            return new LoginHeaderViewHolder(
-                                    layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
-                                    true
-                            );
-                        } else {
-                            return new LoginHeaderViewHolder(
-                                    layoutInflater.inflate(R.layout.login_epilogue_header, parent, false),
-                                    false
-                            );
-                        }
-                    }
-
-                    @Override
-                    public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
-                        bindHeaderViewHolder(holder, sites);
-                    }
-                },
-                new ViewHolderHandler<LoginFooterViewHolder>() {
-                    @Override
-                    public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                                    boolean attachToRoot) {
-                        return new LoginFooterViewHolder(
-                                layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
-                    }
-
-                    @Override
-                    public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-                        bindFooterViewHolder(holder, sites);
-                    }
-                },
+                dataLoadedListener(),
+                headerHandler(),
+                footerHandler(),
                 mOldSitesIds,
                 SitePickerMode.DEFAULT_MODE
         );
+    }
+
+    @NonNull
+    private OnDataLoadedListener dataLoadedListener() {
+        return new OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {
+            }
+
+            @Override
+            public void onAfterLoad() {
+                mSitesList.post(() -> {
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                        mBottomShadow.setVisibility(View.VISIBLE);
+                    } else {
+                        mBottomShadow.setVisibility(View.GONE);
+                    }
+                });
+            }
+        };
+    }
+
+    @NonNull
+    private ViewHolderHandler<LoginHeaderViewHolder> headerHandler() {
+        return new ViewHolderHandler<LoginHeaderViewHolder>() {
+            @Override
+            public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                            boolean attachToRoot) {
+                if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+                    return new LoginHeaderViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
+                            true
+                    );
+                } else {
+                    return new LoginHeaderViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_header, parent, false),
+                            false
+                    );
+                }
+            }
+
+            @Override
+            public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
+                bindHeaderViewHolder(holder, sites);
+            }
+        };
+    }
+
+    @NonNull
+    private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
+        return new ViewHolderHandler<LoginFooterViewHolder>() {
+            @Override
+            public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                            boolean attachToRoot) {
+                return new LoginFooterViewHolder(
+                        layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
+            }
+
+            @Override
+            public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+                bindFooterViewHolder(holder, sites);
+            }
+        };
     }
 
     @Override
