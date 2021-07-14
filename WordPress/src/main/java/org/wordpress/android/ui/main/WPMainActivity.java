@@ -1196,11 +1196,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-        final @StringRes int titleRes;
-        final @StringRes int messageRes;
-        final @StringRes int positiveButtonTitleRes;
-        final @StringRes int negativeButtonTitleRes;
-        final @StringRes int neutralButtonTitleRes;
+        @StringRes final int titleRes;
+        @StringRes final int messageRes;
+        @StringRes final int positiveButtonTitleRes;
+        @StringRes final int negativeButtonTitleRes;
+        @StringRes final int neutralButtonTitleRes;
 
         if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
             titleRes = R.string.quick_start_dialog_need_help_manage_site_title;

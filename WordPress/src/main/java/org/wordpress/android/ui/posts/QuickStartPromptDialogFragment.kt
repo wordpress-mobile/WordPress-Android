@@ -151,8 +151,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     private fun updateDialogImage(view: View) {
-        val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
-        imageContainer?.let {
+        if (!onboardingImprovementsFeatureConfig.isEnabled()) {
+            val imageContainer = view.findViewById<LinearLayout>(R.id.promo_dialog_image_container)
             if (drawableResId == UNDEFINED_RES_ID) {
                 imageContainer.visibility = View.GONE
             } else {
