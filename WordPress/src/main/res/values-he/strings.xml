@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-24 19:37:42+0000
+Translation-Revision-Date: 2021-07-07 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">פרסום באופן שגרתי יכול לעזור בשילוב הקוראים שלך, ולמשוך מבקרים חדשים לאתר שלך.</string>
+    <string name="blogging_reminders_tip">עצה</string>
+    <string name="blogging_reminders_select_days_message">אפשר לעדכן את ההגדרה הזאת בכל עת</string>
+    <string name="blogging_reminders_select_days">לבחור את הימים שבהם ברצונך לכתוב את הבלוג</string>
+    <string name="blogging_reminders_epilogue_caption">אפשר לעדכן זאת בכל עת דרך האתר שלי &gt; הגדרות &gt; תזכורת לכתיבת בלוג.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">עדיין אין לך תזכורות.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">אנחנו נשלח לך תזכורות לכתוב בלוג &lt;b&gt;בכל יום&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">אנחנו נשלח לך תזכורות לכתוב בלוג ⁦%1$s⁩ בשבוע ביום ⁦%2$s⁩.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">התזכורות הוסרו!</string>
+    <string name="blogging_reminders_epilogue_title">הכול מוכן!</string>
+    <string name="blogging_reminders_update">לעדכן</string>
+    <string name="blogging_reminders_not_set">לא הוגדרו אפשרויות</string>
+    <string name="blogging_reminders_n_a_week">%s בשבוע</string>
+    <string name="set_your_blogging_reminders_button">הגדרת תזכורות</string>
+    <string name="set_up_blogging_reminders_message">הגדרת התזכורות לכתיבת בלוג בימים שבחרת לפרסם.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">הפוסט שלך מתפרסם… בינתיים, אפשר להגדיר את התזכורות שלך לכתוב בלוג בימים שבחרת לפרסם.</string>
+    <string name="set_your_blogging_reminders_title">להגדיר את התזכורות שלך לכתוב בלוג</string>
+    <string name="blogging_reminders_notification_text">זוהי תזכורת ליצור משהו היום</string>
+    <string name="blogging_reminders_notification_title">הגיע הזמן לכתוב בלוג ביום %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">עריכת בלוקים לשימוש חוזר עדיין אינה נתמכת ב-WordPress למערכת Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">לחלופין, ניתן לנתק ולערוך את הבלוקים האלה בנפרד על ידי הקשת הטקסט \"המרה לבלוקים רגילים\".</string>
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
@@ -18,6 +40,7 @@ Language: he_IL
     <string name="site_settings_categories_empty_subtitle">אפשר להוסיף את הקטגוריות שנפוצות אצלך כאן כדי לבחור בהן במהירות בעת הקצאת קטגוריות לפוסטים שלך</string>
     <string name="site_settings_categories_empty_button">ליצור קטגוריה</string>
     <string name="site_settings_categories_title">קטגוריות</string>
+    <string name="site_settings_blogging_reminders_title">תזכורת לכתיבת בלוג</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
     <string name="gutenberg_native_border_settings">הגדרות גבול</string>
     <string name="storage_utils_dialog_dont_show_button">לא להציג שוב</string>
@@ -2844,4 +2867,13 @@ Language: he_IL
     <string name="add">הוסף</string>
     <string name="save">שמור</string>
     <string name="cancel">בטל</string>
+    <string-array name="blogging_reminders_count">
+        <item>פעם אחת</item>
+        <item>פעמיים</item>
+        <item>שלוש פעמים</item>
+        <item>ארבע פעמים</item>
+        <item>חמש פעמים</item>
+        <item>שש פעמים</item>
+        <item>שבע פעמים</item>
+    </string-array>
 </resources>
