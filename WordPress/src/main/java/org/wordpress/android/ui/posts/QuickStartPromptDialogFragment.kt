@@ -164,8 +164,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     private fun updateSiteLayout(view: View) {
-        val siteLayout = view.findViewById<LinearLayout>(R.id.site_layout)
-        siteLayout?.let {
+        if (onboardingImprovementsFeatureConfig.isEnabled()) {
+            val siteLayout = view.findViewById<LinearLayout>(R.id.site_layout)
             val txtTitle = siteLayout.findViewById<TextView>(R.id.text_title)
             val txtDomain = view.findViewById<TextView>(R.id.text_domain)
             val imgBlavatar = view.findViewById<ImageView>(R.id.image_blavatar)
@@ -212,8 +212,8 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
     }
 
     private fun updateNeutralButton(view: View) {
-        val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
-        buttonNeutral?.let {
+        if (!onboardingImprovementsFeatureConfig.isEnabled()) {
+            val buttonNeutral = view.findViewById<Button>(R.id.promo_dialog_button_neutral)
             if (neutralButtonLabel.isNotEmpty()) {
                 buttonNeutral.visibility = View.VISIBLE
                 buttonNeutral.text = neutralButtonLabel
