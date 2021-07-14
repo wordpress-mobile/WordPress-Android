@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.test
 class JetpackRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
+    @Mock private lateinit var jetpackTunnelGsonRequestBuilder: JetpackTunnelGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
@@ -51,7 +52,8 @@ class JetpackRestClientTest {
                 null,
                 requestQueue,
                 accessToken,
-                userAgent)
+                userAgent,
+                jetpackTunnelGsonRequestBuilder)
     }
 
     @Test
