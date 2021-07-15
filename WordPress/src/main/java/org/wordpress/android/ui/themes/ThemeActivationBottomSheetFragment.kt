@@ -16,7 +16,10 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
         const val TAG = "ThemeActivationBottomSheetFragment"
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.theme_activation_bottom_sheet, container)
     }
