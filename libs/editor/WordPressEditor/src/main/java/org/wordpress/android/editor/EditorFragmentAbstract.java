@@ -222,9 +222,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
         boolean showPreview();
-        // TODO(David): Is this correctly typed? Should it use React Native types instead (e.g. ReadableMap,
-        //  ReadableArray)?
-        Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<String> newBlockTypes);
+        Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes);
         void onSetBlockTypeImpressionCount(String name, Integer count);
     }
 

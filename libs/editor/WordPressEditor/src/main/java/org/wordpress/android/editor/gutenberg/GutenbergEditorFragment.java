@@ -501,12 +501,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnBlockTypeImpressionsEventListener() {
                     @Override
-                    public ReadableMap onRequestBlockTypeImpressions(ReadableArray newBlockTypes) {
-                        // TODO(David): What are the appropriate types for this function?
-                        //  How might/where should we cast from React Native types (e.g. Readablemap)
-                        //  to Java types (e.g. ArrayList)?
-                        Map<String, Integer> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes.toArrayList());
-                        return combinedNewBlockTypesAndStoreImpressionCounts;
+                    public Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
+                        Map<String, Integer> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes);
+                        return impressions;
                     }
 
                     @Override
