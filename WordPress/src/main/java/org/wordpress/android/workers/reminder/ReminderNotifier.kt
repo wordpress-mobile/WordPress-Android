@@ -33,7 +33,7 @@ class ReminderNotifier @Inject constructor(
                 contentIntentBuilder = {
                     PendingIntent.getActivity(
                             context,
-                            0,
+                            REMINDER_NOTIFICATION_ID + siteId,
                             PostsListActivity.buildIntent(context, site, actionsShownByDefault = true),
                             FLAG_CANCEL_CURRENT
                     )
@@ -48,7 +48,7 @@ class ReminderNotifier @Inject constructor(
                 smallIcon = R.drawable.ic_app_white_24dp
         )
 
-        reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID, reminderNotification)
+        reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID + siteId, reminderNotification)
 
         analyticsTracker.setSite(siteId)
         analyticsTracker.trackNotificationReceived()
