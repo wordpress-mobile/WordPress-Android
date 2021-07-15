@@ -34,7 +34,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Suppress("LongParameterList")
 class JetpackRestClient @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
