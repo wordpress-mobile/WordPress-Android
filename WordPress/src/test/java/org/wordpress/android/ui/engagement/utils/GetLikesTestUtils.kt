@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.engagement.utils
 
-import android.graphics.pdf.PdfDocument.PageInfo
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.model.LikeModel.LikeType
 import org.wordpress.android.fluxc.model.LikeModel.LikeType.COMMENT_LIKE
