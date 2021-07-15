@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 08:30:47+0000
+Translation-Revision-Date: 2021-07-12 22:04:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ogiltig URL. Ange en giltig URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Inbäddat innehåll från %s kan för närvarande inte visas i den mobila redigeraren. Förhandsvisa sidan för att se det inbäddade innehållet.</string>
+    <string name="gutenberg_native_embed_caption_s">Bädda in bildtext. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Beskrivning för inbäddning. Tom</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">LÄGG TILL LÄNK</string>
+    <string name="activity_log_visit_our_documentation_page">besök vår dokumentationssida</string>
+    <string name="activity_log_multisite_message">Jetpack Backup för Multisite-installationer möjliggör nedladdningsbara säkerhetskopior utan återställning med ett klick. Mer information: %1$s.</string>
     <string name="blogging_reminders_tip_message">Genom att publicera regelbundet kan du bidra till att hålla dina läsare engagerade och locka nya besökare till webbplatsen.</string>
     <string name="blogging_reminders_tip">Tips</string>
     <string name="blogging_reminders_select_days_message">Du kan uppdatera detta när som helst</string>
@@ -77,7 +84,7 @@ Language: sv_SE
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hoten.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att åtgärda hotet.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dubbeltryck för att lägga till en länk.</string>
-    <string name="gutenberg_native_add_link">LÄGG TILL LÄNK</string>
+    <string name="gutenberg_native_edit_link">REDIGERA  LÄNK</string>
     <string name="login_empty_view_try_another_account">Prova med ett annat konto</string>
     <string name="login_empty_view_see_instructions">Se instruktionerna</string>
     <string name="login_no_jetpack_sites_error_message">Om du redan har en webbplats behöver du installera gratis-tillägget Jetpack och ansluta det till ditt konto hos WordPress.com.</string>
@@ -97,6 +104,7 @@ Language: sv_SE
     <string name="gutenberg_native_post_meta_settings">Inställningar för metainformation om inlägg</string>
     <string name="gutenberg_native_post_content_settings">Inställningar för inläggsinnehåll</string>
     <string name="gutenberg_native_featured">Utvalda</string>
+    <string name="gutenberg_native_embed_link">Bädda in länk</string>
     <string name="gutenberg_native_display_post_date">Visa inläggsdatum</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beskriv kortfattat länken för den som använder skärmläsare.</string>
     <string name="login_no_jetpack_sites">Inga Jetpack-webbplatser hittades</string>
@@ -116,9 +124,7 @@ Language: sv_SE
     <string name="gutenberg_native_use_icon_button">Använd ikonknapp</string>
     <string name="gutenberg_native_search_input_field">Inmatningsfält för sökning.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Sökknapp. Den nuvarande knapptexten är</string>
-    <string name="gutenberg_native_search_blocks">Sök block</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Sök blocketikett. Den nuvarande texten är</string>
-    <string name="gutenberg_native_search_block">Sök block</string>
     <string name="gutenberg_native_outside">Utsida</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Ingen anpassad platshållare angiven</string>
     <string name="gutenberg_native_no_button">Ingen knapp</string>
@@ -140,6 +146,7 @@ Language: sv_SE
     <string name="get_likes_no_network_error">Inget nätverk tillgängligt.</string>
     <string name="comments_empty_list_filtered_unreplied">Inga obesvarade kommentarer</string>
     <string name="comment_status_unreplied">Obesvarat</string>
+    <string name="gutenberg_native_add_link">Lägg till länk</string>
     <string name="gutenberg_native_search_settings">Sökinställningar</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>

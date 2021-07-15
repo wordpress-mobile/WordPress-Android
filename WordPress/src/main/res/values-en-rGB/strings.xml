@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 07:40:14+0000
+Translation-Revision-Date: 2021-07-12 22:03:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Invalid URL. Please enter a valid URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
+    <string name="gutenberg_native_embed_caption_s">Embed caption. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Embed caption. Empty</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ADD LINK</string>
+    <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
@@ -77,7 +84,7 @@ Language: en_GB
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threats.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threat.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Double tap to add a link.</string>
-    <string name="gutenberg_native_add_link">ADD LINK</string>
+    <string name="gutenberg_native_edit_link">EDIT LINK</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
@@ -97,6 +104,7 @@ Language: en_GB
     <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
     <string name="gutenberg_native_post_content_settings">Post content settings</string>
     <string name="gutenberg_native_featured">Featured</string>
+    <string name="gutenberg_native_embed_link">Embed link</string>
     <string name="gutenberg_native_display_post_date">Display post date</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
@@ -116,9 +124,7 @@ Language: en_GB
     <string name="gutenberg_native_use_icon_button">Use icon button</string>
     <string name="gutenberg_native_search_input_field">Search input field.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
-    <string name="gutenberg_native_search_blocks">Search blocks</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
-    <string name="gutenberg_native_search_block">Search block</string>
     <string name="gutenberg_native_outside">Outside</string>
     <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
     <string name="gutenberg_native_no_button">No button</string>
@@ -140,6 +146,7 @@ Language: en_GB
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comment_status_unreplied">Unreplied</string>
+    <string name="gutenberg_native_add_link">Add link</string>
     <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>

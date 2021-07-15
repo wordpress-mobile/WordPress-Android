@@ -77,7 +77,6 @@ Language: ko_KR
     <string name="threat_fix_enter_server_creds_msg_plural">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">위협을 해결하려면 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">링크를 두 번 눌러 추가하세요.</string>
-    <string name="gutenberg_native_add_link">링크 추가</string>
     <string name="login_empty_view_try_another_account">다른 계정으로 시도</string>
     <string name="login_empty_view_see_instructions">지침 참조</string>
     <string name="login_no_jetpack_sites_error_message">이미 사이트가 있으면 무료 젯팩 플러그인을 설치하고 워드프레스닷컴 계정에 연결해야 합니다.</string>
@@ -116,9 +115,7 @@ Language: ko_KR
     <string name="gutenberg_native_use_icon_button">아이콘 버튼 사용</string>
     <string name="gutenberg_native_search_input_field">입력 필드를 검색합니다.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">검색 버튼입니다. 현재 버튼 텍스트는</string>
-    <string name="gutenberg_native_search_blocks">블록 검색</string>
     <string name="gutenberg_native_search_block_label_current_text_is">블록 레이블을 검색합니다. 현재 텍스트는</string>
-    <string name="gutenberg_native_search_block">블록 검색</string>
     <string name="gutenberg_native_outside">외부</string>
     <string name="gutenberg_native_no_custom_placeholder_set">설정된 사용자 정의 플레이스홀더 없음</string>
     <string name="gutenberg_native_no_button">버튼 없음</string>
