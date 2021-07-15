@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
@@ -42,10 +43,12 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions", "LongParameterList")
 class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
@@ -76,6 +79,9 @@ class StatsViewModel
     val hideToolbar = newsCardHandler.hideToolbar
 
     val selectedSection = statsSectionManager.liveSelectedSection
+
+    private val _statsModuleUiModel = MediatorLiveData<Event<StatsModuleUiModel>>()
+    val statsModuleUiModel: LiveData<Event<StatsModuleUiModel>> = _statsModuleUiModel
 
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -138,16 +144,26 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
         }
+
+        _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+
         val siteChanged = statsSiteProvider.start(localSiteId)
-        if (restart && siteChanged) {
-            launch {
-                listUseCases.forEach { useCase ->
-                    useCase.value.onCleared()
-                    useCase.value.refreshData(true)
+        if (!isStatsModuleEnabled()) {
+            _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+        } else {
+            if (restart && siteChanged) {
+                launch {
+                    listUseCases.forEach { useCase ->
+                        useCase.value.onCleared()
+                        useCase.value.refreshData(true)
+                    }
                 }
             }
         }
     }
+
+    private fun isStatsModuleEnabled() =
+            statsSiteProvider.siteModel.isActiveModuleEnabled("stats")
 
     private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
@@ -201,11 +217,21 @@ class StatsViewModel
         _showSnackbarMessage.value = null
     }
 
+    private fun buildShowEnabledViewUiModel() = StatsModuleUiModel(disableVisible = false)
+
+    private fun buildShowDisabledViewUiModel() =
+            StatsModuleUiModel(disableVisible = true, disableProgressVisible = false)
+
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
         val date: String? = null,
         val timeZone: String? = null,
         val enableSelectPrevious: Boolean = false,
         val enableSelectNext: Boolean = false
+    )
+
+    data class StatsModuleUiModel(
+        val disableVisible: Boolean = false,
+        val disableProgressVisible: Boolean = false
     )
 }
