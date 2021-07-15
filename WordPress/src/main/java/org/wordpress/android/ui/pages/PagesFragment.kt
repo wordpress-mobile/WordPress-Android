@@ -486,7 +486,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun setupMlpObservers(activity: FragmentActivity) {
         mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
-            createNewPage(request.title, request.content, request.template)
+            createNewPage(request.title, "", request.template)
         })
         mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
             val fm = activity.supportFragmentManager
