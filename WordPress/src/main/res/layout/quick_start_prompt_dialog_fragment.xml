@@ -42,13 +42,6 @@
             style="@style/PromoDialogDescription"
             tools:text="This is a short description about the promotional feature." />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/promo_dialog_link"
-            style="@style/PromoDialogLink"
-            android:clickable="true"
-            android:focusable="true"
-            tools:text="Link" />
-
     </LinearLayout>
 
     <RelativeLayout
