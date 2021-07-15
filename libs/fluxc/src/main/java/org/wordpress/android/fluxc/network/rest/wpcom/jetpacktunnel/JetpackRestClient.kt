@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.JPAPI
@@ -35,6 +34,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
+@Suppress("LongParameterList")
 class JetpackRestClient @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
