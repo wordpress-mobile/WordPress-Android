@@ -77,7 +77,6 @@ fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
 fastlane/screenshots
 default.profraw
-google-upload-credentials.json
 
 # Bundler
 /.bundle
@@ -97,3 +96,7 @@ local-builds.gradle
 # be ignored.
 .configure-files/*
 !.configure-files/*.enc
+# This secret is not part of the repository anymore, but we keep it in the
+# gitignore for retrocompatibility, so that it won't appear as a new file and
+# be accidentally checked in the repository.
+google-upload-credentials.json
