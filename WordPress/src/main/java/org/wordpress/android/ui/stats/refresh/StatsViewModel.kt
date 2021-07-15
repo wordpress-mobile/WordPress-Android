@@ -225,7 +225,7 @@ class StatsViewModel
     fun onEnableStatsModuleClick() {
         _statsModuleUiModel.value = Event(buildShowActivatingViewUiModel())
         launch {
-            when(statsModuleActivateUseCase.postActivateStatsModule(statsSiteProvider.siteModel)) {
+            when (statsModuleActivateUseCase.postActivateStatsModule(statsSiteProvider.siteModel)) {
                 is NetworkUnavailable -> {
                     _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
                     _showSnackbarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.no_network_title))
