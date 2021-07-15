@@ -49,6 +49,13 @@ class AnalyticsUtilsWrapper @Inject constructor(
 
     fun trackLikeListOpened(source: String, listType: String) = AnalyticsUtils.trackLikeListOpened(source, listType)
 
+    fun trackLikeListFetchedMore(
+        source: String,
+        listType: String,
+        nextPage: Int,
+        perPage: Int
+    ) = AnalyticsUtils.trackLikeListFetchedMore(source, listType, nextPage, perPage)
+
     /* READER */
 
     fun trackWithReaderPostDetails(

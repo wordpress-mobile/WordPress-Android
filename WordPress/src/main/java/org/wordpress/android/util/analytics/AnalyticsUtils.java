@@ -75,6 +75,8 @@ public class AnalyticsUtils {
     private static final String SOURCE_INFO_KEY = "source_info";
     private static final String LIST_TYPE_KEY = "list_type";
     private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
+    private static final String PAGE_KEY = "page";
+    private static final String PER_PAGE_KEY = "per_page";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -746,6 +748,19 @@ public class AnalyticsUtils {
         properties.put(LIST_TYPE_KEY, listType);
 
         AnalyticsTracker.track(Stat.LIKE_LIST_OPENED, properties);
+    }
+
+    public static void trackLikeListFetchedMore(String source,
+                                                String listType,
+                                                int nextPage,
+                                                int perPage) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+        properties.put(LIST_TYPE_KEY, listType);
+        properties.put(PAGE_KEY, nextPage);
+        properties.put(PER_PAGE_KEY, perPage);
+
+        AnalyticsTracker.track(Stat.LIKE_LIST_FETCHED_MORE, properties);
     }
 
     public static void trackStorageWarningDialogEvent(Stat stat, String source, Boolean isStorageSettingsResolved) {

@@ -128,11 +128,15 @@ class GetLikesUseCase @Inject constructor(
                     likes
                 }
 
+                val pageInfo = PagingInfo(
+                        pageLength = paginationParams.pageLength,
+                        page = if (likes.isNotEmpty()) ((likes.size - 1) / paginationParams.pageLength) + 1 else 1
+                )
                 flow.emit(
                     if (result.isError) {
-                        getFailureState(noNetworkDetected, likes, errorMessage, fingerPrint.expectedNumLikes)
+                        getFailureState(noNetworkDetected, likes, errorMessage, fingerPrint.expectedNumLikes, pageInfo)
                     } else {
-                        LikesData(likes, fingerPrint.expectedNumLikes, hasMore)
+                        LikesData(likes, fingerPrint.expectedNumLikes, hasMore, pageInfo)
                     }
                 )
 
@@ -203,7 +207,8 @@ class GetLikesUseCase @Inject constructor(
         noNetworkDetected: Boolean,
         orderedLikes: List<LikeModel>,
         errorMessage: String?,
-        expectedNumLikes: Int
+        expectedNumLikes: Int,
+        pageInfo: PagingInfo
     ): Failure {
         return if (noNetworkDetected) {
             Failure(
@@ -215,7 +220,8 @@ class GetLikesUseCase @Inject constructor(
                             UiStringRes(R.string.no_network_title)
                     ),
                     expectedNumLikes,
-                    orderedLikes.isNotEmpty()
+                    orderedLikes.isNotEmpty(),
+                    pageInfo
             )
         } else {
             Failure(
@@ -231,7 +237,8 @@ class GetLikesUseCase @Inject constructor(
                             UiStringRes(R.string.get_likes_empty_state_title)
                     ),
                     expectedNumLikes,
-                    orderedLikes.isNotEmpty()
+                    orderedLikes.isNotEmpty(),
+                    pageInfo
             )
         }
     }
@@ -272,7 +279,8 @@ class GetLikesUseCase @Inject constructor(
         data class LikesData(
             val likes: List<LikeModel>,
             val expectedNumLikes: Int,
-            val hasMore: Boolean = false
+            val hasMore: Boolean = false,
+            val pageInfo: PagingInfo
         ) : GetLikesState()
 
         data class Failure(
@@ -281,7 +289,8 @@ class GetLikesUseCase @Inject constructor(
             val cachedLikes: List<LikeModel>,
             val emptyStateData: EmptyStateData,
             val expectedNumLikes: Int,
-            val hasMore: Boolean
+            val hasMore: Boolean,
+            val pageInfo: PagingInfo
         ) : GetLikesState() {
             data class EmptyStateData(
                 val showEmptyState: Boolean,
@@ -289,6 +298,8 @@ class GetLikesUseCase @Inject constructor(
             )
         }
     }
+
+    data class PagingInfo(val pageLength: Int, val page: Int)
 
     // Extend error categories if appropriate
     enum class FailureType {
