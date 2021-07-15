@@ -189,6 +189,7 @@ class StatsViewModel
     }
 
     fun onSiteChanged() {
+        _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
         loadData {
             listUseCases.values.forEach {
                 it.refreshData(true)
