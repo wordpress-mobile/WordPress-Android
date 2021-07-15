@@ -211,21 +211,25 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         };
     }
 
-    @NonNull
+    @Nullable
     private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
-        return new ViewHolderHandler<LoginFooterViewHolder>() {
-            @Override
-            public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                            boolean attachToRoot) {
-                return new LoginFooterViewHolder(
-                        layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
-            }
+        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            return null;
+        } else {
+            return new ViewHolderHandler<LoginFooterViewHolder>() {
+                @Override
+                public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                                boolean attachToRoot) {
+                    return new LoginFooterViewHolder(
+                            layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
+                }
 
-            @Override
-            public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
-                bindFooterViewHolder(holder, sites);
-            }
-        };
+                @Override
+                public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+                    bindFooterViewHolder(holder, sites);
+                }
+            };
+        }
     }
 
     @Override
