@@ -76,7 +76,6 @@ Language: ar
     <string name="error_media_unexpected_null_value">كانت الوسائط فارغة</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديدات.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديد.</string>
-    <string name="gutenberg_native_add_link">إضافة رابط</string>
     <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
@@ -114,7 +113,6 @@ Language: ar
     <string name="suggestion">اقتراح:</string>
     <string name="like_title_singular">إعجاب واحد</string>
     <string name="gutenberg_native_use_icon_button">استخدام زر الأيقونة</string>
-    <string name="gutenberg_native_search_blocks">البحث في المكوّنات</string>
     <string name="gutenberg_native_search_button_current_button_text_is">زر البحث. نص الزر الحالي هو</string>
     <string name="gutenberg_native_search_input_field">حقل إدخال البحث.</string>
     <string name="gutenberg_native_search_block_label_current_text_is">تسمية مكون البحث. النص الحالي هو</string>
@@ -124,7 +122,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
     <string name="gutenberg_native_no_button">بدون زر</string>
-    <string name="gutenberg_native_search_block">مكوّن بحث</string>
     <string name="gutenberg_native_inside">داخلي</string>
     <string name="gutenberg_native_outside">خارجي</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">أنقر نقرًا مزدوجًا لتحرير نص الزر</string>

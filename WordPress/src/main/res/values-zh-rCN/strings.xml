@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-07 14:18:37+0000
+Translation-Revision-Date: 2021-07-14 00:36:17+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_add_link_0fcaed3b">添加链接</string>
     <string name="blogging_reminders_select_days_message">您可以随时更新</string>
     <string name="blogging_reminders_tip">提示</string>
     <string name="blogging_reminders_tip_message">定期发布文章有助于留住读者以及吸引新访客访问您的站点。</string>
@@ -77,10 +78,10 @@ Language: zh_CN
     <string name="error_media_file_type_not_allowed">此文件类型不被允许</string>
     <string name="error_media_unexpected_empty_media_file_path">媒体的意外空文件路径</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">双击可添加链接。</string>
-    <string name="gutenberg_native_add_link">添加链接</string>
     <string name="login_no_jetpack_sites_error_message">如果您已经拥有一个站点，则需要安装免费的 Jetpack 插件并将其连接到您的 WordPress.com 账户。</string>
     <string name="login_empty_view_see_instructions">请参阅说明</string>
     <string name="login_empty_view_try_another_account">使用其他帐户尝试</string>
+    <string name="gutenberg_native_edit_link">编辑链接</string>
     <string name="login_empty_view_avatar_content_description">您的个人资料照片</string>
     <string name="login_not_a_jetpack_site">要将此应用用于 %1$s，您需要安装并启用 Jetpack 插件。</string>
     <string name="gutenberg_native_move_image_forward">前移图像</string>
@@ -97,6 +98,7 @@ Language: zh_CN
     <string name="gutenberg_native_post_content_settings">文章内容设置</string>
     <string name="gutenberg_native_post_meta_settings">文章元数据设置</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
+    <string name="gutenberg_native_embed_link">嵌入链接</string>
     <string name="gutenberg_native_display_post_date">显示文章日期</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
@@ -114,7 +116,6 @@ Language: zh_CN
     <string name="suggestion">建议：</string>
     <string name="like_title_singular">1 喜欢</string>
     <string name="gutenberg_native_search_block_label_current_text_is">搜索区块标签。当前文字为</string>
-    <string name="gutenberg_native_search_blocks">搜索区块</string>
     <string name="gutenberg_native_search_button_current_button_text_is">搜索按钮。当前按钮文字为</string>
     <string name="gutenberg_native_search_input_field">搜索输入字段。</string>
     <string name="gutenberg_native_use_icon_button">使用图标按钮</string>
@@ -126,7 +127,6 @@ Language: zh_CN
     <string name="gutenberg_native_inside">内部</string>
     <string name="gutenberg_native_no_button">无按钮</string>
     <string name="gutenberg_native_no_custom_placeholder_set">未设置自定义占位符</string>
-    <string name="gutenberg_native_search_block">搜索区块</string>
     <string name="gutenberg_native_outside">外部</string>
     <string name="comment_status_unreplied">未回复</string>
     <string name="comments_empty_list_filtered_unreplied">没有未回复的评论</string>
@@ -141,6 +141,7 @@ Language: zh_CN
     <string name="get_likes_empty_state_title">获取数据时出错</string>
     <string name="get_likes_unknown_error">获取数据时发生未知错误。</string>
     <string name="gutenberg_native_search_settings">搜索设置</string>
+    <string name="gutenberg_native_add_link">添加链接</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="gutenberg_native_add_button_text">添加按钮文本</string>

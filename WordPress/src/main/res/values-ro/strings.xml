@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-09 12:28:45+0000
+Translation-Revision-Date: 2021-07-15 15:08:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL invalid. Te rog introdu un URL valid.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Conținutul înglobat de la %s nu poate fi vizualizat în acest moment în editorul pentru dispozitive mobile. Te rog previzualizează pagina pentru a vedea conținutul înglobat.</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ADAUGĂ LEGĂTURĂ</string>
+    <string name="activity_log_multisite_message">Copii de siguranță Jetpack pentru instalări multi-site oferă copii de siguranță care pot fi descărcate, fără restaurări cu un singur clic. Pentru mai multe informații, %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">vizitează pagina cu documentație.</string>
+    <string name="gutenberg_native_embed_caption_empty">Înglobează subtitrarea. Nu există</string>
+    <string name="gutenberg_native_embed_caption_s">Înglobează subtitrarea. %s</string>
     <string name="blogging_reminders_tip">Sfat</string>
     <string name="blogging_reminders_select_days_message">Poți actualiza oricând</string>
     <string name="blogging_reminders_select_days">Selectează zilele în care vrei să publici</string>
@@ -78,9 +85,9 @@ Language: ro
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introdu datele de conectare la server&lt;/a&gt; pentru a înlătura amenințările.</string>
     <string name="login_empty_view_see_instructions">Vezi instrucțiunile</string>
     <string name="login_empty_view_try_another_account">Încearcă cu un alt cont</string>
-    <string name="gutenberg_native_add_link">ADAUGĂ LEGĂTURĂ</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Atinge de două ori pentru a adăuga o legătură.</string>
     <string name="login_no_jetpack_sites_error_message">Dacă ai deja un site, trebuie să instalezi modulul gratuit Jetpack și să-l conectezi la contul tău WordPress.com.</string>
+    <string name="gutenberg_native_edit_link">EDITEAZĂ LEGĂTURA</string>
     <string name="login_empty_view_avatar_content_description">Poza ta de profil</string>
     <string name="login_not_a_jetpack_site">Ca să utilizezi această aplicație pentru %1$s, trebuie să instalezi modulul Jetpack și să-l conectezi la contul tău WordPress.com.</string>
     <string name="gutenberg_native_image_settings">Setări imagine</string>
@@ -97,6 +104,7 @@ Language: ro
     <string name="gutenberg_native_post_content_settings">Setări conținut articol</string>
     <string name="gutenberg_native_post_meta_settings">Setări metadate articol</string>
     <string name="gutenberg_native_featured">Reprezentativ</string>
+    <string name="gutenberg_native_embed_link">Înglobează legătura</string>
     <string name="gutenberg_native_display_post_date">Afișează dată articol</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrie pe scurt legătura pentru a ajuta utilizatorii care folosesc cititorul de ecran</string>
     <string name="login_no_jetpack_sites">Nu am găsit niciun site Jetpack</string>
@@ -116,7 +124,6 @@ Language: ro
     <string name="gutenberg_native_use_icon_button">Folosește butonul icon</string>
     <string name="gutenberg_native_search_input_field">Câmp de intrare pentru căutare.</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etichetă buton Căutare. Textul actual este</string>
-    <string name="gutenberg_native_search_blocks">Caută blocuri</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Buton Căutare. Textul actual al butonului este</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Atinge de două ori pentru a edita textul butonului</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Atinge de două ori pentru a edita textul etichetei</string>
@@ -125,7 +132,6 @@ Language: ro
     <string name="gutenberg_native_inside">În interior</string>
     <string name="gutenberg_native_hide_search_heading">Ascunde subtitlul de căutare</string>
     <string name="gutenberg_native_double_tap_to_change_unit">atinge de două ori pentru a schimba unitatea</string>
-    <string name="gutenberg_native_search_block">Bloc Căutare</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nu ai setat niciun substituent personalizat</string>
     <string name="gutenberg_native_outside">În exterior</string>
     <string name="gutenberg_native_current_placeholder_text_is">Textul actual pentru substituent este</string>
@@ -141,6 +147,7 @@ Language: ro
     <string name="gutenberg_native_button_inside">Buton în interior</string>
     <string name="get_likes_unknown_error">A apărut o eroare necunoscută în timpul primirii datelor pentru aprecieri.</string>
     <string name="gutenberg_native_search_settings">Setări căutare</string>
+    <string name="gutenberg_native_add_link">Adaugă o legătură</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
@@ -390,10 +397,10 @@ Language: ro
     <string name="scan_again">Scanează încă o dată</string>
     <string name="scan_now">Scanează acum</string>
     <string name="scan_state_icon">Icon stare scanare</string>
-    <string name="backup">Copii de siguranță</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtru pentru tip de activitate (%s tipuri selectate)</string>
     <string name="scan_idle_no_threats_found_title">Nu-ți faci griji pentru nimic</string>
     <string name="scan_idle_threats_found_title">Site-ul tău poate fi în pericol</string>
+    <string name="backup">Copie de siguranță</string>
     <string name="activity_log_activity_type_error_subtitle">Te rog verifică-ți conexiunea la internet și încearcă din nou.</string>
     <string name="activity_log_activity_type_empty_title">Nu sunt disponibile activități</string>
     <string name="activity_log_activity_type_empty_subtitle">Nicio activitate înregistrată în intervalul de timp selectat.</string>
@@ -586,8 +593,8 @@ Language: ro
     <string name="gutenberg_native_page_title_s">Titlu pagină. %s</string>
     <string name="gutenberg_native_page_title_empty">Titlu pagină. Gol</string>
     <string name="gutenberg_native_paste_block_after">Plasează blocul după</string>
-    <string name="gutenberg_native_video_caption_empty">Text asociat video. Gol</string>
     <string name="gutenberg_native_updates_the_title">Actualizări titlu.</string>
+    <string name="gutenberg_native_video_caption_empty">Subtitrare video. Nu există</string>
     <string name="story_saving_failed_message_plural">%1$d diapozitive necesită acțiune</string>
     <string name="story_saving_failed_message_singular">1 diapozitiv necesită acțiune</string>
     <string name="dialog_story_saving_error_title_singular">Nu am putut salva 1 diapozitiv</string>
@@ -898,10 +905,10 @@ Language: ro
     <string name="reader_filter_empty_sites_list">Vezi ultimele articole de pe site-urile pe care le urmărești</string>
     <string name="reader_filter_main_title">Urmăresc</string>
     <string name="reader_filter_cta">Filtrează</string>
-    <string name="gutenberg_native_video_caption_s">Text asociat video. %s</string>
     <string name="gutenberg_native_edit_video">Editează videoul</string>
     <string name="gutenberg_native_edit_media">Editează media</string>
     <string name="gutenberg_native_add_a_shortcode">Adaugă un scurtcod…</string>
+    <string name="gutenberg_native_video_caption_s">Subtitrare video. %s</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  și %1$d %2$s</string>
     <string name="stats_posting_activity_empty_description">Nu există statistici pentru această perioadă.</string>
     <string name="stats_posting_activity_label_content_description">Activitate de publicare pentru %1$s</string>
