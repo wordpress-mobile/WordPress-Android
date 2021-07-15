@@ -884,6 +884,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_UNDO:
             case EDITOR_TAPPED_REDO:
                 return "editor_button_tapped";
+            case EDITOR_SETTINGS_FETCHED:
+                return "editor_settings_fetched";
             case REVISIONS_LIST_VIEWED:
                 return "revisions_list_viewed";
             case REVISIONS_DETAIL_VIEWED_FROM_LIST:

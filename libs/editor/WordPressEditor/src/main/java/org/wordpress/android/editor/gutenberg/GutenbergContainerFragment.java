@@ -30,6 +30,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 
 import java.util.ArrayList;
 
@@ -72,6 +73,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaFilesCollectionBasedBlockEditorListener
                                           onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
+                                  OnGutenbergDidRequestPreviewListener
+                                          onGutenbergDidRequestPreviewListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -90,6 +93,7 @@ public class GutenbergContainerFragment extends Fragment {
                     showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
                     onFPPTooltipShownEventListener,
+                    onGutenbergDidRequestPreviewListener,
                     isDarkMode);
     }
 

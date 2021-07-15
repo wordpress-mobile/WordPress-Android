@@ -461,6 +461,13 @@ private fun buildZendeskTags(
 
     selectedSite?.zendeskAddOns?.takeIf { it.isNotEmpty() }?.let { tags.addAll(it.split(",")) }
 
+    // Add selectedSiteSelfHostedTag if selected site is self-hosted irrespective of the connection type
+    selectedSite?.let {
+        val isSelectedSiteSelfHosted = !SiteUtils.isAccessedViaWPComRest(it) ||
+                (it.isJetpackConnected && !it.isWPComAtomic)
+        if (isSelectedSiteSelfHosted) tags.add(ZendeskConstants.selectedSiteSelfHostedTag)
+    }
+
     return tags
 }
 
@@ -493,6 +500,7 @@ private val wpcomPushNotificationDeviceToken: String?
 private object ZendeskConstants {
     const val blogSeparator = "\n----------\n"
     const val jetpackTag = "jetpack"
+    const val selectedSiteSelfHostedTag = "selected_site_self_hosted"
     const val networkWifi = "WiFi"
     const val networkWWAN = "Mobile"
     const val networkTypeLabel = "Network Type:"

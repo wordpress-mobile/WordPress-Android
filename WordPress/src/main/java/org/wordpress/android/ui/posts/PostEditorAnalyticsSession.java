@@ -29,6 +29,8 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_SESSION_ID = "session_id";
     private static final String KEY_STARTUP_TIME = "startup_time_ms";
     private static final String KEY_TEMPLATE = "template";
+    private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
+    private static final String KEY_ENDPOINT = "endpoint";
 
     private String mSessionId = UUID.randomUUID().toString();
     private String mPostType;
@@ -140,6 +142,13 @@ public class PostEditorAnalyticsSession implements Serializable {
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
         AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
+    }
+
+    public void editorSettingsFetched(Boolean fullSiteEditing, String endpoint) {
+        final Map<String, Object> properties = getCommonProperties();
+        properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
+        properties.put(KEY_ENDPOINT, endpoint);
+        AnalyticsTracker.track(Stat.EDITOR_SETTINGS_FETCHED, properties);
     }
 
     public void end(Boolean canViewEditorOnboarding) {
