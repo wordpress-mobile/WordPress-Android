@@ -1,6 +1,0 @@
-17.6:
-Met het Audioblok kan je podcasts, muziek en geluidsbestanden toevoegen aan je berichten en pagina’s. Hij is nu ook beschikbaar voor gebruikers met een gratis abonnement!
-
-Maak van iedere afbeelding een *uitgelichte* afbeelding met de nieuwe knop ‘Instellen als uitgelicht’ in het Afbeeldingblok.
-
-Tenslotte hebben we het duidelijker gemaakt dat je de automatisch gegenereerde berichtarchiefpagina’s niet kunt bewerken.

@@ -1,6 +1,0 @@
-17.6:
-Mit dem Audioblock kannst du deinen Beiträgen und Seiten Podcasts, Musik und Audiodateien hinzufügen. Er ist jetzt auch für Benutzer mit dem Kostenlos-Tarif verfügbar!
-
-Mache mit dem neuen Button „Als Beitragsbild festlegen“ Im Bildblock jedes beliebige Bild zu einem Beitragsbild.
-
-Außerdem haben wir noch verdeutlicht, dass du die automatisch generierte Beitragsarchivseite nicht bearbeiten kannst.

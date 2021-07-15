@@ -1,6 +1,0 @@
-17.6:
-Blok Audio memungkinkan Anda menambahkan podcast, musik, dan file suara ke pos dan halaman Anda. Sekarang juga tersedia untuk pengguna dengan Paket Gratis!
-
-Ubah semua gambar menjadi gambar *andalan*, dengan tombol ‘Tetapkan sebagai Andalan’ yang baru pada blok Gambar.
-
-Terakhir, kami memperjelas bahwa Anda tidak dapat menyunting halaman arsip pos yang dibuat secara otomatis.
