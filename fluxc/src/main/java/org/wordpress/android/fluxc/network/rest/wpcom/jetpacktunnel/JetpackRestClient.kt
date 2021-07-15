@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.endpoint.JPAPI
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
@@ -85,7 +87,7 @@ class JetpackRestClient @Inject constructor(
      * @param [payload] The payload to activate the stats module
      */
     suspend fun activateStatsModule(payload: ActivateStatsModulePayload): ActivateStatsModuleResultPayload {
-        val url = "/jetpack/v4/module/stats/active/"
+        val url = JPAPI.module.stats.active.pathV4
         val params = mutableMapOf("active" to true)
         val response = jetpackTunnelGsonRequestBuilder.syncPostRequest(
                 this,
