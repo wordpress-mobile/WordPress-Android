@@ -3691,4 +3691,10 @@
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+
+    <!-- Stats module disabled error view -->
+    <string name="stats_disabled_title">Looking for stats?</string>
+    <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
+    <string name="stats_disabled_enable_stats_button">Enable site stats</string>
+    <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
 </resources>
