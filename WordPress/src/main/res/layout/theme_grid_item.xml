@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_margin_normal"
         android:layout_marginTop="@dimen/content_margin_normal"
-        android:layout_marginEnd="@dimen/content_margin_normal">
+        android:layout_marginEnd="@dimen/content_margin_normal"
+        android:importantForAccessibility="no">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,15 +24,14 @@
                 android:id="@+id/theme_grid_item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:foreground="?attr/selectableItemBackground"
-                android:importantForAccessibility="noHideDescendants">
+                android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:contentDescription="@string/theme_image_desc"
+                    android:importantForAccessibility="no"
                     tools:src="@drawable/bg_rectangle_placeholder_themes_100dp" />
 
             </FrameLayout>
