@@ -12,6 +12,10 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.ThemeActivationBottomSheetBinding
 
 class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
+    companion object {
+        const val TAG = "ThemeActivationBottomSheetFragment"
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.theme_activation_bottom_sheet, container)

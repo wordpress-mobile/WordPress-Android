@@ -328,7 +328,9 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     private void activateTheme(String themeId) {
-        // TODO Link theme activation action sheet
+        ThemeActivationBottomSheetFragment bottomSheet = new ThemeActivationBottomSheetFragment();
+        bottomSheet.show(getSupportFragmentManager(), ThemeActivationBottomSheetFragment.TAG);
+        if (true) return;
 
         if (!mSite.isUsingWpComRestApi()) {
             AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
