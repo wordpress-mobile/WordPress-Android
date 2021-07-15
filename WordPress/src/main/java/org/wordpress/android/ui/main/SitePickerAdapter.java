@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -92,8 +93,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-    private final ViewHolderHandler mHeaderHandler;
-    private final ViewHolderHandler mFooterHandler;
+    @Nullable private final ViewHolderHandler mHeaderHandler;
+    @Nullable private final ViewHolderHandler mFooterHandler;
 
     private boolean mIsMultiSelectEnabled;
     private final boolean mIsInSearchMode;
@@ -101,11 +102,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
     private SiteList mAllSites;
-    private ArrayList<Integer> mIgnoreSitesIds;
+    @Nullable private final ArrayList<Integer> mIgnoreSitesIds;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
-    private OnDataLoadedListener mDataLoadedListener;
+    @NonNull private final OnDataLoadedListener mDataLoadedListener;
 
     private boolean mIsSingleItemSelectionEnabled;
     private int mSelectedItemPos;
@@ -149,7 +150,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              int currentLocalBlogId,
                              String lastSearch,
                              boolean isInSearchMode,
-                             OnDataLoadedListener dataLoadedListener,
+                             @NonNull OnDataLoadedListener dataLoadedListener,
                              SitePickerMode sitePickerMode,
                              boolean isInEditMode
     ) {
@@ -162,9 +163,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              int currentLocalBlogId,
                              String lastSearch,
                              boolean isInSearchMode,
-                             OnDataLoadedListener dataLoadedListener,
-                             ViewHolderHandler<?> headerHandler,
-                             ArrayList<Integer> ignoreSitesIds
+                             @NonNull OnDataLoadedListener dataLoadedListener,
+                             @NonNull ViewHolderHandler<?> headerHandler,
+                             @Nullable ArrayList<Integer> ignoreSitesIds
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
                 headerHandler, null, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false);
@@ -175,9 +176,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              int currentLocalBlogId,
                              String lastSearch,
                              boolean isInSearchMode,
-                             OnDataLoadedListener dataLoadedListener,
-                             ViewHolderHandler<?> headerHandler,
-                             ViewHolderHandler<?> footerHandler,
+                             @NonNull OnDataLoadedListener dataLoadedListener,
+                             @NonNull ViewHolderHandler<?> headerHandler,
+                             @Nullable ViewHolderHandler<?> footerHandler,
                              ArrayList<Integer> ignoreSitesIds,
                              SitePickerMode sitePickerMode
     ) {
@@ -190,10 +191,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              int currentLocalBlogId,
                              String lastSearch,
                              boolean isInSearchMode,
-                             OnDataLoadedListener dataLoadedListener,
-                             ViewHolderHandler<?> headerHandler,
-                             ViewHolderHandler<?> footerHandler,
-                             ArrayList<Integer> ignoreSitesIds,
+                             @NonNull OnDataLoadedListener dataLoadedListener,
+                             @Nullable ViewHolderHandler<?> headerHandler,
+                             @Nullable ViewHolderHandler<?> footerHandler,
+                             @Nullable ArrayList<Integer> ignoreSitesIds,
                              SitePickerMode sitePickerMode,
                              boolean isInEditMode
     ) {
@@ -660,10 +661,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (mDataLoadedListener != null) {
-                boolean isEmpty = mSites == null || mSites.size() == 0;
-                mDataLoadedListener.onBeforeLoad(isEmpty);
-            }
+            boolean isEmpty = mSites == null || mSites.size() == 0;
+            mDataLoadedListener.onBeforeLoad(isEmpty);
         }
 
         @Override
@@ -732,9 +731,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 mSites = updatedSiteLists[1];
                 notifyDataSetChanged();
             }
-            if (mDataLoadedListener != null) {
-                mDataLoadedListener.onAfterLoad();
-            }
+            mDataLoadedListener.onAfterLoad();
         }
 
         private List<SiteModel> getBlogsForCurrentView() {
