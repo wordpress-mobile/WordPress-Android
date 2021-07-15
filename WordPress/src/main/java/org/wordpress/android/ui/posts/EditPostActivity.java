@@ -3644,6 +3644,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorThemeSupport editorThemeSupport = editorTheme.getThemeSupport();
         ((EditorThemeUpdateListener) mEditorFragment)
                     .onEditorThemeUpdated(editorThemeSupport.toBundle());
+
+        mPostEditorAnalyticsSession
+                .editorSettingsFetched(editorThemeSupport.isFSETheme(), event.getEndpoint().getValue());
     }
     // EditPostActivityHook methods
 
