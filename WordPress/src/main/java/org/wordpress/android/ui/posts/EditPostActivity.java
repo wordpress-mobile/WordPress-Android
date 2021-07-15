@@ -469,8 +469,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String content = mSiteStore.getBlockLayoutContent(mSite, layoutSlug);
         // Create a new post
         mEditPostRepository.set(() -> {
-            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content, PostStatus.DRAFT.toString(),
-                    null, null, false);
+            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content,
+                    PostStatus.DRAFT.toString(), null, null, false);
             return post;
         });
         mEditPostRepository.savePostSnapshot();
