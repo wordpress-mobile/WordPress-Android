@@ -16,7 +16,7 @@
         android:layout_height="@dimen/theme_activation_bottom_sheet_close_button_size"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/bottom_sheet_handle"
-        android:layout_margin="@dimen/theme_activation_bottom_sheet_margin_16dp"
+        android:layout_margin="@dimen/margin_extra_large"
         android:background="@drawable/close_action_sheet_circle_selector"
         android:contentDescription="@string/label_close_button"
         android:cropToPadding="true"
@@ -41,9 +41,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/theme_name_tv"
-        android:layout_marginEnd="@dimen/theme_activation_bottom_sheet_margin_32dp"
-        android:layout_marginStart="@dimen/theme_activation_bottom_sheet_margin_32dp"
-        android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_16dp"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
         android:text="@string/theme_activation_bottom_sheet_info"
         android:textSize="@dimen/theme_activation_bottom_sheet_text_size" />
@@ -53,9 +53,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/info_tv"
-        android:layout_marginEnd="@dimen/theme_activation_bottom_sheet_margin_16dp"
-        android:layout_marginStart="@dimen/theme_activation_bottom_sheet_margin_16dp"
-        android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_32dp">
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_extra_medium_large">
 
         <ImageView
             android:id="@+id/use_theme_check_iv"
@@ -87,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/theme_activation_bottom_sheet_divider_height"
             android:layout_below="@+id/use_theme_layout_sub_text_tv"
-            android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_8dp"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/gray_5" />
     </RelativeLayout>
 
@@ -96,9 +96,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/use_theme_layout_ll"
-        android:layout_marginEnd="@dimen/theme_activation_bottom_sheet_margin_16dp"
-        android:layout_marginStart="@dimen/theme_activation_bottom_sheet_margin_16dp"
-        android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_8dp">
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium">
 
         <ImageView
             android:id="@+id/keep_current_check_iv"
@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_below="@id/keep_current_layout_ll"
-        android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_16dp"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@color/gray_0">
 
         <View
@@ -136,10 +136,10 @@
             android:id="@+id/action_sheet_buttons_ll"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginBottom="@dimen/theme_activation_bottom_sheet_margin_8dp"
-            android:layout_marginEnd="@dimen/theme_activation_bottom_sheet_margin_16dp"
-            android:layout_marginStart="@dimen/theme_activation_bottom_sheet_margin_16dp"
-            android:layout_marginTop="@dimen/theme_activation_bottom_sheet_margin_8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
@@ -154,7 +154,7 @@
                 app:cornerRadius="8dp" />
 
             <Space
-                android:layout_width="@dimen/theme_activation_bottom_sheet_margin_16dp"
+                android:layout_width="@dimen/margin_extra_large"
                 android:layout_height="match_parent" />
 
             <com.google.android.material.button.MaterialButton
