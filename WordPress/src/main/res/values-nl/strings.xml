@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-12 22:41:51+0000
+Translation-Revision-Date: 2021-07-15 17:42:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ongeldige URL. Geef een geldige URL in.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Ingesloten inhoud van %s kan momenteel niet worden bekeken in de mobiele editor. Bekijk een voorbeeld van de pagina om de ingesloten inhoud weer te geven.</string>
+    <string name="gutenberg_native_embed_caption_s">Bijschrift insluiten. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Bijschrift insluiten. leeg</string>
     <string name="gutenberg_native_add_link_0fcaed3b">LINK TOEVOEGEN</string>
     <string name="activity_log_visit_our_documentation_page">bezoek onze documentatie pagina</string>
+    <string name="activity_log_multisite_message">Jetpack Backup voor Multisite installaties biedt downloadbare back-ups, geen terugzet bewerkingen met één klik. Voor meer informatie %1$s.</string>
     <string name="blogging_reminders_tip_message">Regelmatig publiceren kan je lezers betrokken houden en nieuwe bezoekers naar je site aantrekken.</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_select_days_message">Je kunt dit op elk moment updaten</string>
