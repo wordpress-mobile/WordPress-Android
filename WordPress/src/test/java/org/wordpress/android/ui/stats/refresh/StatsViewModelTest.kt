@@ -58,6 +58,7 @@ class StatsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
         whenever(statsSectionManager.liveSelectedSection).thenReturn(liveSelectedSection)
+        whenever(statsSiteProvider.siteModel).thenReturn(site)
         viewModel = StatsViewModel(
                 mapOf(DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
@@ -75,6 +76,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `stores and tracks tab insights selection`() {
+        startViewModel()
+
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
@@ -83,6 +86,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `stores and tracks tab days selection`() {
+        startViewModel()
+
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
@@ -91,6 +96,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `stores and tracks tab weeks selection`() {
+        startViewModel()
+
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
@@ -99,6 +106,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `stores and tracks tab months selection`() {
+        startViewModel()
+
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
@@ -107,6 +116,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `stores and tracks tab years selection`() {
+        startViewModel()
+
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
@@ -116,6 +127,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Test
     fun `shows shadow on the insights tab`() {
         var toolbarHasShadow: Boolean? = null
+        startViewModel()
 
         viewModel.toolbarHasShadow.observeForever { toolbarHasShadow = it }
 
@@ -132,6 +144,8 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `propagates site change event to base list use case`() = test {
+        startViewModel()
+
         viewModel.onSiteChanged()
 
         verify(baseListUseCase).refreshData(true)
