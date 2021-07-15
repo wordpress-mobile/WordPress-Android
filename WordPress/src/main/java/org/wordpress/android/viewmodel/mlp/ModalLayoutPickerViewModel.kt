@@ -72,12 +72,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
             state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
         }
 
-    sealed class PageRequest(val template: String?, val content: String) {
-        open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
-        object Blank : Create(null, "", "")
-        class Preview(template: String?, content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
-                template,
-                content
+    sealed class PageRequest(val template: String?) {
+        open class Create(template: String?, val title: String) : PageRequest(template)
+        object Blank : Create(null, "")
+        class Preview(template: String?, val content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
+                template
         )
     }
 
@@ -174,8 +173,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         selectedLayout?.let { layout ->
-            val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
-            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
+            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.title)
             return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
