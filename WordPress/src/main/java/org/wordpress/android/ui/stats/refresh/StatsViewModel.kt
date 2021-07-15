@@ -167,7 +167,7 @@ class StatsViewModel
     }
 
     private fun isStatsModuleEnabled() =
-            statsSiteProvider.siteModel.isActiveModuleEnabled("stats")
+            statsSiteProvider.siteModel.isActiveModuleEnabled("stats") || statsSiteProvider.siteModel.isWPCom
 
     private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
@@ -193,10 +193,14 @@ class StatsViewModel
     }
 
     fun onSiteChanged() {
-        _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
-        loadData {
-            listUseCases.values.forEach {
-                it.refreshData(true)
+        if (!isStatsModuleEnabled()) {
+            _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+        } else {
+            _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+            loadData {
+                listUseCases.values.forEach {
+                    it.refreshData(true)
+                }
             }
         }
     }
