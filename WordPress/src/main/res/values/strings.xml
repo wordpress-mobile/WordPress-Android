@@ -3696,4 +3696,5 @@
     <string name="stats_disabled_title">Looking for stats?</string>
     <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
     <string name="stats_disabled_enable_stats_button">Enable site stats</string>
+    <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
 </resources>

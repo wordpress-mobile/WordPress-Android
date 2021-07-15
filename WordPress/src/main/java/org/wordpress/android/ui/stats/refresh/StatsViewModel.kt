@@ -22,6 +22,9 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
+import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
 import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -58,7 +61,8 @@ class StatsViewModel
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
-    newsCardHandler: NewsCardHandler
+    newsCardHandler: NewsCardHandler,
+    private val statsModuleActivateUseCase: StatsModuleActivateUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -218,10 +222,32 @@ class StatsViewModel
         _showSnackbarMessage.value = null
     }
 
+    fun onEnableStatsModuleClick() {
+        _statsModuleUiModel.value = Event(buildShowActivatingViewUiModel())
+        launch {
+            when(statsModuleActivateUseCase.postActivateStatsModule(statsSiteProvider.siteModel)) {
+                is NetworkUnavailable -> {
+                    _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+                    _showSnackbarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.no_network_title))
+                }
+                is RemoteRequestFailure -> {
+                    _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+                    _showSnackbarMessage.value =
+                            SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
+                }
+                is Success -> {
+                    _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+                }
+            }
+        }
+    }
     private fun buildShowEnabledViewUiModel() = StatsModuleUiModel(disableVisible = false)
 
     private fun buildShowDisabledViewUiModel() =
             StatsModuleUiModel(disableVisible = true, disableProgressVisible = false)
+
+    private fun buildShowActivatingViewUiModel() =
+            StatsModuleUiModel(disableVisible = true, disableProgressVisible = true)
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
