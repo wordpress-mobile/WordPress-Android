@@ -48,7 +48,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     private RecyclerView mSitesList;
-    private View mBottomShadow;
+    @Nullable private View mBottomShadow;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
@@ -175,10 +175,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                         return;
                     }
 
-                    if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                        mBottomShadow.setVisibility(View.VISIBLE);
-                    } else {
-                        mBottomShadow.setVisibility(View.GONE);
+                    if (mBottomShadow != null) {
+                        if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                            mBottomShadow.setVisibility(View.VISIBLE);
+                        } else {
+                            mBottomShadow.setVisibility(View.GONE);
+                        }
                     }
                 });
             }
