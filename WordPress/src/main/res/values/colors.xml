@@ -103,6 +103,13 @@
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
 
+    <!-- theme action sheet -->
+    <color name="theme_action_sheet_close_button_bg">@color/gray_0</color>
+    <color name="theme_action_sheet_close_button_tint">@color/gray_30</color>
+    <color name="theme_action_sheet_button_layout_bg">@color/gray_0</color>
+    <color name="theme_action_sheet_preview_button">@color/gray_30</color>
+    <color name="theme_action_sheet_tick_color">@color/primary</color>
+
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->
     <color name="color_primary_dark">#006b98</color>

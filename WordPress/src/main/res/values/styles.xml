@@ -1582,4 +1582,16 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">@color/on_surface_selector</item>
     </style>
+
+    <style name="ThemeActionSheetTitle">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textSize">@dimen/theme_activation_bottom_sheet_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ThemeActionSheetOptionText">
+        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textSize">@dimen/theme_activation_bottom_sheet_text_size</item>
+    </style>
 </resources>
