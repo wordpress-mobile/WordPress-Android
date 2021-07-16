@@ -129,7 +129,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtTitle;
         private final TextView mTxtDomain;
         private final ImageView mImgBlavatar;
-        private final View mDivider;
+        @Nullable private final View mDivider;
         private Boolean mIsSiteHidden;
         private final RadioButton mSelectedRadioButton;
 
