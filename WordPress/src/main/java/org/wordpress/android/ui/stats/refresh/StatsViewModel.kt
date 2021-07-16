@@ -22,10 +22,10 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
@@ -149,11 +149,11 @@ class StatsViewModel
             }
         }
 
-        _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+        _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
 
         val siteChanged = statsSiteProvider.start(localSiteId)
         if (!isStatsModuleEnabled()) {
-            _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+            _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
         } else {
             if (restart && siteChanged) {
                 launch {
@@ -194,9 +194,9 @@ class StatsViewModel
 
     fun onSiteChanged() {
         if (!isStatsModuleEnabled()) {
-            _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+            _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
         } else {
-            _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+            _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
             loadData {
                 listUseCases.values.forEach {
                     it.refreshData(true)
@@ -227,31 +227,32 @@ class StatsViewModel
     }
 
     fun onEnableStatsModuleClick() {
-        _statsModuleUiModel.value = Event(buildShowActivatingViewUiModel())
+        _statsModuleUiModel.value = Event(buildShowStatsActivatingViewUiModel())
         launch {
             when (statsModuleActivateUseCase.postActivateStatsModule(statsSiteProvider.siteModel)) {
                 is NetworkUnavailable -> {
-                    _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+                    _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
                     _showSnackbarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.no_network_title))
                 }
                 is RemoteRequestFailure -> {
-                    _statsModuleUiModel.value = Event(buildShowDisabledViewUiModel())
+                    _statsModuleUiModel.value = Event(buildShowStatsDisabledViewUiModel())
                     _showSnackbarMessage.value =
                             SnackbarMessageHolder(UiStringRes(R.string.stats_disabled_enable_stats_error_message))
                 }
                 is Success -> {
-                    _statsModuleUiModel.value = Event(buildShowEnabledViewUiModel())
+                    _statsModuleUiModel.value = Event(buildShowStatsEnabledViewUiModel())
                 }
             }
         }
     }
-    private fun buildShowEnabledViewUiModel() = StatsModuleUiModel(disableVisible = false)
 
-    private fun buildShowDisabledViewUiModel() =
-            StatsModuleUiModel(disableVisible = true, disableProgressVisible = false)
+    private fun buildShowStatsEnabledViewUiModel() = StatsModuleUiModel(disabledStatsViewVisible = false)
 
-    private fun buildShowActivatingViewUiModel() =
-            StatsModuleUiModel(disableVisible = true, disableProgressVisible = true)
+    private fun buildShowStatsDisabledViewUiModel() =
+            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = false)
+
+    private fun buildShowStatsActivatingViewUiModel() =
+            StatsModuleUiModel(disabledStatsViewVisible = true, disabledStatsProgressVisible = true)
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
@@ -262,7 +263,7 @@ class StatsViewModel
     )
 
     data class StatsModuleUiModel(
-        val disableVisible: Boolean = false,
-        val disableProgressVisible: Boolean = false
+        val disabledStatsViewVisible: Boolean = false,
+        val disabledStatsProgressVisible: Boolean = false
     )
 }

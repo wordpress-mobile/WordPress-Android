@@ -157,12 +157,12 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     private fun StatsFragmentBinding.updateUi(statsModuleUiModel: StatsModuleUiModel) {
-        if (statsModuleUiModel.disableVisible) {
+        if (statsModuleUiModel.disabledStatsViewVisible) {
             disabledView.statsDisabledView.visibility = View.VISIBLE
             tabLayout.visibility = View.GONE
             pullToRefresh.visibility = View.GONE
 
-            if (statsModuleUiModel.disableProgressVisible) {
+            if (statsModuleUiModel.disabledStatsProgressVisible) {
                 disabledView.statsDisabledView.progressBar.visibility = View.VISIBLE
                 disabledView.statsDisabledView.button.visibility = View.GONE
             } else {

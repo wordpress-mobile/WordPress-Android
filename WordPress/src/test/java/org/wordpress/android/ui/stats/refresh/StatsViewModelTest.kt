@@ -156,7 +156,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         startViewModel(statsModuleEnabled = true)
 
-        assertThat(uiModel.last().disableVisible).isFalse
+        assertThat(uiModel.last().disabledStatsViewVisible).isFalse
     }
 
     @Test
@@ -165,7 +165,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         startViewModel(statsModuleEnabled = false)
 
-        assertThat(uiModel.last().disableVisible).isTrue
+        assertThat(uiModel.last().disabledStatsViewVisible).isTrue
     }
 
     @Test
@@ -175,7 +175,7 @@ class StatsViewModelTest : BaseUnitTest() {
         startViewModel(statsModuleEnabled = false)
         viewModel.onEnableStatsModuleClick()
 
-        assertThat(uiModel.last().disableProgressVisible).isTrue
+        assertThat(uiModel.last().disabledStatsProgressVisible).isTrue
     }
 
     @Test
@@ -211,7 +211,7 @@ class StatsViewModelTest : BaseUnitTest() {
         startViewModel(statsModuleEnabled = false)
         viewModel.onEnableStatsModuleClick()
 
-        assertThat(uiModel.last().disableVisible).isFalse
+        assertThat(uiModel.last().disabledStatsViewVisible).isFalse
     }
 
     private fun initObservers(): Observers {
