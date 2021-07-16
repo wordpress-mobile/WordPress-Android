@@ -501,13 +501,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnBlockTypeImpressionsEventListener() {
                     @Override
-                    public Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
-                        Map<String, Integer> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes);
+                    public Map<String, Double> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
+                        Map<String, Double> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes);
                         return impressions;
                     }
 
                     @Override
-                    public void onSetBlockTypeImpressionCount(String name, Integer count) {
+                    public void onSetBlockTypeImpressionCount(String name, Double count) {
                         mEditorFragmentListener.onSetBlockTypeImpressionCount(name, count);
                     }
                 },

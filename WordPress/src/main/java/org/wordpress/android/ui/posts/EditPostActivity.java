@@ -3445,17 +3445,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
-    // TODO(David): How might we merge `newBlockTypes` with the stored Map<String, Intger>?
-    @Override public Map<String, Integer> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
-        Map<String, Integer> impressions = new HashMap<>();
+    @Override public Map<String, Double> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
+        Map<String, Double> newImpressions = new HashMap<>();
         for (int i = 0; i < newBlockTypes.size(); i++) {
-            impressions.put(newBlockTypes.get(i).toString(), 3);
+            newImpressions.put(newBlockTypes.get(i).toString(), 3.0);
         }
-        return impressions;
+        Map<String, Double> storedImpressions = AppPrefs.getGutenbergBlockTypeImpressions();
+        newImpressions.putAll(storedImpressions);
+        AppPrefs.setGutenbergBlockTypeImpressions(newImpressions);
+        return newImpressions;
     }
 
-    @Override public void onSetBlockTypeImpressionCount(String name, Integer count) {
-        // TODO(David): Need to update stored Map<String, Integer> in AppPrefs based on `count` argument.
+    @Override public void onSetBlockTypeImpressionCount(String name, Double count) {
+        Map<String, Double> storedImpressions = AppPrefs.getGutenbergBlockTypeImpressions();
+        storedImpressions.put(name, count);
+        AppPrefs.setGutenbergBlockTypeImpressions(storedImpressions);
     }
 
     // FluxC events

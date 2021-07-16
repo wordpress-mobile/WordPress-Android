@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
@@ -38,6 +41,8 @@ public class AppPrefs {
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
+
+    private static final Gson GSON = new Gson();
 
     public interface PrefKey {
         String name();
@@ -886,13 +891,16 @@ public class AppPrefs {
       // TODO(David): How might we store a Map<String, Integer> in AppPrefs below?
       //  All existing examples are String, int, or boolean. Stringify Map?
 
-//    public static void setGutenbergBlockTypeImpressions(String name, Integer count) {
-//        setString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, name);
-//    }
-//
-//    public static String getGutenbergBlockTypeImpressions() {
-//        return getString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "");
-//    }
+    public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
+        String json = GSON.toJson(newImpressions);
+        setString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+    }
+
+    public static Map<String, Double> getGutenbergBlockTypeImpressions() {
+        String jsonString = getString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
+        return impressions;
+    }
 
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
