@@ -7,11 +7,14 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.JetpackAction
+import org.wordpress.android.fluxc.action.JetpackAction.ACTIVATE_STATS_MODULE
 import org.wordpress.android.fluxc.action.JetpackAction.INSTALL_JETPACK
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
+import org.wordpress.android.fluxc.store.JetpackStore.ActivateStatsModuleErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -41,6 +44,11 @@ class JetpackStore
                             action.payload as SiteModel,
                             actionType
                     )
+                }
+            }
+            ACTIVATE_STATS_MODULE -> {
+                coroutineEngine.launch(T.SETTINGS, this, "JetpackAction.ACTIVATE_STATS_MODULE") {
+                    emitChange(activateStatsModule(action.payload as ActivateStatsModulePayload))
                 }
             }
         }
@@ -129,6 +137,65 @@ class JetpackStore
         if (event.rowsAffected > 0) {
             siteContinuation?.resume(Unit)
             siteContinuation = null
+        }
+    }
+
+    // Activate Jetpack Stats Module
+    suspend fun activateStatsModule(requestPayload: ActivateStatsModulePayload): OnActivateStatsModule {
+        val payload = jetpackRestClient.activateStatsModule(requestPayload)
+        if (payload.success) {
+            reloadSite(requestPayload.site)
+            val reloadedSite = siteStore.getSiteByLocalId(requestPayload.site.id)
+            val isStatsModuleActive = reloadedSite?.activeModules?.contains("stats") ?: false
+            return emitActivateStatsModuleResult(payload, isStatsModuleActive)
+        }
+        return emitActivateStatsModuleResult(payload, false)
+    }
+
+    private fun emitActivateStatsModuleResult(
+        payload: ActivateStatsModuleResultPayload,
+        isStatsModuleActive: Boolean
+    ): OnActivateStatsModule {
+        return if (!payload.isError && isStatsModuleActive) {
+            OnActivateStatsModule(ACTIVATE_STATS_MODULE)
+        } else {
+            OnActivateStatsModule(
+                    ActivateStatsModuleError(GENERIC_ERROR, "Unable to activate stats"),
+                    ACTIVATE_STATS_MODULE
+            )
+        }
+    }
+
+    class ActivateStatsModulePayload(val site: SiteModel) : Payload<BaseNetworkError>()
+
+    data class ActivateStatsModuleResultPayload(
+        val success: Boolean,
+        val site: SiteModel
+    ) : Payload<ActivateStatsModuleError>() {
+        constructor(error: ActivateStatsModuleError, site: SiteModel) : this(success = false, site = site) {
+            this.error = error
+        }
+    }
+
+    enum class ActivateStatsModuleErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE,
+        API_ERROR
+    }
+
+    class ActivateStatsModuleError(
+        val type: ActivateStatsModuleErrorType,
+        val message: String? = null
+    ) : OnChangedError
+
+    // Actions
+    data class OnActivateStatsModule(var causeOfChange: JetpackAction) : Store.OnChanged<ActivateStatsModuleError>() {
+        constructor(
+            error: ActivateStatsModuleError,
+            causeOfChange: JetpackAction
+        ) : this(causeOfChange = causeOfChange) {
+            this.error = error
         }
     }
 }
