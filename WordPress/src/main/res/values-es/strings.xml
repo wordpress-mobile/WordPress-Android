@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-29 06:40:01+0000
+Translation-Revision-Date: 2021-07-13 06:49:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL no válida. Por favor, introduce una URL válida.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">El contenido incrustado de %s no se puede ver en este momento en el editor móvil. Por favor, previsualiza la página para ver el contenido incrustado.</string>
+    <string name="activity_log_multisite_message">Jetpack Backup para instalaciones multisitio proporciona copias de seguridad descargables, no restauraciones con un solo clic. Para más información, %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">visita nuestra página de documentación</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">AÑADIR ENLACE</string>
+    <string name="gutenberg_native_embed_caption_empty">Leyenda incrustada. Vacía</string>
+    <string name="gutenberg_native_embed_caption_s">Leyenda incrustada. %s</string>
     <string name="blogging_reminders_tip_message">Publicar regularmente puede ayudar a que tus lectores permanezcan implicados, y a atraer nuevos visitantes a tu sitio.</string>
     <string name="blogging_reminders_tip">Consejo</string>
     <string name="blogging_reminders_select_days_message">Puedes actualizar esto en cualquier momento</string>
@@ -77,10 +84,10 @@ Language: es
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir las amenazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para corregir la amenaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dos veces para añadir un enlace.</string>
-    <string name="gutenberg_native_add_link">AÑADIR ENLACE</string>
     <string name="login_empty_view_try_another_account">Probar con otra cuenta</string>
     <string name="login_empty_view_see_instructions">Ver las instrucciones</string>
     <string name="login_no_jetpack_sites_error_message">Si ya tienes un sitio, tendrás que instalar el plugin gratuito de Jetpack y conectarlo a tu cuenta de WordPress.</string>
+    <string name="gutenberg_native_edit_link">EDITAR ENLACE</string>
     <string name="login_empty_view_avatar_content_description">Tu foto de perfil</string>
     <string name="login_not_a_jetpack_site">Si quieres usar esta aplicación para %1$s, deberás tener el plugin de Jetpack configurado y conectado a una cuenta de WordPress.com.</string>
     <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
@@ -97,6 +104,7 @@ Language: es
     <string name="gutenberg_native_post_content_settings">Ajustes del contenido de la entrada</string>
     <string name="gutenberg_native_post_meta_settings">Ajustes meta de la entrada</string>
     <string name="gutenberg_native_featured">Destacado</string>
+    <string name="gutenberg_native_embed_link">Enlace incrustado</string>
     <string name="gutenberg_native_display_post_date">Mostrar la fecha de la entrada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente el enlace para ayudar a los usuarios de lectores de pantalla</string>
     <string name="login_no_jetpack_sites">No se han encontrado sitios de Jetpack</string>
@@ -116,9 +124,7 @@ Language: es
     <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
     <string name="gutenberg_native_search_input_field">Campo de introducción de búsqueda.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Botón de búsqueda. El texto actual del botón es</string>
-    <string name="gutenberg_native_search_blocks">Bloques de búsqueda</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta del bloque de búsqueda. El texto actual es</string>
-    <string name="gutenberg_native_search_block">Bloque de búsqueda</string>
     <string name="gutenberg_native_inside">Dentro</string>
     <string name="gutenberg_native_no_custom_placeholder_set">No se ha establecido ningún marcador de posición personalizado</string>
     <string name="gutenberg_native_no_button">Sin botón</string>
@@ -141,6 +147,7 @@ Language: es
     <string name="comments_empty_list_filtered_unreplied">No hay ningún comentario sin responder</string>
     <string name="comment_status_unreplied">Sin responder</string>
     <string name="gutenberg_native_search_settings">Ajustes de búsqueda</string>
+    <string name="gutenberg_native_add_link">Añadir enlace</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>

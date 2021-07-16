@@ -9,9 +9,7 @@ Language: sr_RS
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
-    <string name="gutenberg_native_search_blocks">Блокови претраге</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Натпис блока претраге. Тренутни текст је</string>
-    <string name="gutenberg_native_search_block">Блок претраге</string>
     <string name="gutenberg_native_no_button">Без дугмета</string>
     <string name="gutenberg_native_inside">Унутар</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s је %3$s %4$s.</string>

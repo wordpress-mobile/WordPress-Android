@@ -522,7 +522,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
-            handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
+            handleNewPageAction(request.getTitle(), "", request.getTemplate(),
                     PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 

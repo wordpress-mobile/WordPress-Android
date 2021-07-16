@@ -77,7 +77,6 @@ Language: it
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Inserisci le tue credenziali del server&lt;/a&gt; per risolvere le minacce.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Inserisci le tue credenziali del server&lt;/a&gt; per risolvere la minaccia.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Tocca due volte per aggiungere un link.</string>
-    <string name="gutenberg_native_add_link">AGGIUNGI LINK</string>
     <string name="login_empty_view_try_another_account">Prova con un altro account</string>
     <string name="login_empty_view_see_instructions">Visualizza istruzioni</string>
     <string name="login_no_jetpack_sites_error_message">Se hai già un sito, dovrai installare il plugin Jetpack gratuito e collegarlo al tuo account WordPress.com.</string>
@@ -115,9 +114,7 @@ Language: it
     <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
     <string name="gutenberg_native_search_input_field">Cerca campo di immissione.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Pulsante di ricerca. Il testo del pulsante attuale è</string>
-    <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Cerca etichetta del blocco. Il testo attuale è</string>
-    <string name="gutenberg_native_search_block">Cerca blocco</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nessun set di segnaposto personalizzato</string>
     <string name="gutenberg_native_no_button">Nessun pulsante</string>
     <string name="gutenberg_native_inside">Interno</string>

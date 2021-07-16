@@ -77,7 +77,6 @@ Language: tr
     <string name="threat_fix_enter_server_creds_msg_plural">Tehditleri gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Tehdidi gidermek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Bağlantı eklemek için iki kez dokunun.</string>
-    <string name="gutenberg_native_add_link">BAĞLANTI EKLE</string>
     <string name="login_empty_view_try_another_account">Başka bir hesapla deneyin</string>
     <string name="login_empty_view_see_instructions">Talimatlara bakın</string>
     <string name="login_no_jetpack_sites_error_message">Zaten bir siteniz varsa, ücretsiz Jetpack eklentisini yüklemeniz ve WordPress.com hesabınıza bağlamanız gerekir.</string>
@@ -116,9 +115,7 @@ Language: tr
     <string name="gutenberg_native_use_icon_button">Simge düğmesini kullan</string>
     <string name="gutenberg_native_search_input_field">Arama giriş alanı.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Arama düğmesi. Geçerli düğme metni</string>
-    <string name="gutenberg_native_search_blocks">Arama blokları</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Arama bloğu etiketi. Mevcut metin</string>
-    <string name="gutenberg_native_search_block">Arama bloğu</string>
     <string name="gutenberg_native_outside">Dışında</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Özel yer tutucu ayarlanmadı</string>
     <string name="gutenberg_native_no_button">Düğme yok</string>

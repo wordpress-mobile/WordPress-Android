@@ -77,7 +77,6 @@ Language: de
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um Bedrohungen zu beheben.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um die Bedrohung zu beheben.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Zum Hinzufügen eines Links zweimal tippen</string>
-    <string name="gutenberg_native_add_link">LINK HINZUFÜGEN</string>
     <string name="login_empty_view_try_another_account">Mit einem anderen Konto probieren</string>
     <string name="login_empty_view_see_instructions">Anweisungen anzeigen</string>
     <string name="login_no_jetpack_sites_error_message">Wenn du bereits eine Website hast, musst du das kostenlose Jetpack-Plugin installieren und es mit deinem WordPress.com-Konto verbinden.</string>
@@ -116,9 +115,7 @@ Language: de
     <string name="gutenberg_native_use_icon_button">Icon-Button verwenden</string>
     <string name="gutenberg_native_search_input_field">Eingabefelder suchen</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Button suchen Aktueller Button-Text ist</string>
-    <string name="gutenberg_native_search_blocks">Blöcke suchen</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Blocklabel suchen Aktueller Text ist</string>
-    <string name="gutenberg_native_search_block">Block suchen</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Kein individueller Platzhalter eingestellt</string>
     <string name="gutenberg_native_no_button">Kein Button</string>
     <string name="gutenberg_native_inside">Innen</string>

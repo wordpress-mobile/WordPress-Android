@@ -14,7 +14,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.time.DayOfWeek
-import java.time.format.TextStyle.SHORT_STANDALONE
+import java.time.format.TextStyle.SHORT
 import javax.inject.Inject
 
 class DaySelectionBuilder
@@ -39,7 +39,7 @@ class DaySelectionBuilder
                 MediumEmphasisText(UiStringRes(R.string.blogging_reminders_select_days_message)),
                 DayButtons(daysOfWeek.map {
                     DayItem(
-                            UiStringText(it.getDisplayName(SHORT_STANDALONE, localeManagerWrapper.getLocale())),
+                            UiStringText(it.getDisplayName(SHORT, localeManagerWrapper.getLocale())),
                             bloggingRemindersModel?.enabledDays?.contains(it) == true,
                             ListItemInteraction.create(it, onSelectDay)
                     )

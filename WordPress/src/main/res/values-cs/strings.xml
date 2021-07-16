@@ -54,7 +54,6 @@ Language: cs_CZ
     <string name="threat_fix_enter_server_creds_msg_plural">Chcete-li opravit hrozby &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">Chcete-li opravit hrozbu &lt;a href=\"%1$s\"&gt;vložte přihlašovací údaje k vašemu serveru&lt;/a&gt;.</string>
     <string name="error_media_unexpected_null_value">Média byla prázdná</string>
-    <string name="gutenberg_native_add_link">Přidat odkaz</string>
     <string name="login_empty_view_try_another_account">Zkuste to s jiným účtem</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Dvojitým klepnutím přidáte odkaz</string>
     <string name="login_empty_view_see_instructions">Zobrazit instrukce</string>
@@ -94,9 +93,7 @@ Language: cs_CZ
     <string name="gutenberg_native_use_icon_button">Použijte ikonu tlačítka</string>
     <string name="gutenberg_native_search_input_field">Vyhledejte vstupní pole.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Tlačítko hledat. Aktuální text tlačítka je</string>
-    <string name="gutenberg_native_search_blocks">Hledat bloky</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Vyhledat štítek bloku. Aktuální text je</string>
-    <string name="gutenberg_native_search_block">Hledat blok</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Není nastaven žádný vlastní zástupný symbol</string>
     <string name="gutenberg_native_no_button">Žádné tlačítko</string>
     <string name="gutenberg_native_inside">Uvnitř</string>
