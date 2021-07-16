@@ -1,6 +1,0 @@
-17.6:
-Con el bloque Audio, puedes añadir podcasts, música y archivos de audio a tus entradas y páginas. También está disponible para usuarios del plan gratuito.
-
-Utiliza el nuevo botón "Establecer como destacado" del bloque Imagen para convertir cualquier imagen en una imagen *destacada*.
-
-Por último, dejamos claro que no es posible editar la página Archivos de entradas, que se genera automáticamente.
