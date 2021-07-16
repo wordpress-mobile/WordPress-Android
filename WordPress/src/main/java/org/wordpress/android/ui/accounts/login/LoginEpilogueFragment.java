@@ -47,6 +47,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
+    private static final int EXPANDED_UI_THRESHOLD = 3;
+
     private RecyclerView mSitesList;
     @Nullable private View mBottomShadow;
 
@@ -102,7 +104,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @LayoutRes
     private int loginEpilogueScreenResource() {
         if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
-            return R.layout.login_epilogue_screen_new;
+            if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD) {
+                return R.layout.login_epilogue_screen_new;
+            } else {
+                return R.layout.login_epilogue_screen_new_expanded;
+            }
         } else {
             return R.layout.login_epilogue_screen;
         }
