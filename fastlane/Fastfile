@@ -664,8 +664,8 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options|
-    download_wordpress_metadata_strings(options)
-    download_jetpack_metadata_strings(options)
+    download_wordpress_metadata_strings(options) unless options[:app] != 'wordpress'
+    download_jetpack_metadata_strings(options) unless options[:app] != 'jetpack'
   end
 
   desc "Downloads WordPress's translated metadata from GlotPress"
