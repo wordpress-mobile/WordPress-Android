@@ -680,4 +680,5 @@
     <dimen name="theme_activation_bottom_sheet_title_text_size">23sp</dimen>
     <dimen name="theme_activation_bottom_sheet_text_size">16sp</dimen>
     <dimen name="theme_activation_bottom_sheet_text_size_small">14sp</dimen>
+    <dimen name="theme_action_sheet_option_height">30dp</dimen>
 </resources>
