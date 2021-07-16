@@ -96,7 +96,16 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
+        return (ViewGroup) inflater.inflate(loginEpilogueScreenResource(), container, false);
+    }
+
+    @LayoutRes
+    private int loginEpilogueScreenResource() {
+        if (mOnboardingImprovementsFeatureConfig.isEnabled()) {
+            return R.layout.login_epilogue_screen_new;
+        } else {
+            return R.layout.login_epilogue_screen;
+        }
     }
 
     @Override
