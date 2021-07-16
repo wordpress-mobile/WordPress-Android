@@ -106,7 +106,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mSitesList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mSitesList.setItemAnimator(null);
-        mSitesList.setAdapter(getAdapter());
+        mSitesList.setAdapter(mAdapter);
     }
 
     @Override
@@ -127,6 +127,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
         mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
         mOldSitesIds = requireArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
+
+        initAdapter();
     }
 
     @Override
@@ -139,7 +141,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    private SitePickerAdapter initAdapter() {
         if (mAdapter == null) {
             setNewAdapter();
         }
