@@ -659,6 +659,30 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return filteredSiteList;
     }
 
+    public List<SiteModel> getBlogsForCurrentView() {
+        if (mSitePickerMode.isReblogMode()) {
+            // If we are reblogging we only want to select or search into the WPCom visible sites.
+            return mSiteStore.getVisibleSitesAccessedViaWPCom();
+        } else if (mIsInSearchMode) {
+            return mSiteStore.getSites();
+        }
+        if (mShowHiddenSites) {
+            if (mShowSelfHostedSites) {
+                return mSiteStore.getSites();
+            } else {
+                return mSiteStore.getSitesAccessedViaWPComRest();
+            }
+        } else {
+            if (mShowSelfHostedSites) {
+                List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
+                out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
+                return out;
+            } else {
+                return mSiteStore.getVisibleSitesAccessedViaWPCom();
+            }
+        }
+    }
+
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
@@ -738,30 +762,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 notifyDataSetChanged();
             }
             mDataLoadedListener.onAfterLoad();
-        }
-
-        private List<SiteModel> getBlogsForCurrentView() {
-            if (mSitePickerMode.isReblogMode()) {
-                // If we are reblogging we only want to select or search into the WPCom visible sites.
-                return mSiteStore.getVisibleSitesAccessedViaWPCom();
-            } else if (mIsInSearchMode) {
-                return mSiteStore.getSites();
-            }
-            if (mShowHiddenSites) {
-                if (mShowSelfHostedSites) {
-                    return mSiteStore.getSites();
-                } else {
-                    return mSiteStore.getSitesAccessedViaWPComRest();
-                }
-            } else {
-                if (mShowSelfHostedSites) {
-                    List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
-                    out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
-                    return out;
-                } else {
-                    return mSiteStore.getVisibleSitesAccessedViaWPCom();
-                }
-            }
         }
     }
 
