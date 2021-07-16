@@ -52,6 +52,8 @@ public class EndpointProcessor extends AbstractProcessor {
     private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
     private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>");
     private static final Pattern WPORG_API_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^\\{.*\\}");
+    private static final Pattern WCAPI_VARIABLE_ENDPOINT_PATTERN = WPAPI_VARIABLE_ENDPOINT_PATTERN;
+    private static final Pattern JPAPI_VARIABLE_ENDPOINT_PATTERN = WPAPI_VARIABLE_ENDPOINT_PATTERN;
 
     private static final Map<String, List<String>> XML_RPC_ALIASES;
     static {
