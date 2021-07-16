@@ -156,11 +156,10 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private SitePickerAdapter initAdapter() {
+    private void initAdapter() {
         if (mAdapter == null) {
             setNewAdapter();
         }
-        return mAdapter;
     }
 
     private void setNewAdapter() {
