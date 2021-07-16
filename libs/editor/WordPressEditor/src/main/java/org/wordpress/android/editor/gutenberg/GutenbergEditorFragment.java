@@ -31,10 +31,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
@@ -502,7 +498,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnBlockTypeImpressionsEventListener() {
                     @Override
                     public Map<String, Double> onRequestBlockTypeImpressions(ArrayList<Object> newBlockTypes) {
-                        Map<String, Double> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(newBlockTypes);
+                        Map<String, Double> impressions = mEditorFragmentListener.onRequestBlockTypeImpressions(
+                                newBlockTypes
+                        );
                         return impressions;
                     }
 
