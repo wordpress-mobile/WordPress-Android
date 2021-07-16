@@ -148,7 +148,7 @@ public class EndpointProcessor extends AbstractProcessor {
         EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WOOCOMMERCE", WCWPAPIEndpoint.class,
-                WPAPI_VARIABLE_ENDPOINT_PATTERN);
+                WCAPI_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
 
@@ -166,7 +166,7 @@ public class EndpointProcessor extends AbstractProcessor {
         EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "JPAPI", JPAPIEndpoint.class,
-                WPAPI_VARIABLE_ENDPOINT_PATTERN);
+                JPAPI_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
 
