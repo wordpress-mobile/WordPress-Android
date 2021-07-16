@@ -888,9 +888,6 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
     }
 
-      // TODO(David): How might we store a Map<String, Integer> in AppPrefs below?
-      //  All existing examples are String, int, or boolean. Stringify Map?
-
     public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
         String json = GSON.toJson(newImpressions);
         setString(DeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
