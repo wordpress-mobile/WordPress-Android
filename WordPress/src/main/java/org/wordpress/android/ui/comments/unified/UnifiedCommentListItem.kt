@@ -2,6 +2,7 @@ package org.wordpress.android.ui.comments.unified
 
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.NEXT_PAGE_LOADER
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
 
 sealed class UnifiedCommentListItem(val type: CommentListItemType) {
@@ -26,9 +27,15 @@ sealed class UnifiedCommentListItem(val type: CommentListItemType) {
             get() = remoteCommentId
     }
 
+
+    data class NextPageLoader(val isLoading: Boolean, override val id: Long, val loadAction: () -> Unit) : UnifiedCommentListItem(
+            NEXT_PAGE_LOADER
+    )
+
     enum class CommentListItemType {
         SUB_HEADER,
-        COMMENT;
+        COMMENT,
+        NEXT_PAGE_LOADER;
     }
 
     data class ToggleAction(

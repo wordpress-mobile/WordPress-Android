@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
@@ -46,7 +48,10 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentListViewModel::class.java)
-        activityViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
+        activityViewModel = ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+        ).get(UnifiedCommentActivityViewModel::class.java)
         arguments?.let {
             commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
             commentStatusList = listOf(APPROVED, UNAPPROVED) // TODO: logic must be changed, here for testing purposes
@@ -67,30 +72,23 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         commentsRecyclerView.addItemDecoration(UnifiedCommentListItemDecoration(commentsRecyclerView.context))
 
         adapter = UnifiedCommentListAdapter(requireContext())
-        commentsRecyclerView.adapter = adapter.withLoadStateFooter(CommentListLoadingStateAdapter { retry() })
+        commentsRecyclerView.adapter = adapter
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
-            adapter.refresh()
         }
     }
 
     private fun retry() {
-        adapter.retry()
+//        adapter.retry()
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
         viewModel.setup(commentListFilter, commentStatusList)
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.commentListData.collect { pagingData ->
-                adapter.submitData(pagingData)
-            }
-        }
-
         var isShowingActionMode = false
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
+                adapter.submitList(uiState.commentData)
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
@@ -105,11 +103,11 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            adapter.loadStateFlow.collectLatest { loadState ->
-                viewModel.onLoadStateChanged(loadState.toPagedListLoadingState(adapter.itemCount > 0))
-            }
-        }
+//        lifecycleScope.launchWhenStarted {
+//            adapter.loadStateFlow.collectLatest { loadState ->
+//                viewModel.onLoadStateChanged(loadState.toPagedListLoadingState(adapter.itemCount > 0))
+//            }
+//        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.onSnackbarMessage.collect { snackbarMessage ->
@@ -134,32 +132,32 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
-        uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
-        uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
-        uiHelpers.updateVisibility(
-                commentsRecyclerView,
-                uiModel is CommentsListUiModel.WithData || uiModel is CommentsListUiModel.Refreshing
-        )
-        ptrLayout.isRefreshing = uiModel is CommentsListUiModel.Refreshing
-
-        when (uiModel) {
-            is CommentsListUiModel.Empty -> {
-                if (uiModel.image != null) {
-                    actionableEmptyView.image.visibility = View.VISIBLE
-                    actionableEmptyView.image.setImageResource(uiModel.image)
-                } else {
-                    actionableEmptyView.image.visibility = View.GONE
-                }
-
-                actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
-                        requireContext(),
-                        uiModel.title
-                )
-            }
-
-            else -> { // noop
-            }
-        }
+//        uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
+//        uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
+//        uiHelpers.updateVisibility(
+//                commentsRecyclerView,
+//                uiModel is CommentsListUiModel.WithData || uiModel is CommentsListUiModel.Refreshing
+//        )
+//        ptrLayout.isRefreshing = uiModel is CommentsListUiModel.Refreshing
+//
+//        when (uiModel) {
+//            is CommentsListUiModel.Empty -> {
+//                if (uiModel.image != null) {
+//                    actionableEmptyView.image.visibility = View.VISIBLE
+//                    actionableEmptyView.image.setImageResource(uiModel.image)
+//                } else {
+//                    actionableEmptyView.image.visibility = View.GONE
+//                }
+//
+//                actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
+//                        requireContext(),
+//                        uiModel.title
+//                )
+//            }
+//
+//            else -> { // noop
+//            }
+//        }
     }
 
     override fun onDestroyView() {

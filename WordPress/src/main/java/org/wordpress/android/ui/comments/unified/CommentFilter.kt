@@ -12,6 +12,18 @@ enum class CommentFilter(val labelResId: Int) {
     SPAM(R.string.comment_status_spam),
     DELETE(R.string.comment_status_trash);
 
+    fun toCommentStatuses(): List<CommentStatus> {
+        return when (this) {
+            ALL -> listOf(CommentStatus.APPROVED, CommentStatus.UNAPPROVED)
+            PENDING -> listOf(CommentStatus.UNAPPROVED)
+            APPROVED -> listOf(CommentStatus.APPROVED)
+            UNREPLIED -> listOf(CommentStatus.UNREPLIED)
+            TRASHED -> listOf(CommentStatus.TRASH)
+            SPAM -> listOf(CommentStatus.SPAM)
+            DELETE -> listOf(CommentStatus.DELETED)
+        }
+    }
+
     fun toCommentStatus(): CommentStatus {
         return when (this) {
             ALL -> CommentStatus.ALL

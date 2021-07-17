@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 import org.wordpress.android.R.dimen
-import org.wordpress.android.ui.comments.unified.CommentListLoadingStateAdapter.LoadStateViewHolder
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
 

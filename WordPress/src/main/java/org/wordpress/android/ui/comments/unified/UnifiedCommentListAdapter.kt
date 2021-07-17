@@ -3,11 +3,15 @@ package org.wordpress.android.ui.comments.unified
 import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.NEXT_PAGE_LOADER
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.SUB_HEADER
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.NextPageLoader
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 import org.wordpress.android.ui.utils.AnimationUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -16,10 +20,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) :
-        PagingDataAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
-                diffCallback
-        ) {
+class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(diffCallback) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var commentListUiUtils: CommentListUiUtils
@@ -43,6 +44,7 @@ class UnifiedCommentListAdapter(context: Context) :
                     gravatarUtilsWrapper,
                     animationUtilsWrapper
             )
+            NEXT_PAGE_LOADER.ordinal -> LoadStateViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view holder in UnifiedCommentListAdapter")
         }
     }
@@ -63,10 +65,13 @@ class UnifiedCommentListAdapter(context: Context) :
         } else if (holder is UnifiedCommentViewHolder) {
             holder.bind(getItem(position) as Comment)
         }
+        else if (holder is LoadStateViewHolder) {
+            holder.bind(getItem(position) as NextPageLoader)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)!!.type.ordinal
+        return getItem(position).type.ordinal
     }
 
     companion object {
