@@ -61,7 +61,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/theme_bottom_sheet_selected_description"
-            android:src="@drawable/ic_tick_vector_blue"
+            android:src="@drawable/ic_tick_vector_blue_24dp"
             android:visibility="invisible" />
 
         <TextView
@@ -103,7 +103,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/theme_bottom_sheet_selected_description"
-            android:src="@drawable/ic_tick_vector_blue" />
+            android:src="@drawable/ic_tick_vector_blue_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
