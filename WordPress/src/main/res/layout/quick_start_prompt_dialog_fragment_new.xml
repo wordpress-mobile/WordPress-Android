@@ -19,7 +19,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_dialog_title"
-        style="@style/PromoDialogTitle"
+        style="@style/QuickStartPromptDialogTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
@@ -30,7 +30,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_dialog_description"
-        style="@style/PromoDialogDescription"
+        style="@style/QuickStartPromptDialogDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
@@ -41,7 +41,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/promo_dialog_button_positive"
-        style="@style/PromoDialogButton"
+        style="@style/QuickStartPromptDialogButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
@@ -52,7 +52,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/promo_dialog_button_negative"
-        style="@style/PromoDialogButton"
+        style="@style/QuickStartPromptDialogButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
