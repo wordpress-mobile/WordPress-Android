@@ -2871,7 +2871,7 @@
     <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
     <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
 
     <!-- Quick Start Promo Dialog (New) -->
