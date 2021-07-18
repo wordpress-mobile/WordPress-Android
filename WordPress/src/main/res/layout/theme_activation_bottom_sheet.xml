@@ -139,15 +139,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/preview_theme_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/ThemeBottomSheetButtonOutlined"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/theme_bottom_sheet_preview_button_label"
-                android:textAllCaps="false"
-                android:textColor="@color/theme_action_sheet_preview_button"
-                app:strokeColor="@color/theme_action_sheet_preview_button"
-                app:cornerRadius="@dimen/theme_bottom_sheet_button_corner_radius" />
+                android:textAllCaps="false" />
 
             <Space
                 android:layout_width="@dimen/margin_extra_large"
@@ -155,15 +152,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/activate_theme_button"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/ThemeBottomSheetButtonFilled"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:backgroundTint="@color/accent"
-                android:text="@string/theme_bottom_sheet_activate_button_label"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:cornerRadius="@dimen/theme_bottom_sheet_button_corner_radius" />
+                android:text="@string/theme_bottom_sheet_activate_button_label" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
