@@ -7,6 +7,8 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.annotation.NonNull
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.from
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ThemeActivationBottomSheetBinding
@@ -26,6 +28,11 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Ensures that bottom sheet always open in expanded state even in landscape mode
+        val behavior = from(requireView().parent as View)
+        behavior.state = STATE_EXPANDED
+
         with(ThemeActivationBottomSheetBinding.bind(view)) {
             closeButton.setOnClickListener { dismiss() }
             useThemeLayoutLl.setOnClickListener { toggleSelection(useThemeCheckIv, keepCurrentCheckIv) }
