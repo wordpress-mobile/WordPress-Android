@@ -12,15 +12,15 @@
 
     <ImageButton
         android:id="@+id/close_button"
-        android:layout_width="@dimen/theme_activation_bottom_sheet_close_button_size"
-        android:layout_height="@dimen/theme_activation_bottom_sheet_close_button_size"
+        android:layout_width="@dimen/theme_bottom_sheet_close_button_size"
+        android:layout_height="@dimen/theme_bottom_sheet_close_button_size"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/bottom_sheet_handle"
         android:layout_margin="@dimen/margin_extra_large"
         android:background="@drawable/close_action_sheet_circle_selector"
         android:contentDescription="@string/label_close_button"
         android:cropToPadding="true"
-        android:padding="@dimen/theme_activation_bottom_sheet_close_button_padding"
+        android:padding="@dimen/theme_bottom_sheet_close_button_padding"
         android:src="@drawable/ic_close_black_24dp"
         android:tint="@color/theme_action_sheet_close_button_tint" />
 
@@ -42,8 +42,8 @@
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:gravity="center"
-        android:text="@string/theme_activation_bottom_sheet_info"
-        android:textSize="@dimen/theme_activation_bottom_sheet_text_size" />
+        android:text="@string/theme_bottom_sheet_info"
+        android:textSize="@dimen/theme_bottom_sheet_text_size" />
 
     <RelativeLayout
         android:id="@+id/use_theme_layout_ll"
@@ -56,11 +56,11 @@
 
         <ImageView
             android:id="@+id/use_theme_check_iv"
-            android:layout_width="@dimen/theme_activation_bottom_sheet_selector_size"
-            android:layout_height="@dimen/theme_activation_bottom_sheet_selector_size"
+            android:layout_width="@dimen/theme_bottom_sheet_selector_size"
+            android:layout_height="@dimen/theme_bottom_sheet_selector_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/theme_activation_bottom_sheet_selected_description"
+            android:contentDescription="@string/theme_bottom_sheet_selected_description"
             android:src="@drawable/ic_tick_vector_blue"
             android:visibility="invisible" />
 
@@ -69,19 +69,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/use_theme_layout_main_text_tv"
-            android:text="@string/theme_activation_use_theme_layout_sub_text"
-            android:textSize="@dimen/theme_activation_bottom_sheet_text_size_small" />
+            android:text="@string/theme_bottom_sheet_use_theme_layout_sub_text"
+            android:textSize="@dimen/theme_bottom_sheet_text_size_small" />
 
         <TextView
             android:id="@+id/use_theme_layout_main_text_tv"
             style="@style/ThemeActionSheetOptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/theme_activation_use_theme_layout_main_text" />
+            android:text="@string/theme_bottom_sheet_use_theme_layout_main_text" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/theme_activation_bottom_sheet_divider_height"
+            android:layout_height="@dimen/theme_bottom_sheet_divider_height"
             android:layout_below="@+id/use_theme_layout_sub_text_tv"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/gray_5" />
@@ -98,39 +98,39 @@
 
         <ImageView
             android:id="@+id/keep_current_check_iv"
-            android:layout_width="@dimen/theme_activation_bottom_sheet_selector_size"
-            android:layout_height="@dimen/theme_activation_bottom_sheet_selector_size"
+            android:layout_width="@dimen/theme_bottom_sheet_selector_size"
+            android:layout_height="@dimen/theme_bottom_sheet_selector_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/theme_activation_bottom_sheet_selected_description"
+            android:contentDescription="@string/theme_bottom_sheet_selected_description"
             android:src="@drawable/ic_tick_vector_blue" />
 
         <TextView
             android:layout_width="wrap_content"
             style="@style/ThemeActionSheetOptionText"
-            android:layout_height="@dimen/theme_action_sheet_option_height"
+            android:layout_height="@dimen/theme_bottom_sheet_option_height"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@id/keep_current_check_iv"
             android:gravity="center_vertical"
-            android:text="@string/theme_activation_keep_current_layout_main_text" />
+            android:text="@string/theme_bottom_sheet_keep_current_layout_main_text" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/theme_bottom_sheet_button_container_height"
         android:layout_below="@id/keep_current_layout_ll"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@color/theme_action_sheet_button_layout_bg">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/theme_activation_bottom_sheet_divider_height"
+            android:layout_height="@dimen/theme_bottom_sheet_divider_height"
             android:background="@color/gray_5" />
 
         <LinearLayout
             android:id="@+id/action_sheet_buttons_ll"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="@dimen/theme_bottom_sheet_button_height"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
@@ -143,11 +143,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/theme_activation_bottom_sheet_preview_button_label"
+                android:text="@string/theme_bottom_sheet_preview_button_label"
                 android:textAllCaps="false"
                 android:textColor="@color/theme_action_sheet_preview_button"
                 app:strokeColor="@color/theme_action_sheet_preview_button"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="@dimen/theme_bottom_sheet_button_corner_radius" />
 
             <Space
                 android:layout_width="@dimen/margin_extra_large"
@@ -160,10 +160,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="@color/accent"
-                android:text="@string/theme_activation_bottom_sheet_activate_button_label"
+                android:text="@string/theme_bottom_sheet_activate_button_label"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="@dimen/theme_bottom_sheet_button_corner_radius" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

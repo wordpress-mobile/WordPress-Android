@@ -673,12 +673,15 @@
     <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
 
     <!-- theme activation bottom sheet -->
-    <dimen name="theme_activation_bottom_sheet_close_button_size">30dp</dimen>
-    <dimen name="theme_activation_bottom_sheet_selector_size">23dp</dimen>
-    <dimen name="theme_activation_bottom_sheet_divider_height">1dp</dimen>
-    <dimen name="theme_activation_bottom_sheet_close_button_padding">10dp</dimen>
-    <dimen name="theme_activation_bottom_sheet_title_text_size">23sp</dimen>
-    <dimen name="theme_activation_bottom_sheet_text_size">16sp</dimen>
-    <dimen name="theme_activation_bottom_sheet_text_size_small">14sp</dimen>
-    <dimen name="theme_action_sheet_option_height">30dp</dimen>
+    <dimen name="theme_bottom_sheet_close_button_size">30dp</dimen>
+    <dimen name="theme_bottom_sheet_selector_size">23dp</dimen>
+    <dimen name="theme_bottom_sheet_divider_height">1dp</dimen>
+    <dimen name="theme_bottom_sheet_close_button_padding">10dp</dimen>
+    <dimen name="theme_bottom_sheet_title_text_size">23sp</dimen>
+    <dimen name="theme_bottom_sheet_text_size">16sp</dimen>
+    <dimen name="theme_bottom_sheet_text_size_small">14sp</dimen>
+    <dimen name="theme_bottom_sheet_option_height">30dp</dimen>
+    <dimen name="theme_bottom_sheet_button_container_height">70dp</dimen>
+    <dimen name="theme_bottom_sheet_button_height">55dp</dimen>
+    <dimen name="theme_bottom_sheet_button_corner_radius">8dp</dimen>
 </resources>

@@ -3693,11 +3693,11 @@
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
 
     <!--  theme activation bottom sheet  -->
-    <string name="theme_activation_bottom_sheet_info">%1$s comes with a tailored home page or you can create your own</string>
-    <string name="theme_activation_bottom_sheet_selected_description">Selected</string>
-    <string name="theme_activation_use_theme_layout_main_text">Use %1$s\'s homepage layout</string>
-    <string name="theme_activation_use_theme_layout_sub_text">Saves the current homepage as a draft</string>
-    <string name="theme_activation_keep_current_layout_main_text">Keep current homepage layout</string>
-    <string name="theme_activation_bottom_sheet_preview_button_label">Preview</string>
-    <string name="theme_activation_bottom_sheet_activate_button_label">Activate</string>
+    <string name="theme_bottom_sheet_info">%1$s comes with a tailored home page or you can create your own</string>
+    <string name="theme_bottom_sheet_selected_description">Selected</string>
+    <string name="theme_bottom_sheet_use_theme_layout_main_text">Use %1$s\'s homepage layout</string>
+    <string name="theme_bottom_sheet_use_theme_layout_sub_text">Saves the current homepage as a draft</string>
+    <string name="theme_bottom_sheet_keep_current_layout_main_text">Keep current homepage layout</string>
+    <string name="theme_bottom_sheet_preview_button_label">Preview</string>
+    <string name="theme_bottom_sheet_activate_button_label">Activate</string>
 </resources>
