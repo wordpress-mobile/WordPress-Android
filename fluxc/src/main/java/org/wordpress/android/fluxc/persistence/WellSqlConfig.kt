@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 159
+        return 160
     }
 
     override fun getDbName(): String {
@@ -1804,6 +1804,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 158 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD IS_FSETHEME BOOLEAN")
+                }
+                159 -> migrate(version) {
+                    db.execSQL("ALTER TABLE EditorTheme ADD GALLERY_WITH_IMAGE_BLOCKS BOOLEAN")
                 }
             }
         }
