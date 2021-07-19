@@ -94,6 +94,7 @@ import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
@@ -554,4 +555,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CategoriesListViewModel.class)
     abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ThemesViewModel.class)
+    abstract ViewModel themesViewModel(ThemesViewModel viewModel);
 }

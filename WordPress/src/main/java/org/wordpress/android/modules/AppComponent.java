@@ -215,6 +215,7 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.themes.ThemeActivationBottomSheetFragment;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
@@ -690,6 +691,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(LayoutPreviewFragment object);
 
     void inject(QuickStartPromptDialogFragment object);
+
+    void inject(ThemeActivationBottomSheetFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
