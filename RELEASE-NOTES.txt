@@ -23,6 +23,7 @@
 -----
 * [***] Block editor: New Block: Embed block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3727]
 * [*] Added webp image format support [https://github.com/wordpress-mobile/WordPress-Android/pull/15068]
+* [***] Block Editor: Add Inserter Block Seach [https://github.com/WordPress/gutenberg/pull/33237]
 
 17.8
 -----
