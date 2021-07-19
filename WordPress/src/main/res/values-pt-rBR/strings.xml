@@ -1,56 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-26 20:22:47+0000
+Translation-Revision-Date: 2021-07-03 12:06:58+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Publicar regularmente pode ajudar a manter seus leitores engajados e a atrair novos visitantes ao seu site.</string>
+    <string name="blogging_reminders_tip">Dica</string>
+    <string name="blogging_reminders_select_days_message">Você pode atualizar isso a qualquer momento</string>
+    <string name="blogging_reminders_select_days">Selecione os dias nos quais deseja publicar</string>
+    <string name="blogging_reminders_epilogue_caption">Você pode atualizar isso a qualquer momento em Meu Site &gt; Configurações &gt; Lembretes para publicação.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Não há nenhum lembrete configurado.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Você receberá lembretes para publicar &lt;b&gt;diariamente&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Você receberá lembretes para publicar %1$s por semana em %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Lembretes removidos!</string>
+    <string name="blogging_reminders_epilogue_title">Pronto!</string>
+    <string name="blogging_reminders_update">Atualizar</string>
+    <string name="blogging_reminders_not_set">Nenhum definido</string>
+    <string name="blogging_reminders_n_a_week">%s por semana</string>
+    <string name="set_your_blogging_reminders_button">Definir lembretes</string>
+    <string name="set_up_blogging_reminders_message">Defina lembretes de publicação para dias nos quais deseja publicar.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Seu post está sendo publicado. Enquanto isso, você pode configurar lembretes para os dias em que deseja publicar.</string>
+    <string name="set_your_blogging_reminders_title">Configurar lembretes para publicação</string>
+    <string name="blogging_reminders_notification_text">Este é seu lembrete para publicar algo hoje</string>
+    <string name="blogging_reminders_notification_title">Está na hora de publicar em %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Edição de blocos reutilizáveis ainda não é suportado no WordPress para iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Edição de blocos reutilizáveis ainda não é suportado no WordPress para Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Como alternativa, você pode desanexar e editar os blocos separadamente tocando em \"Converter para blocos normais\".</string>
+    <string name="blogging_reminders_done">Concluído</string>
+    <string name="blogging_reminders_notify_me">Avise-me!</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>
+    <string name="gutenberg_native_set_as_featured_image">Definir como imagem de destaque</string>
+    <string name="gutenberg_native_remove_as_featured_image">Remover de imagem de destaque</string>
+    <string name="fab_add_category_desc">Criar categoria</string>
+    <string name="support_ticket_subject">Suporte do WordPress para Android</string>
+    <string name="site_settings_categories_hint">Gerenciar as categorias de seu site</string>
+    <string name="site_settings_categories_empty_title">Não existem categorias</string>
+    <string name="site_settings_categories_empty_subtitle">Insira aqui as categorias que mais usa para seleção rápida ao categorizar seus posts</string>
+    <string name="site_settings_categories_empty_button">Criar uma categoria</string>
+    <string name="site_settings_categories_title">Categorias</string>
+    <string name="site_settings_blogging_reminders_title">Lembretes para publicação</string>
+    <string name="page_is_posts_page_warning">O conteúdo da sua página de posts mais recentes é automaticamente gerado e não pode ser editada.</string>
+    <string name="gutenberg_native_border_settings">Configurações de borda</string>
+    <string name="storage_utils_dialog_dont_show_button">Não mostrar novamente</string>
+    <string name="storage_utils_dialog_ok_button">Ver armazenamento</string>
+    <string name="storage_utils_dialog_message">Precisamos salvar seu conteúdo no dispositivo antes que possa ser publicado. Revise suas configurações de armazenamento e remova arquivos para liberar espaço.</string>
+    <string name="storage_utils_dialog_title">Armazenamento insuficiente no dispositivo</string>
+    <string name="gutenberg_native_y_axis_position">Posição eixo Y</string>
+    <string name="gutenberg_native_x_axis_position">Posição eixo X</string>
+    <string name="gutenberg_native_type_a_url">Informe um URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Toque para adicionar conteúdo</string>
+    <string name="gutenberg_native_slash_inserter_results">Resultados do adicionador com barra</string>
+    <string name="gutenberg_native_s_has_url_set">URL já definido para %s</string>
+    <string name="gutenberg_native_s_has_no_url_set">URL não definido para %s</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido para blocos normais</string>
+    <string name="gutenberg_native_s_block">Bloco %s </string>
+    <string name="gutenberg_native_minimum_height">Altura mínima</string>
+    <string name="gutenberg_native_media_options">Opções de mídia</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL inválido. Arquivo de áudio não encontrado.</string>
+    <string name="gutenberg_native_insert_crosspost">Inserir post cruzado</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Arraste para ajustar o ponto focal</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Toque duas vezes para abrir a janela inferior para adicionar uma imagem ou vídeo</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toque duas vezes para abrir a janela de ações para adicionar uma imagem ou vídeo</string>
+    <string name="gutenberg_native_current_unit_is_s">A unidade atual é %s</string>
+    <string name="gutenberg_native_crosspost">Post cruzado</string>
+    <string name="gutenberg_native_columns_settings">Configurações de colunas</string>
+    <string name="gutenberg_native_add_link_to_s">Adicionar link para %s</string>
+    <string name="gutenberg_native_add_link_text">Adicionar texto do link</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Adicionar imagem ou vídeo</string>
+    <string name="error_media_path_is_directory">O caminho especificado é um diretório ao invés de um arquivo de mídia</string>
+    <string name="error_media_could_not_find_media_in_path">Não foi possível encontrar um arquivo de mídia no caminho</string>
+    <string name="error_media_unexpected_empty_media_file_path">Campo vazio inesperado para o caminho da mídia</string>
+    <string name="error_media_file_type_not_allowed">Este tipo de arquivo não é permitido</string>
+    <string name="error_media_unexpected_null_value">Mídia estava vazia</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Insira as credenciais do seu servidor&lt;/a&gt; para corrigir ameaças.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Insira as credenciais do seu servidor&lt;/a&gt; para corrigir ameaças.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Clique duas vezes para adicionar um link.</string>
-    <string name="gutenberg_native_add_link">ADICIONAR LINK</string>
     <string name="login_empty_view_try_another_account">Tente com outra conta</string>
     <string name="login_empty_view_see_instructions">Ver instruções</string>
-    <string name="login_no_jetpack_sites_error_message">Se você já tem um site, precisará instalar o plugin gratuito Jetpack e conectá-lo à sua conta do WordPress.</string>
+    <string name="login_no_jetpack_sites_error_message">Se você já possui um site, precisará instalar o plugin gratuito do Jetpack e conectá-lo à sua conta do WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Sua foto de perfil</string>
     <string name="login_not_a_jetpack_site">Para utilizar este aplicativo em %1$s você precisa ter o plugin Jetpack instalado e conectado à sua conta do WordPress.com. </string>
-    <string name="gutenberg_native_size">Tamanho</string>
     <string name="gutenberg_native_move_image_forward">Mover imagem para frente</string>
     <string name="gutenberg_native_move_image_backward">Mover imagem para trás</string>
+    <string name="gutenberg_native_width_settings">Configurações de largura</string>
     <string name="gutenberg_native_image_settings">Configurações da imagem</string>
-    <string name="gutenberg_native_audio_settings">Configurações de áudio</string>
     <string name="user_profile_untitled_site">(Sem título)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Informação de perfil do usuário no final da página</string>
     <string name="likes_list_screen_title">Lista de likes %s</string>
-    <string name="gutenberg_native_write_code">Insira o código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordem e filtros</string>
-    <string name="gutenberg_native_show_download_button">Mostrar botão de download</string>
-    <string name="gutenberg_native_shortcode">Shortcode</string>
-    <string name="gutenberg_native_read_more">Leia mais</string>
-    <string name="gutenberg_native_preload">Pré-carregamento</string>
+    <string name="gutenberg_native_s_social_icon">Ícone do %s</string>
+    <string name="gutenberg_native_mention">Menção</string>
     <string name="gutenberg_native_post_meta_settings">Configurações de metadados do post</string>
     <string name="gutenberg_native_post_content_settings">Configurações do conteúdo do post</string>
-    <string name="gutenberg_native_metadata">Metadados</string>
-    <string name="gutenberg_native_media_file">Arquivo de mídia</string>
-    <string name="gutenberg_native_media_area">Área de mídia</string>
-    <string name="gutenberg_native_loop">Loop</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Link para</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imagem %1$d de %2$d na galeria</string>
-    <string name="gutenberg_native_heading_d">Título %d</string>
     <string name="gutenberg_native_featured">Em destaque</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Digite aqui o URL da mídia a ser incorporada…</string>
-    <string name="gutenberg_native_edit_image">Editar imagem</string>
     <string name="gutenberg_native_display_post_date">Exibir a data do post</string>
-    <string name="gutenberg_native_code">Código</string>
-    <string name="gutenberg_native_change_heading_level">Mudar o nível do título</string>
-    <string name="gutenberg_native_browser_default">Navegador padrão</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">O bloco foi excluído ou está indisponível.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">O bloco não pode ser renderizado dentro de si mesmo.</string>
-    <string name="gutenberg_native_autoplay">Reprodução automática</string>
-    <string name="gutenberg_native_auto">Automático</string>
-    <string name="gutenberg_native_attachment_page">Página de anexo</string>
-    <string name="gutenberg_native_add_text">Adicionar texto…</string>
-    <string name="gutenberg_native_add_caption">Adicione uma legenda</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Modificar %s em</string>
@@ -64,27 +111,36 @@ Language: pt_BR
     <string name="like_faces_singular_text">Um blogueiro curtiu disso.</string>
     <string name="like_title_plural">%d curtidas</string>
     <string name="like_title_singular">1 curtida</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Digite as credenciais de seu servidor para corrigir ameaças.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Digite as credenciais de seu servidor para corrigir a ameaça.</string>
     <string name="suggestion">Sugestão:</string>
-    <string name="gutenberg_native_search_blocks">Pesquisar blocos</string>
-    <string name="gutenberg_native_search_block">Pesquisar bloco</string>
+    <string name="gutenberg_native_use_icon_button">Usar ícone de botão</string>
+    <string name="gutenberg_native_search_input_field">Campo de pesquisa.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Botão de pesquisa. O texto atual do botão é</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Rótulo do bloco de pesquisa. O texto atual é</string>
+    <string name="gutenberg_native_outside">Externo</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Nenhum texto de marcação definido</string>
+    <string name="gutenberg_native_no_button">Sem botão</string>
+    <string name="gutenberg_native_inside">Dentro</string>
+    <string name="gutenberg_native_hide_search_heading">Ocultar título da pesquisa</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Toque duas vezes para editar o texto de marcação</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Toque duas vezes para editar o texto do rótulo</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Toque duas vezes para editar o texto do botão</string>
     <string name="gutenberg_native_double_tap_to_change_unit">toque duas vezes para alterar a unidade</string>
+    <string name="gutenberg_native_current_placeholder_text_is">O texto do marcador de posição atual é</string>
     <string name="gutenberg_native_clear_search">Limpar pesquisa</string>
     <string name="gutenberg_native_cancel_search">Cancelar pesquisa</string>
+    <string name="gutenberg_native_button_position">Posição do botão</string>
+    <string name="gutenberg_native_button_outside">Botão externo</string>
+    <string name="gutenberg_native_button_inside">Botão interno</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s é %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocorreu um erro na obtenção dos dados de curtidas</string>
     <string name="get_likes_unknown_error">Um erro desconhecido ocorreu na obtenção de curtidas.</string>
     <string name="get_likes_no_network_error">Nenhuma rede disponível</string>
     <string name="comments_empty_list_filtered_unreplied">Nenhum comentário não respondido</string>
     <string name="comment_status_unreplied">Não respondido</string>
-    <string name="gutenberg_native_table_of_contents">Tabela de conteúdos</string>
-    <string name="gutenberg_native_summary">sumário</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Exiba uma lista resumida com os títulos de seu post. Adicione âncoras HTML aos blocos de Título para adicionar links aqui.</string>
-    <string name="gutenberg_native_document_outline">visão geral do documento</string>
-    <string name="gutenberg_native_buttongroup">Grupo de botões</string>
+    <string name="gutenberg_native_search_settings">Configurações de pesquisa</string>
     <string name="jetpack_brute_force_allowlist_title">Endereços IP sempre permitidos</string>
     <string name="site_settings_denylist_title">Comentários não permitidos</string>
+    <string name="gutenberg_native_add_button_text">Adicionar texto do botão</string>
     <string name="reader_title_interests">Seguir tópicos</string>
     <string name="stories_intro_main_subtitle">Uma nova maneira de criar e publicar conteúdos atraentes em seu site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dispensar</string>
@@ -151,8 +207,6 @@ Language: pt_BR
     <string name="backup_item_roots">Raiz do WordPress</string>
     <string name="backup_download_details_choose_items_header">Itens incluídos nesse download</string>
     <string name="gutenberg_native_uploading">Enviando…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blocos reutilizáveis não podem ser editados no WordPress para iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blocos reutilizáveis não podem ser editados no WordPress para Android</string>
     <string name="gutenberg_native_replace_file">Substituir arquivo</string>
     <string name="gutenberg_native_replace_audio">Substituir áudio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema ao abrir o áudio</string>
@@ -181,7 +235,7 @@ Language: pt_BR
     <string name="scan_provisioning_description">Desejamos boas-vindas ao Jetpack Scan! Estamos analisando seu site. Informaremos se detectarmos algum problema e iniciaremos a primeira varredura completa.</string>
     <string name="scan_scanning_is_initial_description">Desejamos boas-vindas ao Jetpack Scan, estamos realizando uma análise inicial do seu site. Você receberá os resultados em breve.</string>
     <string name="scan_fixing_threats_description_singular">Vamos corrigir essas ameaças enquanto você faz outras coisas. Enquanto isso, sinta-se à vontade para continuar usando o site normalmente. Você pode conferir o progresso a qualquer momento.</string>
-    <string name="scan_scanning_description">Enviaremos uma notificação assim que a varredura for concluída. Enquanto isso, sinta-se à vontade para continuar usando o site normalmente. Você pode verificar o progresso a qualquer momento.</string>
+    <string name="scan_scanning_description">Enviaremos uma notificação se uma ameaça for encontrada. Enquanto isso, fique à vontade para continuar utilizando seu site normalmente, você pode verificar o progresso a qualquer momento.</string>
     <string name="scan_fixing_threats_title_plural">Corrigindo ameaças</string>
     <string name="scan_start_request_failed_subtitle">O Jetpack Scan não pôde concluir uma varredura do seu site. Verifique se o seu site está inoperante - se não estiver, tente novamente. Se estiver, ou se o Jetpack Scan ainda estiver com problemas, entre em contato com nossa equipe de suporte.</string>
     <string name="scan_request_failed_title">Ocorreu um erro</string>
@@ -488,9 +542,7 @@ Language: pt_BR
     <string name="media_uploading_gif_library_photo">Enviando o arquivo gif</string>
     <string name="media_uploading_stock_library_photo">Enviando mídia</string>
     <string name="media_uploading_default">Enviando mídia</string>
-    <string name="gutenberg_native_select_item">Selecionar item</string>
     <string name="gutenberg_native_search_or_type_url">Pesquisar ou digitar o URL</string>
-    <string name="gutenberg_native_page_break">Quebra de página</string>
     <string name="gutenberg_native_add_this_telephone_link">Adicionar este telefone como link</string>
     <string name="gutenberg_native_add_this_link">Adicionar este link</string>
     <string name="gutenberg_native_add_this_email_link">Adicionar este e-mail como link</string>
@@ -647,7 +699,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
     <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
     <string name="pages_list_author">Autor da página</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">Não foi possível carregar a miniatura do arquivo</string>
     <string name="menu_content_info">Estrutura do conteúdo</string>
     <string name="everyone">Todos</string>
@@ -683,6 +734,7 @@ Language: pt_BR
     <string name="update_now">Atualizar agora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
     <string name="gutenberg_native_move_to_top">Mover para o topo</string>
+    <string name="gutenberg_native_insert_mention">Inserir menção</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toque duas vezes para abrir a janela de ações com as opções disponíveis</string>
     <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
@@ -735,6 +787,7 @@ Language: pt_BR
     <string name="button_insert">Inserir</string>
     <string name="continue_label">Continuar</string>
     <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_number_of_columns">Número de colunas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover o bloco para a direita da posição %1$s para a posição %2$s</string>
     <string name="gutenberg_native_move_block_right">Mover o bloco para a direita</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover o bloco para a esquerda da posição %1$s para a posição %2$s</string>
@@ -751,7 +804,6 @@ Language: pt_BR
     <string name="pages_and_posts_cancel_auto_upload">Cancelar envio</string>
     <string name="gif_list_search_returned_unknown_error">Houve um problema durante a solicitação</string>
     <string name="gif_powered_by_tenor">Desenvolvido por Tenor</string>
-    <string name="gif_picker_search_hint">Pesquisar no Tenor</string>
     <string name="photo_picker_gif">Escolher do Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Sexta-feira</string>
@@ -802,8 +854,10 @@ Language: pt_BR
     <string name="gutenberg_native_link_to">Link para</string>
     <string name="gutenberg_native_link_settings">Configurações de link</string>
     <string name="gutenberg_native_excerpt_length_words">Tamanho do resumo (em palavras)</string>
+    <string name="gutenberg_native_edit_cover_media">Editar mídia de cobertura</string>
     <string name="gutenberg_native_customize">Personalizar</string>
-    <string name="gutenberg_native_video_settings">Configurações de vídeo</string>
+    <string name="gutenberg_native_button_link_url">URL do link do botão</string>
+    <string name="gutenberg_native_border_radius">Raio da borda</string>
     <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
@@ -843,6 +897,7 @@ Language: pt_BR
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Legenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar vídeo</string>
+    <string name="gutenberg_native_edit_media">Editar mídia</string>
     <string name="gutenberg_native_add_a_shortcode">Adicionar um shortcode…</string>
     <string name="post_list_author">Autor do post</string>
     <string name="fab_create_desc">Criar um post</string>
@@ -857,7 +912,6 @@ Language: pt_BR
     <string name="stats_box_type_low">baixa</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Substituir imagem</string>
     <string name="gutenberg_native_gallery_caption_s">Legenda da galeria. %s</string>
     <string name="create_post_page_fab_tooltip">Criar um post ou página</string>
     <string name="content_description_person_building_website">Pessoa construindo um site</string>
@@ -901,14 +955,12 @@ Language: pt_BR
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de mídia do WordPress</string>
     <string name="gutenberg_native_unsupported">Não compatível</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traduzir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
     <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
     <string name="gutenberg_native_start_writing">Comece a escrever…</string>
-    <string name="gutenberg_native_show_section">Mostrar seção</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
     <string name="gutenberg_native_cut_block">Recortar bloco</string>
@@ -925,6 +977,8 @@ Language: pt_BR
     <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
+    <string name="gutenberg_native_link_text">Texto do link</string>
+    <string name="gutenberg_native_link_inserted">Link adicionado</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
     <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
@@ -939,6 +993,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toque duas vezes para mover o bloco para baixo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toque duas vezes e segure para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
     <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu um erro desconhecido. Tente novamente.</string>
@@ -1299,7 +1354,6 @@ Language: pt_BR
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
     <string name="stats_cannot_be_started">Não conseguimos abrir as estatísticas agora. Tente novamente mais tarde.</string>
-    <string name="gif_picker_endless_scroll_network_error">Alguns arquivos não puderam ser enviados devido a problemas com a conexão.</string>
     <string name="gif_picker_empty_search_list">Nenhuma mídia corresponde à sua pesquisa</string>
     <string name="gif_picker_initial_empty_text">Pesquisar para encontrar gifs para adicionar à sua biblioteca de mídias.</string>
     <string name="stats_author_views_label">Visualizações</string>
@@ -1866,7 +1920,7 @@ Language: pt_BR
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">Tem certeza de que quer desconectar o Jetpack do site?</string>
     <string name="jetpack_disconnect_pref_title">\"Desconectar do WordPress.com\"</string>
-    <string name="site_settings_jetpack_allowlist_description">Você pode configurar um endereço IP ou diversos endereços como \"Sempre permitidos\" para evitar que sejam bloqueados pelo Jetpack. IPv4 e IPv6 são aceitos. Para especificar um intervalo, insira o menor e o maior valor separados por um traço. Exemplo: 12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_allowlist_description">Você pode configurar um endereço IP ou diversos endereços como \"Sempre permitidos\" para evitar que sejam bloqueados pelo Jetpack. IPv4 e IPv6 são aceitos. Para especificar um intervalo, insira o menor e o maior valor separados por um traço. Exemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Exigir autenticação em duas etapas</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar contas usando o e-mail</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir login com o WordPress.com</string>
@@ -2813,4 +2867,13 @@ Language: pt_BR
     <string name="add">Adicionar</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
+    <string-array name="blogging_reminders_count">
+        <item>Uma vez</item>
+        <item>Duas vezes</item>
+        <item>Três vezes</item>
+        <item>Quatro vezes</item>
+        <item>Cinco vezes</item>
+        <item>Seis vezes</item>
+        <item>Sete vezes</item>
+    </string-array>
 </resources>

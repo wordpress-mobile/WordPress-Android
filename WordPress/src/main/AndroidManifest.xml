@@ -66,8 +66,6 @@
         android:supportsRtl="true"
         tools:ignore="UnusedAttribute">
 
-        <meta-data android:name="io.sentry.auto-init" android:value="false" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -713,6 +711,12 @@
         <activity
             android:name=".ui.jetpack.restore.RestoreActivity"
             android:label="@string/restore"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Site Settings Categories -->
+        <activity
+            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:label="@string/categories"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->

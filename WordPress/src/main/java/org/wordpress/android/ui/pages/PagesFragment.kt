@@ -128,8 +128,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -451,14 +451,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                         data,
                         post,
                         site,
-                        uploadActionUseCase.getUploadAction(post)
-                ) {
-                    uploadUtilsWrapper.publishPost(
-                            activity,
-                            post,
-                            site
-                    )
-                }
+                        uploadActionUseCase.getUploadAction(post),
+                        {
+                            uploadUtilsWrapper.publishPost(
+                                    activity,
+                                    post,
+                                    site
+                            )
+                        }
+                )
             }
         })
 
@@ -485,7 +486,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun setupMlpObservers(activity: FragmentActivity) {
         mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
-            createNewPage(request.title, request.content, request.template)
+            createNewPage(request.title, "", request.template)
         })
         mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
             val fm = activity.supportFragmentManager

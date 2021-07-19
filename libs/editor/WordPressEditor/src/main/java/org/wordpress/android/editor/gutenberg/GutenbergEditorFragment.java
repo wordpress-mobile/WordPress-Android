@@ -65,6 +65,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceive
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
@@ -486,6 +487,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public boolean onRequestFocalPointPickerTooltipShown() {
                         return mEditorFragmentListener.onGutenbergEditorRequestFocalPointPickerTooltipShown();
+                    }
+                },
+                new OnGutenbergDidRequestPreviewListener() {
+                    @Override
+                    public void gutenbergDidRequestPreview() {
+                        mEditorFragmentListener.showPreview();
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
@@ -1394,8 +1401,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag,
-                                                 @org.jetbrains.annotations.Nullable Object dataFromGutenberg) {
+    public void showEditorHelp() {
+        getGutenbergContainerFragment().showEditorHelp();
+    }
+
+    @Override
+    public void onGutenbergDialogPositiveClicked(@NotNull String instanceTag, int mediaId) {
         switch (instanceTag) {
             case TAG_REPLACE_FEATURED_DIALOG:
                 setFeaturedImage((int) dataFromGutenberg);

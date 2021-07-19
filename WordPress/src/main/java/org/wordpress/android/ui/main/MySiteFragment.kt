@@ -117,8 +117,8 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PromoDialog
-import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -180,12 +180,13 @@ import javax.inject.Named
         "This class is being refactored, if you implement any change, please also update " +
                 "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}"
 )
+@Suppress("LargeClass", "TooManyFunctions")
 class MySiteFragment : Fragment(R.layout.my_site_fragment),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface,
-        PromoDialogClickInterface,
+        QuickStartPromptClickInterface,
         OnConfirmListener,
         OnDismissListener,
         TextInputDialogFragment.Callback {
@@ -1004,7 +1005,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         rowThemes.visibility = themesVisibility
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
-        val sharingVisibility = if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
+        val sharingVisibility = if (site.supportsSharing()) View.VISIBLE else View.GONE
         rowSharing.visibility = sharingVisibility
 
         // show settings for all self-hosted to expose Delete Site
@@ -1353,8 +1354,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    override fun onLinkClicked(instanceTag: String) {}
-
     private fun fetchSitePlans(site: SiteModel?) {
         dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
     }
@@ -1534,14 +1533,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun showQuickStartDialogMigration() {
-        val promoDialog = PromoDialog()
+        val promoDialog = QuickStartPromptDialogFragment()
         promoDialog.initialize(
                 TAG_QUICK_START_MIGRATION_DIALOG,
                 getString(R.string.quick_start_dialog_migration_title),
                 getString(R.string.quick_start_dialog_migration_message),
                 getString(android.R.string.ok),
                 R.drawable.img_illustration_checkmark_280dp,
-                "",
                 "",
                 ""
         )

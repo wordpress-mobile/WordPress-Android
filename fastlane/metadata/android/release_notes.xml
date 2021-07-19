@@ -1,170 +1,106 @@
 <ar>
-17.4:
-لقد أضفنا 3 تحديثات جديدة في هذا التحديث:
-
-سترى الآن أداة انتقاء الوسائط عند إضافة مكوِّن القصة من محرِّر المكوِّن، ما يسهِّل البدء.
-
-تعرض معاينات القصة الآن كما هو متوقع في القارئ.
-
-وأخيرًا، عند فشل رفع الشرائح، سيقوم التطبيق بإعادة المحاولة تلقائيًا، ما يوفِّر عليك نقرة إضافية!
+17.7:
+- جديد! الحصول على مطالبات تذكير التدوين في أيام من اختيارك
+- محرِّر المكوِّن: شبكة تخطيط مكوِّن جديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
+- تم إصلاح مشكلة المقالة المكررة للقارئ
+- تمت إضافة القدرة على الاشتراك في المحادثات عن طريق البريد الإلكتروني من القارئ
 </ar>
 <de-DE>
-17.4:
-Wir haben bei diesem Update 3 neue Updates für Geschichten hinzugefügt:
-
-Dir wird nun eine Medienauswahl angezeigt, wenn du einen Geschichtenblock vom Block-Editor hinzufügst, um dir den Start zu erleichtern.
-
-Die Geschichtenvorschau wird im Reader nun wie erwartet wiedergegeben.
-
-Und zuletzt versucht die App nun automatisch erneut, Slides hochzuladen, wenn dies fehlgeschlagen ist.
+17.7:
+- Neu! Erhalte Blog-Erinnerungen an Tagen deiner Wahl
+- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
+- Problem mit doppeltem Beitrag im Reader behoben
+- Möglichkeit zum Abonnieren von Unterhaltungen per E-Mail im Reader hinzugefügt
 </de-DE>
 <en-US>
-17.4:
-We’ve added 3 new updates to Stories in this update:
-
-You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.
-
-Story previews now render as expected in the Reader.
-
-And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!
+17.7:
+- New! Get blogging reminder prompts on days of your choice
+- Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
+- Fixed Reader duplicate post issue
+- Added ability to subscribe to conversations by email from Reader
 </en-US>
 <es-ES>
-17.4:
-Hemos añadido 3 nuevas actualizaciones a las historias en esta actualización:
-
-Ahora verás un selector de medios cuando añadas un bloque de historias desde el editor de bloques, haciendo más fácil empezar.
-
-Las vistas previas de las historias ahora se muestran en el lector como se espera.
-
-Y, por último, cuando las diapositivas fallan al subir, la aplicación volverá a intentarlo automáticamente, ¡ahorrándote un toque adicional!
+17.7:
+- ¡Nuevo! Obtén avisos de recordatorio de blogueo los días que elijas
+- Editor de bloques: Nuevo bloque de diseño de cuadrícula, retoques del estilo de las acreditaciones, corrección de un nuevo bloque no creado al pulsar Intro dentro del bloque basado en texto, correcciones de la vista en tableta para el botón de inserción
+- Corregido el problema de entradas duplicadas en el lector.
+- Añadida la posibilidad de suscripción a conversaciones por correo electrónico desde el lector
 </es-ES>
-<fr-CA>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
-
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
-
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
-</fr-CA>
-<fr-FR>
-17.4 :
-Nous avons ajouté 3 nouvelles mises à jour à Stories dans cette mise à jour :
-
-Vous verrez désormais un sélecteur de média lors de l’ajout d’un bloc Story dans l’éditeur de blocs, ce qui facilite le démarrage.
-
-Les aperçus de story ont désormais le rendu attendu dans le Lecteur.
-
-Enfin, lorsque le chargement des diapositives échoue, l’application réessaie automatiquement, ce qui vous économise un appui supplémentaire !
-</fr-FR>
 <iw-IL>
-17.4:
-בעדכון הזה הוספנו שלושה עדכונים חדשים לסטוריז:
-
-בורר המדיה מוצג כעת כאשר מוסיפים בלוק של סטורי מעורך הבלוקים, כך שאפשר להתחיל לפרסם בקלות רבה יותר.
-
-התצוגות המקדימות של הסטורי כעת מעובדות באופן תקין ב-Reader.
-
-ואחרון חביב, אם טעינת השקופיות נכשלת, האפליקציה תמשיך לנסות שוב באופן אוטומטי כדי לחסוך לך את ההקשה הנוספת!
+17.7:
+- חדש! הודעות תזכורת להתחיל בכתיבת בלוג בימים שבחרת
+עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
+- תוקנה בעיה של פוסט משוכפל בקורא
+- נוספה היכולת להירשם מהקורא לשיחות באימייל
 </iw-IL>
 <id>
-17.4:
-Kami menambahkan 3 pembaruan untuk Cerita pada pembaruan ini:
-
-Pemilih media akan ditampilkan saat menambahkan blok Cerita dari editor blok, sehingga proses memulai menjadi lebih mudah.
-
-Pratinjau Cerita kini ditampilkan dengan pas di Pembaca.
-
-Akhirnya, jika slide gagal diunggah, aplikasi akan otomatis mencoba ulang, sehingga tidak perlu mengetuk layar lagi.
+17.7:
+- Baru! Dapatkan pesan pengingat blogging pada hari yang sudah dipilih
+- Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
+- Masalah pos duplikat di Pembaca sudah diperbaiki
+- Fitur berlangganan ke percakapan melalui email dari Pembaca sudah ditambahkan
 </id>
 <ja-JP>
-17.4:
-今回のアップデートでは、ストーリーに3件の新しいアップデートを追加しました。
-
-ブロックエディターからストーリーブロックを追加する際に、メディアピッカーが表示されるようになり、開始が簡単になりました。
-
-Reader でストーリーのプレビューが期待どおりに表示されるようになりました。
-
-さらに、スライドのアップロードに失敗するとアプリが自動的に再試行するため、再びタップする必要がなくなりました。
+17.7:
+- 新しくなりました ! 指定した日にブログ作成のリマインダーを受け取ることができます
+- ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
+- Reader の重複投稿の問題を修正
+- Reader からメールで会話をフォローする機能の追加
+ 
 </ja-JP>
 <ko-KR>
-17.4:
-이 업데이트에서 새 업데이트 3가지를 스토리에 추가했습니다.
-
-이제는 더 쉽게 시작할 수 있도록 블록 편집기의 스토리 블록을 추가할 때 미디어 선택기가 표시됩니다.
-
-이제는 스토리 미리보기가 뉴스피드에서 예상대로 렌더링됩니다.
-
-그리고 마지막으로, 슬라이드가 업로드되지 않으면 앱에서 자동으로 다시 시도되므로 다시 누르지 않아도 됩니다.
+17.7:
+- 새로운 기능! 선택한 일자의 블로깅 알림 메시지 받기
+- 블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
+- 리더 중복 글 문제를 해결했음
+- 리더에서 이메일로 대화를 구독하는 기능을 추가했음
 </ko-KR>
 <nl-NL>
-17.4:
-We hebben in deze update drie nieuwe updates aan Verhalen toegevoegd:
-
-Je ziet nu een mediakiezer wanneer je een verhaalblok toevoegt vanuit de blok-editor, waardoor het gemakkelijker wordt om aan de slag te gaan.
-
-Verhaal voorbeelden worden nu weergegeven zoals verwacht in de Reader.
-
-En tot slot, wanneer slides niet kunnen worden geüpload, zal de app het automatisch opnieuw proberen, waardoor je een extra tik bespaart!
+17.7:
+- Nieuw! Ontvang herinneringen om te bloggen op zelf te kiezen dagen
+- Blokeditor: Nieuwe indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
+- Probleem van dubbel bericht in de lezer verholpen
+- Functie toegevoegd om vanaf de lezer je per e-mail te abonneren op gesprekken
 </nl-NL>
 <pt-BR>
-17.4:
-Adicionamos 3 novas atualizações às Stories:
-
-Um seletor de mídia agora é exibido ao adicionar o bloco Story no editor de blocos, facilitando a criação.
-
-A visualização de Story agora é exibida como esperado no leitor.
-
-Por fim, quando slides não são enviados corretamente, o aplicativo tentará novamente economizando um toque adicional.
+17.7:
+- Novidade! Receba lembretes para publicar nos dias que você quiser
+- Editor de blocos: Novo bloco de layout em grade, melhorias no estilo dos rótulos, correção de blocos não criados ao pressionar Enter em um bloco de texto. Correções no botão de inserção na visão em tablet
+- Correção de post duplicado no Leitor
+- Adição de possibilidade de inscrever-se a uma conversa por e-mail no Leitor
 </pt-BR>
 <ru-RU>
-17,4:
-В этой версии мы добавили 3 новых обновления для историй:
-
-Теперь при добавлении блока истории из редактора блоков вы увидите средство выбора мультимедиа, что позволит начать гораздо проще.
-
-Предварительный просмотр истории теперь отображается в Чтиве должным образом.
-
-И, наконец, когда слайды не загружаются, приложение автоматически повторит попытку, экономя вам дополнительное нажатие!
+17,7:
+- Новое! Получайте напоминания о необходимости ведении блога в выбранные вами дни
+- Редактор блоков: Новая сетка макета, настройки стилей бейджей. Исправление создание нового блока при нажатии Ввода внутри текстового блока. Для кнопки вставки исправлен просмотр для планшета.
+- Исправлены проблемы с дублированием записей в Чтиве.
+- Добавлена возможность подписки на обсуждения по email из Чтива.
 </ru-RU>
 <sv-SE>
-17.4:
-Vi har lagt till 3 nya uppdateringar för berättelser i denna uppdatering:
-
-Nu visas en mediaväljare när du lägger till ett berättelseblock i blockredigeraren, så att du enklare kommer igång.
-
-Nu visas förhandsvisningar av berättelser på förväntat sätt i läsaren.
-
-Slutligen: Om en bildspelsbild inte laddas upp korrekt kommer appen automatiskt att göra ett nytt försök, så att du inte behöver trycka en extra gång!
+17.7:
+- Nyhet! Nu kan du få bloggningspåminnelser de dagar du själv väljer
+- Blockredigeraren: Nytt rutnät för layout av block, justeringar av knappstilar, rättat ett fel där nya block inte skapades när man tryckte enter inuti ett textbaserat block, korrigeringar av vy i surfplatta för infogningsknapp
+- Rättat fel med duplicerade inlägg i läsaren
+- Lagt till möjlighet att prenumerera på konversationer via e-post inifrån läsaren
 </sv-SE>
 <tr-TR>
-17.4:
-Bu güncellemede Hikayeler'e 3 yeni güncelleme ekledik:
-
-Artık blok düzenleyiciden bir Hikaye bloku eklerken, başlamayı kolaylaştıran bir medya seçici göreceksiniz.
-
-Hikaye önizlemeleri artık Okuyucu'da beklendiği gibi çalışıyor.
-
-Son olarak, slaytlar yüklenemediğinde, uygulama otomatik olarak yeniden dener ve size fazladan bir dokunuş kazandırır.
+17.7:
+- Yeni! Seçtiğiniz günlerde blog hatırlatıcı istemleri alın
+- Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
+- Okuyucu'da yinelenen gönderi sorunu düzeltildi
+- Okuycu içinden e-posta ile konuşmalara abone olma özelliği eklendi
 </tr-TR>
 <zh-CN>
-17.4
-在本次更新中，我们向故事功能新增了3项更新。
-
-现在，您使用区块编辑器添加故事区块时会看到一个媒体选择器，让您更容易上手。
-
-在阅读器中，故事的预览渲染已经达到预期。
-
-当幻灯片上传失败，应用程序将自动重试，减少您的操作负担。
+17.7：
+- 新功能！ 在您选定的日期收到博客发布提醒提示
+- 区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
+- 修复了阅读器重复发布文章的问题
+- 增加了通过电子邮件从阅读器订阅对话的功能
 </zh-CN>
 <zh-TW>
-17.4:
-我們在此次更新中為「故事」新增了 3 個更新：
-
-現在從區塊編輯器新增故事區塊會看到媒體選擇器，讓你更容易上手。
-
-故事預覽現在可在閱讀器中正常顯示。
-
-若投影片無法上傳，該應用程式將自動重試，為你省去按按鍵的麻煩！
+17.7：
+- 全新推出！ 您可以選擇要在哪些日子收到網誌提醒
+- 區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
+- 修正閱讀器重複文章問題
+- 新增透過電子郵件收到閱讀器討論的訂閱功能
 </zh-TW>

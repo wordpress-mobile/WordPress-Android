@@ -846,14 +846,6 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="PromoDialogLink">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-    </style>
-
     <style name="PromoDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -1549,18 +1541,45 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
     </style>
 
-    <style name="BloggingRemindersTitle" parent="BloggingRemindersText">
+    <style name="BloggingRemindersText.MediumEmphasis" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersText.Title" parent="BloggingRemindersText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="fontFamily">serif</item>
     </style>
 
+    <style name="BloggingRemindersCaption" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+
+    <style name="BloggingRemindersDayBubble">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_extra_low</item>
+        <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+    </style>
+
     <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:backgroundTint">?attr/colorSecondary</item>
+        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipTitle">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipMessage">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
     </style>
 </resources>

@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/primary_domain"
+        android:paddingEnd="@dimen/start_over_preference_margin_small"
         android:paddingStart="@dimen/start_over_preference_margin_small"/>
 
 </LinearLayout>

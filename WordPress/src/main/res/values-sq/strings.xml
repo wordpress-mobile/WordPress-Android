@@ -1,55 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-24 17:42:45+0000
+Translation-Revision-Date: 2021-07-14 11:32:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL e pavlefshme. Ju lutemi, jepni një URL të vlefshme.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Trupëzoni lëndë prej %s, e cila hëpërhë s’mund të shihet te përpunuesi për celular. Ju lutemi, bëni një paraparje të faqes, që të shihni lëndën e trupëzuar.</string>
+    <string name="gutenberg_native_embed_caption_s">Titull trupëzimi. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Titull trupëzimi. I zbrazët</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">SHTONI LIDHJE</string>
+    <string name="activity_log_visit_our_documentation_page">vizitoni faqen tonë të dokumentimit</string>
+    <string name="activity_log_multisite_message">Jetpack Backup për instalim Shumësajtësh furnizon kopjeruajtje të shkarkueshme, jo rikthime me një klikim. Për më tepër hollësi, %1$s.</string>
+    <string name="blogging_reminders_tip_message">Postimi rregullisht mund të ndihmojë t’i mbani lexuesit tuaj të angazhuar, dhe të tërhiqni vizitorë të rinj te sajti juaj.</string>
+    <string name="blogging_reminders_tip">Ndihmëz</string>
+    <string name="blogging_reminders_select_days_message">Këtë mund ta përditësoni në çfarëdo kohe.</string>
+    <string name="blogging_reminders_select_days">Përzgjidhni ditët në të cilat doni të shkruani në blog</string>
+    <string name="blogging_reminders_epilogue_caption">Këtë mund ta përditësoni në çfarëdo kohe, që nga Sajti Im &gt; Rregullime &gt; Kujtues blogimi.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">S’keni të ujdisur kujtues.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Do të merrni kujtues për të bloguar &lt;b&gt;përditë&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Do të merrni kujtues për të bloguar %1$s në javë te %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Kujtuesit u hoqën!</string>
+    <string name="blogging_reminders_epilogue_title">Gjithçka e rregulluar!</string>
+    <string name="blogging_reminders_update">Përditëso</string>
+    <string name="blogging_reminders_not_set">S’ka të caktuar</string>
+    <string name="blogging_reminders_n_a_week">%s në javë</string>
+    <string name="set_your_blogging_reminders_button">Ujdisni kujtues</string>
+    <string name="set_up_blogging_reminders_message">Ujdisni kujtues blogimi për ditë kur doni të postoni.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Postimi juaj po botohet… ndërkohë, mund të ujdisni kujtues blogimi për ditë kur doni të postoni.</string>
+    <string name="set_your_blogging_reminders_title">Caktoni kujtuesit tuaj për blogimin</string>
+    <string name="blogging_reminders_notification_text">Ky kujtuesi juaj për të krijuar diçka sot</string>
+    <string name="blogging_reminders_notification_title">Është koha të blogoni te %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Përpunimi i blloqeve të ripërdorshëm nuk mbulohet ende në WordPress për Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Ndryshe, mund t’i shkëputni dhe përpunoni ndarazi këto blloqe, duke prekur “Shndërroji në blloqe të rregullt”.</string>
+    <string name="blogging_reminders_done">U bë</string>
+    <string name="blogging_reminders_notify_me">Njoftomë</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;, që të aktivizoni rikthime sajti me një klikim, prej kopjeruajtjesh.</string>
+    <string name="gutenberg_native_set_as_featured_image">Vëre Si Figurë të Zgjedhur </string>
+    <string name="gutenberg_native_remove_as_featured_image">Hiqe si Figurë të Zgjedhur </string>
+    <string name="fab_add_category_desc">Krijoni Kategori</string>
+    <string name="support_ticket_subject">Asistencë për WordPress për Android</string>
+    <string name="site_settings_categories_hint">Administroni kategoritë e sajtit tuaj</string>
+    <string name="site_settings_categories_empty_title">S’keni ndonjë kategori</string>
+    <string name="site_settings_categories_empty_subtitle">Shtoni këtu kategoritë që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur caktoni kategori për postimet tuaja</string>
+    <string name="site_settings_categories_empty_button">Krijoni një kategori</string>
+    <string name="site_settings_categories_title">Kategori</string>
+    <string name="site_settings_blogging_reminders_title">Kujtues blogimi</string>
+    <string name="page_is_posts_page_warning">Lënda e faqes tuaj të postimeve më të reja prodhohet automatikisht dhe s’mund të përpunohet.</string>
+    <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
+    <string name="storage_utils_dialog_dont_show_button">Mos e Shfaq Sërish</string>
+    <string name="storage_utils_dialog_ok_button">Shihni Depozitim</string>
+    <string name="storage_utils_dialog_message">Na duhet të ruajmë lëndën tuaj te pajisja, përpara se të mund të botohet. Shqyrtoni rregullimet tuaja për depozitim dhe hiqni kartela për të liruar vend.</string>
+    <string name="storage_utils_dialog_title">Pajisje e pamjaftueshme depozitimi</string>
+    <string name="gutenberg_native_y_axis_position">Pozicion në boshtin Y</string>
+    <string name="gutenberg_native_x_axis_position">Pozicion në boshtin X</string>
+    <string name="gutenberg_native_type_a_url">Shtypni një URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Prekeni që të shotni lëndë</string>
+    <string name="gutenberg_native_s_has_url_set">%s ka të caktuar URL</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s s’ka të caktuar URL</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s shndërruar në blloqe të rregullt</string>
+    <string name="gutenberg_native_s_block">Bllok %s</string>
+    <string name="gutenberg_native_minimum_height">Lartësi minimum</string>
+    <string name="gutenberg_native_media_options">Mundësi media</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL e pavlefshme. S’u gjet kartelë audio.</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Që të rregulloni vatrën, tërhiqeni</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Poshtme për shtim figure ose videoje</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Prekeni dyfish që të hapet Fleta e Veprimeve për shtim figure ose videoje</string>
+    <string name="gutenberg_native_current_unit_is_s">Njësia e tanishme është %s</string>
+    <string name="gutenberg_native_columns_settings">Rregullime Shtyllash</string>
+    <string name="gutenberg_native_add_link_to_s">Shtoni lidhje për te %s</string>
+    <string name="gutenberg_native_add_link_text">Shtoni tekst lidhjeje</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Shtoni figurë ose video</string>
+    <string name="error_media_path_is_directory">Shtegu u dhënë është drejtori, në vend se një kartelë media</string>
+    <string name="error_media_could_not_find_media_in_path">S’u gjet kartelë media te shtegu</string>
+    <string name="error_media_unexpected_empty_media_file_path">Shteg i papritur i zbrazët kartele për Media</string>
+    <string name="error_media_file_type_not_allowed">Ky lloj kartelash s’lejohet</string>
+    <string name="error_media_unexpected_null_value">Media qe e zbrazët</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">Që të zgjidhen kërcënimet, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">Që të zgjidhet kërcënimit, &lt;a href=\"%1$s\"&gt;jepni kredencialet tuaja për te shërbyesi&lt;/a&gt;.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Që të shtoni një lidhje, prekeni dyfish</string>
-    <string name="gutenberg_native_add_link">SHTONI LIDHJE</string>
+    <string name="gutenberg_native_edit_link">PËRPUNONI LIDHJE</string>
     <string name="login_empty_view_try_another_account">Provoni me tjetër llogari</string>
     <string name="login_empty_view_see_instructions">Shihni udhëzimet</string>
-    <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.</string>
+    <string name="login_no_jetpack_sites_error_message">Nëse keni tashmë një sajt, do t’ju duhet të instaloni shtojcën e lirë Jetpack dhe ta lidhni me llogarinë tuaj WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">Fotoja e profilit tuaj</string>
     <string name="login_not_a_jetpack_site">Që të përdorni këtë aplikacion për %1$s, do t’ju duhet të keni të instaluar shtojcën Jetpack dhe të lidhur me llogarinë tuaj WordPress.com.</string>
-    <string name="gutenberg_native_size">Madhësi</string>
     <string name="gutenberg_native_move_image_forward">Shpjere Figurën Përpara</string>
     <string name="gutenberg_native_move_image_backward">Shpjere Figurën Prapa</string>
+    <string name="gutenberg_native_width_settings">Rregullime Gjerësie</string>
     <string name="gutenberg_native_image_settings">Rregullime figurash</string>
-    <string name="gutenberg_native_audio_settings">Rregullime për audion</string>
     <string name="user_profile_untitled_site">(I patitull)</string>
     <string name="user_profile_site_section_header">Sajt</string>
+    <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
-    <string name="gutenberg_native_write_code">Shkruani kod…</string>
     <string name="gutenberg_native_sorting_and_filtering">Renditje dhe filtrim</string>
-    <string name="gutenberg_native_show_download_button">Shfaq buton shkarkimesh</string>
-    <string name="gutenberg_native_shortcode">Kod i shkurtër</string>
-    <string name="gutenberg_native_read_more">Lexoni më tepër</string>
-    <string name="gutenberg_native_preload">Parangarkoje</string>
+    <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
+    <string name="gutenberg_native_mention">Përmendje</string>
     <string name="gutenberg_native_post_meta_settings">Rregullime Meta postimi</string>
     <string name="gutenberg_native_post_content_settings">Rregullime lënde postimi</string>
-    <string name="gutenberg_native_metadata">Tejtëdhëna</string>
-    <string name="gutenberg_native_media_file">Kartelë media</string>
-    <string name="gutenberg_native_media_area">Zonë mediash</string>
-    <string name="gutenberg_native_loop">Qerthull</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Lidhje për te</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">figura %1$d nga %2$d në galeri</string>
-    <string name="gutenberg_native_heading_d">Krye %d</string>
     <string name="gutenberg_native_featured">Të zgjedhura</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Jepni këtu URL-në për trupëzim…</string>
-    <string name="gutenberg_native_edit_image">Përpunoni figurën</string>
+    <string name="gutenberg_native_embed_link">Trupëzoni lidhje</string>
     <string name="gutenberg_native_display_post_date">Shfaq datë postimesh</string>
-    <string name="gutenberg_native_code">Kod</string>
-    <string name="gutenberg_native_change_heading_level">Ndryshoni shkallë kryesh</string>
-    <string name="gutenberg_native_browser_default">Parazgjedhje shfletuesi</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">Blloku është fshirë ose s’mund të kihet.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">Blloku s’mund të krijohet brenda vetes.</string>
-    <string name="gutenberg_native_autoplay">Vetëluaje</string>
-    <string name="gutenberg_native_auto">Auto</string>
-    <string name="gutenberg_native_attachment_page">Faqe bashkëngjitje</string>
-    <string name="gutenberg_native_add_text">Shtoni tekst…</string>
-    <string name="gutenberg_native_add_caption">Shtoni titra</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Ç’është teksti alternativ?</string>
     <string name="gutenberg_native_transform_s_to">Shndërroje %s në</string>
@@ -63,26 +117,37 @@ Language: sq_AL
     <string name="like_faces_singular_text">Këtë e pëlqen 1 blogues.</string>
     <string name="like_title_plural">%d Pëlqime</string>
     <string name="like_title_singular">1 Pëlqim</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Që të eliminohen kërcënimet, jepni kredencialet tuaja për në shërbyes.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Që të eliminohet kërcënimi, jepni kredencialet tuaja për në shërbyes.</string>
     <string name="suggestion">Sugjerim:</string>
-    <string name="gutenberg_native_search_blocks">Kërkon në blloqe</string>
-    <string name="gutenberg_native_search_block">Bllok kërkimesh</string>
+    <string name="gutenberg_native_use_icon_button">Përdor buton ikone</string>
+    <string name="gutenberg_native_search_input_field">Fushë dhëniesh kërkimi.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Buton kërkimi. Teksti i tanishëm i butonit është</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etiketë për kërkoni në blloqe. Teksti i tanishëm është</string>
+    <string name="gutenberg_native_outside">Jashtë</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">S’është caktuar vendmbajtëse vetjake</string>
+    <string name="gutenberg_native_no_button">Pa buton</string>
+    <string name="gutenberg_native_inside">Brenda</string>
+    <string name="gutenberg_native_hide_search_heading">Fshih kryet e kërkimit</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dy herë </string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dy herë</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dy herë</string>
     <string name="gutenberg_native_double_tap_to_change_unit">Që të ndryshoni njësinë, prekeni dy herë</string>
+    <string name="gutenberg_native_current_placeholder_text_is">Teksti i tanishëm i vendmbajtëses është</string>
     <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
     <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
+    <string name="gutenberg_native_button_position">Pozicion butoni</string>
+    <string name="gutenberg_native_button_outside">Buton jashtë</string>
+    <string name="gutenberg_native_button_inside">Buton brenda</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s është %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ndodhi një gabim teksa merreshin të dhëna pëlqimesh</string>
     <string name="get_likes_unknown_error">Ndodhi një gabim i panjohur teksa merreshin pëlqimet.</string>
     <string name="get_likes_no_network_error">S’ka rrjet.</string>
     <string name="comments_empty_list_filtered_unreplied">S’ka komente pa përgjigje</string>
     <string name="comment_status_unreplied">Pa përgjigje</string>
-    <string name="gutenberg_native_table_of_contents">Tryeza e Lëndës</string>
-    <string name="gutenberg_native_summary">përmbledhje</string>
-    <string name="gutenberg_native_summarize_your_post_with_a_list_of_headings_add_html_anchors_to_h">Përmblidheni postimin tuaj me një listë kryesh. Shtoni spiranca HTML për te blloqe Kryesh për t’i lidhur këtu.</string>
-    <string name="gutenberg_native_document_outline">përvijim dokumenti</string>
+    <string name="gutenberg_native_add_link">Shtoni lidhje</string>
+    <string name="gutenberg_native_search_settings">Rregullime kërkimi</string>
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
+    <string name="gutenberg_native_add_button_text">Tekst butoni Shtoni</string>
     <string name="reader_title_interests">Ndiqni tema</string>
     <string name="stories_intro_main_subtitle">Një rrugë e re për të krijuar dhe botuar lëndë tërheqëse në sajtin tuaj.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
@@ -149,8 +214,6 @@ Language: sq_AL
     <string name="backup_item_roots">Rrënjë WordPress-i</string>
     <string name="backup_download_details_choose_items_header">Elementë të përfshirë në këtë shkarkim</string>
     <string name="gutenberg_native_uploading">Po ngarkohet…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për Android</string>
     <string name="gutenberg_native_replace_file">Zëvendësoni kartelë</string>
     <string name="gutenberg_native_replace_audio">Zëvendësoni audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem me hapjen e audios</string>
@@ -162,7 +225,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Prekeni dy herë që të dëgjoni kartelën audio</string>
     <string name="gutenberg_native_choose_audio">Zgjidhni audio</string>
     <string name="gutenberg_native_audio_player">Luajtës Audio</string>
-    <string name="gutenberg_native_audio_file"> kartelë audio</string>
+    <string name="gutenberg_native_audio_file">kartelë audio</string>
     <string name="gutenberg_native_audio_caption_s">Marrje audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Marrje audio. E zbrazët</string>
     <string name="gutenberg_native_add_audio">SHTONI AUDIO</string>
@@ -179,7 +242,7 @@ Language: sq_AL
     <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
     <string name="scan_fixing_threats_description_singular">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këtë kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
-    <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, sapo kontrolli të jetë i plotë. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>
+    <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, nëse gjendet një kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>
     <string name="scan_fixing_threats_title_plural">Zgjidhje Kërcënimesh</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan s’plotësoi dot një kontroll të sajtit tuaj. Ju lutemi, kontrolloni se mos sajti juaj s’është në funksionim – nëse s’është, riprovoni. Nëse është jashtë funksionimi, ose në Jetpack Scan prapë ka probleme, lidhuni me ekipin tonë të asistencës.</string>
     <string name="scan_request_failed_title">Diçka shkoi ters</string>
@@ -485,9 +548,7 @@ Language: sq_AL
     <string name="media_uploading_gif_library_photo">Po ngarkohet media gif</string>
     <string name="media_uploading_stock_library_photo">Po ngarkohet media stok</string>
     <string name="media_uploading_default">Po ngarkohet media</string>
-    <string name="gutenberg_native_select_item">Përzgjidhni objekt</string>
     <string name="gutenberg_native_search_or_type_url">Kërkoni ose shtypni URL</string>
-    <string name="gutenberg_native_page_break">Ndërprerje faqeje</string>
     <string name="gutenberg_native_add_this_telephone_link">Shtoni këtë lidhje telefoni</string>
     <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
     <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
@@ -644,7 +705,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
     <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
     <string name="pages_list_author">Autor faqeje</string>
-    <string name="photo_picker_use_gif">Përdor këtë GIF</string>
     <string name="error_media_thumbnail_not_loaded">S’u ngarkua dot miniaturë mediash</string>
     <string name="menu_content_info">Strukturë lënde</string>
     <string name="everyone">Gjithkush</string>
@@ -680,6 +740,7 @@ Language: sq_AL
     <string name="update_now">Përditësojeni Tani</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
     <string name="gutenberg_native_move_to_top">Ngjite në krye</string>
+    <string name="gutenberg_native_insert_mention">Futni përmendje</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Poshtme me mundësitë e gatshme</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Veprimeve me mundësitë e gatshme</string>
     <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
@@ -732,6 +793,7 @@ Language: sq_AL
     <string name="button_insert">Fute</string>
     <string name="continue_label">Vazhdo</string>
     <string name="copy_text">Kopjoje</string>
+    <string name="gutenberg_native_number_of_columns">Numër shtyllash</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Kaloje bllokun djathtas nga pozicioni %1$s sipër në pozicionin %2$s</string>
     <string name="gutenberg_native_move_block_right">Shpjere bllokun djathtas</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Kaloje bllokun majtas nga pozicioni %1$s në pozicionin %2$s</string>
@@ -748,7 +810,6 @@ Language: sq_AL
     <string name="pages_and_posts_cancel_auto_upload">Anuloje ngarkimin</string>
     <string name="gif_list_search_returned_unknown_error">Pati një problem me trajtimin e kërkesës</string>
     <string name="gif_powered_by_tenor">Bazuar në Tenor</string>
-    <string name="gif_picker_search_hint">Kërkoni në Tenor</string>
     <string name="photo_picker_gif">Zgjidhni prej Tenor-i</string>
     <string name="weekday_saturday">E shtunë</string>
     <string name="weekday_friday">E premte</string>
@@ -799,8 +860,10 @@ Language: sq_AL
     <string name="gutenberg_native_link_to">Lidhje Te</string>
     <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
     <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
+    <string name="gutenberg_native_edit_cover_media">Përpunoni media mbulesë</string>
     <string name="gutenberg_native_customize">PËRSHTATENI</string>
-    <string name="gutenberg_native_video_settings">Rregullime për videon</string>
+    <string name="gutenberg_native_button_link_url">URL Lidhjeje Butoni</string>
+    <string name="gutenberg_native_border_radius">Rreze Anësh</string>
     <string name="gutenberg_native_add_paragraph_block">Shtoni bllok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Krijoni një postim</string>
     <string name="post_list_tab_trashed_posts">Shpënë te hedhurinat</string>
@@ -840,6 +903,7 @@ Language: sq_AL
     <string name="reader_filter_cta">Filtër</string>
     <string name="gutenberg_native_video_caption_s">Legjendë videoje. %s</string>
     <string name="gutenberg_native_edit_video">Përpunoni videon</string>
+    <string name="gutenberg_native_edit_media">Përpunoni media</string>
     <string name="gutenberg_native_add_a_shortcode">Shtoni kod të shkurtër…</string>
     <string name="post_list_author">Autor postimi</string>
     <string name="fab_create_desc">Krijoni një postim</string>
@@ -854,7 +918,6 @@ Language: sq_AL
     <string name="stats_box_type_low">i ulët</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Zëvendëso figurën</string>
     <string name="gutenberg_native_gallery_caption_s">Përshkrim galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Krijoni një postim ose faqe</string>
     <string name="content_description_person_building_website">Personi që po krijon sajt</string>
@@ -898,14 +961,12 @@ Language: sq_AL
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
     <string name="gutenberg_native_unsupported">E pambuluar</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
-    <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Prekeni që të fshihet tastiera</string>
     <string name="gutenberg_native_tap_here_to_show_help">Prekeni këtu që të shfaqet ndihmë</string>
     <string name="gutenberg_native_take_a_video">Bëni një Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
     <string name="gutenberg_native_start_writing">Nisni të shkruani…</string>
-    <string name="gutenberg_native_show_section">Shfaq ndarje</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>
     <string name="gutenberg_native_s_block_empty">Bllok %s. I zbrazët</string>
     <string name="gutenberg_native_cut_block">Bllok Prije</string>
@@ -922,6 +983,8 @@ Language: sq_AL
     <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
     <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
+    <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
+    <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
     <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
@@ -936,6 +999,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Që ta ulni bllokun poshtë, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Që të përpunoni këtë vlerë, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Që të shtoni një bllok, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Për përpunim, prekeni dyfish dhe mbajeni të prekur</string>
     <string name="gutenberg_native_current_value_is_s">Vlera e tanishme është %s</string>
     <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ndodhi një gabim i panjohur. Ju lutemi, riprovoni.</string>
@@ -1296,7 +1360,6 @@ Language: sq_AL
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
-    <string name="gif_picker_endless_scroll_network_error">Dështoi ngarkimi për ca media, për shkak të një gabimi rrjeti.</string>
     <string name="gif_picker_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
     <string name="gif_picker_initial_empty_text">Kërkoni për të gjetur GIF-e që t’i shtoni te Mediateka juaj!</string>
     <string name="stats_author_views_label">Parje</string>
@@ -2810,4 +2873,13 @@ Language: sq_AL
     <string name="add">Shtoni</string>
     <string name="save">Ruaje</string>
     <string name="cancel">Anuloje</string>
+    <string-array name="blogging_reminders_count">
+        <item>Një herë</item>
+        <item>Dy herë</item>
+        <item>Tre herë</item>
+        <item>Katër herë</item>
+        <item>Pesë herë</item>
+        <item>Gjashtë herë</item>
+        <item>Shtatë herë</item>
+    </string-array>
 </resources>

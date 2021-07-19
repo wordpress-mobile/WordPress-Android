@@ -6,9 +6,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.ZendeskHelper
-import org.wordpress.android.support.ZendeskPlanFieldHelper
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.CrashLogging
 import javax.inject.Singleton
 
 @Module
@@ -19,16 +17,10 @@ class SupportModule {
         accountStore: AccountStore,
         siteStore: SiteStore,
         supportHelper: SupportHelper,
-        zendeskPlanFieldHelper: ZendeskPlanFieldHelper,
         buildConfigWrapper: BuildConfigWrapper
-    ): ZendeskHelper = ZendeskHelper(accountStore, siteStore, supportHelper, zendeskPlanFieldHelper, buildConfigWrapper)
+    ): ZendeskHelper = ZendeskHelper(accountStore, siteStore, supportHelper, buildConfigWrapper)
 
     @Singleton
     @Provides
     fun provideSupportHelper(): SupportHelper = SupportHelper()
-
-    @Singleton
-    @Provides
-    fun provideZendeskPlanFieldHelper(remoteLoggingUtils: CrashLogging): ZendeskPlanFieldHelper =
-        ZendeskPlanFieldHelper(remoteLoggingUtils)
 }

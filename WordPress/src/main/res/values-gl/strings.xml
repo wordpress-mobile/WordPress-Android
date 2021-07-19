@@ -1,81 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-05-18 07:01:08+0000
+Translation-Revision-Date: 2021-07-04 15:17:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
-    <string name="gutenberg_native_size">Tamaño</string>
+    <string name="blogging_reminders_tip_message">Publicar regularmente pode axudar a que os teus lectores permanezan implicados, e a atraer novos visitantes ao teu sitio.</string>
+    <string name="blogging_reminders_tip">Consello</string>
+    <string name="blogging_reminders_select_days_message">Podes actualizar isto en calquera momento</string>
+    <string name="blogging_reminders_select_days">Selecciona os días nos que queres bloguear</string>
+    <string name="blogging_reminders_epilogue_caption">Podes actualizar isto en calquera momento desde O meu sitio &gt; Axustes &gt; Recordatorios de blogueo.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Non tes configurado ningún recordatorio.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Tes recordatorios para bloguear &lt;b&gt;todos os días&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Tes recordatorios para bloguear %1$s á semana en %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Recordatorios eliminados!</string>
+    <string name="blogging_reminders_epilogue_title">Todo configurado!</string>
+    <string name="blogging_reminders_update">Actualizar</string>
+    <string name="blogging_reminders_not_set">Nada configurado</string>
+    <string name="blogging_reminders_n_a_week">%s á semana</string>
+    <string name="set_your_blogging_reminders_button">Configurar recordatorios</string>
+    <string name="set_up_blogging_reminders_message">Configura recordatorios de blogueo os días que queiras publicar.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">A túa entrada estase publicando… mentres tanto podes configurar recordatorios de blogueo os días que quieras publicar.</string>
+    <string name="set_your_blogging_reminders_title">Configura os teus recordatorios de blogueo</string>
+    <string name="blogging_reminders_notification_text">Este é o teu recordatorio para crear algo hoxe</string>
+    <string name="blogging_reminders_notification_title">É hora de bloguear en %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">WordPress para iOS aínda non é compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">WordPress para Android aínda non é compatible con editar bloques reutilizables</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternativamente, podes separar e editar estes bloques por separado tocando en «Converter en bloques normais».</string>
+    <string name="blogging_reminders_done">Feito</string>
+    <string name="blogging_reminders_notify_me">Avísame</string>
+    <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para activar as restauracións do sitio cun clic das copias de seguridade.</string>
+    <string name="gutenberg_native_set_as_featured_image">Establecer como imaxe destacada</string>
+    <string name="gutenberg_native_remove_as_featured_image">Eliminar como imaxe destacada</string>
+    <string name="fab_add_category_desc">Crear unha categoría</string>
+    <string name="support_ticket_subject">Soporte de WordPress para Android</string>
+    <string name="site_settings_categories_hint">Xestiona as categorías do teu sitio</string>
+    <string name="site_settings_categories_empty_title">Aínda non tes categorías</string>
+    <string name="site_settings_categories_empty_subtitle">Engade aquí as categorías que uses frecuentemente para que poidan ser seleccionadas rapidamente ao categorizar as túas entradas</string>
+    <string name="site_settings_categories_empty_button">Crear unha categoría</string>
+    <string name="site_settings_categories_title">Categorías</string>
+    <string name="site_settings_blogging_reminders_title">Recordatorios de blogueo</string>
+    <string name="page_is_posts_page_warning">O contido da páxina das túas últimas entradas xérase automaticamente e non se pode editar.</string>
+    <string name="gutenberg_native_border_settings">Axustes do borde</string>
+    <string name="storage_utils_dialog_dont_show_button">Non amosar de novo</string>
+    <string name="storage_utils_dialog_ok_button">Ver o almacenamento</string>
+    <string name="storage_utils_dialog_message">Tenemos que gardar o teu contido no teu dispositivo antes de que poida ser publicado. Revisa os teus axustes de almacenamento e elimina arquivos para gañar espazo.</string>
+    <string name="storage_utils_dialog_title">Insuficiente almacenamento no dispositivo</string>
+    <string name="gutenberg_native_y_axis_position">Posición do eixo Y</string>
+    <string name="gutenberg_native_x_axis_position">Posición do eixo X</string>
+    <string name="gutenberg_native_type_a_url">Teclea unha URL</string>
+    <string name="gutenberg_native_tap_to_add_content">Toca para engadir contido</string>
+    <string name="gutenberg_native_slash_inserter_results">Resultados do insertador de corte</string>
+    <string name="gutenberg_native_s_has_url_set">%s ten unha URL configurada</string>
+    <string name="gutenberg_native_s_has_no_url_set">%s non ten unha URL configurada</string>
+    <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normais</string>
+    <string name="gutenberg_native_s_block">Bloque %s</string>
+    <string name="gutenberg_native_minimum_height">Altura mínima</string>
+    <string name="gutenberg_native_media_options">Opcións de medios</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL non válida. Arquivo de audio non encontrado.</string>
+    <string name="gutenberg_native_insert_crosspost">Insertar entrada cruzada</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Arrastra para axustar o punto focal</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Toca dúas veces para abrir a folla inferior para engadir imaxe ou vídeo</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Toca dúas veces para abrir a folla de acción para engadir imaxe ou vídeo</string>
+    <string name="gutenberg_native_current_unit_is_s">A unidade actual é %s</string>
+    <string name="gutenberg_native_crosspost">Entrada cruzada</string>
+    <string name="gutenberg_native_columns_settings">Axustes de columnas</string>
+    <string name="gutenberg_native_add_link_to_s">Engadir enlace a %s</string>
+    <string name="gutenberg_native_add_link_text">Engadir texto do enlace</string>
+    <string name="gutenberg_native_add_image_or_video_b7b3d22b">Engadir unha imaxe ou vídeo</string>
+    <string name="error_media_path_is_directory">A ruta especificada é un directorio e non un arquivo de medios</string>
+    <string name="error_media_could_not_find_media_in_path">Non se puido encontrar o arquivo de medios na ruta</string>
+    <string name="error_media_unexpected_empty_media_file_path">Ruta de arquivo de medios baleira inesperada</string>
+    <string name="error_media_file_type_not_allowed">O tipo de arquivo non está permitido</string>
+    <string name="error_media_unexpected_null_value">O medio estaba baleiro</string>
+    <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir as ameazas.</string>
+    <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir a ameaza.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link">Toca dúas veces para engadir un enlace.</string>
+    <string name="login_empty_view_try_another_account">Probar con outra conta</string>
+    <string name="login_empty_view_see_instructions">Ver as instrucións</string>
+    <string name="login_no_jetpack_sites_error_message">Se xa tes un sitio, terás que instalar o plugin gratuíto de Jetpack e conectalo á túa conta de WordPress.</string>
+    <string name="login_empty_view_avatar_content_description">A túa foto de perfil</string>
+    <string name="login_not_a_jetpack_site">Se queres usar esta aplicación para %1$s, deberás ter o plugin de Jetpack configurado e conectado a unha conta de WordPress.com.</string>
+    <string name="gutenberg_native_move_image_forward">Mover a imaxe cara diante</string>
+    <string name="gutenberg_native_move_image_backward">Mover a imaxe cara atrás</string>
+    <string name="gutenberg_native_width_settings">Axustes de anchura</string>
     <string name="gutenberg_native_image_settings">Axustes de imaxe</string>
-    <string name="gutenberg_native_audio_settings">Axustes de audio</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
-    <string name="gutenberg_native_write_code">Escribe código…</string>
     <string name="gutenberg_native_sorting_and_filtering">Ordenación e filtrado</string>
-    <string name="gutenberg_native_show_download_button">Amosar o botón de descarga</string>
-    <string name="gutenberg_native_shortcode">Shortcode</string>
-    <string name="gutenberg_native_read_more">Ler máis</string>
-    <string name="gutenberg_native_preload">Precarga</string>
+    <string name="gutenberg_native_s_social_icon">Icona social %s</string>
+    <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
     <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
-    <string name="gutenberg_native_metadata">Metadatos</string>
-    <string name="gutenberg_native_media_file">Arquivo de medios</string>
-    <string name="gutenberg_native_media_area">Área de medios</string>
-    <string name="gutenberg_native_loop">Repetir</string>
-    <string name="gutenberg_native_link_to_12d6f96a">Enlazar a</string>
-    <string name="gutenberg_native_image_1_d_of_2_d_in_gallery">imaxe %1$d de %2$d na biblioteca</string>
-    <string name="gutenberg_native_heading_d">Encabezado %d</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_enter_url_to_embed_here">Introduce aquí a URL a incrustar…</string>
-    <string name="gutenberg_native_edit_image">Editar a imaxe</string>
     <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
-    <string name="gutenberg_native_code">Código</string>
-    <string name="gutenberg_native_change_heading_level">Cambiar o nivel do encabezado</string>
-    <string name="gutenberg_native_browser_default">Navegador por defecto</string>
-    <string name="gutenberg_native_block_has_been_deleted_or_is_unavailable">O bloque borrouse ou non está dispoñible.</string>
-    <string name="gutenberg_native_block_cannot_be_rendered_inside_itself">O bloque non se pode procesar dentro de si mesmo.</string>
-    <string name="gutenberg_native_autoplay">Reprodución automática</string>
-    <string name="gutenberg_native_auto">Automático</string>
-    <string name="gutenberg_native_attachment_page">Páxina de adxuntos</string>
-    <string name="gutenberg_native_add_text">Engadir texto…</string>
-    <string name="gutenberg_native_add_caption">Engadir lenda</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente o enlace para axudar aos usuarios de lectores de pantalla</string>
+    <string name="login_no_jetpack_sites">Non se encontraron sitios de Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Que é o texto alt?</string>
+    <string name="gutenberg_native_transform_s_to">Transformar %s a</string>
+    <string name="gutenberg_native_transform_block">Transformar bloque…</string>
     <string name="gutenberg_native_failed_to_insert_media">Fallo ao insertar os medios.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Fallo ao insertar o arquivo de audio.</string>
     <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe o propósito da imaxe. Déixao baleiro se a imaxe é puramente decorativa.</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformado a %2$s</string>
     <string name="like_faces_error_loading_message">Erro ao cargar os datos de gústame. %s</string>
     <string name="like_faces_plural_text">A %d blogueiros gústalles isto.</string>
     <string name="like_faces_singular_text">A 1 blogueiro gústalle isto.</string>
     <string name="like_title_plural">%d gústame</string>
     <string name="like_title_singular">1 gústame</string>
-    <string name="threat_fix_enter_server_creds_message_plural">Introduce as credenciais do teu servidor para corrixir as ameazas.</string>
-    <string name="threat_fix_enter_server_creds_message_singular">Introduce as credenciais do teu servidor para corrixir a ameaza.</string>
     <string name="suggestion">Suxerencia:</string>
-    <string name="gutenberg_native_search_blocks">Bloques de busca</string>
-    <string name="gutenberg_native_search_block">Bloque de busca</string>
+    <string name="gutenberg_native_use_icon_button">Usar botón de icona</string>
+    <string name="gutenberg_native_search_input_field">Campo de introdución de busca.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is">Botón de busca. O texto actual do botón é</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etiqueta do bloque de busca. O texto actual é</string>
+    <string name="gutenberg_native_outside">Exterior</string>
+    <string name="gutenberg_native_no_custom_placeholder_set">Non se estableceu ningún marcador de posición personalizado</string>
+    <string name="gutenberg_native_no_button">Sen botón</string>
+    <string name="gutenberg_native_inside">Dentro</string>
+    <string name="gutenberg_native_hide_search_heading">Ocultar o encabezado de busca</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Dobre toque para editar o texto do marcador de posición</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text">Dobre toque para editar o texto da etiqueta</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text">Dobre toque para editar o texto do botón</string>
     <string name="gutenberg_native_double_tap_to_change_unit">dobre-toque para cambiar a unidade</string>
+    <string name="gutenberg_native_current_placeholder_text_is">O texto de marcador de posición actual é</string>
     <string name="gutenberg_native_clear_search">Baleirar a busca</string>
     <string name="gutenberg_native_cancel_search">Cancelar a busca</string>
+    <string name="gutenberg_native_button_position">Posición do botón</string>
+    <string name="gutenberg_native_button_outside">Botón exterior</string>
+    <string name="gutenberg_native_button_inside">Botón interior</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s é %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Ocorreu un erro ao obter os datos dos gústame</string>
     <string name="get_likes_unknown_error">Ocorreu un erro ao obter os gústame.</string>
     <string name="get_likes_no_network_error">Non hai ningunha rede dispoñible.</string>
     <string name="comments_empty_list_filtered_unreplied">Non hai ningún comentario sen responder</string>
     <string name="comment_status_unreplied">Sen responder</string>
-    <string name="gutenberg_native_table_of_contents">Táboa de contidos</string>
-    <string name="gutenberg_native_summary">resumo</string>
-    <string name="gutenberg_native_document_outline">esquema do documento</string>
+    <string name="gutenberg_native_search_settings">Axustes de busca</string>
     <string name="jetpack_brute_force_allowlist_title">Direccións IP permitidas sempre</string>
     <string name="site_settings_denylist_title">Comentarios non permitidos</string>
+    <string name="gutenberg_native_add_button_text">Engadir o texto do botón</string>
     <string name="reader_title_interests">Seguir temas</string>
     <string name="stories_intro_main_subtitle">Unha nova forma de crear e publicar contidos atraíntes no teu sitio.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="threat_fix_all_status_success_message_plural">Ameazas corrixidas correctamente.</string>
     <string name="threat_fix_all_confirmation_message_plural">Por favor, confirma que queres corrixir todas as %s ameazas activas.</string>
+    <string name="scan_idle_threats_description_plural">A exploración encontrou %1$s ameazas potenciais con %2$s. Por favor, revísaas a continuación e leva a cabo algunha acción ou toca o botón de corrixir todo. Estamos %3$s se nos necesitas.</string>
+    <string name="scan_fixing_threats_description_plural">Traballamos duro para corrixir estas ameazas en segundo plano. Mentres tanto podes seguir usando o teu sitio como sempre, podes volver a comprobar o progreso en calquera momento.</string>
     <string name="gutenberg_native_edit_focal_point">Editar o punto focal</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Toque dobre para abrir a folla do fondo para editar, substituír ou baleirar a imaxe</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Toque dobre para abrir a folla de acción para editar, substituír ou baleirar a imaxe</string>
@@ -85,12 +158,14 @@ Language: gl_ES
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Completáronse todas as tarefas&lt;/b&gt;&lt;br/&gt;Personalizaches o teu sitio. Ben feito!</string>
     <string name="quick_start_card_menu_hide">Ocultar por agora</string>
     <string name="magic_link_not_meaning_to_create_account">Non querías crear unha nova conta? Volve atrás e volve a introducir o teu enderezo de correo electrónico.</string>
+    <string name="invite_links_disable_dialog_message">Unha vez desactivado o enlace de invitación, ninguén poderá usalo para unirse ao teu equipo. Seguro que desexas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
     <string name="invite_links_bad_format_response">Resposta recibida non válida</string>
     <string name="invite_links_null_response">Non se recibiu ningunha resposta</string>
     <string name="invite_links_cannot_get_role_data_error">Ocorreu un erro ao recuperar datos para o perfil %1$s</string>
     <string name="invite_links_cannot_get_roles_error">Houbo un erro ao obter os perfís</string>
     <string name="invite_links_generic_get_data_error">Erro descoñecido ao obter os datos dos enlaces de invitación</string>
+    <string name="invite_links_helper_text">Utiliza este enlace para embarcar aos membros do teu equipo sen ter que invitalos un a un. Calquera que visite estas URL poderá rexistrarse na túa organización, anque recibira o enlace doutra persoa, así que asegúrate de que o compartes con xente de confianza.</string>
     <string name="invite_links_expire_date">Caduca %1$s</string>
     <string name="invite_links_disable_invite_link">Desactivar enlace de invitación</string>
     <string name="invite_links_share_invite_link">Compartir enlace de invitación</string>
@@ -124,6 +199,7 @@ Language: gl_ES
     <string name="restore_status_failure_heading">Vaia, non puidemos encontrar o estado da túa restauración</string>
     <string name="restore_complete_failed_description">Non puidemos restaurar o teu sitio</string>
     <string name="restore_warning_action_button">Confirmar</string>
+    <string name="restore_warning_description_with_two_parameters">Estás seguro de querer reverter o teu sitio ao %1$s ás %2$s?\n        Todo o que cambiaras desde entón perderase.</string>
     <string name="backup_download_complete_failed_description">Non puidemos crear a túa copia de seguridade</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(exclúe temas, plugins e subidas)</string>
@@ -131,8 +207,6 @@ Language: gl_ES
     <string name="backup_item_roots">Raíz de WordPress</string>
     <string name="backup_download_details_choose_items_header">Elementos incluídos nesta descarga</string>
     <string name="gutenberg_native_uploading">Subindo…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Os bloques reutilizables non se poden editar en WordPress para iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Os bloques reutilizables non se poden editar en WordPress para Android</string>
     <string name="gutenberg_native_replace_file">Substituír arquivo</string>
     <string name="gutenberg_native_replace_audio">Substituír audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema ao abrir o audio</string>
@@ -156,12 +230,21 @@ Language: gl_ES
     <string name="threat_status_fixed">Corrixido</string>
     <string name="threat_found_header">Encontrado</string>
     <string name="scan_here_to_help">aquí para axudar</string>
+    <string name="scan_idle_threats_description_singular">A exploración encontrou unha ameaza potencial con %1$s. Por favor, revísaas a continuación e leva a cabo algunha acción ou toca o botón de corrixir todo. Estamos %2$s se nos necesitas.</string>
+    <string name="scan_idle_manual_scan_description">Para revisar o teu sitio de novo, executa unha exploración manual ou espera a que Jetpack explore o teu sitio máis tarde hoxe mesmo.</string>
+    <string name="scan_provisioning_description">Benvido á exploración de Jetpack! Estamos botándolle un vistazo á túa web para deixalo todo a punto para a primeira análise completa. Informarémoste se encontramos algún problema que lle poida afectar e despois comezará a túa primeira análise.</string>
+    <string name="scan_scanning_is_initial_description">Benvido á ferramenta de exploración de Jetpack, estamos botándolle un primeiro vistazo á túa web nestes momentos, mostrarémosche os resultados enseguida.</string>
+    <string name="scan_fixing_threats_description_singular">Traballamos duro para corrixir estas ameazas en segundo plano. Mentres tanto podes seguir usando o teu sitio coma sempre, podes volver a comprobar o progreso en calquera momento.</string>
+    <string name="scan_scanning_description">Enviarémosche un aviso se se encontra unha ameaza. Mentres tanto, non dubides en seguir usando o teu sitio con normalidade, podes comprobar o progreso en calquera momento.</string>
     <string name="scan_fixing_threats_title_plural">Corrixindo ameazas</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan non puido realizar unha análise do teu sitio. Comproba se o teu sitio está caído. Se non, volve a intentalo. Se o teu sitio está caído ou se Jetpack Scan segue tendo problemas, ponte en contacto co noso equipo de soporte.</string>
     <string name="scan_request_failed_title">Algo saíu mal</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Facendo copia de seguridade do sitio</string>
     <string name="activity_log_currently_backing_up_message">Facendo copia de seguridade do sitio desde %1$s %2$s</string>
     <string name="activity_log_currently_backing_up_title">Creando unha copia de seguridade descargable</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">A copia de seguridade do teu sitio realizouse correctamente</string>
+    <string name="activity_log_backup_finished_snackbar_message">A copia de seguridade do teu sitio realizouse correctamente\nFeita a copia de seguridade desde %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">A copia de seguridade do teu sitio estase realizando\nFacendo a copia de seguridade desde %1$s %2$s</string>
     <string name="pick_audio">Elixir audio</string>
     <string name="restore_another_process_running">Hai outra restauración en curso.</string>
     <string name="restore_complete_failed_icon_content_description">Icona de erro</string>
@@ -205,6 +288,7 @@ Language: gl_ES
     <string name="quick_start_dialog_edit_homepage_title">Editar a páxina de inicio</string>
     <string name="reader_menu_mark_as_unseen">Marcar como non lida</string>
     <string name="reader_menu_mark_as_seen">Marcar como lida</string>
+    <string name="error_media_upload_failed_for_reason">Non se puideron subir los elementos multimedia.\n%1$s</string>
     <string name="error_media_not_enough_storage">Espazo de almacenamento do sitio insuficiente</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Non se pode alternar o estado visto desta entrada</string>
     <string name="reader_marked_post_as_unseen">Marcar entrada como non lida</string>
@@ -216,6 +300,7 @@ Language: gl_ES
     <string name="threat_fix_all_warning_title">Corrixir todas as ameazas</string>
     <string name="threat_ignore_error_message">Non se puido ignorar a ameaza. Ponte en contacto co servizo de soporte.</string>
     <string name="threat_ignore_success_message">Ignorouse a ameaza.</string>
+    <string name="threat_ignore_warning">No deberías ignorar un problema de seguridade a menos que esteas absolutamente seguro de que non é dañino. Se elixes ignorar esta ameaza, seguirá no teu sitio &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_fix_error_message">Non se puido corrixir a ameaza. Ponte en contacto co servizo de soporte.</string>
     <string name="threat_item_sub_header_status_ignored">Ameaza ignorada</string>
     <string name="threat_item_sub_header_status_fixed_on">Ameaza corrixida en %s</string>
@@ -230,6 +315,7 @@ Language: gl_ES
     <string name="scan_history">Historial de exploracións</string>
     <string name="backup_active_filter_empty_subtitle">Proba a axustar o rango de datas</string>
     <string name="backup_active_filter_empty_title">Non se encontraron copias de seguridade coincidentes</string>
+    <string name="backup_empty_subtitle">A túa primeira copia de seguridade estará dispoñible aquí en 24 horas e recibirás unha notificación unha vez que se complete</string>
     <string name="backup_empty_title">A túa primeira copia de seguridade pronto estará lista</string>
     <string name="request_failed_message">Ocorreu un problema ao xestionar a petición. Por favor, inténtao de novo máis tarde.</string>
     <string name="gutenberg_native_move_to_bottom">Mover ao final</string>
@@ -273,6 +359,7 @@ Language: gl_ES
     <string name="threat_fix_fixable_update">Jetpack Scan actualizarase a unha versión máis recente (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan borrará o arquivo ou o directorio afectados.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan reemplazará o arquivo ou o directorio afectados.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan non pode solucionar automaticamente esta ameaza.\n        Suxerímosche que soluciones esta ameaza manualmente: asegúrate de que WordPress, o teu tema e todos os plugins están actualizados e elimina o código, tema ou plugin que estea causando problemas no teu sitio web. \n \n\n        Se necesitas máis axuda para resolver esta ameaza, recomendámosche &lt;b&gt;Codeable&lt;/b&gt;, unha plataforma de profesionais de confianza, altamente cualificados, expertos en WordPress.\n         Fixeron unha selección de expertos en seguridade para axudarnos con estes proxectos. Os prezos oscilan entre 70–120 USD/hora e podes obter un presuposto gratuíto sen compromiso.</string>
     <string name="threat_fix_current_not_fixable_header">Solucionando a ameaza</string>
     <string name="threat_fix_fixed_header">Como o solucionou Jetpack?</string>
     <string name="threat_fix_default_header">Como imos a reparalo?</string>
@@ -333,11 +420,14 @@ Language: gl_ES
     <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividade</string>
     <string name="dialog_confirm_copy_local_copy_button">Copiar a versión desta aplicación</string>
     <string name="dialog_confirm_copy_local_edit_button">Editar a entrada primeiro</string>
+    <string name="dialog_confirm_copy_local_message">A entrada que estás tratando de copiar ten dúas versións que están en conflito ou fixeches cambios recentemente, pero non os gardaches.\nEdita a entrada primeiro para resolver calquera conflito ou procede a copiar a versión desta aplicación.</string>
     <string name="dialog_confirm_copy_local_title">Conflicto de sincronización da entrada</string>
     <string name="button_copy">Duplicar</string>
     <string name="toast_edit_story_update_in_progress_title">A historia está sendo gardada, por favor, espera…</string>
     <string name="gutenberg_native_file_name">Nome do arquivo</string>
     <string name="gutenberg_native_file_block_settings">Axustes do arquivo do bloque</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Erro ao subir os arquivos.\nPor favor, toca para ver as opcións.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Erro ao gardar os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="gutenberg_native_edit_file">Editar o arquivo</string>
     <string name="gutenberg_native_copy_file_url">Copiar a URL do arquivo </string>
     <string name="gutenberg_native_choose_a_file">ELIXIR UN ARQUIVO</string>
@@ -355,10 +445,13 @@ Language: gl_ES
     <string name="reader_follow_comments_null_response">Non se recibiu ningunha resposta</string>
     <string name="activity_log_activity_type_filter_clear">Baleirar</string>
     <string name="activity_log_activity_type_filter_apply">Aplicar</string>
+    <string name="dialog_edit_story_unsupported_format_message">Unha o máis diapositivas non se engadiron á túa historia porque neste momento as historias non son compatibles con arquivos GIF. Por favor, elixe unha imaxe estática ou un vídeo de fondo no seu lugar.</string>
     <string name="dialog_edit_story_unsupported_format_title">Os arquivos GIF non son compatibles</string>
     <string name="dialog_edit_story_unrecoverable_message">Non puidemos encontrar no sitio os medios para esta historia.</string>
     <string name="dialog_edit_story_unrecoverable_title">Non se pode editar a historia</string>
+    <string name="dialog_edit_story_unavailable_message">Non se puido subir medios a esta historia. Comproba a túa conexión a Internet e inténtao de novo dentro dun momento.</string>
     <string name="dialog_edit_story_unavailable_title">Non se pode editar a historia</string>
+    <string name="dialog_edit_story_limited_message">Esta historia editouse nun dispositivo diferente e a posibilidade de editar certos obxectos pode estar limitada.</string>
     <string name="dialog_edit_story_limited_title">Edición limitada da historia</string>
     <string name="cannot_retry_deleted_media_item_fatal">Elimináronse os medios. Intenta volver a crear a túa historia.</string>
     <string name="color_picker_label_background">Fondo</string>
@@ -410,6 +503,7 @@ Language: gl_ES
     <string name="login_prologue_fifth_subtitle_three">Rock n\' roll semanal</string>
     <string name="login_prologue_fifth_subtitle_two">Noticias web</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Estou moi inspirado polo traballo do fotógrafo Cameron Karsten. Probarei estas técnicas no meu próximo</string>
     <string name="login_prologue_second_subtitle_one">Inspírate</string>
     <string name="login_prologue_title_fifth">Segue o teus sitios favoritos e descobre novos blogs.</string>
     <string name="login_prologue_title_fourth">Observa como crece a túa audiencia con analíticas avanzadas.</string>
@@ -424,13 +518,16 @@ Language: gl_ES
     <string name="gutenberg_native_edit_using_web_editor">Editar usando o editor web</string>
     <string name="gutenberg_native_choose_images">Elixir as imaxes</string>
     <string name="stories_intro_create_story_post_label">Crear unha entrada de historia</string>
+    <string name="stories_intro_description_second">Son publicados coma unha nova entrada de blog no teu sitio para que a túa audiencia nunca se perda nada.</string>
     <string name="stories_intro_title_second">As entradas de historias non desaparecen</string>
+    <string name="stories_intro_description_first">Combina fotos, vídeos e texto para crear entradas de historias atractivas e accesibles que lles encantarán aos teus visitantes.</string>
     <string name="stories_intro_title_first">Agora as historias son para todos</string>
     <string name="stories_intro_image_caption_second">Título da historia de exemplo</string>
     <string name="stories_intro_image_caption_first">Como crear unha entrada de historias</string>
     <string name="stories_intro_main_title">Presentación das entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Páxina en branco creada</string>
     <string name="mlp_notice_page_created">Páxina creada</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s denegou o acceso ás túas fotos. Para correxilo, edita os teus permisos e activa %2$s e %3$s.</string>
     <string name="media_insert_failed">Inserción do medio fallida.</string>
     <string name="media_insert_failed_with_reason">Fallou a inserción do medio: %s</string>
     <string name="photo_picker_wordpress_media_library">Elixe desde a biblioteca de medios de WordPress</string>
@@ -445,12 +542,11 @@ Language: gl_ES
     <string name="media_uploading_gif_library_photo">Subindo medios GIF</string>
     <string name="media_uploading_stock_library_photo">Subindo medios de inventarios</string>
     <string name="media_uploading_default">Subindo medios</string>
-    <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
     <string name="gutenberg_native_search_or_type_url">Busca ou escribe a URL</string>
-    <string name="gutenberg_native_page_break">Salto de páxina</string>
     <string name="gutenberg_native_add_this_telephone_link">Engadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_link">Engadir este enlace</string>
     <string name="gutenberg_native_add_this_email_link">Engadir este enlace de correo electrónico</string>
+    <string name="suggestion_no_connection">Non hai conexión a Internet.\nNon están dispoñibles as suxestións.</string>
     <string name="typeface_label_shrikhand">Grosa</string>
     <string name="typeface_label_space_mono">Moderno</string>
     <string name="typeface_label_pacifico">Alegre</string>
@@ -489,6 +585,7 @@ Language: gl_ES
     <string name="toast_capture_operation_in_progress">Operación en progreso, inténtao de novo</string>
     <string name="toast_story_page_not_found">Non se puido encontrar a diapositiva da historia</string>
     <string name="dialog_insufficient_device_storage_error_ok_button">Ver o almacenamento</string>
+    <string name="dialog_insufficient_device_storage_error_message">Tenemos que gardar a historia no teu dispositivo antes de que poida ser publicada. Revisa os teus axustes de almacenamento e elimina arquivos para gañar espazo.</string>
     <string name="dialog_insufficient_device_storage_error_title">Almacenamento insuficiente no dispositivo</string>
     <string name="dialog_story_saving_error_message">Intenta volver a gardar ou borrar as diapositivas e, despois, intenta volver a publicar a túa historia.</string>
     <string name="dialog_story_saving_error_title_plural">Non se puideron gardar %1$d diapositivas</string>
@@ -509,6 +606,7 @@ Language: gl_ES
     <string name="dialog_discard_story_message">A entrada da túa historia non se gardará como borrador.</string>
     <string name="dialog_discard_story_title">Descartar a entrada da historia?</string>
     <string name="dialog_discard_page_ok_button">Borrar</string>
+    <string name="dialog_discard_errored_page_message">Esta diapositiva aínda non se gardou. Se borras esta diapositiva, perderás calquera edición que fixeras.</string>
     <string name="dialog_discard_page_message">Esta diapositiva será eliminada da túa historia.</string>
     <string name="dialog_discard_page_title">Borrar a diapositiva da historia?</string>
     <string name="label_text_color_button">Cambiar a cor do texto</string>
@@ -537,6 +635,7 @@ Language: gl_ES
     <string name="mlp_preview_page">Vista previa</string>
     <string name="mlp_create_page">Crear unha páxina</string>
     <string name="mlp_create_blank_page">Crear unha páxina en branco</string>
+    <string name="mlp_choose_layout_subtitle">Empeza elixindo entre unha ampla variedade de deseños de páxina prefabricados. Ou simplemente empeza cunha páxina en branco.</string>
     <string name="mlp_choose_layout_title">Elixir un deseño</string>
     <string name="prepublishing_nudges_story_title_hint">Pon un título á túa historia</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crear unha entrada ou historia</string>
@@ -546,6 +645,7 @@ Language: gl_ES
     <string name="my_site_bottom_sheet_add_story">Entrada da historia</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Para editares as iconas nos sitios auto-aloxados precisas o plugin Jetpack.</string>
     <string name="reader_toast_err_page_jump_not_found">Non se puido encontrar o salto de páxina enlazado</string>
+    <string name="error_media_quota_exceeded_toast">Non se pode subir o arquivo.\nSuperouse a cota de almacenamento.</string>
     <string name="error_media_quota_exceeded">Cota de almacenamento superada</string>
     <string name="pick_file">Engadir un arquivo</string>
     <string name="gutenberg_native_replace_video">Substituír o vídeo</string>
@@ -556,14 +656,17 @@ Language: gl_ES
     <string name="gutenberg_native_block_removed">Bloque eliminado</string>
     <string name="enter_your_site_address">Introduce o enderezo do teu sitio existente</string>
     <string name="signup_confirmation_title">Confirmación do rexistro</string>
+    <string name="continue_with_google_terms_of_service_text">Se continúas con Google e aínda non tes unha conta de WordPress.com, crearás unha conta e aceptas os nosos %1$stermos do servizo%2$s.</string>
     <string name="continue_terms_of_service_text">Se continúas, aceptas os nosos %1$stermos do servizo%2$s.</string>
     <string name="signup_confirmation_message">Usaremos este enderezo de correo electrónico para crear a túa nova conta de WordPress.com.</string>
+    <string name="signup_magic_link_message">Enviámosche por correo electrónico un enlace de rexistro para crear a túa nova conta de WordPress.com. Comproba o teu correo electrónico neste dispositivo e toca o enlace no correo electrónico que recibiches de WordPress.com.</string>
     <string name="enter_account_info_for_site">Introduce a información da túa conta para %1$s.</string>
     <string name="login_or">ou</string>
     <string name="continue_google_button_suffix">Continuar con Google</string>
     <string name="login_find_your_site_adress">Encontra o enderezo do teu sitio</string>
     <string name="login_done">Feito</string>
     <string name="magic_link_not_seeing_email_message">No ves o correo electrónico? Comproba a túa carpeta de spam ou correo non desexado.</string>
+    <string name="login_magic_links_sent_label">Comproba o teu correo electrónico neste dispositivo e toca o enlace no correo electrónico que recibiches de WordPress.com.</string>
     <string name="login_magic_links_label">Enviarémosche por correo electrónico un enlace que che fará acceder automaticamente, sen necesidade de contrasinal.</string>
     <string name="check_email">Comprobar o correo electrónico</string>
     <string name="get_started">Primeiros pasos</string>
@@ -585,6 +688,7 @@ Language: gl_ES
     <string name="gutenberg_native_block_cut">Bloque cortado</string>
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">O título do sitio só pode ser cambiado por un usuario co perfil de administrador.</string>
+    <string name="my_site_title_changer_dialog_hint">O título do sitio móstrase na barra de título dun navegador web e na cabeceira da maioría dos temas.</string>
     <string name="reader_title_tag_preview">Tema</string>
     <string name="error_update_site_title_network">Non se puido actualizar o título do sitio. Comproba a túa conexión de rede e inténtao de novo.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sen gardar</string>
@@ -595,7 +699,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dúas veces para seleccionar a opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar gradiente</string>
     <string name="pages_list_author">Autor da páxina</string>
-    <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">A miniatura do medio non se puido cargar</string>
     <string name="menu_content_info">Estrutura do contido</string>
     <string name="everyone">Todos</string>
@@ -614,6 +717,7 @@ Language: gl_ES
     <string name="prepublishing_nudges_publish_action">Data de publicación</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">As entradas na papeleira non se poden editar. Desexas cambiar o estado desta entrada a «borrador» para poder traballar nela?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover entrada a borrador?</string>
     <string name="reader_label_choose_your_interests">Elixe as túas temáticas</string>
     <string name="reader_choose_interests_content_description">Elixe as túas temáticas</string>
@@ -624,11 +728,13 @@ Language: gl_ES
     <string name="post_status_post_scheduled">Programado</string>
     <string name="publish_date">Data de publicación</string>
     <string name="ccpa_privacy_notice_read">Le o aviso de privacidade de CCPA</string>
+    <string name="ccpa_privacy_notice_caption">A Ley de Privacidade do Consumidor de California («CCPA») obríganos a que proporcionemos información adicional aos residentes de California sobre as categorías de información personal que recompilamos e compartimos, onde obtemos esa información personal e como e por que a usamos.</string>
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
+    <string name="gutenberg_native_insert_mention">Insertar unha mención</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dúas veces pata abrir a folla de acción coas opcións dispoñibles</string>
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
@@ -681,12 +787,14 @@ Language: gl_ES
     <string name="button_insert">Insertar</string>
     <string name="continue_label">Continuar</string>
     <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_number_of_columns">Número de columnas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover o bloque á dereita desde a posición %1$s á posición %2$s</string>
     <string name="gutenberg_native_move_block_right">Mover o bloque á dereita</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover o bloque á esquerda desde a posición %1$s á posición %2$s</string>
     <string name="gutenberg_native_move_block_left">Mover bloque á esquerda</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toca dúas veces para mover o bloque cara a dereita</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toca dúas veces para mover o bloque cara a esquerda</string>
+    <string name="gutenberg_native_block_settings">Axustes do bloque</string>
     <string name="new_site_creation_creating_site_loading_4">Creando o escritorio</string>
     <string name="new_site_creation_creating_site_loading_3">Configurar o tema</string>
     <string name="new_site_creation_creating_site_loading_2">Engadindo as características do sitio</string>
@@ -696,7 +804,6 @@ Language: gl_ES
     <string name="pages_and_posts_cancel_auto_upload">Cancelar a subida</string>
     <string name="gif_list_search_returned_unknown_error">Houbo un problema ao xestionar a petición</string>
     <string name="gif_powered_by_tenor">Funciona con Tenor</string>
-    <string name="gif_picker_search_hint">Buscar en Tenor</string>
     <string name="photo_picker_gif">Elixir desde Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Venres</string>
@@ -747,8 +854,10 @@ Language: gl_ES
     <string name="gutenberg_native_link_to">Enlazar a</string>
     <string name="gutenberg_native_link_settings">Axustes da ligazón</string>
     <string name="gutenberg_native_excerpt_length_words">Lonxitude do extracto (palabras)</string>
+    <string name="gutenberg_native_edit_cover_media">Editar o medio da portada</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
-    <string name="gutenberg_native_video_settings">Axustes de vídeo</string>
+    <string name="gutenberg_native_button_link_url">URL do enlace do botón</string>
+    <string name="gutenberg_native_border_radius">Radio do borde</string>
     <string name="gutenberg_native_add_paragraph_block">Engadir un bloque de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear unha entrada</string>
     <string name="post_list_tab_trashed_posts">Na papeleira</string>
@@ -788,6 +897,7 @@ Language: gl_ES
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Lenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar o vídeo</string>
+    <string name="gutenberg_native_edit_media">Editar os medios</string>
     <string name="gutenberg_native_add_a_shortcode">Engadir un shortcode…</string>
     <string name="post_list_author">Autor da entrada</string>
     <string name="fab_create_desc">Crear unha entrada</string>
@@ -802,7 +912,6 @@ Language: gl_ES
     <string name="stats_box_type_low">baixas</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  e %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_replace_image">Substituír imaxe</string>
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
     <string name="content_description_person_building_website">Creador da web</string>
@@ -846,14 +955,12 @@ Language: gl_ES
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_unsupported">Non compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
-    <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar o teclado</string>
     <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para amosar a axuda</string>
     <string name="gutenberg_native_take_a_video">Fai un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fai unha foto ou un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Fai unha foto</string>
     <string name="gutenberg_native_start_writing">Empeza a escribir…</string>
-    <string name="gutenberg_native_show_section">Amosar a sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque ten contido non válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Baleiro</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
@@ -870,6 +977,8 @@ Language: gl_ES
     <string name="gutenberg_native_move_block_up">Mover o bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloque cara abaixo, da fila %1$s á fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloque abaixo</string>
+    <string name="gutenberg_native_link_text">Texto do enlace</string>
+    <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Lenda da imaxe. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar o teclado</string>
     <string name="gutenberg_native_help_icon">Icona de axuda</string>
@@ -884,6 +993,7 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dúas veces para mover o bloque cara abaixo</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toca dúas veces para editar este valor</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dúas veces para engadir un bloque</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toca dúas veces e mantén para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor actual é %s</string>
     <string name="gutenberg_native_choose_from_device">Elixir desde o dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu un erro descoñecido. Por favor, inténtao de novo.</string>
@@ -899,6 +1009,8 @@ Language: gl_ES
     <string name="notifications_tab_dialog_switch_desc">Notificacións</string>
     <string name="main_switch_default_title_off">Desactivado</string>
     <string name="main_switch_default_title_on">Activado</string>
+    <string name="notifications_tab_dialog_main_off_message">Ao desactivar os avisos para este sitio, desactivaranse os avisos mostrados na pestana de avisos deste sitio. Podes axustar que tipo de aviso ves despois de activar os avisos para este sitio.</string>
+    <string name="notifications_tab_dialog_main_off_title">Para ver os avisos na pestana de avisos deste sitio, activa os avisos para este sitio.</string>
     <string name="notifications_tab_dialog_main_hint_off">Activar os avisos mostrados na pestana de avisos deste sitio</string>
     <string name="notifications_tab_dialog_main_hint_on">Desactivar os avisos mostrados na pestana de avisos deste sitio</string>
     <string name="notifications_tab_dialog_main_status_off">Avisos para este sitio</string>
@@ -1242,7 +1354,6 @@ Language: gl_ES
     <string name="stats_no_data_for_period">Non hai datos neste período</string>
     <string name="preference_strip_image_location">Eliminar a ubicación dos medios</string>
     <string name="stats_cannot_be_started">Non podemos abrir as estatísticas neste momento. Por favor, inténtao de novo máis tarde</string>
-    <string name="gif_picker_endless_scroll_network_error">Algúns medios fallan ao cargar debido a un erro de rede.</string>
     <string name="gif_picker_empty_search_list">Ningún medio coincide coa túa busca</string>
     <string name="gif_picker_initial_empty_text">Busca para encontrar GIF para engadir á túa biblioteca de medios!</string>
     <string name="stats_author_views_label">Visitas</string>
@@ -1809,6 +1920,7 @@ Language: gl_ES
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">Estás seguro de querer desconectar Jetpack do sitio?</string>
     <string name="jetpack_disconnect_pref_title">«Desconecta de WordPress.com»</string>
+    <string name="site_settings_jetpack_allowlist_description">Podes marcar un enderezo IP (ou series de enderezos) coma «Sempre permitida», evitando que sexa bloqueada por Jetpack. Acéptanse IPv4 e IPv6. Para especificar un rango, introduce un valor inferior e un valor superior separados por un guión. Exemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Requiere a identificación en dous pasos</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar contas usando o correo electrónico</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir o acceso con WordPress.com</string>
@@ -1853,6 +1965,7 @@ Language: gl_ES
     <string name="notification_settings_category_other">Outros</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Todos os meus sitios</string>
     <string name="notification_settings_category_your_sites">Os teus sitios</string>
+    <string name="notification_settings_main_off_message">Desactivando os axustes de avisos desactivaranse todos os avisos desta aplicación, independentemente do tipo. Podes axustar que tipo de aviso recibes despois de activar os axustes de avisos.</string>
     <string name="notification_settings_main_off_title">Para recibir avisos neste dispositivo, activa os axustes de avisos.</string>
     <string name="notification_settings_main_hint_off">Activar os avisos</string>
     <string name="notification_settings_main_hint_on">Desactivar os avisos</string>
@@ -2306,6 +2419,7 @@ Language: gl_ES
     <string name="site_settings_paging_dialog_description">Separar os fíos de comentarios en distintas páxinas</string>
     <string name="site_settings_paging_dialog_header">Comentarios por páxina</string>
     <string name="site_settings_close_after_dialog_title">Pechar os comentarios</string>
+    <string name="site_settings_denylist_description">Cando un comentario conteña algunha destas palabras no seu contido, nome, URL, correo electrónico ou IP, será marcado como spam. Podes introducir palabras parciais, así «press» coincidirá con «WordPress».</string>
     <string name="site_settings_hold_for_moderation_description">Cando un comentario conteña algunha destas palabras no seu contido, nome, URL, correo electrónico ou IP, será retido na cola de moderación. Pódense incluír fragmentos de palabra, de xeito que \"press\" servirá para \"WordPress\". </string>
     <string name="site_settings_list_editor_input_hint">Introduce unha palabra ou frase</string>
     <string name="site_settings_list_editor_no_items_text">Sen elementos</string>
@@ -2753,4 +2867,13 @@ Language: gl_ES
     <string name="add">Engadir</string>
     <string name="save">Gardar</string>
     <string name="cancel">Cancelar</string>
+    <string-array name="blogging_reminders_count">
+        <item>Unha vez</item>
+        <item>Dúas veces</item>
+        <item>Tres veces</item>
+        <item>Catro veces</item>
+        <item>Cinco veces</item>
+        <item>Seis veces</item>
+        <item>Sete veces</item>
+    </string-array>
 </resources>
