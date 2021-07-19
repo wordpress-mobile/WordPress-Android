@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/promo_dialog_title"
+        android:id="@+id/quick_start_prompt_dialog_title"
         style="@style/QuickStartPromptDialogTitleNew"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -30,14 +30,14 @@
         tools:text="@string/quick_start_dialog_need_help_manage_site_title" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/promo_dialog_description"
+        android:id="@+id/quick_start_prompt_dialog_description"
         style="@style/QuickStartPromptDialogDescriptionNew"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/promo_dialog_title"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_prompt_dialog_title"
         tools:text="@string/quick_start_dialog_need_help_manage_site_message" />
 
     <include
@@ -48,6 +48,6 @@
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/promo_dialog_description" />
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_prompt_dialog_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
