@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-15 18:32:00+0000
+Translation-Revision-Date: 2021-07-16 10:59:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -41,12 +41,17 @@ Language: pl
     <string name="storage_utils_dialog_dont_show_button">Nie pokazuj ponownie</string>
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
     <string name="storage_utils_dialog_title">Niewystarczająca ilość pamięci w urządzeniu</string>
+    <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
+    <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
     <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
     <string name="gutenberg_native_tap_to_add_content">Stuknij aby dodać treści</string>
     <string name="gutenberg_native_s_block">blok %s</string>
     <string name="gutenberg_native_minimum_height">Minimalna wysokość</string>
     <string name="gutenberg_native_media_options">Opcje mediów</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">NIeprawidłowy adres URL. Nie odnaleziono pliku dźwiękowego.</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point">Przesuń i dostosuj punkt ostrości</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć dolną zakładkę aby dodać zdjęcie lub film</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video">Stuknij dwukrotnie aby otworzyć zakładkę Akcji aby dodać zdjęcie lub film</string>
     <string name="gutenberg_native_current_unit_is_s">Bieżącą jednostką jest %s</string>
     <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
     <string name="gutenberg_native_add_link_to_s">Dodaj odnośnik do %s</string>
