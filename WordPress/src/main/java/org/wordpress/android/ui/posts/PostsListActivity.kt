@@ -264,6 +264,9 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
+        // Notification opens in Drafts tab
+        if (actionsShownByDefault) tabLayout.getTabAt(PostListType.DRAFTS.ordinal)?.select()
+
         postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
