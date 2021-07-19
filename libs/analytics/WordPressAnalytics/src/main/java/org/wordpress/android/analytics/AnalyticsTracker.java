@@ -231,6 +231,7 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_ENABLED, // Aztec editor only
         EDITOR_GUTENBERG_ENABLED, // Gutenberg editor only
         EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
+        EDITOR_SETTINGS_FETCHED,
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
         REVISIONS_DETAIL_VIEWED_FROM_SWIPE,
@@ -785,6 +786,7 @@ public final class AnalyticsTracker {
         USER_PROFILE_SHEET_SITE_SHOWN,
         BLOG_URL_PREVIEWED,
         LIKE_LIST_OPENED,
+        LIKE_LIST_FETCHED_MORE,
         STORAGE_WARNING_SHOWN,
         STORAGE_WARNING_ACKNOWLEDGED,
         STORAGE_WARNING_CANCELED,

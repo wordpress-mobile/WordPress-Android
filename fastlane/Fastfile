@@ -376,13 +376,26 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
-    app = options[:app]
+    app = options[:app] || 'wordpress'
     UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: app)
 
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    
+    UI.message('Checking app strings translation status...')
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false
+    )
+
+    UI.message("Checking #{app} release notes strings translation status...")
+    paths = APP_SPECIFIC_VALUES[app.to_sym]
+    check_translation_progress(
+      glotpress_url: paths[:gp_url],
+      abort_on_violations: false
+    )
+
     download_translations(app: app)
+
     android_bump_version_final_release(app: app)
     version = android_get_release_version(app: app)
     download_metadata_strings(app: app, version: version["name"], build_number: version["code"])
@@ -690,7 +703,7 @@ REPOSITORY_NAME="WordPress-Android"
       source_locale: "en-US",
       download_path: download_path
     )
-    
+
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
   end

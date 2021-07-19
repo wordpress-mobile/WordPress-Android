@@ -130,6 +130,7 @@ import org.wordpress.android.ui.posts.PrepublishingCategoriesFragment;
 import org.wordpress.android.ui.posts.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
@@ -687,6 +688,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(CategoriesListFragment object);
 
     void inject(LayoutPreviewFragment object);
+
+    void inject(QuickStartPromptDialogFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
