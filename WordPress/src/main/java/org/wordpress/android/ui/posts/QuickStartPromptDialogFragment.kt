@@ -36,6 +36,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
         private const val STATE_KEY_NEUTRAL_BUTTON_LABEL = "state_key_neutral_button_label"
         private const val UNDEFINED_RES_ID = -1
+        private const val SITE_IMAGE_CORNER_RADIUS_IN_DP = 4
     }
 
     @DrawableRes private var drawableResId: Int = UNDEFINED_RES_ID
@@ -172,7 +173,12 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
             txtTitle.text = siteRecord.blogNameOrHomeURL
             txtDomain.text = siteRecord.homeURL
-            imageManager.load(imgBlavatar, siteRecord.blavatarType, siteRecord.blavatarUrl)
+            imageManager.loadImageWithCorners(
+                    imgBlavatar,
+                    siteRecord.blavatarType,
+                    siteRecord.blavatarUrl,
+                    DisplayUtils.dpToPx(requireContext(), SITE_IMAGE_CORNER_RADIUS_IN_DP)
+            )
         }
     }
 
