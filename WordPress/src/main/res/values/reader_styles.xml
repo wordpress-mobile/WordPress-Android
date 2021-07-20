@@ -82,6 +82,7 @@
         <item name="android:fontFamily">serif</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
