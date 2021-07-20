@@ -8,16 +8,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
-import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
-import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
 import org.wordpress.android.ui.utils.UiHelpers
@@ -54,7 +49,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         ).get(UnifiedCommentActivityViewModel::class.java)
         arguments?.let {
             commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
-            commentStatusList = listOf(APPROVED, UNAPPROVED) // TODO: logic must be changed, here for testing purposes
         }
     }
 
@@ -83,9 +77,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
-        viewModel.setup(commentListFilter, commentStatusList)
+        viewModel.setup(commentListFilter)
         var isShowingActionMode = false
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
                 adapter.submitList(uiState.commentData)

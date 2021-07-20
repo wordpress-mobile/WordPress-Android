@@ -301,7 +301,7 @@ dependencies {
     // ProcessLifecycleOwner
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
     // Paging Library
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    //implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'

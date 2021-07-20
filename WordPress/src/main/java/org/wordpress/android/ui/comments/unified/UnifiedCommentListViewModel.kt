@@ -2,8 +2,6 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,6 +16,9 @@ import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.comments.CommentsStore
+import org.wordpress.android.fluxc.store.comments.CommentsStore.CommentsData
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
+import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
@@ -34,6 +35,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.usecase.UseCaseResult.Failure
+import org.wordpress.android.usecase.UseCaseResult.Loading
+import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -49,18 +54,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val commentsStore: CommentsStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val unifiedCommentsListHandler: UnifiedCommentsListHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
-    private lateinit var cacheStatuses: List<CommentStatus>
 
-    private val _rawComments: Flow<List<CommentEntity>> by lazy {
-        commentsStore.getCommentsFlow(
-                selectedSiteRepository.getSelectedSite()!!.siteId,
-                commentFilter.toCommentStatuses()
-        )
-    }
+    private val _rawComments = unifiedCommentsListHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
@@ -73,8 +73,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                 _selectedComments
         ) { comments, selectedIds ->
             CommentsUiModel(
-                    buildCommentList(comments, selectedIds, comments.size >= 30),
-//                buildCommentsListUiModel(commentListLoadingState),
+                    buildCommentList(comments, selectedIds),
                     CommentsListUiModel.WithData,
                     buildActionModeUiModel(selectedIds, commentFilter)
             )
@@ -85,20 +84,21 @@ class UnifiedCommentListViewModel @Inject constructor(
         )
     }
 
-    fun setup(commentListFilter: CommentFilter, cacheStatusList: List<CommentStatus>) {
+    fun setup(commentListFilter: CommentFilter) {
         if (isStarted) return
         isStarted = true
 
         commentFilter = commentListFilter
-        cacheStatuses = cacheStatusList
 
-        launch {
-            commentsStore.fetchComments(
-                    selectedSiteRepository.getSelectedSite()!!,
-                    30,
-                    0,
-                    commentFilter.toCommentStatus(),
-                    cacheStatuses
+        launch(bgDispatcher) {
+            unifiedCommentsListHandler.requestPage(
+                    Parameters(
+                            site = selectedSiteRepository.getSelectedSite()!!,
+                            number = 30,
+                            offset = 0,
+                            networkStatusFilter = commentFilter.toCommentStatus(),
+                            cacheStatuses = commentFilter.toCommentCacheStatuses()
+                    )
             )
         }
     }
@@ -201,12 +201,19 @@ class UnifiedCommentListViewModel @Inject constructor(
     }
 
     private fun buildCommentList(
-        commentEntities: List<CommentEntity>,
-        selectedComments: List<SelectedComment>?,
-        canLoadMore: Boolean,
+        commentsDataResult: UseCaseResult<CommentsData>,
+        selectedComments: List<SelectedComment>?
     ): List<UnifiedCommentListItem> {
-        val list = commentEntities.mapIndexed { index, commentModel ->
-            val previousItem = commentEntities.getOrNull(index)
+        val (comments, hasMore) = when (commentsDataResult) {
+            is Failure<*, CommentsData> -> Pair(commentsDataResult.cachedData.comments, commentsDataResult.cachedData.hasMore)
+            Loading -> Pair(listOf(), false)
+            is Success -> Pair(commentsDataResult.data.comments, commentsDataResult.data.hasMore)
+        }
+
+        // TODOD: manage Loading and Failure conditions
+
+        val list = comments.mapIndexed { index, commentModel ->
+            val previousItem = comments.getOrNull(index)
             when {
                 previousItem == null -> SubHeader(getFormattedDate(commentModel), -1)
                 shouldAddSeparator(previousItem, commentModel) -> SubHeader(
@@ -244,16 +251,16 @@ class UnifiedCommentListViewModel @Inject constructor(
             }
         }.toMutableList()
 
-        if (canLoadMore) {
-            list.add(NextPageLoader(true, -1) {
-                launch {
-                    commentsStore.fetchComments(
-                            selectedSiteRepository.getSelectedSite()!!,
-                            30,
-                            commentEntities.size,
-                            commentFilter.toCommentStatus(),
-                            cacheStatuses
-                    )
+        if (hasMore) {
+            list.add(NextPageLoader(hasMore && commentsDataResult !is Failure<*, *>/*true*/, -1) {
+                launch(bgDispatcher) {
+                    unifiedCommentsListHandler.requestPage(Parameters(
+                            site = selectedSiteRepository.getSelectedSite()!!,
+                            number = 30,
+                            offset = comments.size,
+                            networkStatusFilter = commentFilter.toCommentStatus(),
+                            cacheStatuses = commentFilter.toCommentCacheStatuses()
+                    ))
                 }
             })
         }
