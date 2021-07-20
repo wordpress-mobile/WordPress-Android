@@ -148,6 +148,8 @@
             android:paddingTop="@dimen/margin_extra_large"
             android:includeFontPadding="false"
             android:textAlignment="viewStart"
+            android:ellipsize="end"
+            android:maxLines="3"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
