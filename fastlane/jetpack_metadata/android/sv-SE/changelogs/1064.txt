@@ -1,6 +1,0 @@
-17.6:
-Ljudblocket gör det möjligt att lägga till podcasts, musik och ljudfiler i dina inlägg och på dina sidor. Det är nu även tillgängligt för användare med gratispaket!
-
-Gör valfri bild till en *utvald* bild med den nya knappen "Ange som utvald" i bildblocket.
-
-Vi har även gjort det tydligare att du inte kan redigera den automatiskt genererade inläggsarkivsidan.
