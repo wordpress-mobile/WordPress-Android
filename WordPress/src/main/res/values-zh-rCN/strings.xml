@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-07-14 00:36:17+0000
+Translation-Revision-Date: 2021-07-18 19:49:24+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">无效 URL。请输入有效 URL。</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">来自 %s 的嵌入内容目前无法在手机编辑器中查看。请预览该页面以查看嵌入内容。</string>
+    <string name="gutenberg_native_embed_caption_s">嵌入说明文字。%s</string>
+    <string name="gutenberg_native_embed_caption_empty">嵌入说明文字。空</string>
     <string name="gutenberg_native_add_link_0fcaed3b">添加链接</string>
+    <string name="activity_log_visit_our_documentation_page">访问我们的文档页面</string>
+    <string name="activity_log_multisite_message">多站点安装的 Jetpack Backup 只提供可下载的备份，没有一键还原。更多信息 %1$s。</string>
     <string name="blogging_reminders_tip_message">定期发布文章有助于留住读者以及吸引新访客访问您的站点。</string>
     <string name="blogging_reminders_tip">提示</string>
     <string name="blogging_reminders_select_days_message">您可以随时更新</string>
