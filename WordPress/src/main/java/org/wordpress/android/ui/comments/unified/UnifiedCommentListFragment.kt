@@ -40,7 +40,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private lateinit var commentListFilter: CommentFilter
-    private lateinit var commentStatusList: List<CommentStatus>
 
     private var binding: UnifiedCommentListFragmentBinding? = null
 
@@ -54,7 +53,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         ).get(UnifiedCommentActivityViewModel::class.java)
         arguments?.let {
             commentListFilter = it.getSerializable(KEY_COMMENT_LIST_FILTER) as CommentFilter
-            commentStatusList = listOf(APPROVED, UNAPPROVED) // TODO: logic must be changed, here for testing purposes
         }
     }
 
@@ -75,33 +73,37 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         commentsRecyclerView.adapter = adapter
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
+            viewModel.refresh()
         }
-    }
-
-    private fun retry() {
-//        adapter.retry()
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
-        viewModel.setup(commentListFilter, commentStatusList)
+        viewModel.setup(commentListFilter)
+
         var isShowingActionMode = false
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collect { uiState ->
-                setupCommentsList(uiState.commentsListUiModel)
-                adapter.submitList(uiState.commentData)
-                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
-                    isShowingActionMode = true
-                    (activity as AppCompatActivity).startSupportActionMode(
-                            CommentListActionModeCallback(
-                                    viewModel,
-                                    activityViewModel
-                            )
-                    )
-                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
-                    isShowingActionMode = false
+
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                viewModel.uiState.collect { uiState ->
+                    setupCommentsList(uiState.commentsListUiModel)
+                    adapter.submitList(uiState.commentData)
+                    commentsRecyclerView.requestLayout()
+
+                    if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                        isShowingActionMode = true
+                        (activity as AppCompatActivity).startSupportActionMode(
+                                CommentListActionModeCallback(
+                                        viewModel,
+                                        activityViewModel
+                                )
+                        )
+                    } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                        isShowingActionMode = false
+                    }
                 }
-            }
         }
+//        lifecycleScope.launchWhenResumed {
+//
+//        }
 
 //        lifecycleScope.launchWhenStarted {
 //            adapter.loadStateFlow.collectLatest { loadState ->
@@ -109,26 +111,26 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 //            }
 //        }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.onSnackbarMessage.collect { snackbarMessage ->
-                snackbarSequencer.enqueue(
-                        SnackbarItem(
-                                Info(
-                                        view = coordinator,
-                                        textRes = snackbarMessage.message,
-                                        duration = Snackbar.LENGTH_LONG
-                                ),
-                                snackbarMessage.buttonTitle?.let {
-                                    Action(
-                                            textRes = snackbarMessage.buttonTitle,
-                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
-                                    )
-                                },
-                                dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
-                        )
-                )
-            }
-        }
+//        lifecycleScope.launchWhenStarted {
+//            viewModel.onSnackbarMessage.collect { snackbarMessage ->
+//                snackbarSequencer.enqueue(
+//                        SnackbarItem(
+//                                Info(
+//                                        view = coordinator,
+//                                        textRes = snackbarMessage.message,
+//                                        duration = Snackbar.LENGTH_LONG
+//                                ),
+//                                snackbarMessage.buttonTitle?.let {
+//                                    Action(
+//                                            textRes = snackbarMessage.buttonTitle,
+//                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
+//                                    )
+//                                },
+//                                dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
+//                        )
+//                )
+//            }
+//        }
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {

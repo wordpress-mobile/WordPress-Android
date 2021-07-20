@@ -2,14 +2,13 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
@@ -53,12 +52,14 @@ class UnifiedCommentListViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
-    private lateinit var cacheStatuses: List<CommentStatus>
 
-    private val _rawComments: Flow<List<CommentEntity>> by lazy {
+    private val _rawComments: SharedFlow<List<CommentEntity>> by lazy {
         commentsStore.getCommentsFlow(
                 selectedSiteRepository.getSelectedSite()!!.siteId,
                 commentFilter.toCommentStatuses()
+        ).shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.Companion.WhileSubscribed(UI_STATE_FLOW_TIMEOUT_MS)
         )
     }
 
@@ -85,12 +86,11 @@ class UnifiedCommentListViewModel @Inject constructor(
         )
     }
 
-    fun setup(commentListFilter: CommentFilter, cacheStatusList: List<CommentStatus>) {
+    fun setup(commentListFilter: CommentFilter) {
         if (isStarted) return
         isStarted = true
 
         commentFilter = commentListFilter
-        cacheStatuses = cacheStatusList
 
         launch {
             commentsStore.fetchComments(
@@ -98,7 +98,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                     30,
                     0,
                     commentFilter.toCommentStatus(),
-                    cacheStatuses
+                    commentFilter.toCommentStatuses()
             )
         }
     }
@@ -205,27 +205,30 @@ class UnifiedCommentListViewModel @Inject constructor(
         selectedComments: List<SelectedComment>?,
         canLoadMore: Boolean,
     ): List<UnifiedCommentListItem> {
-        val list = commentEntities.mapIndexed { index, commentModel ->
-            val previousItem = commentEntities.getOrNull(index)
-            when {
-                previousItem == null -> SubHeader(getFormattedDate(commentModel), -1)
-                shouldAddSeparator(previousItem, commentModel) -> SubHeader(
-                        getFormattedDate(commentModel), -1
-                )
-                else -> {
-                    val toggleAction = ToggleAction(
-                            commentModel.remoteCommentId,
-                            CommentStatus.fromString(commentModel.status), this::toggleItem
-                    )
-                    val clickAction = ClickAction(
-                            commentModel.remoteCommentId,
-                            CommentStatus.fromString(commentModel.status),
-                            this::clickItem
-                    )
+        val list = ArrayList<UnifiedCommentListItem>()
+        commentEntities.forEachIndexed { index, commentModel ->
+            val previousItem = commentEntities.getOrNull(index - 1)
+            if (previousItem == null) {
+                list.add(SubHeader(getFormattedDate(commentModel), -1))
+            } else if (shouldAddSeparator(previousItem, commentModel)) {
+                list.add(SubHeader(getFormattedDate(commentModel), -1))
+            }
 
-                    val isSelected = selectedComments?.any { it.remoteCommentId == commentModel.remoteCommentId }
-                    val isPending = commentModel.status == UNAPPROVED.toString()
+            val toggleAction = ToggleAction(
+                    commentModel.remoteCommentId,
+                    CommentStatus.fromString(commentModel.status), this::toggleItem
+            )
+            val clickAction = ClickAction(
+                    commentModel.remoteCommentId,
+                    CommentStatus.fromString(commentModel.status),
+                    this::clickItem
+            )
 
+            val isSelected = selectedComments?.any { it.remoteCommentId == commentModel.remoteCommentId }
+            val isPending = commentModel.status == UNAPPROVED.toString()
+
+
+            list.add(
                     Comment(
                             remoteCommentId = commentModel.remoteCommentId,
                             postTitle = commentModel.postTitle,
@@ -240,9 +243,8 @@ class UnifiedCommentListViewModel @Inject constructor(
                             clickAction = clickAction,
                             toggleAction = toggleAction
                     )
-                }
-            }
-        }.toMutableList()
+            )
+        }
 
         if (canLoadMore) {
             list.add(NextPageLoader(true, -1) {
@@ -252,7 +254,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                             30,
                             commentEntities.size,
                             commentFilter.toCommentStatus(),
-                            cacheStatuses
+                            commentFilter.toCommentStatuses()
                     )
                 }
             })
@@ -294,6 +296,19 @@ class UnifiedCommentListViewModel @Inject constructor(
 //            }
 //        }
 //    }
+
+    fun refresh() {
+        launch {
+            commentsStore.fetchComments(
+                    selectedSiteRepository.getSelectedSite()!!,
+                    30,
+                    0,
+                    commentFilter.toCommentStatus(),
+                    commentFilter.toCommentStatuses()
+            )
+        }
+    }
+
 
     data class CommentsUiModel(
         val commentData: List<UnifiedCommentListItem>,
