@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_epilogue_mysites_heading"
-        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="@color/login_on_surface_high_selector" />
 
     <TextView
