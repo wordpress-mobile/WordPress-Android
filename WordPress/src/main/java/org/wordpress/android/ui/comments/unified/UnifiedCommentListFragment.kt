@@ -73,13 +73,11 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         commentsRecyclerView.adapter = adapter
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
-            viewModel.refresh()
         }
     }
 
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
         viewModel.setup(commentListFilter)
-
         var isShowingActionMode = false
 
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
@@ -101,9 +99,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                     }
                 }
         }
-//        lifecycleScope.launchWhenResumed {
-//
-//        }
 
 //        lifecycleScope.launchWhenStarted {
 //            adapter.loadStateFlow.collectLatest { loadState ->
@@ -111,26 +106,26 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 //            }
 //        }
 
-//        lifecycleScope.launchWhenStarted {
-//            viewModel.onSnackbarMessage.collect { snackbarMessage ->
-//                snackbarSequencer.enqueue(
-//                        SnackbarItem(
-//                                Info(
-//                                        view = coordinator,
-//                                        textRes = snackbarMessage.message,
-//                                        duration = Snackbar.LENGTH_LONG
-//                                ),
-//                                snackbarMessage.buttonTitle?.let {
-//                                    Action(
-//                                            textRes = snackbarMessage.buttonTitle,
-//                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
-//                                    )
-//                                },
-//                                dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
-//                        )
-//                )
-//            }
-//        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.onSnackbarMessage.collect { snackbarMessage ->
+                snackbarSequencer.enqueue(
+                        SnackbarItem(
+                                Info(
+                                        view = coordinator,
+                                        textRes = snackbarMessage.message,
+                                        duration = Snackbar.LENGTH_LONG
+                                ),
+                                snackbarMessage.buttonTitle?.let {
+                                    Action(
+                                            textRes = snackbarMessage.buttonTitle,
+                                            clickListener = View.OnClickListener { snackbarMessage.buttonAction() }
+                                    )
+                                },
+                                dismissCallback = { _, _ -> snackbarMessage.onDismissAction() }
+                        )
+                )
+            }
+        }
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {

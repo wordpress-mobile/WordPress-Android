@@ -2,13 +2,14 @@ package org.wordpress.android.ui.comments.unified
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
@@ -17,6 +18,9 @@ import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.comments.CommentsStore
+import org.wordpress.android.fluxc.store.comments.CommentsStore.CommentsData
+import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
+import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentFilter.PENDING
@@ -33,6 +37,10 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.usecase.UseCaseResult
+import org.wordpress.android.usecase.UseCaseResult.Failure
+import org.wordpress.android.usecase.UseCaseResult.Loading
+import org.wordpress.android.usecase.UseCaseResult.Success
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -48,20 +56,13 @@ class UnifiedCommentListViewModel @Inject constructor(
     private val commentsStore: CommentsStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val unifiedCommentsListHandler: UnifiedCommentsListHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
 
-    private val _rawComments: SharedFlow<List<CommentEntity>> by lazy {
-        commentsStore.getCommentsFlow(
-                selectedSiteRepository.getSelectedSite()!!.siteId,
-                commentFilter.toCommentStatuses()
-        ).shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.Companion.WhileSubscribed(UI_STATE_FLOW_TIMEOUT_MS)
-        )
-    }
+    private val _rawComments = unifiedCommentsListHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
     private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
@@ -74,8 +75,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                 _selectedComments
         ) { comments, selectedIds ->
             CommentsUiModel(
-                    buildCommentList(comments, selectedIds, comments.size >= 30),
-//                buildCommentsListUiModel(commentListLoadingState),
+                    buildCommentList(comments, selectedIds),
                     CommentsListUiModel.WithData,
                     buildActionModeUiModel(selectedIds, commentFilter)
             )
@@ -92,13 +92,15 @@ class UnifiedCommentListViewModel @Inject constructor(
 
         commentFilter = commentListFilter
 
-        launch {
-            commentsStore.fetchComments(
-                    selectedSiteRepository.getSelectedSite()!!,
-                    30,
-                    0,
-                    commentFilter.toCommentStatus(),
-                    commentFilter.toCommentStatuses()
+        launch(bgDispatcher) {
+            unifiedCommentsListHandler.requestPage(
+                    Parameters(
+                            site = selectedSiteRepository.getSelectedSite()!!,
+                            number = 30,
+                            offset = 0,
+                            networkStatusFilter = commentFilter.toCommentStatus(),
+                            cacheStatuses = commentFilter.toCommentCacheStatuses()
+                    )
             )
         }
     }
@@ -296,19 +298,6 @@ class UnifiedCommentListViewModel @Inject constructor(
 //            }
 //        }
 //    }
-
-    fun refresh() {
-        launch {
-            commentsStore.fetchComments(
-                    selectedSiteRepository.getSelectedSite()!!,
-                    30,
-                    0,
-                    commentFilter.toCommentStatus(),
-                    commentFilter.toCommentStatuses()
-            )
-        }
-    }
-
 
     data class CommentsUiModel(
         val commentData: List<UnifiedCommentListItem>,
