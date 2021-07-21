@@ -280,7 +280,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 siteInfoContainer.title.isClickable = SiteUtils.isAccessedViaWPComRest(site)
             }
             updateQuickStartContainer()
-            if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
+            if (isQuickStartInProgress(quickStartStore)) {
                 showQuickStartDialogMigration()
             }
             showQuickStartNoticeIfNecessary()
@@ -1545,7 +1545,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
         if (fragmentManager != null) {
             promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
-            AppPrefs.setQuickStartMigrationDialogShown(true)
             AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_VIEWED)
         }
     }
