@@ -1599,9 +1599,12 @@
         <item name="android:textSize">@dimen/theme_bottom_sheet_text_size</item>
     </style>
 
-    <style name="Widget.ModalLayoutPicker.Button.Primary.accent" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="ThemeBottomSheetButtonFilled" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:backgroundTint">@color/accent</item>
     </style>
+
+    <style name="ThemeBottomSheetButtonOutlined" parent="Widget.ModalLayoutPicker.Button.Secondary"/>
+
 </resources>

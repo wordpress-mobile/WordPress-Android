@@ -138,7 +138,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/preview_theme_button"
-                style="@style/Widget.ModalLayoutPicker.Button.Secondary"
+                style="@style/ThemeBottomSheetButtonOutlined"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -150,7 +150,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/activate_theme_button"
-                style="@style/Widget.ModalLayoutPicker.Button.Primary.accent"
+                style="@style/ThemeBottomSheetButtonFilled"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
