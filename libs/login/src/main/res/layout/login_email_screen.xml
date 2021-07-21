@@ -77,34 +77,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <FrameLayout
+        <include
             android:id="@+id/orLayout"
+            layout="@layout/login_or_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small_medium"
             app:layout_constraintTop_toBottomOf="@+id/spacer"
             app:layout_constraintBottom_toTopOf="@+id/continue_with_google"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="1.0">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="center_vertical"
-                android:alpha="0.12"
-                android:background="?attr/colorOnSurface" />
-
-            <TextView
-                style="@style/Widget.LoginFlow.TextView.DividerText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingStart="@dimen/margin_small"
-                android:paddingEnd="@dimen/margin_small"
-                android:text="@string/login_or" />
-
-        </FrameLayout>
+            app:layout_constraintVertical_bias="1.0" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/continue_with_google"
