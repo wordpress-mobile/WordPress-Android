@@ -19,6 +19,7 @@ const val MAP_KEY_ELEMENT_COLORS: String = "colors"
 const val MAP_KEY_ELEMENT_GRADIENTS: String = "gradients"
 const val MAP_KEY_ELEMENT_STYLES: String = "rawStyles"
 const val MAP_KEY_ELEMENT_FEATURES: String = "rawFeatures"
+const val MAP_KEY_IS_FSETHEME: String = "isFSETheme"
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
@@ -30,7 +31,8 @@ data class EditorTheme(
                     blockEditorSettings.colors,
                     blockEditorSettings.gradients,
                     blockEditorSettings.styles.toString(),
-                    blockEditorSettings.features.toString()
+                    blockEditorSettings.features.toString(),
+                    blockEditorSettings.isFSETheme
             ),
             stylesheet = null,
             version = null
@@ -72,7 +74,8 @@ data class EditorThemeSupport(
     @SerializedName("editor-gradient-presets")
     val gradients: List<EditorThemeElement>?,
     val rawStyles: String?,
-    val rawFeatures: String?
+    val rawFeatures: String?,
+    val isFSETheme: Boolean
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
@@ -92,6 +95,8 @@ data class EditorThemeSupport(
         rawFeatures?.let {
             bundle.putString(MAP_KEY_ELEMENT_FEATURES, it)
         }
+
+        bundle.putBoolean(MAP_KEY_IS_FSETHEME, isFSETheme)
 
         return bundle
     }
