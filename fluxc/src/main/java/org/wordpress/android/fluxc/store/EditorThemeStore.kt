@@ -37,7 +37,7 @@ class EditorThemeStore
 ) : Store(dispatcher) {
     private val editorThemeSqlUtils = EditorThemeSqlUtils()
 
-    class FetchEditorThemePayload @JvmOverloads constructor(val site: SiteModel, val gssEnabled: Boolean = false) :
+    class FetchEditorThemePayload @JvmOverloads constructor(val site: SiteModel) :
             Payload<BaseNetworkError>()
 
     data class OnEditorThemeChanged(
@@ -74,7 +74,7 @@ class EditorThemeStore
                         EditorThemeStore::class.java.simpleName + ": On FETCH_EDITOR_THEME"
                 ) {
                     val payload = action.payload as FetchEditorThemePayload
-                    if (editorSettingsAvailable(payload.site, payload.gssEnabled)) {
+                    if (payload.site.hasRequiredWordPressVersion(EDITOR_SETTINGS_WP_VERSION)) {
                         fetchEditorSettings(payload.site, actionType)
                     } else {
                         fetchEditorTheme(payload.site, actionType)
@@ -179,9 +179,6 @@ class EditorThemeStore
         val onChanged = OnEditorThemeChanged(EditorThemeError(error.message), action, endpoint)
         emitChange(onChanged)
     }
-
-    private fun editorSettingsAvailable(site: SiteModel, gssEnabled: Boolean) =
-            gssEnabled && site.hasRequiredWordPressVersion(EDITOR_SETTINGS_WP_VERSION)
 
     /**
      * Checks if the [SiteModel.getSoftwareVersion] is higher or equal to the [requiredVersion]
