@@ -157,6 +157,7 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.OnboardingImprovementsFeatureConfig
 import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
@@ -214,6 +215,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
     @Inject lateinit var unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig
+    @Inject lateinit var onboardingImprovementsFeatureConfig: OnboardingImprovementsFeatureConfig
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -1316,6 +1318,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     override fun onNeutralClicked(instanceTag: String) {
+        if (onboardingImprovementsFeatureConfig.isEnabled()) return
+
         if (TAG_QUICK_START_DIALOG == instanceTag) {
             AppPrefs.setQuickStartDisabled(true)
             AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED)
