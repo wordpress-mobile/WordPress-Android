@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
@@ -127,7 +129,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void setupBottomButton(Button button) {
         button.setOnClickListener(v -> {
-            mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+            if (mOnboardingImprovementsFeatureConfig.isEnabled() && !mBuildConfigWrapper.isJetpackApp()) {
+                AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED);
+                mUnifiedLoginTracker.trackClick(Click.CREATE_NEW_SITE);
+            } else {
+                mUnifiedLoginTracker.trackClick(Click.CONTINUE);
+            }
             if (mLoginEpilogueListener != null) {
                 mLoginEpilogueListener.onContinue();
             }
