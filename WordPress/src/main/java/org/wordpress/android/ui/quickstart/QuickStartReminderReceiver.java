@@ -50,10 +50,14 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .getSerializable(QuickStartTaskDetails.KEY);
 
         // Failsafes
-        if (quickStartTaskDetails == null || siteLocalId == -1 || AppPrefs.isQuickStartDisabled()
-            || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
-            || mQuickStartStore.getQuickStartCompleted(siteLocalId)
-            || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())) {
+        if (
+                quickStartTaskDetails == null
+                || siteLocalId == -1
+                || AppPrefs.isQuickStartDisabled()
+                || !mQuickStartStore.hasDoneTask(siteLocalId, QuickStartTask.CREATE_SITE)
+                || mQuickStartStore.getQuickStartCompleted(siteLocalId)
+                || mQuickStartStore.hasDoneTask(siteLocalId, quickStartTaskDetails.getTask())
+        ) {
             return;
         }
 
