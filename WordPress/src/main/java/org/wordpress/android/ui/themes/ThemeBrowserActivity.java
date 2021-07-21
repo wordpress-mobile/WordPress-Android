@@ -188,13 +188,15 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ThemesViewModel.class);
-        mViewModel.setSite(mSite);
 
-        mViewModel.getShowBottomSheet().observe(this, event -> event.applyIfNotHandled(theme -> {
-            ThemeActivationBottomSheetFragment bottomSheet = new ThemeActivationBottomSheetFragment();
-            bottomSheet.show(getSupportFragmentManager(), ThemeActivationBottomSheetFragment.TAG);
-            return null;
-        }));
+        mViewModel.getShowBottomSheet().observe(this, shouldShow -> {
+            if (shouldShow) {
+                ThemeActivationBottomSheetFragment bottomSheet = new ThemeActivationBottomSheetFragment();
+                bottomSheet.show(getSupportFragmentManager(), ThemeActivationBottomSheetFragment.TAG);
+            }
+        });
+
+        mViewModel.start(mSite);
     }
 
     @SuppressWarnings("unused")

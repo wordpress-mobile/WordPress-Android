@@ -44,6 +44,7 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
 
         with(ThemeActivationBottomSheetBinding.bind(view)) {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ThemesViewModel::class.java)
+
             viewModel.themeToActivate.observe(this@ThemeActivationBottomSheetFragment) {
                 themeNameTv.text = it.name
                 infoTv.text = requireActivity().getString(R.string.theme_bottom_sheet_info, it.name)
@@ -51,28 +52,30 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
                         requireActivity().getString(R.string.theme_bottom_sheet_use_theme_layout_main_text, it.name)
             }
 
-            closeButton.setOnClickListener { dismiss() }
-
-            useThemeLayoutLl.setOnClickListener {
-                toggleSelection(useThemeCheckIv, keepCurrentCheckIv)
-                viewModel.bottomSheetSelection = USE_THEME_HOMEPAGE
+            viewModel.bottomSheetSelection.observe(this@ThemeActivationBottomSheetFragment) { event ->
+                event.applyIfNotHandled {
+                    when (this) {
+                        USE_THEME_HOMEPAGE -> toggleSelection(useThemeCheckIv, keepCurrentCheckIv)
+                        KEEP_CURRENT_HOMEPAGE -> toggleSelection(keepCurrentCheckIv, useThemeCheckIv)
+                    }
+                }
             }
 
-            keepCurrentLayoutLl.setOnClickListener {
-                toggleSelection(keepCurrentCheckIv, useThemeCheckIv)
-                viewModel.bottomSheetSelection = KEEP_CURRENT_HOMEPAGE
+            viewModel.showBottomSheet.observe(this@ThemeActivationBottomSheetFragment) {
+                if (!it) dismiss()
             }
 
-            previewThemeButton.setOnClickListener { /*TODO*/ }
-            activateThemeButton.setOnClickListener { /*TODO*/ }
+            closeButton.setOnClickListener { viewModel.onDismissButtonClicked() }
+            useThemeLayoutLl.setOnClickListener { viewModel.onUseThemeHomepageSelected() }
+            keepCurrentLayoutLl.setOnClickListener { viewModel.onKeepCurrentHomepageSelected() }
+            previewThemeButton.setOnClickListener { viewModel.onPreviewButtonClicked() }
+            activateThemeButton.setOnClickListener { viewModel.onActivateButtonClicked() }
         }
     }
 
-    private fun toggleSelection(@NonNull viewTapped: View, vararg otherView: View) {
-        if (viewTapped.visibility == INVISIBLE) {
-            viewTapped.visibility = VISIBLE
-            otherView.forEach { it.visibility = INVISIBLE }
-        }
+    private fun toggleSelection(@NonNull viewTapped: View, vararg otherViews: View) {
+        viewTapped.visibility = VISIBLE
+        otherViews.forEach { it.visibility = INVISIBLE }
     }
 
     override fun onAttach(context: Context) {

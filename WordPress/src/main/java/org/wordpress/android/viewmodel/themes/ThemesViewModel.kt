@@ -12,6 +12,7 @@ import org.wordpress.android.util.AppLog.T.THEMES
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.themes.ThemesViewModel.Selection.KEEP_CURRENT_HOMEPAGE
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.Selection.USE_THEME_HOMEPAGE
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,14 +25,21 @@ class ThemesViewModel @Inject constructor(
         KEEP_CURRENT_HOMEPAGE
     }
 
-    var bottomSheetSelection = KEEP_CURRENT_HOMEPAGE
-    var site = SiteModel()
+    private lateinit var site: SiteModel
 
-    private var _showBottomSheet = MutableLiveData<Event<Boolean>>()
-    val showBottomSheet: LiveData<Event<Boolean>> = _showBottomSheet
+    private var _bottomSheetSelection = MutableLiveData<Event<Selection>>()
+    val bottomSheetSelection: LiveData<Event<Selection>> = _bottomSheetSelection
+
+    private var _showBottomSheet = MutableLiveData<Boolean>()
+    val showBottomSheet: LiveData<Boolean> = _showBottomSheet
 
     private var _themeToActivate = MutableLiveData<ThemeModel>()
     val themeToActivate: LiveData<ThemeModel> = _themeToActivate
+
+    fun start(site: SiteModel) {
+        this.site = site
+        _bottomSheetSelection.value = Event(KEEP_CURRENT_HOMEPAGE)
+    }
 
     fun onActivateMenuItemClicked(themeId: String) {
         if (!site.isUsingWpComRestApi) {
@@ -45,8 +53,16 @@ class ThemesViewModel @Inject constructor(
             return
         }
 
-        _showBottomSheet.value = Event(true)
+        _showBottomSheet.value = true
         _themeToActivate.value = theme
+    }
+
+    fun onUseThemeHomepageSelected() {
+        _bottomSheetSelection.value = Event(USE_THEME_HOMEPAGE)
+    }
+
+    fun onKeepCurrentHomepageSelected() {
+        _bottomSheetSelection.value = Event(KEEP_CURRENT_HOMEPAGE)
     }
 
     fun onPreviewButtonClicked() {
@@ -55,5 +71,9 @@ class ThemesViewModel @Inject constructor(
 
     fun onActivateButtonClicked() {
         // todo
+    }
+
+    fun onDismissButtonClicked() {
+        _showBottomSheet.value = false
     }
 }
