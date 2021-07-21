@@ -103,5 +103,6 @@
     <color name="theme_action_sheet_button_layout_bg">#141414</color>
     <color name="theme_action_sheet_preview_button">@color/gray_5</color>
     <color name="theme_action_sheet_tick_color">@color/blue_10</color>
+    <color name="theme_action_sheet_separator">@color/white_translucent_20</color>
 
 </resources>

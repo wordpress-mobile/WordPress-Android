@@ -46,17 +46,17 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ThemesViewModel::class.java)
 
             viewModel.themeToActivate.observe(this@ThemeActivationBottomSheetFragment) {
-                themeNameTv.text = it.name
-                infoTv.text = requireActivity().getString(R.string.theme_bottom_sheet_info, it.name)
-                useThemeLayoutMainTextTv.text =
+                themeName.text = it.name
+                sheetInfo.text = requireActivity().getString(R.string.theme_bottom_sheet_info, it.name)
+                useThemeOptionMainText.text =
                         requireActivity().getString(R.string.theme_bottom_sheet_use_theme_layout_main_text, it.name)
             }
 
             viewModel.bottomSheetSelection.observe(this@ThemeActivationBottomSheetFragment) { event ->
                 event.applyIfNotHandled {
                     when (this) {
-                        USE_THEME_HOMEPAGE -> toggleSelection(useThemeCheckIv, keepCurrentCheckIv)
-                        KEEP_CURRENT_HOMEPAGE -> toggleSelection(keepCurrentCheckIv, useThemeCheckIv)
+                        USE_THEME_HOMEPAGE -> toggleSelection(useThemeCheck, keepCurrentCheck)
+                        KEEP_CURRENT_HOMEPAGE -> toggleSelection(keepCurrentCheck, useThemeCheck)
                     }
                 }
             }
@@ -66,8 +66,8 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             closeButton.setOnClickListener { viewModel.onDismissButtonClicked() }
-            useThemeLayoutLl.setOnClickListener { viewModel.onUseThemeHomepageSelected() }
-            keepCurrentLayoutLl.setOnClickListener { viewModel.onKeepCurrentHomepageSelected() }
+            useThemeOptionLayout.setOnClickListener { viewModel.onUseThemeHomepageSelected() }
+            keepCurrentOptionLayout.setOnClickListener { viewModel.onKeepCurrentHomepageSelected() }
             previewThemeButton.setOnClickListener { viewModel.onPreviewButtonClicked() }
             activateThemeButton.setOnClickListener { viewModel.onActivateButtonClicked() }
         }
