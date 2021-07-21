@@ -115,7 +115,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -278,9 +277,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 siteInfoContainer.title.isClickable = SiteUtils.isAccessedViaWPComRest(site)
             }
             updateQuickStartContainer()
-            if (isQuickStartInProgress(quickStartStore)) {
-                showQuickStartDialogMigration()
-            }
             showQuickStartNoticeIfNecessary()
         }
     }
@@ -1338,7 +1334,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             TAG_CHANGE_SITE_ICON_DIALOG,
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG,
             TAG_QUICK_START_DIALOG,
-            TAG_QUICK_START_MIGRATION_DIALOG,
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
             }
             else -> {
@@ -1529,22 +1524,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         (requireActivity() as WPMainActivity).showQuickStartSnackBar(promptSnackbar)
     }
 
-    private fun showQuickStartDialogMigration() {
-        val promoDialog = QuickStartPromptDialogFragment()
-        promoDialog.initialize(
-                TAG_QUICK_START_MIGRATION_DIALOG,
-                getString(R.string.quick_start_dialog_migration_title),
-                getString(R.string.quick_start_dialog_migration_message),
-                getString(android.R.string.ok),
-                R.drawable.img_illustration_checkmark_280dp,
-                "",
-                ""
-        )
-        if (fragmentManager != null) {
-            promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
-        }
-    }
-
     private fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
         selectedSiteRepository.updateSiteIconMediaId(mediaId, showProgressBar)
     }
@@ -1560,7 +1539,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        const val TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG"
         const val AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000
         const val KEY_IS_DOMAIN_CREDIT_AVAILABLE = "KEY_IS_DOMAIN_CREDIT_AVAILABLE"
         const val KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED"
