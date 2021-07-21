@@ -52,8 +52,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_MIGRATION_DIALOG_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED
@@ -1259,7 +1257,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 startQuickStart()
                 AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
             }
-            TAG_QUICK_START_MIGRATION_DIALOG -> AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED)
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
                 AnalyticsTracker.track(QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
                 skipQuickStart()
@@ -1545,7 +1542,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
         if (fragmentManager != null) {
             promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
-            AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_VIEWED)
         }
     }
 
