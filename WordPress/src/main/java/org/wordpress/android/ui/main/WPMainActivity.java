@@ -1191,7 +1191,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void showQuickStartDialog() {
         if (
-                AppPrefs.isQuickStartDisabled()
+                (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
                 || getSelectedSite() == null
                 || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())
         ) {
