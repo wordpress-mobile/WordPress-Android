@@ -86,6 +86,11 @@ class EditorThemeSqlUtils {
         @Column var version: String? = null
         @Column var rawStyles: String? = null
         @Column var rawFeatures: String? = null
+        @Column var isFSETheme: Boolean = false
+            @JvmName("isFSETheme")
+            get
+            @JvmName("setIsFSETheme")
+            set
 
         override fun setId(id: Int) {
             this.mId = id
@@ -107,7 +112,7 @@ class EditorThemeSqlUtils {
                 gradients = storedGradients.mapNotNull { it.toEditorThemeElement() }
             }
 
-            val editorThemeSupport = EditorThemeSupport(colors, gradients, rawStyles, rawFeatures)
+            val editorThemeSupport = EditorThemeSupport(colors, gradients, rawStyles, rawFeatures, isFSETheme)
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
         }
