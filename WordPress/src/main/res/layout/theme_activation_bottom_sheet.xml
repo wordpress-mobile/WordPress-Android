@@ -25,19 +25,18 @@
         android:tint="@color/theme_action_sheet_close_button_tint" />
 
     <TextView
-        android:id="@+id/theme_name_tv"
+        android:id="@+id/theme_name"
         style="@style/ThemeActionSheetTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/close_button"
-        android:layout_centerHorizontal="true"
-        android:text="Theme Name" />
+        android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:id="@+id/info_tv"
+        android:id="@+id/sheet_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/theme_name_tv"
+        android:layout_below="@id/theme_name"
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_large"
@@ -46,16 +45,16 @@
         android:textSize="@dimen/theme_bottom_sheet_text_size" />
 
     <RelativeLayout
-        android:id="@+id/use_theme_layout_ll"
+        android:id="@+id/use_theme_option_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/info_tv"
+        android:layout_below="@id/sheet_info"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_extra_medium_large">
 
         <ImageView
-            android:id="@+id/use_theme_check_iv"
+            android:id="@+id/use_theme_check"
             android:layout_width="@dimen/theme_bottom_sheet_selector_size"
             android:layout_height="@dimen/theme_bottom_sheet_selector_size"
             android:layout_alignParentEnd="true"
@@ -65,15 +64,15 @@
             android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/use_theme_layout_sub_text_tv"
+            android:id="@+id/use_theme_option_sub_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/use_theme_layout_main_text_tv"
+            android:layout_below="@id/use_theme_option_main_text"
             android:text="@string/theme_bottom_sheet_use_theme_layout_sub_text"
             android:textSize="@dimen/theme_bottom_sheet_text_size_small" />
 
         <TextView
-            android:id="@+id/use_theme_layout_main_text_tv"
+            android:id="@+id/use_theme_option_main_text"
             style="@style/ThemeActionSheetOptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,22 +81,22 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/theme_bottom_sheet_divider_height"
-            android:layout_below="@+id/use_theme_layout_sub_text_tv"
+            android:layout_below="@+id/use_theme_option_sub_text"
             android:layout_marginTop="@dimen/margin_medium"
-            android:background="@color/gray_5" />
+            android:background="@color/theme_action_sheet_separator" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/keep_current_layout_ll"
+        android:id="@+id/keep_current_option_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/use_theme_layout_ll"
+        android:layout_below="@id/use_theme_option_layout"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium">
 
         <ImageView
-            android:id="@+id/keep_current_check_iv"
+            android:id="@+id/keep_current_check"
             android:layout_width="@dimen/theme_bottom_sheet_selector_size"
             android:layout_height="@dimen/theme_bottom_sheet_selector_size"
             android:layout_alignParentEnd="true"
@@ -110,7 +109,7 @@
             style="@style/ThemeActionSheetOptionText"
             android:layout_height="@dimen/theme_bottom_sheet_option_height"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/keep_current_check_iv"
+            android:layout_toStartOf="@id/keep_current_check"
             android:gravity="center_vertical"
             android:text="@string/theme_bottom_sheet_keep_current_layout_main_text" />
     </RelativeLayout>
@@ -118,17 +117,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/theme_bottom_sheet_button_container_height"
-        android:layout_below="@id/keep_current_layout_ll"
+        android:layout_below="@id/keep_current_option_layout"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@color/theme_action_sheet_button_layout_bg">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/theme_bottom_sheet_divider_height"
-            android:background="@color/gray_5" />
+            android:background="@color/theme_action_sheet_separator" />
 
         <LinearLayout
-            android:id="@+id/action_sheet_buttons_ll"
+            android:id="@+id/action_sheet_buttom_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/theme_bottom_sheet_button_height"
             android:layout_marginBottom="@dimen/margin_medium"
@@ -139,12 +138,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/preview_theme_button"
-                style="@style/ThemeBottomSheetButtonOutlined"
+                style="@style/Widget.ModalLayoutPicker.Button.Secondary"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/theme_bottom_sheet_preview_button_label"
-                android:textAllCaps="false" />
+                android:text="@string/theme_bottom_sheet_preview_button_label"/>
 
             <Space
                 android:layout_width="@dimen/margin_extra_large"
@@ -152,7 +150,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/activate_theme_button"
-                style="@style/ThemeBottomSheetButtonFilled"
+                style="@style/Widget.ModalLayoutPicker.Button.Primary.accent"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

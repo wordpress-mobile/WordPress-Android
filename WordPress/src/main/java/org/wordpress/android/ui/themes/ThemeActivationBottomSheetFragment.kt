@@ -35,12 +35,14 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
 
         with(ThemeActivationBottomSheetBinding.bind(view)) {
             closeButton.setOnClickListener { dismiss() }
-            useThemeLayoutLl.setOnClickListener { toggleSelection(useThemeCheckIv, keepCurrentCheckIv) }
-            keepCurrentLayoutLl.setOnClickListener { toggleSelection(keepCurrentCheckIv, useThemeCheckIv) }
+            useThemeOptionLayout.setOnClickListener { toggleSelection(useThemeCheck, keepCurrentCheck) }
+            keepCurrentOptionLayout.setOnClickListener { toggleSelection(keepCurrentCheck, useThemeCheck) }
             previewThemeButton.setOnClickListener { /*TODO*/ }
             activateThemeButton.setOnClickListener { /*TODO*/ }
         }
     }
+
+    override fun getTheme(): Int  = R.style.ThemeActivationBottomSheetStyle
 
     private fun toggleSelection(@NonNull viewTapped: View, vararg otherView: View) {
         if (viewTapped.visibility == INVISIBLE) {

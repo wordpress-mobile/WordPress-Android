@@ -249,6 +249,10 @@
         </item>
     </style>
 
+    <style name="ThemeActivationBottomSheetStyle" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:navigationBarColor">@color/theme_action_sheet_button_layout_bg</item>
+    </style>
+
     <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">
             @style/WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay
@@ -1585,27 +1589,19 @@
 
     <style name="ThemeActionSheetTitle">
         <item name="android:fontFamily">serif</item>
-        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/theme_bottom_sheet_title_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ThemeActionSheetOptionText">
-        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/theme_bottom_sheet_text_size</item>
     </style>
 
-    <style name="ThemeBottomSheetButtonFilled" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.ModalLayoutPicker.Button.Primary.accent" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:backgroundTint">@color/accent</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">@dimen/theme_bottom_sheet_button_corner_radius</item>
-    </style>
-
-    <style name="ThemeBottomSheetButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/theme_action_sheet_preview_button</item>
-        <item name="strokeColor">@color/theme_action_sheet_preview_button</item>
-        <item name="cornerRadius">@dimen/theme_bottom_sheet_button_corner_radius</item>
     </style>
 </resources>

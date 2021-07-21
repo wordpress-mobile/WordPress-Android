@@ -109,6 +109,7 @@
     <color name="theme_action_sheet_button_layout_bg">@color/gray_0</color>
     <color name="theme_action_sheet_preview_button">@color/gray_30</color>
     <color name="theme_action_sheet_tick_color">@color/primary</color>
+    <color name="theme_action_sheet_separator">@color/gray_5</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->
