@@ -36,7 +36,6 @@ class WCProductModelTest {
             assertThat(it.priceType).isEqualTo(FlatFee)
             assertThat(it.restrictionsType).isEqualTo(AnyText)
             assertThat(it.type).isEqualTo(Checkbox)
-
         } ?: fail("Addons list shouldn't be empty")
     }
 
