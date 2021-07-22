@@ -3,8 +3,8 @@ package org.wordpress.android.models.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.merge
 import org.wordpress.android.fluxc.store.comments.CommentsStore
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentParameters
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentParameters
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.OnGetPage
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginateCommentsAction.ReloadFromCache
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
@@ -17,18 +17,20 @@ class UnifiedCommentsListHandler @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val paginateCommentsUseCase: PaginateCommentsUseCase,
-    private val moderateCommentsUseCase: ModerateCommentsUseCase,
-        private val unrepliedCommentsUtils: UnrepliedCommentsUtils
+    private val batchModerateCommentsUseCase: BatchModerateCommentsUseCase,
+    private val unrepliedCommentsUtils: UnrepliedCommentsUtils
 ) {
     private val useCases = listOf(paginateCommentsUseCase)
 
     fun subscribe() = useCases.map { it.subscribe() }.merge()
 
+    fun subscribeToCommentModeraionEvents() = batchModerateCommentsUseCase.subscribe()
+
     suspend fun requestPage(parameters: Parameters) = paginateCommentsUseCase.manageAction(
             OnGetPage(parameters, commentsStore, unrepliedCommentsUtils)
     )
 
-    suspend fun moderateComments(parameters: ModerateCommentParameters) = moderateCommentsUseCase.manageAction(
+    suspend fun moderateComments(parameters: ModerateCommentParameters) = batchModerateCommentsUseCase.manageAction(
             ModerateComment(parameters, commentsStore)
     )
 

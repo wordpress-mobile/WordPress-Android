@@ -1,14 +1,14 @@
 package org.wordpress.android.models.usecases
 
 import kotlinx.coroutines.flow.MutableSharedFlow
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateUseCase.CommentsUpdateState.Idle
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateUseCase.PropagateCommentsUpdateAction
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateUseCase.PropagateCommentsUpdateAction.UpdatedComments
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateUseCase.PropagateCommentsUpdateResult.PropagateCommentsUpdateSuccess
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.CommentsUpdateState.Idle
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.PropagateCommentsUpdateAction
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.PropagateCommentsUpdateAction.UpdatedComments
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateUseCase.PropagateCommentsUpdateResult.PropagateCommentsUpdateSuccess
 import org.wordpress.android.usecase.FlowFSMUseCase
 import javax.inject.Inject
 
-class PropagateCommentsUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, PropagateCommentsUpdateAction, PropagateCommentsUpdateSuccess>(
+class LocalCommentCacheUpdateUseCase @Inject constructor() : FlowFSMUseCase<Any, PropagateCommentsUpdateAction, PropagateCommentsUpdateSuccess>(
         initialState = Idle
 ) {
     override suspend fun runLogic(parameters: Any) {

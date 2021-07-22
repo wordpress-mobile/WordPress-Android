@@ -18,13 +18,14 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentParameters
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentParameters
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationFailure
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationLoading
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.PaginationResult.PaginationSuccess
 import org.wordpress.android.models.usecases.PaginateCommentsUseCase.Parameters
-import org.wordpress.android.models.usecases.PropagateCommentsUpdateHandler
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.models.usecases.UnifiedCommentsListHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -61,28 +62,36 @@ class UnifiedCommentListViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val unifiedCommentsListHandler: UnifiedCommentsListHandler,
-    private val propagateCommentsUpdateHandler: PropagateCommentsUpdateHandler
+    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var commentFilter: CommentFilter
 
-    private val _commentsProvider = unifiedCommentsListHandler.subscribe()
-    private val _commentsUpdateListener = propagateCommentsUpdateHandler.subscribe()
+    private val _commentsUpdateListener = localCommentCacheUpdateHandler.subscribe()
 
     private val _onSnackbarMessage = MutableSharedFlow<SnackbarMessageHolder>()
-    private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
 
     val onSnackbarMessage: SharedFlow<SnackbarMessageHolder> = _onSnackbarMessage
+
+    private val _commentsProvider = unifiedCommentsListHandler.subscribe()
+    private val _selectedComments = MutableStateFlow(emptyList<SelectedComment>())
+    private val _batchModerationState = unifiedCommentsListHandler.subscribeToCommentModeraionEvents()
+
+    val _batchModerationUiState = MutableStateFlow<BatchModerationUiState>(BatchModerationUiState.Idle)
+
+    sealed class BatchModerationUiState {
+        object Idle : BatchModerationUiState()
+        object InProgress : BatchModerationUiState()
+        object Success : BatchModerationUiState()
+        object Failure : BatchModerationUiState()
+    }
 
     val uiState: StateFlow<CommentsUiModel> by lazy {
         combine(
                 _commentsProvider,
-                _selectedComments
-        ) { commentData, selectedIds ->
-//            if (moderationEvents is ModerationSuccess || moderationEvents is ModerationFailure) {
-//                propagateCommentsUpdateHandler.requestCommentsUpdate()
-//            }
-
+                _selectedComments,
+                _batchModerationUiState
+        ) { commentData, selectedIds, batchModerationUiState ->
             CommentsUiModel(
                     buildCommentList(commentData, selectedIds),
                     buildCommentsListUiModel(commentData),
@@ -104,6 +113,25 @@ class UnifiedCommentListViewModel @Inject constructor(
         listToLocalCacheUpdateRequests()
         listenToSnackBarRequests()
         requestsFirstPage()
+
+        launch(bgDispatcher) {
+            _batchModerationState.collectLatest {
+                when (it) {
+                    is BatchModerationState.InProgress -> {
+                        _batchModerationUiState.emit(BatchModerationUiState.InProgress)
+                    }
+                    is BatchModerationState.Failure -> {
+                        _batchModerationUiState.emit(BatchModerationUiState.Failure)
+                    }
+
+                    is BatchModerationState.Success -> {
+                        localCommentCacheUpdateHandler.requestCommentsUpdate()
+                        _selectedComments.emit(emptyList())
+                        _batchModerationUiState.emit(BatchModerationUiState.Idle)
+                    }
+                }
+            }
+        }
     }
 
     private fun requestsFirstPage() {
@@ -127,7 +155,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                                 site = selectedSiteRepository.getSelectedSite()!!,
                                 number = if (commentFilter == UNREPLIED) 100 else 30,
                                 offset = 0,
-                                commentFilter = commentFilter
+                                commentFilter = commentFilter,
                         )
                 )
             }
@@ -184,7 +212,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                     ModerateCommentParameters(
                             selectedSiteRepository.getSelectedSite()!!,
                             _selectedComments.value.map { it.remoteCommentId },
-                            APPROVED
+                            newStatus
                     )
             )
         }
@@ -318,7 +346,7 @@ class UnifiedCommentListViewModel @Inject constructor(
                 }
             }
             is PaginationSuccess -> {
-                if ( commentsDataResult.data.comments.isEmpty()) {
+                if (commentsDataResult.data.comments.isEmpty()) {
                     CommentsListUiModel.Empty(
                             UiStringRes(string.comments_empty_list),
                             R.drawable.img_illustration_empty_results_216dp

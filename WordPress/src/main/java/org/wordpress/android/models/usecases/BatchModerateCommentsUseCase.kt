@@ -5,35 +5,35 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.comments.CommentsStore
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentsState.Idle
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerateCommentParameters
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationFailure
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationInProgress
-import org.wordpress.android.models.usecases.ModerateCommentsUseCase.ModerationResult.ModerationSuccess
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsAction.ModerateComment
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentsState.Idle
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.ModerateCommentParameters
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.Failure
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.InProgress
+import org.wordpress.android.models.usecases.BatchModerateCommentsUseCase.BatchModerationState.Success
 import org.wordpress.android.usecase.FlowFSMUseCase
 import javax.inject.Inject
 
-class ModerateCommentsUseCase @Inject constructor(
+class BatchModerateCommentsUseCase @Inject constructor(
     private val commentsStore: CommentsStore
-) : FlowFSMUseCase<ModerateCommentParameters, ModerateCommentsAction, ModerationResult>(initialState = Idle) {
+) : FlowFSMUseCase<ModerateCommentParameters, ModerateCommentsAction, BatchModerationState>(initialState = Idle) {
     override suspend fun runLogic(parameters: ModerateCommentParameters) {
         manageAction(ModerateComment(parameters, commentsStore))
     }
 
-    sealed class ModerateCommentsState : StateInterface<ModerateCommentsAction, ModerationResult> {
+    sealed class ModerateCommentsState : StateInterface<ModerateCommentsAction, BatchModerationState> {
         object Idle : ModerateCommentsState() {
             override suspend fun runAction(
                 action: ModerateCommentsAction,
-                flowChannel: MutableSharedFlow<ModerationResult>
-            ): StateInterface<ModerateCommentsAction, ModerationResult> {
+                flowChannel: MutableSharedFlow<BatchModerationState>
+            ): StateInterface<ModerateCommentsAction, BatchModerationState> {
                 return when (action) {
                     is ModerateComment -> {
                         val parameters = action.moderateCommentParameters
                         val commentsStore = action.commentsStore
-                        flowChannel.emit(ModerationInProgress)
+                        flowChannel.emit(InProgress)
 
                         parameters.remoteCommentIds.forEach {
                             val localModerationResult = commentsStore.moderateCommentLocally(
@@ -43,8 +43,7 @@ class ModerateCommentsUseCase @Inject constructor(
                             )
 
                             if (localModerationResult.isError) {
-                                flowChannel.emit(ModerationFailure(localModerationResult.error))
-                                return Idle
+                                flowChannel.emit(Failure(localModerationResult.error))
                             }
 
                             val result = commentsStore.pushComment(
@@ -53,11 +52,10 @@ class ModerateCommentsUseCase @Inject constructor(
                             )
 
                             if (result.isError) {
-                                flowChannel.emit(ModerationFailure(result.error))
-                                return Idle
+//                                flowChannel.emit(Failure(result.error))
                             }
                         }
-                        flowChannel.emit(ModerationSuccess)
+                        flowChannel.emit(Success)
                         Idle
                     }
                 }
@@ -65,11 +63,10 @@ class ModerateCommentsUseCase @Inject constructor(
         }
     }
 
-    sealed class ModerationResult {
-        object ModerationInProgress : ModerationResult()
-        data class ModerationFailure(val error: CommentError) : ModerationResult()
-        object ModerationSuccess : ModerationResult()
-        object Idle : ModerationResult()
+    sealed class BatchModerationState {
+        object InProgress : BatchModerationState()
+        data class Failure(val error: CommentError) : BatchModerationState()
+        object Success : BatchModerationState()
     }
 
     sealed class ModerateCommentsAction {

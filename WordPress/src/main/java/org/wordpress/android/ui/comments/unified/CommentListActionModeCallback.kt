@@ -13,6 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.DELETED
+import org.wordpress.android.fluxc.model.CommentStatus.SPAM
+import org.wordpress.android.fluxc.model.CommentStatus.TRASH
+import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.UNSPAM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -56,7 +61,6 @@ class CommentListActionModeCallback(
                         setItemEnabled(trashItem, uiModel.trashActionUiModel)
                         setItemEnabled(untrashItem, uiModel.unTrashActionUiModel)
                         setItemEnabled(deleteItem, uiModel.deleteActionUiModel)
-
 
 //                        val editItemUiModel = uiModel.editActionUiModel
 
@@ -115,10 +119,31 @@ class CommentListActionModeCallback(
                 viewModel.performBatchModeration(APPROVED)
                 true
             }
-//            R.id.mnu_edit_item -> {
-//                viewModel.performEditAction()
-//                true
-//            }
+            R.id.menu_unapprove -> {
+                viewModel.performBatchModeration(UNAPPROVED)
+                true
+            }
+            R.id.menu_spam -> {
+                viewModel.performBatchModeration(SPAM)
+                true
+            }
+            R.id.menu_unspam -> {
+                viewModel.performBatchModeration(APPROVED)
+                true
+            }
+            R.id.menu_trash -> {
+                viewModel.performBatchModeration(TRASH)
+                true
+            }
+            R.id.menu_untrash -> {
+                viewModel.performBatchModeration(APPROVED)
+                true
+            }
+            R.id.menu_delete -> {
+                viewModel.performBatchModeration(DELETED)
+                true
+            }
+
             else -> false
         }
     }
