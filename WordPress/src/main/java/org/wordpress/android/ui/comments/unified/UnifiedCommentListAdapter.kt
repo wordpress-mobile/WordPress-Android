@@ -3,9 +3,7 @@ package org.wordpress.android.ui.comments.unified
 import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.CommentListItemType.COMMENT
@@ -20,7 +18,9 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(diffCallback) {
+class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentListItem, UnifiedCommentListViewHolder<*>>(
+        diffCallback
+) {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var commentListUiUtils: CommentListUiUtils
@@ -52,8 +52,14 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
     override fun onBindViewHolder(holder: UnifiedCommentListViewHolder<*>, position: Int, payloads: MutableList<Any>) {
         if (payloads.isNotEmpty() && (payloads.first() as? Bundle)?.size() ?: 0 > 0) {
             val bundle = payloads.first() as Bundle
-            val isSelected = bundle.getBoolean(UnifiedCommentsListDiffCallback.COMMENT_SELECTION_TOGGLED)
-            (holder as UnifiedCommentViewHolder).toggleSelected(isSelected)
+            if (bundle.containsKey(UnifiedCommentsListDiffCallback.COMMENT_SELECTION_TOGGLED)) {
+                val isSelected = bundle.getBoolean(UnifiedCommentsListDiffCallback.COMMENT_SELECTION_TOGGLED)
+                (holder as UnifiedCommentViewHolder).toggleSelected(isSelected)
+            }
+
+            if (bundle.containsKey(UnifiedCommentsListDiffCallback.COMMENT_PENDING_STATE_CHANGED)) {
+                (holder as UnifiedCommentViewHolder).updateStateAndListeners(getItem(position) as Comment)
+            }
         } else {
             onBindViewHolder(holder, position)
         }
@@ -64,8 +70,7 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
             holder.bind((getItem(position) as SubHeader))
         } else if (holder is UnifiedCommentViewHolder) {
             holder.bind(getItem(position) as Comment)
-        }
-        else if (holder is LoadStateViewHolder) {
+        } else if (holder is LoadStateViewHolder) {
             holder.bind(getItem(position) as NextPageLoader)
         }
     }
