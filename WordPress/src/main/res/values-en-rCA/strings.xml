@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-14 21:17:48+0000
+Translation-Revision-Date: 2021-07-13 06:25:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Invalid URL. Please enter a valid URL.</string>
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
+    <string name="gutenberg_native_embed_caption_s">Embed caption. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Embed caption. Empty</string>
+    <string name="gutenberg_native_add_link_0fcaed3b">ADD LINK</string>
+    <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
+    <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+    <string name="blogging_reminders_tip">Tip</string>
+    <string name="blogging_reminders_select_days_message">You can update this anytime</string>
+    <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
+    <string name="blogging_reminders_epilogue_title">All set!</string>
+    <string name="blogging_reminders_update">Update</string>
+    <string name="blogging_reminders_not_set">None set</string>
+    <string name="blogging_reminders_n_a_week">%s a week</string>
+    <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
+    <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
-    <string name="blogging_goals_not_set">None set</string>
-    <string name="blogging_goals_n_times_a_week">%d times a week</string>
-    <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
-    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one click site restores from backups.</string>
     <string name="gutenberg_native_set_as_featured_image">Set as featured image</string>
     <string name="gutenberg_native_remove_as_featured_image">Remove as featured image </string>
@@ -23,7 +47,7 @@ Language: en_CA
     <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
     <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_title">Categories</string>
-    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
+    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
     <string name="gutenberg_native_border_settings">Border Settings</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
@@ -60,7 +84,7 @@ Language: en_CA
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threats.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threat.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Double tap to add a link.</string>
-    <string name="gutenberg_native_add_link">ADD LINK</string>
+    <string name="gutenberg_native_edit_link">EDIT LINK</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
@@ -80,6 +104,7 @@ Language: en_CA
     <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
     <string name="gutenberg_native_post_content_settings">Post content settings</string>
     <string name="gutenberg_native_featured">Featured</string>
+    <string name="gutenberg_native_embed_link">Embed link</string>
     <string name="gutenberg_native_display_post_date">Display post date</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
@@ -99,9 +124,7 @@ Language: en_CA
     <string name="gutenberg_native_use_icon_button">Use icon button</string>
     <string name="gutenberg_native_search_input_field">Search input field.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Search button. Current button text is</string>
-    <string name="gutenberg_native_search_blocks">Search blocks</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Search block label. Current text is</string>
-    <string name="gutenberg_native_search_block">Search block</string>
     <string name="gutenberg_native_outside">Outside</string>
     <string name="gutenberg_native_no_custom_placeholder_set">No custom placeholder set</string>
     <string name="gutenberg_native_no_button">No button</string>
@@ -123,6 +146,7 @@ Language: en_CA
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comment_status_unreplied">Unreplied</string>
+    <string name="gutenberg_native_add_link">Add link</string>
     <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
@@ -193,8 +217,6 @@ Language: en_CA
     <string name="backup_item_roots">WordPress root</string>
     <string name="backup_download_details_choose_items_header">Items included in this download</string>
     <string name="gutenberg_native_uploading">Uploading…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Reusable blocks aren\'t editable on WordPress for iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Reusable blocks aren\'t editable on WordPress for Android</string>
     <string name="gutenberg_native_replace_file">Replace file</string>
     <string name="gutenberg_native_replace_audio">Replace audio</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem opening the audio</string>
@@ -2855,4 +2877,13 @@ Language: en_CA
     <string name="add">Add</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string-array name="blogging_reminders_count">
+        <item>Once</item>
+        <item>Twice</item>
+        <item>Three times</item>
+        <item>Four times</item>
+        <item>Five times</item>
+        <item>Six times</item>
+        <item>Seven times</item>
+    </string-array>
 </resources>

@@ -18,8 +18,6 @@ Language: nb_NO
     <string name="like_title_plural">%d likinger</string>
     <string name="like_title_singular">1 liking</string>
     <string name="suggestion">Forslag:</string>
-    <string name="gutenberg_native_search_blocks">Søk blokker</string>
-    <string name="gutenberg_native_search_block">Søk blokk</string>
     <string name="gutenberg_native_clear_search">Rensk søk</string>
     <string name="gutenberg_native_cancel_search">Avbryt søk</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s er %3$s %4$s.</string>

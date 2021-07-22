@@ -430,7 +430,7 @@
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
-    <string name="comment_tracker_label_all">All</string>
+    <string name="comment_tracker_label_all" translatable="false">All</string>
     <string name="comment_tracker_label_pending" translatable="false">Pending</string>
     <string name="comment_tracker_label_unreplied" translatable="false">Unreplied</string>
     <string name="comment_tracker_label_approved" translatable="false">Approved</string>
@@ -606,7 +606,7 @@
     <string name="site_settings_time_format_title">Time Format</string>
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
-    <string name="site_settings_blogging_reminders_title">Blogging goals</string>
+    <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -1067,6 +1067,8 @@
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
     <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
+    <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
+    <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
 
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
@@ -2699,6 +2701,9 @@
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
+    <string name="login_epilogue_mysites_heading">Choose a site to open</string>
+    <string name="login_epilogue_mysites_subheading">You can switch sites any time.</string>
+    <string name="login_epilogue_create_new_site_button">Create a new site</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
@@ -2864,6 +2869,20 @@
     <string name="fab_add_category_desc">Create Category</string>
 
     <string name="content_description_more">More</string>
+
+    <!-- Quick Start Promo Dialog (Old) -->
+    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
+    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
+    <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
+
+    <!-- Quick Start Promo Dialog (New) -->
+    <string name="quick_start_dialog_need_help_manage_site_title">Want a little help managing this site with the app?</string>
+    <string name="quick_start_dialog_need_help_manage_site_message">We\'ll walk you through the basics of managing your site with the app.</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
+
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
@@ -2885,14 +2904,7 @@
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
-    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-    <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
+    <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
@@ -2902,7 +2914,7 @@
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
+    <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
@@ -2919,17 +2931,17 @@
     <string name="quick_start_list_check_stats_title">Check your stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_list_update_site_title_title">Check your site title</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
-    <string name="quick_start_list_enable_sharing_title">Enable sharing</string>
+    <string name="quick_start_list_enable_sharing_title">Social sharing</string>
     <string name="quick_start_list_explore_plans_subtitle" translatable="false">@string/quick_start_dialog_explore_plans_message</string>
     <string name="quick_start_list_explore_plans_title" translatable="false">@string/quick_start_dialog_explore_plans_title</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
     <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
     <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
     <string name="quick_start_list_view_site_title">Visit your site</string>
@@ -3246,7 +3258,8 @@
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_image_or_video_b7b3d22b" tools:ignore="UnusedResources">Add image or video</string>
-    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">ADD LINK</string>
+    <string name="gutenberg_native_add_link" tools:ignore="UnusedResources">Add link</string>
+    <string name="gutenberg_native_add_link_0fcaed3b" tools:ignore="UnusedResources">ADD LINK</string>
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources">Add link to %s</string>
@@ -3259,6 +3272,7 @@
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by" tools:ignore="UnusedResources">Alternatively, you can detach and edit these blocks separately by tapping \"Convert to regular blocks\".</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <!-- translators: accessibility text. Empty Audio caption. -->
     <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Audio caption. Empty</string>
@@ -3349,9 +3363,19 @@
     <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources">Edit cover media</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
     <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edit focal point</string>
+    <string name="gutenberg_native_edit_link" tools:ignore="UnusedResources">EDIT LINK</string>
     <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">Editing reusable blocks is not yet supported on WordPress for iOS</string>
+    <!-- translators: accessibility text. Empty Embed caption. -->
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources">Embed caption. Empty</string>
+    <!-- translators: accessibility text. %s: Embed caption. -->
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources">Embed caption. %s</string>
+    <string name="gutenberg_native_embed_link" tools:ignore="UnusedResources">Embed link</string>
+    <!-- translators: %s: host providing embed content e.g: www.youtube.com -->
+    <string name="gutenberg_native_embedded_content_from_s_can_t_be_viewed_in_the_mobile_editor_at_t" tools:ignore="UnusedResources">Embedded content from %s can\'t be viewed in the mobile editor at the moment. Please preview the page to see the embedded content.</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
@@ -3378,6 +3402,7 @@
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
     <string name="gutenberg_native_inside" tools:ignore="UnusedResources">Inside</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources">Invalid URL. Audio file not found.</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources">Invalid URL. Please enter a valid URL.</string>
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
@@ -3441,8 +3466,6 @@
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for Android</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>
     <!-- translators: %s: Block name e.g. "Image block" -->
     <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
@@ -3463,9 +3486,7 @@
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
-    <string name="gutenberg_native_search_block" tools:ignore="UnusedResources">Search block</string>
     <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources">Search block label. Current text is</string>
-    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources">Search blocks</string>
     <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources">Search button. Current button text is</string>
     <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources">Search input field.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
@@ -3638,12 +3659,15 @@
     <string name="storage_utils_dialog_ok_button">View Storage</string>
     <string name="storage_utils_dialog_dont_show_button">Don\'t Show Again</string>
 
-    <!-- Blogging reminders -->
-    <string name="set_your_blogging_goals_title">Set your blogging goals</string>
-    <string name="set_your_blogging_goals_message">Your post is publishing… in the meantime, set up your blogging goals to get reminders, and track your progress.</string>
-    <string name="set_your_blogging_goals_button">Set goals</string>
-    <string name="blogging_goals_n_a_week">%s a week</string>
-    <string-array name="blogging_goals_count">
+    <!-- Blogging Reminders -->
+    <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
+    <string name="blogging_reminders_notification_text">This is your reminder to create something today</string>
+    <string name="set_your_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Your post is publishing… in the meantime, you can set up blogging reminders on days you want to post.</string>
+    <string name="set_up_blogging_reminders_message">Set up blogging reminders on days you want to post.</string>
+    <string name="set_your_blogging_reminders_button">Set reminders</string>
+    <string name="blogging_reminders_n_a_week">%s a week</string>
+    <string-array name="blogging_reminders_count">
         <item>Once</item>
         <item>Twice</item>
         <item>Three times</item>
@@ -3652,17 +3676,24 @@
         <item>Six times</item>
         <item>Seven times</item>
     </string-array>
-    <string name="blogging_goals_not_set">None set</string>
+    <string name="blogging_reminders_not_set">None set</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="blogging_reminders_update">Update</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_epilogue_title">All set!</string>
-    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s on %2$s.</string>
-    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog everyday.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Reminders removed!</string>
+    <string name="blogging_reminders_epilogue_body_days">You\'ll get reminders to blog %1$s a week on %2$s.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">You\'ll get reminders to blog &lt;b&gt;everyday&lt;/b&gt;.</string>
     <string name="blogging_reminders_epilogue_body_no_reminders">You have no reminders set.</string>
-    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site > Settings > Blogging goals.</string>
+    <string name="blogging_reminders_epilogue_caption">You can update this anytime via My Site &gt; Settings &gt; Blogging reminders.</string>
     <string name="blogging_reminders_select_days">Select the days you want to blog on</string>
     <string name="blogging_reminders_select_days_message">You can update this anytime</string>
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
+
+    <!-- Stats module disabled error view -->
+    <string name="stats_disabled_title">Looking for stats?</string>
+    <string name="stats_disabled_subtitle">Enable site stats to see detailed information about your traffic, likes, comments, and subscribers.</string>
+    <string name="stats_disabled_enable_stats_button">Enable site stats</string>
+    <string name="stats_disabled_enable_stats_error_message">Unable to activate site stats</string>
 </resources>

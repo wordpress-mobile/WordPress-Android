@@ -26,6 +26,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
@@ -195,14 +196,14 @@ class EngagedPeopleListViewModel @Inject constructor(
                         updateLikesState.likes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true, updateLikesState.pageInfo)
             }
             is Failure -> {
                 engagementUtils.likesToEngagedPeople(
                         updateLikesState.cachedLikes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false, updateLikesState.pageInfo)
             }
             Loading, null -> listOf()
         }
@@ -230,10 +231,20 @@ class EngagedPeopleListViewModel @Inject constructor(
         )
     }
 
-    private fun appendNextPageLoaderIfNeeded(hasMore: Boolean, isLoading: Boolean): List<EngageItem> {
+    private fun appendNextPageLoaderIfNeeded(
+        hasMore: Boolean,
+        isLoading: Boolean,
+        pageInfo: PagingInfo
+    ): List<EngageItem> {
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
+                    analyticsUtilsWrapper.trackLikeListFetchedMore(
+                            EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                            ListScenarioType.getSourceDescription(listScenario?.type),
+                            pageInfo.page + 1,
+                            pageInfo.pageLength
+                    )
             })
         } else {
             listOf()

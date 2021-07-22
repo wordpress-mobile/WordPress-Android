@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DimenRes
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 
 fun View.setVisible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
@@ -77,4 +79,8 @@ fun View.focusAndShowKeyboard() {
                     }
                 })
     }
+}
+
+fun RecyclerView.disableAnimation() {
+    (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 }

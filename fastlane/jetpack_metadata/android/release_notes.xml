@@ -1,0 +1,67 @@
+<en-US>
+Block editor: New block layout grid, Badge style tweaks, Fixed new block not created when pressing enter inside text-based block, Tablet view fixes for inserter button
+</en-US>
+<ar>
+17.7:
+محرِّر المكوِّن: شبكة تخطيط المكوِّن الجديد، وتعديلات على نمط الشارة، وتم إصلاح عدم إنشاء مكوِّن جديد عند الضغط على مفتاح enter داخل مكوِّن يستند إلى نص، وإصلاحات على طريقة عرض الجهاز اللوحي لزر أداة الإدراج
+</ar>
+<de-DE>
+17.7:
+- Block-Editor: Neues Block-Layout-Raster, Änderungen am Badge-Stil, Problem behoben, bei dem ein neuer Block beim Drücken der Eingabetaste im textbasierten Block nicht erstellt wird, Fehlerbehebungen bei der Tablet-Ansicht für Einfügetaste
+</de-DE>
+<es-ES>
+17.7:
+Editor de bloques: se ha incorporado una nueva cuadrícula de diseño de bloques, se han introducido cambios en el estilo de las insignias, se ha corregido el hecho de que no se cree un nuevo bloque al pulsar Intro dentro de un bloque de texto y también se ha corregido la vista de tableta para el botón de inserción
+</es-ES>
+<fr-FR>
+17.7 :
+Éditeur de blocs : Nouvelle grille de mise en page de bloc, Modifications du style de badge, Correction d’un nouveau bloc non créé lorsque vous appuyez sur Entrée à l’intérieur d’un bloc textuel, Corrections de la vue tablette pour le bouton de l’outil d’insertion
+</fr-FR>
+<iw-IL>
+17.7:
+עורך הבלוקים: רשת פריסה חדשה לבלוקים, שינויים קטנים בסגנון התגים, תיקון בלוק חדש שאינו נוצר בלחיצה על Enter בבלוק המבוסס על טקסט, תיקונים בתצוגת טאבלט לכפתור ההוספה
+</iw-IL>
+<id>
+17.7:
+Editor Blok: Petak tata letak blok yang baru, Perubahan bergaya lencana, Masalah blok baru tidak dapat dibuat saat menekan Enter di dalam blok berbasis teks sudah diperbaiki, Tampilan tablet untuk tombol penyisip sudah diperbaiki
+</id>
+<it-IT>
+17.7:
+Editor dei blocchi: nuovo blocco Griglia di layout, modifiche allo stile dei Badge, correzione del problema relativo alla mancata creazione di un nuovo blocco quando viene premuto Invio all'interno del blocco basato su testo, correzioni relative alla visualizzazione su tablet per il pulsante di inserimento
+</it-IT>
+<ja-JP>
+17.7:
+ブロックエディター: 新しいブロックレイアウトグリッド、バッジのスタイルの調整、テキストベースのブロック内で Enter キーを押しても新しいブロックが作成されない問題の修正、タブレット表示での挿入ボタンの修正
+</ja-JP>
+<ko-KR>
+17.7:
+블록 편집기: 새 블록 레이아웃 그리드, 배지 스타일 조정, 텍스트 기반 블록 안에서 Enter 키를 누를 때 생성되지 않던 새 블록을 수정했음, 삽입기 버튼의 태블릿 보기 수정
+</ko-KR>
+<nl-NL>
+17.7:
+Blokeditor: Nieuw indelingsraster in blokken, kleine aanpassingen aan de badgestijl, probleem verholpen waarbij een nieuw blok niet wordt aangemaakt wanneer je op enter drukt binnen een blok met tekst, problemen met tabletweergave verholpen wat betreft de invoegknop
+</nl-NL>
+<pt-BR>
+17.7:
+Editor de blocos: nova grade de layout de blocos, ajustes no estilo de selo, correção do bug que obstruía a criação de bloco ao pressionar Enter em um bloco baseado em texto e correções na visualização do botão de inserção em tablets
+</pt-BR>
+<ru-RU>
+17.7:
+Редактор блоков: новая разметка блоков в виде сетки, слегка измененный стиль эмблем, исправлена ошибка, из-за которой новый блок не создавался при нажатии клавиши ВВОД внутри текстового блока, а также исправлена кнопка вставки в режиме разметки для планшетов
+</ru-RU>
+<sv-SE>
+17.7:
+Blockredigerare: nytt Layoutrutnät-block, justeringar av märkesstilar, korrigering av att det inte skapades något nytt block när man tryckte på Enter i ett textbaserat block och av infogarknappen i surfplattevy
+</sv-SE>
+<tr-TR>
+17.7:
+Blok düzenleyici: Yeni blok düzeni ızgarası, Rozet stili ince ayarları, Metin tabanlı blok içinde enter tuşuna basıldığında sabit yeni blok oluşturulmaz, Yerleştirici düğmesi için Tablet görünümünde düzeltmeler
+</tr-TR>
+<zh-CN>
+17.7：
+区块编辑器：新增了区块布局网格；调整了徽章样式；修复了在基于文本的区块内按 Enter 时未创建新区块的问题；修复了插入器按钮的平板电脑视图
+</zh-CN>
+<zh-TW>
+17.7：
+區塊編輯器：全新區塊格狀版面、徽章樣式細微調整、修正在文字區塊中按 Enter 鍵不會建立新區塊的問題、插入工具按鈕的平板電腦檢視修正
+</zh-TW>

@@ -13,25 +13,27 @@ class PrologueBuilder
 @Inject constructor() {
     fun buildUiItems(): List<BloggingRemindersItem> {
         return listOf(Illustration(R.drawable.img_illustration_celebration_150dp),
-                Title(UiStringRes(R.string.set_your_blogging_goals_title)),
-                HighEmphasisText(UiStringRes(R.string.set_your_blogging_goals_message))
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.post_publishing_set_up_blogging_reminders_message))
         )
     }
 
     fun buildUiItemsForSettings(): List<BloggingRemindersItem> {
         return listOf(
                 Illustration(R.drawable.img_illustration_celebration_150dp),
-                Title(UiStringRes(R.string.set_your_blogging_goals_title))
+                Title(UiStringRes(R.string.set_your_blogging_reminders_title)),
+                HighEmphasisText(UiStringRes(R.string.set_up_blogging_reminders_message))
         )
     }
 
     fun buildPrimaryButton(
-        onContinue: () -> Unit
+        isFirstTimeFlow: Boolean,
+        onContinue: (Boolean) -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-                UiStringRes(R.string.set_your_blogging_goals_button),
+                UiStringRes(R.string.set_your_blogging_reminders_button),
                 enabled = true,
-                ListItemInteraction.create(onContinue)
+                ListItemInteraction.create(isFirstTimeFlow, onContinue)
         )
     }
 }

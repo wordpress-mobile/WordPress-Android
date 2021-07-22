@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-23 09:54:08+0000
+Translation-Revision-Date: 2021-07-09 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="blogging_reminders_tip_message">Pubblicare articoli regolarmente può contribuire a mantenere l\'attenzione dei lettori e attrarre nuovi visitatori sul tuo sito.</string>
+    <string name="blogging_reminders_tip">Suggerimento</string>
+    <string name="blogging_reminders_select_days_message">Puoi aggiornare questo elemento in qualsiasi momento</string>
+    <string name="blogging_reminders_select_days">Seleziona i giorni in cui vuoi lavorare sul blog</string>
+    <string name="blogging_reminders_epilogue_caption">Puoi aggiornare questa impostazione in qualsiasi momento tramite Il mio sito &gt; Impostazioni &gt; Promemoria blog.</string>
+    <string name="blogging_reminders_epilogue_body_no_reminders">Non ci sono promemoria impostati.</string>
+    <string name="blogging_reminders_epilogue_body_everyday">Riceverai promemoria relativi al blog &lt;b&gt;tutti i giorni&lt;/b&gt;.</string>
+    <string name="blogging_reminders_epilogue_body_days">Riceverai promemoria relativi al blog %1$s alla settimana di %2$s.</string>
+    <string name="blogging_reminders_epilogue_not_set_title">Promemoria eliminati.</string>
+    <string name="blogging_reminders_epilogue_title">Tutto impostato.</string>
+    <string name="blogging_reminders_update">Aggiorna</string>
+    <string name="blogging_reminders_not_set">Nessun set</string>
+    <string name="blogging_reminders_n_a_week">%s alla settimana</string>
+    <string name="set_your_blogging_reminders_button">Imposta promemoria</string>
+    <string name="set_up_blogging_reminders_message">Imposta promemoria relativi al blog per i giorni in cui desideri pubblicare.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Pubblicazione dell\'articolo in corso… Nel frattempo, puoi impostare promemoria relativi al blog per i giorni in cui desideri pubblicare.</string>
+    <string name="set_your_blogging_reminders_title">Imposta i promemoria relativi al blog</string>
+    <string name="blogging_reminders_notification_text">Questo è il tuo promemoria per creare qualcosa oggi</string>
+    <string name="blogging_reminders_notification_title">È ora di pubblicare sul blog di %s</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">La modifica dei blocchi riutilizzabili non è ancora supportata su WordPress per Android</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">In alternativa, puoi staccare e modificare questi blocchi separatamente toccando \"Converti in blocchi regolari\".</string>
     <string name="blogging_reminders_done">Fatto</string>
     <string name="blogging_reminders_notify_me">Inviami una notifica</string>
-    <string name="blogging_goals_not_set">Nessun set</string>
-    <string name="blogging_goals_n_times_a_week">%d volte a settimana</string>
-    <string name="set_your_blogging_goals_button">Imposta gli obiettivi</string>
-    <string name="set_your_blogging_goals_message">Il tuo articolo è in fase di pubblicazione… nel frattempo, imposta i tuoi obiettivi di blogging per ricevere i promemoria e monitorare i tuoi progressi.</string>
-    <string name="set_your_blogging_goals_title">Imposta gli obiettivi per la creazione del blog</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Inserisci le credenziali del server&lt;/a&gt; per abilitare i ripristini del sito con un clic dai backup.</string>
     <string name="gutenberg_native_set_as_featured_image">Imposta come immagine in evidenza </string>
     <string name="gutenberg_native_remove_as_featured_image">Rimuovi come immagine in evidenza </string>
@@ -23,8 +40,8 @@ Language: it
     <string name="site_settings_categories_empty_subtitle">Aggiungi qui le categorie che usati frequentemente in modo che possano essere rapidamente selezionate quando classifichi i tuoi articoli</string>
     <string name="site_settings_categories_empty_button">Crea una categoria</string>
     <string name="site_settings_categories_title">Categorie</string>
-    <string name="site_settings_blogging_reminders_title">Obiettivi del blogging</string>
     <string name="page_is_posts_page_warning">Il contenuto della pagina degli articoli recenti viene generato automaticamente e non può essere modificato.</string>
+    <string name="site_settings_blogging_reminders_title">Promemoria relativi al blog</string>
     <string name="gutenberg_native_border_settings">Impostazioni del bordo</string>
     <string name="storage_utils_dialog_dont_show_button">Non mostrare nuovamente</string>
     <string name="storage_utils_dialog_ok_button">Visualizza archiviazione</string>
@@ -60,7 +77,6 @@ Language: it
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Inserisci le tue credenziali del server&lt;/a&gt; per risolvere le minacce.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Inserisci le tue credenziali del server&lt;/a&gt; per risolvere la minaccia.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Tocca due volte per aggiungere un link.</string>
-    <string name="gutenberg_native_add_link">AGGIUNGI LINK</string>
     <string name="login_empty_view_try_another_account">Prova con un altro account</string>
     <string name="login_empty_view_see_instructions">Visualizza istruzioni</string>
     <string name="login_no_jetpack_sites_error_message">Se hai già un sito, dovrai installare il plugin Jetpack gratuito e collegarlo al tuo account WordPress.com.</string>
@@ -98,9 +114,7 @@ Language: it
     <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
     <string name="gutenberg_native_search_input_field">Cerca campo di immissione.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Pulsante di ricerca. Il testo del pulsante attuale è</string>
-    <string name="gutenberg_native_search_blocks">Cerca blocchi</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Cerca etichetta del blocco. Il testo attuale è</string>
-    <string name="gutenberg_native_search_block">Cerca blocco</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nessun set di segnaposto personalizzato</string>
     <string name="gutenberg_native_no_button">Nessun pulsante</string>
     <string name="gutenberg_native_inside">Interno</string>
@@ -121,6 +135,7 @@ Language: it
     <string name="get_likes_no_network_error">Nessuna rete disponibile.</string>
     <string name="comments_empty_list_filtered_unreplied">Nessun commento senza risposta</string>
     <string name="comment_status_unreplied">Senza risposta</string>
+    <string name="gutenberg_native_search_settings">Impostazioni di ricerca</string>
     <string name="jetpack_brute_force_allowlist_title">Indirizzi IP sempre consentiti</string>
     <string name="site_settings_denylist_title">Commenti respinti</string>
     <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>
@@ -190,8 +205,6 @@ Language: it
     <string name="backup_item_roots">Root WordPress</string>
     <string name="backup_download_details_choose_items_header">Elementi inclusi in questo download</string>
     <string name="gutenberg_native_uploading">Caricamento in corso…</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">I blocchi riutilizzabili non sono modificabili su WordPress per iOS</string>
-    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">I blocchi riutilizzabili non sono modificabili su WordPress per Android</string>
     <string name="gutenberg_native_replace_file">Sostituisci file</string>
     <string name="gutenberg_native_replace_audio">Sostituisci</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problema durante l\'apertura dell\'audio</string>
@@ -203,6 +216,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Tocca due volte per ascoltare il file audio</string>
     <string name="gutenberg_native_choose_audio">Scegli audio</string>
     <string name="gutenberg_native_audio_player">Audio Player</string>
+    <string name="gutenberg_native_audio_file">file audio</string>
     <string name="gutenberg_native_audio_caption_s">Didascalia audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Didascalia audio. Vuota</string>
     <string name="gutenberg_native_add_audio">AGGIUNGI AUDIO</string>
@@ -2851,4 +2865,13 @@ Language: it
     <string name="reply">Rispondi</string>
     <string name="notification_settings">Impostazioni notifiche</string>
     <string name="publish_now">Pubblica ora</string>
+    <string-array name="blogging_reminders_count">
+        <item>Una volta</item>
+        <item>Due volte</item>
+        <item>Tre volte</item>
+        <item>Quattro volte</item>
+        <item>Cinque volte</item>
+        <item>Sei volte</item>
+        <item>Sette volte</item>
+    </string-array>
 </resources>

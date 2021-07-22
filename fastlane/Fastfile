@@ -66,9 +66,26 @@ ALL_LOCALES = [
   { glotpress: "kmr", android: "kmr", promo_config: false},
 ].freeze
 
-RELEASE_NOTES_LOCALES = ALL_LOCALES.reject { |h| h[:google_play].nil? }.map { |h| [h[:glotpress], h[:google_play]] }
+RELEASE_NOTES_LOCALES = ALL_LOCALES
+  .reject { |h| h[:google_play].nil? }
+  .map { |h| [h[:glotpress], h[:google_play]] }
+JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
+  .reject { |h| h[:google_play].nil? }
+  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+  .map { |h| [h[:glotpress], h[:google_play]] }
 
-# Global app vars
+APP_SPECIFIC_VALUES = {
+  wordpress: {
+    metadata_dir: 'metadata',
+    gp_url: 'https://translate.wordpress.org/projects/apps/android/release-notes/'
+  },
+  jetpack: {
+    metadata_dir: 'jetpack_metadata',
+    gp_url: 'https://translate.wordpress.com/projects/jetpack/apps/android/release-notes/'
+  }
+}.freeze
+
+# Global app vars (TODO: move them to APP_SPECIFIC_VALUES)
 
 WP_PACKAGE_NAME = "org.wordpress.android"
 WP_PREFIX = "wpandroid"
@@ -124,18 +141,37 @@ REPOSITORY_NAME="WordPress-Android"
   lane :code_freeze do | options |
     old_version = android_codefreeze_prechecks(options)
 
-    app = options[:app]
-    android_bump_version_release(app: app)
-    new_version = android_get_app_version(app: app)
+    android_bump_version_release(app: 'wordpress')
+    new_version = android_get_app_version(app: 'wordpress')
+
+    # FIXME: Calling android_bump_version_release(app: 'jetpack') won't work here because that action check we're on develop and also creates the branch,
+    #   which won't work since we already ran this action for wordpress and are already in release branch. Patch it manually for now, by applying the same versionName and versionCOde as the ones from WordPress
+    new_version_tuple = android_get_release_version(app: 'wordpress')
+    Dir.chdir('..') do
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionName", "-Pvalue=#{new_version_tuple['name']}")
+      sh('./gradlew', 'updateVersionProperties', "-Pkey=jetpack.versionCode", "-Pvalue=#{new_version_tuple['code']}")
+      sh('git', 'add', 'version.properties')
+      sh('git', 'commit', '-m', 'Bump Jetpack version number')
+    end
 
     # need to get prs list before version update to frozen tag
-    get_prs_list(repository:GHHELPER_REPO, milestone:new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
+    get_prs_list(repository: GHHELPER_REPO, milestone: new_version, report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
 
-    extract_release_notes_for_version(version: new_version,
-      release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
-      extracted_notes_file_path:release_notes_path)
-    cleanup_release_files(files: [release_note_short_path])
-    android_update_release_notes(new_version: new_version)
+    extract_release_notes_for_version(
+      version: new_version,
+      release_notes_file_path: "#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt",
+      extracted_notes_file_path: release_notes_path('wordpress')
+    )
+    # Jetpack Release notes are based on WP Release notes
+    begin
+      # FIXME: Move this logic to release-toolkit?
+      FileUtils.cp(release_notes_path('wordpress'), release_notes_path('jetpack'))
+      sh('git', 'add', release_notes_path('jetpack'))
+      sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
+    end
+    cleanup_release_files(files: release_notes_short_paths)
+
+    android_update_release_notes(new_version: new_version) # Adds empty section for next version
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
 
@@ -143,6 +179,8 @@ REPOSITORY_NAME="WordPress-Android"
     localize_libs()
     send_strings_for_translation()
     ensure_git_status_clean()
+
+    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
   end
 
   #####################################################################################
@@ -151,61 +189,116 @@ REPOSITORY_NAME="WordPress-Android"
   # This lane executes the initial steps planned on code freeze
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane complete_code_freeze [skip_confirm:<skip confirm>]
+  # bundle exec fastlane complete_code_freeze app:<wordpress|jetpack> [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane complete_code_freeze
-  # bundle exec fastlane complete_code_freeze skip_confirm:true
+  # bundle exec fastlane complete_code_freeze app:wordpress
+  # bundle exec fastlane complete_code_freeze app:jetpack skip_confirm:true
   #####################################################################################
-  desc "Creates a new release branch from the current develop"
+  desc "Trigger a release build for a given app after code freeze"
   lane :complete_code_freeze do | options |
     android_completecodefreeze_prechecks(options)
     new_version = android_get_app_version(app: options[:app])
     trigger_release_build(branch_to_build: "release/#{new_version}", app: options[:app])
   end
 
-#####################################################################################
-# update_appstore_strings
-# -----------------------------------------------------------------------------------
-# This lane gets the data from the txt files in the WordPress/metadata/ folder
-# and updates the .po file that is then picked by GlotPress for translations.
-# -----------------------------------------------------------------------------------
-# Usage:
-# fastlane update_appstore_strings version:<version>
-#
-# Example:
-# fastlane update_appstore_strings version:10.3
-#####################################################################################
-  desc "Updates the PlayStoreStrings.po file"
+  #####################################################################################
+  # update_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the WordPress/metadata/ and
+  # WordPress/jetpack_metadata folders and updates the .po files that is then
+  # picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_appstore_strings version:10.3
+  #####################################################################################
+  desc "Updates the PlayStoreStrings.po & JetpackPlayStoreStrings.po files"
   lane :update_appstore_strings do |options|
-    prj_folder = Dir.pwd + "/.."
+    update_wordpress_appstore_strings(options)
+    update_jetpack_appstore_strings(options)
+  end
+
+  #####################################################################################
+  # update_wordpress_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the WordPress/metadata/ folder
+  # and updates the .po file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_wordpress_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_wordpress_appstore_strings version:10.3
+  #####################################################################################
+  desc "Updates the PlayStoreStrings.po file for WordPress"
+  lane :update_wordpress_appstore_strings do |options|
+    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
 
     files = {
-      release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
-      release_note_short: prj_folder + "/WordPress/metadata/release_notes_short.txt",
-      play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
-      play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
-      play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
-      play_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.txt",
-      play_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.txt",
-      play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
-      play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
-      play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
-      play_store_screenshot_6: prj_folder + "/WordPress/metadata/screenshot_6.txt",
-      play_store_screenshot_7: prj_folder + "/WordPress/metadata/screenshot_7.txt",
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
+      play_store_app_title: File.join(metadata_folder, 'title.txt'),
+      play_store_screenshot_1: File.join(metadata_folder, 'screenshot_1.txt'),
+      play_store_screenshot_2: File.join(metadata_folder, 'screenshot_2.txt'),
+      play_store_screenshot_3: File.join(metadata_folder, 'screenshot_3.txt'),
+      play_store_screenshot_4: File.join(metadata_folder, 'screenshot_4.txt'),
+      play_store_screenshot_5: File.join(metadata_folder, 'screenshot_5.txt'),
+      play_store_screenshot_6: File.join(metadata_folder, 'screenshot_6.txt'),
+      play_store_screenshot_7: File.join(metadata_folder, 'screenshot_7.txt'),
 
-      enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/enhanced_screenshot_1.html",
-      enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/enhanced_screenshot_2.html",
-      enhanced_app_store_screenshot_3: prj_folder + "/WordPress/metadata/enhanced_screenshot_3.html",
-      enhanced_app_store_screenshot_4: prj_folder + "/WordPress/metadata/enhanced_screenshot_4.html",
-      enhanced_app_store_screenshot_5: prj_folder + "/WordPress/metadata/enhanced_screenshot_5.html",
-      enhanced_app_store_screenshot_6: prj_folder + "/WordPress/metadata/enhanced_screenshot_6.html",
-      enhanced_app_store_screenshot_7: prj_folder + "/WordPress/metadata/enhanced_screenshot_7.html",
+      enhanced_app_store_screenshot_1: File.join(metadata_folder, 'enhanced_screenshot_1.html'),
+      enhanced_app_store_screenshot_2: File.join(metadata_folder, 'enhanced_screenshot_2.html'),
+      enhanced_app_store_screenshot_3: File.join(metadata_folder, 'enhanced_screenshot_3.html'),
+      enhanced_app_store_screenshot_4: File.join(metadata_folder, 'enhanced_screenshot_4.html'),
+      enhanced_app_store_screenshot_5: File.join(metadata_folder, 'enhanced_screenshot_5.html'),
+      enhanced_app_store_screenshot_6: File.join(metadata_folder, 'enhanced_screenshot_6.html'),
+      enhanced_app_store_screenshot_7: File.join(metadata_folder, 'enhanced_screenshot_7.html'),
     }
 
-    android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po",
+    android_update_metadata_source(
+      po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       source_files: files,
-      release_version: options[:version])
+      release_version: options[:version]
+    )
+  end
+
+  #####################################################################################
+  # update_jetpack_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the WordPress/jetpack_metadata/ folder
+  # and updates the .po file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_jetpack_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_jetpack_appstore_strings version:10.3
+  #####################################################################################
+  desc "Updates the JetpackPlayStoreStrings.po file for Jetpack"
+  lane :update_jetpack_appstore_strings do |options|
+    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+
+    files = {
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      'short-description': File.join(metadata_folder, 'short_description.txt'),
+      'app-store-description': File.join(metadata_folder, 'full_description.txt'),
+      'app-store-name': File.join(metadata_folder, 'title.txt'),
+    }
+
+    # TODO: Move the metadata/JetpackPlayStoreStrings.po file into jetpack_metadata/PlayStoreStrings.po at some point.
+    #   This will require a change in the sandbox to update the path that the cron job uses to import this file into GlotPress.
+    #   In the meantime, `jetpack_metadata/PlayStoreStrings.po` is a symlink to the real `../metadata/JetpackPlayStoreStrings.po`
+    android_update_metadata_source(
+      po_file_path: metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata', 'JetpackPlayStoreStrings.po'),
+      source_files: files,
+      release_version: options[:version]
+    )
   end
 
   #####################################################################################
@@ -283,19 +376,37 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
+    app = options[:app] || 'wordpress'
+    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(app: app)
+
     android_finalize_prechecks(options)
     configure_apply(force: is_ci)
-    hotfix = android_current_branch_is_hotfix
-    download_translations(options) unless hotfix
-    android_bump_version_final_release(app: options[:app]) unless hotfix
-    version = android_get_release_version(app: options[:app])
-    download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
+    UI.message('Checking app strings translation status...')
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false
+    )
+
+    UI.message("Checking #{app} release notes strings translation status...")
+    paths = APP_SPECIFIC_VALUES[app.to_sym]
+    check_translation_progress(
+      glotpress_url: paths[:gp_url],
+      abort_on_violations: false
+    )
+
+    download_translations(app: app)
+
+    android_bump_version_final_release(app: app)
+    version = android_get_release_version(app: app)
+    download_metadata_strings(app: app, version: version["name"], build_number: version["code"])
 
     # Wrap up
-    removebranchprotection(repository:GHHELPER_REPO, branch: "release/#{version["name"]}")
-    setfrozentag(repository:GHHELPER_REPO, milestone: version["name"], freeze: false)
-    create_new_milestone(repository:GHHELPER_REPO)
-    close_milestone(repository:GHHELPER_REPO, milestone: version["name"])
+    if UI.confirm('Do you want to remove branch protection and frozen tag? You should ideally only do so once _both_ JP and WP have been released')
+      removebranchprotection(repository:GHHELPER_REPO, branch: "release/#{version["name"]}")
+      setfrozentag(repository:GHHELPER_REPO, milestone: version["name"], freeze: false)
+      create_new_milestone(repository: GHHELPER_REPO)
+      close_milestone(repository:GHHELPER_REPO, milestone: version["name"])
+    end
 
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version["name"]}", app: options[:app])
@@ -317,10 +428,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm],
+    android_build_prechecks(
+      skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
-      final: true)
+      final: true,
+      app: options[:app]
+    )
     android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
@@ -350,11 +464,13 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm],
+    android_build_prechecks(
+      skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
       final: false,
-      app: options[:app])
+      app: options[:app]
+    )
     android_build_preflight() unless (options[:skip_prechecks])
     build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
     build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release], app: options[:app])
@@ -548,19 +664,26 @@ REPOSITORY_NAME="WordPress-Android"
   end
 
   #####################################################################################
-  # download_metadata_string
+  # download_metadata_strings
   # -----------------------------------------------------------------------------------
-  # This lane downloads the translated metadata (release notes,
-  # app store strings, title, etc.) from GlotPress and updates the local files
+  # This lane downloads the translated metadata (release notes, app store strings, title, etc.)
+  # from GlotPress and updates the local files
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane download_metadata_string build_number:<build_number> version:<version>
+  # fastlane download_metadata_strings app:<wordpress|jetpack> build_number:<build_number> version:<version>
   #
   # Example:
-  # fastlane download_metadata_string build_number:573 version:10.3
+  # fastlane download_metadata_strings app:jetpack build_number:573 version:10.3
   #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options|
+    download_wordpress_metadata_strings(options) unless options[:app] != 'wordpress'
+    download_jetpack_metadata_strings(options) unless options[:app] != 'jetpack'
+  end
+
+  desc "Downloads WordPress's translated metadata from GlotPress"
+  lane :download_wordpress_metadata_strings do |options|
+    app_values = APP_SPECIFIC_VALUES[:wordpress]
     values = options[:version].split('.')
     files = {
       "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key:"release_note_short_#{values[0]}#{values[1]}"},
@@ -569,16 +692,55 @@ REPOSITORY_NAME="WordPress-Android"
       play_store_app_title: {desc:"title.txt", max_size: 50}
     }
 
-    delete_old_changelogs(build: options[:build_number])
-    download_path=Dir.pwd + "/metadata/android"
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+    delete_old_changelogs(app: 'wordpress', build: options[:build_number])
+    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the RELEASE_NOTES_LOCALES,
+    # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
+    gp_downloadmetadata(
+      project_url: app_values[:gp_url],
       target_files: files,
       locales: RELEASE_NOTES_LOCALES,
       source_locale: "en-US",
-      download_path: download_path)
+      download_path: download_path
+    )
 
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
-    sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
+    sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
+  end
+
+  desc "Downloads Jetpack's translated metadata from GlotPress"
+  lane :download_jetpack_metadata_strings do |options|
+    UI.message("Hey")
+    app_values = APP_SPECIFIC_VALUES[:jetpack]
+    values = options[:version].split('.')
+    files = {
+      "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key:"release_note_short_#{values[0]}#{values[1]}"},
+      'short-description': {desc:"short_description.txt", max_size: 80},
+      'app-store-description': {desc:"full_description.txt", max_size: 0},
+      'app-store-name': {desc:"title.txt", max_size: 50}
+    }
+
+    delete_old_changelogs(app: 'jetpack', build: options[:build_number])
+    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+    gp_downloadmetadata(
+      project_url: app_values[:gp_url],
+      target_files: files,
+      locales: JP_RELEASE_NOTES_LOCALES,
+      download_path: download_path
+    )
+
+    # For WordPress, the en-US release notes come from using the source keys (instead of translations) downloaded from GlotPress' en-gb locale (which is unused otherwise).
+    # But for Jetpack, we don't have an unused locale like en-gb in the GP release notes project, so copy from source instead as a fallback
+    metadata_source_dir = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+    FileUtils.cp(File.join(metadata_source_dir, 'release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{options[:build_number]}.txt"))
+    FileUtils.cp(
+      ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
+      File.join(download_path, 'en-US')
+    )
+
+    locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
+    sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
 
 ########################################################################
@@ -717,7 +879,6 @@ REPOSITORY_NAME="WordPress-Android"
 
     prefix = app.downcase == "jetpack" ? JP_PREFIX : WP_PREFIX
     name="#{prefix}-#{version["name"]}.aab"
-    apk_name=universal_apk_name(version)
 
     aab_file="org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir="WordPress/build/outputs/bundle/"
@@ -852,11 +1013,11 @@ REPOSITORY_NAME="WordPress-Android"
 #####################################################################################
 # Private lanes
 #####################################################################################
-  private_lane :delete_old_changelogs do | options |
-    Dir.glob("./metadata/android/*/").each do | folder |
-      Dir["#{folder}changelogs/*"].each do | file |
-        File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
-      end
+  private_lane :delete_old_changelogs do |options|
+    app = options[:app] || 'wordpress'
+    app_values = APP_SPECIFIC_VALUES[app.to_sym]
+    Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
+      File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
     end
   end
 
@@ -869,14 +1030,14 @@ REPOSITORY_NAME="WordPress-Android"
       next
     end
 
-    apk_file_path = universal_apk_file_path(version)
+    apk_file_path = universal_apk_file_path(options[:app], version)
     aab_file_path = bundle_file_path(options[:app], version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
     release_assets = [aab_file_path]
     release_assets.append(apk_file_path) unless is_ci
     create_release(repository:GHHELPER_REPO,
       version: version["name"],
-      release_notes_file_path:release_notes_path,
+      release_notes_file_path: release_notes_path(options[:app]),
       prerelease: set_prerelease_flag,
       release_assets: release_assets.join(',')
     )
@@ -896,17 +1057,26 @@ REPOSITORY_NAME="WordPress-Android"
   #####################################################################################
   # Utils
   #####################################################################################
-  def release_notes_path
-    "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt"
+  def release_notes_path(app)
+    paths = {
+      wordpress: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt",
+      jetpack: "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/jetpack_metadata/release_notes.txt"
+    }
+    paths[app.to_sym] || paths[:wordpress]
   end
 
-  def release_note_short_path
+  def release_notes_short_paths
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "WordPress", "metadata/release_notes_short.txt")
+    [
+      File.join(project_root, "WordPress", "metadata", 'release_notes_short.txt'),
+      File.join(project_root, "WordPress", "jetpack_metadata", 'release_notes_short.txt')
+    ]
   end
 
-  def universal_apk_name(version)
-    "wpandroid-#{version["name"]}-universal.apk"
+  def universal_apk_name(app, version)
+    basenames = { wordpress: 'wpandroid', jetpack: 'jpandroid' }
+    basename = basenames[app.to_sym] || basenames[:wordpress]
+    "#{basename}-#{version["name"]}-universal.apk"
   end
 
   def bundle_file_path(app, version)
@@ -915,8 +1085,8 @@ REPOSITORY_NAME="WordPress-Android"
     File.join(project_root, "build", "#{prefix}-#{ version["name"] }.aab")
   end
 
-  def universal_apk_file_path(version)
+  def universal_apk_file_path(app, version)
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, "build", universal_apk_name(version))
+    File.join(project_root, "build", universal_apk_name(app, version))
   end
 end
