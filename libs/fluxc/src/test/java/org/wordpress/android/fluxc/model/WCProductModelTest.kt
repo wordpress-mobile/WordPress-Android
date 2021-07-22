@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.fluxc.JsonLoader.Companion.jsonFileAs
+import org.wordpress.android.fluxc.JsonLoader.jsonFileAs
 import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnPriceType.FlatFee
 import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnRestrictionsType.AnyText
 import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnType.Checkbox
