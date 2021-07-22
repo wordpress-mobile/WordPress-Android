@@ -70,6 +70,7 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:ellipsize">end</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
@@ -82,7 +83,6 @@
         <item name="android:fontFamily">serif</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
