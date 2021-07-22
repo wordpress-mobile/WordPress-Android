@@ -19,7 +19,6 @@ class LocalNotificationWorker(
     params: WorkerParameters,
     private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) : CoroutineWorker(context, params) {
-    @Suppress("TooGenericExceptionCaught")
     override suspend fun doWork(): Result {
         val id = inputData.getInt(ID, -1)
         if (id == -1) return Result.failure()
