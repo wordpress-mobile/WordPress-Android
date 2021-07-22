@@ -41,6 +41,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.viewmodel.themes.ThemesViewModel;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Hide;
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetAction.Show;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -189,10 +191,17 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ThemesViewModel.class);
 
-        mViewModel.getShowBottomSheet().observe(this, shouldShow -> {
-            if (shouldShow) {
-                ThemeActivationBottomSheetFragment bottomSheet = new ThemeActivationBottomSheetFragment();
-                bottomSheet.show(getSupportFragmentManager(), ThemeActivationBottomSheetFragment.TAG);
+        mViewModel.getBottomSheetAction().observe(this, action -> {
+            FragmentManager fm = getSupportFragmentManager();
+            if (action instanceof Show) {
+                ThemeBottomSheetFragment bottomSheet = new ThemeBottomSheetFragment();
+                bottomSheet.show(fm, ThemeBottomSheetFragment.TAG);
+            } else if (action instanceof Hide) {
+                ThemeBottomSheetFragment bottomSheet =
+                        (ThemeBottomSheetFragment) fm.findFragmentByTag(ThemeBottomSheetFragment.TAG);
+                if (bottomSheet != null) {
+                    bottomSheet.dismiss();
+                }
             }
         });
 

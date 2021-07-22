@@ -16,11 +16,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ThemeActivationBottomSheetBinding
 import org.wordpress.android.viewmodel.themes.ThemesViewModel
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.Selection.KEEP_CURRENT_HOMEPAGE
-import org.wordpress.android.viewmodel.themes.ThemesViewModel.Selection.USE_THEME_HOMEPAGE
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.KeepCurrentHomepage
+import org.wordpress.android.viewmodel.themes.ThemesViewModel.BottomSheetUIState.Selection.UseThemeHomepage
 import javax.inject.Inject
 
-class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
+class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ThemesViewModel
 
@@ -45,24 +45,15 @@ class ThemeActivationBottomSheetFragment : BottomSheetDialogFragment() {
         with(ThemeActivationBottomSheetBinding.bind(view)) {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ThemesViewModel::class.java)
 
-            viewModel.themeToActivate.observe(this@ThemeActivationBottomSheetFragment) {
-                themeName.text = it.name
-                sheetInfo.text = requireActivity().getString(R.string.theme_bottom_sheet_info, it.name)
-                useThemeOptionMainText.text =
-                        requireActivity().getString(R.string.theme_bottom_sheet_use_theme_layout_main_text, it.name)
-            }
+            viewModel.bottomSheetUiState.observe(this@ThemeBottomSheetFragment) {
+                themeName.text = it.themeNameText
+                sheetInfo.text = it.sheetInfoText
+                useThemeHomepageOption.text = it.useThemeHomePageOptionText
 
-            viewModel.bottomSheetSelection.observe(this@ThemeActivationBottomSheetFragment) { event ->
-                event.applyIfNotHandled {
-                    when (this) {
-                        USE_THEME_HOMEPAGE -> toggleSelection(useThemeCheck, keepCurrentCheck)
-                        KEEP_CURRENT_HOMEPAGE -> toggleSelection(keepCurrentCheck, useThemeCheck)
-                    }
+                when(it.selection){
+                    is UseThemeHomepage -> toggleSelection(useThemeCheck, keepCurrentCheck)
+                    is KeepCurrentHomepage -> toggleSelection(keepCurrentCheck, useThemeCheck)
                 }
-            }
-
-            viewModel.showBottomSheet.observe(this@ThemeActivationBottomSheetFragment) {
-                if (!it) dismiss()
             }
 
             closeButton.setOnClickListener { viewModel.onDismissButtonClicked() }
