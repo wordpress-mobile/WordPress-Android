@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -111,7 +112,7 @@ class CommentListActionModeCallback(
     ): Boolean {
         return when (item.itemId) {
             R.id.menu_approve -> {
-                viewModel.performBatchApprove()
+                viewModel.performBatchModeration(APPROVED)
                 true
             }
 //            R.id.mnu_edit_item -> {

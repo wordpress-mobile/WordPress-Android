@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.collect
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
-import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.ActionModeUiModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel
+import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel.CommentsListUiModel.WithData
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -35,7 +35,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private lateinit var commentListFilter: CommentFilter
-    private lateinit var commentStatusList: List<CommentStatus>
 
     private var binding: UnifiedCommentListFragmentBinding? = null
 
@@ -69,20 +68,19 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
         commentsRecyclerView.adapter = adapter
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
+            viewModel.reload()
         }
     }
 
-    private fun retry() {
-//        adapter.retry()
-    }
-
     private fun UnifiedCommentListFragmentBinding.setupObservers() {
-        viewModel.setup(commentListFilter)
         var isShowingActionMode = false
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 setupCommentsList(uiState.commentsListUiModel)
-                adapter.submitList(uiState.commentData)
+                if (uiState.commentsListUiModel is WithData || uiState.commentsListUiModel is CommentsListUiModel.Empty) {
+                    adapter.submitList(uiState.commentData)
+                }
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
@@ -96,12 +94,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 }
             }
         }
-
-//        lifecycleScope.launchWhenStarted {
-//            adapter.loadStateFlow.collectLatest { loadState ->
-//                viewModel.onLoadStateChanged(loadState.toPagedListLoadingState(adapter.itemCount > 0))
-//            }
-//        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.onSnackbarMessage.collect { snackbarMessage ->
@@ -123,35 +115,37 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                 )
             }
         }
+
+        viewModel.setup(commentListFilter)
     }
 
     private fun UnifiedCommentListFragmentBinding.setupCommentsList(uiModel: CommentsListUiModel) {
-//        uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
-//        uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
-//        uiHelpers.updateVisibility(
-//                commentsRecyclerView,
-//                uiModel is CommentsListUiModel.WithData || uiModel is CommentsListUiModel.Refreshing
-//        )
-//        ptrLayout.isRefreshing = uiModel is CommentsListUiModel.Refreshing
-//
-//        when (uiModel) {
-//            is CommentsListUiModel.Empty -> {
-//                if (uiModel.image != null) {
-//                    actionableEmptyView.image.visibility = View.VISIBLE
-//                    actionableEmptyView.image.setImageResource(uiModel.image)
-//                } else {
-//                    actionableEmptyView.image.visibility = View.GONE
-//                }
-//
-//                actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
-//                        requireContext(),
-//                        uiModel.title
-//                )
-//            }
-//
-//            else -> { // noop
-//            }
-//        }
+        uiHelpers.updateVisibility(loadingView, uiModel == CommentsListUiModel.Loading)
+        uiHelpers.updateVisibility(actionableEmptyView, uiModel is CommentsListUiModel.Empty)
+        uiHelpers.updateVisibility(
+                commentsRecyclerView,
+                uiModel is CommentsListUiModel.WithData || uiModel is CommentsListUiModel.Refreshing
+        )
+        ptrLayout.isRefreshing = uiModel is CommentsListUiModel.Refreshing
+
+        when (uiModel) {
+            is CommentsListUiModel.Empty -> {
+                if (uiModel.image != null) {
+                    actionableEmptyView.image.visibility = View.VISIBLE
+                    actionableEmptyView.image.setImageResource(uiModel.image)
+                } else {
+                    actionableEmptyView.image.visibility = View.GONE
+                }
+
+                actionableEmptyView.title.text = uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        uiModel.title
+                )
+            }
+
+            else -> { // noop
+            }
+        }
     }
 
     override fun onDestroyView() {

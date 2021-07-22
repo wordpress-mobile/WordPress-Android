@@ -17,7 +17,7 @@ enum class CommentFilter(val labelResId: Int) {
             ALL -> listOf(CommentStatus.APPROVED, CommentStatus.UNAPPROVED)
             PENDING -> listOf(CommentStatus.UNAPPROVED)
             APPROVED -> listOf(CommentStatus.APPROVED)
-            UNREPLIED -> listOf(CommentStatus.UNREPLIED)
+            UNREPLIED -> listOf(CommentStatus.APPROVED, CommentStatus.UNAPPROVED)
             TRASHED -> listOf(CommentStatus.TRASH)
             SPAM -> listOf(CommentStatus.SPAM)
             DELETE -> listOf(CommentStatus.DELETED)
@@ -29,7 +29,7 @@ enum class CommentFilter(val labelResId: Int) {
             ALL -> CommentStatus.ALL
             PENDING -> CommentStatus.UNAPPROVED
             APPROVED -> CommentStatus.APPROVED
-            UNREPLIED -> CommentStatus.UNREPLIED
+            UNREPLIED -> CommentStatus.ALL
             TRASHED -> CommentStatus.TRASH
             SPAM -> CommentStatus.SPAM
             DELETE -> CommentStatus.DELETED
