@@ -11,6 +11,8 @@ class LocalNotificationScheduler @Inject constructor(
     private val contextProvider: ContextProvider,
     private val localNotificationHandlerFactory: LocalNotificationHandlerFactory
 ) {
+    private val workManager = WorkManager.getInstance(contextProvider.getContext())
+    
     fun scheduleOneTimeNotification(localNotification: LocalNotification): Boolean {
         val localPushHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(localNotification.type)
         if (localPushHandler.shouldShowNotification()) {
@@ -24,9 +26,7 @@ class LocalNotificationScheduler @Inject constructor(
                     )
                     .build()
 
-            WorkManager.getInstance(contextProvider.getContext()).enqueue(
-                    work
-            )
+            workManager.enqueue(work)
             return true
         } else {
             return false
@@ -34,7 +34,7 @@ class LocalNotificationScheduler @Inject constructor(
     }
 
     fun cancelScheduledNotification(notificationType: Type) {
-        WorkManager.getInstance(contextProvider.getContext()).cancelAllWorkByTag(notificationType.tag)
+        workManager.cancelAllWorkByTag(notificationType.tag)
     }
 
     fun cancelNotification(pushId: Int) {
