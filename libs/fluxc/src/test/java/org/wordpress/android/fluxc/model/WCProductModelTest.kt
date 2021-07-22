@@ -3,7 +3,11 @@ package org.wordpress.android.fluxc.model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.fluxc.JsonLoader.Companion.jsonFileAs
+import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnPriceType.FlatFee
+import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnRestrictionsType.AnyText
+import org.wordpress.android.fluxc.model.addons.WCProductAddonModel.AddOnType.Checkbox
 import org.wordpress.android.fluxc.network.rest.wpcom.wc.product.ProductApiResponse
+import kotlin.test.fail
 
 class WCProductModelTest {
     @Test
@@ -15,6 +19,39 @@ class WCProductModelTest {
 
         assertThat(productModelUnderTest).isNotNull
         assertThat(productModelUnderTest?.addons).isNotEmpty
+        assertThat(productModelUnderTest?.addons?.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `Product addons should be serialized with enum values correctly`() {
+        val productModelUnderTest =
+                "wc/product-with-addons.json"
+                        .jsonFileAs(ProductApiResponse::class.java)
+                        ?.asProductModel()
+
+        assertThat(productModelUnderTest).isNotNull
+        assertThat(productModelUnderTest?.addons).isNotEmpty
+
+        productModelUnderTest?.addons?.first()?.let {
+            assertThat(it.priceType).isEqualTo(FlatFee)
+            assertThat(it.restrictionsType).isEqualTo(AnyText)
+            assertThat(it.type).isEqualTo(Checkbox)
+
+        } ?: fail("Addons list shouldn't be empty")
+    }
+
+    @Test
+    fun `Product addons should contain Addon options serialized correctly`() {
+        val addonOptions = "wc/product-with-addons.json"
+                .jsonFileAs(ProductApiResponse::class.java)
+                ?.asProductModel()
+                ?.addons
+                ?.takeIf { it.isNotEmpty() }
+                ?.first()
+                ?.options
+
+        assertThat(addonOptions).isNotNull
+        assertThat(addonOptions).isNotEmpty
     }
 
     @Test
