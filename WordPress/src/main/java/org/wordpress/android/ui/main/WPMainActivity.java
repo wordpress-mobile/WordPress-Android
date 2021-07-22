@@ -1190,9 +1190,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void showQuickStartDialog() {
-        if (AppPrefs.isQuickStartDisabled()
-            || getSelectedSite() == null
-            || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())) {
+        if (
+                (AppPrefs.isQuickStartDisabled() && !mOnboardingImprovementsFeatureConfig.isEnabled())
+                || getSelectedSite() == null
+                || !QuickStartUtils.isQuickStartAvailableForTheSite(getSelectedSite())
+        ) {
             return;
         }
 
