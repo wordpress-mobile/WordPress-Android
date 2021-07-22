@@ -1230,9 +1230,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         quickStartPromptDialogFragment.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
-
-        // Set migration dialog flag so it is not shown for new sites.
-        AppPrefs.setQuickStartMigrationDialogShown(true);
     }
 
     private void appLanguageChanged() {

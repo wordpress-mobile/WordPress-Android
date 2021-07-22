@@ -2883,10 +2883,6 @@
     <string name="quick_start_dialog_need_help_manage_site_button_positive">Show me around</string>
     <string name="quick_start_dialog_need_help_manage_site_button_negative" translatable="false">@string/quick_start_dialog_need_help_button_negative</string>
 
-    <!-- Quick Start Promo Dialog (Migration) -->
-    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
-    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
