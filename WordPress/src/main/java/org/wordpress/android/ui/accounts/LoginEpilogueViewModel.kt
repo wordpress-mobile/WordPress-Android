@@ -19,7 +19,7 @@ class LoginEpilogueViewModel @Inject constructor(
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
 
     fun onSiteClick(localId: Int) {
-        // TODO: Post navigation event.
+        _navigationEvents.postValue(Event(LoginNavigationEvents.SelectSite(localId)))
     }
 
     fun onContinue() {

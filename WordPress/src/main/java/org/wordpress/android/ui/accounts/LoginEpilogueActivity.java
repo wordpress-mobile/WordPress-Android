@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
@@ -63,6 +64,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
             LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
             if (loginEvent instanceof ShowPostSignupInterstitialScreen) {
                 showPostSignupInterstitialScreen();
+            } else if (loginEvent instanceof SelectSite) {
+                selectSite(((SelectSite) loginEvent).getLocalId());
             } else if (loginEvent instanceof CloseWithResultOk) {
                 closeWithResultOk();
             } else if (loginEvent instanceof ShowNoJetpackSites) {
@@ -79,7 +82,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     @Override
     public void onSiteClick(int localId) {
-        // TODO: Trigger view model call.
+        mViewModel.onSiteClick(localId);
     }
 
     @Override
@@ -100,6 +103,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
 
     private void showPostSignupInterstitialScreen() {
         ActivityLauncher.showPostSignupInterstitial(this);
+    }
+
+    private void selectSite(int localId) {
+        // TODO: Trigger select site action.
     }
 
     private void closeWithResultOk() {
