@@ -2,9 +2,6 @@ package org.wordpress.android.ui.comments.unified
 
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.activitylog.list.ActivityLogDiffCallback
-import org.wordpress.android.ui.activitylog.list.ActivityLogDiffCallback.Companion
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 
@@ -27,9 +24,14 @@ class UnifiedCommentsListDiffCallback : DiffUtil.ItemCallback<UnifiedCommentList
      */
     override fun getChangePayload(oldItem: UnifiedCommentListItem, newItem: UnifiedCommentListItem): Any {
         val bundle = Bundle()
-        if (oldItem is Comment && newItem is Comment &&
-                oldItem.isSelected != newItem.isSelected) {
-            bundle.putBoolean(COMMENT_SELECTION_TOGGLED, newItem.isSelected)
+        if (oldItem is Comment && newItem is Comment) {
+            if (oldItem.isSelected != newItem.isSelected) {
+                bundle.putBoolean(COMMENT_SELECTION_TOGGLED, newItem.isSelected)
+            }
+
+            if (oldItem.isPending != newItem.isPending) {
+                bundle.putBoolean(COMMENT_PENDING_STATE_CHANGED, newItem.isPending)
+            }
         }
 
         return bundle
@@ -37,5 +39,8 @@ class UnifiedCommentsListDiffCallback : DiffUtil.ItemCallback<UnifiedCommentList
 
     companion object {
         const val COMMENT_SELECTION_TOGGLED = "COMMENT_SELECTION_TOGGLED"
+        const val COMMENT_PENDING_STATE_CHANGED = "COMMENT_PENDING_STATE_CHANGED"
+        const val COMMENT_CLICK_ACTION_CHANGED = "COMMENT_CLICK_ACTION_CHANGED"
+        const val COMMENT_TOGGLE_ACTION_CHANGED = "COMMENT_TOGGLE_ACTION_CHANGED"
     }
 }

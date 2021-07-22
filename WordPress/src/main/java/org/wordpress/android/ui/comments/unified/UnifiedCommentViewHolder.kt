@@ -60,6 +60,17 @@ class UnifiedCommentViewHolder(
         commentListUiUtils.toggleSelectedStateOfCommentListItem(layoutContainer, isSelected)
     }
 
+    fun updateStateAndListeners(item: Comment) = with(binding) {
+        uiHelpers.updateVisibility(statusIndicator, item.isPending)
+        itemView.setOnClickListener {
+            item.clickAction.onClick()
+        }
+        itemView.setOnLongClickListener {
+            item.toggleAction.onToggle()
+            true
+        }
+    }
+
     private fun getGravatarUrl(comment: Comment): String {
         return if (!TextUtils.isEmpty(comment.authorAvatarUrl)) {
             gravatarUtilsWrapper.fixGravatarUrl(
