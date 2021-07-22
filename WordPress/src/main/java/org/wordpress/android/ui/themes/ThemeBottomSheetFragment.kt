@@ -50,7 +50,7 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
                 sheetInfo.text = it.sheetInfoText
                 useThemeHomepageOption.text = it.useThemeHomePageOptionText
 
-                when(it.selection){
+                when (it.selection) {
                     is UseThemeHomepage -> toggleSelection(useThemeCheck, keepCurrentCheck)
                     is KeepCurrentHomepage -> toggleSelection(keepCurrentCheck, useThemeCheck)
                 }
@@ -64,7 +64,7 @@ class ThemeBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun getTheme(): Int  = R.style.ThemeActivationBottomSheetStyle
+    override fun getTheme(): Int = R.style.ThemeActivationBottomSheetStyle
 
     private fun toggleSelection(@NonNull viewTapped: View, vararg otherViews: View) {
         viewTapped.visibility = VISIBLE
