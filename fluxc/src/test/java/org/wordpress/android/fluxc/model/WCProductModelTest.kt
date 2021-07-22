@@ -6,8 +6,6 @@ import org.wordpress.android.fluxc.JsonLoader.Companion.jsonFileAs
 import org.wordpress.android.fluxc.network.rest.wpcom.wc.product.ProductApiResponse
 
 class WCProductModelTest {
-
-
     @Test
     fun `Product addons should be serialized correctly`() {
         val productModelUnderTest =
@@ -18,6 +16,5 @@ class WCProductModelTest {
         assertThat(productModelUnderTest).isNotNull
         assertThat(productModelUnderTest?.addons).isNotEmpty
     }
-
 }
 
