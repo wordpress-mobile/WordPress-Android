@@ -68,9 +68,6 @@ class PaginateCommentsUseCase @Inject constructor(
 
                         val result = commentsStore.getCachedComments(
                                 site = parameters.site,
-                                number = parameters.number,
-                                offset = parameters.offset,
-                                networkStatusFilter = parameters.commentFilter.toCommentStatus(),
                                 cacheStatuses = parameters.commentFilter.toCommentCacheStatuses()
                         )
 
