@@ -1,6 +1,5 @@
 package org.wordpress.android.workers
 
-import androidx.core.app.NotificationManagerCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import org.wordpress.android.viewmodel.ContextProvider
@@ -8,7 +7,7 @@ import org.wordpress.android.workers.LocalNotification.Type
 import javax.inject.Inject
 
 class LocalNotificationScheduler @Inject constructor(
-    private val contextProvider: ContextProvider
+    contextProvider: ContextProvider
 ) {
     private val workManager = WorkManager.getInstance(contextProvider.getContext())
 
@@ -24,13 +23,5 @@ class LocalNotificationScheduler @Inject constructor(
 
     fun cancelScheduledNotification(notificationType: Type) {
         workManager.cancelAllWorkByTag(notificationType.tag)
-    }
-
-    fun cancelNotification(pushId: Int) {
-        if (pushId != -1) {
-            with(NotificationManagerCompat.from(contextProvider.getContext())) {
-                cancel(pushId)
-            }
-        }
     }
 }
