@@ -30,6 +30,10 @@ class QuickStartUtilsWrapper
         return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteId)
     }
 
+    fun isQuickStartDone(siteId: Int): Boolean {
+        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteId)
+    }
+
     @JvmOverloads
     fun stylizeQuickStartPrompt(
         activityContext: Context,
