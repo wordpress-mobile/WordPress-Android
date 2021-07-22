@@ -1,15 +1,13 @@
 package org.wordpress.android.workers
 
+import android.content.Context
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.workers.LocalNotification.Type
 import javax.inject.Inject
 
-class LocalNotificationScheduler @Inject constructor(
-    contextProvider: ContextProvider
-) {
-    private val workManager = WorkManager.getInstance(contextProvider.getContext())
+class LocalNotificationScheduler(private val workManager: WorkManager) {
+    @Inject constructor(context: Context) : this(WorkManager.getInstance(context))
 
     fun scheduleOneTimeNotification(localNotification: LocalNotification) {
         val work = OneTimeWorkRequestBuilder<LocalNotificationWorker>()
