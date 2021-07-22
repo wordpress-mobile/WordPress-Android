@@ -22,11 +22,14 @@ class LocalNotificationWorker(
     @Suppress("TooGenericExceptionCaught")
     override suspend fun doWork(): Result {
         val id = inputData.getInt(ID, -1)
-
         if (id == -1) return Result.failure()
 
-        with(NotificationManagerCompat.from(context)) {
-            notify(id, localNotificationBuilder().build())
+        val typeTag = inputData.getString(TYPE)
+        val type = Type.fromTag(typeTag) ?: return Result.failure()
+
+        val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
+        if (localNotificationHandler.shouldShowNotification()) {
+            NotificationManagerCompat.from(context).notify(id, localNotificationBuilder().build())
         }
 
         return Result.success()
